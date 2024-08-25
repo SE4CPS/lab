@@ -20,12 +20,12 @@ import Playback from './components/playback.js'
 import defaultConfig from './config.js'
 import * as Util from './utils/util.js'
 import * as Device from './utils/device.js'
-import {
-	SLIDES_SELECTOR,
-	HORIZONTAL_SLIDES_SELECTOR,
-	VERTICAL_SLIDES_SELECTOR,
-	POST_MESSAGE_METHOD_BLACKLIST
-} from './utils/constants.js'
+// import {
+// 	SLIDES_SELECTOR,
+// 	HORIZONTAL_SLIDES_SELECTOR,
+// 	VERTICAL_SLIDES_SELECTOR,
+// 	POST_MESSAGE_METHOD_BLACKLIST
+// } from './utils/constants.js'
 
 // The reveal.js version
 export const VERSION = '5.1.0';
