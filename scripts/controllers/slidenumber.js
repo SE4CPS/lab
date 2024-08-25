@@ -3,7 +3,7 @@ import {
 	SLIDE_NUMBER_FORMAT_CURRENT_SLASH_TOTAL,
 	SLIDE_NUMBER_FORMAT_HORIZONTAL_DOT_VERTICAL,
 	SLIDE_NUMBER_FORMAT_HORIZONTAL_SLASH_VERTICAL
-} from "../utils/constants";
+} from "../utils/constants.js";
 
 /**
  * Handles the display of reveal.js' optional slide number.
