@@ -1,7 +1,7 @@
 import {
 	SLIDE_NUMBER_FORMAT_CURRENT,
 	SLIDE_NUMBER_FORMAT_CURRENT_SLASH_TOTAL
-} from "../utils/constants";
+} from "../utils/constants.js";
 
 /**
  * Makes it possible to jump to a slide by entering its
