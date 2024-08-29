@@ -633,34 +633,19 @@
 
                 <section>
                     <h1>Unstructured Data</h1>
-                    <h3>Logs, Images, and More</h3>
-                </section>
-
-                <section>
-                    <h2>What is Unstructured Data?</h2>
                     <ul>
-                        <li>Data not organized in a predefined way</li>
-                        <li>Examples:</li>
-                        <ul>
-                            <li>Logs</li>
-                            <li>Images</li>
-                            <li>Videos</li>
-                            <li>Text documents</li>
-                        </ul>
+                        <li>Data structure updates before table structure updates &check;</li>
+                        <li>Data values that cannot be structured in RDBS tables</li>
                     </ul>
                 </section>
 
                 <section>
-                    <h2>Why is it Important?</h2>
-                    <ul>
-                        <li>80-90% of all data is unstructured</li>
-                        <li>Contains valuable insights</li>
-                        <li>Key for machine learning and analytics</li>
-                    </ul>
+                    <h2>Unstructured Data</h2>
+                    <p>Logs, Images, Videos, Text documents, Sensor data</p>
                 </section>
 
                 <section>
-                    <h2>Handling Video Data</h2>
+                    <h2>Video Data</h2>
                     <pre><code>
                   Video Data Sample:
                   --------------------
@@ -677,7 +662,7 @@
                 </section>
 
                 <section>
-                    <h2>Handling Audio Data</h2>
+                    <h2>Audio Data</h2>
                     <pre><code>
                   Audio Data Sample (Waveform):
                   --------------------
@@ -688,40 +673,7 @@
                 </section>
 
                 <section>
-                    <h2>Handling JSON Data</h2>
-                    <pre><code>
-                  JSON Data Sample:
-                  --------------------
-                  {
-                    "name": "Alice",
-                    "age": 30,
-                    "city": "New York",
-                    "skills": ["Python", "Data Analysis", "Machine Learning"]
-                  }
-                    </code></pre>
-                </section>
-
-                <section>
-                    <h2>Processing Email Data</h2>
-                    <pre><code>
-                  Email Data Sample:
-                  --------------------
-                  From: john.doe@example.com
-                  To: alice@example.com
-                  Subject: Meeting Reminder
-                  
-                  Body:
-                  Hi Alice,
-                  
-                  Just a reminder about our meeting tomorrow at 10 AM.
-                  
-                  Best,
-                  John
-                    </code></pre>
-                </section>
-
-                <section>
-                    <h2>Handling Text Data</h2>
+                    <h2>Text Data</h2>
                     <pre><code>
                   Text Data Sample:
                   --------------------
@@ -734,7 +686,7 @@
                 </section>
 
                 <section>
-                    <h2>Processing Log Data</h2>
+                    <h2>Log Data</h2>
                     <pre><code>
                   Log Data Sample:
                   --------------------
@@ -746,9 +698,97 @@
                 </section>
 
                 <section>
-                    <h2>SQL or IndexedDB?</h2>
+                    <h2>Why IndexedDB?</h2>
                     <ul>
-                        <li>No schema validation required</li>
+                        <li>No schema validation required for IndexedDB</li>
+                        <li>Asynchronous database requests (for non-blocking UI)</li>
+                        <li>Data storage flexible (objects, arrays, blobs) for IndexedDB</li>
+                        <li>Search value by key (log timestamp)</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h1>Unstructured Data</h1>
+                    <ul>
+                        <li>Data structure updates before table structure updates &check;</li>
+                        <li>Data values that cannot be structured in RDBS tables &check;</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>IndexedDB</h2>
+                </section>
+
+                <section>
+                    <h2>Creating a Database</h2>
+                    <pre><code>
+                // Open a weather database
+                let request = indexedDB.open("WeatherDB", 1);
+                
+                request.onupgradeneeded = function(event) {
+                    let db = event.target.result;
+                    db.createObjectStore("Forecasts", { keyPath: "cityId" });
+                };
+                
+                // SQL equivalent:
+                // CREATE DATABASE WeatherDB;
+                // CREATE TABLE Forecasts (cityId INTEGER PRIMARY KEY, ...);
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Why Different Transaction Types?</h2>
+                    <ul>
+                        <li><strong>Read-Only:</strong> Multiple can run concurrently.</li>
+                        <li><strong>Read-Write:</strong> Locks the store; others wait.</li>
+                    </ul>
+                    <pre><code>
+    // Read-Only
+    db.transaction('store', 'readonly').objectStore('store').get('key');
+    
+    // Read-Write
+    db.transaction('store', 'readwrite').objectStore('store').put('value', 'key');
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Adding Weather Data to an Object Store</h2>
+                    <pre><code>
+                        // Adding a weather forecast
+                        let transaction = db.transaction("Forecasts", "readwrite");
+                        let store = transaction.objectStore("Forecasts");
+                        let request = store.add({ cityId: 101, city: "New York" });
+                        
+                        request.onsuccess = function() {
+                            console.log("Weather data added successfully");
+                        };
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Query Data Item</h2>
+                    <pre><code>
+                            db.transaction('weather', 'readonly').
+                            objectStore('weather').
+                            get('cityId');
+                        </code></pre>
+                </section>
+
+                <section>
+                    <h2>Query Data Items</h2>
+                    <pre><code>
+                            db.transaction('forecasts', 'readonly').
+                            objectStore('forecasts').
+                            openCursor();
+                        </code></pre>
+                </section>
+
+                <section>
+                    <h2>Handling Errors in IndexedDB</h2>
+                    <ul>
+                        <li>Use <code>request.onerror</code> to handle request errors</li>
+                        <li>Handle network errors while syncing weather data</li>
+                        <li>Use transaction abort to rollback changes if needed</li>
                     </ul>
                 </section>
 
