@@ -101,7 +101,8 @@
                                 </tr>
                                 <tr style="color: #ccc;">
                                     <td style="padding: 6px; border: 1px solid #666;">2 (Sep 3, 5)</td>
-                                    <td style="padding: 6px; border: 1px solid #666;"><a href="http://localhost:8080"
+                                    <td style="padding: 6px; border: 1px solid #666;"><a
+                                            href="http://localhost:8080/dms2/#/61"
                                             style="color: #ccc; text-decoration: none; cursor: pointer;">Data Modeling
                                             and Engineering &#x1f517;</a></td>
                                     <td style="padding: 6px; border: 1px solid #666;">Project Part 1: <i
@@ -1067,17 +1068,18 @@
                             </tr>
                             <tr>
                                 <td>ERROR HANDLING;</td>
-                                <td>transaction.onerror = function(event) { console.error(event.target.errorCode); };</td>
+                                <td>transaction.onerror = function(event) { console.error(event.target.errorCode); };
+                                </td>
                             </tr>
                         </tbody>
                     </table>
-                </section>               
+                </section>
 
                 <section>
                     <h2>Limitations in IndexedDB API</h2>
                     <ul>
                         <li>JOIN operations across multiple object stores</li>
-                        <li>Aggregations like COUNT, SUM, AVG, MIN, MAX</li>
+                        <li>Aggregations like SUM, AVG, MIN, MAX</li>
                         <li>Complex WHERE clauses with AND, OR, NOT</li>
                         <li>Subqueries (e.g., SELECT * FROM (SELECT ...))</li>
                         <li>GROUP BY and HAVING clauses</li>
@@ -1172,6 +1174,334 @@
                     <p>Please review the syllabus, homework, lab, and reading list</p>
                 </section>
 
+                <section>
+                    <h2>Data Modeling and Engineering</h2>
+                </section>
+
+                <section>
+                    <h2>Today</h2>
+                    <ul>
+                        <li>Data Modeling and Engineering</li>
+                        <li>Questions Assignment 1</li>
+                        <li>Glossary and Terminology</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Data Modeling: SQL vs. NoSQL</h2>
+                    <ul>
+                        <li><strong>SQL:</strong> Structured schemas with tables, rows, and
+                            columns.</li>
+                        <li><strong>NoSQL:</strong> Flexible schema with key-value pairs for
+                            quick lookups.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>SQL Example: Crops Data</h2>
+                    <pre><code class="sql">
+-- Create table for crops
+CREATE TABLE Crops (
+    CropID INT PRIMARY KEY,
+    CropName VARCHAR(50),
+    PlantingDate DATE,
+    HarvestDate DATE,
+    FarmID INT
+);
+
+-- Insert crop data
+INSERT INTO Crops VALUES
+(1, 'Wheat', '2024-03-15', '2024-08-10', 1),
+(2, 'Corn', '2024-04-01', '2024-09-15', 2);
+                    </code></pre>
+                    <p>Structured data with a fixed schema to manage crops on different farms.</p>
+                </section>
+
+                <section>
+                    <h2>NoSQL Example: Crops Data</h2>
+                    <pre><code class="json">
+{
+    "Farm:1": {
+    "Crops": [
+        {"CropID": "1", "CropName": "Wheat", "PlantingDate": "2024-03-15"}
+    ]
+    },
+    "Farm:2": {
+    "Crops": [
+        {"CropID": "2", "CropName": "Corn", "PlantingDate": "2024-04-01"}
+    ]
+    }
+}
+                    </code></pre>
+                    <p>Flexible schema using key-value pairs for storing crop data.</p>
+                </section>
+
+                <section>
+                    <h2>NoSQL Example: Real-Time Sensor Data</h2>
+                    <pre><code class="json">
+{
+    "Sensor:101": {
+    "Type": "Soil Moisture",
+    "Location": "Field A",
+    "LastReading": "2024-09-02T12:30Z",
+    "Value": "35%"
+    }
+}
+                    </code></pre>
+                    <p>Simple key-value storage for fast sensor data retrieval.</p>
+                </section>
+
+                <section>
+                    <h2 style="text-align: center;">Querying Data</h2>
+                    <div
+                        style="display: flex; justify-content: space-around; align-items: flex-start; font-size: 12pt;">
+                        <!-- SQL Querying -->
+                        <div style="width: 45%; text-align: left;">
+                            <h3 style="font-size: 14pt;">SQL Querying</h3>
+                            <p>SQL databases use a structured query language (SQL) for complex queries, enabling
+                                powerful filtering, joining, and aggregation capabilities.</p>
+                            <p><strong>Process:</strong></p>
+                            <ul style="font-size: 12pt;">
+                                <li><strong>SQL Query</strong> → Returns Structured Data</li>
+                            </ul>
+                        </div>
+
+                        <!-- NoSQL Querying -->
+                        <div style="width: 45%; text-align: left;">
+                            <h3 style="font-size: 14pt;">NoSQL Querying</h3>
+                            <p>NoSQL databases use flexible key-based lookups and simple filtering. Queries typically
+                                return JSON values and may require additional processing with JavaScript.</p>
+                            <p><strong>Process:</strong></p>
+                            <ul style="font-size: 12pt;">
+                                <li><strong>NoSQL Query</strong> → Returns JSON Data</li>
+                                <li><strong>JavaScript Query</strong> → Additional Processing</li>
+                                <li><strong>Result</strong> → Processed Data Output</li>
+                            </ul>
+                            <!-- Warning as a fragment -->
+                            <p class="fragment" style="color: red; font-weight: bold;">
+                                ⚠️ <strong>Warning:</strong> The schema of the JSON data must be known for accurate
+                                processing and aggregation. Since NoSQL schemas are flexible and not enforced, ensure
+                                proper schema knowledge for consistent data handling.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 style="text-align: center;">SQL vs. NoSQL Data Structures</h2>
+                    <div
+                        style="display: flex; justify-content: space-around; align-items: flex-start; font-size: 12pt;">
+                        <!-- SQL Table Structure -->
+                        <div style="width: 45%; text-align: left;">
+                            <h3 style="font-size: 14pt;">SQL Query & Aggregation</h3>
+                            <pre><code class="sql">
+                -- Sample SQL Query
+                SELECT CropName, PlantingDate, HarvestDate
+                FROM Crops
+                WHERE FarmID = 1;
+                
+                -- Average Harvest Duration Calculation
+                SELECT AVG(DATEDIFF(DAY, PlantingDate, HarvestDate)) AS AvgHarvestDays
+                FROM Crops
+                WHERE FarmID = 1;
+                            </code></pre>
+                            <p>Structured query language (SQL) allows direct querying and aggregation, such as
+                                calculating averages.</p>
+                        </div>
+
+                        <!-- NoSQL JSON Structure -->
+                        <div style="width: 45%; text-align: left;">
+                            <h3 style="font-size: 14pt;">NoSQL Query & Aggregation</h3>
+                            <pre><code class="javascript">
+                // JavaScript to query IndexedDB and calculate average harvest days
+                let db; // Assume `db` is an open IndexedDB instance
+                
+                // Query to get data from IndexedDB
+                let transaction = db.transaction(['Crops'], 'readonly');
+                let objectStore = transaction.objectStore('Crops');
+                let request = objectStore.getAll();
+                
+                request.onsuccess = function(event) {
+                    let crops = event.target.result;
+                
+                    // Example of processing data to calculate average harvest days
+                    let totalHarvestDays = crops.reduce((sum, crop) => {
+                        let plantingDate = new Date(crop.PlantingDate);
+                        let harvestDate = new Date(crop.HarvestDate);
+                        let days = (harvestDate - plantingDate) / (1000 * 60 * 60 * 24);
+                        return sum + days;
+                    }, 0);
+                
+                    let avgHarvestDays = totalHarvestDays / crops.length;
+                    console.log('Average Harvest Days:', avgHarvestDays);
+                };
+                            </code></pre>
+                            <p>NoSQL querying returns JSON data, which can be processed with JavaScript for aggregations
+                                such as average calculations.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 style="text-align: center;">NoSQL JSON Structure and Schema Considerations</h2>
+                    <div style="width: 100%; text-align: left; font-size: 10pt;">
+                        <h3 style="font-size: 12pt;">NoSQL JSON: Crops</h3>
+                        <pre><code class="json">
+                {
+                    "Farm:1": {
+                        "Crops": [
+                            {"CropID": "1", "CropName": "Wheat", "PlantingDate": "2024-03-15", "HarvestDate": "2024-08-10"}
+                        ]
+                    },
+                    "Farm:2": {
+                        "Crops": [
+                            {"CropID": "2", "CropName": "Corn", "PlantingDate": "2024-04-01", "HarvestDate": "2024-09-15"}
+                        ]
+                    }
+                }
+                        </code></pre>
+                        <p>Flexible data structure using nested key-value pairs. The schema can vary between documents
+                            and might not be uniform.</p>
+                        <p style="color: red; font-weight: bold;">
+                            ⚠️ <strong>Important:</strong> To ensure accurate processing and aggregation, it's crucial
+                            to know the schema of the JSON data. In NoSQL, since the schema is not enforced, you must
+                            understand and manage it at the application level to maintain consistency and correctness in
+                            data handling.
+                        </p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 style="text-align: center;">Evaluating NoSQL Data Modeling</h2>
+                    <div
+                        style="display: flex; justify-content: space-around; align-items: flex-start; font-size: 12pt;">
+
+                        <!-- Pros -->
+                        <div style="width: 45%; text-align: left;">
+                            <h3 style="font-size: 14pt; color: green;">Pros</h3>
+                            <ul style="font-size: 12pt; list-style-type: disc; margin-left: 20px;">
+                                <li><strong>Flexible Schema:</strong> Allows for varying structures and rapid schema
+                                    changes.</li>
+                                <li><strong>Nested Data:</strong> Can model complex hierarchical relationships within a
+                                    single document.</li>
+                                <li><strong>Efficient Reads:</strong> Reduces the need for joins by storing related data
+                                    together.</li>
+                                <li><strong>Scalability:</strong> Easily scales horizontally to handle large volumes of
+                                    data.</li>
+                            </ul>
+                        </div>
+
+                        <!-- Cons -->
+                        <div style="width: 45%; text-align: left;">
+                            <h3 style="font-size: 14pt; color: red;">Cons</h3>
+                            <ul style="font-size: 12pt; list-style-type: disc; margin-left: 20px;">
+                                <li><strong>Complex Queries:</strong> Nested structures can make querying and data
+                                    manipulation more complex.</li>
+                                <li><strong>Data Duplication:</strong> May lead to data duplication if not managed
+                                    properly.</li>
+                                <li><strong>Performance Issues:</strong> Large and deeply nested documents can impact
+                                    performance.</li>
+                                <li><strong>Inconsistent Structure:</strong> Variability in document structure can lead
+                                    to data inconsistency.</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </section>
+
+                <section>
+                    <h2 style="text-align: center;">Glossary</h2>
+                    <table style="font-size: 16pt; width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Term</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Definition</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid #ddd; padding: 8px;">Structured Data</td>
+                                <td style="border: 1px solid #ddd; padding: 8px;">
+                                    Data that is organized into a fixed schema or format, such as tables, where each
+                                    entry is defined by columns and rows. Examples include relational databases and
+                                    spreadsheets.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #ddd; padding: 8px;">Unstructured Data</td>
+                                <td style="border: 1px solid #ddd; padding: 8px;">
+                                    Data that does not have a predefined structure or organization, often stored in its
+                                    native format. Examples include text files, emails, social media posts, images,
+                                    videos, and audio files.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #ddd; padding: 8px;">Function Declaration</td>
+                                <td style="border: 1px solid #ddd; padding: 8px;">
+                                    A statement that defines a named function with a specified block of code. Function
+                                    declarations are hoisted, meaning they are available throughout their scope before
+                                    the code is executed.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #ddd; padding: 8px;">Function Assignment</td>
+                                <td style="border: 1px solid #ddd; padding: 8px;">
+                                    Assigning a function to a variable, allowing it to be called using the variable
+                                    name. This can be done using a function expression or an arrow function.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #ddd; padding: 8px;">Function Invoking</td>
+                                <td style="border: 1px solid #ddd; padding: 8px;">
+                                    The process of invoking or calling a function to run the code inside its body. This
+                                    is done by using the function name followed by parentheses (e.g.,
+                                    <code>myFunction()</code>).
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <h2 style="text-align: center;">Glossary</h2>
+                    <table style="font-size: 16pt; width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Term</th>
+                                <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Definition</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border: 1px solid #ddd; padding: 8px;">Map</td>
+                                <td style="border: 1px solid #ddd; padding: 8px;">
+                                    A higher-order function that applies a given function to each item in a collection,
+                                    producing a new collection with the results.
+                                    In data processing, it transforms each element of a dataset according to a specified
+                                    operation.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #ddd; padding: 8px;">Reduce</td>
+                                <td style="border: 1px solid #ddd; padding: 8px;">
+                                    A higher-order function that aggregates elements of a collection into a single
+                                    result by iteratively applying a combining function.
+                                    In data processing, it consolidates data from multiple sources into a summary or
+                                    single value.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #ddd; padding: 8px;">Filter</td>
+                                <td style="border: 1px solid #ddd; padding: 8px;">
+                                    A higher-order function that selects elements of a collection that satisfy a given
+                                    condition, producing a new collection of filtered items.
+                                    In data processing, it isolates data that meets specific criteria.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
             </div>
         </div>
 
@@ -1184,10 +1514,10 @@
                 <a href="./#/1" class="footer-link">Table of Contents</a> |
                 <a href="https://github.com/SE4CPS/dms2" class="footer-link" target="_blank">GitHub Repository</a> |
                 <a href="https://docs.google.com/document/d/1QvGbBsMuztZL3IKExnpe3xFaDeMTWAqI-kofT1y_sBE/edit?pli=1"
-                    class="footer-link" target="_blank">Docs</a>
+                    class="footer-link" target="_blank">Docs</a> |
+                <a href="#" class="footer-link" onclick="Reveal.slide(Reveal.getTotalSlides())">Glossary</a>
             </p>
         </div>
-
 
         <!-- Include Reveal.js from CDN -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
