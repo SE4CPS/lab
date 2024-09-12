@@ -2746,12 +2746,16 @@ print('Checksum:', checksum)
                     </ul>
                 </section>
 
+                <section>
+                    <h2>Please start the computer / browser</h2>
+                </section>
+
                 <section
                     data-background-image="https://t3.ftcdn.net/jpg/08/41/44/38/360_F_841443893_p8GvrNId9DJvJnzshjN3JfulvNTvr0tN.jpg"
                     data-background-size="cover" data-background-position="center" style="color: white; padding: 20px;">
                     <!-- Text Container with Semi-Transparent Background -->
                     <div
-                        style="background-color: rgba(0, 0, 0, 0.6); padding: 20px; border-radius: 8px; width: fit-content; margin: auto;">
+                        style="background-color: rgba(0, 0, 0, 0.8); padding: 20px; border-radius: 8px; width: fit-content; margin: auto;">
                         <h2>Flower Store</h2>
                         <ul>
                             <li><strong>Name:</strong> The flower's common name</li>
@@ -2759,8 +2763,15 @@ print('Checksum:', checksum)
                             <li><strong>Price:</strong> The selling price per stem or bunch</li>
                             <li><strong>Description:</strong> Optional details about the flower</li>
                         </ul>
-                        <p><strong>What flower object model do you recommend?</strong></p>
+                        <br>
+                        <a href="https://jsoncrack.com/editor" target="_blank"><strong>Please recommend a data
+                                model</strong></a>
                     </div>
+                </section>
+
+                <section style="display: flex; align-items: center; justify-content: center; height: 100%;">
+                    <iframe src="https://docs.google.com/document/d/1QvGbBsMuztZL3IKExnpe3xFaDeMTWAqI-kofT1y_sBE/edit"
+                        style="border: none; width: 100%; height: 100%;"></iframe>
                 </section>
 
                 <section>
@@ -2773,13 +2784,243 @@ print('Checksum:', checksum)
                 </section>
 
                 <section>
-                    <h3>Create the Database</h3>
-                    <pre><code>use flowerStore</code></pre>
+                    <h3>Create Database</h3>
+                    <pre><code>use flowerDatabase</code></pre>
                 </section>
 
                 <section>
-                    <h3>Create the Collection</h3>
-                    <pre><code>db.createCollection("flowers")</code></pre>
+                    <h3>Create Collection</h3>
+                    <pre><code>db.createCollection("flowerCollection")</code></pre>
+                </section>
+
+                <section>
+                    <h3>Add one Flower</h3>
+                    <pre><code>
+                  db.flowerCollection.insertOne({
+                    name: "Orchid",
+                    color: "Purple",
+                    price: 4.0,
+                    stock: 25
+                  });
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Add many Flowers</h3>
+                    <pre><code>
+                  db.flowerCollection.insertMany([
+                    { name: "Rose", color: "Red", price: 2.5, stock: 50 },
+                    { name: "Tulip", color: "Yellow", price: 1.5, stock: 30 },
+                    { name: "Lily", color: "White", price: 3.0, stock: 20 },
+                    { name: "Daisy", color: "Pink", price: 1.2, stock: 40 }
+                  ]);
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Data Quality and Integrity</h3>
+                    <p>Are all required fields present for each flower?</p>
+                    <pre><code>
+    [
+        { name: "Daisy", color: "Pink", price: 1.2, stock: 40 }
+    ];
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Set Default Value</h3>
+                    <pre><code>
+    db.flowersCollection.updateMany(
+    { $or: [ 
+        { description: { $exists: false } }, 
+        { description: { $eq: undefined } } 
+        ] 
+    },
+    { $set: { description: "unset" } }
+    );
+                    </code></pre>
+                </section>
+
+                <section>
+                    <table style="font-size: 12pt;">
+                        <thead>
+                            <tr>
+                                <th>Operation</th>
+                                <th>Command</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Create</td>
+                                <td><code>db.collection.insertOne(document)</code></td>
+                                <td>Inserts a single document into the collection.</td>
+                            </tr>
+                            <tr>
+                                <td>Create</td>
+                                <td><code>db.collection.insertMany([document1, document2, ...])</code></td>
+                                <td>Inserts multiple documents into the collection.</td>
+                            </tr>
+                            <tr>
+                                <td>Read</td>
+                                <td><code>db.collection.find(query)</code></td>
+                                <td>Finds documents that match the query.</td>
+                            </tr>
+                            <tr>
+                                <td>Read</td>
+                                <td><code>db.collection.findOne(query)</code></td>
+                                <td>Finds a single document that matches the query.</td>
+                            </tr>
+                            <tr>
+                                <td>Update</td>
+                                <td><code>db.collection.updateOne(filter, update)</code></td>
+                                <td>Updates a single document that matches the filter.</td>
+                            </tr>
+                            <tr>
+                                <td>Update</td>
+                                <td><code>db.collection.updateMany(filter, update)</code></td>
+                                <td>Updates multiple documents that match the filter.</td>
+                            </tr>
+                            <tr>
+                                <td>Delete</td>
+                                <td><code>db.collection.deleteOne(filter)</code></td>
+                                <td>Deletes a single document that matches the filter.</td>
+                            </tr>
+                            <tr>
+                                <td>Delete</td>
+                                <td><code>db.collection.deleteMany(filter)</code></td>
+                                <td>Deletes multiple documents that match the filter.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section style="display: flex; align-items: center; justify-content: center; height: 100%;">
+                    <h5>How to <span style="text-decoration: underline;">find all flowers</span> that
+                        cost more than $20 in MongoDB?</h5>
+                    <iframe src="https://docs.google.com/document/d/1QvGbBsMuztZL3IKExnpe3xFaDeMTWAqI-kofT1y_sBE/edit"
+                        style="border: none; width: 100%; height: 100%;"></iframe>
+                </section>
+
+                <section style="display: flex; align-items: center; justify-content: center; height: 100%;">
+                    <h5>How to <span style="text-decoration: underline;">find the first flower</span> that cost more than $20 in MongoDb?</h5>
+                    <iframe src="https://docs.google.com/document/d/1QvGbBsMuztZL3IKExnpe3xFaDeMTWAqI-kofT1y_sBE/edit"
+                        style="border: none; width: 100%; height: 100%;"></iframe>
+                </section>
+
+                <section>
+                    <table style="font-size: 12pt;">
+                        <thead>
+                            <tr>
+                                <th>Keyword</th>
+                                <th>Description</th>
+                                <th>Use Case</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>$or</code></td>
+                                <td>Specifies that at least one of the conditions must be true.</td>
+                                <td>Find documents where either condition1 or condition2 is true.</td>
+                            </tr>
+                            <tr>
+                                <td><code>$and</code></td>
+                                <td>Specifies that all conditions must be true.</td>
+                                <td>Find documents where both condition1 and condition2 are true.</td>
+                            </tr>
+                            <tr>
+                                <td><code>$in</code></td>
+                                <td>Matches any of the values specified in an array.</td>
+                                <td>Find documents where the field contains any value from a list.</td>
+                            </tr>
+                            <tr>
+                                <td><code>$exists</code></td>
+                                <td>Checks for the existence of a field.</td>
+                                <td>Find documents where a field either exists or does not exist.</td>
+                            </tr>
+                            <tr>
+                                <td><code>$gt</code></td>
+                                <td>Matches values that are greater than a specified value.</td>
+                                <td>Find documents where a field's value is greater than a given value.</td>
+                            </tr>
+                            <tr>
+                                <td><code>$lt</code></td>
+                                <td>Matches values that are less than a specified value.</td>
+                                <td>Find documents where a field's value is less than a given value.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <table style="font-size: 12pt;">
+                        <thead>
+                            <tr>
+                                <th>Keyword</th>
+                                <th>Description</th>
+                                <th>Use Case</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>$regex</code></td>
+                                <td>Performs pattern matching using regular expressions.</td>
+                                <td>Find documents where a field matches a given regular expression.</td>
+                            </tr>
+                            <tr>
+                                <td><code>$not</code></td>
+                                <td>Inverts the effect of a query expression.</td>
+                                <td>Find documents that do not match a specific condition.</td>
+                            </tr>
+                            <tr>
+                                <td><code>$all</code></td>
+                                <td>Matches arrays that contain all the specified elements.</td>
+                                <td>Find documents where an array field contains all specified values.</td>
+                            </tr>
+                            <tr>
+                                <td><code>$ne</code></td>
+                                <td>Matches all values that are not equal to a specified value.</td>
+                                <td>Find documents where a field is not equal to a given value.</td>
+                            </tr>
+                            <tr>
+                                <td><code>$size</code></td>
+                                <td>Matches any array with the specified number of elements.</td>
+                                <td>Find documents where an array field has a specific size.</td>
+                            </tr>
+                            <tr>
+                                <td><code>$type</code></td>
+                                <td>Matches documents if a field is of a specific data type.</td>
+                                <td>Find documents where a field is of a certain type (e.g., string, number).</td>
+                            </tr>
+                            <tr>
+                                <td><code>$expr</code></td>
+                                <td>Allows the use of aggregation expressions within the query language.</td>
+                                <td>Find documents by evaluating complex expressions involving multiple fields.</td>
+                            </tr>
+                            <tr>
+                                <td><code>$geoWithin</code></td>
+                                <td>Selects documents with geospatial data within a specified geometry.</td>
+                                <td>Find documents within a certain geographical area.</td>
+                            </tr>
+                            <tr>
+                                <td><code>$mod</code></td>
+                                <td>Performs a modulo operation on the value of a field and selects documents with a
+                                    specified remainder.</td>
+                                <td>Find documents where the field value, divided by a divisor, has a specific
+                                    remainder.</td>
+                            </tr>
+                            <tr>
+                                <td><code>$text</code></td>
+                                <td>Performs a text search on content indexed with a text index.</td>
+                                <td>Find documents that match a text search query.</td>
+                            </tr>
+                            <tr>
+                                <td><code>$where</code></td>
+                                <td>Matches documents that satisfy a JavaScript expression.</td>
+                                <td>Find documents based on a custom JavaScript function.</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </section>
 
                 <section>
