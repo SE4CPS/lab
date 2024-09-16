@@ -120,7 +120,9 @@
                                 </tr>
                                 <tr style="color: #ccc;">
                                     <td style="padding: 6px; border: 1px solid #666;">4 (Sep 17, 19)</td>
-                                    <td style="padding: 6px; border: 1px solid #666;">Data Ingestion and Processing</td>
+                                    <td style="padding: 6px; border: 1px solid #666;"><a href="#/225"
+                                            style="color: #ccc; text-decoration: none; cursor: pointer;">Data Ingestion
+                                            and Processing &#x1f517;</a></td>
                                     <td style="padding: 6px; border: 1px solid #666;"></td>
                                     <td style="padding: 6px; border: 1px solid #666;"></td>
                                 </tr>
@@ -2797,7 +2799,7 @@ print('Checksum:', checksum)
                     <p>Data is up-to-date and available when needed</p>
                     <p class="fragment" data-fragment-index="1"><strong>CAP Theorem &#129300;</strong></p>
                 </section>
-                
+
                 <section>
                     <h2>How to Maintain Data Timeliness?</h2>
                     <p class="fragment" data-fragment-index="1"><strong>Distribute data</strong></p>
@@ -3263,6 +3265,240 @@ print('Checksum:', checksum)
                         <li>How would you assess the completeness of data for a reporting task?</li>
                         <li>What techniques would you use to ensure data quality during migration between systems?</li>
                     </ol>
+                </section>
+
+                <section>
+                    <h2>Data Ingestion and Processing</h2>
+                </section>
+
+                <section>
+                    <h2>Today</h2>
+                    <ul>
+                        <li>Practice NoSQL Queries</li>
+                        <li>Why Data?</li>
+                        <li>Ingestion (Extract)</li>
+                        <li>Processing (Transform)</li>
+                        <li>Loading (Load)</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2 style="text-align: center;">IndexedDB: Query 1</h2>
+                    <p style="text-align: center;">How to open a connection to an IndexedDB database called
+                        "BookStore"?</p>
+                </section>
+
+                <section>
+                    <pre><code>
+    const request = indexedDB.open("BookStore", 1);
+    request.onerror = function(event) {
+        console.log("Error opening database");
+    };
+    request.onsuccess = function(event) {
+        const db = event.target.result;
+        console.log("Database opened successfully");
+    };
+                      </code></pre>
+                </section>
+
+                <section>
+                    <h2 style="text-align: center;">IndexedDB: Query 2</h2>
+                    <p style="font-size: 18pt; text-align: center;">How can you create an object store for "Books" with
+                        "bookId" as the key?</p>
+                </section>
+
+                <section>
+                <pre><code>
+    request.onupgradeneeded = function(event) {
+        const db = event.target.result;
+        const objectStore = db.createObjectStore("Books", { keyPath: "bookId" });
+        console.log("Object store 'Books' created");
+    };
+                      </code></pre>
+                </section>
+
+                <section>
+                    <h2 style="text-align: center;">IndexedDB: Query 3</h2>
+                    <p style="font-size: 18pt; text-align: center;">How to add a new book to the "Books" object store?
+                    </p>
+                </section>
+
+                <section>
+                        <pre><code>
+    const transaction = db.transaction(["Books"], "readwrite");
+    const objectStore = transaction.objectStore("Books");
+    const request = objectStore.add({ bookId: 1, title: "...", author: "..." });
+    request.onsuccess = function(event) {
+        console.log("Book added successfully");
+    };
+                      </code></pre>
+                </section>
+
+                <section>
+                    <p style="text-align: center;">How do you create a database in MongoDB called "BookStore"?</p>
+                </section>
+
+                <section>
+                        <pre><code>
+    use BookStore;
+                      </code></pre>
+                </section>
+
+                <section>
+                    <h2 style="text-align: center;">MongoDB: Query 2</h2>
+                    <p style="font-size: 18pt; text-align: center;">How can you create a collection called "Books" in
+                        the "BookStore" database?</p>
+                </section>
+
+                <section>
+                        <pre><code>
+    db.createCollection("Books");
+                      </code></pre>
+                </section>
+
+                <section>
+                    <h2 style="text-align: center;">MongoDB: Query 3</h2>
+                    <p style="font-size: 18pt; text-align: center;">How do you insert a new book into the "Books"
+                        collection?</p>
+                </section>
+
+                <section>
+                        <pre><code>
+    db.Books.insertOne({
+        title: "New Book",
+        author: "Author X",
+        price: 19.99,
+        copiesSold: 500
+    });
+                      </code></pre>
+                </section>
+
+                <section>
+                    <h2>Today</h2>
+                    <ul>
+                        <li>Practice NoSQL Queries &check;</li>
+                        <li>Why Data?</li>
+                        <li>Ingestion (Extract)</li>
+                        <li>Processing (Transform)</li>
+                        <li>Loading (Load)</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2 style="text-align: center; color: #2a9d8f;">Why Data? To Make Better Decisions</h2>
+                    <div
+                        style="display: flex; flex-wrap: wrap; justify-content: space-around; text-align: left; font-size: 20pt; padding: 20px;">
+                        <div style="min-width: 250px; padding: 10px;">
+                            <ul style="list-style-type: none; padding-left: 0;">
+                                <li style="margin-bottom: 10px; color: #264653;">&#10003; Business Decisions</li>
+                                <li style="margin-bottom: 10px; color: #264653;">&#10003; Maintenance Decisions</li>
+                                <li style="margin-bottom: 10px; color: #264653;">&#10003; Operational Decisions</li>
+                                <li style="margin-bottom: 10px; color: #264653;">&#10003; Strategic Decisions</li>
+                                <li style="margin-bottom: 10px; color: #264653;">&#10003; Resource Allocation Decisions
+                                </li>
+                            </ul>
+                        </div>
+                        <div style="min-width: 250px; padding: 10px;">
+                            <ul style="list-style-type: none; padding-left: 0;">
+                                <li style="margin-bottom: 10px; color: #264653;">&#10003; Financial Decisions</li>
+                                <li style="margin-bottom: 10px; color: #264653;">&#10003; Marketing Decisions</li>
+                                <li style="margin-bottom: 10px; color: #264653;">&#10003; Risk Management Decisions</li>
+                                <li style="margin-bottom: 10px; color: #264653;">&#10003; Product Development Decisions
+                                </li>
+                                <li style="margin-bottom: 10px; color: #264653;">&#10003; Customer Satisfaction
+                                    Decisions</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 style="text-align: center; color: #2a9d8f;">We Collect Data to Answer Questions</h2>
+                    <div style="font-size: 18pt; margin-top: 20px; text-align: center;">
+                        <p><strong style="color: #e76f51;">Key Insight:</strong> Data is collected to provide insights
+                            and solutions.</p>
+                        <p style="margin-top: 20px;">
+                            <strong>But first,</strong> we need to <span style="color: #264653; font-weight: bold;">ask
+                                the right questions</span>.
+                        </p>
+                        <p style="margin-top: 20px;">Without a clear question, the data may lack purpose or direction.
+                        </p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 style="text-align: center; color: #2a9d8f;">When Should We Perform Equipment Maintenance?</h2>
+                    <div style="font-size: 18pt; margin-top: 20px;">
+                        <p><strong style="color: #e76f51;">Data Insights:</strong></p>
+                        <ul style="list-style-type: none; padding-left: 0;">
+                            <li style="margin-bottom: 10px;">
+                                <span style="color: #264653;">&#10003;</span> Monitor sensor data from equipment.
+                            </li>
+                            <li style="margin-bottom: 10px;">
+                                <span style="color: #264653;">&#10003;</span> Analyze historical maintenance records.
+                            </li>
+                            <li style="margin-bottom: 10px;">
+                                <span style="color: #264653;">&#10003;</span> Use predictive maintenance algorithms.
+                            </li>
+                        </ul>
+                        <p style="margin-top: 20px; font-style: italic; color: #2a9d8f;">
+                            <strong>Data-driven decision:</strong> Schedule maintenance proactively to prevent costly
+                            breakdowns and downtime.
+                        </p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 style="text-align: center; color: #2a9d8f;">Who Are Our Most Profitable Customers?</h2>
+                    <div style="font-size: 18pt; margin-top: 20px;">
+                        <p><strong style="color: #e76f51;">Data Insights:</strong></p>
+                        <ul style="list-style-type: none; padding-left: 0;">
+                            <li style="margin-bottom: 10px;">
+                                <span style="color: #264653;">&#10003;</span> Analyze customer lifetime value (CLV).
+                            </li>
+                            <li style="margin-bottom: 10px;">
+                                <span style="color: #264653;">&#10003;</span> Segment customers based on purchasing
+                                behavior.
+                            </li>
+                            <li style="margin-bottom: 10px;">
+                                <span style="color: #264653;">&#10003;</span> Track engagement and retention rates.
+                            </li>
+                        </ul>
+                        <p style="margin-top: 20px; font-style: italic; color: #2a9d8f;">
+                            <strong>Data-driven decision:</strong> Focus marketing efforts on high-value customer
+                            segments to maximize profitability.
+                        </p>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 style="text-align: center; color: #2a9d8f;">Most / Least Bought Genres?</h2>
+                    <p style="font-size: 18pt; text-align: center; margin-top: 20px;">
+                        Using data from our book collection, we want to determine:
+                    </p>
+                    <ul style="font-size: 18pt; list-style-type: none; text-align: center; padding: 0;">
+                        <li style="margin-bottom: 20px;">&#10003; Which genre has sold the most copies?</li>
+                        <li style="margin-bottom: 20px;">&#10003; Which genre has sold the least copies?</li>
+                    </ul>
+                    <p style="font-size: 18pt; text-align: center;">
+                        We can find this by analyzing the total copies sold for each genre.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Today</h2>
+                    <ul>
+                        <li>Why Data? &check;</li>
+                        <li>Ingestion (Extract)</li>
+                        <li>Processing (Transform)</li>
+                        <li>Loading (Load)</li>
+                    </ul>
+                </section>
+
+                <section data-background-color="white">
+                    <img style="width: 100%;"
+                        src="https://miro.medium.com/v2/resize:fit:828/format:webp/0*2YK8HWDX6dWNAWtl.png"
+                        alt="Data Engineering">
                 </section>
 
                 <section>
