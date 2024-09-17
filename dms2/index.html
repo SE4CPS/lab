@@ -3272,7 +3272,7 @@ print('Checksum:', checksum)
                 </section>
 
                 <section>
-                    <h2>Today</h2>
+                    <h2>This week</h2>
                     <ul>
                         <li>Practice NoSQL Queries</li>
                         <li>Why Data?</li>
@@ -3374,7 +3374,7 @@ print('Checksum:', checksum)
                 </section>
 
                 <section>
-                    <h2>Today</h2>
+                    <h2>This week</h2>
                     <ul>
                         <li>Practice NoSQL Queries &check;</li>
                         <li>Why Data?</li>
@@ -3486,8 +3486,9 @@ print('Checksum:', checksum)
                 </section>
 
                 <section>
-                    <h2>Today</h2>
+                    <h2>This week</h2>
                     <ul>
+                        <li>Practice NoSQL Queries &check;</li>
                         <li>Why Data? &check;</li>
                         <li>Ingestion (Extract)</li>
                         <li>Processing (Transform)</li>
@@ -3509,11 +3510,135 @@ print('Checksum:', checksum)
                     <h2>data extraction first or user interface first?</h2>
                 </section>
 
-                <section style="position: relative; height: 100vh; background-image: url('https://media.licdn.com/dms/image/C4E12AQF4yHIikE0qlw/article-cover_image-shrink_600_2000/0/1608107904573?e=2147483647&v=beta&t=8Vzwf8Rks1SYUuqoqpNejpdWgREAXk3_OCBdD8Hcw1A'); background-size: cover; background-position: center;">
-                </section>
-                
                 <section>
-                    <h2>Please review the project, homework 2, lab 1+2, and reading list</h2>
+                    <h2>today - data extraction first to evaluate the data quality</h2>
+                </section>
+
+                <section>
+                    <h2>What is Data Quality?</h2>
+                </section>
+
+                <section>
+                    <ol>
+                        <li><strong>Integrity:</strong> Data maintains accuracy and consistency</li>
+                        <li><strong>Validity:</strong> Data adheres to established formats and rules</li>
+                        <li><strong>Consistency:</strong> Data is consistent across datasets</li>
+                        <li><strong>Accuracy:</strong> Data correctly reflects real-world conditions</li>
+                        <li><strong>Completeness:</strong> All necessary data is included</li>
+                        <li><strong>Timeliness:</strong> Data is available when needed; current conditions</li>
+                        <li><strong>Uniqueness:</strong> No unnecessary duplicates; each entry is distinct</li>
+                    </ol>
+                </section>
+
+                <section
+                    style="position: relative; height: 100vh; background-image: url('https://media.licdn.com/dms/image/C4E12AQF4yHIikE0qlw/article-cover_image-shrink_600_2000/0/1608107904573?e=2147483647&v=beta&t=8Vzwf8Rks1SYUuqoqpNejpdWgREAXk3_OCBdD8Hcw1A'); background-size: cover; background-position: center;">
+                </section>
+
+                <section>
+                    <h2 style="text-align: center;">MongoDB Connection String</h2>
+                    <p style="font-size: 18pt; text-align: center;">Use the following connection string to connect to
+                        your MongoDB cluster:</p>
+                    <pre style="font-size: 16pt; text-align: center; color: black; border-radius: 5px;">
+mongodb+srv://&lt;db_username&gt;:&lt;db_password&gt;@cluster0.lixbqmp.mongodb.net/
+                    </pre>
+                    <p style="font-size: 14pt; text-align: center; margin-top: 20px;">
+                        Replace <strong>&lt;db_username&gt;</strong> and <strong>&lt;db_password&gt;</strong> with your
+                        actual database credentials.
+                    </p>
+                </section>
+
+                <section>
+                    <h2>Please Create flower collection</h2>
+                </section>
+
+                <section>
+                    <h2>Please Add flower documents &#x1F33C; </h2>
+                </section>
+
+                <section data-background-color="white">
+                    <img style="width: 65%;"
+                        src="https://miro.medium.com/v2/resize:fit:828/format:webp/0*2YK8HWDX6dWNAWtl.png"
+                        alt="Data Engineering">
+                </section>
+
+                <section>
+                    <h2 style="text-align: center;">Find Incomplete Data</h2>
+                    <pre style="color: black;">
+db.flowerCollection.find({
+$or: [
+    { fieldName: null },
+    { fieldName: "" },
+    { fieldName: "unset" },
+    { fieldName: { $exists: false } }
+]
+}).count();</pre>
+                </section>
+
+                <section>
+                    <h2 style="text-align: center;">Find Duplicate Values</h2>
+                    <pre style="color: black;">
+db.flowerCollection.aggregate([
+    { $group: { _id: "$fieldName", count: { $sum: 1 } } },
+    { $match: { count: { $gt: 1 } } }
+]);</pre>
+                </section>
+
+                <section>
+                    <h2 style="text-align: center;">Find Invalid Field Length</h2>
+                    <pre style="color: black;">
+db.flowerCollection.find({
+    $expr: { $gt: [ { $strLenCP: "$fieldName" }, 50 ] }
+});</pre>
+                </section>
+
+                <section>
+                    <h2 style="text-align: center;">Find Outdated Data</h2>
+                    <pre style="color: black;">
+db.flowerCollection.find({
+    createdAt: { $gte: new Date("2023-01-01"), $lt: new Date("2023-12-31") }
+});</pre>
+                </section>
+
+                <section>
+                    <h2>What else do you recommend?</h2>
+                </section>
+
+                <section>
+                    <h2>This week</h2>
+                    <ul>
+                        <li>Practice NoSQL Queries &check;</li>
+                        <li>Why Data? &check;</li>
+                        <li>Ingestion (Extract) &check;</li>
+                        <li>Processing (Transform) &rarr; Thursday</li>
+                        <li>Loading (Load) &rarr; Thursday</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Project Part 1: Motivation</h2>
+                    <p>Simulate working with large data sets to explore performance optimization in NoSQL databases.
+                        Techniques include read-only flags, indexing, and dedicated object stores.</p>
+                    <p>Using a "Todo List" domain, this project enhances data query performance and teamwork skills.
+                        Alternate domains may be used, provided they maintain the same 'todo' object structure.</p>
+                </section>
+
+                <section>
+                    <h2>Project Part 1: Implementation</h2>
+                    <ol style="font-size: 18pt;">
+                        <li>Create "TodoList" IndexedDB store with 100,000 objects; display on the browser.</li>
+                        <li>Assign 'completed' status to 1,000 objects, others to 'in progress'.</li>
+                        <li>Time and display the reading of all 'completed' status objects.</li>
+                        <li>Apply a read-only flag, remeasure read time for 'completed' tasks.</li>
+                        <li>Index the 'status' field, time read operations for 'completed' tasks.</li>
+                        <li>Establish "TodoListCompleted" store, move all completed tasks, and time reads.</li>
+                    </ol>
+                    <p>Documentation at <a
+                            href="https://developer.mozilla.org/en-US/docs/Web/API/IDBDatabase/createObjectStore">MDN
+                            Web Docs</a>.</p>
+                </section>
+
+                <section>
+                    <h2>Please review <strong>lab 1</strong>, project, homework 2, lab 2, and reading list</h2>
                 </section>
 
                 <!-- REFERENCES -->
