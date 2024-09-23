@@ -138,7 +138,9 @@
                                 </tr>
                                 <tr style="color: #ccc;">
                                     <td style="padding: 6px; border: 1px solid #666;">5 (Sep 24, 26)</td>
-                                    <td style="padding: 6px; border: 1px solid #666;">Database Architecture</td>
+                                    <td style="padding: 6px; border: 1px solid #666;"><a href="#/312"
+                                            style="color: #ccc; text-decoration: none; cursor: pointer;">Database
+                                            Architecture &#x1f517;</a></td>
                                     <td style="padding: 6px; border: 1px solid #666;">Lab 3, HW 3</td>
                                     <td style="padding: 6px; border: 1px solid #666;">CassandraDB</td>
                                 </tr>
@@ -3647,8 +3649,6 @@ db.flowerCollection.find({
                             Web Docs</a>.</p>
                 </section>
 
-                <!-- WIP -->
-
                 <section>
                     <h2>This week</h2>
                     <ul>
@@ -4237,6 +4237,166 @@ db.flowerCollection.find({
                     <p>Documentation at <a
                             href="https://developer.mozilla.org/en-US/docs/Web/API/IDBDatabase/createObjectStore">MDN
                             Web Docs</a>.</p>
+                </section>
+
+                <section>
+                    <h2>Database Architecture</h2>
+                </section>
+
+                <section>
+                    <h2>Today</h2>
+                    <ul>
+                        <li>Homework 1 and Lab 1</li>
+                        <li>Why Database Architecture</li>
+                        <li>Architecture IndexedDB (key-value)</li>
+                        <li>Architecture MongoDB (document)</li>
+                        <li>Architecture CassandraDB (columnar)</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Review Homework 1</h2>
+                </section>
+
+                <section>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Question</th>
+                                <th>Answer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>What is a key feature of unstructured data in NoSQL databases?</td>
+                                <td>Data can be stored without a fixed schema.</td>
+                            </tr>
+                            <tr>
+                                <td>Which of the following is an example of unstructured data?</td>
+                                <td>A JSON document containing varied fields for different products.</td>
+                            </tr>
+                            <tr>
+                                <td>Which NoSQL database type is most commonly used for storing unstructured data?</td>
+                                <td>Document database.</td>
+                            </tr>
+                            <tr>
+                                <td>Why are NoSQL databases often preferred for storing unstructured data?</td>
+                                <td>They allow flexible, schema-less data storage.</td>
+                            </tr>
+                            <tr>
+                                <td>What does the 'C' in the CAP theorem stand for?</td>
+                                <td>Consistency.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Question</th>
+                                <th>Explanation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Please explain in a brief paragraph, according to the CAP theorem, which two
+                                    properties can be guaranteed simultaneously in a distributed database?</td>
+                                <td>In the context of the CAP theorem, only two out of the three properties —
+                                    Consistency, Availability, and Partition Tolerance — can be fully achieved at the
+                                    same time. Typically, systems need to choose between Consistency and Availability
+                                    when Partition Tolerance is a necessity.</td>
+                            </tr>
+                            <tr>
+                                <td>Please explain in a brief paragraph, in the context of the CAP theorem, what does
+                                    Partition Tolerance refer to?</td>
+                                <td>Partition Tolerance in the CAP theorem means the system continues to operate despite
+                                    an arbitrary number of messages being dropped or delayed by the network between
+                                    nodes. Essentially, the system can sustain any amount of network failure that
+                                    doesn't result in a failure of the entire network.</td>
+                            </tr>
+                            <tr>
+                                <td>Please explain in a brief paragraph, which property is often sacrificed in a
+                                    distributed system to achieve Availability and Partition Tolerance?</td>
+                                <td>Consistency is often sacrificed in a distributed system to achieve Availability and
+                                    Partition Tolerance, leading to eventual consistency rather than guaranteed
+                                    consistency at all times.</td>
+                            </tr>
+                            <tr>
+                                <td>Please explain in a brief paragraph, what does the 'A' in ACID stand for?</td>
+                                <td>The 'A' in ACID stands for Atomicity. This property ensures that all parts of a
+                                    transaction are treated as a single, indivisible unit, and either all of its
+                                    operations are completed without error, or none of them are applied.</td>
+                            </tr>
+                            <tr>
+                                <td>Please explain in a brief paragraph, which ACID property ensures that once a
+                                    transaction is committed, it cannot be undone?</td>
+                                <td>The ACID property that ensures once a transaction is committed it cannot be undone
+                                    is Durability. This means that once a transaction has been committed, it will remain
+                                    so, even in the event of power loss, crashes, or errors.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <h2>Review Lab 1</h2>
+                </section>
+
+                <section data-background-image="./lab1.png" data-background-size="cover"
+                    data-background-position="center">
+                </section>
+
+                <section>
+                    <pre><code>
+// Unit tests
+console.assert(typeof gpsCoordinates === "number", "invalid GPS coordinates");
+console.assert(Array.isArray(sensorReadings), "invalid sensor readings");
+console.assert(typeof cropPhoto === "string", "invalid photo");
+console.assert(typeof farmerNote === "string", "invalid farmer note");
+console.assert(timestamp instanceof Date, "invalid timestamp");
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code>
+// Unit tests
+console.assert(typeof gpsCoordinates === "number" && !isNaN(gpsCoordinates), "GPS coordinates must be a valid number");
+console.assert(Array.isArray(sensorReadings) && sensorReadings.length > 0, "Sensor readings must be a non-empty array");
+console.assert(typeof cropPhoto === "string" && cropPhoto.trim() !== "", "Crop photo path must be a non-empty string");
+console.assert(typeof farmerNote === "string" && farmerNote.trim() !== "", "Farmer note must be a non-empty string");
+console.assert(timestamp instanceof Date && !isNaN(timestamp.valueOf()), "Timestamp must be a valid Date object");
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code lang="javascript">
+// Unit tests https://jestjs.io/
+test('GPS coordinates should be a valid number', () => {
+    const gpsCoordinates = getGPS(); // Function to retrieve GPS coordinates
+    expect(typeof gpsCoordinates).toBe('number');
+    expect(gpsCoordinates).not.toBeNaN();
+});
+                </code></pre>
+                </section>
+
+                <section>
+                    <h2>Lessons for Lab 1</h2>
+                    <ul>
+                        <li>Auto-increment adds objects upon each page reload</li>
+                        <li>Automatically add UUIDs to new entries</li>
+                        <li>Automatically add created, updated timestamps to new entries</li>
+                        <li>Testing is effective only with scripts embedded in the HTML page</li>
+                        <li>GPS data includes latitude, longitude, and altitude</li>
+                        <li>Add good default values for empty fields (e.g., "not available")</li>
+                        <li>Methods for displaying multiple objects vary across browsers</li>
+                        <li>Browser compatibility affects functionality</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Review Homework 1</h2>
                 </section>
 
                 <section>
