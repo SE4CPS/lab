@@ -4456,7 +4456,7 @@ test('GPS coordinates should be a valid number', () => {
                         <li>2021: Neo4j 4.1: data visualization and performance.</li>
                     </ul>
                 </section>
-                
+
                 <section>
                     <p>Table &lt; Tree &lt; Graph</p>
                 </section>
@@ -4623,7 +4623,7 @@ test('GPS coordinates should be a valid number', () => {
                             </tr>
                         </tbody>
                     </table>
-                </section>                
+                </section>
 
                 <section data-background-color="white">
                     <img src="https://dist.neo4j.com/wp-content/uploads/20171107030940/meta-neo4j-graph-visualization-exploration.png"
@@ -4633,6 +4633,113 @@ test('GPS coordinates should be a valid number', () => {
                 <section data-background-color="white">
                     <img src="https://dist.neo4j.com/wp-content/uploads/20210514132624/0rRg0s-ZE8VAn0k3P.jpg"
                         alt="Neo4j Graph Visualization" style="max-width: 100%; height: auto;">
+                </section>
+
+                <section>
+                    <h2>Neo4j Query Language: Cypher</h2>
+                </section>
+
+                <section>
+                    <pre><code>
+                CREATE (f:Flower {name: 'Rose', color: 'Red', type: 'Perennial'})
+                RETURN f
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code>
+                MATCH (f:Flower {name: 'Rose'})
+                RETURN f
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code>
+                MATCH (f:Flower {name: 'Rose'})
+                SET f.color = 'Pink'
+                RETURN f
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code>
+                MATCH (f:Flower {name: 'Rose'})
+                DELETE f
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code>
+                CREATE (f:Flower {name: 'Rose', color: 'Red', type: 'Perennial'})
+                RETURN f
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code>
+                MATCH (f:Flower {name: 'Rose'})
+                RETURN f.color
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code>
+                MATCH (f:Flower)
+                WHERE f.color = 'Red'
+                RETURN f.name, f.type
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code>
+                MATCH (f:Flower)
+                RETURN count(f) AS TotalFlowers
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code>
+                CREATE (f:Flower {name: 'Rose', color: 'Red', type: 'Perennial'}) 
+                CREATE (f2:Flower {name: 'Tulip', color: 'Yellow', type: 'Annual'})
+                CREATE (f)-[:RELATED_TO]->(f2)
+                RETURN f, f2
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code>
+                MATCH (f:Flower {name: 'Rose'})-[:RELATED_TO]->(related)
+                RETURN related.name AS RelatedFlower
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code>
+                MATCH (f:Flower {name: 'Tulip'})-[:RELATED_TO]->(related)
+                RETURN f.name, related.name
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code>
+                MATCH (f:Flower)-[:RELATED_TO]->(related)
+                RETURN f.name AS Flower, collect(related.name) AS RelatedFlowers
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code>
+                MATCH (f:Flower {name: 'Rose'})-[:RELATED_TO]->(r:Flower)
+                SET r.color = 'Pink'
+                RETURN f, r
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code>
+                MATCH (f:Flower {name: 'Rose'})-[:HAS_PETAL]->(p:Petal)
+                RETURN p.color
+                    </code></pre>
                 </section>
 
                 <section>
