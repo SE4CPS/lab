@@ -4449,7 +4449,7 @@ test('GPS coordinates should be a valid number', () => {
                     <ul>
                         <li>2007: Neo4j officially released as open-source project</li>
                         <li>2010: First Neo4j conference, GraphConnect</li>
-                        <li>2013: Neo4j 2.0 released: ACID transactions / Cypher</li>
+                        <li>2013: Neo4j 2.0 released: ACID transactions / <span style="color: green;">Cypher</span></li>
                         <li>2015: Neo4j launched its cloud offering, Neo4j Aura.</li>
                         <li>2018: Neo4j 3.5: “Graph Data Science.”</li>
                         <li>2020: Neo4j 4.0: multi-database, scalability.</li>
@@ -4459,6 +4459,82 @@ test('GPS coordinates should be a valid number', () => {
 
                 <section>
                     <p>Table &lt; Tree &lt; Graph</p>
+                </section>
+
+                <section>
+                    <p>Why Graph Data Model?</p>
+                </section>
+
+                <section data-background-color="white">
+                    <img src="https://c8.alamy.com/comp/2R5R4PW/vector-road-map-of-the-city-of-duren-in-germany-on-a-white-background-2R5R4PW.jpg"
+                        alt="Road Network" style="width: 80%; height: auto;">
+                </section>
+
+                <section data-background-color="white">
+                    <img src="https://dist.neo4j.com/wp-content/uploads/20171107030940/meta-neo4j-graph-visualization-exploration.png"
+                        alt="Neo4j Graph Visualization" style="max-width: 100%; height: auto;">
+                </section>
+
+                <section>
+                    <ul>
+                        <li>Social Networks (e.g., Facebook, LinkedIn)</li>
+                        <li>Supply Chain Management</li>
+                        <li>Recommendation Engines (e.g., Netflix, Amazon)</li>
+                        <li>Biological Networks (e.g., Protein Interaction)</li>
+                        <li>Road and Transport Networks</li>
+                        <li>Telecommunication Networks</li>
+                        <li>Knowledge Graphs</li>
+                        <li>Energy Grids (Power Distribution Networks)</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <ul>
+                        <li>What is the shortest path between two nodes?</li>
+                        <li>Who are the neighbors of a specific node?</li>
+                        <li>Does the graph contain any cycles?</li>
+                        <li>What are the strongly connected components?</li>
+                        <li>Which nodes are within N-hops from a given node?</li>
+                        <li>Which nodes have the highest centrality?</li>
+                        <li>Are there any nodes that match a certain pattern?</li>
+                        <li>What are the communities or clusters in the network?</li>
+                        <li>What are all the possible paths between two nodes?</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Roads Within a 3-Road Radius</h2>
+                    <pre><code>
+                -- Find all roads within three roads (edges) distance from a start node
+                SELECT n1.id AS start_node, n2.id AS second_node, n3.id AS third_node
+                FROM nodes n1
+                JOIN edges e1 ON n1.id = e1.start_node_id
+                JOIN nodes n2 ON e1.end_node_id = n2.id
+                JOIN edges e2 ON n2.id = e2.start_node_id
+                JOIN nodes n3 ON e2.end_node_id = n3.id
+                JOIN edges e3 ON n3.id = e3.start_node_id
+                WHERE n1.name = 'StartIntersection';
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Joins: The Multiplication of Tables</h2>
+                    <p style="font-size: 24px;">SQL Joins multiply tables...</p>
+                    <p style="font-size: 48px;">😔</p>
+                    <p>...resulting in an explosion of rows before filtering!</p>
+                    <p>Example:</p>
+                    <pre><code>
+                SELECT *
+                FROM table1
+                JOIN table2 ON table1.id = table2.id;
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Document-Based DBs: Avoid Modeling Relationships</h2>
+                    <p>Document databases like MongoDB prioritize flexibility and performance for storing unstructured
+                        data.</p>
+                    <p style="font-size: 24px;">❌ Avoid trying to replicate relational DB modeling.</p>
                 </section>
 
                 <section>
@@ -4626,11 +4702,6 @@ test('GPS coordinates should be a valid number', () => {
                 </section>
 
                 <section data-background-color="white">
-                    <img src="https://dist.neo4j.com/wp-content/uploads/20171107030940/meta-neo4j-graph-visualization-exploration.png"
-                        alt="Neo4j Graph Visualization" style="max-width: 100%; height: auto;">
-                </section>
-
-                <section data-background-color="white">
                     <img src="https://dist.neo4j.com/wp-content/uploads/20210514132624/0rRg0s-ZE8VAn0k3P.jpg"
                         alt="Neo4j Graph Visualization" style="max-width: 100%; height: auto;">
                 </section>
@@ -4638,6 +4709,7 @@ test('GPS coordinates should be a valid number', () => {
                 <section>
                     <h2>Neo4j Query Language: Cypher</h2>
                 </section>
+
 
                 <section>
                     <pre><code>
@@ -4665,13 +4737,6 @@ test('GPS coordinates should be a valid number', () => {
                     <pre><code>
                 MATCH (f:Flower {name: 'Rose'})
                 DELETE f
-                    </code></pre>
-                </section>
-
-                <section>
-                    <pre><code>
-                CREATE (f:Flower {name: 'Rose', color: 'Red', type: 'Perennial'})
-                RETURN f
                     </code></pre>
                 </section>
 
@@ -4743,6 +4808,235 @@ test('GPS coordinates should be a valid number', () => {
                 </section>
 
                 <section>
+                    <h2>Another Query Language 😔</h2>
+                </section>
+
+                <section>
+                    <h2>Standardizing Graph Query Language</h2>
+                    <ul>
+                        <li>ISO/IEC 39075:2019 proposes GQL as a unified standard for querying graph databases</li>
+                        <li>Aims to unify Cypher, Gremlin, and SPARQL</li>
+                        <li>Learn more: <a href="https://www.iso.org/standard/76120.html" target="_blank">ISO 76120</a>
+                        </li>
+                    </ul>
+                </section>
+
+                <section
+                    style="font-family: 'Times New Roman', Times, serif; background-color: #f4f4f4; padding: 20px; border: 1px solid #ccc; max-width: 800px; margin: 0 auto; font-size: 18px;">
+                    <h3
+                        style="text-align: center; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid #ccc; padding-bottom: 10px; color: #333; font-size: 18px;">
+                        Case Study II - Supply Chain Optimization
+                    </h3>
+
+                    <h4 style="margin-top: 20px; font-weight: bold; color: #444; font-size: 16px;">Requirements Overview
+                    </h4>
+                    <ul style="line-height: 1.8; color: #555;">
+                        <li><strong>Supplier Relationships:</strong> Complex network of suppliers, distributors, and
+                            manufacturers, requiring real-time tracking of goods flow.</li>
+                        <li><strong>Shipment Tracking:</strong> Monitoring shipments across different regions, requiring
+                            visibility of delays and bottlenecks.</li>
+                        <li><strong>Product Lifecycle:</strong> Tracking the product journey from raw materials to
+                            finished goods, with a need to identify critical path disruptions.</li>
+                        <li><strong>Inventory Optimization:</strong> Real-time data on stock levels across warehouses,
+                            aiming to minimize excess inventory while avoiding stockouts.</li>
+                    </ul>
+                    <p style="margin-top: 30px; text-indent: 40px; font-size: 14px; color: #333;">
+                        Which database type do you recommend?</p>
+                </section>
+
+                <section>
+                    <p>
+                        Why recommend a Graph Database for managing this supply chain network? It is good
+                        in tracking complex, interdependent relationships between suppliers, products, and shipments,
+                        providing real-time insights and uncovering critical issues such as shipment delays or
+                        bottlenecks.
+                    </p>
+                </section>
+
+                <section>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Operation</th>
+                                <th>SQL</th>
+                                <th>IndexedDB</th>
+                                <th>MongoDB</th>
+                                <th>Neo4j</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Create</td>
+                                <td>INSERT INTO table_name (columns) VALUES (values)</td>
+                                <td>objectStore.add(data)</td>
+                                <td>db.collection.insertOne(data)</td>
+                                <td>CREATE (n:Label {properties})</td>
+                            </tr>
+                            <tr>
+                                <td>Read</td>
+                                <td>SELECT * FROM table_name WHERE condition</td>
+                                <td>objectStore.get(key) or objectStore.openCursor()</td>
+                                <td>db.collection.find(query)</td>
+                                <td>MATCH (n:Label) WHERE condition RETURN n</td>
+                            </tr>
+                            <tr>
+                                <td>Update</td>
+                                <td>UPDATE table_name SET column = value WHERE condition</td>
+                                <td>objectStore.put(data)</td>
+                                <td>db.collection.updateOne(query, update)</td>
+                                <td>MATCH (n:Label) WHERE condition SET n.property = value</td>
+                            </tr>
+                            <tr>
+                                <td>Delete</td>
+                                <td>DELETE FROM table_name WHERE condition</td>
+                                <td>objectStore.delete(key)</td>
+                                <td>db.collection.deleteOne(query)</td>
+                                <td>MATCH (n:Label) WHERE condition DELETE n</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Operation</th>
+                                <th>SQL</th>
+                                <th>IndexedDB</th>
+                                <th>MongoDB</th>
+                                <th>Neo4j</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Create Relationship</td>
+                                <td>INSERT INTO relation_table (fk1, fk2) VALUES (id1, id2)</td>
+                                <td>IndexedDB doesn’t support relationships natively</td>
+                                <td>Embed related document or use references (manual handling)</td>
+                                <td>CREATE (a)-[:RELATION]->(b)</td>
+                            </tr>
+                            <tr>
+                                <td>Read Relationship</td>
+                                <td>SELECT * FROM relation_table WHERE fk1 = id1</td>
+                                <td>Manually retrieve related objects</td>
+                                <td>db.collection.aggregate([lookup])</td>
+                                <td>MATCH (a)-[:RELATION]->(b) RETURN b</td>
+                            </tr>
+                            <tr>
+                                <td>Update Relationship</td>
+                                <td>UPDATE relation_table SET fk2 = new_id WHERE fk1 = id1</td>
+                                <td>Manually update linked objects</td>
+                                <td>Manually update references or embedded docs</td>
+                                <td>MATCH (a)-[r:RELATION]->(b) SET r.property = value</td>
+                            </tr>
+                            <tr>
+                                <td>Delete Relationship</td>
+                                <td>DELETE FROM relation_table WHERE fk1 = id1</td>
+                                <td>Manually remove related data</td>
+                                <td>Remove reference or embedded docs manually</td>
+                                <td>MATCH (a)-[r:RELATION]->(b) DELETE r</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <pre><code>
+// Create individual nodes
+CREATE (:Supplier { name: 'Supplier A' })
+
+CREATE (:Product { id: 'P001' })
+
+CREATE (:Manufacturer { name: 'Manufacturer B' })
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code>
+// Create relationships between nodes
+MATCH (s:Supplier { name: 'Supplier A' }),
+        (p:Product { id: 'P001' }),
+        (m:Manufacturer { name: 'Manufacturer B' })
+CREATE (s)-[:SUPPLIES]->(p)-[:PRODUCES]->(m)
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code>
+// Create nodes and relationships
+CREATE (:Supplier {
+    name: 'Supplier A'
+    })-[:SUPPLIES]->(:Product {
+        id: 'P001'
+    })-[:PRODUCES]->(:Manufacturer {
+        name: 'Manufacturer B'
+    })
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code>
+// Find the supplier of a product
+MATCH (s:Supplier)-[:SUPPLIES]->(p:Product {id: 'P001'})
+RETURN s.name
+                    </code></pre>
+                </section>
+
+                <section>
+                    <pre><code>
+MATCH (n)
+DETACH DELETE n
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Please open Neo4j Console</h2>
+                    <p><a href="https://console.neo4j.io" target="_blank">https://console.neo4j.org</a></p>
+                </section>
+
+                <section>
+                    <pre><code>
+// Create Flower Nodes
+CREATE (:Flower { name: 'Rose' })
+CREATE (:Flower { name: 'Tulip' })
+CREATE (:Flower { name: 'Sunflower' })
+CREATE (:Flower { name: 'Daisy' })
+CREATE (:Flower { name: 'Lily' })
+                </code></pre>
+                </section>
+
+                <section>
+                    <pre><code>
+// Create relationships between Flower Nodes
+MATCH (r:Flower {name: 'Rose'}), (t:Flower {name: 'Tulip'})
+CREATE (r)-[:NEIGHBOR]->(t)
+
+MATCH (s:Flower {name: 'Sunflower'}), (d:Flower {name: 'Daisy'})
+CREATE (s)-[:NEIGHBOR]->(d)
+
+MATCH (l:Flower {name: 'Lily'}), (r:Flower {name: 'Rose'})
+CREATE (l)-[:NEIGHBOR]->(r)
+            </code></pre>
+                </section>
+
+                <section>
+                    <pre><code>
+// Find all neighbors of a specific flower
+MATCH (f:Flower {name: 'Rose'})-[:NEIGHBOR]->(neighbor)
+RETURN neighbor.name
+
+// Find all flowers connected by "NEIGHBOR" relationships
+MATCH (f:Flower)-[:NEIGHBOR]->(neighbor)
+RETURN f.name, neighbor.name
+
+// Count how many neighbors each flower has
+MATCH (f:Flower)-[:NEIGHBOR]->(neighbor)
+RETURN f.name, COUNT(neighbor) AS neighbor_count
+                </code></pre>
+                </section>
+
+                <section>
                     <h2>Database Architecture <br> MongoDB (document)</h2>
                 </section>
 
@@ -4763,6 +5057,35 @@ test('GPS coordinates should be a valid number', () => {
                         <li>Fault Tolerance and Recovery: Utilizes replication and backup strategies to
                             ensure high availability and data protection.</li>
                     </ul>
+                </section>
+
+                <section
+                    style="font-family: 'Times New Roman', Times, serif; background-color: #f4f4f4; padding: 20px; border: 1px solid #ccc; max-width: 800px; margin: 0 auto; font-size: 20px;">
+                    <ul style="line-height: 1.8; color: #555;">
+                        <li><strong>Agriculture:</strong> How will sensor data (e.g., soil moisture, weather) be
+                            collected and integrated?</li>
+                        <li><strong>Retail:</strong> How will customer purchase data be tracked and analyzed to optimize
+                            inventory?</li>
+                        <li><strong>Healthcare:</strong> What kind of patient data (e.g., medical history, vital signs)
+                            needs to be securely stored and accessed?</li>
+                        <li><strong>Logistics:</strong> How will shipment and fleet tracking data be collected and used
+                            for real-time decision-making?</li>
+                        <li><strong>Education:</strong> How will student performance data be collected and analyzed to
+                            improve learning outcomes?</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Database Architecture <br> IndexedDB (key-value)</h2>
+                </section>
+
+                <section>
+                    <h2>Question on Database Architecture?</h2>
+                </section>
+
+                <section>
+                    <h2>Maker Space: Big Data in Agriculture</h2>
+                    <p>When is a good time?</p>
                 </section>
 
                 <section>
@@ -4786,9 +5109,14 @@ test('GPS coordinates should be a valid number', () => {
                     <h5>References</h5>
                     <ul>
                         <li>
+                            <a href="https://neo4j.com/resources/" target="_blank">
+                                Neo4j Resources - neo4j.com
+                            </a>
+                        </li>
+                        <li>
                             <a href="https://medium.com/@mudrapatel17/data-engineering-concepts-part-1-data-modeling-cb6fcf1da42d"
                                 target="_blank">
-                                Data Engineering concepts: Part 1, Data Modeling
+                                Data Engineering Concepts: Part 1, Data Modeling
                             </a>
                         </li>
                         <li>
