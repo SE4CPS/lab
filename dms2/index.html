@@ -8037,6 +8037,53 @@ RETURN f.name, COUNT(neighbor) AS neighbor_count
 
                 <section>
                     <a href="https://play.clickhouse.com/play?user=play" target="_blank">Please Open ClickHouse</a>
+                    <br>
+                    <a href="https://api.elephantsql.com/console/2adbd215-d81b-437e-8db9-ca56daf199ce/browser?"
+                        target="_blank">Please Open ElephantSQL</a>
+                </section>
+
+                <section>
+                    <h4>Aggregate Queries Performance</h4>
+                    <table>
+                        <tr>
+                            <td style="text-align: center; padding: 10px;">PostgreSQL Query (10,000 rows)</td>
+                            <td style="text-align: center; padding: 10px;">ClickHouse Query (10,000 * 40 rows)</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <pre><code class="language-sql" style="line-height: 1.8; font-size: 1.2em;">
+                EXPLAIN ANALYZE
+                SELECT 
+                    AVG(lowest_price) AS avg_lowest_price,
+                    MAX(highest_price) AS max_highest_price,
+                    MIN(menus_appeared) AS min_menus_appeared,
+                    SUM(times_appeared) AS total_times_appeared,
+                    COUNT(*) AS total_dishes,
+                    STDDEV(lowest_price) AS stddev_lowest_price,
+                    STDDEV(highest_price) AS stddev_highest_price
+                FROM dish;
+                                </code></pre>
+                            </td>
+                            <td>
+                                <pre><code class="language-sql" style="line-height: 1.8; font-size: 1.2em;">
+                SELECT 
+                    avg(lowest_price) AS avg_lowest_price,
+                    max(highest_price) AS max_highest_price,
+                    min(menus_appeared) AS min_menus_appeared,
+                    sum(times_appeared) AS total_times_appeared,
+                    count(*) AS total_dishes,
+                    stddevPop(lowest_price) AS stddev_lowest_price,
+                    stddevPop(highest_price) AS stddev_highest_price
+                FROM dish;
+                                </code></pre>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <p class="fragment" data-fragment-index="1">
+                        ClickHouse <span style="color: orange;">caches</span> query results to reduce response times and
+                        computational load on subsequent runs.
+                    </p>
                 </section>
 
                 <section>
@@ -8110,7 +8157,8 @@ RETURN f.name, COUNT(neighbor) AS neighbor_count
                 </section>
 
                 <section>
-                    <a href="https://www.autodraw.com/" target="_blank">Practice Map SQL to Columnar DB (for a Data Warehouse)</a>
+                    <a href="https://www.autodraw.com/" target="_blank">Practice Map SQL to Columnar DB (for a Data
+                        Warehouse)</a>
                 </section>
 
                 <section>
