@@ -75,6 +75,21 @@
         .slides {
             width: 90% !important;
         }
+
+        #module-1 h4 span {
+            visibility: hidden;
+            /* Initially hide all words */
+            color: black;
+            /* Default color */
+            transition: color 0.3s ease;
+        }
+
+        #module-1 h4 span.visible {
+            visibility: visible;
+            /* Show the word when it becomes visible */
+            color: green;
+            /* Highlight color */
+        }
     </style>
 </head>
 
@@ -241,10 +256,10 @@
                         </tbody>
                     </table>
                 </section>
-
-                <section id="module-1">
-                    <h4>Module 1<br>Introduction to Industry 4.0 Ecosystems</h4>
-                </section>
+                
+                <section id="module-1" onclick="revealNextWord()">
+                    <h4>Software Engineering in Industry 4.0 Ecosystems</h4>
+                </section>                
 
                 <section id="module-2">
                     <h4>Module 2<br>Requirements Engineering for Industry 4.0 Applications</h4>
@@ -320,9 +335,11 @@
                         perspective approach.
                     </p>
                     <ul>
-                        <li>First, we focus on the design aspect, the team structure, the requirements, the user interface design, the architecture, and tracking.
+                        <li>First, we focus on the design aspect, the team structure, the requirements, the user
+                            interface design, the architecture, and tracking.
                         </li>
-                        <li>Second, we focus on the implementation, integration, testing, verification, validation, release, and maintenance part.
+                        <li>Second, we focus on the implementation, integration, testing, verification, validation,
+                            release, and maintenance part.
                         </li>
                     </ul>
                 </section>
@@ -419,9 +436,10 @@
                     <p><strong>Textbooks:</strong></p>
                     <ul>
                         <li><em><a href="tb1.pdf" target="_blank">Managerial Challenges
-                            of Industry 4.0</a></em></li>
+                                    of Industry 4.0</a></em></li>
                         <li><em><a href="tb2.pdf" target="_blank">THE ESSENCE OF INDUSTRY 4.0</a></em></li>
-                        <li><em><a href="tb3.pdf" target="_blank">Industry 4.0 Current Status and Future Trends</a></em></li>
+                        <li><em><a href="tb3.pdf" target="_blank">Industry 4.0 Current Status and Future Trends</a></em>
+                        </li>
                         <li><em><a href="tb4.pdf" target="_blank">Software Engineering</a></em></li>
                     </ul>
                 </section>
@@ -524,6 +542,18 @@
                     <h4>Questions?</h4>
                 </section>
 
+                <section id="course-project">
+                    <h4>Project</h4>
+                </section>
+
+                <section>
+                    <img src="https://miro.medium.com/v2/resize:fit:4800/format:webp/1*2bxyNbvAjXgekCOI6hxM5A.png">
+                </section>
+
+                <section>
+                    <img src="https://miro.medium.com/v2/resize:fit:1100/format:webp/1*DxWji8Tcj77HHVHVzFPXsw.jpeg">
+                </section>
+
             </div>
         </div>
 
@@ -539,7 +569,7 @@
                 <a href="https://github.com/SE4CPS/i40" class="footer-link" target="_blank">GitHub Repository</a> |
                 <a href="https://docs.google.com/document/d/1QvGbBsMuztZL3IKExnpe3xFaDeMTWAqI-kofT1y_sBE/edit?pli=1"
                     class="footer-link" target="_blank">Docs</a> |
-                <a href="./#/course-syllabus" class="footer-link" target="_blank">Project</a>
+                <a href="./#/course-project" class="footer-link" target="_blank">Project</a>
             </p>
         </div>
 
@@ -563,6 +593,30 @@
                 // Optional plugins
                 plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom]
             });
+
+            let currentWordIndex = 0;
+
+            function revealNextWord() {
+                const heading = document.querySelector('#module-1 h4');
+                const words = heading.textContent.split(' ');
+
+                // If the words are not already wrapped in spans, wrap them
+                if (!heading.querySelector('span')) {
+                    heading.textContent = ''; // Clear existing text
+                    words.forEach(word => {
+                        const span = document.createElement('span');
+                        span.textContent = word + ' ';
+                        heading.appendChild(span);
+                    });
+                }
+
+                const spans = heading.querySelectorAll('span');
+                if (currentWordIndex < spans.length) {
+                    spans[currentWordIndex].classList.add('visible'); // Make the current word visible
+                    currentWordIndex++; // Move to the next word
+                }
+            }
+
         </script>
 </body>
 
