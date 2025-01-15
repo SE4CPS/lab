@@ -30,10 +30,10 @@
         code {
             font-size: 12pt;
         }
-
+/* 
         pre {
             background-color: #444 !important;
-        }
+        } */
 
         table {
             width: 100%;
@@ -763,6 +763,47 @@
                             </tr>
                         </tbody>
                     </table>
+                </section>
+
+                <section data-background="white">
+
+                    <div style="display: flex;">
+
+                        <div style="width: 40%;">
+                            <img src="erd6.png"
+                                alt="Entity-Relationship Diagram (ERD) showcasing attributes and their constraints"
+                                style="width: 100%; height: auto;">
+                        </div>
+                        <div style="width: 60%;">
+                            <pre style="white-space: pre-wrap; word-break: break-word;font-size: 9pt"><code class="sql">
+CREATE TABLE Customer (
+    CustomerID INTEGER PRIMARY KEY,
+    Name VARCHAR(100) NOT NULL,
+    Email VARCHAR(100) UNIQUE,
+    Phone VARCHAR(15)
+);
+
+CREATE TABLE Bike (
+    BikeID INTEGER PRIMARY KEY,
+    Model VARCHAR(100) NOT NULL,
+    Color VARCHAR(50),
+    Condition VARCHAR(50),
+    Availability BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE RentalTransaction (
+    RentalID INTEGER PRIMARY KEY,
+    CustomerID INTEGER NOT NULL,
+    BikeID INTEGER NOT NULL,
+    BookingDate DATE NOT NULL,
+    ReturnDate DATE,
+    FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
+    FOREIGN KEY (BikeID) REFERENCES Bike(BikeID)
+);
+                        </code></pre>
+                        </div>
+
+                    </div>
                 </section>
 
                 <!-- Module 3 -->
