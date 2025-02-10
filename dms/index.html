@@ -182,7 +182,7 @@
                 <td style="padding: 6px; border: 1px solid #666;"></td>
               </tr>
               <tr style="color: #ccc;">
-                <td style="padding: 6px; border: 1px solid #666;">5 (Feb 10, 12, 14)</td>
+                <td style="padding: 6px; border: 1px solid #666;">5 (Feb <a href="./#/feb-10">10</a>, 12, 14)</td>
                 <td style="padding: 6px; border: 1px solid #666;"><a href="./#/module-5">Relational
                     Database Advanced SQL</a></td>
                 <td style="padding: 6px; border: 1px solid #666;">Lab 3 + Homework 3 (2w)</td>
@@ -1525,17 +1525,17 @@ ORDER BY
           <h5>Relationship Types (Cardinality)</h5>
           <div style="display: flex; justify-content: space-around;">
             <div>
-              <h3>1:1</h3>
+              <h5>1:1</h5>
               <p>Each record links to one record</p>
               <p><strong>Entities:</strong> 1</p>
             </div>
             <div>
-              <h3>1:N</h3>
+              <h5>1:N</h5>
               <p>One record links to many records</p>
               <p><strong>Entities:</strong> 2</p>
             </div>
             <div>
-              <h3>N:N</h3>
+              <h5>N:N</h5>
               <p>Many records link to many records</p>
               <p><strong>Entities:</strong> 3</p>
             </div>
@@ -3045,7 +3045,7 @@ CREATE TABLE Orders (OrderID INT, CustomerID INT, FOREIGN KEY (CustomerID) REFER
         </section>
 
         <section>
-          <h3>Database Interfaces by Role & Purpose</h3>
+          <h5>Database Interfaces by Role & Purpose</h5>
           <table border="1">
             <thead>
               <tr>
@@ -3155,7 +3155,7 @@ CREATE TABLE Orders (OrderID INT, CustomerID INT, FOREIGN KEY (CustomerID) REFER
         </section>
 
         <section>
-          <h3>Database Interfaces by Role & Purpose</h3>
+          <h5>Database Interfaces by Role & Purpose</h5>
           <table border="1">
             <thead>
               <tr>
@@ -3922,6 +3922,548 @@ CREATE TABLE Orders (OrderID INT, CustomerID INT, FOREIGN KEY (CustomerID) REFER
           <button onclick="document.getElementById('ans_5831').style.display='block'">Show Answer</button>
           <pre id="ans_5831" style="display:none;"><code class="sql">
               SELECT * FROM customers WHERE address IS NULL;
+          </code></pre>
+        </section>
+
+        <section id="feb-10">
+          <h5>Today: February 10, 2025</h5>
+          <ul>
+            <li>Practice Question</li>
+            <li>SQL JOIN</li>
+            <li>SQL Aggregation</li>
+            <li>SQL Constraint</li>
+            <li>Team Project Part 1</li>
+            <li>Homework 2, Lab 2</li>
+          </ul>
+        </section>
+
+        <section>
+          <h5>Why SQL Joins?</h5>
+          <ul>
+            <li>Merge data (rows) from multiple tables</li>
+            <li>Avoid redundancy & maintain consistency</li>
+          </ul>
+        </section>
+
+        <section data-background="white">
+          <img src="erd5.png" alt="Travel Relationship" style="height: 550px;">
+        </section>
+
+        <section>
+          <h5>Inner Join</h5>
+          <p>Returns only matching rows from both tables</p>
+          <pre><code class="sql">
+          SELECT * 
+          FROM A 
+          INNER JOIN B 
+          ON A.id = B.id;
+          </code></pre>
+          <table border="1">
+            <tr>
+              <th>A.id</th>
+              <th>A.val</th>
+              <th>B.id</th>
+              <th>B.val</th>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>X</td>
+              <td>1</td>
+              <td>Y</td>
+            </tr>
+          </table>
+        </section>
+
+        <section>
+          <h5>Left Join</h5>
+          <p>Returns <span class="highlight">all rows from the left table</span> and matching rows from the right</p>
+          <pre><code class="sql">
+          SELECT * 
+          FROM A 
+          LEFT JOIN B 
+          ON A.id = B.id;
+          </code></pre>
+          <table border="1">
+            <tr>
+              <th>A.id</th>
+              <th>A.val</th>
+              <th>B.id</th>
+              <th>B.val</th>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>X</td>
+              <td>1</td>
+              <td>Y</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Z</td>
+              <td>NULL</td>
+              <td>NULL</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>M</td>
+              <td>3</td>
+              <td>N</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>P</td>
+              <td>NULL</td>
+              <td>NULL</td>
+            </tr>
+          </table>
+        </section>
+
+        <section>
+          <h5>Right Join</h5>
+          <p>Returns <span class="highlight">all rows from the right table</span> and matching rows from the left</p>
+          <pre><code class="sql">
+          SELECT * 
+          FROM A 
+          RIGHT JOIN B 
+          ON A.id = B.id;
+          </code></pre>
+          <table border="1">
+            <tr>
+              <th>A.id</th>
+              <th>A.val</th>
+              <th>B.id</th>
+              <th>B.val</th>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>X</td>
+              <td>1</td>
+              <td>Y</td>
+            </tr>
+            <tr>
+              <td>NULL</td>
+              <td>NULL</td>
+              <td>2</td>
+              <td>Z</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>M</td>
+              <td>3</td>
+              <td>N</td>
+            </tr>
+            <tr>
+              <td>NULL</td>
+              <td>NULL</td>
+              <td>4</td>
+              <td>P</td>
+            </tr>
+          </table>
+        </section>
+
+        <section>
+          <h5>Natural Join with Multiple Columns</h5>
+          <p>Automatically joins columns with the same name and identical values</p>
+          <pre><code class="sql">
+          SELECT * 
+          FROM A 
+          NATURAL JOIN B;
+          </code></pre>
+        </section>
+
+        <section>
+          <h5>Table A</h5>
+          <table border="1">
+            <tr>
+              <th>id</th>
+              <th>name</th>
+              <th>value</th>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>Alpha</td>
+              <td>10</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Beta</td>
+              <td>20</td>
+            </tr>
+          </table>
+
+          <br>
+
+          <h5>Table B</h5>
+          <table border="1">
+            <tr>
+              <th>id</th>
+              <th>name</th>
+              <th>score</th>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>Alpha</td>
+              <td>90</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Gamma</td>
+              <td>85</td>
+            </tr>
+          </table>
+        </section>
+
+        <section>
+          <h5>Result of Natural Join</h5>
+          <p>Matches rows where both id and name are the same</p>
+          <table border="1">
+            <tr>
+              <th>id</th>
+              <th>name</th>
+              <th>value</th>
+              <th>score</th>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>Alpha</td>
+              <td>10</td>
+              <td>90</td>
+            </tr>
+          </table>
+        </section>
+
+        <section>
+          <h5>Full Outer Join</h5>
+          <p>Returns all rows from both tables</p>
+          <p>Includes unmatched rows with NULL values where no match is found</p>
+        </section>
+
+        <section>
+          <h5>Full Outer Join Query</h5>
+          <pre><code class="sql">
+          SELECT * 
+          FROM A 
+          FULL OUTER JOIN B 
+          ON A.id = B.id;
+          </code></pre>
+        </section>
+
+        <section>
+          <h5>Table A</h5>
+          <table border="1">
+            <tr>
+              <th>id</th>
+              <th>A.val</th>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>X</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Y</td>
+            </tr>
+          </table>
+
+          <br>
+
+          <h5>Table B</h5>
+          <table border="1">
+            <tr>
+              <th>id</th>
+              <th>B.val</th>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Z</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>W</td>
+            </tr>
+          </table>
+        </section>
+
+        <section>
+          <h5>Result of Full Outer Join</h5>
+          <table border="1">
+            <tr>
+              <th>id</th>
+              <th>A.val</th>
+              <th>B.val</th>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>X</td>
+              <td>NULL</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Y</td>
+              <td>Z</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>NULL</td>
+              <td>W</td>
+            </tr>
+          </table>
+          <p>Includes unmatched rows from both tables</p>
+        </section>
+
+        <section>
+          <h5>What is a CROSS JOIN?</h5>
+          <p>Generates the Cartesian product of two tables</p>
+        </section>
+
+        <section>
+          <h5>CROSS JOIN Query</h5>
+          <pre><code class="sql">
+      SELECT * FROM A CROSS JOIN B;
+          </code></pre>
+        </section>
+
+        <section>
+          <h5>Example Tables</h5>
+          <table border="1">
+            <caption>Table A</caption>
+            <tr>
+              <th style="width: 50%;">id</th>
+              <th style="width: 50%;">name</th>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>Alice</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Bob</td>
+            </tr>
+          </table>
+
+          <br>
+
+          <table border="1">
+            <caption>Table B</caption>
+            <tr>
+              <th style="width: 50%;">id</th>
+              <th style="width: 50%;">color</th>
+            </tr>
+            <tr>
+              <td>10</td>
+              <td>Red</td>
+            </tr>
+            <tr>
+              <td>20</td>
+              <td>Blue</td>
+            </tr>
+          </table>
+        </section>
+
+        <section>
+          <h5>Result of CROSS JOIN</h5>
+          <p>All possible combinations of rows</p>
+          <table border="1">
+            <tr>
+              <th>A.id</th>
+              <th>A.name</th>
+              <th>B.id</th>
+              <th>B.color</th>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>Alice</td>
+              <td>10</td>
+              <td>Red</td>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>Alice</td>
+              <td>20</td>
+              <td>Blue</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Bob</td>
+              <td>10</td>
+              <td>Red</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Bob</td>
+              <td>20</td>
+              <td>Blue</td>
+            </tr>
+          </table>
+        </section>
+
+        <section>
+          Question?
+        </section>
+
+        <section data-background="white">
+          <img src="https://miro.medium.com/v2/resize:fit:1400/0*nmiFlWSY8q6WZ-7e.png" alt="Travel Relationship"
+            style="height: 550px;">
+        </section>
+
+        <section data-background="white">
+          <img src=https://wac-cdn.atlassian.com/dam/jcr:b033c1f2-b354-44ac-982f-6e4db0c97d71/sqlJoins_7.png"
+            alt="Travel Relationship" style="height: 550px;">
+        </section>
+
+        <section>
+          <h5>Which Join to Apply?</h5>
+          <p>Consider the following use cases on a flower database</p>
+        </section>
+
+        <section>
+          <h5>Flower Database Use Cases</h5>
+          <table border="1">
+            <tr>
+              <th>Use Case</th>
+              <th>Tables Involved</th>
+              <th>Expected Result</th>
+            </tr>
+            <tr>
+              <td>Get only flowers that have matching orders</td>
+              <td>Flowers, Orders</td>
+              <td>Only flowers that have been ordered</td>
+            </tr>
+            <tr>
+              <td>List all flowers with their orders (if any)</td>
+              <td>Flowers, Orders</td>
+              <td>All flowers, showing NULL for those with no orders</td>
+            </tr>
+            <tr>
+              <td>Show all flowers and all orders, even if unmatched</td>
+              <td>Flowers, Orders</td>
+              <td>All flowers and all orders, showing NULL where unmatched</td>
+            </tr>
+          </table>
+        </section>
+
+        <section>
+          <h5>Which Join Would You Use?</h5>
+          <ul>
+            <li>Inner Join?</li>
+            <li>Left Join?</li>
+            <li>Full Outer Join?</li>
+          </ul>
+        </section>
+
+        <section>
+          Question?
+        </section>
+
+        <section>
+          <a href="https://github.com/SE4CPS/DMS/blob/main/database/PostgreSQL/spaceship.sql" target="_blank">PostgreSQL
+            Spaceship</a>
+        </section>
+
+        <section>
+          <h5>SQLite and PostgreSQL Syntax Differences</h5>
+          <table border="1">
+            <tr>
+              <th>Feature</th>
+              <th>SQLite</th>
+              <th>PostgreSQL</th>
+            </tr>
+            <tr>
+              <td>Auto-increment ID</td>
+              <td>INTEGER PRIMARY KEY</td>
+              <td>SERIAL PRIMARY KEY</td>
+            </tr>
+            <tr>
+              <td>Full Outer Join</td>
+              <td>Not supported (use UNION of LEFT and RIGHT JOIN)</td>
+              <td>FULL OUTER JOIN</td>
+            </tr>
+            <tr>
+              <td>Foreign Keys</td>
+              <td>PRAGMA foreign_keys = ON</td>
+              <td>Enforced by default</td>
+            </tr>
+          </table>
+        </section>
+
+        <section>
+          <h5>PostgreSQL Meta Commands Table</h5>
+          <table border="1">
+            <tr>
+              <th>Command</th>
+              <th>Description</th>
+            </tr>
+            <tr>
+              <td>SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'your_table';</td>
+              <td>List column names and data types for a specific table</td>
+            </tr>
+            <tr>
+              <td>SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';</td>
+              <td>Get all table names from the public schema</td>
+            </tr>
+            <tr>
+              <td>SELECT * FROM pg_catalog.pg_tables;</td>
+              <td>Get detailed information about all tables</td>
+            </tr>
+            <tr>
+              <td>SELECT * FROM pg_indexes WHERE tablename = 'your_table';</td>
+              <td>Get all indexes of a specific table</td>
+            </tr>
+          </table>
+        </section>
+
+        <section>
+          <h5>How to Get All Astronauts and Their Missions?</h5>
+        </section>
+
+        <section>
+          <h5>SQL Query</h5>
+          <pre><code class="sql">
+          SELECT A.name, A.role, M.name AS mission_name
+          FROM Astronauts A
+          LEFT JOIN Missions M
+          ON A.missions = M.id;
+          </code></pre>
+        </section>
+
+        <section>
+          <h5>How to Find Missions with No Assigned Astronauts?</h5>
+        </section>
+
+        <section>
+          <h5>SQL Query</h5>
+          <pre><code class="sql">
+          SELECT M.name, M.destination 
+          FROM Missions M
+          LEFT JOIN Astronauts A
+          ON M.id = A.missions
+          WHERE A.id IS NULL;
+          </code></pre>
+        </section>
+
+        <section>
+          <h5>How to Get All Alien Encounters with Mission Names?</h5>
+        </section>
+
+        <section>
+          <h5>SQL Query</h5>
+          <pre><code class="sql">
+          SELECT AE.species, AE.communication, M.name AS mission_name
+          FROM AlienEncounters AE
+          INNER JOIN Missions M
+          ON AE.missionId = M.id;
+          </code></pre>
+        </section>
+
+        <section>
+          <h5>How to Get the Total Number of Missions for Each Role?</h5>
+        </section>
+
+        <section>
+          <h5>SQL Query</h5>
+          <pre><code class="sql">
+          SELECT A.role, COUNT(A.missions) AS total_missions
+          FROM Astronauts A
+          GROUP BY A.role;
           </code></pre>
         </section>
 
