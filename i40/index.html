@@ -176,7 +176,8 @@
                             </tr>
                             <tr style="color: #ccc;">
                                 <td style="padding: 6px; border: 1px solid #666;">5 (Feb <a href="./#/feb-10">10</a>,
-                                    12, 14)</td>
+                                    <a href="./#/feb-12">12</a>, 14)
+                                </td>
                                 <td style="padding: 6px; border: 1px solid #666;"><a href="./#/module-5">Architectural
                                         Design for Industry 4.0 Applications</a></td>
                                 <td style="padding: 6px; border: 1px solid #666;">Lab 3 + Homework 3 (2w)</td>
@@ -3686,6 +3687,379 @@
                     <p id="answer-5" style="display:none;"><strong>Correct Answer:</strong> Option D</p>
                 </section>
 
+                <section id="feb-12">
+                    <h4>February 12, 2025</h4>
+                    <ul>
+                        <li>Data Architecture First</li>
+                        <li>Error-Resilient/Security Architecture First</li>
+                        <li>Practice Questions</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <p>Why prioritize Data Pipeline before Software Architecture?</p>
+                    <ul>
+                        <li class="alpha-list"> Data is the foundation of decision-making and AI models</li>
+                        <li class="alpha-list"> Software architecture depends on well-structured data flows</li>
+                        <li class="alpha-list"> Scalable data pipelines prevent downstream bottlenecks</li>
+                        <li class="alpha-list"> Ensuring high-quality data improves system reliability</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <p>How Data Pipeline Architecture improve scalability?</p>
+                    <ul>
+                        <li class="alpha-list"> Supports distributed storage and processing</li>
+                        <li class="alpha-list"> Enables real-time and batch data handling</li>
+                        <li class="alpha-list"> Reduces dependency on monolithic systems</li>
+                        <li class="alpha-list"> Allows independent scaling of data and compute layers</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <p>Why good data flow critical before software architecture?</p>
+                    <ul>
+                        <li class="alpha-list"> Clean, structured data prevents application inefficiencies</li>
+                        <li class="alpha-list"> Ensures smooth integration across multiple services</li>
+                        <li class="alpha-list"> Reduces rework caused by poor data management</li>
+                        <li class="alpha-list"> Provides a single source of truth for all applications</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h5>Data Pipeline</h5>
+
+                    <div style="display: flex; gap: 20px; font-size: 17pt;">
+                        <pre>
+
+ <b>Raw Sensor Data | Device</b>
+ +----+----------+------+---------+
+ | id | sensor  | water_hydration |
+ +----+----------+----------------+
+ | 1  | SensorA | 45              |
+ +----+----------+----------------+
+
+ +----+----------+------+---------+
+ | id | sensor  | water_hydration |
+ +----+----------+----------------+
+ | 2  | SensorB | 38              |
+ +----+----------+----------------+
+
+ +----+----------+------+---------+
+ | id | sensor  | water_hydration |
+ +----+----------+----------------+
+ | 3  | SensorC | 40              |
+ +----+----------+----------------+
+
+</pre>
+
+                        <pre>
+
+ <b>Data Lake</b>
+ +----+----------+-----------+
+ | id | raw_data | timestamp |
+ +----+----------+-----------+
+ | 1  | {JSON}   | 12:01:30  |
+ | 2  | {JSON}   | 12:02:10  |
+ | 3  | {JSON}   | 12:02:10  |
+ | 1  | {JSON}   | 09:08:10  |
+ | 2  | {JSON}   | 11:10:10  |
+ | 3  | {JSON}   | 01:06:10  |
+ | 1  | {JSON}   | 04:05:10  |
+ | 2  | {JSON}   | 12:04:10  |
+ | 3  | {JSON}   | 01:06:10  |
+ | 1  | {JSON}   | 04:05:10  |
+ | 2  | {JSON}   | 12:04:10  |
+ | 3  | {JSON}   | 01:06:10  |
+ | 1  | {JSON}   | 04:05:10  |
+ | 2  | {JSON}   | 12:04:10  |
+ +----+----------+-----------+
+
+</pre>
+
+                        <pre>
+
+ <b>Data Warehouse</b>
+ +----+----------+--------------+
+ | id | sensor  | avg_hydration |
+ +----+----------+--------------+
+ | 1  | SensorA | 46            |
+ | 2  | SensorB | 39            |
+ +----+----------+--------------+
+
+</pre>
+
+                        <pre>
+
+ <b>Dashboard</b>
+ +----------+------------------+
+ | Sensor   | Avg Hydration (%)|
+ +----------+------------------+
+ | SensorA  | 46               |
+ | SensorB  | 39               |
+ +----------+------------------+
+
+</pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h5>Database Pipeline</h5>
+
+                    <div style="display: flex; gap: 20px; font-size: 20pt;">
+                        <pre>
+
+    <b>Raw Sensor Data | SQLite</b>
+
+</pre>
+
+                        <pre>
+
+    <b>Data Lake | MongoDB</b>
+
+</pre>
+
+
+                        <pre>
+
+    <b>Data Warehouse | MySQL</b>
+
+</pre>
+
+
+                        <pre>
+
+    <b>Dashboard | IndexedDB</b>
+
+</pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h5>Caching vs Persisting</h5>
+
+                    <div style="display: flex; gap: 20px; font-size: 17pt;">
+                        <pre>
+
+    <b>Sensor Cache</b> | SQLite
+
+</pre>
+
+                        <pre>
+
+    <b>Lake Persisted</b> | MongoDB
+
+</pre>
+
+                        <pre>
+
+    <b>Warehouse Cache</b> | MySQL 
+
+</pre>
+
+                        <pre>
+
+    <b>Dashboard Cache</b> | IndexedDB
+
+</pre>
+                    </div>
+                </section>
+
+                <section style="text-align: left;">
+                    <h5>Full Loading</h5>
+                    <ul>
+                        <li>Loads all data at once</li>
+                        <li>Higher initial load time</li>
+                        <li>Useful for smaller datasets or when all data is needed</li>
+                    </ul>
+
+                    <h5>Partial Loading</h5>
+                    <ul>
+                        <li>Loads only a subset of data</li>
+                        <li>Faster initial load time</li>
+                        <li>Useful for large datasets or when only a part of data is required</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h5>Full Loading and/or Partial Loading</h5>
+
+                    <div style="display: flex; gap: 20px; font-size: 17pt;">
+                        <pre>
+
+    <b>Sensor Cache</b> | SQLite
+
+</pre>
+
+                        <pre>
+
+    <b>Lake Persisted</b> | MongoDB
+
+</pre>
+
+                        <pre>
+
+    <b>Warehouse Cache</b> | MySQL 
+
+</pre>
+
+                        <pre>
+
+    <b>Dashboard Cache</b> | IndexedDB
+
+</pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h5>Loading Triggers</h5>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Trigger Type</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Time-based</td>
+                                <td>Data is loaded at specific time intervals (e.g., every 5 minutes)</td>
+                            </tr>
+                            <tr>
+                                <td>Event-based</td>
+                                <td>Data is loaded when a specific event occurs (e.g., user action, system change, value
+                                    changed)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section data-background="white">
+                    <img src="plantuml_data_processes.svg">
+                </section>
+
+                <section>
+                    Data Architecture > Software Architecture
+                </section>
+
+                <section>
+                    Error-Resilient/Security Architecture First
+                </section>
+
+                <section>
+                    <h5>Relevant NIST Publication</h5>
+                    <a href="https://csrc.nist.gov/pubs/ir/8259/a/final" target="_blank">NIST IR 8259A: A
+                        Profile for IoT Security</a>
+                </section>
+
+                <section>
+                    <h5>Error Handling in IoT Systems (Architecture Perspective)</h5>
+                    <ul>
+                        <li>Decouple error handling from business logic using middleware layers</li>
+                        <li>Event-driven architecture for detecting errors in real-time</li>
+                        <li>Use of centralized logging services for error monitoring</li>
+                        <li>Fallback mechanisms for fault tolerance and service continuity</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h5>Error Logs and Business Logic Components</h5>
+
+                    <div style="display: flex; gap: 20px; font-size: 17pt;">
+                        <pre>
+
+                <b>Business Logic</b> 
+                +------------------------+
+                | Handle IoT device      |
+                | interactions, data     |
+                | processing, and        |
+                | communication          |
+                +------------------------+
+                
+                        </pre>
+
+                        <pre>
+
+                <b>Error Logs</b> 
+                +------------------------+
+                | Logs errors from       |
+                | Business Logic         |
+                | component, including   |
+                | device failure,        |
+                | performance issues,    |
+                | and system faults      |
+                +------------------------+
+                
+                        </pre>
+                    </div>
+                </section>
+
+                <section data-background="white">
+                    <img src="plantuml_error_1.svg">
+                </section>
+
+                <section data-background="white">
+                    <img src="plantuml_error_2.svg">
+                </section>
+
+                <section>
+                    <h5>Monitoring Infrastructure in IoT Systems (Architecture Perspective)</h5>
+                    <ul>
+                        <li>Distributed monitoring across IoT devices via a central control plane</li>
+                        <li>Use of microservices for collecting and processing device health data</li>
+                        <li>Integration with cloud-based IoT platforms (e.g., AWS IoT, Azure IoT Hub)</li>
+                        <li>Real-time streaming analytics and alert systems for device performance</li>
+                    </ul>
+                </section>
+
+                <section data-background="white">
+                    <img src="plantuml_monitoring.svg">
+                </section>
+
+                <section>
+                    <h5>Diagnostics in IoT Systems (Architecture Perspective)</h5>
+                    <ul>
+                        <li>Distributed diagnostics using edge devices for localized analysis</li>
+                        <li>Automated diagnosis with AI/ML models at the edge or cloud</li>
+                        <li>Centralized reporting and troubleshooting workflows</li>
+                        <li>Data-driven insights for root cause analysis of system failures</li>
+                    </ul>
+                </section>
+
+                <section data-background="white">
+                    <img src="plantuml_diagnostic.svg">
+                </section>
+
+                <section>
+                    <h5>Over-the-Air (OTA) Updates in IoT Systems (Architecture Perspective)</h5>
+                    <ul>
+                        <li>Modular firmware design for seamless OTA updates</li>
+                        <li>Integration of OTA update pipelines within CI/CD systems</li>
+                        <li>Secure transmission of updates with encryption and integrity checks</li>
+                        <li>Version control and rollback mechanisms for devices</li>
+                    </ul>
+                </section>
+
+                <section data-background="white">
+                    <img src="plantuml_ota.svg">
+                </section>
+
+                <section>
+                    Questions?
+                </section>
+
+                <section>
+                    <h5>Review Architecture Design Principles</h5>
+                    <ol>
+                        <li>Data Architecture First</li>
+                        <li>Security and Privacy</li>
+                        <li>Data Integrity</li>
+                        <li>Feature Toggle</li>
+                        <li>Monolithic Architecture</li>
+                        <li>Layered Architecture</li>
+                    </ol>
+                </section>
 
                 <section>
                     Questions?
