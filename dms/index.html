@@ -54,6 +54,11 @@
       font-size: 14pt;
     }
 
+    section pre code {
+      font-size: 20px;
+      line-height: 1.6;
+    }
+
     /* Global Footer Styling */
     .global-footer {
       position: fixed;
@@ -183,7 +188,7 @@
               </tr>
               <tr style="color: #ccc;">
                 <td style="padding: 6px; border: 1px solid #666;">5 (Feb <a href="./#/feb-10">10</a>, <a
-                    href="./#/feb-12">12</a>, 14)</td>
+                    href="./#/feb-12">12</a>, <a href="./#/feb-14">14</a>)</td>
                 <td style="padding: 6px; border: 1px solid #666;"><a href="./#/module-5">Relational
                     Database Advanced SQL</a></td>
                 <td style="padding: 6px; border: 1px solid #666;">Lab 3 + Homework 3 (2w), Project Part 1 (4w)</td>
@@ -5082,6 +5087,239 @@ CREATE TABLE Orders (OrderID INT, CustomerID INT, FOREIGN KEY (CustomerID) REFER
 
         <section>
           Question?
+        </section>
+
+        <section id="feb-14">
+          <h5>Today: February 14, 2025</h5>
+          <ul>
+            <li>Use Case Scenario</li>
+            <li>Documentation</li>
+            <li>Homework 3, Lab 3, Team Project Part 1</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Who has gone on the most space missions?</h2>
+        </section>
+
+        <section>
+          <pre><code>
+            SELECT name, missions FROM Astronauts 
+            ORDER BY missions DESC LIMIT 1;
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Which missions are still ongoing?</h2>
+        </section>
+
+        <section>
+          <pre><code>
+            SELECT name, destination FROM Missions 
+            WHERE status = 'Ongoing';
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Which scientists have never been on a mission?</h2>
+        </section>
+
+        <section>
+          <pre><code>
+            SELECT name FROM Astronauts 
+            WHERE role = 'Scientist' AND missions = 0;
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Which mission had the largest crew?</h2>
+        </section>
+
+        <section>
+          <pre><code>
+            SELECT name, crew FROM Missions 
+            ORDER BY crew DESC LIMIT 1;
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Which spaceships are out of fuel?</h2>
+        </section>
+
+        <section>
+          <pre><code>
+            SELECT name FROM Spaceship 
+            WHERE fuelLevel = 0;
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Which missions encountered hostile aliens?</h2>
+        </section>
+
+        <section>
+          <pre><code>
+            SELECT m.name, a.species FROM AlienEncounters a
+            JOIN Missions m ON a.missionId = m.id 
+            WHERE a.communication = 'Hostile';
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>List all engineers and the number of missions they have participated in, if any.</h2>
+        </section>
+
+        <section>
+          <pre><code>
+            SELECT name, missions FROM Astronauts 
+            WHERE role = 'Engineer';
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Which teams have a score greater than 0?</h2>
+        </section>
+
+        <section>
+          <pre><code>
+            SELECT team, score FROM Score 
+            WHERE score > 0;
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Find all missions that visited planets starting with 'P'.</h2>
+        </section>
+
+        <section>
+          <pre><code>
+            SELECT name, destination FROM Missions 
+            WHERE destination LIKE 'P%';
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>List all missions along with any alien species encountered.</h2>
+        </section>
+
+        <section>
+          <pre><code>
+            SELECT m.name, a.species FROM Missions m
+            LEFT JOIN AlienEncounters a ON m.id = a.missionId;
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Which mission had the smallest crew?</h2>
+        </section>
+
+        <section>
+          <pre><code>
+            SELECT name, crew FROM Missions 
+            ORDER BY crew ASC LIMIT 1;
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Which spaceships have more than 10 fuel?</h2>
+        </section>
+
+        <section>
+          <pre><code>
+            SELECT name, fuelLevel FROM Spaceship 
+            WHERE fuelLevel > 10;
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>How many completed missions are there?</h2>
+        </section>
+
+        <section>
+          <pre><code>
+            SELECT COUNT(*) FROM Missions 
+            WHERE status = 'Completed';
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Find all engineers who have participated in at least one mission.</h2>
+        </section>
+
+        <section>
+          <pre><code>
+            SELECT name FROM Astronauts 
+            WHERE role = 'Engineer' AND missions > 0;
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Which team has the highest score?</h2>
+        </section>
+
+        <section>
+          <pre><code>
+            SELECT team, score FROM Score 
+            ORDER BY score DESC LIMIT 1;
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Find all scientists and their total number of missions.</h2>
+        </section>
+
+        <section>
+          <pre><code>
+            SELECT name, missions FROM Astronauts 
+            WHERE role = 'Scientist';
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Which mission had the most alien encounters?</h2>
+        </section>
+
+        <section>
+          <pre><code>
+            SELECT m.name, COUNT(a.id) AS encounters FROM Missions m
+            JOIN AlienEncounters a ON m.id = a.missionId 
+            GROUP BY m.name 
+            ORDER BY encounters DESC LIMIT 1;
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>List all spaceships along with their type and fuel level.</h2>
+        </section>
+
+        <section>
+          <pre><code>
+            SELECT name, shiptype, fuelLevel FROM Spaceship;
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Find all missions that went to planets with names longer than 6 characters.</h2>
+        </section>
+
+        <section>
+          <pre><code>
+            SELECT name, destination FROM Missions 
+            WHERE LENGTH(destination) > 6;
+          </code></pre>
+        </section>
+
+        <section>
+          Questions?
+        </section>
+
+        <section>
+          <a href="https://www.postgresql.org/docs/current/ddl.html" target="_blank">PostgreSQL
+            Documentation</a>
+        </section>
+
+        <section>
+          Homework 3, Lab 3, Team Project Part 1
         </section>
 
         <!-- Module 6 -->
