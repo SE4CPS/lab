@@ -176,7 +176,7 @@
                             </tr>
                             <tr style="color: #ccc;">
                                 <td style="padding: 6px; border: 1px solid #666;">5 (Feb <a href="./#/feb-10">10</a>,
-                                    <a href="./#/feb-12">12</a>, 14)
+                                    <a href="./#/feb-12">12</a>, <a href="./#/feb-14">14</a>)
                                 </td>
                                 <td style="padding: 6px; border: 1px solid #666;"><a href="./#/module-5">Architectural
                                         Design for Industry 4.0 Applications</a></td>
@@ -4061,8 +4061,202 @@
                     </ol>
                 </section>
 
+                <section id="feb-14">
+                    <h4>February 14, 2025</h4>
+                    <ul>
+                        <li>Public vs. Private Endpoints in Software Architecture</li>
+                        <li>Error-Resilient/Security Architecture First</li>
+                        <li>Practice Questions</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h5>Public vs. Private/Internal Endpoints in IoT Applications</h5>
+
+                    <div style="display: flex; gap: 20px; font-size: 17pt;">
+                        <pre>
+
+                <b>Public Endpoints</b>
+                +------------------------+
+                | Expose data to         |
+                | external clients or    |
+                | third-party services   |
+                | (e.g., weather,        |
+                | monitoring systems)    |
+                +------------------------+
+                
+                        </pre>
+
+                        <pre>
+
+                <b>Private/Internal Endpoints</b>
+                +------------------------+
+                | Handle sensitive data  |
+                | (e.g., device control, |
+                | authentication, and    |
+                | configuration)         |
+                | Restricted to          |
+                | internal services and  |
+                | devices                |
+                +------------------------+
+                
+                        </pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h5>Plant Watering App - Public vs. Private/Internal Endpoints</h5>
+
+                    <div style="display: flex; gap: 20px; font-size: 17pt;">
+                        <pre>
+
+                <b>Public Endpoints</b>
+                +------------------------+
+                | Provide external data  |
+                | (e.g., weather forecast|
+                | for plant hydration)   |
+                | Accessible by external |
+                | users or services (e.g.|
+                | mobile app, monitoring)|
+                +------------------------+
+                
+                        </pre>
+
+                        <pre>
+
+                <b>Private/Internal Endpoints</b>
+                +------------------------+
+                | Manage device control  |
+                | (e.g., soil moisture   |
+                | threshold, water valve |
+                | activation)            |
+                | Handle authentication  |
+                | and device status      |
+                +------------------------+
+                
+                        </pre>
+                    </div>
+                </section>
+
+                <section>
+                    Are our endpoints public or private?
+                </section>
+
+                <section data-background="white">
+                    <img src="plantuml_auth_user.svg">
+                </section>
+
+                <section data-background="white">
+                    <img src="plantuml_auth_sensor.svg">
+                </section>
+
+                <section data-background="white">
+                    <img src="plantuml_auth_all.svg">
+                </section>
+
+                <section>
+                    <h2>Requirements for Authentication</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Authentication Method</th>
+                                <th>Lifetime Option</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>UUID</td>
+                                <td>Permanent</td>
+                                <td>UUID remains valid until it is manually revoked or changed.</td>
+                            </tr>
+                            <tr>
+                                <td>UUID</td>
+                                <td>Time-limited</td>
+                                <td>UUID expires after a predefined period, requiring re-authentication.</td>
+                            </tr>
+                            <tr>
+                                <td>Username/Password</td>
+                                <td>Session-based</td>
+                                <td>Valid for the duration of the session, requiring re-authentication after expiration.
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Username/Password</td>
+                                <td>Time-limited</td>
+                                <td>Expires after a predefined period, and requires re-login to access.</td>
+                            </tr>
+                            <tr>
+                                <td>Username/Password</td>
+                                <td>Multi-factor (MFA)</td>
+                                <td>Requires additional authentication factors after the initial login, often with
+                                    time-based tokens.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
                 <section>
                     Questions?
+                </section>
+
+                <section>
+                    <p>We are considering two endpoints for a sensor data retrieval system. Please propose the appropriate endpoint signatures:</p>
+                
+                    <table border="1">
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Details</th>
+                        </tr>
+                        <tr>
+                            <td><strong>Endpoint URL</strong></td>
+                            <td>[Propose URL structure]</td>
+                        </tr>
+                        <tr>
+                            <td><strong>HTTP Method</strong></td>
+                            <td>[Propose HTTP method]</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Input</strong></td>
+                            <td>[Propose input parameters]</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Output</strong></td>
+                            <td>[Propose output format, e.g., JSON]</td>
+                        </tr>
+                    </table>
+                </section>
+                
+                <section>
+                    <h5>Clone and Set Up i40 Repository</h5>
+                    <ul>
+                        <li><strong>Clone the repository:</strong> git clone https://github.com/SE4CPS/i40.git</li>
+
+                        <li><strong>Navigate into the project folder:</strong> cd i40/architecture</li>
+
+                        <li><strong>Install dependencies:</strong> npm install</li>
+
+                        <li><strong>Start the application:</strong> npm start</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Sample URL Queries</h2>
+                    <ul>
+                        <li><strong>User Authentication:</strong><br>
+                            <code>GET http://localhost:3000/auth/user?username=user1&password=password1</code><br>
+                            Response: <code>{"message": "User user1 authenticated"}</code>
+                        </li>
+                
+                        <li><strong>Sensor Authentication:</strong><br>
+                            <code>GET http://localhost:3000/auth/sensor?uuid=UUID-123</code><br>
+                            Response: <code>{"message": "Sensor UUID-123 authenticated"}</code>
+                        </li>
+                    </ul>
+                </section>                
+
+                <section>
+                    Questions on Software Architecture?
                 </section>
 
                 <section>
@@ -4398,7 +4592,8 @@
                 <a href="mailto:sberhe@pacific.edu" class="footer-link">m_lnu17@u.pacific.edu</a> |
                 <a href="./#/course-syllabus">Syllabus</a> |
                 <a href="https://pacific.zoom.us/my/berhe" class="footer-link" target="_blank">Join Zoom</a> |
-                <a href="https://github.com/SE4CPS/i40" class="footer-link" target="_blank">GitHub Repository</a> |
+                <a href="https://github.com/SE4CPS/PlantWaterSystem" class="footer-link" target="_blank">GitHub
+                    Repository</a> |
                 <a href="https://docs.google.com/document/d/1QvGbBsMuztZL3IKExnpe3xFaDeMTWAqI-kofT1y_sBE/edit?pli=1"
                     class="footer-link" target="_blank">Docs</a> |
                 <a href="./#/course-project" class="footer-link" target="_blank">Project</a>
