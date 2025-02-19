@@ -12,8 +12,9 @@ try:
     cur = conn.cursor()
 
     # Execute a simple query
-    cur.execute("SELECT version();")
-    db_version = cur.fetchone()
+    # cur.execute("SELECT version();")
+    cur.execute("SELECT name, price FROM Flowers WHERE price > 10;")
+    db_version = cur.fetchall()
     print("PostgreSQL Version:", db_version)
 
     # Close cursor and connection

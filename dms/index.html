@@ -138,14 +138,14 @@
                     Databases Management
                     System</a></td>
                 <!--
-                                        - Introduction evoluation and why dms matters
-                                        - Review table of contents
-                                        - Install SQLite
-                                        - Review syllabus
-                                        - Code sql (crud)
-                                        - Review homework and lab questions
-                                        - Email course on Friday with weekly summary
-                                    -->
+                            - Introduction evoluation and why dms matters
+                            - Review table of contents
+                            - Install SQLite
+                            - Review syllabus
+                            - Code sql (crud)
+                            - Review homework and lab questions
+                            - Email course on Friday with weekly summary
+                        -->
                 <td style="padding: 6px; border: 1px solid #666;">Lab 1 + Homework 1 (2w)</td>
                 <td style="padding: 6px; border: 1px solid #666;">SQLite</td>
                 <td style="padding: 6px; border: 1px solid #666;"></td>
@@ -196,7 +196,7 @@
                 <td style="padding: 6px; border: 1px solid #666;"></td>
               </tr>
               <tr style="color: #ccc;">
-                <td style="padding: 6px; border: 1px solid #666;">6 (Feb 19, 21)</td>
+                <td style="padding: 6px; border: 1px solid #666;">6 (Feb <a href="./#/feb-19">19</a>, 21)</td>
                 <td style="padding: 6px; border: 1px solid #666;"><a href="./#/module-6">Relational
                     Database Normalization</a></td>
                 <td style="padding: 6px; border: 1px solid #666;"></td>
@@ -5328,22 +5328,408 @@ CREATE TABLE Orders (OrderID INT, CustomerID INT, FOREIGN KEY (CustomerID) REFER
           <h5>Module 6<br>Relational Database Normalization</h5>
         </section>
 
-        <section>
-          <h5>Table Normalization: 1NF to 3NF</h5>
+        <section id="feb-19">
+          <h5>Today: February 19, 2025</h5>
           <ul>
-            <li><strong>First Normal Form (1NF):</strong>
-              Eliminate duplicate columns and ensure all values are atomic (no repeating groups or
-              arrays).
-            </li>
-            <li><strong>Second Normal Form (2NF):</strong>
-              Ensure the table is in 1NF and all non-key attributes depend entirely on the primary key.
-            </li>
-            <li><strong>Third Normal Form (3NF):</strong>
-              Ensure the table is in 2NF and remove transitive dependencies (non-key attributes should
-              only depend on the primary key).
-            </li>
+            <li>Structured and Unstructured Data</li>
+            <li>Not Normalized: Redundant data and anomalies</li>
+            <li>First Normal Form (1NF): Atomic values, no repeating groups</li>
+            <li>Second Normal Form (2NF): Remove partial dependencies</li>
+            <li>Third Normal Form (3NF): Remove transitive dependencies</li>
+            <li>Practice Exercise: Normalize a sample table</li>
+            <li>Discussion: When to denormalize?</li>
           </ul>
         </section>
+
+        <section>
+          <h5>Database Engineering Process</h5>
+          <div
+            style="display: flex; flex-direction: row; gap: 10px; border: 2px solid black; padding: 15px; width: fit-content;">
+            <pre>
++--------------+
+| Requirements | -->
++--------------+
+  </pre>
+            <pre>
++-----+
+| ERD | -->
++-----+
+  </pre>
+            <pre>
++----------+
+| Database | -->
++----------+
+  </pre>
+            <pre>
++-------+
+| Table | -->
++-------+
+  </pre>
+            <pre style="color: #28A745;">
++------+
+| Data |
++------+
+              </pre>
+          </div>
+        </section>
+
+        <section data-background="white">
+          <img src="https://superna.io/wp-content/uploads/2023/11/Screen_Shot_2023-05-.png"
+            alt="Structured vs Unstructured Data">
+        </section>
+
+        <section>
+          <h5>Structured (20%) vs. Unstructured Data (80%)</h5>
+
+          <table style="border-collapse: collapse; width: 100%;">
+            <thead>
+              <tr>
+                <th>Characteristic</th>
+                <th>Structured Data</th>
+                <th>Unstructured Data</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Format</td>
+                <td>Organized (tables)</td>
+                <td>Freeform (text, images)</td>
+              </tr>
+              <tr>
+                <td>Storage</td>
+                <td>Relational databases (SQL)</td>
+                <td>NoSQL databases, file systems</td>
+              </tr>
+              <tr>
+                <td>Querying</td>
+                <td>Easy to query</td>
+                <td>Difficult to analyze</td>
+              </tr>
+              <tr>
+                <td>Examples</td>
+                <td>Spreadsheets, SQL databases</td>
+                <td>Emails, social media posts, videos</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h5>Stuctured Data</h5>
+          <pre>
++------------+----------------------+---------------------+--------------------+
+| customer   | products             | phone               | address            |
++------------+----------------------+---------------------+--------------------+
+| Alice      | Laptop, Mouse        | 123-456-7890        | 12 Main St, NY     |
+| Bob        | Phone, Charger       | 987-654-3210        | 34 Elm St, CA      |
+| Alice      | Keyboard, Monitor    | 123-456-7890        | 12 Main St, NY     |
++------------+----------------------+---------------------+--------------------+
+          </pre>
+          How to query all keyboard products?
+        </section>
+
+        <section>
+          <h5>Stuctured Data</h5>
+          <pre>
++------------+----------------------+---------------------+--------------------+
+| customer   | products             | phone               | address            |
++------------+----------------------+---------------------+--------------------+
+| Alice      | Laptop, Mouse        | 123-456-7890        | 12 Main St, NY     |
+| Bob        | Phone, Charger       | 987-654-3210        | 34 Elm St, CA      |
+| Alice      | Keyboard, Monitor    | 123-456-7890        | 12 Main St, NY     |
++------------+----------------------+---------------------+--------------------+
+          </pre>
+          How to query all products of the customer 1?
+        </section>
+
+        <section>
+          <h5>Stuctured Data</h5>
+          <pre>
++------------+----------------------+---------------------+--------------------+
+| customer   | products             | phone               | address            |
++------------+----------------------+---------------------+--------------------+
+| Alice      | Laptop, Mouse        | 123-456-7890        | 12 Main St, NY     |
+| Bob        | Phone, Charger       | 987-654-3210        | 34 Elm St, CA      |
+| Alice      | Keyboard, Monitor    | 123-456-7890        | 12 Main St, NY     |
++------------+----------------------+---------------------+--------------------+
+          </pre>
+          How to query all products of the customers in CA?
+        </section>
+
+        <section>
+          <p><strong>Problems:</strong></p>
+          <ul>
+            <li>Repeated customer details (Alice appears twice).</li>
+            <li>Multiple products in a single field.</li>
+            <li>Difficult to update customer information.</li>
+          </ul>
+        </section>
+
+        <section>
+          <h5>Not Normalized Data (but structured)</h5>
+        </section>
+
+        <section>
+          <h5>Database Engineering Process</h5>
+          <div
+            style="display: flex; flex-direction: row; gap: 10px; border: 2px solid black; padding: 15px; width: fit-content;">
+            <pre>
++--------------+
+| Unstructured | -->
++--------------+
+              </pre>
+            <pre>
++------------+
+| Structured | -->
++------------+
+              </pre>
+            <pre>
++--------------+
+| Unnormalized | -->
++--------------+
+              </pre>
+            <pre>
++-----+
+| NF1 |
++-----+
+              </pre>
+          </div>
+        </section>
+
+        <section>
+          <h5>First Normal Form (NF1)</h5>
+          <p><strong>Definition:</strong> A table is in First Normal Form when all its attributes contain only atomic
+            (indivisible) values, and each record is unique.</p>
+        </section>
+
+        <section>
+          <h5>Key Characteristics of NF1</h5>
+          <ul>
+            <li>Each column contains <span class="highlight">atomic values</span> (no repeating groups or arrays)</li>
+            <li>Each column must hold values of a <span class="highlight">one type</span></li>
+            <li>Each row must be unique, typically ensured by a <span class="highlight">primary key</span></li>
+            <li><span class="highlight">Order</span> of rows and columns does not affect the data's significance</li>
+          </ul>
+        </section>
+
+        <section>
+          <h5>Example of NF1</h5>
+          <div style="display: flex;">
+            <pre>
++----+-----------+-----------------+
+| id | name      | hobbies         |
++----+-----------+-----------------+
+| 1  | Alice     | Reading         |
+| 2  | Bob       | Cycling         |
+| 3  | Charlie   | Reading, Hiking |
++----+-----------+-----------------+
+        </pre>
+            <pre>
++----+-----------+-----------------+
+| id | name      | hobbies         |
++----+-----------+-----------------+
+| 1  | Alice     | Reading         |
+| 2  | Bob       | Cycling         |
+| 3  | Charlie   | Reading         |   
+| 4  | Charlie   | Hiking          |     
++----+-----------+-----------------+
+        </pre>
+          </div>
+        </section>
+
+        <section>
+          <h5>Data in NF1</h5>
+          <pre>
++------------+---------+----------------+-----------+------------+-------+
+| customer_id| name    | phone          | products  | city       | state |
++------------+---------+----------------+-----------+------------+-------+
+| 1          | Alice   | 123-456-7890   | Laptop    | New York   | NY    |
+| 2          | Alice   | 123-456-7890   | Mouse     | New York   | NY    |
+| 3          | Bob     | 987-654-3210   | Phone     | California | CA    |
+| 4          | Bob     | 987-654-3210   | Charger   | California | CA    |
+| 5          | Alice   | 123-456-7890   | Keyboard  | New York   | NY    |
+| 6          | Alice   | 123-456-7890   | Monitor   | New York   | NY    |
++------------+---------+----------------+-----------+------------+-------+
+          </pre>
+          How to query all keyboard products?
+        </section>
+
+        <section>
+          <h5>Data in NF1</h5>
+          <pre>
++------------+---------+----------------+-----------+------------+-------+
+| customer_id| name    | phone          | products  | city       | state |
++------------+---------+----------------+-----------+------------+-------+
+| 1          | Alice   | 123-456-7890   | Laptop    | New York   | NY    |
+| 2          | Alice   | 123-456-7890   | Mouse     | New York   | NY    |
+| 3          | Bob     | 987-654-3210   | Phone     | California | CA    |
+| 4          | Bob     | 987-654-3210   | Charger   | California | CA    |
+| 5          | Alice   | 123-456-7890   | Keyboard  | New York   | NY    |
+| 6          | Alice   | 123-456-7890   | Monitor   | New York   | NY    |
++------------+---------+----------------+-----------+------------+-------+
+          </pre>
+          How to query all products of the customer 1?
+        </section>
+
+        <section>
+          <h5>Data in NF1</h5>
+          <pre>
++------------+---------+----------------+-----------+------------+-------+
+| customer_id| name    | phone          | products  | city       | state |
++------------+---------+----------------+-----------+------------+-------+
+| 1          | Alice   | 123-456-7890   | Laptop    | New York   | NY    |
+| 2          | Alice   | 123-456-7890   | Mouse     | New York   | NY    |
+| 3          | Bob     | 987-654-3210   | Phone     | California | CA    |
+| 4          | Bob     | 987-654-3210   | Charger   | California | CA    |
+| 5          | Alice   | 123-456-7890   | Keyboard  | New York   | NY    |
+| 6          | Alice   | 123-456-7890   | Monitor   | New York   | NY    |
++------------+---------+----------------+-----------+------------+-------+
+          </pre>
+          How to query all products of the customers in CA?
+        </section>
+
+        <section>
+          <h5>Why NF1 is not sufficient?</h5>
+          <pre>
++------------+---------+----------------+-----------+------------+-------+
+| customer_id| name    | phone          | products  | city       | state |
++------------+---------+----------------+-----------+------------+-------+
+| 1          | Alice   | 123-456-7890   | Laptop    | New York   | NY    |
+| 2          | Alice   | 123-456-7890   | Mouse     | New York   | NY    |
+| 3          | Bob     | 987-654-3210   | Phone     | California | CA    |
+| 4          | Bob     | 987-654-3210   | Charger   | California | CA    |
+| 5          | Alice   | 123-456-7890   | Keyboard  | New York   | NY    |
+| 6          | Alice   | 123-456-7890   | Monitor   | New York   | NY    |
++------------+---------+----------------+-----------+------------+-------+
+          </pre>
+        </section>
+
+        <section>
+          <h5>Second Normal Form (2NF)</h5>
+          <ul>
+            <li>Remove partial dependencies</li>
+            <li>Non-key attributes must depend on the entire primary key</li>
+          </ul>
+          <div style="display: flex;">
+            <pre>
++------------+----------------+-----------+
+| customer_id| phone          | city      |
++------------+----------------+-----------+
+| 1          | 123-456-7890   | New York  |
+| 2          | 123-456-7890   | New York  |
+| 3          | 987-654-3210   | California|
+| 4          | 987-654-3210   | California|
++------------+----------------+-----------+
+              </pre>
+            <pre>
++------------+-----------+
+| product_id | product   |
++------------+----------+
+| 1          | Laptop   |
+| 2          | Mouse    |
+| 3          | Phone    |
+| 4          | Charger  |
+| 5          | Keyboard |
+| 6          | Monitor  |
++------------+-------- -+
+          </pre>
+            <pre>
++----------+-------------+
+| order_id | customer_id |
++----------+-------------+
+| 1        | 1           |
+| 2        | 2           |
+| 3        | 3           |
+| 4        | 4           |
++----------+-------------+
+          </pre>
+          </div>
+        </section>
+
+        <section>
+          <h5>Second Normal Form (2NF)</h5>
+          <table>
+            <thead>
+              <tr>
+                <th>Concept</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Remove partial dependencies</td>
+                <td>Eliminate attributes that depend on part of the key</td>
+              </tr>
+              <tr>
+                <td>Full dependency on primary key</td>
+                <td>Attributes depend on the whole key</td>
+              </tr>
+              <tr>
+                <td>Eliminate duplicate data</td>
+                <td>Separate customer and product tables</td>
+              </tr>
+              <tr>
+                <td>Use foreign keys</td>
+                <td>Link customer_id in orders to customers</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h5>Third Normal Form (3NF)</h5>
+          <ul>
+            <li>Remove transitive dependencies</li>
+            <li>Ensure non-key attributes are only dependent on the primary key</li>
+          </ul>
+          <div style="display: flex;">
+            <pre>
++------------+--------------+
+| customer_id| phone        |
++------------+--------------+
+| 1          | 123-456-7890 |
+| 2          | 123-456-7890 |
+| 3          | 987-654-3210 |
+| 4          | 987-654-3210 |
++------------+--------------+
+              </pre>
+            <pre>
++------------+---------+
+| product_id | product |
++------------+---------+
+| 1          | Laptop  |
+| 2          | Mouse   |
+| 3          | Phone   |
+| 4          | Charger |
+| 5          | Keyboard|
+| 6          | Monitor |
++------------+---------+
+          </pre>
+            <pre>
++------------+------------+-------+
+| customer_id| city       | state |
++------------+------------+-------+
+| 1          | New York   | NY    |
+| 2          | New York   | NY    |
+| 3          | California | CA    |
+| 4          | California | CA    |
++------------+------------+-------+
+          </pre>
+            <pre>
++----------+-------------+
+| order_id | customer_id |
++----------+-------------+
+| 1        | 1           |
+| 2        | 2           |
+| 3        | 3           |
+| 4        | 4           |
++----------+-------------+
+          </pre>
+          </div>
+
+        </section>
+
+        <!-- Indexing Module 7 -->
 
         <section id="module-7">
           <h5>Module 7<br>Relational Database Table Indexing</h5>
