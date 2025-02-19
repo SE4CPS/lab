@@ -5920,6 +5920,17 @@ CREATE TABLE Orders (OrderID INT, CustomerID INT, FOREIGN KEY (CustomerID) REFER
         </section>
 
         <section>
+          <h5>Does City Depend on State?</h5>
+          <p><span class="highlight">State depends on City</span>, not the other way around.</p>
+          <ul>
+            <li>Each <span class="highlight">city</span> belongs to one state</li>
+            <li>A <span class="highlight">state</span> has many cities</li>
+            <li>Knowing the city → you can find the state</li>
+            <li>Knowing the state → you cannot find a unique city</li>
+          </ul>
+        </section>
+
+        <section>
           <h5>Third Normal Form (3NF)</h5>
           <ul>
             <li><span class="highlight">Remove transitive dependencies</span></li>
@@ -5953,7 +5964,328 @@ CREATE TABLE Orders (OrderID INT, CustomerID INT, FOREIGN KEY (CustomerID) REFER
               </pre>
             </div>
           </div>
-        </section>       
+        </section>
+
+        <section>
+          <p>A table in NF1 is in <span class="highlight">3NF</span> if all <span class="highlight">non-key
+              attributes</span> depend only on the primary key (NF2) and do not depend on other non-key attributes
+            (NF3).</p>
+        </section>
+
+        <section>
+          <h5>Second Normal Form (2NF) to Third Normal Form (3NF)</h5>
+          <table>
+            <thead>
+              <tr>
+                <th>Step</th>
+                <th>Description</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1. Identify transitive dependencies</td>
+                <td>Find attributes that depend on a non-key attribute instead of the primary key</td>
+                <td>❌ customer_id → city → state</td>
+              </tr>
+              <tr>
+                <td>2. Remove transitive dependencies</td>
+                <td>Move dependent attributes to a separate table</td>
+                <td>✔ Create "Cities" table with city → state</td>
+              </tr>
+              <tr>
+                <td>3. Ensure direct dependency</td>
+                <td>All non-key attributes must depend only on the primary key</td>
+                <td>❌ customer_id → city → state → ✔ Store city_id in "Customers"</td>
+              </tr>
+              <tr>
+                <td>4. Split into separate tables</td>
+                <td>Move transitive dependencies to their own entities</td>
+                <td>✔ Customers, Orders, and Cities as separate tables</td>
+              </tr>
+              <tr>
+                <td>5. Use foreign keys</td>
+                <td>Link tables using primary and foreign keys</td>
+                <td>✔ customers.city_id → cities.city_id</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h5>History of Third Normal Form (3NF)</h5>
+          <ul>
+            <li><span class="highlight">1971</span> – Edgar F. Codd introduces 3NF to remove transitive dependencies
+            </li>
+            <li>1980s – 3NF becomes widely adopted to improve data integrity</li>
+            <li><span class="highlight">1990s</span> – SQL databases implement 3NF as a best practice</li>
+            <li>2000s-Present – 3NF remains a standard, though often denormalized for performance</li>
+          </ul>
+        </section>
+
+        <section>
+          <h5>Database Normal Forms</h5>
+          <table>
+            <thead>
+              <tr>
+                <th>Normal Form</th>
+                <th>Summmary</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="highlight">1NF</span></td>
+                <td>Eliminate repeating groups; ensure atomic values</td>
+              </tr>
+              <tr>
+                <td><span class="highlight">2NF</span></td>
+                <td>Remove partial dependencies; all attributes must depend on the whole primary key</td>
+              </tr>
+              <tr>
+                <td>3NF</td>
+                <td>Remove transitive dependencies; non-key attributes must depend only on the primary key</td>
+              </tr>
+              <tr>
+                <td>BCNF</td>
+                <td>Every determinant must be a candidate key; stricter than 3NF</td>
+              </tr>
+              <tr>
+                <td>4NF</td>
+                <td>Eliminate multi-valued dependencies; each row represents a single fact</td>
+              </tr>
+              <tr>
+                <td>5NF</td>
+                <td>Decompose tables to remove redundancy while preserving all joins</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h5>Questions?</h5>
+        </section>
+
+        <section>
+          <h5>Unnormalized, 1NF, 2NF, or 3NF?</h5>
+          <div style="display: flex; gap: 20px; justify-content: center; flex-direction: row;">
+            <div>
+              <h6>Orders</h6>
+              <pre>
++----------+------------+-----------------------+
+| order_id | customer  | products               |
++----------+------------+-----------------------+
+| 1        | Alice     | Laptop, Mouse          |
+| 2        | Bob       | Phone, Charger         |
++----------+------------+-----------------------+
+              </pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h5>Unnormalized, 1NF, 2NF, or 3NF?</h5>
+          <div style="display: flex; gap: 20px; justify-content: center; flex-direction: row;">
+            <div>
+              <h6>Orders</h6>
+              <pre>
++----------+-----------+-------------+
+| order_id | customer  | product_id  |
++----------+------------+------------+
+| 1        | Alice     | 101         |
+| 1        | Alice     | 102         |
+| 2        | Bob       | 103         |
+| 2        | Bob       | 104         |
++----------+-----------+-------------+
+              </pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h5>Unnormalized, 1NF, 2NF, or 3NF?</h5>
+          <div style="display: flex; gap: 20px; justify-content: center; flex-direction: row;">
+            <div>
+              <h6>Orders</h6>
+              <pre>
++----------+------------+----------+-------+
+| order_id | customer  | product  | city   |
++----------+------------+----------+-------+
+| 1        | Alice     | Laptop   | NY     |
+| 1        | Alice     | Mouse    | NY     |
+| 2        | Bob       | Phone    | CA     |
+| 2        | Bob       | Charger  | CA     |
++----------+------------+----------+-------+
+              </pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h5>Unnormalized, 1NF, 2NF, or 3NF?</h5>
+          <div style="display: flex; gap: 20px; justify-content: center; flex-direction: row;">
+            <div>
+              <h6>Customers</h6>
+              <pre>
++------------+----------------+-------------+-------+---------+
+| customer_id| phone          | city        | state | zip_code|
++------------+----------------+-------------+-------+---------+
+| 1          | 123-456-7890   | New York    | NY    | 10001   |
+| 3          | 987-654-3210   | Los Angeles | CA    | 90001   |
++------------+----------------+-------------+-------+---------+
+              </pre>
+            </div>
+            <div>
+              <h6>Orders</h6>
+              <pre>
+    +----------+-------------+
+    | order_id | customer_id |
+    +----------+-------------+
+    | 1        | 1           |
+    | 2        | 3           |
+    +----------+-------------+
+              </pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h5>Unnormalized, 1NF, 2NF, or 3NF?</h5>
+          <div style="display: flex; gap: 20px; justify-content: center; flex-direction: row;">
+            <div>
+              <h6>Customers</h6>
+              <pre>
++------------+----------------+---------+
+| customer_id| phone          | city_id |
++------------+----------------+---------+
+| 1          | 123-456-7890   | 101     |
+| 3          | 987-654-3210   | 102     |
++------------+----------------+---------+
+              </pre>
+            </div>
+            <div>
+              <h6>Cities</h6>
+              <pre>
+      +---------+-------------+---------+
+      | city_id | city       | zip_code |
+      +---------+-------------+---------+
+      | 101     | New York   | 10001    |
+      | 102     | Los Angeles| 90001    |
+      +---------+-------------+---------+
+              </pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h5>Questions?</h5>
+        </section>
+
+        <section>
+          <h5>Database Engineering Process in Practice</h5>
+          <div
+            style="display: flex; flex-direction: row; gap: 10px; border: 2px solid black; padding: 15px; width: fit-content;">
+            <pre class="highlight">
++------+
+| Data | -->
++------+
+            </pre>
+            <pre>
++--------------+
+| Requirements | -->
++--------------+
+  </pre>
+            <pre>
++-----+
+| ERD | -->
++-----+
+  </pre>
+            <pre>
++----------+
+| Database | -->
++----------+
+  </pre>
+            <pre>
++-------+
+| Table | 
++-------+
+  </pre>
+          </div>
+        </section>
+
+        <section>
+          <h5>Discussion: When to Normalize or denormalize?</h5>
+        </section>
+
+        <section>
+          <h5>Questions?</h5>
+        </section>
+
+        <section>
+          <h5>Recursive JOINS</h5>
+        </section>
+
+        <section>
+          <h5>Sample Data: Car Parts Hierarchy</h5>
+          <pre>
+        +---------+------------+---------------+
+        | part_id | name       | parent_part_id|
+        +---------+------------+---------------+
+        | 1       | Car        | NULL          |  <-- Root (Top-Level Part)
+        | 2       | Engine     | 1             |  <-- Engine belongs to Car
+        | 3       | Wheel      | 1             |  <-- Wheel belongs to Car
+        | 4       | Piston     | 2             |  <-- Piston belongs to Engine
+        | 5       | Bolt       | 4             |  <-- Bolt belongs to Piston
+        +---------+------------+---------------+
+          </pre>
+        </section>
+
+        <section>
+          <h5>Recursive Self-JOIN with Levels</h5>
+          <pre><code>
+        WITH RECURSIVE CarParts AS (
+            -- Start with the whole car (top-level part)
+            SELECT t1.part_id, t1.name AS part_name, 
+                   t1.parent_part_id AS parent_id, 
+                   NULL AS parent_name, 1 AS level
+            FROM parts AS t1
+            WHERE t1.parent_part_id IS NULL  
+        
+            UNION ALL
+        
+            -- Recursively join parts to their parent parts and track levels
+            SELECT t2.part_id, t2.name, t2.parent_part_id, 
+                   c.part_name AS parent_name, c.level + 1
+            FROM parts AS t2
+            JOIN CarParts AS c ON t2.parent_part_id = c.part_id
+        )
+        SELECT * FROM CarParts;
+          </code></pre>
+        </section>
+        
+        <section>
+          <h5>Recursive Self-JOIN Output</h5>
+          <p>Querying the full car parts hierarchy using recursion.</p>
+          <pre><code>
+        +---------+------------+-----------+-------------+--------+
+        | part_id | part_name  | parent_id | parent_name | level  |
+        +---------+------------+-----------+-------------+--------+
+        | 1       | Car        | NULL      | NULL        | 1      |
+        | 2       | Engine     | 1         | Car         | 2      |
+        | 3       | Wheel      | 1         | Car         | 2      |
+        | 4       | Piston     | 2         | Engine      | 3      |
+        | 5       | Bolt       | 4         | Piston      | 4      |
+        +---------+------------+-----------+-------------+--------+
+          </code></pre>
+          <p>🔁 Recursive query returns all levels of the hierarchy!</p>
+        </section>
+
+        <section>
+          <h5>Questions?</h5>
+        </section>
+
+        <section>
+          <h5>Project Part 1, Homework 3, Lab 3</h5>
+        </section>
 
         <!-- Indexing Module 7 -->
 
