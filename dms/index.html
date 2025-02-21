@@ -196,7 +196,8 @@
                 <td style="padding: 6px; border: 1px solid #666;"></td>
               </tr>
               <tr style="color: #ccc;">
-                <td style="padding: 6px; border: 1px solid #666;">6 (Feb <a href="./#/feb-19">19</a>, 21)</td>
+                <td style="padding: 6px; border: 1px solid #666;">6 (Feb <a href="./#/feb-19">19</a>, <a
+                    href="./#/feb-21">21</a>)</td>
                 <td style="padding: 6px; border: 1px solid #666;"><a href="./#/module-6">Relational
                     Database Normalization</a></td>
                 <td style="padding: 6px; border: 1px solid #666;"></td>
@@ -6261,7 +6262,7 @@ CREATE TABLE Orders (OrderID INT, CustomerID INT, FOREIGN KEY (CustomerID) REFER
         SELECT * FROM CarParts;
           </code></pre>
         </section>
-        
+
         <section>
           <h5>Recursive Self-JOIN Output</h5>
           <pre><code>
@@ -6277,12 +6278,423 @@ CREATE TABLE Orders (OrderID INT, CustomerID INT, FOREIGN KEY (CustomerID) REFER
           </code></pre>
         </section>
 
+        <section id="feb-21">
+          <h5>February 21, 2025</h5>
+          <ul>
+            <li>Practice Question</li>
+            <li>Data Incon</li>
+            <li>First Normal Form (1NF): Atomic values, no repeating groups</li>
+            <li>Second Normal Form (2NF): Remove partial dependencies</li>
+            <li>Third Normal Form (3NF): Remove transitive dependencies</li>
+            <li>Practice Exercise: Normalize a sample table</li>
+            <li>Discussion: When to denormalize?</li>
+          </ul>
+        </section>
+
+        <section>
+          <h5>What Normal Form is This?</h5>
+          <pre>
+                +----------+------------+------------------+
+                | order_id | customer  | products          |
+                +----------+------------+------------------+
+                | 1        | Alice     | Laptop, Mouse     |
+                | 2        | Bob       | Phone, Charger    |
+                +----------+------------+------------------+
+  </pre>
+          <details>
+            <summary>Show Answer</summary>
+            <p id="q0-5738">Unnormalized (UNF) – The "products" contains multiple values
+            </p>
+          </details>
+        </section>
+
+        <section>
+          <h5>What Normal Form is This?</h5>
+          <pre>
+                +----------+------------+----------+-------+
+                | order_id | customer  | product  | city   |
+                +----------+------------+----------+-------+
+                | 1        | Alice     | Laptop   | NY     |
+                | 1        | Alice     | Mouse    | NY     |
+                | 2        | Bob       | Phone    | CA     |
+                | 2        | Bob       | Charger  | CA     |
+                +----------+------------+----------+-------+
+  </pre>
+          <details>
+            <summary>Show Answer</summary>
+            <p id="q1-8592">2NF – "city" depends on "customer"</p>
+          </details>
+        </section>
+
+        <section>
+          <p>Which of the following violates 1NF?</p>
+          <ul class="alpha-list">
+            <li>A table with a primary key</li>
+            <li>A table where a column stores multiple values (e.g., "Engine, Wheel")</li>
+            <li>A table with foreign keys</li>
+            <li>A table without NULL values</li>
+          </ul>
+          <details>
+            <summary>Show Answer</summary>
+            <p id="q2-4923">Answer: A</p>
+          </details>
+        </section>
+
+        <section>
+          <p>How do you fix a table that violates 1NF?</p>
+          <ul class="alpha-list">
+            <li>Remove duplicate rows</li>
+            <li>Store multi-valued attributes in separate rows</li>
+            <li>Use a composite primary key</li>
+            <li>Merge columns to reduce table size</li>
+          </ul>
+          <details>
+            <summary>Show Answer</summary>
+            <p id="q3-8271">Answer: B</p>
+          </details>
+        </section>
+
+        <section>
+          <p>Which table violates 2NF?</p>
+          <ul class="alpha-list">
+            <li>A table where all attributes depend on the full primary key</li>
+            <li>A table with a non-key column that depends on only part of a composite key</li>
+            <li>A table with foreign keys</li>
+            <li>A table with NULL values</li>
+          </ul>
+          <details>
+            <summary>Show Answer</summary>
+            <p id="q4-3718">Answer: B</p>
+          </details>
+        </section>
+
+        <section>
+          <p>How do you convert a 1NF table to 2NF?</p>
+          <ul class="alpha-list">
+            <li>Remove transitive dependencies</li>
+            <li>Ensure all non-key attributes depend on the whole primary key</li>
+            <li>Remove foreign keys</li>
+            <li>Merge duplicate records</li>
+          </ul>
+          <details>
+            <summary>Show Answer</summary>
+            <p id="q4-6439">Answer: B</p>
+          </details>
+        </section>
+
+        <section>
+          <p>Which table violates 3NF?</p>
+          <ul class="alpha-list">
+            <li>A table where non-key attributes depend only on the primary key</li>
+            <li>A table where a non-key column depends on another non-key column</li>
+            <li>A table with foreign keys</li>
+            <li>A table without NULL values</li>
+          </ul>
+          <details>
+            <summary>Show Answer</summary>
+            <p id="q5-2147">Answer: B</p>
+          </details>
+        </section>
+
+        <section>
+          <p>How do you fix a table that violates 3NF?</p>
+          <ul class="alpha-list">
+            <li>Remove attributes that do not depend on the primary key</li>
+            <li>Create separate tables for attributes with transitive dependencies</li>
+            <li>Add composite keys</li>
+            <li>Remove NULL values</li>
+          </ul>
+          <details>
+            <summary>Show Answer</summary>
+            <p id="q6-5126">Answer: B</p>
+          </details>
+        </section>
+
+        <section>
+          <p>Which of these real-world cases breaks 1NF?</p>
+          <ul class="alpha-list">
+            <li>A spaceship database storing multiple crew names in one column</li>
+            <li>A database with a primary key</li>
+            <li>A table using foreign keys</li>
+            <li>A table with atomic values</li>
+          </ul>
+          <details>
+            <summary>Show Answer</summary>
+            <p id="q7-8934">Answer: A</p>
+          </details>
+        </section>
+
+        <section>
+          <p>What is the key difference between 2NF and 3NF?</p>
+          <ul class="alpha-list">
+            <li>2NF focuses on foreign keys, 3NF removes NULL values</li>
+            <li>2NF only works for composite keys</li>
+            <li>3NF does not allow primary keys</li>
+            <li>2NF removes partial dependencies, 3NF removes transitive dependencies</li>
+          </ul>
+          <details>
+            <summary>Show Answer</summary>
+            <p id="q8-7861">Answer: D</p>
+          </details>
+        </section>
+
+        <section>
+          <p>Which is NOT a benefit of normalization?</p>
+          <ul class="alpha-list">
+            <li>Reduces redundancy</li>
+            <li>Improves consistency</li>
+            <li>Increases update anomalies</li>
+            <li>Improves query performance</li>
+          </ul>
+          <details>
+            <summary>Show Answer</summary>
+            <p id="q9-3742">Answer: C</p>
+          </details>
+        </section>
+
+        <section>
+          <p>Which is a possible downside of normalization?</p>
+          <ul class="alpha-list">
+            <li>Too many joins can slow down queries</li>
+            <li>It increases redundancy</li>
+            <li>It makes updates inconsistent</li>
+            <li>It prevents data integrity</li>
+          </ul>
+          <details>
+            <summary>Show Answer</summary>
+            <p id="q10-9283">Answer: A</p>
+          </details>
+        </section>
+
+        <section>
+          <h5>Functional vs. Semantic Dependency</h5>
+          <ul>
+            <li><span class="highlight">Functional Dependency (2NF)</span> → Every non-key attribute depends on full
+              primary key</li>
+            <li><span class="highlight">Semantic Dependency (3NF)</span> → Every non-key attribute depends only on the
+              primary key, not on other non-key attributes</li>
+          </ul>
+        </section>
+
         <section>
           <h5>Questions?</h5>
         </section>
 
         <section>
-          <h5>Project Part 1, Homework 3, Lab 3</h5>
+          <div style="display: flex; flex-direction: row; gap: 10px; padding: 15px; width: fit-content;">
+            <pre class="highlight">
+        +------+
+        | Data | -->
+        +------+
+            </pre>
+            <pre>
++-----+
+| NF1 | -->
++-----+
+            </pre>
+            <pre>
++--------------+
+| Requirements | -->
++--------------+
+  </pre>
+            <pre>
++-----------+
+| NF2 + NF3 | -->
++-----------+
+  </pre>
+            <pre>
++-------+
+| Table | 
++-------+
+  </pre>
+          </div>
+        </section>
+
+        <section data-background="black">
+          <img src="https://www.thevillaserena.com/img/space-shuttle/space-shuttle-2.jpg" alt="Projection Operation"
+            style="max-width: 100%;">
+        </section>
+
+        <section data-background="white">
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/17/SanDisk-Cruzer-USB-4GB-ThumbDrive.jpg/1200px-SanDisk-Cruzer-USB-4GB-ThumbDrive.jpg"
+            alt="Projection Operation" style="max-width: 100%;">
+        </section>
+
+        <section>
+          <h5>Unnormalized Space Mission Data</h5>
+          <p>🔗 <a href="https://github.com/SE4CPS/DMS/tree/main/database/PostgreSQL" target="_blank">View Dataset on
+              GitHub</a></p>
+        </section>
+
+        <section>
+          <div style="display: flex; flex-direction: row; gap: 10px; padding: 15px; width: fit-content;">
+            <pre>
+        +------+
+        | Data | -->
+        +------+
+            </pre>
+            <pre class="highlight">
++-----+
+| NF1 | -->
++-----+
+            </pre>
+            <pre>
++--------------+
+| Requirements | -->
++--------------+
+  </pre>
+            <pre>
++-----------+
+| NF2 + NF3 | -->
++-----------+
+  </pre>
+            <pre>
++-------+
+| Table | 
++-------+
+  </pre>
+          </div>
+        </section>
+
+        <section>
+          <div style="display: flex; flex-direction: row; gap: 10px; padding: 15px; width: fit-content;">
+            <pre>
+        +------+
+        | Data | -->
+        +------+
+            </pre>
+            <pre>
++-----+
+| NF1 | -->
++-----+
+            </pre>
+            <pre class="highlight">
++--------------+
+| Requirements | -->
++--------------+
+  </pre>
+            <pre>
++-----------+
+| NF2 + NF3 | -->
++-----------+
+  </pre>
+            <pre>
++-------+
+| Table | 
++-------+
+  </pre>
+          </div>
+        </section>
+
+        <section>
+          <p>❓ <span class="highlight">Which missions had the most hostile alien encounters?</span></p>
+        </section>
+
+        <section>
+          <div style="display: flex; flex-direction: row; gap: 10px; padding: 15px; width: fit-content;">
+            <pre>
+        +------+
+        | Data | -->
+        +------+
+            </pre>
+            <pre>
++-----+
+| NF1 | -->
++-----+
+            </pre>
+            <pre>
++--------------+
+| Requirements | -->
++--------------+
+  </pre>
+            <pre class="highlight">
++-----------+
+| NF2 + NF3 | -->
++-----------+
+  </pre>
+            <pre>
++-------+
+| Table | 
++-------+
+  </pre>
+          </div>
+        </section>
+
+        <section>
+          <div style="display: flex; flex-direction: row; gap: 10px; padding: 15px; width: fit-content;">
+            <pre>
+        +------+
+        | Data | -->
+        +------+
+            </pre>
+            <pre>
++-----+
+| NF1 | -->
++-----+
+            </pre>
+            <pre>
++--------------+
+| Requirements | -->
++--------------+
+  </pre>
+            <pre>
++-----------+
+| NF2 + NF3 | -->
++-----------+
+  </pre>
+            <pre class="highlight">
++-------+
+| Table | 
++-------+
+  </pre>
+          </div>
+        </section>
+
+        <section>
+          <p>🔗 <a href="https://sqliteonline.com/" target="_blank">SQL Database</a></p>
+        </section>
+
+        <section>
+          <h5>Questions?</h5>
+        </section>
+
+        <section>
+          <h5>Project Part 1 (Mar/21), Homework 3 (Feb/24), Lab 3  (Feb/24)</h5>
+        </section>
+
+        <section>
+          <h5>Git Checkout & Setup for DMS (Part 1)</h5>
+          <pre><code>        # 1️⃣ Clone the repository
+        git clone https://github.com/SE4CPS/DMS.git
+        
+        # 2️⃣ Navigate to the project folder
+        cd DMS/project/part1
+        
+        # 3️⃣ Check current teams
+        dir  # (Windows) or ls (Mac/Linux)
+        
+        # 4️⃣ Create a new team folder
+        mkdir team-n
+        cd team-n</code></pre>
+        </section>
+
+        <section>
+          <h5>Git Commit & Push (Part 2)</h5>
+          <pre><code>        # 5️⃣ Make your code changes
+        
+        # 6️⃣ Stage your new folder
+        git add team-n
+        
+        # 7️⃣ Commit your changes
+        git commit -m "Added team-n folder"
+        
+        # 8️⃣ Push changes to the repository
+        git push origin main</code></pre>
+        </section>
+
+        <section>
+          <h5>Thanks</h5>
         </section>
 
         <!-- Indexing Module 7 -->
