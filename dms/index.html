@@ -231,7 +231,8 @@
                 <td style="padding: 6px; border: 1px solid #666;">Holiday Week</td>
               </tr>
               <tr style="color: #ccc;">
-                <td style="padding: 6px; border: 1px solid #666;">10 (Mar <a href="./#/mar-17">17</a>, 19, 21)</td>
+                <td style="padding: 6px; border: 1px solid #666;">10 (Mar <a href="./#/mar-17">17</a>, <a
+                    href="./#/mar-19">19</a>, 21)</td>
                 <td style="padding: 6px; border: 1px solid #666;"><a href="./#/module-10">Relational
                     Database Transactions</a></td>
                 <td style="padding: 6px; border: 1px solid #666;">Lab 4 + Homework 4 (2w), Project Part
@@ -9254,9 +9255,410 @@ SELECT category, AVG(price) AS average_price FROM Flowers GROUP BY category HAVI
           <h5>Questions</h5>
         </section>
 
+        <section id="mar-19">
+          <h5>March 19, 2025</h5>
+          <h5>Relational Database Transactions</h5>
+          <ul>
+            <li>ACID Properties</li>
+            <li>Transaction States</li>
+            <li>Concurrency Control</li>
+            <li>Isolation Levels</li>
+            <li>Practice Exercise</li>
+          </ul>
+        </section>
+
         <section>
           <h5>Relational Database Transactions</h5>
         </section>
+
+        <section>
+          <h2>ACID Properties</h2>
+        </section>
+
+        <section>
+          <h3>Atomicity</h3>
+          <ul>
+            <li>Ensures that all operations in a transaction are completed</li>
+            <li>If any part of the transaction fails, the entire transaction is rolled back</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Consistency</h3>
+          <ul>
+            <li>Ensures the database remains in a valid state before and after transactions</li>
+            <li>Transactions must respect all integrity constraints</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Isolation</h3>
+          <ul>
+            <li>Transactions execute independently without interfering with each other</li>
+            <li>Prevents issues like invalid reads, non-repeatable reads, and phantom reads</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Durability</h3>
+          <ul>
+            <li>Ensures that once a transaction is committed, it remains permanently stored</li>
+            <li>Data is saved even in case of a system crash</li>
+          </ul>
+        </section>
+
+        <section>
+          <p>A transaction partially executes, and some operations succeed while others fail, leaving the database in an
+            inconsistent state. Which ACID property is violated?</p>
+          <ul class="alpha-list">
+            <li>Atomicity</li>
+            <li>Consistency</li>
+            <li>Isolation</li>
+            <li>Durability</li>
+          </ul>
+          <details>
+            <summary>Show Answer</summary>
+            <p><strong>Correct Answer: A) Atomicity</strong></p>
+          </details>
+        </section>
+
+        <section>
+          <p>Two transactions read and update the same record simultaneously, leading to inconsistent data due to
+            uncommitted changes. Which ACID property is violated?</p>
+          <ul>
+            <li>Atomicity</li>
+            <li>Consistency</li>
+            <li>Isolation</li>
+            <li>Durability</li>
+          </ul>
+          <details>
+            <summary>Show Answer</summary>
+            <p><strong>Correct Answer: C) Isolation</strong></p>
+          </details>
+        </section>
+
+        <section>
+          <h2>Transaction States</h2>
+        </section>
+
+        <section>
+          <table border="1">
+            <tr>
+              <th>State</th>
+              <th>Description</th>
+              <th>SQL Keyword (SQLite, PostgreSQL, MariaDB, Oracle)</th>
+            </tr>
+            <tr>
+              <td>Active</td>
+              <td>The transaction is in progress and operations are being executed</td>
+              <td>BEGIN TRANSACTION; / START TRANSACTION;</td>
+            </tr>
+            <tr>
+              <td>Partially Committed</td>
+              <td>All operations have been executed, but the final commit is pending</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Committed</td>
+              <td>All changes are permanently saved to the database, completing the transaction</td>
+              <td>COMMIT;</td>
+            </tr>
+            <tr>
+              <td>Failed</td>
+              <td>An error occurred during execution, preventing further progress</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Rollback</td>
+              <td>The transaction is explicitly reversed and returning the database to its previous
+                state</td>
+              <td>ROLLBACK;</td>
+            </tr>
+          </table>
+        </section>
+
+        <section>
+          <h2>Concurrency Control</h2>
+        </section>
+
+        <section>
+          <h3>What is Concurrency Control?</h3>
+          <p>Concurrency control ensures that multiple transactions can execute simultaneously without interfering with
+            each other, maintaining data integrity and consistency.</p>
+        </section>
+
+        <section>
+          <h3>Problems in Concurrency</h3>
+          <ul>
+            <li>Invalid Reads - A transaction reads uncommitted changes from another transaction</li>
+            <li>Non-Repeatable Reads - A transaction gets different results when reading the same data multiple times
+            </li>
+            <li>Phantom Reads - A transaction sees new rows inserted by another transaction during its execution</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Concurrency Control Methods</h3>
+        </section>
+
+        <section>
+          <table border="1">
+            <tr>
+              <th>Method</th>
+              <th>Description</th>
+              <th>Used In</th>
+              <th>Example (T1, T2, Value X)</th>
+            </tr>
+            <tr>
+              <td>Lock-Based Concurrency</td>
+              <td>Transactions acquire locks on data to prevent conflicts</td>
+              <td>PostgreSQL, MySQL (InnoDB), Oracle</td>
+              <td>
+                T1 locks X=10 and updates it to X=20<br>
+                T2 tries to update X but must wait until T1 commits or rolls back
+              </td>
+            </tr>
+            <tr>
+              <td>Optimistic Concurrency Control</td>
+              <td>Transactions proceed without locking, but check for conflicts before committing</td>
+              <td>SQLite, PostgreSQL (MVCC), Oracle</td>
+              <td>
+                T1 reads X=10, performs calculations<br>
+                T2 updates X=20 and commits<br>
+                T1 tries to commit X=15 but detects conflict and must restart
+              </td>
+            </tr>
+            <tr>
+              <td>Timestamp-Based Concurrency</td>
+              <td>Each transaction gets a timestamp and is executed based on ordering rules</td>
+              <td>Oracle, PostgreSQL (MVCC), SQL Server</td>
+              <td>
+                T1 (timestamp 100) reads X=10<br>
+                T2 (timestamp 200) updates X=20 and commits<br>
+                T1 tries to update X=15 but is aborted due to an older timestamp
+              </td>
+            </tr>
+            <tr>
+              <td>Multiversion Concurrency Control (MVCC)</td>
+              <td>Each transaction sees a snapshot of the database, avoiding locks</td>
+              <td>PostgreSQL, MySQL (InnoDB), Oracle</td>
+              <td>
+                T1 starts and sees X=10<br>
+                T2 updates X=20 and commits<br>
+                T1 still sees X=10 until it commits and starts a new transaction
+              </td>
+            </tr>
+          </table>
+        </section>
+
+        <section>
+          <table border="1">
+            <tr>
+              <th>Method</th>
+              <th>Best When ✅</th>
+              <th>Not Ideal When ❌</th>
+            </tr>
+            <tr>
+              <td>Lock-Based Concurrency</td>
+              <td>✅ High-conflict environments where strict consistency is required (e.g., financial transactions)</td>
+              <td>❌ High-read workloads, as locks can cause contention and slow down performance</td>
+            </tr>
+            <tr>
+              <td>Optimistic Concurrency Control (OCC)</td>
+              <td>✅ Read-heavy workloads with infrequent conflicts (e.g., analytics, dashboards)</td>
+              <td>❌ High-write workloads where conflicts are common, leading to frequent transaction retries</td>
+            </tr>
+            <tr>
+              <td>Timestamp-Based Concurrency</td>
+              <td>✅ Systems that require strict ordering of transactions (e.g., blockchain, distributed databases)</td>
+              <td>❌ Systems where real-time changes need immediate visibility to other transactions</td>
+            </tr>
+            <tr>
+              <td>Multiversion Concurrency Control (MVCC)</td>
+              <td>✅ Databases with many concurrent reads and some writes, avoiding read locks (e.g., PostgreSQL, MySQL
+                InnoDB)</td>
+              <td>❌ When strict consistency is required, as it may allow anomalies like write skew</td>
+            </tr>
+          </table>
+        </section>
+
+        <section>
+          <h2>Isolation Control</h2>
+        </section>
+
+        <section>
+          <p>Isolation ensures that transactions execute independently, preventing conflicts and inconsistencies when
+            multiple transactions run concurrently.</p>
+        </section>
+
+        <section>
+          <table border="1">
+            <tr>
+              <th>Isolation Level</th>
+              <th>Description</th>
+              <th>Best When ✅</th>
+              <th>Not Ideal When ❌</th>
+            </tr>
+            <tr>
+              <td>Read Uncommitted</td>
+              <td>Allows transactions to read uncommitted changes from other transactions, leading to invalid reads</td>
+              <td>✅ Performance is the highest priority and minor inconsistencies are acceptable</td>
+              <td>❌ Data consistency is required, as invalid reads can occur</td>
+            </tr>
+            <tr>
+              <td>Read Committed</td>
+              <td>Transactions can only read committed data, preventing invalid reads but allowing non-repeatable reads
+              </td>
+              <td>✅ General-purpose applications where occasional inconsistencies are tolerable</td>
+              <td>❌ When repeatable reads are necessary to maintain consistency</td>
+            </tr>
+            <tr>
+              <td>Repeatable Read</td>
+              <td>Ensures that transactions read the same data multiple times without seeing changes from other
+                transactions</td>
+              <td>✅ When avoiding non-repeatable reads is critical, such as in financial applications</td>
+              <td>❌ Systems with high concurrency, as it may reduce performance due to increased locking</td>
+            </tr>
+            <tr>
+              <td>Serializable</td>
+              <td>Enforces full isolation by executing transactions as if they run sequentially, eliminating concurrency
+                issues</td>
+              <td>✅ When absolute consistency is required, such as in banking and accounting systems</td>
+              <td>❌ High-concurrency environments, as it can lead to significant performance bottlenecks</td>
+            </tr>
+          </table>
+        </section>
+
+        <section>
+          <table border="1">
+            <tr>
+              <th>Isolation Level</th>
+              <th>Transaction</th>
+              <th>Step</th>
+              <th>Value of X</th>
+            </tr>
+            <tr>
+              <td rowspan="4">Read Uncommitted</td>
+              <td>T1</td>
+              <td>Starts and reads X</td>
+              <td>X=10</td>
+            </tr>
+            <tr>
+              <td>T2</td>
+              <td>Starts, updates X to 20, does not commit</td>
+              <td>X=20 (invalid read visible to T1)</td>
+            </tr>
+            <tr>
+              <td>T1</td>
+              <td>Reads X again</td>
+              <td>X=20</td>
+            </tr>
+            <tr>
+              <td>T2</td>
+              <td>Rolls back changes</td>
+              <td>X=10 (T1 already saw uncommitted changes)</td>
+            </tr>
+
+            <tr>
+              <td rowspan="4">Read Committed</td>
+              <td>T1</td>
+              <td>Starts and reads X</td>
+              <td>X=10</td>
+            </tr>
+            <tr>
+              <td>T2</td>
+              <td>Starts, updates X to 20, commits</td>
+              <td>X=20</td>
+            </tr>
+            <tr>
+              <td>T1</td>
+              <td>Reads X again</td>
+              <td>X=20 (sees committed changes)</td>
+            </tr>
+            <tr>
+              <td>T2</td>
+              <td>Updates X to 25, commits</td>
+              <td>X=25 (T1 sees new committed changes)</td>
+            </tr>
+
+            <tr>
+              <td rowspan="4">Repeatable Read</td>
+              <td>T1</td>
+              <td>Starts and reads X</td>
+              <td>X=10</td>
+            </tr>
+            <tr>
+              <td>T2</td>
+              <td>Starts, updates X to 20, commits</td>
+              <td>X=20</td>
+            </tr>
+            <tr>
+              <td>T1</td>
+              <td>Reads X again</td>
+              <td>X=10 (does not see T2's changes)</td>
+            </tr>
+            <tr>
+              <td>T1</td>
+              <td>Reads X once more</td>
+              <td>X=10 (still sees original snapshot)</td>
+            </tr>
+
+            <tr>
+              <td rowspan="4">Serializable</td>
+              <td>T1</td>
+              <td>Starts and reads X</td>
+              <td>X=10</td>
+            </tr>
+            <tr>
+              <td>T2</td>
+              <td>Starts, tries to update X to 20</td>
+              <td>Blocked by T1</td>
+            </tr>
+            <tr>
+              <td>T1</td>
+              <td>Commits</td>
+              <td>X=10</td>
+            </tr>
+            <tr>
+              <td>T2</td>
+              <td>Updates X to 20</td>
+              <td>X=20 (now visible to new transactions)</td>
+            </tr>
+          </table>
+        </section>
+
+        <section>
+          <p>Which isolation level allows invalid reads, making it the least strict but fastest?</p>
+          <ul class="alpha-list">
+            <li>Serializable</li>
+            <li>Repeatable Read</li>
+            <li>Read Committed</li>
+            <li>Read Uncommitted</li>
+          </ul>
+          <details>
+            <summary>Show Answer</summary>
+            <p><strong>Answer: D) Read Uncommitted</strong></p>
+          </details>
+        </section>
+
+        <section>
+          <p>Which isolation level is generally recommended for preventing anomalies while maintaining good concurrency
+            in most applications?</p>
+          <ul class="alpha-list">
+            <li>Serializable</li>
+            <li>Repeatable Read</li>
+            <li>Read Committed</li>
+            <li>Read Uncommitted</li>
+          </ul>
+          <details>
+            <summary>Show Answer</summary>
+            <p><strong>Answer: C) Read Committed</strong></p>
+            <p>Read Committed is often recommended because it prevents dirty reads and provides a good balance between
+              consistency and performance.</p>
+          </details>
+        </section>
+
+        <section>Practice Exercise</section>
 
         <section>
           <p>Hotel Reservation</p>
@@ -9272,6 +9674,48 @@ SELECT category, AVG(price) AS average_price FROM Flowers GROUP BY category HAVI
     INSERT INTO Payments (PaymentID, ReservationID, Amount, PaymentDate) 
     VALUES (501, 202, 499.99, '2025-03-15');
           </code></pre>
+        </section>
+
+        <section>
+          <h5>ACID Properties: Atomicity</h5>
+          <p>What happens if a transaction fails during execution?</p>
+          <ul class="alpha-list">
+            <li>All changes are permanently saved</li>
+            <li>Only successful operations are kept</li>
+            <li>All changes are rolled back</li>
+            <li>The database remains locked</li>
+          </ul>
+          <button onclick="document.getElementById('acidQ1').style.display='block'">Show Answer</button>
+          <p id="acidQ1" style="display:none;" class="highlight">Correct Answer: C. All changes are rolled back -
+            Atomicity ensures transactions are all-or-nothing</p>
+        </section>
+
+        <section>
+          <h5>ACID Properties: Consistency</h5>
+          <p>Which statement best describes the Consistency property?</p>
+          <ul class="alpha-list">
+            <li>Data is always encrypted</li>
+            <li>Database moves from one valid state to another</li>
+            <li>Records are stored in sequential order</li>
+            <li>All users see the same data version</li>
+          </ul>
+          <button onclick="document.getElementById('acidQ2').style.display='block'">Show Answer</button>
+          <p id="acidQ2" style="display:none;" class="highlight">Correct Answer: B. Database moves from one valid state
+            to another - Consistency maintains data integrity rules</p>
+        </section>
+
+        <section>
+          <h5>ACID Properties: Isolation</h5>
+          <p>What is the primary purpose of the Isolation property?</p>
+          <ul class="alpha-list">
+            <li>To prevent unauthorized access</li>
+            <li>To make transactions execute faster</li>
+            <li>To prevent concurrent transactions from interfering</li>
+            <li>To ensure data encryption</li>
+          </ul>
+          <button onclick="document.getElementById('acidQ3').style.display='block'">Show Answer</button>
+          <p id="acidQ3" style="display:none;" class="highlight">Correct Answer: C. To prevent concurrent transactions
+            from interfering - Isolation ensures concurrent transactions appear sequential</p>
         </section>
 
         <section>
