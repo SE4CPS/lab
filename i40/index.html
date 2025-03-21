@@ -247,7 +247,7 @@
                             </tr>
                             <tr style="color: #ccc;">
                                 <td style="padding: 6px; border: 1px solid #666;">10 (Mar <a href="./#/mar-17">17</a>,
-                                    <a href="./#/mar-19">19</a>, 21)
+                                    <a href="./#/mar-19">19</a>, <a href="./#/mar-21">21</a>)
                                 </td>
                                 <td style="padding: 6px; border: 1px solid #666;"><a href="./#/module-10">Resource
                                         Constraints and Sustainability in Industry 4.0</a></td>
@@ -8028,8 +8028,323 @@
                 </section>
 
                 <section>
-                    Given a battery powered vehicle navigation system that continuously upstreams GPS coordinates, please recommend
+                    Given a battery powered vehicle navigation system that continuously upstreams GPS coordinates,
+                    please recommend
                     two means to reduce resource consumption for route calculation.
+                </section>
+
+                <section id="mar-21">
+                    <h4>Agenda: March 21, 2025</h4>
+                    <ul class="alpha-list">
+                        <li>Low-Resolution Display (Web)</li>
+                        <li>Low-Resolution Display (Embedded)</li>
+                        <li>Paging</li>
+                        <li>Lazy Loading</li>
+                        <li>Team Project Reading Paper</li>
+                        <li>Course Project Sprint #8</li>
+                    </ul>
+                </section>
+
+                <section>Low-Resolution Display (Web)</section>
+
+                <section>
+                    <img
+                        src="https://internetingishard.netlify.app/simple-responsive-media-queries-703f8b.73c5a09a.png" />
+                </section>
+
+                <section>
+                    <h2>Optimizing for Low-Resolution Devices (Web)</h2>
+                    <ul>
+                        <li>User-Agent Detection</li>
+                        <li>Media Queries</li>
+                        <li>Display: Flex</li>
+                        <li>Viewport Meta Tag</li>
+                        <li>Font and Button Sizing</li>
+                        <li>Image Optimization</li>
+                        <li>Touch-Friendly Design</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Detecting User Agent</h2>
+                    <p>Identify the browser and device type using JavaScript.</p>
+                    <pre><code class="javascript">
+console.log(navigator.userAgent);
+                    </code></pre>
+                    <ul>
+                        <li><code>navigator.userAgent</code> provides browser and device details.</li>
+                        <li>Useful for device-specific optimizations.</li>
+                        <li>Less preferred than media queries for responsive design.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Detecting Mobile vs. Desktop</h2>
+                    <pre><code class="javascript">
+if (/Mobi|Android/i.test(navigator.userAgent)) {
+    console.log("Mobile device detected");
+} else {
+    console.log("Desktop detected");
+}
+                    </code></pre>
+                    <ul>
+                        <li>Checks if the user agent string contains mobile keywords.</li>
+                        <li>Useful for conditional UI changes.</li>
+                        <li>Consider feature detection instead for better reliability.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Examples of User Agents</h2>
+                    <ul>
+                        <li><strong>Chrome (Windows):</strong>
+                            <code>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36</code>
+                        </li>
+                        <li><strong>Firefox (Mac):</strong>
+                            <code>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Gecko/20100101 Firefox/115.0</code>
+                        </li>
+                        <li><strong>Safari (iPhone):</strong>
+                            <code>Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/605.1.15</code>
+                        </li>
+                        <li><strong>Edge (Windows):</strong>
+                            <code>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0</code>
+                        </li>
+                        <li><strong>Android Chrome:</strong>
+                            <code>Mozilla/5.0 (Linux; Android 13; Pixel 6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36</code>
+                        </li>
+                        <li><strong>Opera (Windows):</strong>
+                            <code>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 OPR/95.0.0.0</code>
+                        </li>
+                        <li><strong>Brave (Mac):</strong>
+                            <code>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Brave/120.0.0.0</code>
+                        </li>
+                        <li><strong>Safari (iPad):</strong>
+                            <code>Mozilla/5.0 (iPad; CPU OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/605.1.15</code>
+                        </li>
+                        <li><strong>Samsung Internet (Android):</strong>
+                            <code>Mozilla/5.0 (Linux; Android 13; SM-G998U) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/22.0 Chrome/120.0.0.0 Mobile Safari/537.36</code>
+                        </li>
+                        <li><strong>Googlebot (Web Crawler):</strong>
+                            <code>Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)</code>
+                        </li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Define API Endpoints</h2>
+                    <pre><code class="javascript">
+// Define API endpoints
+const API_ENDPOINTS = {
+    desktop: "https://api.sproutly.com/full-weather-data",
+    mobile: "https://api.sproutly.com/compact-weather-data",
+    embedded: "https://api.sproutly.com/basic-sensor-data"
+};
+                    </code></pre>
+                    <p>Based on the device type, different endpoints serve the appropriate data response.</p>
+                </section>
+
+                <section>
+                    <h2>Selecting the API Endpoint</h2>
+                    <pre><code class="javascript">
+let selectedEndpoint;
+
+if (userAgent.includes("Mobile") || userAgent.includes("Android") || userAgent.includes("iPhone")) {
+    selectedEndpoint = API_ENDPOINTS.mobile;  // Send compact data
+} else if (userAgent.includes("ESP32") || userAgent.includes("RaspberryPi")) {
+    selectedEndpoint = API_ENDPOINTS.embedded;  // Send only essential sensor data
+} else {
+    selectedEndpoint = API_ENDPOINTS.desktop;  // Send full weather data
+}
+
+console.log("Using API:", selectedEndpoint);
+                    </code></pre>
+                    <p>Based on the user agent, the correct API endpoint is selected to optimize the data response.</p>
+                </section>
+
+                <section>
+                    <h3>Mobile Devices</h3>
+                    <p>Mobile devices may have limited battery life and slower network speeds, so updates should be less
+                        frequent.</p>
+                    <pre><code class="javascript">
+// Mobile devices update every 30 minutes
+if (userAgent.includes("Mobile") || userAgent.includes("Android") || userAgent.includes("iPhone")) {
+    setInterval(() => {
+        // Fetch compact weather data for mobile
+        fetch(API_ENDPOINTS.mobile)
+            .then(response => response.json())
+            .then(data => console.log("Mobile Data:", data))
+            .catch(error => console.error("Mobile API Error:", error));
+    }, 30 * 60 * 1000); // Update every 30 minutes
+}
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h5>User Agent not always correct 😔</h5>
+                </section>
+
+                <section>
+                    <h2>Media Queries</h2>
+                    <p>Media queries adjust CSS based on device features like screen size, resolution, and orientation.
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Syntax</h3>
+                    <pre><code class="css">
+                @media (max-width: 768px) {
+                    /* Styles for small screens */
+                }
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Mobile Layout</h3>
+                    <pre><code class="css">
+                @media (max-width: 600px) {
+                    body { font-size: 14px; }
+                    .container { padding: 10px; }
+                }
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h3>Common Queries</h3>
+                    <ul>
+                        <li>@media (max-width: 768px) {}</li>
+                        <li>@media (min-width: 1024px) {}</li>
+                        <li>@media (orientation: portrait) {}</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Introduction to the Viewport</h2>
+                    <p>The viewport defines the visible area of a web page on the screen.</p>
+                    <ul>
+                        <li>Crucial for mobile-friendly designs.</li>
+                        <li>Works with media queries to ensure responsiveness.</li>
+                        <li>Controls scaling and layout for different screen sizes.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Viewport Meta Tag</h3>
+                    <p>The viewport meta tag sets the visible area of the web page on mobile devices.</p>
+                    <pre><code class="html">
+&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+                    </code></pre>
+                    <ul>
+                        <li><strong>width=device-width</strong>: Sets the width to the device's screen width.</li>
+                        <li><strong>initial-scale=1</strong>: Sets the initial zoom level.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Viewport and Media Queries</h3>
+                    <p>Media queries use the viewport's size to apply different styles for various devices.</p>
+                    <ul>
+                        <li>Media queries adapt layouts based on the viewport's width.</li>
+                        <li>Responsive designs adjust to different screen sizes automatically.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Preventing Zooming on Mobile</h3>
+                    <p>The viewport meta tag can control zoom behavior on mobile devices.</p>
+                    <pre><code class="html">
+&lt;meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"&gt;
+                    </code></pre>
+                    <ul>
+                        <li><strong>user-scalable=no</strong>: Prevents zooming.</li>
+                        <li><strong>Note:</strong> Not recommended for accessibility reasons.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Why Viewport is Important</h3>
+                    <ul>
+                        <li>Ensures proper scaling on mobile devices.</li>
+                        <li>Works with media queries for responsive design.</li>
+                        <li>Improves user experience across all devices.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Flexbox Layout</h2>
+                    <p>Flexbox is a layout model that makes it easier to design responsive layouts without using floats
+                        or positioning.</p>
+                    <ul>
+                        <li>Align and distribute space among items in a container.</li>
+                        <li>Works with both horizontal and vertical layouts.</li>
+                        <li>Ideal for responsive design.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Setting up the Flexbox Container</h3>
+                    <p>To create a flex container, set the container's display property to `flex`.</p>
+                    <pre><code class="html">
+&lt;div class="flex-container"&gt;
+    &lt;div class="flex-item"&gt;Item 1&lt;/div&gt;
+    &lt;div class="flex-item"&gt;Item 2&lt;/div&gt;
+    &lt;div class="flex-item"&gt;Item 3&lt;/div&gt;
+&lt;/div&gt;
+
+&lt;style&gt;
+    .flex-container {
+        display: flex; /* Turn container into flexbox */
+    }
+&lt;/style&gt;
+                    </code></pre>
+                </section>
+
+                <section>
+                    <img src="https://cdn.matthewjamestaylor.com/titles/holy-grail-3-column-responsive-layout-diagram.png">
+                </section>
+
+                <section>
+                    <h5>Lazy Loading and Paging</h5>
+                </section>
+
+                <section>
+                    <h2>Lazy Loading in JavaScript</h2>
+                    <ul>
+                        <li><strong>What is it?</strong> Delaying loading of images or content until needed.</li>
+                        <li><strong>Why use it?</strong> Improves page load time and performance.</li>
+                        <li><strong>How?</strong> Using the "loading" attribute or Intersection Observer API.</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Lazy Loading with onscroll</h2>
+                    <ul>
+                        <li><strong>Trigger:</strong> Using the `onscroll` event to detect when an element enters the viewport.</li>
+                        <li><strong>Use Case:</strong> Load content or images only when the user scrolls near them.</li>
+                        <li><strong>Example:</strong> Trigger lazy loading of images as the user scrolls.</li>
+                    </ul>
+                </section>      
+                
+                <section>
+                    <pre><code lang="javascript">
+window.onscroll = function() {
+    if (elementInView()) {
+        loadContent();
+    }
+};
+
+function elementInView() {
+    // Check if the element is in the viewport
+    return element.getBoundingClientRect().top < window.innerHeight;
+}
+
+function loadContent() {
+    // Logic to load content (e.g., images, data)
+    console.log('Content loaded');
+}</code></pre>
+                </section>                
+                
+                <section>
+                    <img src="https://www.allaboutcircuits.com/uploads/articles/PICAXE-20X_Clock__Thermometer.jpg" />
                 </section>
 
                 <section>
