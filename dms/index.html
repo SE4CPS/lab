@@ -241,7 +241,8 @@
                 <td style="padding: 6px; border: 1px solid #666;"></td>
               </tr>
               <tr style="color: #ccc;">
-                <td style="padding: 6px; border: 1px solid #666;">11 (Mar 24, 26, 28)</td>
+                <td style="padding: 6px; border: 1px solid #666;">11 (Mar <a href="./#/mar-24">24</a>, <a
+                    href="./#/mar-26">26</a>, 28)</td>
                 <td style="padding: 6px; border: 1px solid #666;"><a href="./#/module-11">Relational
                     Database Security</a></td>
                 <td style="padding: 6px; border: 1px solid #666;"></td>
@@ -9994,23 +9995,634 @@ SELECT category, AVG(price) AS average_price FROM Flowers GROUP BY category HAVI
         </section>
 
         <section>
-          The database system shall store customer information, furniture items, and orders in relational tables. Each order must
+          The database system shall store customer information, furniture items, and orders in relational tables. Each
+          order must
           link to one or more furniture items and update inventory upon placement. The system should allow staff to
           retrieve order history and identify low-stock items using SQL queries.
-        </section>
-
-        <section>
-          <h5>Homework 4 (Mar/31), Lab 4 (Mar/31), Project Part 1 (Mar/21)</h5>
-        </section>
-
-        <section>
-          <h5>Thanks</h5>
         </section>
 
         <!-- Module 11 -->
 
         <section id="module-11">
-          <h5>Module 11<br>Relational Database Security</h5>
+          <h5>Module 11<br>Relational Database Security 🔒</h5>
+        </section>
+
+        <section id="mar-24">
+          <h5>March 24, 2025</h5>
+          <h5>Relational Database Security</h5>
+          <ul>
+            <li>Database Security</li>
+            <li>Database Access Control</li>
+            <li>Database Fragmentation</li>
+            <li>Database Encryption</li>
+            <li>Database SQL Injection</li>
+            <li>Database Query Log</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Database Security</h2>
+        </section>
+
+        <section>
+          <h2>Zero Trust in Databases</h2>
+          <ul>
+            <li>Never trust by default</li>
+            <li>Authenticate every access request</li>
+            <li>Enforce least privilege at all levels</li>
+            <li>Continuously monitor and log activity</li>
+            <li>Combine RBAC, IP rules, and encryption</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Database Access Control</h2>
+        </section>
+
+        <section>
+          <h2>What Is Access Control?</h2>
+          <p>Controls who can access data</p>
+          <ul>
+            <li>Prevents unauthorized access</li>
+            <li>Enforces least privilege</li>
+            <li>Core to database security</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>API Key Access Control</h2>
+          <p>Restrict DB/API access via unique API keys</p>
+          <ul>
+            <li>Map keys to user roles</li>
+            <li>Used in web apps, microservices</li>
+            <li>Regenerate or revoke compromised keys</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>DB Connection URL</h2>
+          <pre><code>
+        postgresql://username:password@host:port/database?sslmode=require
+          </code></pre>
+          <ul>
+            <li><strong>username:</strong> neondb_owner</li>
+            <li><strong>password:</strong> npg_M5sVheSzQLv41234 <em>(acts like API key)</em></li>
+            <li><strong>host:</strong> ep-shrill-tree-a819xf7v-pooler.eastus2.azure.neon.tech</li>
+            <li><strong>database:</strong> neondb</li>
+            <li><strong>sslmode:</strong> require (enforces encrypted connection)</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>IP-Based Access Control</h2>
+          <p>Restrict DB/API access to specific IP addresses</p>
+          <ul>
+            <li>Allowlist trusted IPs only</li>
+            <li>Block unauthorized external sources</li>
+            <li>Used in firewalls and DB configs</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Access Control Models</h2>
+          <ul>
+            <li><strong>DAC</strong>: Owner controls access</li>
+            <li><strong>MAC</strong>: Based on security labels</li>
+            <li><strong>RBAC</strong>: Role defines permissions</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Access Control Models: Use Case</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>Who Controls Access?</th>
+                <th>Access Logic</th>
+                <th>Example</th>
+                <th>Supported by Relational DBs</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>RBAC</td>
+                <td>System (via Roles)</td>
+                <td>User has role with permission</td>
+                <td>Doctor role can read patient record</td>
+                <td>✅ Widely Supported</td>
+              </tr>
+              <tr>
+                <td>DAC</td>
+                <td>Record Owner</td>
+                <td>Owner grants access</td>
+                <td>Patient grants doctor access</td>
+                <td>✅ Partially Supported</td>
+              </tr>
+              <tr>
+                <td>MAC</td>
+                <td>System (via Labels)</td>
+                <td>Access requires clearance</td>
+                <td>Only staff with "Confidential" clearance can read</td>
+                <td>❌ Rarely Supported</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h2>Mandatory Access Control (MAC)</h2>
+          <ul>
+            <li>System enforces security labels</li>
+            <li>Access requires clearance level</li>
+            <li>Used in military and classified systems</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Discretionary Access Control (DAC)</h2>
+          <ul>
+            <li>Object owners define access</li>
+            <li>Permissions can be delegated</li>
+            <li>Simple but hard to audit at scale</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>DAC: Granting User Access</h2>
+          <pre><code>GRANT SELECT ON patient_records TO doctor_alex;</code></pre>
+          <ul>
+            <li>Owner of the table grants access</li>
+            <li>Follows discretionary access model</li>
+            <li>Permissions can be passed to others (if allowed)</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Role-Based Access Control (RBAC)</h2>
+          <ul>
+            <li>Users → Roles → Permissions</li>
+            <li>Centralized permission management</li>
+            <li>Scales well in large systems</li>
+          </ul>
+        </section>
+
+        <section data-background="white">
+          <img src="https://ars.els-cdn.com/content/image/3-s2.0-B9780123735669500057-f03-02-9780123735669.gif"
+            alt="Full Stack Engineer" style="width: 80%; margin-top: 20px;">
+        </section>
+
+        <section>
+          <h2>Creating and Assigning Roles (UA)</h2>
+          <pre><code>CREATE ROLE physician;</code></pre>
+          <pre><code>CREATE USER dr_smith WITH PASSWORD 'secure123';</code></pre>
+          <pre><code>GRANT physician TO dr_smith;</code></pre>
+        </section>
+
+        <section>
+          <h2>Common Privileges/Permissions (P)</h2>
+          <ul>
+            <li>SELECT, INSERT, UPDATE, DELETE</li>
+            <li>CREATE, DROP, ALTER</li>
+            <li>GRANT, REVOKE</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Granting Permissions (PA)</h2>
+          <pre><code>GRANT SELECT ON employees TO physician;</code></pre>
+          <p>Allows read-only access to a table</p>
+        </section>
+
+        <section>
+          <h2>Revoking Permissions (PA)</h2>
+          <pre><code>REVOKE SELECT ON employees FROM physician;</code></pre>
+          <p>Removes previously granted privileges</p>
+        </section>
+
+        <section>
+          <h2>Revoke All Permissions</h2>
+          <pre><code>
+        REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM PUBLIC;
+          </code></pre>
+        </section>
+      
+        <section data-background="white">
+          <img src="https://ars.els-cdn.com/content/image/3-s2.0-B9780123735669500057-f03-02-9780123735669.gif"
+            alt="Full Stack Engineer" style="width: 80%; margin-top: 20px;">
+        </section>
+
+        <section>
+          <h2>Granular Access Support</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Database</th>
+                <th>RBAC Support</th>
+                <th>IP-Based Access</th>
+                <th>API Key Control</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>SQLite</td>
+                <td>❌</td>
+                <td>❌</td>
+                <td>External Only</td>
+              </tr>
+              <tr>
+                <td>PostgreSQL</td>
+                <td>✅ Column-Level</td>
+                <td>✅ via pg_hba.conf</td>
+                <td>External Only</td>
+              </tr>
+              <tr>
+                <td>MariaDB</td>
+                <td>✅ Roles + Fine-Grained</td>
+                <td>✅ via host-based grants</td>
+                <td>External Only</td>
+              </tr>
+              <tr>
+                <td>OracleDB</td>
+                <td>✅ RBAC + VPD</td>
+                <td>✅ via network ACLs</td>
+                <td>External Only</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h2>Database Fragmentation</h2>
+        </section>
+
+        <section>
+          <h2>Database Vertical Fragmentation for Privacy</h2>
+          <ul>
+            <li>Separates identifiers from sensitive content</li>
+            <li>Example: store patient names in one table/database, diagnoses in another</li>
+            <li>Reduces risk of re-identification if breached</li>
+            <li>Used in privacy-preserving and regulatory-compliant systems</li>
+          </ul>
+        </section>
+
+        <section data-background="white">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQWgRzQBI0wvAggrrQ_jEAtRS8A5Orgoqi_JQ&s"
+            alt="Full Stack Engineer" style="width: 50%">
+        </section>
+
+        <section>
+          <h2>Summary</h2>
+          <ul>
+            <li>Start with API key or user identity</li>
+            <li>Use RBAC to simplify privilege logic</li>
+            <li>Use GRANT/REVOKE for control</li>
+            <li>Choose DB based on granularity needs</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Database Encryption</h2>
+        </section>
+
+        <section data-background="white">
+          <img src="https://miro.medium.com/v2/resize:fit:1200/1*62blCQs9eJ9MPxY7q27aCg.jpeg" alt="Full Stack Engineer"
+            style="width: 100%">
+        </section>
+
+        <section>
+          <h2>Plain Text vs. Encrypted Text</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Plain Text</th>
+                <th>Encrypted Text</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Patient Name: Alice</td>
+                <td>U2FsdGVkX1+gTx4kV7K9Zw==</td>
+              </tr>
+              <tr>
+                <td>SSN: 123-45-6789</td>
+                <td>8b1a9953c4611296a827abf8c47804d7</td>
+              </tr>
+              <tr>
+                <td>Diagnosis: Flu</td>
+                <td>5d41402abc4b2a76b9719d911017c592</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h2>What Is Database Encryption?</h2>
+          <ul>
+            <li>Protects data by converting it to unreadable form</li>
+            <li>Requires a key to decrypt and access</li>
+            <li>Mitigates data breach impact</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Why Encrypt Databases?</h2>
+          <ul>
+            <li>Protect sensitive data at rest and in transit</li>
+            <li>Support regulatory compliance (e.g., GDPR, HIPAA)</li>
+            <li>Prevent insider and external threats</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Types of Encryption</h2>
+          <ul>
+            <li><strong>At Rest:</strong> Encrypts stored data (e.g., disk, tablespace)</li>
+            <li><strong>In Transit:</strong> Encrypts data over the network</li>
+            <li><strong>Column-Level:</strong> Encrypt specific fields (e.g., SSN)</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Transparent Data Encryption (TDE)</h2>
+          <ul>
+            <li>Encrypts data files automatically</li>
+            <li>Keys managed by the DB engine</li>
+            <li>Minimal application changes required</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Example: Column Encryption</h2>
+          <pre><code>CREATE TABLE patients (
+          id SERIAL,
+          name TEXT,
+          ssn TEXT ENCRYPTED FOR STORAGE
+        );</code></pre>
+        </section>
+
+        <section>
+          <h2>Key Management</h2>
+          <ul>
+            <li>Keys can be internal or managed externally (KMS, HSM)</li>
+            <li>Rotation and protection are critical</li>
+            <li>Lost keys = lost data</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Performance Considerations</h2>
+          <ul>
+            <li>Encryption adds CPU overhead</li>
+            <li>Column-level is slower but more selective</li>
+            <li>Use indexing carefully on encrypted fields</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Risks Without Encryption</h2>
+          <ul>
+            <li>Plaintext data exposed in disk theft or backups</li>
+            <li>Network sniffing leaks sensitive data</li>
+            <li>Non-compliance with data protection laws</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Risks With Encryption?</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Plain Text</th>
+                <th>Encrypted Text</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Patient Name: Alice</td>
+                <td>U2FsdGVkX1+gTx4kV7K9Zw==</td>
+              </tr>
+              <tr>
+                <td>SSN: 123-45-6789</td>
+                <td>8b1a9953c4611296a827abf8c47804d7</td>
+              </tr>
+              <tr>
+                <td>Diagnosis: Flu</td>
+                <td>5d41402abc4b2a76b9719d911017c592</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h2>Database Encryption Support</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Database</th>
+                <th>Encryption at Rest</th>
+                <th>Encryption in Transit</th>
+                <th>Column-Level</th>
+                <th>TDE Support</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>SQLite</td>
+                <td>❌ (via extensions)</td>
+                <td>❌</td>
+                <td>❌</td>
+                <td>❌</td>
+              </tr>
+              <tr>
+                <td>PostgreSQL</td>
+                <td>✅ (manual)</td>
+                <td>✅ (SSL)</td>
+                <td>✅ (PGCrypto)</td>
+                <td>❌</td>
+              </tr>
+              <tr>
+                <td>MariaDB</td>
+                <td>✅</td>
+                <td>✅</td>
+                <td>✅ (via functions)</td>
+                <td>✅</td>
+              </tr>
+              <tr>
+                <td>OracleDB</td>
+                <td>✅</td>
+                <td>✅</td>
+                <td>✅</td>
+                <td>✅</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h2>Summary</h2>
+          <ul>
+            <li>Encrypt data to reduce breach risks</li>
+            <li>Choose level: full, column, or in transit</li>
+            <li>Use strong key management practices</li>
+            <li>Verify DB feature support before implementation</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Database SQL Injection</h2>
+        </section>
+
+        <section>
+          <h2>What Is SQL Injection?</h2>
+          <ul>
+            <li>Attacker manipulates SQL queries via user input</li>
+            <li>Can expose, modify, or delete data</li>
+            <li>Common in apps that use unsafe query building</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Vulnerable Python Example</h2>
+          <pre><code class="language-python">
+        user = input("Enter username: ")
+        query = f"SELECT * FROM users WHERE name = '{user}'"
+        cursor.execute(query)
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Injection Attack Example</h2>
+          <pre><code>
+        Input: alice' OR '1'='1
+        Query: SELECT * FROM users WHERE name = 'alice' OR '1'='1'
+          </code></pre>
+          <p>Bypasses authentication and returns all users</p>
+        </section>
+
+        <section>
+          <h2>Safe Python Example (Parameterized)</h2>
+          <pre><code class="language-python">
+        user = input("Enter username: ")
+        query = "SELECT * FROM users WHERE name = %s"
+        cursor.execute(query, (user,))
+          </code></pre>
+          <p>Using parameters prevents SQL injection</p>
+        </section>
+
+        <section>
+          <h2>SQL Injection Prevention Tips</h2>
+          <ul>
+            <li>Always use parameterized queries</li>
+            <li>Never concatenate raw input into SQL</li>
+            <li>Use ORM libraries (e.g., SQLAlchemy, Django ORM)</li>
+            <li>Sanitize and validate input when needed</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Database Query Log</h2>
+        </section>
+
+        <section>
+          <h2>Why Log SQL Queries?</h2>
+          <ul>
+            <li>Track suspicious or slow queries</li>
+            <li>Monitor access patterns</li>
+            <li>Detect SQL injection attempts</li>
+            <li>Improve performance and security</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Basic Logging in Python</h2>
+          <pre><code class="language-python">
+        import logging
+        logging.basicConfig(level=logging.INFO)
+        
+        query = "SELECT * FROM patients"
+        logging.info(f"Running query: {query}")
+        cursor.execute(query)
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Logging Query with Parameters</h2>
+          <pre><code class="language-python">
+        query = "SELECT * FROM patients WHERE name = %s"
+        params = ("Alice",)
+        logging.info("Query: %s | Params: %s", query, params)
+        cursor.execute(query, params)
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>Enabling SQL Logs in Databases</h2>
+          <ul>
+            <li><strong>PostgreSQL:</strong> <code>log_statement = 'all'</code></li>
+            <li><strong>MySQL/MariaDB:</strong> <code>general_log = ON</code></li>
+            <li><strong>SQLite:</strong> Use logging in wrapper code</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Best Practices for Query Logging</h2>
+          <ul>
+            <li>Mask sensitive values in logs (e.g., passwords)</li>
+            <li>Use rotating log files to manage size</li>
+            <li>Centralize logs for analysis (e.g., ELK stack)</li>
+            <li>Correlate with user actions for traceability</li>
+          </ul>
+        </section>
+
+        <section>
+          <h5>Questions</h5>
+        </section>
+
+        <section>
+          <h5>Case Study 1: Stolen Laptop</h5>
+          <p>A doctor’s laptop with a local database of patient records is stolen. The database file is unprotected and
+            contains names, SSNs, and diagnoses.</p>
+          <p><strong>What security measure would have reduced the risk?</strong></p>
+        </section>
+
+        <section>
+          <h5>Case Study 2: Unusual Patient Record Access</h5>
+          <p>A staff member accessed over 200 patient records within 5 minutes — far beyond typical behavior for their
+            role.</p>
+          <p><strong>What access control or monitoring strategy should be used?</strong></p>
+        </section>
+
+        <section>
+          <h5>Case Study 3: SQL Injection Breach</h5>
+          <p>A public-facing web app allowed attackers to run raw SQL through a login form, exposing the entire user
+            database.</p>
+          <p><strong>What protection should have been implemented?</strong></p>
+        </section>
+
+        <section>
+          <h5>Questions</h5>
+        </section>
+
+        <section>
+          <h5>Homework 4 (Mar/31), Lab 4 (Mar/31), Project Part 2 (Apr/20)</h5>
+        </section>
+
+        <section id="mar-26">
+          <h5>March 26, 2025</h5>
+          <h5>Relational Database Security Implementation/h5>
+            <ul>
+              <li>Database Security</li>
+              <li>Database Access Control</li>
+              <li>Database Fragmentation</li>
+              <li>Database Encryption</li>
+              <li>Database SQL Injection</li>
+              <li>Database Query Log</li>
+            </ul>
+        </section>
+
+        <section>
+          <h5>Thanks</h5>
         </section>
 
         <!-- Module 12 -->
