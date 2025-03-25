@@ -10206,7 +10206,7 @@ SELECT category, AVG(price) AS average_price FROM Flowers GROUP BY category HAVI
         REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM PUBLIC;
           </code></pre>
         </section>
-      
+
         <section data-background="white">
           <img src="https://ars.els-cdn.com/content/image/3-s2.0-B9780123735669500057-f03-02-9780123735669.gif"
             alt="Full Stack Engineer" style="width: 80%; margin-top: 20px;">
@@ -10610,15 +10610,73 @@ SELECT category, AVG(price) AS average_price FROM Flowers GROUP BY category HAVI
 
         <section id="mar-26">
           <h5>March 26, 2025</h5>
-          <h5>Relational Database Security Implementation/h5>
+          <h5>Relational Database Security Implementation</h5>
             <ul>
+              <li>Database Encryption PostgreSQL</li>
               <li>Database Security</li>
               <li>Database Access Control</li>
               <li>Database Fragmentation</li>
-              <li>Database Encryption</li>
               <li>Database SQL Injection</li>
               <li>Database Query Log</li>
             </ul>
+        </section>
+
+        <section>
+          <h2>Create Extension</h2>
+          <pre><code>CREATE EXTENSION IF NOT EXISTS pgcrypto;</code></pre>
+          <p>Enables <code>pgcrypto</code> for cryptographic functions, including PGP encryption.</p>
+        </section>
+
+        <section>
+          <h2>Drop Table</h2>
+          <pre><code>DROP TABLE secure_data;</code></pre>
+        </section>
+
+        <section>
+          <h2>Create Table</h2>
+          <pre><code>CREATE TABLE IF NOT EXISTS secure_data (
+          id SERIAL PRIMARY KEY,
+          sensitive_info BYTEA NOT NULL
+      );</code></pre>
+        </section>
+
+        <section>
+          <h2>Insert Encrypted Data</h2>
+          <pre><code>INSERT INTO secure_data (sensitive_info)
+      VALUES (pgp_sym_encrypt('Secret Information', 'my_strong_password'));</code></pre>
+        </section>
+
+        <section>
+          <h2>Select Encrypted Data</h2>
+          <pre><code>SELECT id, ENCODE(sensitive_info, 'hex') AS encrypted_info FROM secure_data;</code></pre>
+        </section>
+
+        <section>
+          <h2>Decrypt Data</h2>
+          <pre><code>SELECT id, pgp_sym_decrypt(sensitive_info, 'my_strong_password') AS decrypted_info 
+      FROM secure_data;</code></pre>
+        </section>
+
+        <section>
+          <h5>Case Study 2: Unusual Patient Record Access</h5>
+          <p>A staff member accessed over 200 patient records within 5 minutes — far beyond typical behavior for their
+            role.</p>
+          <p><strong>What access control or monitoring strategy should be used?</strong></p>
+        </section>
+
+        <section>
+          <h5>Case Study 3: SQL Injection Breach</h5>
+          <p>A public-facing web app allowed attackers to run raw SQL through a login form, exposing the entire user
+            database.</p>
+          <p><strong>What protection should have been implemented?</strong></p>
+        </section>
+
+        <section>
+          <h5>Questions</h5>
+        </section>
+
+        <section>
+          <h5>Homework 4 (Mar/31), Lab 4 (Mar/31), Project Part 2 (Apr/20)</h5>
         </section>
 
         <section>
