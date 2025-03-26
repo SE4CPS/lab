@@ -55,8 +55,26 @@
     }
 
     section pre code {
-      font-size: 20px;
+      font-size: 20pt;
       line-height: 1.6;
+    }
+
+    code {
+      font-size: 20pt;
+      line-height: 1.6;
+    }
+
+    .copy-btn {
+      padding: 8px 12px;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+    }
+
+    .copy-btn:hover {
+      background-color: #e6e6e6;
     }
 
     /* Global Footer Styling */
@@ -9385,7 +9403,7 @@ SELECT category, AVG(price) AS average_price FROM Flowers GROUP BY category HAVI
         <section>
           <h3>What is Concurrency Control?</h3>
           <p>Concurrency control ensures that multiple transactions can execute simultaneously without interfering with
-            each other, maintaining data integrity and consistency.</p>
+            each other, maintaining data integrity and consistency</p>
         </section>
 
         <section>
@@ -9489,7 +9507,7 @@ SELECT category, AVG(price) AS average_price FROM Flowers GROUP BY category HAVI
 
         <section>
           <p>Isolation ensures that transactions execute independently, preventing conflicts and inconsistencies when
-            multiple transactions run concurrently.</p>
+            multiple transactions run concurrently</p>
         </section>
 
         <section>
@@ -10582,21 +10600,21 @@ SELECT category, AVG(price) AS average_price FROM Flowers GROUP BY category HAVI
         <section>
           <h5>Case Study 1: Stolen Laptop</h5>
           <p>A doctor’s laptop with a local database of patient records is stolen. The database file is unprotected and
-            contains names, SSNs, and diagnoses.</p>
+            contains names, SSNs, and diagnoses</p>
           <p><strong>What security measure would have reduced the risk?</strong></p>
         </section>
 
         <section>
           <h5>Case Study 2: Unusual Patient Record Access</h5>
           <p>A staff member accessed over 200 patient records within 5 minutes — far beyond typical behavior for their
-            role.</p>
+            role</p>
           <p><strong>What access control or monitoring strategy should be used?</strong></p>
         </section>
 
         <section>
           <h5>Case Study 3: SQL Injection Breach</h5>
           <p>A public-facing web app allowed attackers to run raw SQL through a login form, exposing the entire user
-            database.</p>
+            database</p>
           <p><strong>What protection should have been implemented?</strong></p>
         </section>
 
@@ -10611,63 +10629,634 @@ SELECT category, AVG(price) AS average_price FROM Flowers GROUP BY category HAVI
         <section id="mar-26">
           <h5>March 26, 2025</h5>
           <h5>Relational Database Security Implementation</h5>
-            <ul>
-              <li>Database Encryption PostgreSQL</li>
-              <li>Database Security</li>
-              <li>Database Access Control</li>
-              <li>Database Fragmentation</li>
-              <li>Database SQL Injection</li>
-              <li>Database Query Log</li>
-            </ul>
+          <ul>
+            <li>Database Encryption PostgreSQL</li>
+            <li>Database Hashing PostgreSQL</li>
+            <li>Database IP-Based (Network) Access Control PostgreSQL</li>
+            <li>Database User-Based Access Control</li>
+            <li>Database Role-Based Access Control</li>
+            <li>Database Fragmentation</li>
+            <li>Database SQL Parameterized</li>
+            <li>Database Query Log PostgreSQL and SQLite</li>
+            <li>Database Encryption SQLCipher</li>
+            <li>Database Case Study</li>
+          </ul>
+        </section>
+
+        <section>
+          <h5>Database Encryption PostgreSQL</h5>
+        </section>
+
+        <section>
+          <a href="https://console.neon.tech" target="_blank">
+            Neon Tech Project Console
+          </a>
         </section>
 
         <section>
           <h2>Create Extension</h2>
-          <pre><code>CREATE EXTENSION IF NOT EXISTS pgcrypto;</code></pre>
-          <p>Enables <code>pgcrypto</code> for cryptographic functions, including PGP encryption.</p>
+          <pre><code id="code-snippet">
+            CREATE EXTENSION IF NOT EXISTS pgcrypto;
+          </code></pre>
+          <button onclick="copyToClipboard('code-snippet')" aria-label="Copy code to clipboard"
+            class="copy-btn">Copy</button>
+        </section>
+
+        <section>
+          <h2>PGP Encryption</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Technical Aspect</th>
+                <th>PGP Encryption (Asymmetric)</th>
+                <th>Symmetric Encryption (AES, DES)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Key Type</td>
+                <td>Public-Private Key Pair</td>
+                <td>Single Shared Secret Key</td>
+              </tr>
+              <tr>
+                <td>Encryption Speed</td>
+                <td>Slower; computationally intensive</td>
+                <td>Faster; suitable for large data</td>
+              </tr>
+              <tr>
+                <td>Key Management</td>
+                <td>Complex; public key distribution required</td>
+                <td>Simpler; secure key sharing essential</td>
+              </tr>
+              <tr>
+                <td>Security Strength</td>
+                <td>High; secure over insecure channels</td>
+                <td>Medium to High; risk if key compromised</td>
+              </tr>
+              <tr>
+                <td>Use Case Examples</td>
+                <td>Email encryption, digital signatures</td>
+                <td>File encryption, database encryption</td>
+              </tr>
+            </tbody>
+          </table>
+          <p><small>Reference: <a href="https://www.postgresql.org/docs/current/pgcrypto.html"
+                target="_blank">PostgreSQL pgcrypto Documentation</a></small></p>
         </section>
 
         <section>
           <h2>Drop Table</h2>
-          <pre><code>DROP TABLE secure_data;</code></pre>
+          <pre><code id="drop-table">
+            DROP TABLE secure_data;
+          </code></pre>
+          <button onclick="copyToClipboard('drop-table')" class="copy-btn">Copy</button>
         </section>
 
         <section>
           <h2>Create Table</h2>
-          <pre><code>CREATE TABLE IF NOT EXISTS secure_data (
-          id SERIAL PRIMARY KEY,
-          sensitive_info BYTEA NOT NULL
-      );</code></pre>
+          <pre><code id="create-table">
+            CREATE TABLE IF NOT EXISTS secure_data(
+              id SERIAL PRIMARY KEY,
+              sensitive_info BYTEA NOT NULL
+            );
+        </code></pre>
+          <button onclick="copyToClipboard('create-table')" class="copy-btn">Copy</button>
         </section>
 
         <section>
           <h2>Insert Encrypted Data</h2>
-          <pre><code>INSERT INTO secure_data (sensitive_info)
-      VALUES (pgp_sym_encrypt('Secret Information', 'my_strong_password'));</code></pre>
+          <pre><code id="insert-data">
+    INSERT INTO secure_data (sensitive_info)
+    VALUES (pgp_sym_encrypt('Secret Information', 'my_strong_password'));
+          </code></pre>
+          <button onclick="copyToClipboard('insert-data')" class="copy-btn">Copy</button>
         </section>
 
         <section>
           <h2>Select Encrypted Data</h2>
-          <pre><code>SELECT id, ENCODE(sensitive_info, 'hex') AS encrypted_info FROM secure_data;</code></pre>
+          <pre><code id="select-data">
+    SELECT id, ENCODE(sensitive_info, 'hex') AS encrypted_info 
+    FROM secure_data;
+          </code></pre>
+          <button onclick="copyToClipboard('select-data')" class="copy-btn">Copy</button>
         </section>
 
         <section>
           <h2>Decrypt Data</h2>
-          <pre><code>SELECT id, pgp_sym_decrypt(sensitive_info, 'my_strong_password') AS decrypted_info 
-      FROM secure_data;</code></pre>
+          <pre><code id="decrypt-data">
+    SELECT id, pgp_sym_decrypt(sensitive_info, 'my_strong_password') 
+    AS decrypted_info 
+    FROM secure_data;
+          </code></pre>
+          <button onclick="copyToClipboard('decrypt-data')" class="copy-btn">Copy</button>
         </section>
 
         <section>
-          <h5>Case Study 2: Unusual Patient Record Access</h5>
+          <h5>Database Hashing PostgreSQL</h5>
+        </section>
+
+        <!-- Slide 1: Hashing vs Encryption -->
+        <section>
+          <h2>Hashing vs. Encryption</h2>
+          <ul>
+            <li><strong>Hashing:</strong> One-way, irreversible; used for password storage and verification</li>
+            <li><strong>Encryption:</strong> Two-way, reversible; protects sensitive data, allows secure retrieval</li>
+          </ul>
+        </section>
+
+        <!-- Slide 2: SCRAM-SHA-256 Hashing -->
+        <section>
+          <h2>Create User with SCRAM-SHA-256</h2>
+          <pre><code id="scram-sha">
+    SET password_encryption = 'scram-sha-256';
+    CREATE ROLE username WITH LOGIN PASSWORD 'your_secure_password';
+        </code></pre>
+          <button onclick="copyToClipboard('scram-sha')" class="copy-btn">Copy</button>
+        </section>
+
+        <section>
+          <h2>List All Users and Roles</h2>
+          <pre><code id="list-roles">
+        SELECT rolname, rolsuper, rolcreaterole, rolcreatedb, rolcanlogin
+        FROM pg_roles;
+          </code></pre>
+          <button onclick="copyToClipboard('list-roles')" class="copy-btn">Copy</button>
+        </section>
+
+        <!-- Slide 3: MD5 Hashing (Legacy) -->
+        <section>
+          <h2>Create User with MD5 (Legacy)</h2>
+          <pre><code id="md5">
+    SET password_encryption = 'md5';
+    CREATE ROLE username WITH LOGIN PASSWORD 'your_secure_password';
+        </code></pre>
+          <button onclick="copyToClipboard('md5')" class="copy-btn">Copy</button>
+        </section>
+
+        <section>
+          <h5>Database IP-Based (Network) Access Control PostgreSQL</h5>
+        </section>
+
+        <section>
+          <a href="https://console.neon.tech/app/projects/rapid-grass-89273391/settings/network-security"
+            target="_blank">Neon Network Security</a>
+        </section>
+
+        <section>
+          <h5>Questions</h5>
+        </section>
+
+        <section>
+          <h5>Database User-Based Access Control</h5>
+        </section>
+
+        <!-- Slide 1: Create Users -->
+        <section>
+          <h5>Create Users (Flower Store)</h5>
+          <pre><code id="create-users">
+    CREATE USER Bob PASSWORD 'bob_pass_123!';
+    CREATE USER Alice PASSWORD 'alice_pass_123!';
+          </code></pre>
+          <button onclick="copyToClipboard('create-users')" class="copy-btn">Copy</button>
+        </section>
+
+        <!-- Slide 2: Grant Access -->
+        <section>
+          <h5>Grant Permissions to Users</h5>
+          <pre><code id="grant-users">
+        -- Grant full access to Bob
+        GRANT ALL PRIVILEGES ON Flowers TO Bob;
+        
+        -- Grant read-only access to Alice
+        GRANT SELECT ON Flowers TO Alice;
+          </code></pre>
+          <button onclick="copyToClipboard('grant-users')" class="copy-btn">Copy</button>
+        </section>
+
+        <section>
+          <h5>List and Switch Users</h5>
+          <pre><code id="user-switch">
+        -- Show all users and roles
+        SELECT rolname FROM pg_roles;
+        
+        -- Switch user temporarily
+        SET ROLE Alice;
+        
+        -- Switch back
+        RESET ROLE;
+          </code></pre>
+          <button onclick="copyToClipboard('user-switch')" class="copy-btn">Copy</button>
+        </section>
+
+        <section>
+          <h5>Test Queries with User Permissions</h5>
+          <pre><code id="set-user">
+        -- Switch to user 'Alice' (read-only)
+        SET ROLE Alice;
+        
+        -- Successful query (Alice can SELECT)
+        SELECT * FROM flowers;
+        
+        -- Failed query (Alice cannot DELETE)
+        DELETE FROM flowers WHERE id = 1;
+        
+        RESET ROLE;
+        
+        -- Switch to user 'bob' (full access)
+        SET ROLE Bob;
+        
+        -- Successful query (Bob can DELETE)
+        DELETE FROM flowers WHERE id = 1;
+        
+        RESET ROLE;
+          </code></pre>
+          <button onclick="copyToClipboard('set-user')" class="copy-btn">Copy</button>
+        </section>
+
+        <!-- Slide 3: Revoke Access -->
+        <section>
+          <h5>Revoke User Access</h5>
+          <pre><code id="revoke-access">
+    REVOKE INSERT ON flowers FROM Bob;
+          </code></pre>
+          <button onclick="copyToClipboard('revoke-access')" class="copy-btn">Copy</button>
+        </section>
+
+        <section>
+          <h5>Questions</h5>
+        </section>
+
+        <section>
+          <h5>Database Role-Based Access Control</h5>
+        </section>
+
+        <section>
+          <h5>Create Roles</h5>
+          <pre><code id="create-roles">
+        CREATE ROLE viewer;
+        CREATE ROLE manager;
+          </code></pre>
+          <button onclick="copyToClipboard('create-roles')" class="copy-btn">Copy</button>
+        </section>
+
+        <section>
+          <h5>Create Users and Assign Roles</h5>
+          <pre><code id="create-users">
+        CREATE USER alice PASSWORD 'alice_pass';
+        CREATE USER bob PASSWORD 'bob_pass';
+        
+        GRANT viewer TO alice;
+        GRANT manager TO bob;
+          </code></pre>
+          <button onclick="copyToClipboard('create-users')" class="copy-btn">Copy</button>
+        </section>
+
+        <section>
+          <h5>Grant Permissions to Roles</h5>
+          <pre><code id="grant-permissions">
+        GRANT SELECT ON flowers_core TO viewer;
+        GRANT SELECT, INSERT, UPDATE ON flowers_pricing TO manager;
+          </code></pre>
+          <button onclick="copyToClipboard('grant-permissions')" class="copy-btn">Copy</button>
+        </section>
+
+        <section>
+          <h5>Test Role-Based Access</h5>
+          <pre><code id="switch-role">
+        GRANT alice TO current_user;
+        SET ROLE alice;
+        SELECT * FROM flowers_core;
+        
+        SELECT * FROM flowers_pricing;
+        
+        RESET ROLE;
+          </code></pre>
+          <button onclick="copyToClipboard('switch-role')" class="copy-btn">Copy</button>
+        </section>       
+
+        <section>
+          <h5>Questions</h5>
+        </section>
+
+        <section>
+          <h5>Database Fragmentation</h5>
+        </section>
+        
+        <section>
+          <h5>Split Table: Core Info</h5>
+          <pre><code id="fragment-core">
+        CREATE TABLE flowers_core (
+          id INTEGER PRIMARY KEY,
+          name TEXT
+        );
+          </code></pre>
+          <button onclick="copyToClipboard('fragment-core')" class="copy-btn">Copy</button>
+        </section>
+        
+        <section>
+          <h5>Split Table: Pricing Info</h5>
+          <pre><code id="fragment-pricing">
+        CREATE TABLE flowers_pricing (
+          id INTEGER PRIMARY KEY,
+          price REAL
+        );
+          </code></pre>
+          <button onclick="copyToClipboard('fragment-pricing')" class="copy-btn">Copy</button>
+        </section>
+        
+        <section>
+          <h5>Insert Fragmented Data</h5>
+          <pre><code id="insert-fragmented">
+        INSERT INTO flowers_core (id, name) VALUES (1, 'Rose');
+        INSERT INTO flowers_pricing (id, price) VALUES (1, 2.99);
+          </code></pre>
+          <button onclick="copyToClipboard('insert-fragmented')" class="copy-btn">Copy</button>
+        </section>
+
+        <section>
+          <h5>Assign Access to Users</h5>
+          <pre><code id="access-fragments">
+        GRANT SELECT ON flowers_core TO viewer;
+        GRANT SELECT, INSERT, UPDATE ON flowers_pricing TO manager;
+          </code></pre>
+          <button onclick="copyToClipboard('access-fragments')" class="copy-btn">Copy</button>
+        </section>
+
+        <section>
+          <h5>Questions</h5>
+        </section>
+
+        <section>
+          <h5>Database SQL Parameterized</h5>
+        </section>
+
+        <section>
+          <h5>Safe SQLite Parameter</h5>
+            <a href="https://github.com/SE4CPS/DMS/blob/main/database/SQLite/sql-param.py" target="_blank">
+              github.com/SE4CPS/DMS/sql-param.py
+            </a>
+        </section>
+        
+        <section>
+          <h5>Database Query Log PostgreSQL and SQLite</h5>
+        </section>
+
+        <section>
+          <table>
+            <thead>
+              <tr>
+                <th>Technical Area</th>
+                <th>Importance of Logging</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Query Performance</td>
+                <td>Identify slow queries and optimize them</td>
+              </tr>
+              <tr>
+                <td>Security</td>
+                <td>Track unauthorized access attempts</td>
+              </tr>
+              <tr>
+                <td>Error Diagnosis</td>
+                <td>Understand and debug failed operations</td>
+              </tr>
+              <tr>
+                <td>Auditing</td>
+                <td>Maintain compliance and trace changes</td>
+              </tr>
+              <tr>
+                <td>Replication & Backup</td>
+                <td>Ensure consistency and troubleshoot issues</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>        
+
+        <section>
+          <pre><code id="enable-logging">
+        -- In postgresql.conf:
+        logging_collector = on
+        log_directory = 'log'
+        log_filename = 'postgresql-%Y-%m-%d.log'
+        log_statement = 'all'
+        log_min_error_statement = error
+        log_min_messages = warning
+          </code></pre>
+          <button onclick="copyToClipboard('enable-logging')" class="copy-btn">Copy</button>
+        </section>        
+  
+        <section>
+          <a href="https://console.neon.tech/app/projects/rapid-grass-89273391/monitoring/query_history"
+            target="_blank">
+            Neon Query History
+          </a>
+        </section>
+
+        <section>
+          <h5>Grant Access and Test as Alice</h5>
+          <pre><code id="grant-alice">
+        GRANT USAGE ON SCHEMA public TO Alice;
+        GRANT SELECT ON team1_flowers TO Alice;
+        -- GRANT ALL PRIVILEGES ON team1_flowers TO Alice;
+        GRANT Alice TO current_user;
+        SET ROLE Alice;
+        SELECT * FROM team1_flowers;
+        RESET ROLE;
+          </code></pre>
+          <button onclick="copyToClipboard('grant-alice')" class="copy-btn">Copy</button>
+        </section>
+
+        <section>
+          <h5>SQLite Query Logs - Option 1</h5>
+          <pre><code id="show-schema">
+        sqlite3 mydatabase.db
+        .echo ON
+        .tables
+        .schema
+          </code></pre>
+          <button onclick="copyToClipboard('show-schema')" class="copy-btn">Copy</button>
+        </section>          
+
+        <section>
+          <h5>SQLite Query Logs - Option 2</h5>
+          <pre><code id="sqlite-log">
+        sqlite3 mydatabase.db
+        .echo ON
+        .output my_log.txt
+        .schema
+          </code></pre>
+          <button onclick="copyToClipboard('sqlite-log')" class="copy-btn">Copy</button>
+        </section>        
+
+        <section>
+          <h5>Questions</h5>
+        </section>
+
+        <section>
+          <h5>Database Encryption SQLCipher</h5>
+        </section>
+
+        <section>
+          <h2>Why Encrypted SQLite?</h2>
+          <ul>
+            <li><strong>Mobile:</strong> Android, iOS smartphones and tablets</li>
+            <li><strong>Wearables:</strong> Smartwatches, fitness trackers</li>
+            <li><strong>Smart TV:</strong> Securing user preferences and viewing history</li>
+            <li><strong>Desktop:</strong> Windows, macOS, Linux apps</li>
+            <li><strong>Compliance:</strong> Ensures GDPR, HIPAA, and security standards compliance</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Clone SQLCipher Repository</h2>
+          <p>
+            <a href="https://github.com/sqlcipher/sqlcipher.git" target="_blank">
+              git clone https://github.com/sqlcipher/sqlcipher.git
+            </a>
+          </p>
+        </section>
+
+        <section>
+          <h2>SQLCipher Encryption</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Technical Aspect</th>
+                <th>SQLCipher</th>
+                <th>Standard SQLite</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Encryption Method</td>
+                <td>Transparent AES-256 Encryption</td>
+                <td>No built-in encryption</td>
+              </tr>
+              <tr>
+                <td>Data-at-rest Security</td>
+                <td>Strong; protects database files on disk</td>
+                <td>Weak; plaintext data storage</td>
+              </tr>
+              <tr>
+                <td>Performance Impact</td>
+                <td>Moderate overhead due to encryption operations</td>
+                <td>Minimal; faster access (unencrypted)</td>
+              </tr>
+              <tr>
+                <td>Use Cases</td>
+                <td>Mobile apps, sensitive data storage</td>
+                <td>General-purpose lightweight storage</td>
+              </tr>
+              <tr>
+                <td>Key Management</td>
+                <td>Application-managed passphrase</td>
+                <td>Not applicable</td>
+              </tr>
+            </tbody>
+          </table>
+          <p><small>Reference: <a href="https://github.com/sqlcipher/sqlcipher" target="_blank">SQLCipher GitHub
+                Documentation</a></small></p>
+        </section>
+
+        <section>
+          <h2>Encrypting with SQLCipher</h2>
+          <pre><code>
+        sqlcipher mydatabase.db
+        
+        sqlite> PRAGMA key = 'your_secure_password';
+        sqlite> CREATE TABLE flowers(id INTEGER, name TEXT);
+        sqlite> INSERT INTO flowers VALUES (1, 'Rose');
+        sqlite> .quit
+          </code></pre>
+        </section>
+
+        <section>
+          <h5>Questions</h5>
+        </section>
+
+        <section>
+          <h2>⚠️ No Access Control in SQLite</h2>
+          <ul>
+            <li>SQLite does <strong>not</strong> support user roles or permissions</li>
+            <li>Anyone with access to the database file has full control</li>
+            <li>No built-in authentication or authorization</li>
+            <li>Use OS-level file permissions or encryption (e.g., SQLCipher) for protection</li>
+          </ul>
+        </section>
+
+        <section>
+          <h5>March 26, 2025</h5>
+          <h5>Relational Database Security Implementation</h5>
+          <ul>
+            <li>Database Encryption PostgreSQL</li>
+            <li>Database Hashing PostgreSQL</li>
+            <li>Database IP-Based (Network) Access Control PostgreSQL</li>
+            <li>Database User-Based Access Control</li>
+            <li>Database Role-Based Access Control</li>
+            <li>Database Fragmentation</li>
+            <li>Database SQL Parameterized</li>
+            <li>Database Query Log PostgreSQL and SQLite</li>
+            <li>Database Encryption SQLCipher</li>
+            <li>Database Case Study</li>
+          </ul>
+        </section>
+
+        <section>
+          <h5>Database Case Study</h5>
+        </section>
+
+        <section>
+          <h5>Case Study: Bike Rental Platform</h5>
+          <p>
+            A bike rental company uses a PostgreSQL database to manage rentals, customer accounts, and location check-ins.
+          </p>
+          <ul>
+            <li>Some team members manage prices, others handle station maintenance records</li>
+            <li>Rental submissions come from a public web app</li>
+            <li>Data should be monitored for abuse or repeated failures</li>
+          </ul>
+          <p>Which role-based controls, logging settings, and SQL security features would you apply?</p>
+        </section>
+        
+        <section>
+          <h5>Case Study: Furniture Store Inventory</h5>
+          <p>
+            A local furniture business tracks product inventory, employee tasks, and customer orders in PostgreSQL.
+          </p>
+          <ul>
+            <li>Warehouse staff update stock; sales staff access product and pricing info</li>
+            <li>Admins need analytics logs without modifying data</li>
+            <li>Mobile apps use local SQLite for offline browsing</li>
+          </ul>
+          <p>How would you design user roles, query logging, and local database encryption?</p>
+        </section>       
+
+        <section>
+          <h5>Case Study: Flower Store Order System</h5>
+          <p>
+            A flower shop uses both an online order system and an in-store terminal, with all data synced to a central PostgreSQL database.
+          </p>
+          <ul>
+            <li>Customer input is stored, including flower types and delivery info</li>
+            <li>Employees have different access levels (viewer vs. manager)</li>
+            <li>Product details and prices are fragmented into separate tables</li>
+          </ul>
+          <p>What access control model, SQL safety, and fragmentation strategy makes sense here?</p>
+        </section>        
+
+        <section>
+          <h5>Case Study: Unusual Patient Record Access</h5>
           <p>A staff member accessed over 200 patient records within 5 minutes — far beyond typical behavior for their
-            role.</p>
+            role</p>
           <p><strong>What access control or monitoring strategy should be used?</strong></p>
         </section>
 
         <section>
-          <h5>Case Study 3: SQL Injection Breach</h5>
+          <h5>Case Study: SQL Injection Breach</h5>
           <p>A public-facing web app allowed attackers to run raw SQL through a login form, exposing the entire user
-            database.</p>
+            database</p>
           <p><strong>What protection should have been implemented?</strong></p>
         </section>
 
@@ -10939,6 +11528,15 @@ SELECT category, AVG(price) AS average_price FROM Flowers GROUP BY category HAVI
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/zoom/zoom.min.js"></script>
 
     <script>
+
+      function copyToClipboard(elementId) {
+        const code = document.getElementById(elementId).innerText;
+        navigator.clipboard.writeText(code).then(() => {
+          alert('Copied to clipboard');
+        }).catch(err => {
+          alert('Failed to copy!');
+        });
+      }
 
       function showAnswer(id) {
         document.getElementById(id).style.display = "block";
