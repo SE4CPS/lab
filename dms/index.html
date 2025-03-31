@@ -11283,6 +11283,7 @@ SELECT category, AVG(price) AS average_price FROM Flowers GROUP BY category HAVI
             <li>Data Replication</li>
             <li>CAP Theorem</li>
             <li>Consistency Models</li>
+            <li>Implementation</li>
             <li>Limitations</li>
           </ul>
         </section>
@@ -11372,7 +11373,31 @@ SELECT category, AVG(price) AS average_price FROM Flowers GROUP BY category HAVI
               </tr>
             </tbody>
           </table>
-        </section>        
+        </section>
+
+        <section data-background="white">
+          <div style="display: flex; align-items: center;">
+            <div style="flex: 0 0 60%;">
+              <h5>Horizontal vs Vertical Partitioning</h5>
+              <ol>
+                <li><strong>Horizontal Partitioning (Sharding):</strong>
+                  Split by rows
+                  <br>e.g., Users with ID 1–1000 on Node A, 1001–2000 on Node B
+                </li>
+                <li><strong>Vertical Partitioning:</strong>
+                  Split by columns
+                  <br>e.g., Contact Info on Node A, Login Credentials on Node B
+                </li>
+                <li>Used to improve performance, scalability, and data locality</li>
+                <li>Trade-off: More joins or routing logic in queries</li>
+              </ol>
+            </div>
+            <div style="flex: 0 0 40%;">
+              <img src="https://miro.medium.com/v2/resize:fit:800/1*fSQex1AygqpyDQpWooK38A.png"
+                style="max-width: 100%;">
+            </div>
+          </div>
+        </section>
 
         <section>Data Replication</section>
 
@@ -11504,6 +11529,78 @@ SELECT category, AVG(price) AS average_price FROM Flowers GROUP BY category HAVI
           </table>
         </section>
 
+        <section>Implementation</section>
+
+        <section>
+          <h5>Replication Across PostgreSQL Nodes 🌷</h5>
+          <pre><code class="python" data-line-numbers style="font-size: 14pt;">
+import psycopg2
+conns = [psycopg2.connect(host=h, dbname="garden", user="u", password="p") for h in ["db1", "db2", "db3"]]
+def replicate(flower_id, flower_data):
+    for conn in conns:
+        conn.cursor().execute("INSERT INTO flowers (id, data) VALUES (%s, %s)", (flower_id, flower_data))
+        conn.commit()
+replicate(7, '{"type": "Rose", "color": "Red"}')
+          </code></pre>
+        </section>
+
+        <section>
+          <h5>Horizontal Partitioning Across PostgreSQL Nodes 🌼</h5>
+          <pre><code class="python" data-line-numbers style="font-size: 14pt;">
+import psycopg2
+conns = [psycopg2.connect(host=h, dbname="garden", user="u", password="p") for h in ["db1", "db2", "db3"]]
+def insert_shard(flower_id, flower_data):
+    conn = conns[flower_id % len(conns)]
+    conn.cursor().execute("INSERT INTO flowers (id, data) VALUES (%s, %s)", (flower_id, flower_data))
+    conn.commit()
+insert_shard(7, '{"type": "Rose", "color": "Red"}')
+          </code></pre>
+        </section>
+
+        <section>
+          <h5>Semantic Horizontal Partitioning 🌹</h5>
+          <pre><code class="python" data-line-numbers style="font-size: 14pt;">
+import psycopg2
+partitions = {
+    "Rose": psycopg2.connect(host="db1", dbname="garden", user="u", password="p"),
+    "Tulip": psycopg2.connect(host="db2", dbname="garden", user="u", password="p"),
+    "Daisy": psycopg2.connect(host="db3", dbname="garden", user="u", password="p")
+}
+def insert_by_type(flower_type, flower_data):
+    conn = partitions[flower_type]
+    conn.cursor().execute("INSERT INTO flowers (type, data) VALUES (%s, %s)", (flower_type, flower_data))
+    conn.commit()
+insert_by_type("Rose", '{"color": "Red", "season": "Spring"}')
+          </code></pre>
+        </section>
+
+        <section data-background="white">
+          <h5>Modern Frameworks Supporting Distributed Databases</h5>
+          <ul>
+            <li><a href="https://www.pingcap.com/tidb/" target="_blank"><strong>TiDB</strong></a>: Distributed SQL
+              engine with horizontal scalability (MySQL compatible)</li>
+
+            <li><a href="https://www.cockroachlabs.com/product/cockroachdb/"
+                target="_blank"><strong>CockroachDB</strong></a>: SQL-based, distributed transactions, strongly
+              consistent (CP)</li>
+
+            <li><a href="https://www.foundationdb.org/" target="_blank"><strong>FoundationDB</strong></a>:
+              ACID-compliant key-value store, used in Apple ecosystem</li>
+
+            <li><a href="https://cassandra.apache.org/" target="_blank"><strong>Apache Cassandra</strong></a>:
+              Decentralized, wide-column store, CP-oriented</li>
+
+            <li><a href="https://www.mongodb.com/" target="_blank"><strong>MongoDB</strong></a>: Document database with
+              sharding and replica sets (AC)</li>
+
+            <li><a href="https://aws.amazon.com/dynamodb/" target="_blank"><strong>Amazon DynamoDB</strong></a>: Managed
+              NoSQL with partitioning and replication (AP)</li>
+
+            <li><a href="https://fauna.com/" target="_blank"><strong>FaunaDB</strong></a>: Globally distributed
+              serverless database with strong consistency</li>
+          </ul>
+        </section>
+
         <section>Limitations</section>
 
         <section data-background="white">
@@ -11549,6 +11646,127 @@ SELECT category, AVG(price) AS average_price FROM Flowers GROUP BY category HAVI
               </tr>
             </tbody>
           </table>
+        </section>
+
+        <section>
+          <h5>Questions</h5>
+        </section>
+
+        <section>
+          <p>Which describes semantic horizontal partitioning in distributed databases?</p>
+          <ul class="alpha-list">
+            <li>Data is split by fixed-size blocks and distributed randomly</li>
+            <li>Rows are partitioned based on row ID modulo node count</li>
+            <li>Data is routed to nodes based on meaningful attributes like category or type</li>
+            <li>Each column is stored on a different node</li>
+          </ul>
+          <details style="display: flex;">
+            <summary><strong>Answer </strong></summary>&nbsp; C
+          </details>
+        </section>
+
+        <section>
+          <p>What does the CAP theorem state about distributed systems?</p>
+          <ul class="alpha-list">
+            <li>All three properties—Consistency, Availability, and Partition Tolerance—can always be guaranteed</li>
+            <li>Only Consistency and Availability matter in practice</li>
+            <li>Only two of Consistency, Availability, and Partition Tolerance can be fully guaranteed</li>
+            <li>CAP applies only to SQL databases</li>
+          </ul>
+          <details style="display: flex;">
+            <summary><strong>Answer </strong></summary>&nbsp; C
+          </details>
+        </section>
+
+        <section>
+          <p>Which database is commonly categorized as CP in the CAP theorem?</p>
+          <ul class="alpha-list">
+            <li>MongoDB</li>
+            <li>CouchDB</li>
+            <li>DynamoDB</li>
+            <li>MySQL</li>
+          </ul>
+          <details style="display: flex;">
+            <summary><strong>Answer </strong></summary>&nbsp; B
+          </details>
+        </section>
+
+        <section>
+          <p>What kind of partitioning splits data by rows?</p>
+          <ul class="alpha-list">
+            <li>Vertical partitioning</li>
+            <li>Horizontal partitioning</li>
+            <li>Semantic indexing</li>
+            <li>Data denormalization</li>
+          </ul>
+          <details style="display: flex;">
+            <summary><strong>Answer </strong></summary>&nbsp; B
+          </details>
+        </section>
+
+        <section>
+          <p>In distributed databases, what is a typical challenge of replication?</p>
+          <ul class="alpha-list">
+            <li>Ensuring real-time video rendering</li>
+            <li>Achieving strong consistency across nodes</li>
+            <li>Disabling logging and backups</li>
+            <li>Maintaining monolithic code structure</li>
+          </ul>
+          <details style="display: flex;">
+            <summary><strong>Answer </strong></summary>&nbsp; B
+          </details>
+        </section>
+
+        <section>
+          <p>Which replication type allows multiple nodes to accept writes?</p>
+          <ul class="alpha-list">
+            <li>Primary-Secondary</li>
+            <li>Multi-Primary</li>
+            <li>Read-Only</li>
+            <li>Snapshot-based</li>
+          </ul>
+          <details style="display: flex;">
+            <summary><strong>Answer </strong></summary>&nbsp; B
+          </details>
+        </section>
+
+        <section>
+          <p>Which consistency model ensures every read returns the latest write?</p>
+          <ul class="alpha-list">
+            <li>Eventual Consistency</li>
+            <li>Monotonic Reads</li>
+            <li>Causal Consistency</li>
+            <li>Strong Consistency</li>
+          </ul>
+          <details style="display: flex;">
+            <summary><strong>Answer </strong></summary>&nbsp; D
+          </details>
+        </section>
+
+        <section>
+          <p>What kind of partitioning splits columns across different nodes?</p>
+          <ul class="alpha-list">
+            <li>Vertical partitioning</li>
+            <li>Horizontal partitioning</li>
+            <li>Logical segmentation</li>
+            <li>Key-based sharding</li>
+          </ul>
+          <details style="display: flex;">
+            <summary><strong>Answer </strong></summary>&nbsp; A
+          </details>
+        </section>
+
+        <section>
+          <p>Why is single-node MySQL considered AC (not CP)?</p>
+          <ul class="alpha-list">
+            <li>It supports network partition tolerance</li>
+            <li>It guarantees consistency and availability in a local setup</li>
+            <li>It scales horizontally by default</li>
+            <li>It uses a NoSQL backend</li>
+          </ul>
+          <details style="display: flex;">
+            <summary><strong>Answer </strong></summary>&nbsp; B
+          </details>
         </section>
 
         <section>
