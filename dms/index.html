@@ -269,7 +269,7 @@
               </tr>
               <tr style="color: #ccc;">
                 <td style="padding: 6px; border: 1px solid #666;">12 (<a href="./#/mar-31">Mar 31</a>, <a
-                    href="./#/apr-02">Apr 2</a>, Apr 4)
+                    href="./#/apr-02">Apr 2</a>, <a href="./#/apr-04">Apr 4</a>)
                 </td>
                 <td style="padding: 6px; border: 1px solid #666;"><a href="./#/module-12">Relational
                     Database and Data
@@ -12045,12 +12045,199 @@ insert_by_type("Rose", '{"color": "Red", "season": "Spring"}')
           </details>
         </section>
 
+        <section id="apr-04">
+          <h5>April 4, 2025</h5>
+          <h5>Practice Lab - Writing Slow Queries</h5>
+          <ul>
+            <li>ORDER BY</li>
+            <li>UPDATE</li>
+            <li>DECRYPT</li>
+            <li>JOIN</li>
+            <li>DISTINCT</li>
+            <li>GROUP BY</li>
+            <li>LIKE (with wildcards at the beginning)</li>
+            <li>OR (in WHERE clause)</li>
+            <li>HAVING</li>
+            <li>SUBQUERY (Non-correlated)</li>
+            <li>SUBQUERY (Correlated)</li>
+          </ul>
+        </section>
+
+        <section>
+          <h5> (1/2) Bike Database &#x1F6B2;</h5>
+          <pre>
+              <code>
+  -- Create Bikes table with encrypted price field as BYTEA
+  CREATE TABLE Bikes (
+      bike_id SERIAL PRIMARY KEY,
+      brand VARCHAR(50),
+      encrypted_price BYTEA,
+      color VARCHAR(30)
+  );
+              </code>
+            </pre>
+        </section>
+
+        <section>
+          <h5> (2/2) Bike Database &#x1F6B2;</h5>
+          <pre>
+              <code>
+  CREATE TABLE Sales (
+      sale_id SERIAL PRIMARY KEY,
+      bike_id INT,
+      sale_date DATE,
+      sale_price DECIMAL(10, 2),
+      FOREIGN KEY (bike_id) REFERENCES Bikes(bike_id)
+  );                
+              </code>
+            </pre>
+        </section>
+
+        <section>
+          <h5>ORDER BY - Time Complexity: O(n log n)</h5>
+          <p><strong>Scenario:</strong> Sorting bikes by price.</p>
+          <pre>
+              <code>
+  -- Query: Order by price
+  EXPLAIN ANALYZE SELECT * FROM Bikes ORDER BY price;
+              </code>
+            </pre>
+        </section>
+
+        <section>
+          <h5>UPDATE - Time Complexity: O(n) + O(log n) (for index updates)</h5>
+          <p><strong>Scenario:</strong> Updating the price of bikes from a certain brand.</p>
+          <pre>
+              <code>
+  -- Query: Update price for a specific brand
+  EXPLAIN ANALYZE 
+  UPDATE Bikes 
+  SET price = price * 0.9 
+  WHERE brand = 'Trek';
+              </code>
+            </pre>
+        </section>
+
+        <section>
+          <h5>DECRYPT - Time Complexity: O(n)</h5>
+          <p><strong>Scenario:</strong> Decrypting encrypted bike prices for display.</p>
+          <pre>
+              <code>
+  -- Query: Decrypt encrypted price data
+  EXPLAIN ANALYZE 
+  SELECT bike_id, brand, DECRYPT(encrypted_price) 
+  FROM Bikes;
+              </code>
+            </pre>
+        </section>
+
+        <section>
+          <h5>JOIN - Time Complexity: O(n^2)</h5>
+          <p><strong>Scenario:</strong> Joining bikes and sales</p>
+          <pre>
+              <code>
+  EXPLAIN ANALYZE 
+  SELECT Bikes.bike_id, Bikes.brand, Sales.sale_price 
+  FROM Bikes
+  JOIN Sales;
+              </code>
+            </pre>
+        </section>
+
+        <section>
+          <h5>DISTINCT - Time Complexity: O(n log n)</h5>
+          <p><strong>Scenario:</strong> Getting a unique list of bike brands.</p>
+          <pre>
+              <code>
+  EXPLAIN ANALYZE 
+  SELECT DISTINCT brand 
+  FROM Bikes;
+              </code>
+            </pre>
+        </section>
+
+        <section>
+          <h5>GROUP BY - Time Complexity: O(n log n)</h5>
+          <p><strong>Scenario:</strong> Grouping bikes by brand and calculating the average sale.</p>
+          <pre>
+              <code>
+  -- Query: Grouping bikes by brand and calculating average sale price
+  EXPLAIN ANALYZE SELECT Bikes.brand, AVG(Sales.sale_price) 
+  FROM Bikes
+  JOIN Sales ON Bikes.bike_id = Sales.bike_id
+  GROUP BY Bikes.brand;
+              </code>
+            </pre>
+        </section>
+
+        <section>
+          <h5>LIKE - Time Complexity: O(n * m)</h5>
+          <p><strong>Scenario:</strong> Searching for bikes with a color that starts with "Bl".</p>
+          <pre>
+              <code>
+  -- Query: Searching for colors using LIKE with wildcard
+  EXPLAIN ANALYZE 
+  SELECT * 
+  FROM Bikes 
+  WHERE color 
+  LIKE '%Bl%';
+              </code>
+            </pre>
+        </section>
+
+        <section>
+          <h5>OR - Time Complexity: O(n)</h5>
+          <p><strong>Scenario:</strong> Filtering bikes that are either red or blue.</p>
+          <pre>
+              <code>
+  -- Query: Using OR in WHERE clause
+  EXPLAIN ANALYZE 
+  SELECT * 
+  FROM Bikes 
+  WHERE color = 'Red' OR color = 'Blue';
+              </code>
+            </pre>
+        </section>
+
+        <section>
+          <h5>HAVING - Time Complexity: O(n log n)</h5>
+          <p><strong>Scenario:</strong> Finding bike brands with an average sale price greater than $500.</p>
+          <pre>
+              <code>
+  -- Query: Filtering results with HAVING
+  EXPLAIN ANALYZE SELECT Bikes.brand, AVG(Sales.sale_price)
+  FROM Bikes
+  JOIN Sales ON Bikes.bike_id = Sales.bike_id
+  GROUP BY Bikes.brand
+  HAVING AVG(Sales.sale_price) > 500;
+              </code>
+            </pre>
+        </section>
+
+        <section>
+          <h5>SUBQUERY (Non-correlated) - Time Complexity: O(n^2)</h5>
+          <p><strong>Scenario:</strong> Finding bikes that have sales higher than the average.
+          </p>
+          <pre>
+              <code>
+  -- Query: Non-correlated subquery to filter bikes
+  EXPLAIN ANALYZE SELECT * 
+  FROM Bikes b
+  WHERE b.price > (SELECT AVG(price) FROM Bikes);
+              </code>
+            </pre>
+        </section>
+
+        <section>
+          <h5>SQL Query vs System Performance</h5>
+        </section>
+
         <section>
           <h5>Questions</h5>
         </section>
 
         <section>
-          <h5>Homework 4 (Apr/18), Lab 5 (Apr/18), Project Part 2 (Apr/20)</h5>
+          <h5>Homework 5 (Apr/18), Lab 5 (Apr/18), Project Part 2 (Apr/20)</h5>
         </section>
 
         <section>
