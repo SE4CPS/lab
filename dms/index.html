@@ -279,7 +279,8 @@
                 <td style="padding: 6px; border: 1px solid #666;"></td>
               </tr>
               <tr style="color: #ccc;">
-                <td style="padding: 6px; border: 1px solid #666;">13 (Apr <a href="./#/apr-07"> 7</a>, 9, 11)</td>
+                <td style="padding: 6px; border: 1px solid #666;">13 (Apr <a href="./#/apr-07"> 7</a>, <a
+                    href="./#/apr-09"> 9</a>, 11)</td>
                 <td style="padding: 6px; border: 1px solid #666;"><a href="./#/module-13">Relational
                     Database and Data
                     Aggregation</a></td>
@@ -12780,6 +12781,693 @@ insert_by_type("Rose", '{"color": "Red", "season": "Spring"}')
             <li>What trade-offs come with optimizing for query speed over consistency?</li>
             <li>How might your current project benefit from a hybrid storage model?</li>
           </ul>
+        </section>
+
+        <section id="apr-09">
+          <h5>April 9, 2025</h5>
+          <h5>Relational Database and Columnar Storage</h5>
+          <ul>
+            <li>ClickHouse Playground</li>
+            <li>Comparing PostgreSQL vs. ClickHouse</li>
+          </ul>
+        </section>
+
+        <section>
+          <div style="display: flex; align-items: center;">
+            <div style="width: 60%;">
+              <h5>ClickHouse Playground</h5>
+              <ul>
+                <li>Web-based platform to experiment with ClickHouse queries</li>
+                <li>No setup required; start querying instantly</li>
+                <li>Access to various sample datasets for testing</li>
+                <li>Supports SQL queries with real-time results</li>
+              </ul>
+            </div>
+            <div style="width: 40%;">
+              <!-- Placeholder for ClickHouse Playground Screenshot -->
+              <p><a href="https://play.clickhouse.com/play?user=play#c2VsZWN0ICogZnJvbSB0cmlwczs="
+                  target="_blank">ClickHouse Playground</a></p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h5>Clickhouse and Performance</h5>
+          <pre><code class="sql">
+        SELECT count(*)
+        FROM trips AS t1
+        JOIN dish AS t2
+          ON t1.trip_id= t2.id
+          </code></pre>
+        </section>
+
+        <section data-background="white">
+          <div style="display: flex; align-items: center;">
+            <div style="width: 60%;">
+              <h5>Why ClickHouse is Faster than PostgreSQL</h5>
+              <ul>
+                <li>Columnar storage enables faster analytics on selected columns</li>
+                <li>Vectorized query execution processes thousands of rows at once</li>
+                <li>Data compression reduces I/O and memory usage</li>
+                <li>No transaction overhead for read-heavy workloads</li>
+                <li>Query engine optimized for OLAP, not general-purpose use</li>
+                <li>Efficient filtering via data skipping indexes and partitions</li>
+                <li>Parallel execution by default across CPU cores and threads</li>
+                <li>Schema-on-write enables fast reads with known types</li>
+                <li>Minimal overhead from locks, WAL, or MVCC</li>
+                <li>Smart caching and memory-mapped I/O improve speed</li>
+              </ul>
+            </div>
+            <div style="width: 40%;">
+              <img src="https://d1.awsstatic.com/clickhouselogo.8d97d88b0524a004d9333a7e004c3c040b2d916e.png"
+                alt="ClickHouse vs PostgreSQL Performance" style="width: 100%;">
+            </div>
+          </div>
+        </section>
+
+        <section>Columnar storage enables faster analytics on selected columns</section>
+
+        <section>
+          <div style="display: flex; gap: 40px;">
+            <div style="width: 50%;">
+              <h5>ClickHouse</h5>
+              <ul>
+                <li>Columnar storage has faster query on selected columns</li>
+                <li>Reads only needed columns: O(n)</li>
+                <li>Example: 1 column × 3B rows = 3B values</li>
+              </ul>
+            </div>
+            <div style="width: 50%;">
+              <h5>PostgreSQL</h5>
+              <ul>
+                <li>Row-based storage reads entire rows for any query</li>
+                <li>Reads all columns: O(n × m)</li>
+                <li>Example: 20 columns × 3B rows = 60B values</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div style="display: flex; gap: 40px;">
+            <div style="width: 50%;">
+              <h5>ClickHouse</h5>
+              <ul>
+                <li>Vectorized query processes thousands of rows at once</li>
+                <li>Operates on data blocks (e.g., 8192 rows) using SIMD</li>
+                <li>O(n / block_size), e.g., O(n / 8192)</li>
+              </ul>
+            </div>
+            <div style="width: 50%;">
+              <h5>PostgreSQL</h5>
+              <ul>
+                <li>Tuple-at-a-time execution: one row per operation</li>
+                <li>No vectorization in standard execution path</li>
+                <li>O(n) operations for n rows</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section data-background="white">
+          <div style="display: flex; gap: 40px; align-items: center;">
+            <div style="width: 60%;">
+              <h5>What is SIMD?</h5>
+              <ul>
+                <li>SIMD = Single Instruction, Multiple Data</li>
+                <li>Performs the same operation on many data points at once</li>
+                <li>Boosts performance by parallelizing low-level computations</li>
+                <li>ClickHouse uses SIMD to process blocks of rows efficiently</li>
+              </ul>
+            </div>
+            <div style="width: 40%;">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/SIMD2.svg/330px-SIMD2.svg.png"
+                alt="SIMD Diagram" style="width: 100%; border: 1px solid #ccc;" />
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div style="display: flex; gap: 40px; align-items: flex-start;">
+            <div style="width: 50%;">
+              <h5>PostgreSQL</h5>
+              <ul>
+                <li>Processes one row at a time (no SIMD)</li>
+                <li>Loop-based: slower for numeric-heavy workloads</li>
+                <li>No vectorization for simple column operations</li>
+              </ul>
+            </div>
+            <div style="width: 50%;">
+              <h5>ClickHouse with SIMD</h5>
+              <ul>
+                <li>SIMD = Single Instruction, Multiple Data</li>
+                <li>Accelerates operations on numeric types (Int, Float)</li>
+                <li>Works best for math-heavy expressions: sum, multiply</li>
+                <li>Less effective on strings or complex nested types</li>
+                <li>Processes blocks (e.g. 8192 rows) in SIMD lanes</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>Vectorized query execution processes thousands of rows at once</section>
+
+        <section>
+          <div style="display: flex; gap: 40px; align-items: flex-start;">
+            <div style="width: 50%;">
+              <h5>PostgreSQL</h5>
+              <ul>
+                <li>Table with 3 billion rows × 20 columns</li>
+                <li>Query reads 1 column → full row still loaded</li>
+                <li>Disk read: 3B × 20 = 60 billion values</li>
+                <li>Limited compression → high I/O volume</li>
+                <li>Slower response due to unnecessary data</li>
+              </ul>
+            </div>
+            <div style="width: 50%;">
+              <h5>ClickHouse</h5>
+              <ul>
+                <li>Same table: 3 billion rows × 20 columns</li>
+                <li>Query reads 1 column → only 1 column accessed</li>
+                <li>Disk read: 3B values only</li>
+                <li>High compression → fewer bytes read</li>
+                <li>Much faster due to minimized I/O</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section data-background="black">
+          <img src="https://chistadata.com/wp-content/uploads/2024/02/clickhouse-columnar-store-1536x861.png"
+            alt="ClickHouse Columnar Storage" />
+        </section>
+
+        <section>Data compression reduces I/O and memory usage</section>
+
+        <section>
+          <div style="display: flex; gap: 40px; align-items: flex-start;">
+            <div style="width: 50%;">
+              <h5>PostgreSQL</h5>
+              <ul>
+                <li>3B rows × 20 columns = ~240 GB uncompressed</li>
+                <li>Row-based compression ≈ 2× → ~120 GB</li>
+                <li>Query reads entire rows even for 1 column</li>
+                <li>I/O: ~120 GB read from disk</li>
+                <li>Latency: High due to unnecessary data read</li>
+              </ul>
+            </div>
+            <div style="width: 50%;">
+              <h5>ClickHouse</h5>
+              <ul>
+                <li>3B rows × 1 column = ~12 GB uncompressed</li>
+                <li>Column compression ≈ 4–8× → ~1.5–3 GB</li>
+                <li>Query reads only 1 compressed column</li>
+                <li>I/O: ~2 GB read from disk</li>
+                <li>Latency: Much lower due to minimal read</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div style="display: flex; gap: 40px;">
+            <div style="width: 55%;">
+              <h5>Compression Example: `flowers.color` Column</h5>
+              <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                  <tr>
+                    <th style="border-bottom: 1px solid #ccc; text-align: left;">Row</th>
+                    <th style="border-bottom: 1px solid #ccc; text-align: left;">Color</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>'Red'</td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>'Red'</td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>'Red'</td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td>'Yellow'</td>
+                  </tr>
+                  <tr>
+                    <td>5</td>
+                    <td>'Yellow'</td>
+                  </tr>
+                  <tr>
+                    <td>6</td>
+                    <td>'White'</td>
+                  </tr>
+                  <tr>
+                    <td>...</td>
+                    <td>...</td>
+                  </tr>
+                  <tr>
+                    <td>3,000,000,000</td>
+                    <td>'Red'</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="width: 45%;">
+              <ul>
+                <li>Low-cardinality string column: only a few values repeated</li>
+                <li>Color is not a key → foreign key offers no storage benefit</li>
+                <li>PostgreSQL stores each string inline → ~3–6 bytes × 3B rows</li>
+                <li>Total storage: ~12–18 GB for this column alone</li>
+                <li>ClickHouse compresses repeated values → ~200–500 MB</li>
+                <li>Uses RLE + dictionary encoding for massive savings</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div style="display: flex; align-items: center; justify-content: center;">
+            <div style="text-align: center;">
+              <h5>Compression in ClickHouse</h5>
+              <p>
+                <a href="https://clickhouse.com/docs/data-compression/compression-in-clickhouse" target="_blank">
+                  https://clickhouse.com/docs/data-compression/compression-in-clickhouse
+                </a>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section>No transaction overhead for read-heavy workloads</section>
+
+        <section>
+          <div style="display: flex; gap: 40px;">
+            <div style="width: 50%;">
+              <h5>PostgreSQL</h5>
+              <ul>
+                <li>MVCC manages concurrent reads/writes</li>
+                <li>Requires transaction visibility checks</li>
+                <li>Read queries involve tuple versioning logic</li>
+                <li>Overhead: O(n) row checks + system metadata</li>
+                <li>Good for mixed workloads, but slower for pure reads</li>
+              </ul>
+            </div>
+            <div style="width: 50%;">
+              <h5>ClickHouse</h5>
+              <ul>
+                <li>Append-only architecture with no transactions</li>
+                <li>No version checks → fewer CPU cycles per row</li>
+                <li>Optimized for read-heavy, analytical workloads</li>
+                <li>Overhead: O(n) with minimal metadata checks</li>
+                <li>Higher throughput on large scans</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h5>Query: Count rows by flower color</h5>
+          <p><code>SELECT color, COUNT(*) FROM flowers GROUP BY color;</code></p>
+          <div style="display: flex; gap: 40px;">
+            <div style="width: 50%;">
+              <ul>
+                <li>3B rows, 3 unique colors</li>
+                <li>PostgreSQL must check visibility of every row</li>
+                <li>MVCC adds overhead → ~15–20 seconds</li>
+                <li>WAL and snapshot logic slows down I/O</li>
+              </ul>
+            </div>
+            <div style="width: 50%;">
+              <ul>
+                <li>ClickHouse reads compressed `color` column directly</li>
+                <li>No versioning, locking, or transactions involved</li>
+                <li>Processes in blocks → SIMD + vectorized aggregation</li>
+                <li>Same query completes in ~1–2 seconds</li>
+                <li>~10× faster for pure reads at this scale</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>Query engine optimized for OLAP, not general-purpose use</section>
+
+        <section>
+          <div style="display: flex; gap: 40px;">
+            <div style="width: 50%;">
+              <h5>PostgreSQL</h5>
+              <ul>
+                <li>General-purpose engine: OLTP + OLAP features</li>
+                <li>Optimized for transactions, constraints, and ACID</li>
+                <li>Supports small, frequent writes and reads</li>
+                <li>Query planner handles many workload types</li>
+                <li>Overhead from MVCC, triggers, and indexing logic</li>
+              </ul>
+            </div>
+            <div style="width: 50%;">
+              <h5>ClickHouse</h5>
+              <ul>
+                <li>Purpose-built for OLAP: analytical workloads only</li>
+                <li>Optimized for large scans, aggregations, and joins</li>
+                <li>Schema-on-write with compressed columnar layout</li>
+                <li>No overhead from transactional or constraint logic</li>
+                <li>Minimal planning time and fast execution path</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h5>Query: Total revenue by flower color</h5>
+          <p><code>SELECT color, SUM(price) FROM flowers GROUP BY color;</code></p>
+          <div style="display: flex; gap: 40px;">
+            <div style="width: 50%;">
+              <ul>
+                <li>PostgreSQL processes row-by-row with full query planner</li>
+                <li>Cost-based optimizer weighs multiple strategies</li>
+                <li>Overhead from MVCC and index scan decisions</li>
+                <li>Query time: ~12–18 seconds on 3B rows</li>
+              </ul>
+            </div>
+            <div style="width: 50%;">
+              <ul>
+                <li>ClickHouse loads only `color` and `price` columns</li>
+                <li>Scans and aggregates in-memory with SIMD</li>
+                <li>No planner overhead, no transactional metadata</li>
+                <li>Query time: ~1–2 seconds on the same data</li>
+                <li>Built for fast, repeatable analytical queries</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div style="display: flex; align-items: center; justify-content: center;">
+            <div style="text-align: center;">
+              <h5>OLAP in ClickHouse</h5>
+              <p>
+                <a href="https://clickhouse.com/docs/concepts/olap" target="_blank">
+                  https://clickhouse.com/docs/concepts/olap
+                </a>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section>Efficient filtering via data skipping indexes and partitions</section>
+
+        <section>
+          <div style="display: flex; gap: 40px;">
+            <div style="width: 50%;">
+              <h5>PostgreSQL</h5>
+              <ul>
+                <li>Uses B-tree and GIN indexes for filtering</li>
+                <li>Works well for selective filters on indexed columns</li>
+                <li>Must scan full rows if no index is used</li>
+                <li>Table partitions must be defined and maintained manually</li>
+                <li>Cost of index lookup + row access grows with data size</li>
+              </ul>
+            </div>
+            <div style="width: 50%;">
+              <h5>ClickHouse</h5>
+              <ul>
+                <li>Uses data skipping indexes (min/max per block)</li>
+                <li>Automatically skips data blocks irrelevant to query</li>
+                <li>Partitioning and sorting built into table engine</li>
+                <li>Efficient for range queries and ordered filtering</li>
+                <li>Minimal overhead, even with billions of rows</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h5>Query: Filter recent flower sales</h5>
+          <p><code>SELECT * FROM flowers WHERE sale_date &gt;= '2024-01-01';</code></p>
+          <div style="display: flex; gap: 40px;">
+            <div style="width: 50%;">
+              <ul>
+                <li>PostgreSQL scans index → retrieves row pointers → reads rows</li>
+                <li>If no index: full table scan (slow)</li>
+                <li>Partition pruning requires manual setup</li>
+                <li>Query time: ~8–12 seconds on 3B rows</li>
+              </ul>
+            </div>
+            <div style="width: 50%;">
+              <ul>
+                <li>ClickHouse skips blocks with outdated sale_date using min/max index</li>
+                <li>Partitioned by month or year for faster access</li>
+                <li>Only reads relevant blocks → far less I/O</li>
+                <li>Query time: ~0.5–1.5 seconds</li>
+                <li>Filtering is fast by design, not by workaround</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div style="display: flex; align-items: center; justify-content: center;">
+            <div style="text-align: center;">
+              <h5>Partitions in ClickHouse</h5>
+              <p>
+                <a href="https://clickhouse.com/docs/partitions" target="_blank">
+                  https://clickhouse.com/docs/partitions
+                </a>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section>Parallel execution by default across CPU cores and threads</section>
+
+        <section>
+          <div style="display: flex; gap: 40px;">
+            <div style="width: 50%;">
+              <h5>PostgreSQL</h5>
+              <ul>
+                <li>Parallel query execution must be enabled manually</li>
+                <li>Planner decides if parallelism is worth it</li>
+                <li>Not all operations are parallelizable (e.g., certain joins)</li>
+                <li>Default behavior favors safety over speed</li>
+                <li>Limited control over thread-level concurrency</li>
+              </ul>
+            </div>
+            <div style="width: 50%;">
+              <h5>ClickHouse</h5>
+              <ul>
+                <li>Parallel execution is the default for all queries</li>
+                <li>Queries split across CPU threads automatically</li>
+                <li>Each thread processes independent data blocks</li>
+                <li>Scales linearly with available cores</li>
+                <li>Optimized for high-core environments</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section data-background="white">
+          <h5>What is a CPU Core?</h5>
+          <div style="display: flex; gap: 40px; align-items: center;">
+            <div style="width: 50%;">
+              <ul>
+                <li>A core is an independent processing unit inside a CPU</li>
+                <li>Each core can execute its own thread or task</li>
+                <li>More cores → better parallelism and multitasking</li>
+                <li>ClickHouse uses all available cores by default</li>
+              </ul>
+            </div>
+            <div style="width: 50%; text-align: center;">
+              <img src="https://askleo.com/wp-content/uploads/2009/05/quadcore.png" alt="Quad Core CPU"
+                style="max-width: 100%; border: 1px solid #ccc;" />
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h5>Query: Total flower sales</h5>
+          <p><code>SELECT SUM(price) FROM flowers;</code></p>
+          <div style="display: flex; gap: 40px;">
+            <div style="width: 50%;">
+              <ul>
+                <li>PostgreSQL may use 1–2 CPU threads by default</li>
+                <li>Sequential scan or partial parallelism based on planner</li>
+                <li>Query time: ~10–14 seconds</li>
+              </ul>
+            </div>
+            <div style="width: 50%;">
+              <ul>
+                <li>ClickHouse distributes scan across all CPU cores</li>
+                <li>Each thread processes a subset of blocks in parallel</li>
+                <li>Aggregation happens concurrently, then merged</li>
+                <li>Query time: ~1–2 seconds</li>
+                <li>Parallelism is automatic and efficient</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>Schema-on-write enables fast reads with known types</section>
+
+        <section>
+          <div style="display: flex; gap: 40px;">
+            <div style="width: 50%;">
+              <h5>PostgreSQL</h5>
+              <ul>
+                <li>Supports schema-on-write: data types defined upfront</li>
+                <li>Also supports semi-structured types (e.g., JSONB)</li>
+                <li>Query planner needs to interpret structure at runtime for flexible types</li>
+                <li>Extra CPU cost when accessing dynamic or text-based columns</li>
+              </ul>
+            </div>
+            <div style="width: 50%;">
+              <h5>ClickHouse</h5>
+              <ul>
+                <li>Strict schema-on-write: all types are declared at insert time</li>
+                <li>No flexible columns — ensures fast, type-safe reads</li>
+                <li>No parsing needed during query execution</li>
+                <li>Optimized storage layout per column type</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h5>Query: Count red flowers</h5>
+          <p><code>SELECT COUNT(*) FROM flowers WHERE color = 'Red';</code></p>
+          <div style="display: flex; gap: 40px;">
+            <div style="width: 50%;">
+              <ul>
+                <li>PostgreSQL with `color` as JSONB → needs type parsing</li>
+                <li>Performance hit for interpreting structure</li>
+                <li>Query time: ~10 seconds on 3B rows</li>
+              </ul>
+            </div>
+            <div style="width: 50%;">
+              <ul>
+                <li>ClickHouse stores `color` as fixed String type</li>
+                <li>No parsing, no interpretation — direct binary scan</li>
+                <li>Query time: ~1–2 seconds on same data</li>
+                <li>Schema-on-write ensures fast reads by design</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>Minimal overhead from locks, WAL, or MVCC</section>
+
+        <section>
+          <div style="display: flex; gap: 40px;">
+            <div style="width: 50%;">
+              <h5>PostgreSQL</h5>
+              <ul>
+                <li>Uses MVCC (Multi-Version Concurrency Control)</li>
+                <li>Relies on WAL (Write-Ahead Log) for durability</li>
+                <li>Employs locks to ensure consistency in transactions</li>
+                <li>Extra overhead for visibility checks and write coordination</li>
+                <li>Ideal for OLTP, but adds latency for analytical reads</li>
+              </ul>
+            </div>
+            <div style="width: 50%;">
+              <h5>ClickHouse</h5>
+              <ul>
+                <li>No MVCC — data is immutable after write</li>
+                <li>No traditional WAL — uses parts + merges</li>
+                <li>No row-level locks or blocking reads</li>
+                <li>Data is written in bulk, then read without coordination</li>
+                <li>Minimal overhead for read-heavy, append-only workloads</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h5>Query: Count recent flower sales</h5>
+          <p><code>SELECT COUNT(*) FROM flowers WHERE sale_date &gt;= '2024-01-01';</code></p>
+          <div style="display: flex; gap: 40px;">
+            <div style="width: 50%;">
+              <ul>
+                <li>PostgreSQL performs MVCC visibility checks</li>
+                <li>Reads affected by concurrent writers and locks</li>
+                <li>WAL must be maintained and checked for consistency</li>
+                <li>Query time: ~8–12 seconds</li>
+              </ul>
+            </div>
+            <div style="width: 50%;">
+              <ul>
+                <li>ClickHouse reads compressed blocks directly</li>
+                <li>No need for locks, versioning, or WAL coordination</li>
+                <li>Query time: ~1–2 seconds</li>
+                <li>Fast because data is immutable and optimized for reading</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>Smart caching and memory-mapped I/O improve speed</section>
+
+        <section>
+          <div style="display: flex; gap: 40px;">
+            <div style="width: 50%;">
+              <h5>PostgreSQL</h5>
+              <ul>
+                <li>Relies on shared buffers for caching data pages</li>
+                <li>Uses OS page cache but not memory-mapped files</li>
+                <li>Manages cache eviction and I/O manually</li>
+                <li>Extra CPU used for decoding tuples and metadata</li>
+                <li>Good for transactional workloads, less efficient for large scans</li>
+              </ul>
+            </div>
+            <div style="width: 50%;">
+              <h5>ClickHouse</h5>
+              <ul>
+                <li>Uses memory-mapped files for efficient file access</li>
+                <li>OS handles caching → less overhead inside ClickHouse</li>
+                <li>Accesses compressed blocks directly in memory</li>
+                <li>Zero-copy reads where possible</li>
+                <li>Ideal for fast, repeated analytical queries</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h5>Query: Count flowers by color</h5>
+          <p><code>SELECT color, COUNT(*) FROM flowers GROUP BY color;</code></p>
+          <div style="display: flex; gap: 40px;">
+            <div style="width: 50%;">
+              <ul>
+                <li>PostgreSQL reads data pages via shared buffers</li>
+                <li>Cache hit depends on buffer pool + OS cache</li>
+                <li>Tuple parsing adds CPU overhead</li>
+                <li>Query time: ~10–15 seconds (cold)</li>
+              </ul>
+            </div>
+            <div style="width: 50%;">
+              <ul>
+                <li>ClickHouse reads compressed column blocks via memory map</li>
+                <li>Repeated queries hit OS cache directly</li>
+                <li>No decoding needed → data ready for aggregation</li>
+                <li>Query time: ~1–2 seconds (hot)</li>
+                <li>Smart I/O strategy = faster on large reads</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div style="display: flex; align-items: center; justify-content: center;">
+            <div style="text-align: center;">
+              <h5>Caching in ClickHouse</h5>
+              <p>
+                <a href="https://clickhouse.com/docs/operations/query-cache" target="_blank">
+                  https://clickhouse.com/docs/operations/query-cache
+                </a>
+              </p>
+            </div>
+          </div>
         </section>
 
         <section>
