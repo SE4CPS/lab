@@ -21,6 +21,7 @@
     <!-- Add Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+
     <style>
         /* Additional custom styles can go here */
         body {
@@ -128,7 +129,7 @@
                             <tr style="color: #ccc;">
                                 <td style="padding: 6px; border: 1px solid #666;">June 3</td>
                                 <td style="padding: 6px; border: 1px solid #666;">9 AM – 4 PM</td>
-                                <td style="padding: 6px; border: 1px solid #666;">Android Project Structure, Hello World
+                                <td style="padding: 6px; border: 1px solid #666;">Android Project Structure, Calculator
                                     App</td>
                                 <td style="padding: 6px; border: 1px solid #666;"></td>
                             </tr>
@@ -416,6 +417,290 @@
                         alt="Android Architecture Diagram" style="max-width: 90%; max-height: 500px;" />
                     <p style="font-size: 0.8rem; color: #666;">Image source: GeeksforGeeks</p>
                 </section>
+
+                <section>
+                    <h2>Android Project Structure, Calculator</h2>
+                </section>
+
+                <section>
+                    <h2>Android Project Structure</h2>
+                    <ul>
+                        <li><b>src/main/java/</b> - Kotlin files</li>
+                        <li><b>src/main/res/layout/</b> - XML UI files</li>
+                        <li><b>AndroidManifest.xml</b> - Declare Activities</li>
+                    </ul>
+                    <p>One activity + layout for calculator app.</p>
+                </section>
+
+                <section>
+                    <h2>Layout XML (activity_main.xml)</h2>
+                    <pre><code>
+    &lt;LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"&gt;
+
+        &lt;EditText android:id="@+id/etNumber1" ... /&gt;
+        &lt;EditText android:id="@+id/etNumber2" ... /&gt;
+        &lt;Button android:id="@+id/btnAdd" ... /&gt;
+        &lt;TextView android:id="@+id/tvResult" ... /&gt;
+    &lt;/LinearLayout&gt;
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>Where to Store Layout</h2>
+                    <p>Save XML at:</p>
+                    <pre><code>
+    app/src/main/res/layout/activity_main.xml
+                    </code></pre>
+                    <p>Used by MainActivity via setContentView().</p>
+                </section>
+
+                <section>
+                    <h2>MainActivity.kt Location</h2>
+                    <p>Path:</p>
+                    <pre><code>
+    app/src/main/java/com/example/calculator/MainActivity.kt
+                    </code></pre>
+                    <p>Basic activity code skeleton:</p>
+                    <pre><code>
+
+    class MainActivity : AppCompatActivity() {
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            setContentView(R.layout.activity_main)
+        }
+    }
+                    </code></pre>
+                </section>
+
+                <section>
+                    <h2>onCreate() & setContentView()</h2>
+                    <pre><code>onCreate() // : Activity start point</code></pre>
+                    <pre><code>setContentView() // : Load UI from XML.</code></pre>
+                </section>
+
+                <section>
+                    <h2>Accessing Views</h2>
+                    <pre><code>
+    val et1 = findViewById&lt;EditText&gt;(R.id.etNumber1)
+    val et2 = findViewById&lt;EditText&gt;(R.id.etNumber2)
+    val btn = findViewById&lt;Button&gt;(R.id.btnAdd)
+    val tv = findViewById&lt;TextView&gt;(R.id.tvResult)
+                    </code></pre>
+                    <p>Use these to read inputs and update output.</p>
+                </section>
+                <section>
+                    <h2>Button Click Listener</h2>
+                    <pre><code>
+    btn.setOnClickListener {
+    // code when clicked
+    }
+      </code></pre>
+                    <p>Put calculation logic here.</p>
+                </section>
+
+                <section>
+                    <h2>Read Input Values</h2>
+                    <pre><code>
+    val num1 = et1.text.toString().toDoubleOrNull() ?: 0.0
+    val num2 = et2.text.toString().toDoubleOrNull() ?: 0.0
+      </code></pre>
+                    <p>Safe conversion with default 0.0</p>
+                </section>
+
+                <section>
+                    <h2>Calculate & Show Result</h2>
+                    <pre><code>
+    val result = num1 + num2
+    tv.text = "Result: $result"
+      </code></pre>
+                </section>
+
+                <section>
+                    <pre><code style="font-size: 9pt;">override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        val et1 = findViewById&lt;EditText&gt;(R.id.etNumber1)
+        val et2 = findViewById&lt;EditText&gt;(R.id.etNumber2)
+        val btn = findViewById&lt;Button&gt;(R.id.btnAdd)
+        val tv = findViewById&lt;TextView&gt;(R.id.tvResult)
+        btn.setOnClickListener {
+            val num1 = et1.text.toString().toDoubleOrNull() ?: 0.0
+            val num2 = et2.text.toString().toDoubleOrNull() ?: 0.0
+            val result = num1 + num2
+            tv.text = "Result: $result"
+        }
+    }</code></pre>
+                </section>
+
+
+                <section>
+                    <pre><code class="language-xml" style="font-size: 9pt;">&lt;LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"&gt;
+    &lt;TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vertical Layout Example" /&gt;
+    &lt;LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"&gt;
+        &lt;Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Button 1" /&gt;
+        &lt;Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Button 2" /&gt;
+    &lt;/LinearLayout&gt;
+&lt;/LinearLayout&gt;</code></pre>
+                </section>
+
+                <section>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="border:1px solid #ccc; padding:8px; text-align:left;">Property</th>
+                                <th style="border:1px solid #ccc; padding:8px; text-align:left;">Description</th>
+                                <th style="border:1px solid #ccc; padding:8px; text-align:left;">Example XML</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="border:1px solid #ccc; padding:8px;">background</td>
+                                <td style="border:1px solid #ccc; padding:8px;">Sets background color or drawable</td>
+                                <td style="border:1px solid #ccc; padding:8px;">android:background="#FF0000"</td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid #ccc; padding:8px;">textSize</td>
+                                <td style="border:1px solid #ccc; padding:8px;">Sets text font size</td>
+                                <td style="border:1px solid #ccc; padding:8px;">android:textSize="18sp"</td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid #ccc; padding:8px;">textColor</td>
+                                <td style="border:1px solid #ccc; padding:8px;">Sets text color</td>
+                                <td style="border:1px solid #ccc; padding:8px;">android:textColor="#333333"</td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid #ccc; padding:8px;">padding</td>
+                                <td style="border:1px solid #ccc; padding:8px;">Sets padding inside view</td>
+                                <td style="border:1px solid #ccc; padding:8px;">android:padding="16dp"</td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid #ccc; padding:8px;">layout_width</td>
+                                <td style="border:1px solid #ccc; padding:8px;">Width of the view</td>
+                                <td style="border:1px solid #ccc; padding:8px;">android:layout_width="match_parent"</td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid #ccc; padding:8px;">layout_height</td>
+                                <td style="border:1px solid #ccc; padding:8px;">Height of the view</td>
+                                <td style="border:1px solid #ccc; padding:8px;">android:layout_height="wrap_content"
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid #ccc; padding:8px;">layout_margin</td>
+                                <td style="border:1px solid #ccc; padding:8px;">Margin outside the view</td>
+                                <td style="border:1px solid #ccc; padding:8px;">android:layout_margin="8dp"</td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid #ccc; padding:8px;">gravity</td>
+                                <td style="border:1px solid #ccc; padding:8px;">Aligns content inside the view</td>
+                                <td style="border:1px solid #ccc; padding:8px;">android:gravity="center"</td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid #ccc; padding:8px;">layout_gravity</td>
+                                <td style="border:1px solid #ccc; padding:8px;">Aligns view inside parent layout</td>
+                                <td style="border:1px solid #ccc; padding:8px;">android:layout_gravity="center"</td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid #ccc; padding:8px;">visibility</td>
+                                <td style="border:1px solid #ccc; padding:8px;">Shows or hides the view</td>
+                                <td style="border:1px solid #ccc; padding:8px;">android:visibility="gone"</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <h2>Common Kotlin Syntax in Android</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Concept</th>
+                                <th>Description</th>
+                                <th>Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Variable Declaration</td>
+                                <td>Immutable and mutable vars</td>
+                                <td><code>val name: String = "Solomon"<br>var age: Int = 30</code></td>
+                            </tr>
+                            <tr>
+                                <td>Null Safety</td>
+                                <td>Nullable types &amp; safe calls</td>
+                                <td><code>var s: String? = null<br>println(s?.length ?: 0)</code></td>
+                            </tr>
+                            <tr>
+                                <td>Function</td>
+                                <td>Named function with return</td>
+                                <td><code>fun add(a: Int, b: Int): Int { return a + b }</code></td>
+                            </tr>
+                            <tr>
+                                <td>Single-Expression Function</td>
+                                <td>Short form function</td>
+                                <td><code>fun mul(a: Int, b: Int) = a * b</code></td>
+                            </tr>
+                            <tr>
+                                <td>Class</td>
+                                <td>Class with properties</td>
+                                <td><code>class Person(val name: String, var age: Int)</code></td>
+                            </tr>
+                            <tr>
+                                <td>Lambda</td>
+                                <td>Anonymous function</td>
+                                <td><code>btn.setOnClickListener { /* code */ }</code></td>
+                            </tr>
+                            <tr>
+                                <td>Object Expression</td>
+                                <td>Anonymous class instance</td>
+                                <td><code>val listener = object : View.OnClickListener { ... }</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <pre><code class="language-xml" style="font-size: 9pt;">&lt;manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.example.app"&gt;
+    &lt;application
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"&gt;
+        &lt;activity android:name=".MainActivity"&gt;
+            &lt;intent-filter&gt;
+                &lt;action android:name="android.intent.action.MAIN" /&gt;
+                &lt;category android:name="android.intent.category.LAUNCHER" /&gt;
+            &lt;/intent-filter&gt;
+        &lt;/activity&gt;
+    &lt;/application&gt;
+&lt;/manifest&gt;</code></pre>
+                </section>
+
+                <section>Questions?</section>
 
             </div>
         </div>
