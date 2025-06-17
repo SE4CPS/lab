@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Documentation</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2em;
+            line-height: 1.6;
+            font-size: 10pt;
+        }
+
+        h2 {
+            border-bottom: 2px solid #444;
+            padding-bottom: 0.3em;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1em 0;
+        }
+
+        th,
+        td {
+            border: 1px solid #888;
+            padding: 0.6em;
+            text-align: left;
+        }
+
+        .mermaid {
+            text-align: center;
+            margin: 2em 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Software Ecosystem Framework</h1>
+    <p>
+        This document presents the architecture, data flow, frontend components, and API surface of the
+        <strong>releasetrain.io</strong> platform.
+        The system is designed to ingest open-source ecosystem data (e.g., GitHub, Reddit, CVEs), classify and enrich
+        updates,
+        and support triage and visualization interfaces. The goal is to help designers, architects, testers,
+        and developers better maintain and evolve complex software ecosystems. Detailed diagrams, endpoint
+        documentation,
+        and references to prior publications are included below.
+    </p>
+
+    <h2>Prototype and GitHub</h2>
+    <ul>
+        <li>
+            🌐 <strong>Live Prototype:</strong>
+            <a href="https://releasetrain.io/" target="_blank">https://releasetrain.io/</a>
+        </li>
+        <li>
+            💻 <strong>Client Repository:</strong>
+            <a href="https://github.com/SE4CPS/releasetrain-client"
+                target="_blank">github.com/SE4CPS/releasetrain-client</a>
+        </li>
+        <li>
+            📋 <strong>Development Board:</strong>
+            <a href="https://github.com/orgs/SE4CPS/projects/24" target="_blank">SE4CPS GitHub Project #24</a>
+        </li>
+    </ul>
+
+    <h2>System Architecture Diagram</h2>
+    <div class="mermaid">
+        graph LR
+        A["a) Bot1 (GitHub)"] --> D["d) MongoDB Data Lake"]
+        B["b) Bot2 (CVE)"] --> D
+        C["c) Bot3 (Reddit)"] --> D
+
+        Note1["📝 Improve data quality"]:::green
+        Note1 --> D
+
+        subgraph E_SG["e) Classification"]
+        direction LR
+        Type["Type"]
+        Security["Security"]
+        Breaking["Breaking"]
+        Type --> E["e) Classified Output"]
+        Security --> E
+        Breaking --> E
+        Sentimental:::green --> E
+        LLM/RAG:::green --> E
+        end
+
+        E <--> D
+
+            D --> F["f) Backend"]
+
+            F --> FEEntry["Frontend"]
+
+            subgraph H["h) Frontend"]
+            direction LR
+            FE1["1) Ecosystem Graph Architecture"]
+            FE2["2) Ecosystem UML Architecture"]
+            FE3["3) Ecosystem Software Updates"]
+            FE4["4) Ecosystem Triage Buttons"]
+            FE5["Ecosystem Release Notes Generator"]:::green
+
+            FEEntry --> FE1
+            FEEntry --> FE2
+            FEEntry --> FE3
+            FEEntry --> FE4
+            FEEntry --> FE5
+            end
+
+            classDef green fill:#d4f4dd,stroke:#2b7a2b,color:#1c3c1c;
+
+    </div>
+
+    <h2>a–c) Bots Ingesting Ecosystem Data</h2>
+    <table>
+        <tr>
+            <th>Bot</th>
+            <th>Description</th>
+            <th>Technology Used</th>
+        </tr>
+        <tr>
+            <td>a) Bot1 (GitHub)</td>
+            <td>Ingests GitHub repo and issue activity.</td>
+            <td>Python, GitHub API</td>
+        </tr>
+        <tr>
+            <td>b) Bot2 (CVE)</td>
+            <td>Monitors Common Vulnerabilities and Exposures databases.</td>
+            <td>Python, Web Scraping, File Download (NVD JSON feeds)</td>
+        </tr>
+        <tr>
+            <td>c) Bot3 (Reddit)</td>
+            <td>Extracts ecosystem-related discussions from Reddit forums.</td>
+            <td>Python, Reddit API</td>
+        </tr>
+    </table>
+
+    <h2>d) MongoDB Data Lake</h2>
+    <p>
+        Centralized, schemaless storage of ingested raw and enriched data. Serves as the source of truth for
+        classification and backend systems.
+    </p>
+
+    <h2>e) Classification Engine</h2>
+    <table>
+        <tr>
+            <th>Component</th>
+            <th>Description</th>
+            <th>Technology Used</th>
+        </tr>
+        <tr>
+            <td>Type</td>
+            <td>Categorizes updates as feature, bugfix, or refactor.</td>
+            <td>Python, Updated Daily</td>
+        </tr>
+        <tr>
+            <td>Security</td>
+            <td>Flags entries with potential or confirmed security implications.</td>
+            <td>Python, Updated Daily</td>
+        </tr>
+        <tr>
+            <td>Breaking</td>
+            <td>Detects potential backward-incompatible changes [<a href="#ref3">3</a>].</td>
+            <td>Python, Updated Daily</td>
+        </tr>
+        <tr>
+            <td>e) Classified Output</td>
+            <td>Unified enriched stream, fed back into the Data Lake [<a href="#ref4">4</a>].</td>
+            <td>Python, Stream Aggregation</td>
+        </tr>
+    </table>
+
+    <h2>f) Backend</h2>
+    <p>
+        Coordinates data processing, triggers classification, and interfaces with the frontend. May perform aggregation,
+        deduplication, and logging.
+    </p>
+    <table>
+        <tr>
+            <th>Technology</th>
+            <th>Details</th>
+        </tr>
+        <tr>
+            <td>Platform Stack</td>
+            <td>Node.js, Express.js, JavaScript, NGINX (reverse proxy)</td>
+        </tr>
+        <tr>
+            <td>Python Support</td>
+            <td>Python 3.10.12 — used for ML and data enrichment</td>
+        </tr>
+        <tr>
+            <td>Server Environment</td>
+            <td>Ubuntu 22.04.1 LTS (Jammy), running on a virtual machine</td>
+        </tr>
+    </table>
+
+    <h2>h) Frontend Modules</h2>
+    <p>
+        The frontend modules are licensed under the MIT License and welcome community contributions from open-source
+        volunteers and researchers.
+    </p>
+    <table>
+        <tr>
+            <th>Component</th>
+            <th>Description</th>
+            <th>Technology Used</th>
+            <th>Repository</th>
+        </tr>
+        <tr>
+            <td>1) Ecosystem Graph Architecture</td>
+            <td>Visualizes relationships among software components [<a href="#ref5">5</a>].</td>
+            <td>JavaScript, Chart.js</td>
+            <td><a href="https://github.com/SE4CPS/releasetrain-client" target="_blank">GitHub</a></td>
+        </tr>
+        <tr>
+            <td>2) Ecosystem UML Architecture</td>
+            <td>Displays autogenerated UML diagrams for structural understanding [<a href="#ref1">1</a>].</td>
+            <td>PlantUML, JavaScript</td>
+            <td><a href="https://github.com/SE4CPS/releasetrain-client" target="_blank">GitHub</a></td>
+        </tr>
+        <tr>
+            <td>3) Ecosystem Software Updates</td>
+            <td>Summarizes recent changes, grouped by source and impact.</td>
+            <td>JavaScript, Chart.js</td>
+            <td><a href="https://github.com/SE4CPS/releasetrain-client" target="_blank">GitHub</a></td>
+        </tr>
+        <tr>
+            <td>4) Ecosystem Triage Buttons</td>
+            <td>Interactive UI to triage, tag, and escalate updates [<a href="#ref2">2</a>].</td>
+            <td>JavaScript</td>
+            <td><a href="https://github.com/SE4CPS/releasetrain-client" target="_blank">GitHub</a></td>
+        </tr>
+    </table>
+
+    <p>
+        <strong>License:</strong> MIT &nbsp;|&nbsp; <strong>Contributions:</strong> Developers and researchers are
+        invited to contribute via pull requests, issues, and feature suggestions on GitHub.
+    </p>
+
+    <h2>GET Request API Endpoints</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Method</th>
+                <th>Endpoint</th>
+                <th>Description</th>
+                <th>Example Request</th>
+                <th>Sample Response</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/reddit</code></td>
+                <td>Get Reddit posts</td>
+                <td><a href="https://releasetrain.io/api/reddit" target="_blank"><code>/api/reddit</code></a></td>
+                <td>
+                    <pre>[{ "title": "...", "author": "...", ... }]</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/reddit/count</code></td>
+                <td>Get total Reddit post count (last 2 years)</td>
+                <td><a href="https://releasetrain.io/api/reddit/count"
+                        target="_blank"><code>/api/reddit/count</code></a></td>
+                <td>
+                    <pre>{ "totalRedditPosts": 248 }</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/v/</code></td>
+                <td>Get filtered versions by component(s)</td>
+                <td><a href="https://releasetrain.io/api/v/?q=chrome,firefox"
+                        target="_blank"><code>/api/v/?q=chrome,firefox</code></a></td>
+                <td>
+                    <pre>{ "versions": [ ... ] }</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/v/count</code></td>
+                <td>Get total version count (last 2 years)</td>
+                <td><a href="https://releasetrain.io/api/v/count" target="_blank"><code>/api/v/count</code></a></td>
+                <td>
+                    <pre>{ "totalVersions": 1221 }</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/v/fcc</code></td>
+                <td>Get forecasted coincide release dates</td>
+                <td><a href="https://releasetrain.io/api/v/fcc?q=chrome,firefox"
+                        target="_blank"><code>/api/v/fcc?q=chrome,firefox</code></a></td>
+                <td>
+                    <pre>[{ "component": "...", "coincideReleaseDate": "..." }]</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/v/fc</code></td>
+                <td>Get forecasted next release date</td>
+                <td><a href="https://releasetrain.io/api/v/fc?q=chrome"
+                        target="_blank"><code>/api/v/fc?q=chrome</code></a></td>
+                <td>
+                    <pre>[{ "component": "...", "releaseDate": "..." }]</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/v/:id</code></td>
+                <td>Get version by MongoDB ObjectId</td>
+                <td><a href="https://releasetrain.io/api/v/660c38fce3cba9423e4f8f23"
+                        target="_blank"><code>/api/v/660c38fce3cba9423e4f8f23</code></a></td>
+                <td>
+                    <pre>{ "versionProductName": "...", ... }</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/v/versionId/:versionId</code></td>
+                <td>Get version by versionId</td>
+                <td><a href="https://releasetrain.io/api/v/versionId/20250217component1.2.3"
+                        target="_blank"><code>/api/v/versionId/20250217component1.2.3</code></a></td>
+                <td>
+                    <pre>{ "versionNumber": "1.2.3", ... }</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/v/d/versionsByComponent</code></td>
+                <td>Get detailed version data by component (name, version, OS)</td>
+                <td><a href="https://releasetrain.io/api/v/d/versionsByComponent?component=name:chrome,version:118"
+                        target="_blank"><code>/api/v/d/versionsByComponent?component=name:chrome,version:118</code></a>
+                </td>
+                <td>
+                    <pre>[{ "latestVersion": { ... }, "currentVersion": { ... } }]</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/c/name/:componentName/:versionNumber?</code></td>
+                <td>Get component data by name and optional version</td>
+                <td><a href="https://releasetrain.io/api/c/name/firefox"
+                        target="_blank"><code>/api/c/name/firefox</code></a></td>
+                <td>
+                    <pre>{ "firefox": [ ... ] }</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/c/os</code></td>
+                <td>Get distinct operating systems in the last 2 years</td>
+                <td><a href="https://releasetrain.io/api/c/os" target="_blank"><code>/api/c/os</code></a></td>
+                <td>
+                    <pre>[ "ubuntu", "windows", ... ]</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/c/count</code></td>
+                <td>Get total distinct component count (last 2 years)</td>
+                <td><a href="https://releasetrain.io/api/c/count" target="_blank"><code>/api/c/count</code></a></td>
+                <td>
+                    <pre>{ "totalComponents": 142 }</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/c/names</code></td>
+                <td>Get all distinct component names</td>
+                <td><a href="https://releasetrain.io/api/c/names" target="_blank"><code>/api/c/names</code></a></td>
+                <td>
+                    <pre>[ "chrome", "firefox", ... ]</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/c/frequency</code></td>
+                <td>Get most frequent and recently updated components</td>
+                <td><a href="https://releasetrain.io/api/c/frequency" target="_blank"><code>/api/c/frequency</code></a>
+                </td>
+                <td>
+                    <pre>{ "totalComponents": 20, "components": [ ... ] }</pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>References</h2>
+    <ul>
+        <li id="ref1">[1] Kan, V., Lnu, M. P., Berhe, S., El Kari, C., Maynard, M., & Khomh, F. (2025).<br>
+            <em><a href="https://www.sciencedirect.com/science/article/pii/S1877050925008440" target="_blank">
+                    Automated UML Visualization of Software Ecosystems: Tracking Versions, Dependencies, and Security
+                    Updates.<br>
+                </a></em><strong>Procedia Computer Science, 257</strong>, 834–841.
+        </li>
+        <li id="ref2">
+            [2] Veed, S. P., Daftary, S. M., Singh, B., Rudra, M., Berhe, S., Maynard, M., & Khomh, F. (2025).<br>
+            <em><a href="https://sdiotsec.github.io/accepted_papers_posters/sdiotsec25-final78.pdf" target="_blank">
+                    IoT Software Updates: User Perspectives in the Context of NIST IR 8259A.<br>
+                </a></em>Presented at <strong>SDIoTSec 2025 – Workshop on Security, Privacy, and Dependability for Smart
+                IoT</strong>.
+        </li>
+        <li id="ref3">
+            [3] Singh, B., Daftary, S., Rudra, M., Veed, S., Berhe, S., Maynard, M., & Khomh, F. (2024).<br>
+            <em><a href="https://okipublishing.com/book/index.php/okip/catalog/view/46/58/321" target="_blank">Enriching
+                    Release Notes with Reddit Feedback: Understanding How User Feedback Can Augment
+                    Maintaining Software Updates.<br>
+                </a></em>In <strong>Competitive Tools, Techniques, and Methods</strong>. Oklahoma International
+            Publishing eBooks.
+        </li>
+        <li id="ref4">
+            [4] Berhe, S., Kan, V., Khan, O., Pader, N., Farooqui, A. Z., Maynard, M., & Khomh, F. (2024).<br>
+            <em><a href="https://www.sciencedirect.com/science/article/pii/S187705092401305X" target="_blank">
+                    Triage Software Update Impact via Release Notes Classification.<br>
+                </a></em><strong>Procedia Computer Science, 238</strong>, 618–622.
+        </li>
+        <li id="ref5">
+            [5] Berhe, S., Maynard, M., & Khomh, F. (2023).<br>
+            <em><a href="https://www.sciencedirect.com/science/article/pii/S1877050923006129" target="_blank">
+                    Maintenance Cost of Software Ecosystem Updates.<br>
+                </a></em><strong>Procedia Computer Science, 220</strong>, 608–615.
+        </li>
+    </ul>
+</body>
+
+</html>
