@@ -94,28 +94,32 @@
         LLM/RAG:::green --> E
         end
 
-        E <--> D
-
-            D --> F["f) Backend"]
-
-            F --> FEEntry["Frontend"]
-
-            subgraph H["h) Frontend"]
-            direction LR
-            FE1["1) Ecosystem Graph Architecture"]
-            FE2["2) Ecosystem UML Architecture"]
-            FE3["3) Ecosystem Software Updates"]
-            FE4["4) Ecosystem Triage Buttons"]
-            FE5["Ecosystem Release Notes Generator"]:::green
-
-            FEEntry --> FE1
-            FEEntry --> FE2
-            FEEntry --> FE3
-            FEEntry --> FE4
-            FEEntry --> FE5
+        subgraph E_Azure["g) Azure Cloud"]
+        Azure(gpt-4o) <--> LLM/RAG
             end
 
-            classDef green fill:#d4f4dd,stroke:#2b7a2b,color:#1c3c1c;
+            E <--> D
+
+                D <--> F["f) Backend API"]
+
+                    F <--> FEEntry["Frontend"]
+
+                        subgraph H["h) Frontend"]
+                        direction LR
+                        FE1["1) Ecosystem Graph Architecture"]
+                        FE2["2) Ecosystem UML Architecture"]
+                        FE3["3) Ecosystem Software Updates"]
+                        FE4["4) Ecosystem Triage Buttons"]
+                        FE5["Ecosystem Release Notes Generator"]:::green
+
+                        FEEntry --> FE1
+                        FEEntry --> FE2
+                        FEEntry --> FE3
+                        FEEntry --> FE4
+                        FEEntry --> FE5
+                        end
+
+                        classDef green fill:#d4f4dd,stroke:#2b7a2b,color:#1c3c1c;
 
     </div>
 
@@ -123,21 +127,25 @@
     <table>
         <tr>
             <th>Bot</th>
+            <th>Platform</th>
             <th>Description</th>
             <th>Technology Used</th>
         </tr>
         <tr>
             <td>a) Bot1 (GitHub)</td>
+            <td>Ubuntu 22.04.1 LTS</td>
             <td>Ingests GitHub repo and issue activity.</td>
             <td>Python, GitHub API</td>
         </tr>
         <tr>
             <td>b) Bot2 (CVE)</td>
+            <td>Ubuntu 22.04.1 LTS</td>
             <td>Monitors Common Vulnerabilities and Exposures databases.</td>
             <td>Python, Web Scraping, File Download (NVD JSON feeds)</td>
         </tr>
         <tr>
             <td>c) Bot3 (Reddit)</td>
+            <td>Ubuntu 22.04.1 LTS</td>
             <td>Extracts ecosystem-related discussions from Reddit forums.</td>
             <td>Python, Reddit API</td>
         </tr>
@@ -146,35 +154,46 @@
     <h2>d) MongoDB Data Lake</h2>
     <p>
         Centralized, schemaless storage of ingested raw and enriched data. Serves as the source of truth for
-        classification and backend systems.
+        classification and backend systems. The database is installed with MongoDB Atlas.
     </p>
 
     <h2>e) Classification Engine</h2>
     <table>
         <tr>
             <th>Component</th>
+            <th>Platform</th>
             <th>Description</th>
             <th>Technology Used</th>
         </tr>
         <tr>
             <td>Type</td>
+            <td>Ubuntu 22.04.1 LTS</td>
             <td>Categorizes updates as feature, bugfix, or refactor.</td>
             <td>Python, Updated Daily</td>
         </tr>
         <tr>
             <td>Security</td>
+            <td>Ubuntu 22.04.1 LTS</td>
             <td>Flags entries with potential or confirmed security implications.</td>
             <td>Python, Updated Daily</td>
         </tr>
         <tr>
             <td>Breaking</td>
+            <td>Ubuntu 22.04.1 LTS</td>
             <td>Detects potential backward-incompatible changes [<a href="#ref3">3</a>].</td>
             <td>Python, Updated Daily</td>
         </tr>
         <tr>
-            <td>e) Classified Output</td>
+            <td>Classified Output</td>
+            <td>Ubuntu 22.04.1 LTS</td>
             <td>Unified enriched stream, fed back into the Data Lake [<a href="#ref4">4</a>].</td>
             <td>Python, Stream Aggregation</td>
+        </tr>
+        <tr>
+            <td>LLM/RAG</td>
+            <td>Azure subscription 1</td>
+            <td>Reddit + CVE + Release Notes</td>
+            <td>Python, gpt-4o</td>
         </tr>
     </table>
 
@@ -186,19 +205,18 @@
     <table>
         <tr>
             <th>Technology</th>
+            <th>Platform</th>
             <th>Details</th>
         </tr>
         <tr>
             <td>Platform Stack</td>
+            <td>Ubuntu 22.04.1 LTS</td>
             <td>Node.js, Express.js, JavaScript, NGINX (reverse proxy)</td>
         </tr>
         <tr>
             <td>Python Support</td>
+            <td>Ubuntu 22.04.1 LTS</td>
             <td>Python 3.10.12 — used for ML and data enrichment</td>
-        </tr>
-        <tr>
-            <td>Server Environment</td>
-            <td>Ubuntu 22.04.1 LTS (Jammy), running on a virtual machine</td>
         </tr>
     </table>
 
@@ -395,6 +413,29 @@
             </tr>
         </tbody>
     </table>
+
+    <h2>Security </h2>
+    <p>
+        Security Overview: The security model of the releasetrain.io platform prioritizes both data integrity and secure
+        communication. API access is controlled through key-based authentication, ensuring only authorized users can
+        interact with backend services. All data transmissions occur over HTTPS, with certificates issued via the free,
+        automated Certbot utility powered by Let's Encrypt. The platform is hosted on DigitalOcean rather than MongoDB
+        Atlas for backend compute, allowing tighter integration with custom firewalls and container orchestration, while
+        Atlas remains the managed database layer for scalable, high-availability storage. MongoDB connections are
+        handled via authenticated URIs with TLS enabled, and the backend stack (Node.js/Express with NGINX reverse
+        proxy) is configured to enforce HTTPS-only traffic. While current component labels and test coverage need
+        refinement, the architecture supports future integration of access logs, intrusion detection, and data
+        validation pipelines.</p>
+
+    <h3>Current Limitations</h3>
+    <ul>
+        <li>API keys are hardcoded and not yet rotated regularly</li>
+        <li>Component names in the frontend are inconsistent 
+        </li>
+        <li>No automated test cases are implemented for security-critical flows</li>
+        <li>Data inputs (e.g., Reddit and CVE feeds) are not fully validated
+        </li>
+    </ul>
 
     <h2>References</h2>
     <ul>
