@@ -34,6 +34,18 @@
             text-align: left;
         }
 
+        pre code {
+            display: block;
+            background-color: #f5f5f5;
+            padding: 12px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 10pt;
+            font-family: Consolas, monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
         .mermaid {
             text-align: center;
             margin: 2em 0;
@@ -277,11 +289,133 @@
         <tbody>
             <tr>
                 <td>GET</td>
+                <td><code>/api/aggregate/v/oldestTimestamp?count=1000</code></td>
+                <td>Get the oldest release date among the most recent <code>count</code> versions. Also returns delta in
+                    days from today.</td>
+                <td><a href="https://releasetrain.io/api/aggregate/v/oldestTimestamp?count=1000"
+                        target="_blank"><code>/api/aggregate/v/oldestTimestamp?count=1000</code></a></td>
+                <td>
+                    <pre><code>{ 
+    "oldest": "20240101", 
+    "deltaInDays": 212 
+}</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/aggregate/v/updateTypeCount?timestamp=YYYYMMDD</code></td>
+                <td>Count how many updates are classified as major, minor, patch, or other for a given date.</td>
+                <td><a href="https://releasetrain.io/api/aggregate/v/updateTypeCount?timestamp=20250723"
+                        target="_blank"><code>/api/aggregate/v/updateTypeCount?timestamp=20250723</code></a></td>
+                <td>
+                    <pre><code>{
+    "timestamp": "20250723",
+    "major": 2,
+    "minor": 3,
+    "patch": 1,
+    "other": 4
+}</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/aggregate/v/componentTypeCount?timestamp=YYYYMMDD</code></td>
+                <td>Count how many times each <code>componentType</code> label appears for a given date.</td>
+                <td><a href="https://releasetrain.io/api/aggregate/v/componentTypeCount?timestamp=20250730"
+                        target="_blank"><code>/api/aggregate/v/componentTypeCount?timestamp=20250730</code></a></td>
+                <td>
+                    <pre><code>{
+    "timestamp": "20250730",
+    "total": 8,
+    "components": {
+        "browser": 3,
+        "runtime": 5
+    }
+}</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/aggregate/v/sourceCountByType?sourceType=TYPE&timestamp=YYYYMMDD</code></td>
+                <td>Count how many updates were tagged with a specific source type (e.g., <code>CVE</code>,
+                    <code>major</code>, etc.) on a given date.
+                </td>
+                <td><a href="https://releasetrain.io/api/aggregate/v/sourceCountByType?sourceType=CVE&timestamp=20250723"
+                        target="_blank"><code>/api/aggregate/v/sourceCountByType?sourceType=CVE&timestamp=20250723</code></a>
+                </td>
+                <td>
+                    <pre><code>{
+    "timestamp": "20250723",
+    "sourceType": "CVE",
+    "count": 6
+}</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/aggregate/v/versionCountByDay?start=YYYYMMDD&end=YYYYMMDD</code></td>
+                <td>Get how many updates were released each day in a time window.</td>
+                <td><a href="https://releasetrain.io/api/aggregate/v/versionCountByDay?start=20250701&end=20250730"
+                        target="_blank"><code>/api/aggregate/v/versionCountByDay?start=20250701&end=20250730</code></a>
+                </td>
+                <td>
+                    <pre><code>{
+    "range": {
+        "start": "20250701",
+        "end": "20250730"
+    },
+    "days": [
+        { "_id": "20250701", "count": 4 },
+        ...
+    ]
+}</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/aggregate/v/missingFields?field=FIELDNAME&limit=50</code></td>
+                <td>Find documents missing a specific field (e.g., <code>versionNumber</code>) for data cleanup.</td>
+                <td><a href="https://releasetrain.io/api/aggregate/v/missingFields?field=versionNumber&limit=50"
+                        target="_blank"><code>/api/aggregate/v/missingFields?field=versionNumber&limit=50</code></a>
+                </td>
+                <td>
+                    <pre><code>{
+    "field": "versionNumber",
+    "missingCount": 3,
+    "sample": [ ... ]
+}</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/aggregate/v/classificationSummary?timestamp=YYYYMMDD</code></td>
+                <td>Summarize security and breaking classifications for a specific day.</td>
+                <td><a href="https://releasetrain.io/api/aggregate/v/classificationSummary?timestamp=20250723"
+                        target="_blank"><code>/api/aggregate/v/classificationSummary?timestamp=20250723</code></a></td>
+                <td>
+                    <pre><code>{
+    "timestamp": "20250723",
+    "total": 5,
+    "classification": {
+        "breakingAPI": 2,
+        "securityHigh": 3
+    }
+}</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
                 <td><code>/api/reddit</code></td>
                 <td>Get Reddit posts</td>
                 <td><a href="https://releasetrain.io/api/reddit" target="_blank"><code>/api/reddit</code></a></td>
                 <td>
-                    <pre>[{ "title": "...", "author": "...", ... }]</pre>
+                    <pre><code>[
+    {
+        "title": "...",
+        "author": "...",
+        ...
+    }
+]</code></pre>
                 </td>
             </tr>
             <tr>
@@ -291,7 +425,9 @@
                 <td><a href="https://releasetrain.io/api/reddit/count"
                         target="_blank"><code>/api/reddit/count</code></a></td>
                 <td>
-                    <pre>{ "totalRedditPosts": 248 }</pre>
+                    <pre><code>{
+    "totalRedditPosts": 248
+}</code></pre>
                 </td>
             </tr>
             <tr>
@@ -301,16 +437,21 @@
                 <td><a href="https://releasetrain.io/api/v/?q=chrome,firefox"
                         target="_blank"><code>/api/v/?q=chrome,firefox</code></a></td>
                 <td>
-                    <pre>{ "versions": [ ... ] }</pre>
+                    <pre><code>{
+    "versions": [ ... ]
+}</code></pre>
                 </td>
             </tr>
+
             <tr>
                 <td>GET</td>
                 <td><code>/api/v/count</code></td>
                 <td>Get total version count (last 2 years)</td>
                 <td><a href="https://releasetrain.io/api/v/count" target="_blank"><code>/api/v/count</code></a></td>
                 <td>
-                    <pre>{ "totalVersions": 1221 }</pre>
+                    <pre><code>{
+    "totalVersions": 1221
+}</code></pre>
                 </td>
             </tr>
             <tr>
@@ -320,7 +461,12 @@
                 <td><a href="https://releasetrain.io/api/v/fcc?q=chrome,firefox"
                         target="_blank"><code>/api/v/fcc?q=chrome,firefox</code></a></td>
                 <td>
-                    <pre>[{ "component": "...", "coincideReleaseDate": "..." }]</pre>
+                    <pre><code>[
+    {
+        "component": "...",
+        "coincideReleaseDate": "..."
+    }
+]</code></pre>
                 </td>
             </tr>
             <tr>
@@ -330,7 +476,12 @@
                 <td><a href="https://releasetrain.io/api/v/fc?q=chrome"
                         target="_blank"><code>/api/v/fc?q=chrome</code></a></td>
                 <td>
-                    <pre>[{ "component": "...", "releaseDate": "..." }]</pre>
+                    <pre><code>[
+    {
+        "component": "...",
+        "releaseDate": "..."
+    }
+]</code></pre>
                 </td>
             </tr>
             <tr>
@@ -340,7 +491,10 @@
                 <td><a href="https://releasetrain.io/api/v/660c38fce3cba9423e4f8f23"
                         target="_blank"><code>/api/v/660c38fce3cba9423e4f8f23</code></a></td>
                 <td>
-                    <pre>{ "versionProductName": "...", ... }</pre>
+                    <pre><code>{
+    "versionProductName": "...",
+    ...
+}</code></pre>
                 </td>
             </tr>
             <tr>
@@ -350,7 +504,10 @@
                 <td><a href="https://releasetrain.io/api/v/versionId/20250217component1.2.3"
                         target="_blank"><code>/api/v/versionId/20250217component1.2.3</code></a></td>
                 <td>
-                    <pre>{ "versionNumber": "1.2.3", ... }</pre>
+                    <pre><code>{
+    "versionNumber": "1.2.3",
+    ...
+}</code></pre>
                 </td>
             </tr>
             <tr>
@@ -361,7 +518,12 @@
                         target="_blank"><code>/api/v/d/versionsByComponent?component=name:chrome,version:118</code></a>
                 </td>
                 <td>
-                    <pre>[{ "latestVersion": { ... }, "currentVersion": { ... } }]</pre>
+                    <pre><code>[
+    {
+        "latestVersion": { ... },
+        "currentVersion": { ... }
+    }
+]</code></pre>
                 </td>
             </tr>
             <tr>
@@ -371,7 +533,9 @@
                 <td><a href="https://releasetrain.io/api/c/name/firefox"
                         target="_blank"><code>/api/c/name/firefox</code></a></td>
                 <td>
-                    <pre>{ "firefox": [ ... ] }</pre>
+                    <pre><code>{
+    "firefox": [ ... ]
+}</code></pre>
                 </td>
             </tr>
             <tr>
@@ -380,7 +544,11 @@
                 <td>Get distinct operating systems in the last 2 years</td>
                 <td><a href="https://releasetrain.io/api/c/os" target="_blank"><code>/api/c/os</code></a></td>
                 <td>
-                    <pre>[ "ubuntu", "windows", ... ]</pre>
+                    <pre><code>[
+    "ubuntu",
+    "windows",
+    ...
+]</code></pre>
                 </td>
             </tr>
             <tr>
@@ -389,7 +557,9 @@
                 <td>Get total distinct component count (last 2 years)</td>
                 <td><a href="https://releasetrain.io/api/c/count" target="_blank"><code>/api/c/count</code></a></td>
                 <td>
-                    <pre>{ "totalComponents": 142 }</pre>
+                    <pre><code>{
+    "totalComponents": 142
+}</code></pre>
                 </td>
             </tr>
             <tr>
@@ -398,7 +568,11 @@
                 <td>Get all distinct component names</td>
                 <td><a href="https://releasetrain.io/api/c/names" target="_blank"><code>/api/c/names</code></a></td>
                 <td>
-                    <pre>[ "chrome", "firefox", ... ]</pre>
+                    <pre><code>[
+    "chrome",
+    "firefox",
+    ...
+]</code></pre>
                 </td>
             </tr>
             <tr>
@@ -408,7 +582,10 @@
                 <td><a href="https://releasetrain.io/api/c/frequency" target="_blank"><code>/api/c/frequency</code></a>
                 </td>
                 <td>
-                    <pre>{ "totalComponents": 20, "components": [ ... ] }</pre>
+                    <pre><code>{
+    "totalComponents": 20,
+    "components": [ ... ]
+}</code></pre>
                 </td>
             </tr>
         </tbody>
@@ -430,7 +607,7 @@
     <h3>Current Limitations</h3>
     <ul>
         <li>API keys are hardcoded and not yet rotated regularly</li>
-        <li>Component names in the frontend are inconsistent 
+        <li>Component names in the frontend are inconsistent
         </li>
         <li>No automated test cases are implemented for security-critical flows</li>
         <li>Data inputs (e.g., Reddit and CVE feeds) are not fully validated
