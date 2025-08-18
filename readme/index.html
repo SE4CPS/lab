@@ -87,53 +87,104 @@
     <h2>System Architecture Diagram</h2>
     <div class="mermaid">
         graph LR
-        A["a) Bot1 (GitHub)"] --> D["d) MongoDB Data Lake"]
-        B["b) Bot2 (CVE)"] --> D
-        C["c) Bot3 (Reddit)"] --> D
+        A["a) Bot1 (GitHub) ✅"] --> D["d) MongoDB Data Lake ✅"]
+        B["b) Bot2 (CVE) ✅"] --> D
+        C["c) Bot3 (Reddit) ✅"] --> D
 
-        Note1["📝 Improve data quality"]:::green
+        Note1["📝 Improve data quality ⏳"]:::green
         Note1 --> D
 
-        subgraph E_SG["e) Classification"]
+        subgraph E_SG["e) AI / ML"]
         direction LR
-        Type["Type"]
-        Security["Security"]
-        Breaking["Breaking"]
+        Type["Type ✅"]
+        Security["Security ✅"]
+        Breaking["Breaking ✅"]
+        Sentimental["Sentimental ⏳"]:::green
+        LLM/RAG["LLM/RAG ⏳"]:::green
         Type --> E["e) Classified Output"]
         Security --> E
         Breaking --> E
-        Sentimental:::green --> E
-        LLM/RAG:::green --> E
+        Sentimental --> E
+        LLM/RAG --> E
         end
 
         subgraph E_Azure["g) Azure Cloud"]
         Azure(gpt-4o) <--> LLM/RAG
             end
 
-            E <--> D
+            E <--> AgenticAI["🤖 Agentic AI (LLM+API+DB+Rules)
+                • Cross-source risk correlation
+                • Contextual sentiment-driven triage"]:::green
 
-                D <--> F["f) Backend API"]
+                AgenticAI <--> D
+                    AgenticAI <--> F["f) Backend API"]
 
-                    F <--> FEEntry["Frontend"]
+                        F <--> FEEntry["Frontend"]
 
-                        subgraph H["h) Frontend"]
-                        direction LR
-                        FE1["1) Ecosystem Graph Architecture"]
-                        FE2["2) Ecosystem UML Architecture"]
-                        FE3["3) Ecosystem Software Updates"]
-                        FE4["4) Ecosystem Triage Buttons"]
-                        FE5["Ecosystem Release Notes Generator"]:::green
+                            subgraph H["h) Frontend"]
+                            direction LR
+                            FE1["1) Ecosystem Graph Architecture ✅"]
+                            FE2["2) Ecosystem UML Architecture ✅"]
+                            FE3["3) Ecosystem Software Updates ✅"]
+                            FE4["4) Ecosystem Triage Buttons ✅"]
+                            FE5["Ecosystem Release Notes Generator ⏳"]:::green
 
-                        FEEntry --> FE1
-                        FEEntry --> FE2
-                        FEEntry --> FE3
-                        FEEntry --> FE4
-                        FEEntry --> FE5
-                        end
+                            FEEntry --> FE1
+                            FEEntry --> FE2
+                            FEEntry --> FE3
+                            FEEntry --> FE4
+                            FEEntry --> FE5
+                            end
 
-                        classDef green fill:#d4f4dd,stroke:#2b7a2b,color:#1c3c1c;
-
+                            classDef green fill:#d4f4dd,stroke:#2b7a2b,color:#1c3c1c;
     </div>
+
+    <h2>🤖 Agentic AI vs Traditional Software</h2>
+    <table>
+        <tr>
+            <th>Component</th>
+            <th>Description / Example</th>
+            <th>Technology / Tools</th>
+            <th>Difference from Software</th>
+        </tr>
+        <tr>
+            <td>Data Access & Reasoning</td>
+            <td>
+                Dynamically queries GitHub, CVE, and Reddit data.<br>
+                <strong>Example:</strong><br>
+                <code>
+if cve.severity >= 7:<br>
+&nbsp;&nbsp;&nbsp;trigger_triage()<br>
+else:<br>
+&nbsp;&nbsp;&nbsp;ignore()<br><br>
+prompt = """<br>
+I have a new CVE and a list of affected repos.<br>
+Consider GitHub data and Reddit sentiment.<br>
+Decide if this requires urgent triage and explain why.<br>
+"""<br>
+response = llm(prompt)
+        </code>
+            </td>
+            <td>Python, LangChain (<a href="https://python.langchain.com/docs/tutorials/agents/" target="_blank">agents
+                    tutorial</a>),
+                pymongo, requests</td>
+            <td>Software uses fixed if-else rules; Agentic AI reasons with data and context to decide actions
+                autonomously.</td>
+        </tr>
+        <tr>
+            <td>Action Orchestration</td>
+            <td>Triggers backend API calls, updates frontend, and manages multi-tool workflows based on goals.</td>
+            <td>Python, FastAPI, LangChain agents</td>
+            <td>Software executes pre-defined workflows; Agentic AI sequences tools dynamically based on reasoning and
+                priorities.</td>
+        </tr>
+        <tr>
+            <td>Contextual Interpretation</td>
+            <td>Uses LLM/RAG to interpret nuanced data, sentiment, and cross-source correlations.</td>
+            <td>Python, gpt-4o, LlamaIndex</td>
+            <td>Software cannot interpret nuanced text or correlate cross-domain data; Agentic AI can.</td>
+        </tr>
+    </table>
 
     <h2>a–c) Bots Ingesting Ecosystem Data</h2>
     <table>
