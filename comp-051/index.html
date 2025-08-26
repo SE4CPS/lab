@@ -106,6 +106,15 @@
             opacity: 0.85;
             font-size: 0.9em;
         }
+
+        code,
+        .language-c,
+        .language-nasm,
+        .language-text {
+            font-size: 18pt;
+        }
+
+
     </style>
 </head>
 
@@ -140,15 +149,18 @@
                             style="width:100%;max-width:220px;height:auto;border:1px solid #ccc;border-radius:8px;">
                         <img src="https://yourhorsefarm.com/wp-content/uploads/2021/01/Wild-West.jpg" alt="Image 2"
                             style="width:100%;max-width:220px;height:auto;border:1px solid #ccc;border-radius:8px;">
-                        <img src="https://cdn.shopify.com/s/files/1/0061/7735/7891/files/water-wheel.jpg?v=1650898428" alt="Image 3"
+                        <img src="https://cdn.shopify.com/s/files/1/0061/7735/7891/files/water-wheel.jpg?v=1650898428"
+                            alt="Image 3"
                             style="width:100%;max-width:220px;height:auto;border:1px solid #ccc;border-radius:8px;">
 
                         <!-- Bottom row -->
-                        <img src="https://images.fineartamerica.com/images/artworkimages/mediumlarge/1/old-2925-train-in-black-and-white-garry-gay.jpg" alt="Image 4"
+                        <img src="https://images.fineartamerica.com/images/artworkimages/mediumlarge/1/old-2925-train-in-black-and-white-garry-gay.jpg"
+                            alt="Image 4"
                             style="width:100%;max-width:220px;height:auto;border:1px solid #ccc;border-radius:8px;">
                         <img src="./img/landline.jpg" alt="Image 5"
                             style="width:100%;max-width:220px;height:auto;border:1px solid #ccc;border-radius:8px;">
-                        <img src="https://bernardmarr.com/wp-content/uploads/2021/07/How-Tesla-Is-Using-Artificial-Intelligence-to-Create-The-Autonomous-Cars-Of-The-Future.jpg" alt="Image 6"
+                        <img src="https://bernardmarr.com/wp-content/uploads/2021/07/How-Tesla-Is-Using-Artificial-Intelligence-to-Create-The-Autonomous-Cars-Of-The-Future.jpg"
+                            alt="Image 6"
                             style="width:100%;max-width:220px;height:auto;border:1px solid #ccc;border-radius:8px;">
                     </div>
                 </section>
@@ -303,8 +315,7 @@
                                     multitasking.</li>
                                 <li class="fragment">Programmers had to include code to handle devices and stop/start
                                     jobs manually.</li>
-                                <li class="fragment">Very slow, error-prone → need for a <b>system to manage
-                                        resources</b>.</li>
+                                <li class="fragment">Very slow, error-prone.</li>
                             </ul>
                         </div>
                         <div style="flex:1; padding:20px; text-align:center;">
@@ -370,9 +381,106 @@
                                 <li class="fragment">Close to hardware, portable</li>
                                 <li class="fragment">Small runtime, fast compilation</li>
                             </ul>
-                            <pre><code class="language-cpp">int add(int a, int b){ return a + b; }</code></pre>
                         </div>
                     </div>
+                </section>
+
+                <!-- Slide 1: C Code -->
+                <section>
+                    <h2>C Code</h2>
+                    <pre><code class="language-c">
+int add(int a, int b) {
+    return a + b;
+}
+  </code></pre>
+                </section>
+
+                <!-- Slide 2: Assembly Code -->
+                <section>
+                    <h2>Assembly</h2>
+                    <pre><code class="language-nasm">
+add:
+    mov eax, edi    ; move a into eax
+    add eax, esi    ; add b (esi) to eax
+    ret             ; return result
+  </code></pre>
+                    <p style="font-size: 0.6em; color: gray;">x86-64 System V calling convention</p>
+                </section>
+
+                <!-- Slide 3: Machine Code (Hex) -->
+                <section>
+                    <h2>Machine Code</h2>
+                    <pre><code class="language-text">
+55                ; push rbp
+89 f8             ; mov eax, edi
+01 f0             ; add eax, esi
+5d                ; pop rbp
+c3                ; ret
+  </code></pre>
+                    <p style="font-size: 0.6em; color: gray;">Compiled with gcc -O1 on x86-64</p>
+                </section>
+
+                <!-- Slide 4: Diagram Overview -->
+                <!-- Slide 4: Diagram Overview -->
+                <section>
+                    <h2 style="color: white;">How C Becomes Machine Code</h2>
+                    <div
+                        style="display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; margin-top: 2em; color: white;">
+
+                        <div style="padding: 20px; background-color: #333; border-radius: 10px;">
+                            <strong>C Code</strong><br>
+                            <code style="color: #00bcd4;">int add(int a, int b)</code>
+                        </div>
+
+                        <div style="font-size: 2em; color: white;">→</div>
+
+                        <div style="padding: 20px; background-color: #444; border-radius: 10px;">
+                            <strong>Compiler</strong><br>
+                            <small style="color: #ff4081;">(gcc, clang, etc.)</small>
+                        </div>
+
+                        <div style="font-size: 2em; color: white;">→</div>
+
+                        <div style="padding: 20px; background-color: #555; border-radius: 10px;">
+                            <strong>Assembly Code</strong><br>
+                            <code style="color: #ff9800;">mov eax, edi</code>
+                        </div>
+
+                        <div style="font-size: 2em; color: white;">→</div>
+
+                        <div style="padding: 20px; background-color: #666; border-radius: 10px;">
+                            <strong>Assembler</strong><br>
+                            <small style="color: #4caf50;">(part of toolchain)</small>
+                        </div>
+
+                        <div style="font-size: 2em; color: white;">→</div>
+
+                        <div style="padding: 20px; background-color: #777; border-radius: 10px;">
+                            <strong>Machine Code</strong><br>
+                            <code style="color: #673ab7;">55 89 f8 01 f0 5d c3</code>
+                        </div>
+
+                    </div>
+                    <p style="font-size: 0.6em; margin-top: 1em; color: #bbb;">Source: Visualized compilation process
+                        from C to machine code</p>
+                </section>
+
+                <section>
+                    <h2>Start Engine (C Code)</h2>
+                    <pre><code class="language-c" style="font-size: 16pt;">
+#include &lt;stdio.h&gt;
+
+// Simulated function to start engine
+void start_engine() {
+    printf("Connecting to engine...\n");
+    // Simulate hardware I/O or network call
+    printf("Engine started successfully!\n");
+}
+
+int main() {
+    start_engine();
+    return 0;
+}</code></pre>
                 </section>
 
                 <!-- 4. History of C++ (text left, image right) -->
@@ -393,6 +501,10 @@
                     </div>
                 </section>
 
+                <section data-background-color="white">
+                    <img src="cpp.jfif" alt="C++ Image" style="max-width: 100%; height: auto;">
+                </section>
+
                 <!-- 5. Why C++? (image left, text right) -->
                 <section>
                     <div style="display:flex;align-items:center;gap:28px;">
@@ -410,44 +522,6 @@
                     </div>
                 </section>
 
-                <!-- 6. Toolchain (text left) -->
-                <section>
-                    <div style="display:flex;align-items:center;gap:28px;">
-                        <div style="flex:1 1 0;">
-                            <h3><span class="highlight">Toolchain</span></h3>
-                            <ul>
-                                <li class="fragment">Editor → Compiler → Linker → Program</li>
-                                <li class="fragment">We use: g++ / clang++</li>
-                            </ul>
-                            <pre><code class="language-cpp">// hello.cpp
-#include &lt;iostream&gt;
-int main(){ std::cout &lt;&lt; "Hello"; }</code></pre>
-                        </div>
-                        <div style="flex:1 1 0;text-align:center;">
-                            <img src="" alt="(add: toolchain diagram)"
-                                style="max-width:100%;height:auto;border-radius:8px;" />
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 7. Compile & Run (image left) -->
-                <section>
-                    <div style="display:flex;align-items:center;gap:28px;">
-                        <div style="flex:1 1 0;text-align:center;">
-                            <img src="" alt="(add: terminal/shell)"
-                                style="max-width:100%;height:auto;border-radius:8px;" />
-                        </div>
-                        <div style="flex:1 1 0;">
-                            <h3><span class="highlight">Compile</span> &amp; Run</h3>
-                            <pre><code class="language-cpp">$ g++ hello.cpp -o hello
-$ ./hello
-Hello</code></pre>
-                            <p style="opacity:0.85;font-size:0.9em;" class="fragment">Tip: use <code>-std=c++17</code>
-                                or later.</p>
-                        </div>
-                    </div>
-                </section>
-
                 <!-- 8. Basic I/O (text left) -->
                 <section>
                     <div style="display:flex;align-items:center;gap:28px;">
@@ -461,20 +535,20 @@ int main(){
   std::cout &lt;&lt; "You are " &lt;&lt; age &lt;&lt; "\n";
 }</code></pre>
                         </div>
-                        <div style="flex:1 1 0;text-align:center;">
+                        <!-- <div style="flex:1 1 0;text-align:center;">
                             <img src="" alt="(add: prompt/console)"
                                 style="max-width:100%;height:auto;border-radius:8px;" />
-                        </div>
+                        </div> -->
                     </div>
                 </section>
 
                 <!-- 9. Variables (image left) -->
                 <section>
                     <div style="display:flex;align-items:center;gap:28px;">
-                        <div style="flex:1 1 0;text-align:center;">
+                        <!-- <div style="flex:1 1 0;text-align:center;">
                             <img src="" alt="(add: memory boxes)"
                                 style="max-width:100%;height:auto;border-radius:8px;" />
-                        </div>
+                        </div> -->
                         <div style="flex:1 1 0;">
                             <h3><span class="highlight">Variables</span></h3>
                             <pre><code class="language-cpp">int count = 5; 
@@ -495,19 +569,19 @@ int sum = a + b;
 int product = a * b; 
 double avg = (a + b) / 2.0;</code></pre>
                         </div>
-                        <div style="flex:1 1 0;text-align:center;">
+                        <!-- <div style="flex:1 1 0;text-align:center;">
                             <img src="" alt="(add: arithmetic)" style="max-width:100%;height:auto;border-radius:8px;" />
-                        </div>
+                        </div> -->
                     </div>
                 </section>
 
                 <!-- 11. Decisions (image left) -->
                 <section>
                     <div style="display:flex;align-items:center;gap:28px;">
-                        <div style="flex:1 1 0;text-align:center;">
+                        <!-- <div style="flex:1 1 0;text-align:center;">
                             <img src="" alt="(add: branching arrows)"
                                 style="max-width:100%;height:auto;border-radius:8px;" />
-                        </div>
+                        </div> -->
                         <div style="flex:1 1 0;">
                             <h3><span class="highlight">Decisions</span></h3>
                             <pre><code class="language-cpp">if (score &gt;= 90) {
@@ -528,18 +602,18 @@ double avg = (a + b) / 2.0;</code></pre>
   std::cout &lt;&lt; i &lt;&lt; " ";
 }</code></pre>
                         </div>
-                        <div style="flex:1 1 0;text-align:center;">
+                        <!-- <div style="flex:1 1 0;text-align:center;">
                             <img src="" alt="(add: loop icon)" style="max-width:100%;height:auto;border-radius:8px;" />
-                        </div>
+                        </div> -->
                     </div>
                 </section>
 
                 <!-- 13. While loop (image left) -->
                 <section>
                     <div style="display:flex;align-items:center;gap:28px;">
-                        <div style="flex:1 1 0;text-align:center;">
+                        <!-- <div style="flex:1 1 0;text-align:center;">
                             <img src="" alt="(add: countdown)" style="max-width:100%;height:auto;border-radius:8px;" />
-                        </div>
+                        </div> -->
                         <div style="flex:1 1 0;">
                             <h3>Loops: <span class="highlight">while</span></h3>
                             <pre><code class="language-cpp">int n = 5;
@@ -558,9 +632,9 @@ while (n &gt; 0) {
                             <pre><code class="language-cpp">int square(int x){ return x * x; }
 int main(){ std::cout &lt;&lt; square(5); }</code></pre>
                         </div>
-                        <div style="flex:1 1 0;text-align:center;">
+                        <!-- <div style="flex:1 1 0;text-align:center;">
                             <img src="" alt="(add: function block)"
-                                style="max-width:100%;height:auto;border-radius:8px;" />
+                                style="max-width:100%;height:auto;border-radius:8px;" /> -->
                         </div>
                     </div>
                 </section>
@@ -568,10 +642,10 @@ int main(){ std::cout &lt;&lt; square(5); }</code></pre>
                 <!-- 15. Arrays (image left) -->
                 <section>
                     <div style="display:flex;align-items:center;gap:28px;">
-                        <div style="flex:1 1 0;text-align:center;">
+                        <!-- <div style="flex:1 1 0;text-align:center;">
                             <img src="" alt="(add: array cells)"
                                 style="max-width:100%;height:auto;border-radius:8px;" />
-                        </div>
+                        </div> -->
                         <div style="flex:1 1 0;">
                             <h3><span class="highlight">Arrays</span></h3>
                             <pre><code class="language-cpp">int nums[3] = {10, 20, 30};
@@ -591,26 +665,10 @@ std::string s = "Pacific";
 std::cout &lt;&lt; s.size();
 std::cout &lt;&lt; s[0];</code></pre>
                         </div>
-                        <div style="flex:1 1 0;text-align:center;">
+                        <!-- <div style="flex:1 1 0;text-align:center;">
                             <img src="" alt="(add: text/letters)"
                                 style="max-width:100%;height:auto;border-radius:8px;" />
-                        </div>
-                    </div>
-                </section>
-
-                <!-- 17. Structs (image left) -->
-                <section>
-                    <div style="display:flex;align-items:center;gap:28px;">
-                        <div style="flex:1 1 0;text-align:center;">
-                            <img src="" alt="(add: data grouping)"
-                                style="max-width:100%;height:auto;border-radius:8px;" />
-                        </div>
-                        <div style="flex:1 1 0;">
-                            <h3><span class="highlight">Structs</span></h3>
-                            <pre><code class="language-cpp">struct Student { std::string name; int id; };
-Student s1{"Alice", 101};
-std::cout &lt;&lt; s1.name;</code></pre>
-                        </div>
+                        </div> -->
                     </div>
                 </section>
 
@@ -625,20 +683,20 @@ public:
 };
 Student s; s.name = "Bob"; s.id = 102;</code></pre>
                         </div>
-                        <div style="flex:1 1 0;text-align:center;">
+                        <!-- <div style="flex:1 1 0;text-align:center;">
                             <img src="" alt="(add: OOP class/object)"
                                 style="max-width:100%;height:auto;border-radius:8px;" />
-                        </div>
+                        </div> -->
                     </div>
                 </section>
 
                 <!-- 19. How this course runs (image left) -->
                 <section>
                     <div style="display:flex;align-items:center;gap:28px;">
-                        <div style="flex:1 1 0;text-align:center;">
+                        <!-- <div style="flex:1 1 0;text-align:center;">
                             <img src="" alt="(add: learning loop)"
                                 style="max-width:100%;height:auto;border-radius:8px;" />
-                        </div>
+                        </div> -->
                         <div style="flex:1 1 0;">
                             <h3>How This <span class="highlight">Course</span> Runs</h3>
                             <ul>
@@ -649,7 +707,6 @@ Student s; s.name = "Bob"; s.id = 102;</code></pre>
                         </div>
                     </div>
                 </section>
-
 
                 <section>
                     <h4>Questions?</h4>
@@ -772,7 +829,6 @@ Student s; s.name = "Bob"; s.id = 102;</code></pre>
                     </ul>
                 </section>
 
-            </div>
         </div>
 
         <div class="global-footer">
