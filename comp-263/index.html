@@ -634,6 +634,91 @@ flowchart TB
                     </ol>
                 </section>
 
+                <section data-auto-animate style="font-size:14pt;">
+                    <h3 style="margin-bottom:20px;">Databases Overview</h3>
+
+                    <div style="
+    display:flex;
+    justify-content:center;
+    gap:25px;
+    flex-wrap:nowrap;
+  ">
+                        <!-- IndexedDB highlighted -->
+                        <div style="
+      border:2px solid #4CAF50;
+      background:#C8E6C9;   /* lighter green */
+      color:#1B5E20;        /* dark green text for contrast */
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      font-weight:bold;
+      min-width:120px;
+    ">
+                            IndexedDB
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            Redis
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            MongoDB
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            CassandraDB
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            Faiss
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            ClickHouse
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            Neo4j
+                        </div>
+                    </div>
+                </section>
+
                 <section>
                     <h4>IndexedDB Timeline</h4>
                     <ul style="font-size:20pt;">
@@ -645,6 +730,243 @@ flowchart TB
                         <li><strong>2018:</strong> IndexedDB 2.0 becomes official W3C recommendation</li>
                         <li><strong>2020s:</strong> Continuous improvements & optimizations</li>
                     </ul>
+                </section>
+
+                <!-- =================== -->
+                <!-- Slide 1: Structure  -->
+                <!-- =================== -->
+                <section data-auto-animate style="font-size:12pt;">
+                    <h3 style="margin-bottom:16px;">IndexedDB vs SQL — Structure</h3>
+
+                    <div style="
+    display:grid;
+    grid-template-columns: 1fr 24px 1fr;
+    gap:24px;   /* increased vertical & horizontal gap */
+    align-items:start;
+  ">
+                        <!-- LEFT: IndexedDB -->
+                        <div>
+                            <div
+                                style="border:2px solid #ccc;border-radius:50% / 18%;padding:18px 24px;text-align:center;font-weight:600;margin-bottom:20px;">
+                                IndexedDB (Browser)
+                            </div>
+
+                            <div style="border:1px solid #ccc;border-radius:8px;padding:12px;margin-bottom:20px;">
+                                <div style="font-weight:600;margin-bottom:8px;">Object Store: <code>items</code></div>
+                                <div style="font-size:.9em;opacity:.9;line-height:1.5em;">
+                                    keyPath: <code>id</code><br>
+                                    indexes: <code>by_name</code>, <code>by_price</code>
+                                </div>
+                            </div>
+
+                            <div style="border:1px dashed #aaa;border-radius:8px;padding:12px;margin-bottom:20px;">
+                                <div style="font-weight:600;margin-bottom:8px;">Record (JSON-like):</div>
+                                <pre style="margin:0;font-size:.9em;line-height:1.5em;overflow:auto;"><code>{
+  id: 1,
+  name: "Chair",
+  price: 49,
+  stock: 10
+}</code></pre>
+                            </div>
+                        </div>
+
+                        <!-- Middle arrows -->
+                        <div style="display:flex;flex-direction:column;align-items:center;gap:18px;margin-top:10px;">
+                            <div>⇄</div>
+                            <div>⇄</div>
+                            <div>⇄</div>
+                        </div>
+
+                        <!-- RIGHT: SQL -->
+                        <div>
+                            <div
+                                style="border:2px solid #ccc;border-radius:50% / 18%;padding:18px 24px;text-align:center;font-weight:600;margin-bottom:20px;">
+                                SQL Database
+                            </div>
+
+                            <div style="border:1px solid #ccc;border-radius:8px;padding:12px;margin-bottom:20px;">
+                                <div style="font-weight:600;margin-bottom:8px;">Table: <code>items</code></div>
+                                <pre style="margin:0;font-size:.9em;line-height:1.5em;overflow:auto;"><code>CREATE TABLE items (
+  id    INTEGER PRIMARY KEY,
+  name  TEXT,
+  price REAL,
+  stock INTEGER
+);</code></pre>
+                            </div>
+
+                            <div style="border:1px dashed #aaa;border-radius:8px;padding:12px;margin-bottom:20px;">
+                                <div style="font-weight:600;margin-bottom:8px;">Row:</div>
+                                <pre
+                                    style="margin:0;font-size:.9em;line-height:1.5em;overflow:auto;"><code>(1, 'Chair', 49, 10)</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- =================== -->
+                <!-- Slide 2: CRUD Ops   -->
+                <!-- =================== -->
+                <section data-auto-animate style="font-size:12pt;">
+                    <h3 style="margin-bottom:16px;">CRUD: IndexedDB ↔ SQL</h3>
+
+                    <div style="
+    display:grid;
+    grid-template-columns: 1fr 24px 1fr;
+    gap:24px;   /* more breathing room */
+    align-items:start;
+  ">
+                        <!-- IndexedDB side -->
+                        <div style="border:1px solid #ccc;border-radius:8px;padding:12px;">
+                            <div style="font-weight:600;margin-bottom:8px;">IndexedDB</div>
+                            <pre style="margin:0;font-size:.9em;line-height:1.5em;"><code>// CREATE
+store.add({id: 1, name: "Chair", price: 49, stock: 10});
+
+// READ
+store.get(1);
+
+// UPDATE
+store.put({id: 1, name: "Chair", price: 59, stock: 10});
+
+// DELETE
+store.delete(1);
+</code></pre>
+                        </div>
+
+                        <!-- middle arrow -->
+                        <div style="text-align:center;font-weight:700;">↔</div>
+
+                        <!-- SQL side -->
+                        <div style="border:1px solid #ccc;border-radius:8px;padding:12px;">
+                            <div style="font-weight:600;margin-bottom:8px;">SQL</div>
+                            <pre style="margin:0;font-size:.9em;line-height:1.5em;"><code>-- CREATE
+INSERT INTO items VALUES (1, 'Chair', 49, 10);
+
+-- READ
+SELECT * FROM items WHERE id = 1;
+
+-- UPDATE
+UPDATE items SET price = 59 WHERE id = 1;
+
+-- DELETE
+DELETE FROM items WHERE id = 1;
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section data-auto-animate style="font-size:12pt;">
+
+                    <!-- ====== IndexedDB Event Flow (Signatures Only) ====== -->
+                    <h3 style="margin-bottom:10px;">IndexedDB Event Flow</h3>
+                    <div style="
+    display:grid;
+    grid-template-columns: repeat(4, minmax(160px, 1fr));
+    gap:10px;
+    font-size:12pt;
+    align-items:stretch;
+  ">
+
+                        <!-- meaningful: CREATE DB -->
+                        <div style="border:1px solid #4CAF50;border-radius:8px;padding:8px;text-align:center;">
+                            1) const req = indexedDB.open("furnitureDB", 1); <br>(<i>CREATE DATABASE furnitureDB</i>)
+                        </div>
+
+                        <!-- meaningful: schema creation -->
+                        <div style="border:1px solid #4CAF50;border-radius:8px;padding:8px;text-align:center;">
+                            2) req.onupgradeneeded = function (event) { } <br>(<i>CREATE TABLE items ...</i>)
+                        </div>
+
+                        <!-- neutral: connect -->
+                        <div style="border:1px solid #ccc;border-radius:8px;padding:8px;text-align:center;">
+                            3) req.onsuccess = function (event) { } <br>(<i>CONNECT</i>)
+                        </div>
+
+                        <!-- meaningful: error -->
+                        <div style="border:1px solid #F44336;border-radius:8px;padding:8px;text-align:center;">
+                            4) req.onerror = function (event) { } <br>(<i>CONNECTION ERROR</i>)
+                        </div>
+
+                        <!-- meaningful: transaction -->
+                        <div style="border:1px solid #9C27B0;border-radius:8px;padding:8px;text-align:center;">
+                            5) const tx = db.transaction("items", "readwrite"); <br>(<i>BEGIN TRANSACTION</i>)
+                        </div>
+
+                        <div style="border:1px solid #ccc;border-radius:8px;padding:8px;text-align:center;">
+                            6) const store = tx.objectStore("items"); <br>(<i>SELECT FROM items</i>)
+                        </div>
+
+                        <div style="border:1px solid #ccc;border-radius:8px;padding:8px;text-align:center;">
+                            7) request.onsuccess = function (event) { } <br>(<i>QUERY OK</i>)
+                        </div>
+
+                        <div style="border:1px solid #F44336;border-radius:8px;padding:8px;text-align:center;">
+                            8) request.onerror = function (event) { } <br>(<i>QUERY ERROR</i>)
+                        </div>
+
+                        <div style="border:1px solid #4CAF50;border-radius:8px;padding:8px;text-align:center;">
+                            9) tx.oncomplete = function (event) { } <br>(<i>COMMIT</i>)
+                        </div>
+
+                        <div style="border:1px solid #F44336;border-radius:8px;padding:8px;text-align:center;">
+                            10) tx.onerror = function (event) { } <br>(<i>ROLLBACK</i>)
+                        </div>
+
+                        <div style="border:1px solid #F44336;border-radius:8px;padding:8px;text-align:center;">
+                            11) tx.onabort = function (event) { } <br>(<i>ROLLBACK</i>)
+                        </div>
+
+                        <div style="border:1px solid #9C27B0;border-radius:8px;padding:8px;text-align:center;">
+                            12) db.onversionchange = function (event) { } <br>(<i>ALTER DATABASE / SCHEMA MIGRATION</i>)
+                        </div>
+                    </div>
+
+                    <!-- ====== CRUD Interface (Signatures Only) ====== -->
+                    <h3 style="margin:18px 0 10px;">CRUD (Object Store API)</h3>
+                    <div style="
+    display:grid;
+    grid-template-columns: repeat(4, minmax(160px, 1fr));
+    gap:10px;
+    font-size:12pt;
+    align-items:stretch;
+  ">
+                        <!-- CREATE -->
+                        <div style="border:1px solid #4CAF50;border-radius:8px;padding:8px;text-align:center;">
+                            store.add(object); <br>(<i>INSERT INTO items VALUES (...)</i>)
+                        </div>
+
+                        <!-- READ -->
+                        <div style="border:1px solid #ccc;border-radius:8px;padding:8px;text-align:center;">
+                            store.get(key); <br>(<i>SELECT * FROM items WHERE id = ?</i>)
+                        </div>
+
+                        <div style="border:1px solid #ccc;border-radius:8px;padding:8px;text-align:center;">
+                            store.getAll(); <br>(<i>SELECT * FROM items</i>)
+                        </div>
+
+                        <div style="border:1px solid #ccc;border-radius:8px;padding:8px;text-align:center;">
+                            store.openCursor(); <br>(<i>SELECT * FROM items ORDER BY id</i>)
+                        </div>
+
+                        <!-- UPDATE -->
+                        <div style="border:1px solid #FF9800;border-radius:8px;padding:8px;text-align:center;">
+                            store.put(object); <br>(<i>UPDATE items SET ... WHERE id = ?</i>)
+                        </div>
+
+                        <!-- DELETE -->
+                        <div style="border:1px solid #F44336;border-radius:8px;padding:8px;text-align:center;">
+                            store.delete(key); <br>(<i>DELETE FROM items WHERE id = ?</i>)
+                        </div>
+
+                        <div style="border:1px solid #F44336;border-radius:8px;padding:8px;text-align:center;">
+                            store.clear(); <br>(<i>DELETE FROM items</i>)
+                        </div>
+
+                        <!-- INDEX -->
+                        <div style="border:1px solid #ccc;border-radius:8px;padding:8px;text-align:center;">
+                            store.index("by_name").getAll(query); <br>(<i>SELECT * FROM items WHERE name = ?</i>)
+                        </div>
+                    </div>
+
                 </section>
 
                 <section>
@@ -660,14 +982,42 @@ flowchart TB
                     </p>
                 </section>
 
-                <section>
-                    <h4>Today</h4>
-                    <ul>
-                        <li>Unstructured data</li>
-                        <li>IndexedDB Part 2</li>
-                        <li>Code Lab</li>
-                    </ul>
+                <section data-auto-animate>
+                    <h4>Coding</h4>
+                    <div style="margin-top:15px;display:flex;justify-content:center;">
+                        <a href="https://onecompiler.com/" target="_blank" style="
+         border:2px solid #4CAF50;
+         border-radius:8px;
+         padding:12px 20px;
+         font-size:14pt;
+         font-weight:bold;
+         text-decoration:none;
+         color:#bf4a12; 
+         background:#f9f9f9;
+         box-shadow:0 0 10px rgba(0,0,0,0.1);
+       ">
+                            ▶ OneCompiler.com
+                        </a>
+                    </div>
                 </section>
+
+                <section>
+                    <h4>Questions</h4>
+                </section>
+
+                <section data-auto-animate style="font-size:14pt;">
+                    <ol style="margin-top:20px;line-height:1.8em;">
+                        <li>What is the difference between <b>NoSQL</b> and <b>SQL</b>?</li>
+                        <li>What was the motivation to introduce <b>NoSQL databases</b>?</li>
+                        <li>What is the difference between a <b>SQL database</b> and <b>IndexedDB</b>?</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h4>Thanks</h4>
+                </section>
+
+                <!--
 
                 <section>
                     <h1>Unstructured Data</h1>
@@ -844,8 +1194,6 @@ flowchart TB
                         alt="People taking pictures"
                         style="width: 40%; height: auto; display: block; margin: 20px auto; opacity: 0.8;">
                 </section>
-
-                <!--
 
                 <section>
                     <h4>Today</h4>
