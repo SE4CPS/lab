@@ -72,6 +72,105 @@
             color: #bf4a12;
             font-weight: bold;
         }
+
+        .columns {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+
+        .columns .col {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .columns pre {
+            font-size: 0.7em;
+        }
+
+        /* Generic styling for any .json-bridge block */
+        .json-bridge {
+            --box-bg: #eef;
+            --hub-bg: #ffd86b;
+            --border: #333;
+            --text: #111;
+
+            position: relative;
+            width: min(1200px, 92vw);
+            margin: 0 auto;
+            padding-top: 6px;
+            text-align: center;
+        }
+
+        /* Put arrows under the boxes */
+        .json-bridge .arrows {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            /* behind */
+        }
+
+        .json-bridge .arrows line {
+            stroke: var(--border);
+            stroke-width: 2.5;
+            opacity: 0.9;
+        }
+
+        /* Boxes sit above arrows */
+        .json-bridge .hub,
+        .json-bridge .tiers {
+            position: relative;
+            z-index: 1;
+            /* above */
+        }
+
+        .json-bridge .hub {
+            margin: 0 auto 40px auto;
+            padding: 20px 48px;
+            background: var(--hub-bg);
+            color: var(--text);
+            border: 3px solid var(--border);
+            border-radius: 14px;
+            font-size: clamp(24px, 3.2vw, 36px);
+            font-weight: 800;
+            width: fit-content;
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        .json-bridge .tiers {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: clamp(18px, 3vw, 30px);
+            margin-top: 60px;
+            align-items: start;
+        }
+
+        .json-bridge .tier {
+            background: var(--box-bg);
+            color: var(--text);
+            /* ensure readable on dark theme */
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: clamp(18px, 2.2vw, 28px);
+            text-align: center;
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        .json-bridge .tier-title {
+            font-size: clamp(20px, 2.6vw, 30px);
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 6px;
+        }
+
+        .json-bridge .tier-sub {
+            font-size: clamp(16px, 1.8vw, 22px);
+            opacity: 0.95;
+        }
     </style>
 </head>
 
@@ -124,7 +223,8 @@
                             </tr>
                             <tr style="color:#ccc;">
                                 <td style="padding:6px; border:1px solid #666;">Week 2</td>
-                                <td style="padding:6px; border:1px solid #666;">Sep 2, Sep 4</td>
+                                <td style="padding:6px; border:1px solid #666;"><a href="#/sept-02">Sept 2</a>, Sep 4
+                                </td>
                                 <td style="padding:6px; border:1px solid #666;"><a href="#/61"
                                         style="color:#ccc; text-decoration:none;">Data Modeling and Engineering
                                         &#x1f517;</a></td>
@@ -152,7 +252,7 @@
                             </tr>
                             <tr style="color:#ccc;">
                                 <td style="padding:6px; border:1px solid #666;">Week 5</td>
-                                <td style="padding:6px; border:1px solid #666;">Sep 23, Sep 25</td>
+                                <td style="padding:6px; border:1px solid #666;">Sept 23, Sept 25</td>
                                 <td style="padding:6px; border:1px solid #666;"><a href="#/321"
                                         style="color:#ccc; text-decoration:none;">Database Architecture &#x1f517;</a>
                                 </td>
@@ -161,7 +261,7 @@
                             </tr>
                             <tr style="color:#ccc;">
                                 <td style="padding:6px; border:1px solid #666;">Week 6</td>
-                                <td style="padding:6px; border:1px solid #666;">Sep 30, Oct 2</td>
+                                <td style="padding:6px; border:1px solid #666;">Sept 30, Oct 2</td>
                                 <td style="padding:6px; border:1px solid #666;"><a href="#/377"
                                         style="color:#ccc; text-decoration:none;">Database Dashboard &#x1f517;</a></td>
                                 <td style="padding:6px; border:1px solid #666;"></td>
@@ -1775,19 +1875,813 @@ let req = idx.get("Chair");
                     </ul>
                 </section>
 
+                <section id="sept-02" style="text-align: center;">
+                    <h4>Today, Tuesday Sept 2nd</h4>
+                    <ol>
+                        <li>From Tables to JSON Documents</li>
+                        <li>JSON Modeling Structures</li>
+                        <li>Design Principles</li>
+                        <li>Lab Use Case Examples</li>
+                        <li>Roster Verification</li>
+                        <li>Homework 1 and Lab 1</li>
+                    </ol>
+                </section>
+
+
+                <section id="json-bridge">
+                    <div class="json-bridge">
+                        <div class="hub">JSON Format</div>
+
+                        <svg class="arrows" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                            <defs>
+                                <marker id="arrowHead" markerWidth="4.5" markerHeight="4.5" refX="3.2" refY="2.25"
+                                    orient="auto">
+                                    <path d="M 0 0 L 4.5 2.25 L 0 4.5 z" fill="#333"></path>
+                                </marker>
+                            </defs>
+                            <line x1="50" y1="28" x2="16.7" y2="78" marker-end="url(#arrowHead)" />
+                            <line x1="50" y1="28" x2="50" y2="78" marker-end="url(#arrowHead)" />
+                            <line x1="50" y1="28" x2="83.3" y2="78" marker-end="url(#arrowHead)" />
+                        </svg>
+
+                        <div class="tiers">
+                            <div class="tier">
+                                <div class="tier-title">Frontend</div>
+                                <div class="tier-sub">JS Object</div>
+                            </div>
+                            <div class="tier">
+                                <div class="tier-title">Backend</div>
+                                <div class="tier-sub">OOP Classes</div>
+                            </div>
+                            <div class="tier">
+                                <div class="tier-title">Database</div>
+                                <div class="tier-sub">SQL Tables</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+                <section>
+                    <h3>Database</h3>
+                </section>
+
+                <section>
+                    <div class="columns">
+                        <!-- Left column -->
+                        <div class="col">
+                            <div style="display:flex; align-items:center; gap:5px; margin-bottom:12px;">
+                                <h3 style="margin:0;">Data Modeling in Tables</h3>
+                                <img src="https://upload.wikimedia.org/wikipedia/en/5/58/Edgar_F_Codd.jpg"
+                                    alt="E. F. Codd" style="max-width:80px; height:auto; border-radius:8px;">
+                            </div>
+                            <ul>
+                                <li>1970s — E.F. Codd and Relational Model</li>
+                                <li>ER Diagrams for conceptual design</li>
+                                <li><span class="highlight">Tables</span> with rows & columns</li>
+                                <li><span class="highlight">Relationships</span> via Foreign Keys</li>
+                                <li>Normalization for consistency</li>
+                            </ul>
+                        </div>
+
+                        <!-- Right column -->
+                        <div class="col">
+                            <pre class="mermaid">
+erDiagram
+  CUSTOMER ||--o{ ORDER : places
+  PRODUCT ||--o{ ORDER : included_in
+
+  CUSTOMER {
+    int id
+    string name
+    string email
+  }
+  PRODUCT {
+    int id
+    string name
+    float price
+  }
+  ORDER {
+    int id
+    date order_date
+    int product_id
+    int quantity
+  }
+      </pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="columns">
+                        <!-- Left column -->
+                        <div class="col">
+                            <h3>Normalization (Step 1)</h3>
+                            <ul>
+                                <li><strong>Denormalized:</strong> Multiple values in one field</li>
+                                <li><strong>Normal Form 1 (1NF):</strong>
+                                    <br>– All attributes are <em>atomic</em> (no lists)
+                                    <br>– Each row identified by a <em>primary key</em>
+                                    <br>– No repeating groups
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Right column -->
+                        <div class="col">
+                            <table style="width:100%; border-collapse: collapse; font-size:0.8em;">
+                                <thead>
+                                    <tr>
+                                        <th style="border:1px solid #ccc; padding:4px;">OrderID (PK)</th>
+                                        <th style="border:1px solid #ccc; padding:4px;">Customer</th>
+                                        <th style="border:1px solid #ccc; padding:4px;">Products</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px;">101</td>
+                                        <td style="border:1px solid #ccc; padding:4px;">Alice</td>
+                                        <td style="border:1px solid #ccc; padding:4px;">Chair, Table</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="border:1px solid #ccc; padding:4px;">102</td>
+                                        <td style="border:1px solid #ccc; padding:4px;">Bob</td>
+                                        <td style="border:1px solid #ccc; padding:4px;">Sofa</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <p style="margin-top:10px; font-size:0.75em; color:#666;">
+                                In <strong>1NF</strong>, Products column would be split so each row has a single
+                                product.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="columns">
+                        <!-- Left column -->
+                        <div class="col">
+                            <h3>SQL and Table Structures</h3>
+                            <ul>
+                                <li><strong>SQL (Structured Query Language)</strong></li>
+                                <li>Designed to query data in <em>tables</em></li>
+                                <li>Supports filtering, joining, grouping</li>
+                                <li>Declarative: state <em>what</em>, not <em>how</em></li>
+                                <li style="color:#b22222; font-weight:bold;">
+                                    ⚠ Risk: Missing knowledge of SQL &amp; table structure is critical
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Right column -->
+                        <div class="col">
+                            <pre><code class="sql">
+SELECT * FROM Customer;
+
+SELECT c.name, o.order_date FROM Customer c
+JOIN Order o ON c.id = o.customer_id;
+
+SELECT p.name, SUM(o.quantity) AS total_sold FROM Order o
+JOIN Product p ON o.product_id = p.id
+GROUP BY p.name;
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Backend</h3>
+                </section>
+
+                <!-- Slide 1: Object Modeling with Classes -->
+                <section>
+                    <div class="columns">
+                        <!-- Left column -->
+                        <div class="col">
+                            <div style="display:flex; align-items:center; gap:5px; margin-bottom:12px;">
+                                <h3 style="margin:0;">Data Modeling in Classes</h3>
+                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSNn2SVdJFYhnFMvhfOzFufYTGgRFIYVtnJ0A&s"
+                                    alt="E. F. Codd" style="max-width:80px; height:auto; border-radius:8px;">
+                            </div>
+                            <ul>
+                                <li>Simula (1967, Ole-Johan Dahl)</li>
+                                <li>Smalltalk (1972, Alan Kay)</li>
+                                <li>C++ (1985, Bjarne Stroustrup)</li>
+                                <li>Java (1995, James Gosling)</li>
+                                <li><span class="highlight">Classes</span> define structure &amp; behavior</li>
+                                <li><span class="highlight">Objects</span> are instances with state</li>
+                                <li>Relationships via <em>composition</em> &amp; <em>references</em></li>
+                            </ul>
+                        </div>
+
+                        <!-- Right column: UML-style class diagram -->
+                        <div class="col">
+                            <pre class="mermaid">
+classDiagram
+  class Customer {
+    +int id
+    +string name
+    +string email
+    +placeOrder(product, qty)
+  }
+  class Order {
+    +int id
+    +date orderDate
+    +addItem(product, qty)
+    +getTotal()
+  }
+  class Product {
+    +int id
+    +string name
+    +float price
+  }
+
+  Customer "1" o-- "*" Order : places
+  Order "*" *-- "*" Product : items
+      </pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 2: Encapsulation (Step 1) -->
+                <section>
+                    <div class="columns">
+                        <!-- Left column -->
+                        <div class="col">
+                            <h3>Encapsulation</h3>
+                            <ul>
+                                <li><strong>From data bags → classes:</strong> data + methods</li>
+                                <li><strong>Encapsulation:</strong> hide internals behind APIs</li>
+                                <li><strong>Simplify communication:</strong> Conway's Law</li>
+                            </ul>
+                        </div>
+
+                        <!-- Right column: Before ➜ After in JS -->
+                        <div class="col">
+                            <pre><code class="javascript" style="line-height: 1.4;">
+// ❌ Before
+const order = { items: [] };
+order.items.push({ name:"Chair", price:50 });
+console.log(order.items[0].price);
+
+// ✅ After
+class Order {
+  constructor(){ this.items=[]; }
+  add(p){ this.items.push(p); }
+}
+
+const o = new Order();
+o.add({ name:"Chair", price:50 });
+console.log(o.items[0].price);
+</code></pre>
+
+                        </div>
+                    </div>
+                </section>
+
+
+                <section>
+                    <div class="columns">
+                        <!-- Left column -->
+                        <div class="col">
+                            <h3>OOP and Backend</h3>
+                            <ul>
+                                <li><strong>Objects</strong> group data + methods</li>
+                                <li><strong>Query via methods</strong> (e.g., <code>order.total()</code>)</li>
+                                <li><strong>Available in:</strong> Backend tier only</li>
+                                <li><strong>Mapping Objects:</strong> Frontend/Database</li>
+                                <li style="color:#b22222; font-weight:bold;">
+                                    ⚠ Risk: Missing/Wrong OOP knowledge limits backend design
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Right column -->
+                        <div class="col">
+                            <pre><code class="javascript" style="line-height:1.5;">
+class Order {
+  constructor(){ this.items=[]; }
+  add(p, q){ this.items.push({p,q}); }
+  get total(){ return this.items
+    .reduce((s,i)=>s+i.p.price*i.q,0); }
+}
+
+const o = new Order();
+o.add({name:"Chair",price:50},2);
+console.log(o.total); // query object
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Frontend</h3>
+                </section>
+
+                <section>
+                    <div class="columns">
+                        <!-- Left column -->
+                        <div class="col">
+                            <div style="display:flex; align-items:center; gap:5px; margin-bottom:12px;">
+                                <h3 style="margin:0;">Data Modeling in JavaScript</h3>
+                                <img src="https://unchainedcrypto.com/wp-content/uploads/2020/01/UN_155.jpg"
+                                    alt="Brendan Eich" style="max-width:200px; height:auto; border-radius:8px;">
+                            </div>
+                            <ul>
+                                <li>1995 — JavaScript in Browser (Brendan Eich)</li>
+                                <li><span class="highlight">Objects</span> as native structure</li>
+                                <li><span class="highlight">JSON</span> introduced for serialization</li>
+                                <li>Basis for frontend data exchange</li>
+                            </ul>
+                        </div>
+
+                        <!-- Right column -->
+                        <div class="col">
+                            <pre><code class="javascript">
+const customer = {
+  id: 1,
+  name: "Alice",
+  orders: [
+    { id: 101, product: "Chair", qty: 2 },
+    { id: 102, product: "Table", qty: 1 }
+  ]
+};
+console.log(customer.name);
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+
+
+                <section>
+                    <div class="columns">
+                        <!-- Left column -->
+                        <div class="col">
+                            <h3>Frontend Data Normalization</h3>
+                            <ul>
+                                <li><strong>Denormalized:</strong> nested, repetitive fields</li>
+                                <li><strong>Normalized JSON:</strong> break into arrays & IDs</li>
+                                <li><strong>Frontend:</strong> simple traversal, fast rendering</li>
+                            </ul>
+                        </div>
+
+                        <!-- Right column -->
+                        <div class="col">
+                            <pre><code class="json" style="line-height: 1.2;">
+// Denormalized
+{
+  "id": 1,
+  "name": "Alice",
+  "orders": [
+    { "product": "Chair", "qty": 2 },
+    { "product": "Table", "qty": 1 }
+  ]
+}
+
+// Normalized
+{
+  "customers": [{ "id": 1, "name": "Alice" }],
+  "orders": [
+    { "id": 101, "customerId": 1, "product": "Chair", ... },
+    { "id": 102, "customerId": 1, "product": "Table", ... }
+  ]
+}
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+
+                <section>
+                    <div class="columns">
+                        <!-- Left column -->
+                        <div class="col">
+                            <h3>JSON / Document Modeling</h3>
+                            <ul>
+                                <li>2000s — NoSQL & flexible schema</li>
+                                <li>JSON documents, nested objects/arrays</li>
+                                <li>Tree-like structures replace joins</li>
+                                <li>Denormalization for read efficiency</li>
+                                <li>Query using any programming language</li>
+                            </ul>
+                        </div>
+
+                        <!-- Right column -->
+                        <div class="col">
+                            <pre><code class="json" style="line-height: 1.2;">{
+  "customer": {
+    "id": 1,
+    "name": "Alice",
+    "email": "alice@example.com",
+    "orders": [
+      {
+        "id": 101,
+        "order_date": "2025-09-01",
+        "items": [
+          { "product": "Chair", "price": 49.99,... },
+          { "product": "Table", "price": 199.99,... }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="columns">
+                        <!-- Left column -->
+                        <div class="col">
+                            <h3>JSON in Frontend</h3>
+                            <ul>
+                                <li><strong>Query with JS syntax:</strong> Map-Filter-Reduce</li>
+                                <li><strong>Native in frontend:</strong> JSON ⇄ JS Objects</li>
+                                <li><strong>Basis for APIs:</strong> exchange with backend</li>
+                                <li style="color:#b22222; font-weight:bold;">
+                                    ⚠ Risk: Weak JSON skills → hard to handle frontend data
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Right column -->
+                        <div class="col">
+                            <pre><code class="javascript">
+// Query JSON directly
+const data = {
+  customer: { name: "Alice" },
+  orders: [ { product:"Chair", qty:2 } ]
+};
+
+console.log(data.customer.name); // "Alice"
+console.log(data.orders[0].product); // "Chair"
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="json-bridge">
+                        <div class="hub">JSON Format</div>
+
+                        <svg class="arrows" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                            <defs>
+                                <marker id="arrowHead" markerWidth="4.5" markerHeight="4.5" refX="3.2" refY="2.25"
+                                    orient="auto">
+                                    <path d="M 0 0 L 4.5 2.25 L 0 4.5 z" fill="#333"></path>
+                                </marker>
+                            </defs>
+                            <line x1="50" y1="28" x2="16.7" y2="78" marker-end="url(#arrowHead)" />
+                            <line x1="50" y1="28" x2="50" y2="78" marker-end="url(#arrowHead)" />
+                            <line x1="50" y1="28" x2="83.3" y2="78" marker-end="url(#arrowHead)" />
+                        </svg>
+
+                        <div class="tiers">
+                            <div class="tier">
+                                <div class="tier-title">Frontend</div>
+                                <div class="tier-sub">JS Object</div>
+                            </div>
+                            <div class="tier">
+                                <div class="tier-title">Backend</div>
+                                <div class="tier-sub">OOP Classes</div>
+                            </div>
+                            <div class="tier">
+                                <div class="tier-title">Database</div>
+                                <div class="tier-sub">SQL Tables</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="sept-02" style="text-align: center;">
+                    <h4>Today, Tuesday Sept 2nd</h4>
+                    <ol>
+                        <li>From Tables to JSON Documents &check;</li>
+                        <li>JSON Modeling Structures</li>
+                        <li>Design Principles</li>
+                        <li>Lab Use Case Examples</li>
+                        <li>Roster Verification</li>
+                        <li>Homework 1 and Lab 1</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <div class="columns">
+                        <!-- Left column -->
+                        <div class="col">
+                            <ul>
+                                <li><strong>Created:</strong> 2001 by Douglas Crockford</li>
+                                <li><strong>Standardized:</strong> ECMA-404 (2013), RFC 8259 (IETF)</li>
+                                <li><strong>Where used:</strong>
+                                    <br>– Frontend: JavaScript objects, APIs
+                                    <br>– Backend: REST, GraphQL, config
+                                    <br>– Databases: NoSQL (MongoDB, CouchDB), IndexedDB
+                                </li>
+                                <li><strong>Historical context:</strong>
+                                    Lightweight alternative to XML for data exchange on the web
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Right column -->
+                        <div class="col" style="text-align:center;">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/2/24/Douglas_Crockford%2C_February_2013.jpg"
+                                alt="Douglas Crockford" style="max-width:220px; border-radius:8px; margin-top:10px;">
+                            <br>
+                            <a href"https://ecma-international.org/wp-content/uploads/ECMA-404_2nd_edition_december_2017.pdf"
+                                target="_blank" style="display:block; margin-top:6px; font-size:0.9em; color:#007acc;">
+                                ECMA-404 Standard</a>
+                        </div>
+                    </div>
+                </section>
+
+
+                <section>
+                    <div class="columns">
+                        <!-- Left -->
+                        <div class="col">
+                            <h3>JSON Object</h3>
+                            <ul>
+                                <li>Curly braces <code>{ }</code></li>
+                                <li>Key–value pairs</li>
+                                <li>Keys are always strings</li>
+                            </ul>
+                        </div>
+
+                        <!-- Right -->
+                        <div class="col">
+                            <pre><code class="javascript">
+const customer = {
+  id: 1,
+  name: "Alice",
+  email: "alice@example.com"
+};
+console.log(customer.name); // Alice
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+
+                <section>
+                    <div class="columns">
+                        <!-- Left -->
+                        <div class="col">
+                            <h3>JSON Array</h3>
+                            <ul>
+                                <li>Square brackets <code>[ ]</code></li>
+                                <li>Ordered collection</li>
+                                <li>Can hold any JSON values</li>
+                            </ul>
+                        </div>
+
+                        <!-- Right -->
+                        <div class="col">
+                            <pre><code class="javascript">
+const products = [
+  "Chair",
+  "Table",
+  "Sofa"
+];
+console.log(products[1]); // Table
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="columns">
+                        <!-- Left -->
+                        <div class="col">
+                            <h3>JSON String</h3>
+                            <ul>
+                                <li>Double quotes required</li>
+                                <li>Supports Unicode</li>
+                                <li>Escape special chars with <code>\</code></li>
+                            </ul>
+                        </div>
+
+                        <!-- Right -->
+                        <div class="col">
+                            <pre><code class="javascript">
+const message = {
+  text: "Hello, World!",
+  escaped: "Line1\nLine2"
+};
+console.log(message.text);
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="columns">
+                        <!-- Left -->
+                        <div class="col">
+                            <h3>Numbers &amp; Booleans</h3>
+                            <ul>
+                                <li>Numbers: integer or decimal</li>
+                                <li>Boolean: <code>true</code> / <code>false</code></li>
+                                <li>No quotes required</li>
+                            </ul>
+                        </div>
+
+                        <!-- Right -->
+                        <div class="col">
+                            <pre><code class="javascript">
+const order = {
+  qty: 2,
+  price: 49.99,
+  available: true
+};
+console.log(order.price * order.qty); // 99.98
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="columns">
+                        <!-- Left -->
+                        <div class="col">
+                            <h3>Null</h3>
+                            <ul>
+                                <li>Represents empty / unknown</li>
+                                <li>Written as <code>null</code></li>
+                                <li>No quotes around it</li>
+                            </ul>
+                        </div>
+
+                        <!-- Right -->
+                        <div class="col">
+                            <pre><code class="javascript">
+const profile = {
+  name: "Alice",
+  note: null
+};
+console.log(profile.note); // null
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section data-background-color="white">
+                    <img src="https://www.json.org/img/object.png" alt="JSON Data Types"
+                        style="border-radius:6px; max-height: 400px;">
+                </section>
+
+                <section>
+                    <a href="https://www.json.org/json-en.html" target="_blank" style="font-size:0.9em; color:#007acc;">
+                        https://www.json.org/json-en.html</a>
+                </section>
+
+                <section>
+                    <p style="font-size:0.9em;">Is each snippet valid JSON?</p>
+                    <pre><code class="json" style="font-size:0.7em; line-height:1.3;">
+1. { "name": "Alice" }
+2. { name: "Alice" }
+3. { "age": 25, }
+4. [ "red", "green", "blue" ]
+5. [ "a", "b",, "c" ]
+6. { "valid": true, "value": null }
+7. { "price": 19.99, "qty": 2 }
+8. { "flag": True }
+9. { "nested": { "x": 1, "y": 2 } }
+10. "Just a string"
+  </code></pre>
+                </section>
+
+
+                <section id="sept-02" style="text-align: center;">
+                    <h4>Today, Tuesday Sept 2nd</h4>
+                    <ol>
+                        <li>From Tables to JSON Documents &check;</li>
+                        <li>JSON Modeling Structures &check;</li>
+                        <li>Design Principles</li>
+                        <li>Lab Use Case Examples</li>
+                        <li>Roster Verification</li>
+                        <li>Homework 1 and Lab 1</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <div class="columns">
+                        <!-- Flat structure -->
+                        <div class="col">
+                            <h4>Flat</h4>
+                            <pre><code class="json" style="line-height:1.3;">
+{
+  "customer_id": 1,
+  "customer_name": "Alice",
+  "order_id": 101,
+  "product": "Chair",
+  "qty": 2
+}
+      </code></pre>
+                        </div>
+
+                        <!-- Nested structure -->
+                        <div class="col">
+                            <h4>Nested</h4>
+                            <pre><code class="json" style="line-height:1.3;">
+{
+  "customer": {
+    "id": 1,
+    "name": "Alice"
+  },
+  "order": {
+    "id": 101,
+    "item": {
+      "product": "Chair",
+      "qty": 2
+    }
+  }
+}
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+
+                <section>
+
+                    <h3>Design Principles for JSON Data</h3>
+
+                    <img src="https://miro.medium.com/v2/1*s5EFf2e8t0wqCAnSglUt_Q.png"
+                        alt="Design Principles for JSON Data" style="border-radius:6px; max-height: 400px;">
+
+                </section>
+
+                <section>
+                    <h3>DIKW as Nested JSON</h3>
+                    <pre><code class="json" style="font-size:0.8em; line-height:1.4;">
+{
+  "Wisdom": {
+    "Knowledge": {
+      "Information": {
+        "Data": [
+          "leaf1",
+          "leaf2",
+          "leaf3"
+        ]
+      }
+    }
+  }
+}
+  </code></pre>
+                </section>
+
+
+                <section id="sept-02" style="text-align: center;">
+                    <h4>Today, Tuesday Sept 2nd</h4>
+                    <ol>
+                        <li>From Tables to JSON Documents &check;</li>
+                        <li>JSON Modeling Structures &check;</li>
+                        <li>Design Principles &check;</li>
+                        <li>Lab Use Case Examples</li>
+                        <li>Roster Verification</li>
+                        <li>Homework 1 and Lab 1</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <p style="font-size:0.9em;">Model JSON requirements:</p>
+                    <p style="margin-top:20px; font-size:0.85em;">
+                        <a href="https://jsoncrack.com/editor" target="_blank">https://jsoncrack.com/editor</a>
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Lab Use Case Examples</h3>
+                    <ul>
+                        <li><strong>IoT Sensor Data:</strong> Time-series data from temperature, humidity sensors</li>
+                        <li><strong>Social Media Posts:</strong> User posts with text, images, comments, likes</li>
+                        <li><strong>Healthcare Records:</strong> Patient records with demographics, visits,
+                            prescriptions</li>
+                        <li><strong>Geospatial Data:</strong> Locations with coordinates, metadata, timestamps</li>
+                    </ul>
+                </section>
+
                 <section data-background-color="white">
                     <h3>Questions</h3>
                 </section>
 
-                <section style="text-align: center;">
-                    <h4>Today, Thursday Aug 28th</h4>
+
+                <section id="sept-02" style="text-align: center;">
+                    <h4>Today, Tuesday Sept 2nd</h4>
                     <ol>
-                        <li>Big Data Characteristics (5V) &check;</li>
-                        <li>Browser and IndexedDB Architecture &check;</li>
+                        <li>From Tables to JSON Documents &check;</li>
+                        <li>JSON Modeling Structures &check;</li>
+                        <li>Design Principles &check;</li>
                         <li>Lab Use Case Examples &check;</li>
+                        <li>Roster Verification</li>
                         <li>Homework 1 and Lab 1</li>
                     </ol>
                 </section>
+
 
                 <section>
                     <h4>Homework 1 (Canvas Module 1)</h4>
@@ -1808,7 +2702,6 @@ let req = idx.get("Chair");
                     <img src="https://www.pciltd.com/blog/assets/img/Blog/iot_smart_agriculture.jpg"
                         alt="IoT Smart Agriculture" style="width: 60%; height: auto; margin-top: 0px;">
                 </section>
-
 
                 <section>
                     <h4>Lab 1: Agricultural Data Collection with IndexedDB</h4>
@@ -1833,16 +2726,6 @@ let req = idx.get("Chair");
 
                 <section>
                     <h4>Questions</h4>
-                </section>
-
-                <section style="text-align: center;">
-                    <h4>Today, Thursday Aug 28th</h4>
-                    <ol>
-                        <li>Big Data Characteristics (5V) &check;</li>
-                        <li>Browser and IndexedDB Architecture &check;</li>
-                        <li>Lab Use Case Examples &check;</li>
-                        <li>Homework 1 and Lab 1 &check;</li>
-                    </ol>
                 </section>
 
                 <section>
@@ -1898,12 +2781,19 @@ let req = idx.get("Chair");
                     </ol>
                 </section>
 
+                <section data-auto-animate style="font-size:14pt;">
+                    <ol style="margin-top:20px;line-height:1.8em;">
+                        <li>How are Full Stack Engineering and JSON related in the way data flows across frontend, backend, and databases?</li>
+                        <li>What are the trade-offs between using a flat JSON structure vs. a nested JSON structure for representing the same data?</li>
+                        <li>Whats are disadvantages of modling data in JSON?</li>
+                    </ol>
+                </section>
+
                 <section>
                     <h4>Thanks</h4>
                 </section>
 
                 <!--
-
                 <section>
                     <h1>Unstructured Data</h1>
                     <ul>
@@ -2087,358 +2977,6 @@ let req = idx.get("Chair");
                         <li>IndexedDB Part 2</li>
                         <li>Code Lab</li>
                     </ul>
-                </section>
-
-                <section>
-                    <h4>Why IndexedDB?</h4>
-                    <ul>
-                        <li>Performance</li>
-                        <li>Comprehensive API</li>
-                        <li>ACID Compliance</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h4>Performance via Asynchronous API</h4>
-                    <img src="https://miro.medium.com/v2/1*V5syja2casc0gCuu9zKV5g.png"
-                        alt="Asynchronous APIs in IndexedDB"
-                        style="width: 60%; height: auto; display: block; margin: 0 auto;">
-                </section>
-
-                <section>
-                    <h4>Performance via Asynchronous API</h4>
-                    <ul>
-                        <li>Non-blocking operations keep the UI responsive</li>
-                        <li>Allows multiple requests to run simultaneously</li>
-                        <li>Prevents the browser from freezing during large data operations</li>
-                    </ul>
-                    <pre><code class="javascript" data-line-numbers>
-    let request = indexedDB.open("BookStoreDB", 1);
-    request.onsuccess = function(event) {
-        let db = event.target.result;
-        let transaction = db.transaction("Books", "readwrite");
-        let store = transaction.objectStore("Books");
-        store.add({ title: "JavaScript Basics", author: "John Doe" });
-    };
-    console.log("next Instruction...");
-                    </code></pre>
-                </section>
-
-                <section>
-                    <h4>Performance via Asynchronous API</h4>
-                    <ul>
-                        <li>Improves performance for data-intensive applications</li>
-                        <li>Enables smooth user experience without lag</li>
-                        <li>Handles large datasets effectively</li>
-                    </ul>
-                    <p>Fetching all books in the background while the user continues browsing</p>
-                    <pre><code class="javascript" data-line-numbers>
-    let transaction = db.transaction("Books", "readonly");
-    let store = transaction.objectStore("Books");
-    let request = store.getAll();
-    request.onsuccess = function(event) {
-        console.log(event.target.result);
-    };
-    console.log("next Instruction...");
-                    </code></pre>
-                </section>
-
-                <section>
-                    <h4>Performance via Indexing</h4>
-                    <ul>
-                        <li>Fast data retrieval by creating indexes on frequently queried fields</li>
-                        <li>Reduces the time complexity of search operations</li>
-                        <li>Improves performance when dealing with large datasets</li>
-                    </ul>
-                    <pre><code class="javascript" data-line-numbers>
-    let request = indexedDB.open("BookStoreDB", 1);
-    request.onupgradeneeded = function(event) {
-        let db = event.target.result;
-        let store = db.createObjectStore("Books", { keyPath: "id", autoIncrement: true });
-        store.createIndex("authorIndex", "author", { unique: false });
-    };
-                    </code></pre>
-                </section>
-
-                <section>
-                    <h4>Performance via Indexing</h4>
-                    <ul>
-                        <li>Fast retrieve all books by a specific author</li>
-                        <li>Efficiently search and filter data</li>
-                        <li>Minimizes the overhead of scanning the entire database</li>
-                    </ul>
-                    <pre><code class="javascript" data-line-numbers>
-    let transaction = db.transaction("Books", "readonly");
-    let store = transaction.objectStore("Books");
-    let index = store.index("authorIndex");
-    let request = index.getAll("John Doe");
-    request.onsuccess = function(event) {
-        console.log(event.target.result);
-    };
-                    </code></pre>
-                </section>
-
-                <section>
-                    <h4>Performance via Parallel Reads</h4>
-                    <pre><code class="javascript" data-line-numbers>
-    let transaction = db.transaction("Books", "readonly");
-    let store = transaction.objectStore("Books");
-    
-    let request1 = store.get(1);
-    let request2 = store.get(2);
-    
-    request1.onsuccess = function(event) {
-        console.log("Book 1:", event.target.result);
-    };
-    request2.onsuccess = function(event) {
-        console.log("Book 2:", event.target.result);
-    };
-                    </code></pre>
-                </section>
-
-                <section>
-                    <h4>Performance via No Schema Verification</h4>
-                    <ul>
-                        <li>Faster data storage and retrieval as no schema validation is required</li>
-                        <li>Less overhead, especially for large datasets or frequently updated data</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h4>Why IndexedDB?</h4>
-                    <ul>
-                        <li>Performance &check;</li>
-                        <li>Comprehensive API</li>
-                        <li>ACID Compliance</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h4>Comprehensive API (1/4)</h4>
-                    <table style="font-size: 18pt;">
-                        <thead>
-                            <tr>
-                                <th>SQL Query</th>
-                                <th>IndexedDB API</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>CREATE TABLE Books (id INT, title TEXT, author TEXT);</td>
-                                <td>db.createObjectStore("Books", { keyPath: "id", autoIncrement: true });</td>
-                            </tr>
-                            <tr>
-                                <td>INSERT INTO Books (title, author) VALUES ('Book Title', 'Author');</td>
-                                <td>store.add({ title: 'Book Title', author: 'Author' });</td>
-                            </tr>
-                            <tr>
-                                <td>SELECT * FROM Books;</td>
-                                <td>store.getAll();</td>
-                            </tr>
-                            <tr>
-                                <td>SELECT * FROM Books WHERE id = 1;</td>
-                                <td>store.get(1);</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
-
-                <section>
-                    <h4>Comprehensive API (2/4)</h4>
-                    <table style="font-size: 18pt;">
-                        <thead>
-                            <tr>
-                                <th>SQL Query</th>
-                                <th>IndexedDB API</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>UPDATE Books SET author = 'New Author' WHERE id = 1;</td>
-                                <td>let record = store.get(1); record.author = 'New Author'; store.put(record);</td>
-                            </tr>
-                            <tr>
-                                <td>DELETE FROM Books WHERE id = 1;</td>
-                                <td>store.delete(1);</td>
-                            </tr>
-                            <tr>
-                                <td>CREATE INDEX ON Books (author);</td>
-                                <td>store.createIndex("authorIndex", "author", { unique: false });</td>
-                            </tr>
-                            <tr>
-                                <td>SELECT * FROM Books WHERE author = 'Author';</td>
-                                <td>let index = store.index("authorIndex"); index.getAll("Author");</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
-
-                <section>
-                    <h4>Comprehensive API (3/4)</h4>
-                    <table style="font-size: 18pt;">
-                        <thead>
-                            <tr>
-                                <th>SQL Query</th>
-                                <th>IndexedDB API</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>SELECT COUNT(*) FROM Books;</td>
-                                <td>store.count();</td>
-                            </tr>
-                            <tr>
-                                <td>DELETE FROM Books;</td>
-                                <td>store.clear();</td>
-                            </tr>
-                            <tr>
-                                <td>DROP TABLE Books;</td>
-                                <td>db.deleteObjectStore("Books");</td>
-                            </tr>
-                            <tr>
-                                <td>ALTER TABLE Books ADD COLUMN published_date DATE;</td>
-                                <td>No direct equivalent; modify existing records to add new field</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
-
-                <section>
-                    <h4>Comprehensive API (4/4)</h4>
-                    <table style="font-size: 18pt;">
-                        <thead>
-                            <tr>
-                                <th>SQL Query</th>
-                                <th>IndexedDB API</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>BEGIN TRANSACTION;</td>
-                                <td>let transaction = db.transaction(["Books"], "readwrite");</td>
-                            </tr>
-                            <tr>
-                                <td>COMMIT;</td>
-                                <td>transaction.oncomplete = function() { ... }</td>
-                            </tr>
-                            <tr>
-                                <td>ROLLBACK;</td>
-                                <td>transaction.abort();</td>
-                            </tr>
-                            <tr>
-                                <td>SELECT * FROM Books ORDER BY title;</td>
-                                <td>let cursor = store.openCursor(); cursor.continue();</td>
-                            </tr>
-                            <tr>
-                                <td>ERROR HANDLING;</td>
-                                <td>transaction.onerror = function(event) { console.error(event.target.errorCode); };
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
-
-                <section>
-                    <h4>Limitations in IndexedDB API</h4>
-                    <ul>
-                        <li>JOIN operations across multiple object stores</li>
-                        <li>Aggregations like SUM, AVG, MIN, MAX</li>
-                        <li>Complex WHERE clauses with AND, OR, NOT</li>
-                        <li>Subqueries (e.g., SELECT * FROM (SELECT ...))</li>
-                        <li>GROUP BY and HAVING clauses</li>
-                        <li>ALTER TABLE to modify schema after creation</li>
-                        <li>Full-text search within fields</li>
-                        <li>Triggers and stored procedures</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h4>Why IndexedDB?</h4>
-                    <ul>
-                        <li>Performance &check;</li>
-                        <li>Comprehensive API &check;</li>
-                        <li>ACID Compliance</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h4>ACID Compliance of IndexedDB</h4>
-                    <table style="font-size: 18pt;">
-                        <thead>
-                            <tr>
-                                <th>ACID Property</th>
-                                <th>IndexedDB Compliance</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Atomicity</td>
-                                <td>Supported. Transactions are atomic, meaning all operations within a transaction are
-                                    completed successfully, or none are applied. If an error occurs, the transaction can
-                                    be aborted</td>
-                            </tr>
-                            <tr>
-                                <td>Consistency</td>
-                                <td>Partially. While IndexedDB does not enforce a schema, it maintains consistency
-                                    within the data by ensuring that transactions either fully succeed or fail,
-                                    preventing partial updates</td>
-                            </tr>
-                            <tr>
-                                <td>Isolation</td>
-                                <td>Partial. Transactions are isolated to an extent, meaning data changes in a
-                                    transaction are not visible to other transactions until the transaction is complete.
-                                    However, there is no strict locking mechanism as in traditional RDBMS</td>
-                            </tr>
-                            <tr>
-                                <td>Durability</td>
-                                <td>Supported. Once a transaction is committed, the data is guaranteed to be saved, even
-                                    if the system crashes immediately afterward. Data is stored persistently in the
-                                    browser</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
-
-                <section>
-                    <h4>Why IndexedDB?</h4>
-                    <ul>
-                        <li>Performance &check;</li>
-                        <li>Comprehensive API &check;</li>
-                        <li>ACID Compliance &check;</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h4>Today</h4>
-                    <ul>
-                        <li>Unstructured data &check;</li>
-                        <li>IndexedDB Part 2 &check;</li>
-                        <li>Code Lab</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h4>Code Lab</h4>
-                    <a href="https://docs.google.com/document/d/1QvGbBsMuztZL3IKExnpe3xFaDeMTWAqI-kofT1y_sBE/edit?pli=1"
-                        class="footer-link" target="_blank">Docs</a>
-                </section>
-
-                <section>
-                    <h4>Today</h4>
-                    <ul>
-                        <li>Unstructured data &check;</li>
-                        <li>IndexedDB Part 2 &check;</li>
-                        <li>Code Lab &check;</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h4>Reminder</h4>
-                    <p>Please review the syllabus, homework, lab, and reading list</p>
-                </section>
-
-                <section>
-                    <h4>Data Modeling and Engineering</h4>
                 </section>
 
                 <section>
