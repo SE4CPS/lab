@@ -223,7 +223,8 @@
                             </tr>
                             <tr style="color:#ccc;">
                                 <td style="padding:6px; border:1px solid #666;">Week 2</td>
-                                <td style="padding:6px; border:1px solid #666;"><a href="#/sept-02">Sept 2</a>, Sep 4
+                                <td style="padding:6px; border:1px solid #666;"><a href="#/sept-02">Sept 2</a>, <a
+                                        href="#/sept-04">Sept 4</a>
                                 </td>
                                 <td style="padding:6px; border:1px solid #666;"><a href="#/61"
                                         style="color:#ccc; text-decoration:none;">Data Modeling and Engineering
@@ -706,7 +707,7 @@ flowchart TB
                 <section>
                     <div style="display: flex;">
                         <div style="flex: 1; padding-right: 2em;">
-                            <h2>Volume</h2>
+                            <h3>Volume</h3>
                             <ul>
                                 <li>Massive data size</li>
                                 <li>Petabytes to exabytes</li>
@@ -739,7 +740,7 @@ flowchart TB
                 <section>
                     <div style="display: flex;">
                         <div style="flex: 1; padding-right: 2em;">
-                            <h2>Velocity</h2>
+                            <h3>Velocity</h3>
                             <ul>
                                 <li>Real-time streams</li>
                                 <li>Low-latency ingest</li>
@@ -772,7 +773,7 @@ flowchart TB
                 <section>
                     <div style="display: flex;">
                         <div style="flex: 1; padding-right: 2em;">
-                            <h2>Variety</h2>
+                            <h3>Variety</h3>
                             <ul>
                                 <li>Structured & unstructured</li>
                                 <li>Multiformat input</li>
@@ -805,7 +806,7 @@ flowchart TB
                 <section>
                     <div style="display: flex;">
                         <div style="flex: 1; padding-right: 2em;">
-                            <h2>Veracity</h2>
+                            <h3>Veracity</h3>
                             <ul>
                                 <li>Uncertain accuracy</li>
                                 <li>Missing/incomplete values</li>
@@ -838,7 +839,7 @@ flowchart TB
                 <section>
                     <div style="display: flex;">
                         <div style="flex: 1; padding-right: 2em;">
-                            <h2>Value</h2>
+                            <h3>Value</h3>
                             <ul>
                                 <li>Actionable insight</li>
                                 <li>Advanced analytics</li>
@@ -1887,7 +1888,6 @@ let req = idx.get("Chair");
                     </ol>
                 </section>
 
-
                 <section id="json-bridge">
                     <div class="json-bridge">
                         <div class="hub">JSON Format</div>
@@ -2670,18 +2670,660 @@ console.log(profile.note); // null
                 </section>
 
 
-                <section id="sept-02" style="text-align: center;">
-                    <h4>Today, Tuesday Sept 2nd</h4>
+                <section id="sept-04" style="text-align: center;">
+                    <h4>Today, Tuesday Sept 4th</h4>
                     <ol>
-                        <li>From Tables to JSON Documents &check;</li>
-                        <li>JSON Modeling Structures &check;</li>
-                        <li>Design Principles &check;</li>
-                        <li>Lab Use Case Examples &check;</li>
-                        <li>Roster Verification</li>
+                        <li>JSON Modeling Structures</li>
+                        <li>Summary IndexedDB</li>
                         <li>Homework 1 and Lab 1</li>
+                        <li>Roster Verification</li>
+                        <li>Lab Use Case Examples</li>
                     </ol>
                 </section>
 
+
+                <section>
+                    <h3>JSON Data Distributed</h3>
+                    <div style="font-size:80px; text-align:center; margin-top:40px;">
+                        🗄️ 📚 🕸️ 📊
+                    </div>
+                    <p style="text-align:center; font-size:20px; margin-top:20px;">
+                        Data is stored across multiple machines for <span class="highlight">scalability</span>,
+                        <span class="highlight">fault tolerance</span>, and <span class="highlight">availability</span>.
+                    </p>
+                </section>
+
+
+                <section>
+                    <h3>Defining IDs</h3>
+                    <div style="display:flex; gap:40px; align-items:flex-start; justify-content:space-between;">
+
+                        <!-- Left side -->
+                        <div style="flex:1;">
+                            <ul style="font-size:20px; line-height:1.6;">
+                                <li><span class="highlight">Unique</span> – each ID is distinct, no duplicates</li>
+                                <li><span class="highlight">No Meaning</span> – ID is just an identifier</li>
+                                <li>Purpose: <span class="highlight">reference only</span></li>
+                            </ul>
+                        </div>
+
+                        <!-- Right side -->
+                        <div style="flex:1;">
+                            <pre><code class="language-json">
+// ✅ Good ID
+{ "id": "7f8c9d12", "name": "Alice" }
+
+// ❌ Bad ID (meaning encoded)
+{ "id": "2025-student-Alice", "name": "Alice" }
+      </code></pre>
+                        </div>
+
+                    </div>
+                </section>
+
+
+
+                <section>
+                    <h3>Defining JSON IDs</h3>
+                    <div style="display:flex; gap:40px; align-items:flex-start; justify-content:space-between;">
+
+                        <!-- Left side -->
+                        <div style="flex:1;">
+                            <p style="font-size:20px; line-height:1.6;">
+                                🔑 <span class="highlight">Every object shouldhave a unique <code>id</code></span><br>
+                                This ensures:
+                            </p>
+                            <ul style="font-size:18px; line-height:1.6;">
+                                <li>Reliable referencing</li>
+                                <li>Consistent updates</li>
+                                <li>Safe merges in distributed systems</li>
+                            </ul>
+                        </div>
+
+                        <!-- Right side -->
+                        <div style="flex:1;">
+                            <pre><code class="language-json">
+{
+  "id": "a12f-34cd-56ef",
+  "name": "...",
+  "type": "...",
+  "createdAt": "...",
+  "otherField": "..."
+}
+      </code></pre>
+                        </div>
+
+                    </div>
+                </section>
+
+
+                <section>
+                    <h3>Defining JSON IDs</h3>
+                    <div style="display:flex; gap:40px; align-items:flex-start; justify-content:space-between;">
+
+                        <!-- Left side -->
+                        <div style="flex:1;">
+                            <ul style="font-size:20px; line-height:1.6;">
+                                <li><span class="highlight">Business ID</span> – human-readable, domain-specific (e.g.,
+                                    order#1234)</li>
+                                <li><span class="highlight">Auto-increment</span> – sequential ID (1, 2, 3...)
+                                </li>
+                                <li><span class="highlight">UUID</span> – globally unique 128-bit identifier</li>
+                            </ul>
+                        </div>
+
+                        <!-- Right side -->
+                        <div style="flex:1;">
+                            <pre><code class="language-javascript">
+// Built-in in modern browsers
+const id = crypto.randomUUID();
+
+console.log(id);
+// e.g. "3b241101-e2bb-4255-8caf-4136c566a962"
+      </code></pre>
+                        </div>
+
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Why UUID is a Universal ID</h3>
+                    <ul style="font-size:20px; line-height:1.6;">
+                        <li><span class="highlight">Universally Unique Identifier</span> – 128-bit number</li>
+                        <li>Guarantees uniqueness across <span class="highlight">time</span> &amp; <span
+                                class="highlight">space</span></li>
+                        <li>Divided into structured parts:
+                            <ul>
+                                <li>Timestamp / Random / Hash depending on version</li>
+                                <li>Variant bits specify format</li>
+                                <li>Version bits indicate generation method</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <p style="font-size:16px; margin-top:15px; color:#ccc;">UUIDs prevent collisions across distributed
+                        systems without coordination.</p>
+                </section>
+
+                <section>
+                    <h3>UUID Structure Breakdown</h3>
+                    <pre><code class="language-text">
+  123e4567-e89b-12d3-a456-426614174000
+  └───────┘ └───┘ └──┘ └──┘ └────────┘
+   Time     Ver   Seq  Var   Node/Random
+  </code></pre>
+                    <ul style="font-size:20px; line-height:1.6;">
+                        <li><span class="highlight">Time</span> – milliseconds since epoch (v1)</li>
+                        <li><span class="highlight">Version</span> – 1 to 8 (defines how UUID is made)</li>
+                        <li><span class="highlight">Variant</span> – layout type (e.g., RFC 4122)</li>
+                        <li><span class="highlight">Node/Random</span> – MAC address or random bits</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>UUID Versions (History)</h3>
+                    <table style="width:100%; font-size:18px; border-collapse:collapse;">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left; border-bottom:1px solid #666;">Version</th>
+                                <th style="text-align:left; border-bottom:1px solid #666;">Basis</th>
+                                <th style="text-align:left; border-bottom:1px solid #666;">Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>v1</td>
+                                <td>Timestamp + MAC</td>
+                                <td>First defined, 1990s</td>
+                            </tr>
+                            <tr>
+                                <td>v2</td>
+                                <td>DCE Security</td>
+                                <td>Rare, site-specific</td>
+                            </tr>
+                            <tr>
+                                <td>v3</td>
+                                <td>MD5 Hash (Name-based)</td>
+                                <td>Stable for same input</td>
+                            </tr>
+                            <tr>
+                                <td>v4</td>
+                                <td>Random</td>
+                                <td>Most common today</td>
+                            </tr>
+                            <tr>
+                                <td>v5</td>
+                                <td>SHA-1 Hash (Name-based)</td>
+                                <td>More secure than v3</td>
+                            </tr>
+                            <tr>
+                                <td>v6, v7, v8</td>
+                                <td>Proposed (time-ordered, Unix time, custom)</td>
+                                <td>2020s improvements</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+
+                <section>
+                    <h3>ISO 8601 Date &amp; Time Format</h3>
+                    <div style="display:flex; gap:40px; align-items:flex-start; justify-content:space-between;">
+
+                        <!-- Left side explanation -->
+                        <div style="flex:1;">
+                            <ul style="font-size:20px; line-height:1.6;">
+                                <li><span class="highlight">Standardized format</span> for date &amp; time</li>
+                                <li>Unambiguous across regions</li>
+                                <li>Order: <code>YYYY-MM-DD</code> → <code>hh:mm:ss</code> → timezone</li>
+                                <li>Preferred for APIs, JSON, databases</li>
+                                <li>Machine &amp; human-readable</li>
+                            </ul>
+                        </div>
+
+                        <!-- Right side examples -->
+                        <div style="flex:1;">
+                            <pre><code class="language-json">
+// ISO 8601 Examples
+
+"2025-09-04" 
+// date only (YYYY-MM-DD)
+
+"2025-09-04T10:15:30Z" 
+// UTC time (Z = Zulu)
+
+"2025-09-04T10:15:30-07:00" 
+// local time with offset
+      </code></pre>
+                        </div>
+
+                    </div>
+                    <p style="font-size:16px; margin-top:20px; text-align:center; color:#ccc;">
+                        ✅ Always use ISO 8601 for storing &amp; exchanging dates
+                    </p>
+                </section>
+
+
+                <section>
+                    <h3>What Does the Z Mean in ISO 8601?</h3>
+                    <div style="display:flex; gap:40px; align-items:flex-start; justify-content:space-between;">
+
+                        <!-- Left side explanation -->
+                        <div style="flex:1;">
+                            <ul style="font-size:20px; line-height:1.6;">
+                                <li><span class="highlight">Z = Zulu time (UTC+0)</span></li>
+                                <li><span class="highlight">UTC (Coordinated Universal Time)</span></li>
+                                <li>No offset from zero meridian (Greenwich)</li>
+                                <li>Same everywhere in the world</li>
+                                <li>For distributed DB to avoid timezone errors</li>
+                            </ul>
+                        </div>
+
+                        <!-- Right side examples -->
+                        <div style="flex:1;">
+                            <pre><code class="language-json">
+// ISO 8601 with Z
+
+"2025-09-04T10:15:30Z"
+// 10:15:30 UTC
+
+"2025-09-04T03:15:30-07:00"
+// Same moment in California (UTC-7)
+
+"2025-09-04T12:15:30+02:00"
+// Same moment in Central Europe (UTC+2)
+      </code></pre>
+                        </div>
+
+                    </div>
+                    <p style="font-size:16px; margin-top:20px; text-align:center; color:#ccc;">
+                        ✅ <span class="highlight">Z</span> ensures a single global reference, independent of local
+                        timezones.
+                    </p>
+                </section>
+
+
+                <section>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e2/UTC%2B0000_-_2021.svg"
+                        alt="UTC Timezones" style="border-radius:6px;">
+                </section>
+
+
+
+                <section>
+                    <div style="display:flex; gap:15px; align-items:flex-start; justify-content:space-between;">
+
+                        <!-- Left column -->
+                        <div style="flex:1;">
+                            <pre><code class="language-javascript">
+// JavaScript (Browser)
+const z = new Date().toISOString();
+// e.g. "2025-09-04T13:22:11.123Z"
+      </code></pre>
+
+                            <pre><code class="language-javascript">
+// JavaScript (Node.js)
+const z = new Date().toISOString();
+      </code></pre>
+
+                            <pre><code class="language-python">
+# Python 3
+from datetime import datetime, timezone
+z = datetime.now(timezone.utc).isoformat()
+# e.g. "2025-09-04T13:22:11.123456+00:00"
+      </code></pre>
+
+                            <pre><code class="language-ruby">
+# Ruby
+require "time"
+z = Time.now.utc.iso8601
+      </code></pre>
+                        </div>
+
+                        <!-- Right column -->
+                        <div style="flex:1;">
+                            <pre><code class="language-java">
+// Java (java.time)
+import java.time.*;
+String z = Instant.now().toString();
+// or:
+String z2 = OffsetDateTime.now(ZoneOffset.UTC).toString();
+      </code></pre>
+
+                            <pre><code class="language-go">
+// Go
+import "time"
+z := time.Now().UTC().Format(time.RFC3339)
+      </code></pre>
+
+                            <pre><code class="language-csharp">
+// C#
+string z = DateTime.UtcNow.ToString("o");
+// ISO 8601, e.g. 2025-09-04T13:22:11.1234567Z
+      </code></pre>
+
+                            <pre><code class="language-php">
+// PHP
+$z = (new DateTime('now', new DateTimeZone('UTC')))
+       ->format(DateTime::ATOM);
+      </code></pre>
+
+                            <pre><code class="language-bash">
+# Shell (Unix)
+date -u +"%Y-%m-%dT%H:%M:%SZ"
+      </code></pre>
+                        </div>
+
+                    </div>
+                    <p style="font-size:16px; margin-top:10px; text-align:center; color:#ccc;">
+                        Tip: Prefer ISO 8601 strings (with <code>Z</code>) when storing or exchanging timestamps.
+                    </p>
+                </section>
+
+
+                <section>Question</section>
+
+
+                <section>
+                    <div style="display:flex; gap:40px;">
+
+                        <div style="flex:1;">
+                            <p><span class="highlight">Embed</span> when:</p>
+                            <ul style="font-size:18px; line-height:1.6;">
+                                <li>1-to-1 relationship</li>
+                                <li>Data is always accessed together</li>
+                                <li>Example: user profile + address</li>
+                            </ul>
+                            <pre><code class="language-json">
+{
+  "userId": "u1",
+  "name": "Alice",
+  "address": {
+    "city": "Stockton",
+    "zip": "95211"
+  }
+}
+      </code></pre>
+                        </div>
+
+                        <div style="flex:1;">
+                            <p><span class="highlight">Reference</span> when:</p>
+                            <ul style="font-size:18px; line-height:1.6;">
+                                <li>1-to-n or n-to-n</li>
+                                <li>Entities are reused across docs</li>
+                                <li>Example: users and groups</li>
+                            </ul>
+                            <pre><code class="language-json">
+// 1 → n (one user in multiple groups)
+{ "userId": "u1", "groupIds": ["g1", "g2"] }
+
+// n ↔ n (mutual references between users & groups)
+{ "userId": "u2", "groupIds": ["g1"] }
+
+{ "groupId": "g1", "memberIds": ["u1", "u2"] }
+
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+
+                <section>
+                    <h3>Optimize for Access Patterns</h3>
+                    <ul style="font-size:20px; line-height:1.6;">
+                        <li>Model data around how it’s <span class="highlight">queried</span>, not abstract theory</li>
+                        <li>Include <span class="highlight">redundant fields</span> if it avoids joins/lookups</li>
+                        <li>Precompute aggregates when queries need speed</li>
+                        <li>Design for <span class="highlight">read efficiency</span> over write purity</li>
+                    </ul>
+                    <pre><code class="language-json">
+// Store authorName directly with posts
+{
+  "postId": "p1",
+  "title": "JSON Best Practices",
+  "authorId": "u1",
+  "authorName": "Alice"
+}
+  </code></pre>
+                </section>
+
+
+                <section>
+                    <h3>JSON Attribute Naming Conventions</h3>
+                    <div style="display:flex; gap:40px; align-items:flex-start; justify-content:space-between;">
+
+                        <!-- Left side -->
+                        <div style="flex:1;">
+                            <ul style="font-size:20px; line-height:1.6;">
+                                <li><span class="highlight">Booleans</span>: start with <code>is</code>,
+                                    <code>has</code>, or <code>can</code>
+                                    <code>isActive</code>, <code>hasLicense</code>, <code>canEdit</code>
+                                </li>
+                                <li><span class="highlight">Arrays</span>: use plural or end with <code>List</code>
+                                    <code>userList</code>, <code>tags</code>, <code>orderIds</code>
+                                </li>
+                                <li><span class="highlight">Numbers</span>: add units or context
+                                    <code>priceUSD</code>, <code>ageYears</code>, <code>timeoutMs</code>
+                                </li>
+                                <li><span class="highlight">Strings</span>: descriptive nouns, no type suffix
+                                    <code>userName</code>, <code>email</code>, <code>addressLine</code>
+                                </li>
+                                <li><span class="highlight">Dates / Time</span>: use ISO 8601, suffix with
+                                    <code>At</code>
+                                    <code>createdAt</code>, <code>updatedAt</code>, <code>expiresAt</code>
+                                </li>
+                                <li><span class="highlight">Objects</span>: use clear entity names
+                                    <code>userProfile</code>, <code>billingInfo</code>, <code>geoLocation</code>
+                                </li>
+                                <li><span class="highlight">IDs</span>: always include <code>id</code> suffix
+                                    <code>userId</code>, <code>orderId</code>, <code>sessionId</code>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Right side -->
+                        <div style="flex:1;">
+                            <pre><code class="language-json">{
+  "userId": "u123",
+  "userName": "Alice",
+  "isActive": true,
+  "tags": ["student", "premium"],
+  "orderIds": ["o1001", "o1002"],
+  "priceUSD": 199.99,
+  "createdAt": "2025-09-04T10:15:00Z",
+  "userProfile": {
+    "ageYears": 29,
+    "email": "alice@example.com"
+  }
+}</code></pre>
+                        </div>
+
+                    </div>
+                </section>
+
+
+                <section>
+                    <h3>Common Metadata Attributes</h3>
+                    <div style="display:flex; gap:40px; align-items:flex-start; justify-content:space-between;">
+
+                        <!-- Left side explanation -->
+                        <div style="flex:1;">
+                            <p style="font-size:20px; line-height:1.6;">
+                                ✅ Common fields for <span class="highlight">metadata object</span>:
+                            </p>
+                            <ul style="font-size:18px; line-height:1.6;">
+                                <li>createdAt, updatedAt, deletedAt</li>
+                                <li>author – creator / last editor</li>
+                                <li>schemaVersion – track schema changes</li>
+                                <li>source – origin system or API</li>
+                                <li>tags – labels for categorization</li>
+                                <li>status – draft, active, archived, etc.</li>
+                                <li>revision – document version number</li>
+                                <li>checksum – hash for integrity check</li>
+                                <li>permissions – access control rules</li>
+                            </ul>
+                        </div>
+
+                        <!-- Right side JSON example -->
+                        <div style="flex:1;">
+                            <pre><code class="language-json" style="font-size: 9pt;">{
+  "metadata": {
+    "createdAt": "2025-09-04T12:00:00Z",
+    "updatedAt": "2025-09-04T12:30:00Z",
+    "author": "u1", // source device
+    "tags": ["json", "nosql", "big-data"],
+    "status": "active",
+    "checksum": "a1b2c3d4",
+    "permissions": {
+      "read": ["admin", "editor"],
+      "write": ["admin"]
+    }
+  }
+}</code></pre>
+                        </div>
+
+                    </div>
+                </section>
+
+
+
+                <section>Question</section>
+
+
+
+                <section style="text-align: center;">
+                    <h4>Today, Tuesday Sept 4th</h4>
+                    <ol>
+                        <li>JSON Modeling Structures &check;</li>
+                        <li>Summary IndexedDB</li>
+                        <li>Homework 1 and Lab 1</li>
+                        <li>Roster Verification</li>
+                        <li>Lab Use Case Examples</li>
+                    </ol>
+                </section>
+
+
+
+                <section data-auto-animate>
+                    <h3>NoSQL Database Properties</h3>
+                    <table style="width:100%; border-collapse:collapse; font-size:18px;">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left; border-bottom:1px solid #666;">Database</th>
+                                <th style="text-align:left; border-bottom:1px solid #666;">Type</th>
+                                <th style="text-align:left; border-bottom:1px solid #666;">Query Language</th>
+                                <th style="text-align:left; border-bottom:1px solid #666;">Data Format</th>
+                                <th style="text-align:center; border-bottom:1px solid #666;" colspan="4">ACID</th>
+                                <th style="text-align:center; border-bottom:1px solid #666;" colspan="3">CAP</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                                <th style="text-align:center;">A</th>
+                                <th style="text-align:center;">C</th>
+                                <th style="text-align:center;">I</th>
+                                <th style="text-align:center;">D</th>
+                                <th style="text-align:center;">C</th>
+                                <th style="text-align:center;">A</th>
+                                <th style="text-align:center;">P</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="highlight">IndexedDB</span></td>
+                                <td>Key-Value (browser)</td>
+                                <td>JavaScript API</td>
+                                <td>JSON</td>
+                                <td style="text-align:center;">✓</td>
+                                <td style="text-align:center;">✓</td>
+                                <td style="text-align:center;">✓</td>
+                                <td style="text-align:center;">✓</td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                            </tr>
+                            <tr>
+                                <td>MongoDB</td>
+                                <td>Document Store</td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                            </tr>
+                            <tr>
+                                <td>Neo4j</td>
+                                <td>Graph Database</td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                            </tr>
+                            <tr>
+                                <td>Cassandra</td>
+                                <td>Wide-Column Store</td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                            </tr>
+                            <tr>
+                                <td>Reddis</td>
+                                <td>Key-Value (in-memory)</td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                            </tr>
+                            <tr>
+                                <td>ClickHouse</td>
+                                <td>Columnar (OLAP)</td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                            </tr>
+                            <tr>
+                                <td>FAISS</td>
+                                <td>Vector Index / Library</td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                                <td style="text-align:center;"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
 
                 <section>
                     <h4>Homework 1 (Canvas Module 1)</h4>
@@ -2697,11 +3339,11 @@ console.log(profile.note); // null
                     </ul>
                 </section>
 
-                <section style="text-align: center;">
+                <!-- <section style="text-align: center;">
                     <h4>Lab 1 (Canvas Module 1)</h4>
                     <img src="https://www.pciltd.com/blog/assets/img/Blog/iot_smart_agriculture.jpg"
                         alt="IoT Smart Agriculture" style="width: 60%; height: auto; margin-top: 0px;">
-                </section>
+                </section> -->
 
                 <section>
                     <h4>Lab 1: Agricultural Data Collection with IndexedDB</h4>
@@ -2711,12 +3353,17 @@ console.log(profile.note); // null
                 </section>
 
                 <section>
+                    <img src="./img/lab1-example.png" alt="Lab 1 Example"
+                        style="width: 80%; height: auto; margin-top: 0px;">
+                </section>
+
+                <section>
                     <h4>Lab 1: Submission Instructions</h4>
                     <ol>
                         <li>Name file: <strong>lab1-lastname-XXXX.html</strong> (e.g.
                             <em>lab1-john-doe-1234.html</em>)
                         </li>
-                        <li>Push code to <a href="https://github.com/SE4CPS/2025-COMP-263/tree/main/labs/lab1"
+                        <li>Push code to <a href="https://github.com/SE4CPS/2025-COMP-263/tree/main/labs/lab1/"
                                 target="_blank">
                                 GitHub repo</a></li>
                         <li>Add 5 unit tests + screenshot of console with retrieved data</li>
@@ -2729,7 +3376,7 @@ console.log(profile.note); // null
                 </section>
 
                 <section>
-                    <h2>Course Terms</h2>
+                    <h3>Course Terms</h3>
                     <p style="font-size:14pt; line-height:1.4;">
                         <span class="highlight">NoSQL</span>, <span class="highlight">Key-Value Store</span>,
                         Document Store, Column Store,
@@ -2783,11 +3430,68 @@ console.log(profile.note); // null
 
                 <section data-auto-animate style="font-size:14pt;">
                     <ol style="margin-top:20px;line-height:1.8em;">
-                        <li>How are Full Stack Engineering and JSON related in the way data flows across frontend, backend, and databases?</li>
-                        <li>What are the trade-offs between using a flat JSON structure vs. a nested JSON structure for representing the same data?</li>
+                        <li>How are Full Stack Engineering and JSON related in the way data flows across frontend,
+                            backend, and databases?</li>
+                        <li>What are the trade-offs between using a flat JSON structure vs. a nested JSON structure for
+                            representing the same data?</li>
                         <li>Whats are disadvantages of modling data in JSON?</li>
                     </ol>
                 </section>
+
+
+
+                <section>
+                    <h2>Should You Use IndexedDB?</h2>
+                    <ol style="font-size:20px; line-height:1.6;">
+                        <li>Do you need to store data <span class="highlight">locally in the browser</span>?</li>
+                        <li>Do you want to work with <span class="highlight">structured objects</span>, not just
+                            strings?</li>
+                        <li>Do you need to store more than <span class="highlight">5–10 MB</span> of data?</li>
+                        <li>Do you need <span class="highlight">offline access</span> to your data?</li>
+                        <li>Do you need <span class="highlight">querying by keys or indexes</span>?</li>
+                        <li>Do you want <span class="highlight">transactions (ACID support)</span> in the browser?</li>
+                        <li>Do you need to store <span class="highlight">files/blobs</span> (e.g., images) locally?</li>
+                        <li>Do you expect your app to <span class="highlight">sync later</span> with a backend server?
+                        </li>
+                        <li>Do you need better performance than <span class="highlight">localStorage</span> can provide?
+                        </li>
+                        <li>Is your app a <span class="highlight">progressive web app (PWA)</span> or <span
+                                class="highlight">offline-first</span> design?</li>
+                    </ol>
+                </section>
+
+
+                <section style="text-align: center;">
+                    <h4>Today, Tuesday Sept 4th</h4>
+                    <ol>
+                        <li>JSON Modeling Structures &check;</li>
+                        <li>Summary IndexedDB &check;</li>
+                        <li>Homework 1 and Lab 1 &check;</li>
+                        <li>Roster Verification</li>
+                        <li>Lab Use Case Examples</li>
+                    </ol>
+                </section>
+
+                
+
+                <section>
+                    <h2>Lab Use Case</h2>
+                    <p style="font-size:20px; line-height:1.6;">
+                        Write a <span class="highlight">local offline database</span> using IndexedDB
+                        to keep track of <span class="highlight">books borrowed from a library</span>.
+                    </p>
+                    <ul style="font-size:18px; line-height:1.6; margin-top:20px;">
+                        <li>Each book should have a <span class="highlight">unique id</span></li>
+                        <li>Store the <span class="highlight">title</span> and <span class="highlight">author</span>
+                        </li>
+                        <li>Record the <span class="highlight">borrower</span></li>
+                        <li>Save <span class="highlight">borrowed date</span> and <span class="highlight">due
+                                date</span></li>
+                        <li>Support adding, updating, deleting, and listing books</li>
+                    </ul>
+                </section>
+
+
 
                 <section>
                     <h4>Thanks</h4>
@@ -9957,7 +10661,7 @@ RETURN f.name, COUNT(neighbor) AS neighbor_count
                 </section>
 
                 <section>
-                    <h2>Instructor & TA</h2>
+                    <h3>Instructor & TA</h3>
                     <ul>
                         <li><strong>Instructor:</strong> Dr. Berhe, CTC 117<br>Email: sberhe@pacific.edu</li>
                         <li><strong>TA:</strong> Mayuresh Sanjay More<br>Email: m_more1@u.pacific.edu<br>Office Hours:
@@ -9966,7 +10670,7 @@ RETURN f.name, COUNT(neighbor) AS neighbor_count
                 </section>
 
                 <section>
-                    <h2>Course Resources</h2>
+                    <h3>Course Resources</h3>
                     <ul>
                         <li><a href="https://pacific.instructure.com/courses/135840" target="_blank">Canvas</a></li>
                         <li><a href="https://github.com/SE4CPS/2025-COMP-263" target="_blank">GitHub Repository</a></li>
@@ -9976,7 +10680,7 @@ RETURN f.name, COUNT(neighbor) AS neighbor_count
                 </section>
 
                 <section>
-                    <h2>Course Description</h2>
+                    <h3>Course Description</h3>
                     <p>This course explores managing large volumes of unstructured and evolving data.
                         Emphasis on hands-on labs, projects, and real-world domains (IoT in agriculture, automotive,
                         retail, healthcare).
@@ -9984,7 +10688,7 @@ RETURN f.name, COUNT(neighbor) AS neighbor_count
                 </section>
 
                 <section>
-                    <h2>Course Goals by Role</h2>
+                    <h3>Course Goals by Role</h3>
                     <ul>
                         <li>Strategic: Database architecture decision-making</li>
                         <li>Operational: Query NoSQL databases</li>
@@ -9997,7 +10701,7 @@ RETURN f.name, COUNT(neighbor) AS neighbor_count
                 </section>
 
                 <section>
-                    <h2>Course Goals by Terms</h2>
+                    <h3>Course Goals by Terms</h3>
                     <p style="font-size:14pt; line-height:1.4;">
                         <span class="highlight">NoSQL</span>, <span class="highlight">Key-Value Store</span>,
                         <span class="highlight">Document Store</span>, Column Store,
@@ -10039,7 +10743,7 @@ RETURN f.name, COUNT(neighbor) AS neighbor_count
 
 
                 <section>
-                    <h2>Grading Schema</h2>
+                    <h3>Grading Schema</h3>
                     <ul>
                         <li>Attendance: 5%</li>
                         <li>Homework: 15%</li>
@@ -10051,7 +10755,7 @@ RETURN f.name, COUNT(neighbor) AS neighbor_count
                 </section>
 
                 <section>
-                    <h2>Policies</h2>
+                    <h3>Policies</h3>
                     <ul>
                         <li><strong>Late Work:</strong> 20% penalty; extensions only if requested before deadline by
                             email.</li>
@@ -10062,7 +10766,7 @@ RETURN f.name, COUNT(neighbor) AS neighbor_count
                 </section>
 
                 <section>
-                    <h2>University Policies</h2>
+                    <h3>University Policies</h3>
                     <ul>
                         <li><strong>ADA Accommodations:</strong> Contact SSD (ssd@pacific.edu).</li>
                         <li><strong>Honor Code:</strong> Academic honesty required; violations reported.</li>
