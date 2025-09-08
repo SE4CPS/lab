@@ -28,7 +28,7 @@
         }
 
         pre {
-            background-color: #444 !important;
+            /* background-color: #444 !important; */
         }
 
         table {
@@ -39,6 +39,10 @@
 
         li {
             font-size: 22pt;
+        }
+
+        img {
+            border-radius: 4px;
         }
 
         .global-footer {
@@ -87,6 +91,10 @@
 
         .columns pre {
             font-size: 0.7em;
+        }
+
+        .hljs {
+            background-color: inherit !important;
         }
 
         /* Generic styling for any .json-bridge block */
@@ -171,6 +179,87 @@
             font-size: clamp(16px, 1.8vw, 22px);
             opacity: 0.95;
         }
+
+        /* Layout */
+        .split {
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+        }
+
+        .left,
+        .right {
+            flex: 1 1 0;
+        }
+
+        .left {
+            min-width: 42%;
+        }
+
+        .right {
+            min-width: 42%;
+        }
+
+        /* Typography & alignment */
+        .highlight {
+            background: rgba(255, 234, 120, 0.25);
+            padding: 0 .25rem;
+            border-radius: .25rem;
+            outline: 1px solid rgba(240, 200, 50, .25);
+        }
+
+        .muted {
+            opacity: .88;
+        }
+
+        ul,
+        ol {
+            text-align: left;
+        }
+
+        .tight li {
+            margin: .25rem 0;
+        }
+
+        .small {
+            font-size: .9em;
+        }
+
+        /* Tables */
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table thead th {
+            background: #fafafa;
+            color: #111;
+        }
+
+        .table th,
+        .table td {
+            border: 1px solid #ddd;
+            padding: .5rem .6rem;
+            text-align: left;
+        }
+
+        /* Right-side image placeholder */
+        .img-fit {
+            width: 100%;
+            height: auto;
+        }
+
+        .placeholder {
+            width: 100%;
+            min-height: 220px;
+            border: 2px dashed #e0e0e0;
+            border-radius: .5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: .9em;
+        }
     </style>
 </head>
 
@@ -234,11 +323,12 @@
                             </tr>
                             <tr style="color:#ccc;">
                                 <td style="padding:6px; border:1px solid #666;">Week 3</td>
-                                <td style="padding:6px; border:1px solid #666;">Sep 9, Sep 11</td>
+                                <td style="padding:6px; border:1px solid #666;"><a href="#/sept-09">Sept 9</a>, <a
+                                        href="#/sept-11">Sept 11</a></td>
                                 <td style="padding:6px; border:1px solid #666;"><a href="#/135"
                                         style="color:#ccc; text-decoration:none;">Data Quality and Standards
                                         &#x1f517;</a></td>
-                                <td style="padding:6px; border:1px solid #666;">MongoDB</td>
+                                <td style="padding:6px; border:1px solid #666;"><a href="#/mongodb">MongoDB</a></td>
                                 <td style="padding:6px; border:1px solid #666;">Lab 2, HW 2, Project Part 1: <i>Data and
                                         Scalability</i></td>
                             </tr>
@@ -1259,7 +1349,6 @@ DELETE FROM items WHERE id = 1;
                         </div>
                     </div>
                 </section>
-
 
                 <section data-auto-animate>
                     <h3 style="margin-bottom:16px;">Browser Support for IndexedDB</h3>
@@ -3201,8 +3290,6 @@ date -u +"%Y-%m-%dT%H:%M:%SZ"
                     </ol>
                 </section>
 
-
-
                 <section data-auto-animate>
                     <h3>NoSQL Database Properties</h3>
                     <table style="width:100%; border-collapse:collapse; font-size:18px;">
@@ -3472,8 +3559,6 @@ date -u +"%Y-%m-%dT%H:%M:%SZ"
                     </ol>
                 </section>
 
-                
-
                 <section>
                     <h2>Lab Use Case</h2>
                     <p style="font-size:20px; line-height:1.6;">
@@ -3491,11 +3576,1292 @@ date -u +"%Y-%m-%dT%H:%M:%SZ"
                     </ul>
                 </section>
 
+                <!-- ========================================================= -->
+                <!-- DATA QUALITY -->
 
+                <!-- Slide 1 -->
+                <section id="sept-09">
+                    <h4>Today <span class="highlight">Agenda</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Motivation for Data Quality</li>
+                                <li>Seven Metrics</li>
+                                <li>Integrity → Uniqueness</li>
+                                <li>MongoDB History & Features</li>
+                                <li>CRUD, Operators, Practice</li>
+                                <li>Homework, Lab, and Project</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <div class="placeholder">agenda</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 2 -->
+                <section>
+                    <h4>Why <span class="highlight">Data Quality</span>?</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Bad data = Incorrect decisions</li>
+                                <li>High quality = trust & efficiency</li>
+                                <li>Foundation for AI & analytics</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img class="img-fit"
+                                src="https://bernardmarr.com/wp-content/uploads/2021/07/How-Tesla-Is-Using-Artificial-Intelligence-to-Create-The-Autonomous-Cars-Of-The-Future.jpg"
+                                alt="Autonomous vehicle data" />
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 3 -->
+                <section>
+                    <h4>Example <span class="highlight">Agriculture</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Farmers rely on real-time weather</li>
+                                <li>Incorrect yields mislead supply</li>
+                                <li>Clean data improves food security</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <div class="right">
+                                <img class="img-fit"
+                                    src="https://www.agroinnovationlab.com/wp-content/uploads/2021/03/RG_Wetterdaten_copyright_Pessl-Instruments-klein-e1616760615979.jpg"
+                                    alt="Agriculture data" />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Data Quality Principle -->
+                <section>
+                    <p>
+                        The quality of the data<br>
+                        determines the quality<br>
+                        of the software.
+                    </p>
+                </section>
+
+                <!-- Slide 5 -->
+                <section>
+                    <h4>Origins of <span class="highlight">Data Quality Metrics</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><b>Wang et al.</b> (1995) —
+                                    <a href="https://web.mit.edu/tdqm/www/tdqmpub/SURVEYIEEEKDEAug95.pdf"
+                                        target="_blank">
+                                        Survey of Data Quality Research
+                                    </a>
+                                </li>
+                                <li>Introduced multi-dimensional metrics: accuracy, consistency, completeness,
+                                    timeliness, uniqueness</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="text">
+// Timeline
+1995: Survey of Data Quality
+1996: Beyond Accuracy (MIT)
+2011: ISO 8000 Standard
+                    </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- Slide 48 -->
+                <section>
+                    <h4>ISO <span class="highlight">Data Quality</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Released <b>2011</b></li>
+                                <li><b>ISO 8000</b> standard</li>
+                                <li>Core: accuracy, consistency, completeness, timeliness</li>
+                                <li>Used in distributed DBs & IoT</li>
+                                <li>
+                                    <a href="https://www.iso.org/obp/ui/#iso:std:iso:8000:-1:ed-1:v1:en"
+                                        target="_blank">
+                                        ISO 8000-1:2011
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="text">
+// ISO 8000 Principles
+- Accurate
+- Consistent
+- Complete
+- Timely
+                            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 4 -->
+                <section>
+                    <h4>Data Quality <span class="highlight">Seven Metrics</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Integrity</li>
+                                <li>Validity</li>
+                                <li>Consistency</li>
+                                <li>Accuracy</li>
+                                <li>Completeness</li>
+                                <li>Timeliness</li>
+                                <li>Uniqueness</li>
+                            </ul>
+
+                            <p class="note">
+                                Example: NASA Mars Climate Orbiter failed in <b>1999</b> due to data
+                                <span class="fragment highlight">inconsistency</span>.
+                            </p>
+                        </div>
+                        <div class="right">
+                            <img class="img-fit" src="https://i.ytimg.com/vi/XRVwd9ap4Ak/maxresdefault.jpg"
+                                alt="Agriculture data" />
+                        </div>
+                    </div>
+                </section>
 
                 <section>
-                    <h4>Thanks</h4>
+                    <h4>How can organizations better <span class="highlight">enforce</span> data quality?</h4>
                 </section>
+
+                <!-- INTEGRITY -->
+                <!-- Slide 5 -->
+                <section>
+                    <h4>Integrity <span class="highlight">Definition</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Data unchanged & correct</li>
+                                <li>Reliable across lifecycle</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <div class="mermaid">
+                                flowchart LR
+                                A[Source] -->|Loss in transit| B[Destination]
+                                A -->|Tampering| B
+
+                                classDef issue stroke:#f66,stroke-width:2px,color:#900;
+                                linkStyle 0 stroke:#f66,stroke-width:2px;
+                                linkStyle 1 stroke:#f66,stroke-width:2px;
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 6 -->
+                <section>
+                    <h4>Integrity <span class="highlight">Examples</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>No negative yields</li>
+                                <li>Immutable harvest dates</li>
+                                <li>Signed sensor logs</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// MongoDB
+db.farm.find({ yieldKg: { $lt: 0 } })
+
+// SQL
+SELECT * FROM farm
+WHERE yield_kg < 0;
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 7 -->
+                <section>
+                    <h4>Integrity <span class="highlight">Check</span></h4>
+                    <div class="mermaid">
+                        flowchart LR
+                        A[Source Data] --> B[Generate Checksum]
+                        B --> C[Transmit Data + Checksum]
+                        C --> D[Verify Checksum]
+                        D -->|Match ✅| E[Data Accepted]
+                        D -->|Mismatch ❌| F[Data Rejected]
+
+                        %% Green link for correct
+                        linkStyle 3 stroke:#0a0,stroke-width:2px;
+
+                        %% Red link for incorrect
+                        linkStyle 4 stroke:#f66,stroke-width:2px;
+                    </div>
+                </section>
+
+                <!-- VALIDITY -->
+                <!-- Slide 8 -->
+                <section>
+                    <h4>Validity <span class="highlight">Definition</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Values follow format</li>
+                                <li>Within allowed ranges</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <div class="placeholder">rules</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 9 -->
+                <section>
+                    <h4>Validity <span class="highlight">Examples</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Valid season values</li>
+                                <li>Temperature numeric</li>
+                                <li>ISO timestamps</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// MongoDB
+db.farm.find({
+  season:{ $nin:["Spring","Fall"] }
+})
+
+// SQL
+SELECT * FROM farm
+WHERE season NOT IN
+ ('Spring','Fall');
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 10 -->
+                <section>
+                    <h4>Validity <span class="highlight">Check</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Which fields in farm data</li>
+                                <li>need strict validation?</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <div class="placeholder">Q</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CONSISTENCY -->
+                <!-- Slide 11 -->
+                <section>
+                    <h4>Consistency <span class="highlight">Definition</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Uniform values across data</li>
+                                <li>No contradictions</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <div class="placeholder">consistency</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 12 -->
+                <section>
+                    <h4>Consistency <span class="highlight">Examples</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Same yield units</li>
+                                <li>Uniform crop codes</li>
+                                <li>Consistent spelling</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// MongoDB
+db.farm.aggregate([
+ { $group:{ _id:"$unit"} }
+])
+
+// SQL
+SELECT unit, COUNT(*)
+FROM farm GROUP BY unit;
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 13 -->
+                <section>
+                    <h4>Consistency <span class="highlight">Check</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>How to align units</li>
+                                <li>across farm datasets?</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <div class="placeholder">Q</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ACCURACY -->
+                <!-- Slide 14 -->
+                <section>
+                    <h4>Accuracy <span class="highlight">Definition</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Reflects real-world values</li>
+                                <li>Correct at source</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <div class="placeholder">target</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 15 -->
+                <section>
+                    <h4>Accuracy <span class="highlight">Examples</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Yields cross-checked</li>
+                                <li>Sensor calibration</li>
+                                <li>Outlier detection</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// MongoDB
+db.farm.find({ yieldKg:{ $gt: 8000 } })
+
+// SQL
+SELECT * FROM farm
+WHERE yield_kg > 8000;
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 16 -->
+                <section>
+                    <h4>Accuracy <span class="highlight">Check</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>How would you cross-check</li>
+                                <li>satellite and field data?</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <div class="placeholder">Q</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- COMPLETENESS -->
+                <!-- Slide 17 -->
+                <section>
+                    <h4>Completeness <span class="highlight">Definition</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>All necessary data present</li>
+                                <li>No missing critical fields</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <div class="placeholder">checklist</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 18 -->
+                <section>
+                    <h4>Completeness <span class="highlight">Examples</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Crop required</li>
+                                <li>Soil type filled</li>
+                                <li>No empty arrays</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// MongoDB
+db.farm.find({
+  crop:{ $exists:false }
+})
+
+// SQL
+SELECT * FROM farm
+WHERE crop IS NULL;
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 19 -->
+                <section>
+                    <h4>Completeness <span class="highlight">Check</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>What key fields must always</li>
+                                <li>be present in farm data?</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <div class="placeholder">Q</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- TIMELINESS -->
+                <!-- Slide 20 -->
+                <section>
+                    <h4>Timeliness <span class="highlight">Definition</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Data is current when needed</li>
+                                <li>No outdated records</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <div class="placeholder">clock</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 21 -->
+                <section>
+                    <h4>Timeliness <span class="highlight">Examples</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Fresh weather data</li>
+                                <li>Daily soil updates</li>
+                                <li>Stream lag < 5min</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// MongoDB
+db.farm.find({
+  updatedAt:{ $lt:ISODate("2025-09-01") }
+})
+
+// SQL
+SELECT * FROM farm
+WHERE updated_at<'2025-09-01';
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 22 -->
+                <section>
+                    <h4>Timeliness <span class="highlight">Check</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>How to enforce update cycles</li>
+                                <li>for weather sensors?</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <div class="placeholder">Q</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- UNIQUENESS -->
+                <!-- Slide 23 -->
+                <section>
+                    <h4>Uniqueness <span class="highlight">Definition</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>No duplicate entities</li>
+                                <li>Each ID distinct</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <div class="placeholder">unique</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 24 -->
+                <section>
+                    <h4>Uniqueness <span class="highlight">Examples</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>No duplicate farmId</li>
+                                <li>One crop per field</li>
+                                <li>Unique device IDs</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// MongoDB
+db.farm.aggregate([
+ { $group:{ _id:"$farmId", c:{ $sum:1 }}},
+ { $match:{ c:{ $gt:1 } }}
+])
+
+// SQL
+SELECT farm_id,COUNT(*)
+FROM farm GROUP BY farm_id
+HAVING COUNT(*)>1;
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 25 -->
+                <section>
+                    <h4>Uniqueness <span class="highlight">Check</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>What duplicates can arise</li>
+                                <li>in agriculture data?</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <div class="placeholder">Q</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- MONGODB INTRO -->
+
+                <!-- Slide 27 -->
+                <section data-auto-animate style="font-size:14pt;" id="mongodb">
+                    <h3 style="margin-bottom:20px;">NoSQL Databases</h3>
+
+                    <div style="
+    display:flex;
+    justify-content:center;
+    gap:25px;
+    flex-wrap:wrap; /* Allow wrapping to multiple rows */
+    max-width:800px;
+    margin:auto;
+  ">
+
+                        <div style="
+      border:2px solid #4CAF50;
+      background:#C8E6C9;   /* lighter green */
+      color:#1B5E20;        /* dark green text for contrast */
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      font-weight:bold;
+      min-width:120px;
+    ">
+                            IndexedDB
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            Redis
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      background:#C8E6C9;   /* lighter green */
+      color:#1B5E20;        /* dark green text for contrast */
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            MongoDB
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            CassandraDB
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            Faiss
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            ClickHouse
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            Neo4j
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 26 -->
+                <section>
+                    <h4>MongoDB <span class="highlight">History</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>2007: Start at 10gen</li>
+                                <li>2009: Open source</li>
+                                <li>2014: WiredTiger</li>
+                                <li>2016: Atlas cloud</li>
+                                <li>2017: IPO</li>
+                                <li>2021+: ACID, time series</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://static.seekingalpha.com/uploads/2020/6/11/48404648-1591874366497563_origin.png"
+                                alt="MongoDB History" />
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 27 -->
+                <section>
+                    <h4>MongoDB <span class="highlight">Local vs Online</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><a href="https://www.mongodb.com/products/compass" target="_blank">MongoDB
+                                        Compass</a> (Local)
+                                    <ul>
+                                        <li>GUI client for local databases</li>
+                                        <li>Runs on developer’s machine</li>
+                                        <li>Good for testing & development</li>
+                                        <li>No internet required</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <ul>
+                                <li><a href="https://www.mongodb.com/atlas" target="_blank">MongoDB Atlas</a> (Online)
+                                    <ul>
+                                        <li>Fully managed cloud service</li>
+                                        <li>Global availability & scaling</li>
+                                        <li>Backups, monitoring, security</li>
+                                        <li>Accessible anywhere via internet</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- Slide 28 -->
+                <section>
+                    <h4>MongoDB <span class="highlight">Features</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>JSON docs</li>
+                                <li>Dynamic schema</li>
+                                <li>Sharding & Replica</li>
+                                <li>Indexes & Aggs</li>
+                                <li>ACID Tx</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// Document
+{ crop:"Wheat",yieldKg:3000,
+  soil:"Loam" }
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 29 -->
+                <section>
+                    <h4>MongoDB <span class="highlight">Query Language (MQL)</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><b>Sample JSON Document</b>
+                                    <pre><code class="json">
+{
+  "farm": "GreenField",
+  "crop": "Wheat",
+  "year": 2024,
+  "yield_tons": 120,
+  "location": "California"
+}
+                              </code></pre>
+                                </li>
+                                <li><b>MQL Query Examples</b>
+                                    <pre><code class="javascript">
+// Find farms growing Wheat
+db.crops.find({ crop: "Wheat" });
+
+// Farms with yield > 100 tons
+db.crops.find({ yield_tons: { $gt: 100 } });
+
+// Update yield
+db.crops.updateOne(
+  { farm: "GreenField" },
+  { $set: { yield_tons: 130 } }
+);
+                              </code></pre>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <ul>
+                                <li><b>I/O Options</b></li>
+                                <li>Compass (GUI JSON view)</li>
+                                <li>Shell queries</li>
+                                <li>Drivers (Python, Node.js, Java)</li>
+                                <li>Atlas API (REST/GraphQL)</li>
+                            </ul>
+                            <pre><code class="text">
+// Principles of MQL
+- JSON-like syntax
+- Expressive operators ($gt, $set, etc.)
+- CRUD: Create, Read, Update, Delete
+- Works locally or in Atlas
+                      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- CRUD -->
+                <!-- Slide 29 -->
+                <section>
+                    <h4>CRUD <span class="highlight">Create</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Create collection & insert</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// MongoDB
+use farmDB
+db.farm.insertOne({ crop:"Rice" })
+
+// SQL
+INSERT INTO farm(crop)
+VALUES ('Rice');
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 30 -->
+                <section>
+                    <h4>CRUD <span class="highlight">Read</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Find docs by condition</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// MongoDB
+db.farm.find({crop:"Rice"})
+
+// SQL
+SELECT * FROM farm
+WHERE crop='Rice';
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 31 -->
+                <section>
+                    <h4>CRUD <span class="highlight">Update</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Update field values</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// MongoDB
+db.farm.updateOne({crop:"Rice"},
+ {$set:{yieldKg:4000}})
+
+// SQL
+UPDATE farm SET yield_kg=4000
+WHERE crop='Rice';
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+                <!-- Slide 32 -->
+                <section>
+                    <h4>CRUD <span class="highlight">Delete</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Remove docs</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// MongoDB
+db.farm.deleteOne({crop:"Rice"})
+
+// SQL
+DELETE FROM farm
+WHERE crop='Rice';
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- OPERATORS -->
+                <!-- Slide 33 -->
+                <section>
+                    <h4>Comparison <span class="highlight">Ops</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>$gt / $lt</li>
+                                <li>$in / $ne</li>
+                                <li>$exists</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// MongoDB
+db.farm.find({yieldKg:{$gt:3000}})
+
+// SQL
+SELECT * FROM farm
+WHERE yield_kg>3000;
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 34 -->
+                <section>
+                    <h4>Logical <span class="highlight">Ops</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>$and / $or / $not / $nor</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// MongoDB
+db.farm.find({$and:[
+ {crop:"Wheat"},{yieldKg:{$gt:2000}}]})
+
+// SQL
+SELECT * FROM farm
+WHERE crop='Wheat' AND yield_kg>2000;
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 35 -->
+                <section>
+                    <h4>Evaluation <span class="highlight">Ops</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>$regex</li>
+                                <li>$type</li>
+                                <li>$expr</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// MongoDB
+db.farm.find({crop:/^W/})
+
+// SQL
+SELECT * FROM farm
+WHERE crop LIKE 'W%';
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PRACTICE QUERIES -->
+                <!-- Slide 36 -->
+                <section>
+                    <h4>Practice <span class="highlight">Query 1</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Crops with yield > 6000</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// MongoDB
+db.farm.find({yieldKg:{$gt:6000}})
+
+// SQL
+SELECT * FROM farm
+WHERE yield_kg>6000;
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 37 -->
+                <section>
+                    <h4>Practice <span class="highlight">Query 2</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Crops with no irrigation</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// MongoDB
+db.farm.find({irrigation:null})
+
+// SQL
+SELECT * FROM farm
+WHERE irrigation IS NULL;
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 38 -->
+                <section>
+                    <h4>Practice <span class="highlight">Query 3</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Cheapest crop by price</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// MongoDB
+db.farm.find().sort({price:1}).limit(1)
+
+// SQL
+SELECT * FROM farm
+ORDER BY price ASC LIMIT 1;
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 39 -->
+                <section>
+                    <h4>Practice <span class="highlight">Query 4</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Update stock of maize +20</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// MongoDB
+db.farm.updateOne(
+ {crop:"Maize"},
+ {$inc:{stock:20}}
+)
+
+// SQL
+UPDATE farm SET stock=stock+20
+WHERE crop='Maize';
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 40 -->
+                <section>
+                    <h4>Practice <span class="highlight">Query 5</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Delete crops with yield < 1000</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// MongoDB
+db.farm.deleteMany(
+ {yieldKg:{$lt:1000}}
+)
+
+// SQL
+DELETE FROM farm
+WHERE yield_kg<1000;
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 41 -->
+                <section>
+                    <h4>Practice <span class="highlight">Query 6</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Crops priced 10–20</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// MongoDB
+db.farm.find({price:
+ {$gte:10,$lte:20}})
+
+// SQL
+SELECT * FROM farm
+WHERE price BETWEEN 10 AND 20;
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 42 -->
+                <section>
+                    <h4>Practice <span class="highlight">Query 7</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>List crops by yield desc</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// MongoDB
+db.farm.find().sort({yieldKg:-1})
+
+// SQL
+SELECT * FROM farm
+ORDER BY yield_kg DESC;
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 43 -->
+                <section>
+                    <h4>Practice <span class="highlight">Query 8</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Add soilType to all docs</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// MongoDB
+db.farm.updateMany(
+ {},{$set:{soilType:"unset"}}
+)
+
+// SQL
+UPDATE farm SET soil_type='unset';
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 44 -->
+                <section>
+                    <h4>Practice <span class="highlight">Query 9</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Farms not in Asia</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// MongoDB
+db.farm.find({region:
+ {$ne:"Asia"}})
+
+// SQL
+SELECT * FROM farm
+WHERE region<>'Asia';
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- CONCEPTUAL -->
+                <!-- Slide 45 -->
+                <section>
+                    <h4>Conceptual <span class="highlight">Q1</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <p>In distributed <u>farm databases</u>, which <b>data quality metric</b>is the hardest to
+                                guarantee?</p>
+                        </div>
+                        <div class="right">
+                            <ul>
+                                <li>Accuracy</li>
+                                <li>Consistency</li>
+                                <li>Completeness</li>
+                                <li>Timeliness</li>
+                                <li>Uniqueness</li>
+                                <li>Validity</li>
+                                <li>Integrity</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- Slide 46 -->
+                <section>
+                    <h4>Conceptual <span class="highlight">Q2</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>How would you automate data quality checks daily?</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <div class="placeholder">Q</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 47 -->
+                <section>
+                    <h4>Conceptual <span class="highlight">Q3</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Why is timeliness more critical in IoT pipelines?</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <div class="placeholder">Q</div>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- READING -->
+                <!-- Slide 48 -->
+                <section>
+                    <h4>Reading <span class="highlight">Material</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><a target="_blank" href="https://academic.oup.com/erae/article/48/4/719/6316150">
+                                        Improving agricultural data systems</a></li>
+                                <li><a target="_blank" href="https://www.fao.org/statistics">
+                                        FAO Statistics Portal</a></li>
+                                <li><a target="_blank"
+                                        href="https://www.w3schools.com/mongodb/mongodb_query_operators.php">
+                                        MongoDB Query Operators</a></li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <div class="placeholder">reading</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- WRAP-UP -->
+                <!-- Slide 49 -->
+                <section id="sept-11">
+                    <h4>Today <span class="highlight">Wrap Up</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Data Quality Motivation ✓</li>
+                                <li>Seven Metrics ✓</li>
+                                <li>MongoDB History ✓</li>
+                                <li>CRUD & Operators ✓</li>
+                                <li>Practice Queries ✓</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <div class="placeholder">wrapup</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 50 -->
+                <section>
+                    <h4>Thanks <span class="highlight">Q&amp;A</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <p class="muted">Questions on Data Quality or MongoDB?</p>
+                        </div>
+                        <div class="right">
+                            <div class="placeholder">end</div>
+                        </div>
+                    </div>
+                </section>
+
 
                 <!--
                 <section>
@@ -4708,1205 +6074,6 @@ console.assert(result.soilMoisture >= 0 && result.soilMoisture <= 100,
                 <section>
                     <h4>Reminder</h4>
                     <p>Please review the syllabus, homework, lab, and reading list</p>
-                </section>
-
-                <section>
-                    <h4>Data Quality and Standards</h4>
-                </section>
-
-                <section>
-                    <h4>Today</h4>
-                    <ul>
-                        <li>Why Data Quality?</li>
-                        <li>Definition of Data Quality</li>
-                        <li>Implementation of Data Quality</li>
-                        <li>Introduction MongoDB</li>
-                        <li>Project Part 1, Homework 2, Lab 2</li>
-                    </ul>
-                </section>
-
-                <section style="position: relative; width: 100%; height: 100%;">
-                    <img src="https://bernardmarr.com/wp-content/uploads/2021/07/How-Tesla-Is-Using-Artificial-Intelligence-to-Create-The-Autonomous-Cars-Of-The-Future.jpg"
-                        alt="Autonomous Cars - Tesla's AI"
-                        style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;">
-                </section>
-
-                <section data-background-color="white">
-                    <img src="https://www.researchgate.net/publication/329353549/figure/fig1/AS:961825814376458@1606328552167/Communication-network-in-a-telecare-medicine-information-system.png"
-                        alt="Interconnected E-Clinical Systems Network and Data Workflow">
-                </section>
-
-                <section>
-                    <h4>Definition of Data Quality</h4>
-                    <ul style="font-size: 18pt;">
-                        <li><strong>Integrity:</strong> Data maintains accuracy and consistency</li>
-                        <li><strong>Validity:</strong> Data adheres to established formats and rules</li>
-                        <li><strong>Consistency:</strong> Data is consistent across datasets</li>
-                        <li><strong>Accuracy:</strong> Data correctly reflects real-world conditions</li>
-                        <li><strong>Completeness:</strong> All necessary data is included; essential for analysis</li>
-                        <li><strong>Timeliness:</strong> Data is available when needed; current conditions</li>
-                        <li><strong>Uniqueness:</strong> No unnecessary duplicates; each entry is distinct</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h4>Definition of Data Quality</h4>
-                    <ul style="font-size: 18pt;">
-                        <li><strong>Healthcare:</strong> Compliance with <em>HIPAA</em> for data privacy, accuracy in
-                            patient records</li>
-                        <li><strong>Automotive:</strong> Compliance with <em>ISO/TS 16949</em> for quality and safety
-                            standards</li>
-                        <li><strong>Manufacturing:</strong> Conformity with <em>ISO 9001</em> for quality management
-                            systems</li>
-                        <li><strong>Retail:</strong> Compliance with <em>PCI DSS</em> for payment data security,
-                            accuracy in inventory data</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h4>Implementing Data Integrity</h4>
-                </section>
-
-                <section>
-                    <h4>Data Tampering</h4>
-                    Data tampering involves unauthorized alterations or manipulations of data, potentially compromising
-                    its integrity during transmission or storage.
-                </section>
-
-                <section>
-                    <table style="width: 100%; ">
-                        <tr>
-                            <th style="border: 1px solid black; padding: 8px; width: 50%;">Original JSON</th>
-                            <th style="border: 1px solid black; padding: 8px; width: 50%;">Tampered JSON</th>
-                        </tr>
-                        <tr>
-                            <td style="border: 1px solid black; padding: 8px;">
-                                <pre>
-                                    <code>{
-    "uuid": "123e4567-e89b-...", 
-    "data": {
-        "name": "John Doe", 
-        "age": 30
-    }
-}</code>
-                                </pre>
-                            </td>
-                            <td style="border: 1px solid black; padding: 8px;">
-                                <pre><code>{
-    "uuid": "123e4567-e89b-...", 
-    "data": {
-        "name": "Jane Doe", 
-        "age": 30
-    }
-}</code></pre>
-                            </td>
-                        </tr>
-                    </table>
-                </section>
-
-                <section data-background-color="white">
-                    <h4>Verification Data Integrity</h4>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ce/Checksum.svg/495px-Checksum.svg.png"
-                        alt="Verify Data Integrity" style="width: 50%;">
-                </section>
-
-                <section>
-                    <pre><code style="font-size: 13pt;">{
-    "patientRecord": {
-    "uuid": "123e4567-e89b-12d3-a456-426614174000",
-    "clinicalRecord": {
-        "patientName": "John Doe",
-        "diagnosisCode": "E11.9",
-        },
-        "metadata": {
-            "patientRecordChecksum": "79e1ed3dc3250d3a9cc80f9ab...",
-            "author": "Dr. Jane Smith",
-        }
-    }
-}</code></pre>
-                </section>
-
-                <section>
-                    <pre><code style="font-size: 13pt;">async function createChecksum(data) {
-    const dataAsBytes = new TextEncoder().encode(data);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', dataAsBytes);
-    const hashHex = Array.from(new Uint8Array(hashBuffer))
-                        .map(byte => byte.toString(16).padStart(2, '0'))
-                        .join('');
-    return hashHex;
-}
-
-// Example usage:
-createChecksum('patientRecord').then(checksum => console.log('Checksum:', checksum));</code></pre>
-                </section>
-
-                <section>
-                    <pre><code style="font-size: 13pt;">import hashlib
-def create_checksum(data):
-    # Convert data to bytes
-    data_as_bytes = data.encode('utf-8')
-    # Create SHA-256 hash
-    hash_object = hashlib.sha256(data_as_bytes)
-    # Convert hash to hexadecimal format
-    hash_hex = hash_object.hexdigest()
-    return hash_hex
-
-# Example usage
-checksum = create_checksum('patientRecord')
-print('Checksum:', checksum)
-                </code></pre>
-                </section>
-
-                <section data-background-color="white">
-                    <img src="https://www.researchgate.net/publication/329353549/figure/fig1/AS:961825814376458@1606328552167/Communication-network-in-a-telecare-medicine-information-system.png"
-                        alt="Interconnected E-Clinical Systems Network and Data Workflow">
-                </section>
-
-                <section>
-                    <h4>What if data is lost in transit?</h4>
-                    HTTPS, Bluetooth, Wi-Fi (802.11), Ethernet (IEEE 802.3), Cellular Networks (3G, 4G, 5G), Satellite
-                    Communication
-                </section>
-
-                <section>
-                    <section data-background-color="white">
-                        <h4>Early Build Data Quality Visibility</h4>
-                        <img src="https://www.scnsoft.com/blog-pictures/business-intelligence/data-quality-management-dashboard_1.png"
-                            alt="Early build visibility" style="width: 60%;">
-                    </section>
-                </section>
-
-                <section>
-                    <h4>Definition of Data Quality</h4>
-                    <ul style="font-size: 18pt;">
-                        <li><strong>Integrity:</strong> Data maintains accuracy and consistency &check;</li>
-                        <li><strong>Validity:</strong> Data adheres to established formats and rules</li>
-                        <li><strong>Consistency:</strong> Data is consistent across datasets</li>
-                        <li><strong>Accuracy:</strong> Data correctly reflects real-world conditions</li>
-                        <li><strong>Completeness:</strong> All necessary data is included; essential for analysis</li>
-                        <li><strong>Timeliness:</strong> Data is available when needed; current conditions</li>
-                        <li><strong>Uniqueness:</strong> No unnecessary duplicates; each entry is distinct</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h4>Verify Valid Format, Range, Type, and Value</h4>
-                    <pre><code style="font-size: 12pt;">{
-    "patientRecord": {
-            "uuid": "123e4567-e89b-12d3...",            // Format: UUID
-            "clinicalRecord": {
-            "patientName": "John Doe",                  // Type: String, Value: Non-empty
-            "diagnosisCode": "E11.9"                    // Format: ICD-10 Code, Value: Valid code
-        },
-        "metadata": {
-            "createdTimestamp": "2024-09-08T12:34:56Z",  // Format: ISO 8601, Value: Valid timestamp
-            "patientRecordChecksum": "79e1ed3dc3250...", // Type: String (SHA-256), Value: Correct hash
-            "author": "Dr. Jane Smith"                   // Type: String, Value: Valid name
-        }
-    }
-}
-</code></pre>
-                </section>
-
-                <section>
-                    <h4>SQL Database</h4>
-                    What mechanism does SQL offer to achieve data integrity?
-                </section>
-
-                <section>
-                    <h4>Format and Type Validation</h4>
-                    <ul style="font-size: 18pt;">
-                        <li><strong>Format Validation:</strong>
-                            <ul>
-                                <li>UUID: Use regular expressions to ensure it follows the UUID format</li>
-                                <li>Timestamp: Use regular expressions to verify ISO 8601 format</li>
-                            </ul>
-                        </li>
-                        <li><strong>Type Validation:</strong>
-                            <ul>
-                                <li>Name: Ensure it's a string and non-empty</li>
-                                <li>Diagnosis Code: Verify that it's a valid code</li>
-                                <li>Author: Check that it's a string and non-empty</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h4>Range and Value Validation</h4>
-                    <ul style="font-size: 18pt;">
-                        <li><strong>Range Validation:</strong>
-                            <ul>
-                                <li>Temperature: Verify the value falls within a realistic range, e.g., -50°C to 50°C.
-                                </li>
-                                <li>Date: Check that the date is within a valid range, e.g., not in the future</li>
-                            </ul>
-                        </li>
-                        <li><strong>Value Validation:</strong>
-                            <ul>
-                                <li>Diagnosis Code: Ensure it is a valid and recognized code (e.g., ICD-10)</li>
-                                <li>Status: Check if the status is one of the allowed values (e.g., "active",
-                                    "inactive")</li>
-                                <li>Quantity: Verify that the value is a positive number and meets expected criteria
-                                    (e.g., greater than 0)</li>
-                            </ul>
-                        </li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h4>Definition of Data Quality</h4>
-                    <ul style="font-size: 18pt;">
-                        <li><strong>Integrity:</strong> Data maintains accuracy and consistency &check;</li>
-                        <li><strong>Validity:</strong> Data adheres to established formats and rules &check;</li>
-                        <li><strong>Consistency:</strong> Data is consistent across datasets</li>
-                        <li><strong>Accuracy:</strong> Data correctly reflects real-world conditions</li>
-                        <li><strong>Completeness:</strong> All necessary data is included; essential for analysis</li>
-                        <li><strong>Timeliness:</strong> Data is available when needed; current conditions</li>
-                        <li><strong>Uniqueness:</strong> No unnecessary duplicates; each entry is distinct</li>
-                    </ul>
-                </section>
-
-                <section data-background-color="white">
-                    <h4>Often, 5% of live data is used for development and testing purposes. What do you recommend?</h4>
-                    <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*IaXLk5xc2EXTII49J70bjQ.png"
-                        alt="5% of live data used for development and testing" style="width: 80%; height: auto;">
-                </section>
-
-                <section data-background-color="white">
-                    <h4>When would You recommend to hire a data quality engineer?</h4>
-                    <img src="https://www.zirous.com/wp-content/uploads/2019/01/Hierarchy-of-Needs-Pyramid-01.png"
-                        alt="When Would You Hire a Data Quality Engineer?" style="width: 100%; height: auto;">
-                </section>
-
-                <section
-                    style="font-family: 'Times New Roman', Times, serif; background-color: #f4f4f4; padding: 20px; border: 1px solid #ccc; max-width: 800px; margin: 0 auto;">
-                    <h3
-                        style="text-align: center; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid #ccc; padding-bottom: 10px; color: #333; font-size: 20px;">
-                        Case Study: Bike Store Data Quality
-                    </h3>
-                    <h4 style="margin-top: 20px; font-weight: bold; color: #444; font-size: 18px;">Data Quality
-                        Requirements Overview</h4>
-                    <ul style="line-height: 1.8; color: #555; font-size: 16px;">
-                        <li><strong>Accuracy:</strong> Ensure product descriptions, pricing, and inventory levels are
-                            correct to prevent sales issues and customer dissatisfaction</li>
-                        <li><strong>Completeness:</strong> All product listings should have complete information
-                            including specifications, availability, and compatible accessories</li>
-                        <li><strong>Consistency:</strong> Data should be consistent across all platforms (online store,
-                            in-shop digital systems, mobile apps) to prevent confusion and errors</li>
-                        <li><strong>Timeliness:</strong> Stock updates and promotional information should be updated in
-                            real-time to reflect current availability and offers</li>
-                        <li><strong>Reliability:</strong> Order history and customer data must be reliable for effective
-                            CRM and marketing strategies</li>
-                    </ul>
-                    <p style="margin-top: 30px; text-indent: 40px; font-size: 16px; color: #333;">
-                        What strategies and technologies would you recommend to meet these data quality requirements?
-                    </p>
-                </section>
-
-                <section>
-                    <h4>Reading Material</h4>
-                    <ul style="font-size: 18pt;">
-                        <li><a href="https://www.amazon.com/Practical-Data-Quality-real-world-organization/dp/180461078X"
-                                target="_blank">Practical Data Quality</a> - $15 on Amazon Kindle</li>
-                        <li><a href="https://academic.oup.com/erae/article/48/4/719/6316150" target="_blank">Better
-                                data, higher impact: improving agricultural data systems for societal change (free
-                                access)</a></li>
-                        <li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10646672/" target="_blank">Data
-                                Quality in Health Research: Integrative Literature Review (free access)</a></li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h4>Today</h4>
-                    <ul>
-                        <li>Why Data Quality? &check;</li>
-                        <li>Definition of Data Quality &check;</li>
-                        <li>Implementation of Data Quality &check;</li>
-                        <li>Introduction MongoDB</li>
-                        <li>Project Part 1, Homework 2, Lab 2</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h4>Introduction MongoDB</h4>
-                </section>
-
-                <section data-background-color="white">
-                    <img src="https://static.seekingalpha.com/uploads/2020/6/11/48404648-1591874366497563_origin.png"
-                        alt="MongoDB Stock Performance Chart" style="width: 65%;">
-                    <p style="font-size: 18pt;">Reference (2020): <a target="_blank"
-                            href="https://seekingalpha.com/article/4353507-mongodb-consistent-enterprise-market-share-gains">MongoDB:
-                            Consistent Enterprise Market Share Gains</a></p>
-                </section>
-
-                <section>
-                    <ul>
-                        <li><strong>2007:</strong> MongoDB development begins at 10gen</li>
-                        <li><strong>2009:</strong> Released as open-source document database</li>
-                        <li><strong>2010:</strong> Commercial support options introduced</li>
-                        <li><strong>2013:</strong> 10gen rebrands to MongoDB, Inc</li>
-                        <li><strong>2014:</strong> WiredTiger storage engine introduced</li>
-                        <li><strong>2016:</strong> Launch of MongoDB Atlas cloud service</li>
-                        <li><strong>2017:</strong> MongoDB goes public on NASDAQ</li>
-                        <li><strong>2019:</strong> Release of MongoDB 4.2 with advanced features</li>
-                        <li><strong>2021:</strong> Introduction of MongoDB 5.0, expanding use cases</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <ul>
-                        <li><strong>Document-Oriented:</strong> JSON-like document storage</li>
-                        <li><strong>Dynamic Schemas:</strong> No predefined schema required</li>
-                        <li><strong>Scalability:</strong> Easy scaling through sharding</li>
-                        <li><strong>Replication:</strong> Automatic replication for high availability</li>
-                        <li><strong>Indexing:</strong> Comprehensive indexing options</li>
-                        <li><strong>Aggregation Framework:</strong> In-database data processing</li>
-                        <li><strong>Ad Hoc Queries:</strong> Supports rich query operations</li>
-                        <li><strong>Storage Engines:</strong> Multiple options like WiredTiger</li>
-                        <li><strong>ACID Transactions:</strong> Multi-document transaction support</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h4>Database Terminology</h4>
-                    <table style="width:100%; text-align:center; border-collapse: collapse;">
-                        <tr>
-                            <th style="border: 1px solid black; padding: 8px;">Concept</th>
-                            <th style="border: 1px solid black; padding: 8px;">MongoDB</th>
-                            <th style="border: 1px solid black; padding: 8px;">IndexedDB</th>
-                            <th style="border: 1px solid black; padding: 8px;">SQL</th>
-                        </tr>
-                        <tr>
-                            <td style="border: 1px solid black; padding: 8px;">Table/Collection</td>
-                            <td style="border: 1px solid black; padding: 8px;">Collection</td>
-                            <td style="border: 1px solid black; padding: 8px;">Object Store</td>
-                            <td style="border: 1px solid black; padding: 8px;">Table</td>
-                        </tr>
-                        <tr>
-                            <td style="border: 1px solid black; padding: 8px;">Row/Record</td>
-                            <td style="border: 1px solid black; padding: 8px;">Document</td>
-                            <td style="border: 1px solid black; padding: 8px;">Record</td>
-                            <td style="border: 1px solid black; padding: 8px;">Row</td>
-                        </tr>
-                        <tr>
-                            <td style="border: 1px solid black; padding: 8px;">Column/Field</td>
-                            <td style="border: 1px solid black; padding: 8px;">Field</td>
-                            <td style="border: 1px solid black; padding: 8px;">Key/Value</td>
-                            <td style="border: 1px solid black; padding: 8px;">Column</td>
-                        </tr>
-                        <tr>
-                            <td style="border: 1px solid black; padding: 8px;">Query/Search</td>
-                            <td style="border: 1px solid black; padding: 8px;">Query</td>
-                            <td style="border: 1px solid black; padding: 8px;">Transaction/Request</td>
-                            <td style="border: 1px solid black; padding: 8px;">Query</td>
-                        </tr>
-                    </table>
-                </section>
-
-                <section>
-                    <h4>Create Collection in MongoDB</h4>
-                    <p>To create a collection named <code>todos</code>:</p>
-                    <pre><code>db.createCollection("todos")</code></pre>
-                </section>
-
-                <section>
-                    <h4>Create Operation in MongoDB</h4>
-                    <p>Insert a new document into the <code>todos</code> collection:</p>
-                    <pre><code>db.todos.insert({ task: "Learn MongoDB", status: "In Progress" })</code></pre>
-                </section>
-
-                <section>
-                    <h4>Read Operation in MongoDB</h4>
-                    <p>Find documents with status "In Progress" in the <code>todos</code> collection:</p>
-                    <pre><code>db.todos.find({ status: "In Progress" })</code></pre>
-                </section>
-
-                <section>
-                    <h4>Update Operation in MongoDB</h4>
-                    <p>Update a document in the <code>todos</code> collection:</p>
-                    <pre><code>db.todos.update({ task: "Learn MongoDB" }, { $set: { status: "Completed" } })</code></pre>
-                </section>
-
-                <section>
-                    <h4>Delete Operation in MongoDB</h4>
-                    <p>Remove a document from the <code>todos</code> collection:</p>
-                    <pre><code>db.todos.remove({ task: "Learn MongoDB" })</code></pre>
-                </section>
-
-                <section
-                    style="font-family: 'Times New Roman', Times, serif; background-color: #f4f4f4; padding: 20px; border: 1px solid #ccc; max-width: 800px; margin: 0 auto;">
-                    <h3
-                        style="text-align: center; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid #ccc; padding-bottom: 10px; color: #333; font-size: 20px;">
-                        Case Study: Travel Agency Database
-                    </h3>
-                    <h4 style="margin-top: 20px; font-weight: bold; color: #444; font-size: 18px;">Requirements Overview
-                    </h4>
-                    <ul style="line-height: 1.8; color: #555; font-size: 16px;">
-                        <li><strong>Booking Data:</strong> High transaction rates with reservations, cancellations, and
-                            updates</li>
-                        <li><strong>Customer Profiles:</strong> Rich customer data including preferences, booking
-                            history, and loyalty program information</li>
-                        <li><strong>Travel Inventory:</strong> Diverse data from multiple sources, including flights,
-                            hotels, and tours, requiring flexible schema and fast querying</li>
-                        <li><strong>Multi-User Access:</strong> Access control to manage different levels of user
-                            permissions for staff and management</li>
-                    </ul>
-                    <p style="margin-top: 30px; text-indent: 40px; font-size: 16px; color: #333;">
-                        Which type of database (SQL, IndexedDB, or MongoDB) would you recommend for each requirement,
-                        and why?
-                    </p>
-                </section>
-
-                <section>
-                    <h4>Please Install MongoDB</h4>
-                    <p><a href="https://www.mongodb.com/try/download/community" target="_blank">MongoDB Community
-                            Edition Download</a></p>
-                </section>
-
-                <section>
-                    <h4>Today</h4>
-                    <ul>
-                        <li>Why Data Quality? &check;</li>
-                        <li>Definition of Data Quality &check;</li>
-                        <li>Implementation of Data Quality &check;</li>
-                        <li>Introduction MongoDB &check;</li>
-                        <li>Project Part 1, Homework 2, Lab 2</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h4>Project Part 1: Motivation</h4>
-                    <p>Simulate working with large data sets to explore performance optimization in NoSQL databases.
-                        Techniques include read-only flags, indexing, and dedicated object stores</p>
-                    <p>Using a "Todo List" domain, this project improves data query performance and teamwork skills.
-                        Alternate domains may be used, provided they maintain the same 'todo' object structure</p>
-                </section>
-
-                <section>
-                    <h4>Project Part 1: Implementation</h4>
-                    <ol style="font-size: 18pt;">
-                        <li>Create "TodoList" IndexedDB store with 100,000 objects; display on the browser</li>
-                        <li>Assign 'completed' status to 1,000 objects, others to 'in progress'</li>
-                        <li>Time and display the reading of all 'completed' status objects</li>
-                        <li>Apply a read-only flag, remeasure read time for 'completed' tasks</li>
-                        <li>Index the 'status' field, time read operations for 'completed' tasks</li>
-                        <li>Establish "TodoListCompleted" store, move all completed tasks, and time reads</li>
-                    </ol>
-                    <p>Documentation at <a
-                            href="https://developer.mozilla.org/en-US/docs/Web/API/IDBDatabase/createObjectStore">MDN
-                            Web Docs</a></p>
-                </section>
-
-                <section>
-                    <h4>Project Part 1: Delivery</h4>
-                    <ul>
-                        <li>List team members with IDs</li>
-                        <li>Provide screenshots for tasks 1 to 6</li>
-                        <li>Share lessons and insights from the project</li>
-                        <li>Include screenshot of GitHub branch submission (e.g., project_1_team_1)</li>
-                    </ul>
-                    <p>Upload one PDF with all project details (e.g., project_1_team_1.pdf)</p>
-                </section>
-
-                <section>
-                    <h3
-                        style="text-align: center; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid #ccc; padding-bottom: 10px; font-size: 20px;">
-                        Project Publishing Opportunity
-                    </h3>
-                    <p>
-                        International Conference on Emerging Data and Industry (EDI40)
-                    </p>
-                    <p style="text-align: center; font-size: 16px; margin-top: 10px;">
-                        <a href="https://cs-conferences.acadiau.ca/edi40-25/" style="text-decoration: underline;"
-                            target="_blank">Conference Details</a>
-                    </p>
-                </section>
-
-                <section>
-                    <h4>Lab 2</h4>
-                    <ul>
-                        <li>Data Modeling</li>
-                        <li>Data Transformation</li>
-                        <li>Data Integrity Verification</li>
-                        <li>Data Validity Verification</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h4>Homework 2</h4>
-                    <ul>
-                        <li>IndexedDB Performance</li>
-                        <li>IndexedDB Aggregation</li>
-                        <li>IndexedDB ACID</li>
-                        <li>Weather Data Requirements</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h4>Today</h4>
-                    <ul>
-                        <li>Why Data Quality? &check;</li>
-                        <li>Definition of Data Quality &check;</li>
-                        <li>Implementation of Data Quality &check;</li>
-                        <li>Introduction MongoDB &check;</li>
-                        <li>Project Part 1, Homework 2, Lab 2 &check;</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h4>Today</h4>
-                    <ol>
-                        <li>Syllabus Update</li>
-                        <li>Definition of Data Quality</li>
-                        <li>Implementation of Data Quality</li>
-                    </ol>
-                </section>
-
-                <section>
-                    <h4>Syllabus Update</h4>
-                    <p>TA Chentankumar Patil (<a href="mailto:c_patil@u.pacific.edu">c_patil@u.pacific.edu</a>)</p>
-                    <p>TA Suhasi Miteshkumar Daftary (<a
-                            href="mailto:s_daftary@u.pacific.edu">s_daftary@u.pacific.edu</a>)</p>
-                </section>
-
-                <section>
-                    <h4>Definition of Data Quality</h4>
-                    <ul style="font-size: 18pt;">
-                        <li><strong>Integrity:</strong> Data maintains accuracy and consistency &check;</li>
-                        <li><strong>Validity:</strong> Data adheres to established formats and rules &check;</li>
-                        <li><strong>Consistency:</strong> Data is consistent across datasets</li>
-                        <li><strong>Accuracy:</strong> Data correctly reflects real-world conditions</li>
-                        <li><strong>Completeness:</strong> All necessary data is included; essential for analysis</li>
-                        <li><strong>Timeliness:</strong> Data is available when needed; current conditions</li>
-                        <li><strong>Uniqueness:</strong> No unnecessary duplicates; each entry is distinct</li>
-                    </ul>
-                </section>
-
-                <section data-background-color="white">
-                    <img src="https://www.researchgate.net/publication/329353549/figure/fig1/AS:961825814376458@1606328552167/Communication-network-in-a-telecare-medicine-information-system.png"
-                        alt="Interconnected E-Clinical Systems Network and Data Workflow">
-                </section>
-
-                <section>
-                    <h4>Data Quality and Consistency</h4>
-                    Data is uniform across the database(s), collection(s), and document(s)
-                </section>
-
-                <section>
-                    <h4>How to Maintain Data Consistency?</h4>
-                    <p class="fragment" data-fragment-index="1"><strong>One database, collection, document, field per
-                            value</strong></p>
-                </section>
-
-                <section>
-                    <h4>realistic for distributed databases?</h4>
-                    <p class="fragment" data-fragment-index="1"><strong>CAP Theorem &#129300;</strong></p>
-                </section>
-
-                <section>
-                    <h4>Data Quality and Accuracy</h4>
-                    Data correctly reflects real-world values
-                </section>
-
-                <section>
-                    <h4>How to Maintain Data Accuracy?</h4>
-                    <p class="fragment" data-fragment-index="1"><strong>Validate data at entry</strong></p>
-                    <p class="fragment" data-fragment-index="2"><strong>Regular audits</strong></p>
-                    <p class="fragment" data-fragment-index="3"><strong>Monitor dashboard</strong></p>
-                    <p class="fragment" data-fragment-index="4"><strong>Automation</strong></p>
-                </section>
-
-                <section>
-                    <h4>Data Quality and Completeness</h4>
-                    <p>Data is comprehensive and includes all information</p>
-                </section>
-                <section>
-                    <h4>How to Maintain Data Completeness?</h4>
-                    <p class="fragment" data-fragment-index="1"><strong>Mandatory fields are filled</strong></p>
-                    <p class="fragment" data-fragment-index="2"><strong>Regular audits</strong></p>
-                    <p class="fragment" data-fragment-index="3"><strong>Monitor dashboards</strong></p>
-                    <p class="fragment" data-fragment-index="4"><strong>Automation</strong></p>
-                </section>
-
-                <section>
-                    <h4>Data Quality and Timeliness</h4>
-                    <p>Data is up-to-date and available when needed</p>
-                    <p class="fragment" data-fragment-index="1"><strong>CAP Theorem &#129300;</strong></p>
-                </section>
-
-                <section>
-                    <h4>How to Maintain Data Timeliness?</h4>
-                    <p class="fragment" data-fragment-index="1"><strong>Distribute data</strong></p>
-                    <p class="fragment" data-fragment-index="2"><strong>Real-time updates</strong></p>
-                    <p class="fragment" data-fragment-index="3"><strong>Set data refresh schedules</strong></p>
-                    <p class="fragment" data-fragment-index="4"><strong>Monitor for delays</strong></p>
-                    <p class="fragment" data-fragment-index="5"><strong>Automate data pipelines</strong></p>
-                </section>
-
-                <section>
-                    <h4>Data Quality and Uniqueness</h4>
-                    <p>Each record is distinct, with no duplicates</p>
-                </section>
-                <section>
-                    <h4>How to Maintain Data Uniqueness?</h4>
-                    <p class="fragment" data-fragment-index="1"><strong>Unique constraints</strong></p>
-                    <p class="fragment" data-fragment-index="2"><strong>Monitor for duplicates</strong></p>
-                    <p class="fragment" data-fragment-index="3"><strong>Automate data checks</strong></p>
-                </section>
-
-                <section>
-                    <h4>Definition of Data Quality</h4>
-                    <ul style="font-size: 18pt;">
-                        <li><strong>Integrity:</strong> Data maintains accuracy and consistency &check;</li>
-                        <li><strong>Validity:</strong> Data adheres to established formats and rules &check;</li>
-                        <li><strong>Consistency:</strong> Data is consistent across datasets &check;</li>
-                        <li><strong>Accuracy:</strong> Data correctly reflects real-world conditions &check;</li>
-                        <li><strong>Completeness:</strong> All necessary data is included; essential for analysis
-                            &check;</li>
-                        <li><strong>Timeliness:</strong> Data is available when needed; current conditions &check;</li>
-                        <li><strong>Uniqueness:</strong> No unnecessary duplicates; each entry is distinct &check;</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h4>Today</h4>
-                    <ol>
-                        <li>Syllabus Update &check;</li>
-                        <li>Definition of Data Quality &check;</li>
-                        <li>Implementation of Data Quality</li>
-                    </ol>
-                </section>
-
-                <section>
-                    <h4>Please start the computer / browser</h4>
-                </section>
-
-                <section
-                    data-background-image="https://t3.ftcdn.net/jpg/08/41/44/38/360_F_841443893_p8GvrNId9DJvJnzshjN3JfulvNTvr0tN.jpg"
-                    data-background-size="cover" data-background-position="center" style="color: white; padding: 20px;">
-                    <div
-                        style="background-color: rgba(0, 0, 0, 0.8); padding: 20px; border-radius: 8px; width: fit-content; margin: auto;">
-                        <h4>Flower Store</h4>
-                        <ul>
-                            <li><strong>Name:</strong> The flower's common name</li>
-                            <li><strong>Color:</strong> The primary color of the flower</li>
-                            <li><strong>Price:</strong> The selling price per stem or bunch</li>
-                            <li><strong>Description:</strong> Optional details about the flower</li>
-                        </ul>
-                        <br>
-                        <a href="https://jsoncrack.com/editor" target="_blank"><strong>Please recommend a data
-                                model</strong></a>
-                    </div>
-                </section>
-
-                <section style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                    <iframe src="https://docs.google.com/document/d/1QvGbBsMuztZL3IKExnpe3xFaDeMTWAqI-kofT1y_sBE/edit"
-                        style="border: none; width: 100%; height: 100%;"></iframe>
-                </section>
-
-                <section>
-                    <h4>Please start MongoDB</h4>
-                </section>
-
-                <section>
-                    <img src="https://www.pragimtech.com/blog/contribute/article_images/2220211210231003/mongodb-collection-vs-document.jpg"
-                        alt="MongoDB Collection vs Document" style="width: 100%; height: auto;" />
-                </section>
-
-                <section>
-                    <h3>Create Database</h3>
-                    <pre><code>use flowerDatabase</code></pre>
-                </section>
-
-                <section>
-                    <h3>Create Collection</h3>
-                    <pre><code>db.createCollection("flowerCollection")</code></pre>
-                </section>
-
-                <section>
-                    <h4>CRUD Operators</h4>
-                    <table style="font-size: 12pt;">
-                        <thead>
-                            <tr>
-                                <th>Operation</th>
-                                <th>Command</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Create</td>
-                                <td><code>db.collection.insertOne(document)</code></td>
-                                <td>Inserts a single document into the collection</td>
-                            </tr>
-                            <tr>
-                                <td>Create</td>
-                                <td><code>db.collection.insertMany([document1, document2, ...])</code></td>
-                                <td>Inserts multiple documents into the collection</td>
-                            </tr>
-                            <tr>
-                                <td>Read</td>
-                                <td><code>db.collection.find(query)</code></td>
-                                <td>Finds documents that match the query</td>
-                            </tr>
-                            <tr>
-                                <td>Read</td>
-                                <td><code>db.collection.findOne(query)</code></td>
-                                <td>Finds a single document that matches the query</td>
-                            </tr>
-                            <tr>
-                                <td>Update</td>
-                                <td><code>db.collection.updateOne(filter, update)</code></td>
-                                <td>Updates a single document that matches the filter</td>
-                            </tr>
-                            <tr>
-                                <td>Update</td>
-                                <td><code>db.collection.updateMany(filter, update)</code></td>
-                                <td>Updates multiple documents that match the filter</td>
-                            </tr>
-                            <tr>
-                                <td>Delete</td>
-                                <td><code>db.collection.deleteOne(filter)</code></td>
-                                <td>Deletes a single document that matches the filter</td>
-                            </tr>
-                            <tr>
-                                <td>Delete</td>
-                                <td><code>db.collection.deleteMany(filter)</code></td>
-                                <td>Deletes multiple documents that match the filter</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
-
-                <section>
-                    <h3>Add one Flower</h3>
-                    <pre><code>
-                  db.flowerCollection.insertOne({
-                    name: "Orchid",
-                    color: "Purple",
-                    price: 4.0,
-                    stock: 25
-                  });
-                    </code></pre>
-                </section>
-
-                <section>
-                    <h3>Add many Flowers</h3>
-                    <pre><code>
-                  db.flowerCollection.insertMany([
-                    { name: "Rose", color: "Red", price: 2.5, stock: 50 },
-                    { name: "Tulip", color: "Yellow", price: 1.5, stock: 30 },
-                    { name: "Lily", color: "White", price: 3.0, stock: 20 },
-                    { name: "Daisy", color: "Pink", price: 1.2, stock: 40 }
-                  ]);
-                    </code></pre>
-                </section>
-
-                <section>
-                    <h3>Data Quality and Integrity</h3>
-                    <pre><code>
-    [
-        { name: "Daisy", color: "Pink", price: 1.2, stock: 40 }
-    ];
-                    </code></pre>
-                </section>
-
-                <section
-                    data-background-image="https://t3.ftcdn.net/jpg/08/41/44/38/360_F_841443893_p8GvrNId9DJvJnzshjN3JfulvNTvr0tN.jpg"
-                    data-background-size="cover" data-background-position="center" style="color: white; padding: 20px;">
-                    <div
-                        style="background-color: rgba(0, 0, 0, 0.8); padding: 20px; border-radius: 8px; width: fit-content; margin: auto;">
-                        <h4>Flower Store</h4>
-                        <ul>
-                            <li><strong>Name:</strong> The flower's common name</li>
-                            <li><strong>Color:</strong> The primary color of the flower</li>
-                            <li><strong>Price:</strong> The selling price per stem or bunch</li>
-                            <li><strong>Description:</strong> Optional details about the flower</li>
-                        </ul>
-                        <br>
-                        <div
-                            style="border: 2px solid red; background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; font-weight: bold;">
-                            ⚠️ Warning: Ensure Data Integrity When Translating Requirements to Data Model and Data!
-                        </div>
-                    </div>
-                </section>
-
-                <section>
-                    <h3>Set Default Value</h3>
-                    <pre><code>
-    db.flowersCollection.updateMany(
-    { $or: [ 
-        { description: { $exists: false } }, 
-        { description: { $eq: undefined } } 
-        ] 
-    },
-    { $set: { description: "unset" } }
-    );
-                    </code></pre>
-                </section>
-
-                <section>
-                    <pre><code>db.flowersCollection.find({});</code></pre>
-                </section>
-
-                <section>
-                    <h4>Comparison Operators</h4>
-                    <table style="font-size: 12pt;">
-                        <thead>
-                            <tr>
-                                <th>Operator</th>
-                                <th>Description</th>
-                                <th>Use Case</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><code>$gt</code></td>
-                                <td>Matches values greater than a specified value</td>
-                                <td>Find documents where a field's value is greater than a given value</td>
-                            </tr>
-                            <tr>
-                                <td><code>$lt</code></td>
-                                <td>Matches values less than a specified value</td>
-                                <td>Find documents where a field's value is less than a given value</td>
-                            </tr>
-                            <tr>
-                                <td><code>$in</code></td>
-                                <td>Matches any of the values in an array</td>
-                                <td>Find documents where a field contains any value from a list</td>
-                            </tr>
-                            <tr>
-                                <td><code>$ne</code></td>
-                                <td>Matches values not equal to a specified value</td>
-                                <td>Find documents where a field is not equal to a given value</td>
-                            </tr>
-                            <tr>
-                                <td><code>$exists</code></td>
-                                <td>Checks for the existence of a field</td>
-                                <td>Find documents where a field either exists or does not</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
-
-                <section style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                    <h5>How to <span style="text-decoration: underline;">find all flowers</span> that
-                        cost more than $20 in MongoDB?</h5>
-                    <iframe src="https://docs.google.com/document/d/1QvGbBsMuztZL3IKExnpe3xFaDeMTWAqI-kofT1y_sBE/edit"
-                        style="border: none; width: 100%; height: 100%;"></iframe>
-                </section>
-
-                <section>
-                    <pre><code>db.flowersCollection.find({ price: { $gt: 20 } });</code></pre>
-                </section>
-
-                <section style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                    <h5>How to <span style="text-decoration: underline;">find the first flower</span> that cost more
-                        than $20 in MongoDb?</h5>
-                    <iframe src="https://docs.google.com/document/d/1QvGbBsMuztZL3IKExnpe3xFaDeMTWAqI-kofT1y_sBE/edit"
-                        style="border: none; width: 100%; height: 100%;"></iframe>
-                </section>
-
-                <section>
-                    <h4>Logical Operators</h4>
-                    <table style="font-size: 12pt;">
-                        <thead>
-                            <tr>
-                                <th>Operator</th>
-                                <th>Description</th>
-                                <th>Use Case</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><code>$or</code></td>
-                                <td>At least one condition must be true</td>
-                                <td>Find documents where either condition1 or condition2 is true</td>
-                            </tr>
-                            <tr>
-                                <td><code>$and</code></td>
-                                <td>All conditions must be true</td>
-                                <td>Find documents where both condition1 and condition2 are true</td>
-                            </tr>
-                            <tr>
-                                <td><code>$not</code></td>
-                                <td>Inverts the effect of a query expression</td>
-                                <td>Find documents that do not match a specific condition</td>
-                            </tr>
-                            <tr>
-                                <td><code>$nor</code></td>
-                                <td>None of the conditions must be true</td>
-                                <td>Find documents where none of the specified conditions are true</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
-
-                <section style="display: flex; align-items: center; justify-content: center; height: 100%;">
-                    <h5>How to <span style="text-decoration: underline;">find the first flower</span> that cost more
-                        than $20 and has at least 5 available in MongoDb?</h5>
-                    <iframe src="https://docs.google.com/document/d/1QvGbBsMuztZL3IKExnpe3xFaDeMTWAqI-kofT1y_sBE/edit"
-                        style="border: none; width: 100%; height: 100%;"></iframe>
-                </section>
-
-                <section>
-                    <h4>Evaluation Operators</h4>
-                    <table style="font-size: 12pt;">
-                        <thead>
-                            <tr>
-                                <th>Operator</th>
-                                <th>Description</th>
-                                <th>Use Case</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><code>$regex</code></td>
-                                <td>Pattern matching using regular expressions</td>
-                                <td>Find documents where a field matches a regex pattern</td>
-                            </tr>
-                            <tr>
-                                <td><code>$size</code></td>
-                                <td>Matches arrays with the specified number of elements</td>
-                                <td>Find documents where an array field has a specific size</td>
-                            </tr>
-                            <tr>
-                                <td><code>$type</code></td>
-                                <td>Matches documents where a field is a specific type</td>
-                                <td>Find documents where a field is of a certain type (e.g., string, number)</td>
-                            </tr>
-                            <tr>
-                                <td><code>$expr</code></td>
-                                <td>Allows aggregation expressions within the query</td>
-                                <td>Find documents by evaluating complex expressions</td>
-                            </tr>
-                            <tr>
-                                <td><code>$mod</code></td>
-                                <td>Performs modulo operation on the value of a field</td>
-                                <td>Find documents where a field value, divided by a divisor, has a specific remainder.
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
-
-                <section>
-                    <h4>MongoDB Cursor Methods</h4>
-                    <table style="font-size: 12pt;">
-                        <thead>
-                            <tr>
-                                <th>Method</th>
-                                <th>Command</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Limit</td>
-                                <td><code>db.collection.find().limit(n)</code></td>
-                                <td>Limits the number of documents returned by the query to <code>n</code></td>
-                            </tr>
-                            <tr>
-                                <td>Sort</td>
-                                <td><code>db.collection.find().sort({ field: 1 })</code></td>
-                                <td>Sorts the documents by the specified <code>field</code>. Use <code>1</code> for
-                                    ascending and <code>-1</code> for descending order</td>
-                            </tr>
-                            <tr>
-                                <td>Skip</td>
-                                <td><code>db.collection.find().skip(n)</code></td>
-                                <td>Skips the first <code>n</code> documents of the query results</td>
-                            </tr>
-                            <tr>
-                                <td>Count</td>
-                                <td><code>db.collection.countDocuments(query)</code></td>
-                                <td>Returns the number of documents that match the query criteria</td>
-                            </tr>
-                            <tr>
-                                <td>Distinct</td>
-                                <td><code>db.collection.distinct(field)</code></td>
-                                <td>Returns an array of distinct values for the specified <code>field</code> in the
-                                    query results</td>
-                            </tr>
-                            <tr>
-                                <td>ForEach</td>
-                                <td><code>db.collection.find().forEach(callback)</code></td>
-                                <td>Iterates over each document in the cursor and executes the provided
-                                    <code>callback</code> function.
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Map</td>
-                                <td><code>db.collection.find().map(callback)</code></td>
-                                <td>Transforms the documents in the cursor using the provided <code>callback</code>
-                                    function and returns an array of the transformed documents</td>
-                            </tr>
-                            <tr>
-                                <td>Next</td>
-                                <td><code>db.collection.find().next()</code></td>
-                                <td>Returns the next document in the cursor</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </section>
-
-                <section>
-                    <ol style="font-size: 18pt;">
-                        <li>Find all flowers that have a price greater than $15</li>
-                        <li>Find all flowers that are either red or yellow</li>
-                        <li>Find flowers that are out of stock (stock = 0)</li>
-                        <li>Find the cheapest flower in the store</li>
-                        <li>Update the stock of all tulips by adding 10 units</li>
-                        <li>Delete all flowers that have a price less than $5</li>
-                        <li>Find all flowers that have a price between $10 and $20</li>
-                        <li>List all flowers sorted by price in descending order</li>
-                        <li>Add a "description" field to all flowers, setting it to "Beautiful flower."</li>
-                        <li>Find flowers that are not pink in color</li>
-                    </ol>
-                </section>
-
-                <section>
-                    <h4>Reading Material</h4>
-                    <ul style="font-size: 18pt;">
-                        <li><a href="https://www.amazon.com/Practical-Data-Quality-real-world-organization/dp/180461078X"
-                                target="_blank">Practical Data Quality</a> - $15 on Amazon Kindle</li>
-                        <li><a href="https://academic.oup.com/erae/article/48/4/719/6316150" target="_blank">Better
-                                data, higher impact: improving agricultural data systems for societal change (free
-                                access)</a></li>
-                        <li><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10646672/" target="_blank">Data
-                                Quality in Health Research: Integrative Literature Review (free access)</a></li>
-                        <li><a href="https://www.w3schools.com/mongodb/mongodb_query_operators.php"
-                                target="_blank">MongoDB Query Operators (W3Schools)</a></li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h4>Questions on Data Quality?</h4>
-                </section>
-
-                <section>
-                    <ol style="font-size: 20pt;">
-                        <li>How would you detect and remove duplicate entries in a dataset?</li>
-                        <li>What steps would you take to handle missing data in key fields?</li>
-                        <li>How would you implement validation checks for data accuracy at the point of entry?</li>
-                        <li>How can you ensure that data types are consistent across your dataset?</li>
-                        <li>What tools would you use to perform regular data audits for quality control?</li>
-                        <li>How would you handle outdated data in a system requiring real-time updates?</li>
-                        <li>How can you automate data cleaning to maintain quality over time?</li>
-                        <li>What method would you use to maintain referential integrity between related datasets?</li>
-                        <li>How would you assess the completeness of data for a reporting task?</li>
-                        <li>What techniques would you use to ensure data quality during migration between systems?</li>
-                    </ol>
-                </section>
-
-                <section>
-                    <h4>Data Ingestion and Processing</h4>
-                </section>
-
-                <section>
-                    <h4>This week</h4>
-                    <ul>
-                        <li>Practice NoSQL Queries</li>
-                        <li>Why Data?</li>
-                        <li>Ingestion (Extract)</li>
-                        <li>Processing (Transform)</li>
-                        <li>Loading (Load)</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h2 style="text-align: center;">IndexedDB: Query 1</h4>
-                        <p style="text-align: center;">How to open a connection to an IndexedDB database called
-                            "BookStore"?</p>
-                </section>
-
-                <section>
-                    <pre><code>
-    const request = indexedDB.open("BookStore", 1);
-    request.onerror = function(event) {
-        console.log("Error opening database");
-    };
-    request.onsuccess = function(event) {
-        const db = event.target.result;
-        console.log("Database opened successfully");
-    };
-                      </code></pre>
-                </section>
-
-                <section>
-                    <h2 style="text-align: center;">IndexedDB: Query 2</h4>
-                        <p style="font-size: 18pt; text-align: center;">How can you create an object store for "Books"
-                            with
-                            "bookId" as the key?</p>
-                </section>
-
-                <section>
-                    <pre><code>
-    request.onupgradeneeded = function(event) {
-        const db = event.target.result;
-        const objectStore = db.createObjectStore("Books", { keyPath: "bookId" });
-        console.log("Object store 'Books' created");
-    };
-                      </code></pre>
-                </section>
-
-                <section>
-                    <h2 style="text-align: center;">IndexedDB: Query 3</h4>
-                        <p style="font-size: 18pt; text-align: center;">How to add a new book to the "Books" object
-                            store?
-                        </p>
-                </section>
-
-                <section>
-                    <pre><code>
-    const transaction = db.transaction(["Books"], "readwrite");
-    const objectStore = transaction.objectStore("Books");
-    const request = objectStore.add({ bookId: 1, title: "...", author: "..." });
-    request.onsuccess = function(event) {
-        console.log("Book added successfully");
-    };
-                      </code></pre>
-                </section>
-
-                <section>
-                    <p style="text-align: center;">How do you create a database in MongoDB called "BookStore"?</p>
-                </section>
-
-                <section>
-                    <pre><code>
-    use BookStore;
-                      </code></pre>
-                </section>
-
-                <section>
-                    <h2 style="text-align: center;">MongoDB: Query 2</h4>
-                        <p style="font-size: 18pt; text-align: center;">How can you create a collection called "Books"
-                            in
-                            the "BookStore" database?</p>
-                </section>
-
-                <section>
-                    <pre><code>
-    db.createCollection("Books");
-                      </code></pre>
-                </section>
-
-                <section>
-                    <h2 style="text-align: center;">MongoDB: Query 3</h4>
-                        <p style="font-size: 18pt; text-align: center;">How do you insert a new book into the "Books"
-                            collection?</p>
-                </section>
-
-                <section>
-                    <pre><code>
-    db.Books.insertOne({
-        title: "New Book",
-        author: "Author X",
-        price: 19.99,
-        copiesSold: 500
-    });
-                      </code></pre>
                 </section>
 
                 <section>
@@ -10790,10 +10957,15 @@ RETURN f.name, COUNT(neighbor) AS neighbor_count
                 <span class="footer-link"><a href="https://pacific.instructure.com/courses/135840"
                         target="_blank">Canvas</a></span> |
                 <span class="footer-link"><a href="https://github.com/SE4CPS/2025-COMP-263" target="_blank">GitHub
-                        Repository</a></span> |
+                        Repository</a></span>
+                |
+                <span class="footer-link"><a href="https://jsoncrack.com/editor" target="_blank">JSON Editor</a></span>
+                |
                 <span class="footer-link"><a href="https://onecompiler.com/" target="_blank">One Compiler</a></span>
             </p>
         </div>
+
+
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
 
