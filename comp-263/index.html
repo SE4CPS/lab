@@ -29,6 +29,7 @@
 
         pre {
             /* background-color: #444 !important; */
+            box-shadow: none !important;
         }
 
         table {
@@ -308,7 +309,8 @@
                                 <td style="padding:6px; border:1px solid #666;"><a href="#/15"
                                         style="color:#ccc; text-decoration:none;">Unstructured and Evolving Data
                                         &#x1f517;</a></td>
-                                <td style="padding:6px; border:1px solid #666;"><a href="#IndexedDB">IndexedDB</a> </td>
+                                <td style="padding:6px; border:1px solid #666;"><a href="#/indexedDB">IndexedDB</a>
+                                </td>
                                 <td style="padding:6px; border:1px solid #666;">Lab 1, HW 1, Roster Verification</td>
                             </tr>
                             <tr style="color:#ccc;">
@@ -1006,7 +1008,92 @@ flowchart TB
                     </ol>
                 </section>
 
-                <section id="IndexedDB">
+                <section data-auto-animate style="font-size:14pt;" id="indexedDB">
+                    <div style="
+    display:flex;
+    justify-content:center;
+    gap:25px;
+    flex-wrap:wrap; /* Allow wrapping to multiple rows */
+    max-width:800px;
+    margin:auto;
+  ">
+
+                        <div style="
+      border:2px solid #4CAF50;
+      background:#C8E6C9;   /* lighter green */
+      color:#1B5E20;        /* dark green text for contrast */
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      font-weight:bold;
+      min-width:120px;
+    ">
+                            IndexedDB
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            Redis
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            MongoDB
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            CassandraDB
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            Faiss
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            ClickHouse
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            Neo4j
+                        </div>
+                    </div>
+                </section>
+
+                <section>
                     <h4>IndexedDB Timeline</h4>
                     <ul style="font-size:20pt;">
                         <li><strong>2010:</strong> W3C introduces IndexedDB as a <u>web standard</u> for client-side
@@ -3738,8 +3825,192 @@ date -u +"%Y-%m-%dT%H:%M:%SZ"
                 </section>
 
                 <section>
+                    <div class="center">
+                        <table
+                            style="width:100%; text-align:center; font-size:1.5em; border-collapse:collapse; border:0px;">
+                            <tr style="border:0px;">
+                                <td style="padding:30px;">Accuracy</td>
+                                <td style="padding:30px;">Completeness</td>
+                                <td style="padding:30px;">Consistency</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:30px;">Timeliness</td>
+                                <td style="padding:30px;">Validity</td>
+                                <td style="padding:30px;">Uniqueness</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:30px;" colspan="3">Integrity</td>
+                            </tr>
+                        </table>
+                    </div>
+                </section>
+
+
+                <section>
+                    <h4>Data Quality: <span class="highlight">Consistency</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Uniform values across records</li>
+                                <li>No contradictions in fields</li>
+                                <li>Same units, codes, and formats</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// ✅ Consistent
+{ "id": 1, "unit": "kg" }
+{ "id": 2, "unit": "kg" }
+
+// ❌ Inconsistent
+{ "id": 3, "unit": "kg" }
+{ "id": 4, "unit": "lbs" }
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Data Quality: <span class="highlight">Accuracy</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Reflects real-world truth</li>
+                                <li>Correct at the source</li>
+                                <li>Free from measurement errors</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// ✅ Accurate
+{ "crop": "Wheat", "yieldKg": 7200 }
+
+// ❌ Inaccurate (too high to be realistic)
+{ "crop": "Wheat", "yieldKg": 7200000 }
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+
+                <section>
+                    <h4>Data Quality: <span class="highlight">Completeness</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>All necessary data is present</li>
+                                <li>No missing critical fields</li>
+                                <li>No empty required arrays</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// ✅ Complete
+{ "id": 1, "crop": "Maize", "soil": "Loam" }
+
+// ❌ Incomplete (missing soil)
+{ "id": 2, "crop": "Maize" }
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Data Quality: <span class="highlight">Timeliness</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Data is current when needed</li>
+                                <li>No outdated values</li>
+                                <li>Updated on schedule</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// ✅ Timely
+{ "crop": "Rice", "updatedAt": "2025-09-08T09:00Z" }
+
+// ❌ Outdated
+{ "crop": "Rice", "updatedAt": "2020-05-01T10:00Z" }
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Data Quality: <span class="highlight">Uniqueness</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>No duplicate records</li>
+                                <li>Each entity has a distinct ID</li>
+                                <li>One fact represented only once</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// ✅ Unique IDs
+{ "id": 1, "crop": "Barley" }
+{ "id": 2, "crop": "Millet" }
+
+// ❌ Duplicate IDs
+{ "id": 3, "crop": "Wheat" }
+{ "id": 3, "crop": "Wheat" }
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Data Quality: <span class="highlight">Validity</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Data follows defined formats</li>
+                                <li>Adheres to business rules</li>
+                                <li>Within acceptable ranges</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// ✅ Valid
+{ "id": 10, "organic": true, "harvestDate": "2025-09-01" }
+
+// ❌ Invalid (wrong type + bad date)
+{ "id": "ten", "organic": "yes", "harvestDate": "jan-2025" }
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+
+                <section>
+                    <h4>Data Quality: <span class="highlight">Integrity</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Data is accurate in its relationships</li>
+                                <li>No broken links between entities</li>
+                                <li>References are valid and consistent</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+// ✅ With integrity
+{ "farmId": 1, "cropId": 101, "crop": "Maize" }
+{ "cropId": 101, "name": "Maize" }
+
+// ❌ Broken reference (farm points to missing crop)
+{ "farmId": 2, "cropId": 999, "crop": "Unknown" }
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+
+                <section>
                     <p>
-                        How to <span class="highlight">enforce</span> data quality?
+                        How to <span class="highlight">validate</span> data quality?
                     </p>
                 </section>
 
@@ -3812,7 +4083,7 @@ date -u +"%Y-%m-%dT%H:%M:%SZ"
 
                 <section>
                     <p>
-                        How to <span class="highlight">enforce</span> data quality?
+                        How to <span class="highlight">validate</span> data quality?
                     </p>
                 </section>
 
@@ -3822,19 +4093,11 @@ date -u +"%Y-%m-%dT%H:%M:%SZ"
                         <div class="left">
                             <ul>
                                 <li>Data unchanged & correct</li>
-                                <li>Reliable across lifecycle</li>
+                                <li>Reliable end-to-end</li>
                             </ul>
                         </div>
                         <div class="right">
-                            <div class="mermaid">
-                                flowchart LR
-                                A[Source] -->|Loss in transit| B[Destination]
-                                A -->|Tampering| B
-
-                                classDef issue stroke:#f66,stroke-width:2px,color:#900;
-                                linkStyle 0 stroke:#f66,stroke-width:2px;
-                                linkStyle 1 stroke:#f66,stroke-width:2px;
-                            </div>
+                            <img src="./img/dataIntegrity.png" alt="Data Integrity Example" />
                         </div>
                     </div>
                 </section>
@@ -3958,13 +4221,12 @@ console.log(hash);
                             </ul>
                         </div>
                         <div class="right">
-                            <div class="placeholder">rules</div>
+                            <img src="https://m.media-amazon.com/images/I/517RIDy3KTL._UF1000,1000_QL80_.jpg"
+                                alt="Data Validity Example" height="300px" />
                         </div>
                     </div>
                 </section>
 
-
-                <!-- Slide 9 -->
                 <section>
                     <h4>Validity <span class="highlight">Examples</span></h4>
                     <div class="split">
@@ -3973,6 +4235,7 @@ console.log(hash);
                                 <li>Valid season values</li>
                                 <li>Temperature numeric</li>
                                 <li>ISO timestamps</li>
+                                <li>Use standards</li>
                             </ul>
                         </div>
                         <div class="right">
@@ -3991,313 +4254,99 @@ WHERE season NOT IN
                     </div>
                 </section>
 
-                <!-- Slide 10 -->
                 <section>
                     <h4>Validity <span class="highlight">Check</span></h4>
                     <div class="split">
                         <div class="left">
                             <ul>
-                                <li>Which fields in farm data</li>
-                                <li>need strict validation?</li>
+                                <li>Which data is invalid?</li>
                             </ul>
                         </div>
                         <div class="right">
-                            <div class="placeholder">Q</div>
+                            <pre><code>{
+  "id": 1,
+  "crop": "Wheat",
+  "yieldKg": 7500,
+  "harvestDate": "32-13-2025",
+  "price": 250,
+  "irrigation": "Drip",
+  "stock": 120,
+  "locaton": "Field A",
+  "owner": 12345,
+  "organic": "maybe"
+}
+            </code></pre>
                         </div>
                     </div>
                 </section>
 
-                <!-- CONSISTENCY -->
-                <!-- Slide 11 -->
+
                 <section>
-                    <h4>Consistency <span class="highlight">Definition</span></h4>
+                    <h4>Validity <span class="highlight">MongoDB Check</span></h4>
                     <div class="split">
                         <div class="left">
                             <ul>
-                                <li>Uniform values across data</li>
-                                <li>No contradictions</li>
+                                <li>Check if organic field is valid</li>
                             </ul>
                         </div>
                         <div class="right">
-                            <div class="placeholder">consistency</div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Slide 12 -->
-                <section>
-                    <h4>Consistency <span class="highlight">Examples</span></h4>
-                    <div class="split">
-                        <div class="left">
-                            <ul>
-                                <li>Same yield units</li>
-                                <li>Uniform crop codes</li>
-                                <li>Consistent spelling</li>
-                            </ul>
-                        </div>
-                        <div class="right">
-                            <pre><code>
-// MongoDB
-db.farm.aggregate([
- { $group:{ _id:"$unit"} }
-])
-
-// SQL
-SELECT unit, COUNT(*)
-FROM farm GROUP BY unit;
-      </code></pre>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Slide 13 -->
-                <section>
-                    <h4>Consistency <span class="highlight">Check</span></h4>
-                    <div class="split">
-                        <div class="left">
-                            <ul>
-                                <li>How to align units</li>
-                                <li>across farm datasets?</li>
-                            </ul>
-                        </div>
-                        <div class="right">
-                            <div class="placeholder">Q</div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- ACCURACY -->
-                <!-- Slide 14 -->
-                <section>
-                    <h4>Accuracy <span class="highlight">Definition</span></h4>
-                    <div class="split">
-                        <div class="left">
-                            <ul>
-                                <li>Reflects real-world values</li>
-                                <li>Correct at source</li>
-                            </ul>
-                        </div>
-                        <div class="right">
-                            <img src="https://luckyretail.com/Uploadfile/202011/202012162/500012386A2/500012386A2.jpg">
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Slide 15 -->
-                <section>
-                    <h4>Accuracy <span class="highlight">Examples</span></h4>
-                    <div class="split">
-                        <div class="left">
-                            <ul>
-                                <li>Yields cross-checked</li>
-                                <li>Sensor calibration</li>
-                                <li>Outlier detection</li>
-                            </ul>
-                        </div>
-                        <div class="right">
-                            <pre><code>
-// MongoDB
-db.farm.find({ yieldKg:{ $gt: 8000 } })
-
-// SQL
-SELECT * FROM farm
-WHERE yield_kg > 8000;
-      </code></pre>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Slide 16 -->
-                <section>
-                    <h4>Accuracy <span class="highlight">Check</span></h4>
-                    <div class="split">
-                        <div class="left">
-                            <ul>
-                                <li>How would you cross-check</li>
-                                <li>satellite and field data?</li>
-                            </ul>
-                        </div>
-                        <div class="right">
-                            <div class="placeholder">Q</div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- COMPLETENESS -->
-                <!-- Slide 17 -->
-                <section>
-                    <h4>Completeness <span class="highlight">Definition</span></h4>
-                    <div class="split">
-                        <div class="left">
-                            <ul>
-                                <li>All necessary data present</li>
-                                <li>No missing critical fields</li>
-                            </ul>
-                        </div>
-                        <div class="right">
-                            <div class="placeholder">checklist</div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Slide 18 -->
-                <section>
-                    <h4>Completeness <span class="highlight">Examples</span></h4>
-                    <div class="split">
-                        <div class="left">
-                            <ul>
-                                <li>Crop required</li>
-                                <li>Soil type filled</li>
-                                <li>No empty arrays</li>
-                            </ul>
-                        </div>
-                        <div class="right">
-                            <pre><code>
-// MongoDB
+                            <div class="fragment">
+                                <pre><code>
+// MongoDB: find docs where 'organic' is not boolean
 db.farm.find({
-  crop:{ $exists:false }
+  $expr: { $ne: [ { $type: "$organic" }, "bool" ] }
 })
-
-// SQL
-SELECT * FROM farm
-WHERE crop IS NULL;
-      </code></pre>
+                </code></pre>
+                            </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- Slide 19 -->
                 <section>
-                    <h4>Completeness <span class="highlight">Check</span></h4>
-                    <div class="split">
-                        <div class="left">
-                            <ul>
-                                <li>What key fields must always</li>
-                                <li>be present in farm data?</li>
-                            </ul>
-                        </div>
-                        <div class="right">
-                            <div class="placeholder">Q</div>
-                        </div>
+                    <div class="center">
+                        <p>Consistency • Accuracy • Completeness • Timeliness • Uniqueness</p>
+                        <p>➡️ <span class="highlight">Thursday</span></p>
                     </div>
                 </section>
 
-                <!-- TIMELINESS -->
-                <!-- Slide 20 -->
                 <section>
-                    <h4>Timeliness <span class="highlight">Definition</span></h4>
-                    <div class="split">
-                        <div class="left">
-                            <ul>
-                                <li>Data is current when needed</li>
-                                <li>No outdated records</li>
-                            </ul>
-                        </div>
-                        <div class="right">
-                            <div class="placeholder">clock</div>
-                        </div>
-                    </div>
+                    <h4>Questions?</h4>
                 </section>
 
-                <!-- Slide 21 -->
                 <section>
-                    <h4>Timeliness <span class="highlight">Examples</span></h4>
+                    <h4>Which <span class="highlight">Data Quality</span> metrics are NOT met?</h4>
                     <div class="split">
                         <div class="left">
                             <ul>
-                                <li>Fresh weather data</li>
-                                <li>Daily soil updates</li>
-                                <li>Stream lag < 5min</li>
+                                <li>Are units consistent across records?</li>
+                                <li>Is harvestDate in the correct format?</li>
+                                <li>Is the record up to date?</li>
+                                <li>Is crop present and non-empty?</li>
+                                <li>Is owner the expected type?</li>
                             </ul>
                         </div>
                         <div class="right">
-                            <pre><code>
-// MongoDB
-db.farm.find({
-  updatedAt:{ $lt:ISODate("2025-09-01") }
-})
+                            <!-- 1st click: show the JSON object -->
+                            <div class="fragment">
+                                <pre><code>{
+  "id": 42,
+  "crop": "Wheat",
+  "yieldKg": 7200,
+  "unit": "lbs",
+  "owner": "Alice",
+  "harvestDate": "13/31/2025",
+  "updatedAt": "2022-01-10T10:00:00Z"
+}</code></pre>
+                            </div>
 
-// SQL
-SELECT * FROM farm
-WHERE updated_at<'2025-09-01';
-      </code></pre>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Slide 22 -->
-                <section>
-                    <h4>Timeliness <span class="highlight">Check</span></h4>
-                    <div class="split">
-                        <div class="left">
-                            <ul>
-                                <li>How to enforce update cycles</li>
-                                <li>for weather sensors?</li>
-                            </ul>
-                        </div>
-                        <div class="right">
-                            <div class="placeholder">Q</div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- UNIQUENESS -->
-                <!-- Slide 23 -->
-                <section>
-                    <h4>Uniqueness <span class="highlight">Definition</span></h4>
-                    <div class="split">
-                        <div class="left">
-                            <ul>
-                                <li>No duplicate entities</li>
-                                <li>Each ID distinct</li>
-                            </ul>
-                        </div>
-                        <div class="right">
-                            <div class="placeholder">unique</div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Slide 24 -->
-                <section>
-                    <h4>Uniqueness <span class="highlight">Examples</span></h4>
-                    <div class="split">
-                        <div class="left">
-                            <ul>
-                                <li>No duplicate farmId</li>
-                                <li>One crop per field</li>
-                                <li>Unique device IDs</li>
-                            </ul>
-                        </div>
-                        <div class="right">
-                            <pre><code>
-// MongoDB
-db.farm.aggregate([
- { $group:{ _id:"$farmId", c:{ $sum:1 }}},
- { $match:{ c:{ $gt:1 } }}
-])
-
-// SQL
-SELECT farm_id,COUNT(*)
-FROM farm GROUP BY farm_id
-HAVING COUNT(*)>1;
-      </code></pre>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Slide 25 -->
-                <section>
-                    <h4>Uniqueness <span class="highlight">Check</span></h4>
-                    <div class="split">
-                        <div class="left">
-                            <ul>
-                                <li>What duplicates can arise</li>
-                                <li>in agriculture data?</li>
-                            </ul>
-                        </div>
-                        <div class="right">
-                            <div class="placeholder">Q</div>
+                            <!-- 2nd click: reveal which three metrics are violated -->
+                            <div class="fragment">
+                                <pre><code>❌ Metrics not met:
+- Consistency
+- Validity
+- Timeliness
+</code></pre>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -4320,12 +4369,12 @@ HAVING COUNT(*)>1;
                             </ul>
                         </div>
                         <div class="right">
-                            <div class="placeholder">agenda</div>
+                            <img height="300px"
+                                src="https://quotefancy.com/media/wallpaper/1600x900/612095-W-Edwards-Deming-Quote-Quality-is-everyone-s-responsibility.jpg">
                         </div>
                     </div>
                 </section>
 
-                <!-- Slide 27 -->
                 <section data-auto-animate style="font-size:14pt;" id="mongodb">
                     <div style="
     display:flex;
@@ -4435,7 +4484,60 @@ HAVING COUNT(*)>1;
                     </div>
                 </section>
 
-                <!-- Slide 27 -->
+                <section>
+                    <h4>NoSQL Types & <span class="highlight">SQL</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><strong>Key–Value:</strong> Fast lookups</li>
+                                <li><strong>Document:</strong> JSON records</li>
+                                <li><strong>Column-Family:</strong> Wide tables</li>
+                                <li><strong>Graph:</strong> Nodes + edges</li>
+                                <li><strong>SQL:</strong> Rows + columns</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://media.geeksforgeeks.org/wp-content/uploads/20220405112418/NoSQLDatabases.jpg"
+                                alt="NoSQL Database Types" style="max-width:90%; height:auto;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>RDBMS vs <span class="highlight">MongoDB</span></h4>
+                    <div class="center">
+                        <img src="https://media.geeksforgeeks.org/wp-content/uploads/20250703171634069003/RDBMS-vs-MongoDB.webp"
+                            alt="RDBMS vs MongoDB" style="max-width:90%; height:auto;">
+                    </div>
+                </section>
+
+                <section>
+                    <h4>What is a <span class="highlight">Document?</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>A document is a self-contained unit of information</li>
+                                <li>Stores related data together in one JSON-like structure</li>
+                                <li>No need to join across tables to reconstruct meaning</li>
+                                <li>Each document can stand alone and be understood by itself</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>{
+  "id": 101,
+  "crop": "Wheat",
+  "yieldKg": 7500,
+  "irrigation": "Drip",
+  "location": { // No joins needed
+    "field": "North",
+    "soil": "Loam"
+  }
+}
+            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
                 <section>
                     <h4>MongoDB <span class="highlight">Local vs Online</span></h4>
                     <div class="split">
@@ -4511,16 +4613,9 @@ HAVING COUNT(*)>1;
                                 <li><b>MQL Query Examples</b>
                                     <pre><code class="javascript">
 // Find farms growing Wheat
-db.crops.find({ crop: "Wheat" });
-
-// Farms with yield > 100 tons
-db.crops.find({ yield_tons: { $gt: 100 } });
-
-// Update yield
-db.crops.updateOne(
-  { farm: "GreenField" },
-  { $set: { yield_tons: 130 } }
-);
+db.crops.find({ 
+    crop: "Wheat" 
+});
                               </code></pre>
                                 </li>
                             </ul>
@@ -4551,9 +4646,8 @@ db.crops.updateOne(
                     <div class="split">
                         <div class="left">
                             <ul>
-                                <li>Unique identifier for documents</li>
-                                <li>12-byte BSON value</li>
-                                <li>Includes timestamp, machine ID, process ID, counter</li>
+                                <li>UUID for documents auto-generated</li>
+                                <li>Timestamp, MAC, process ID, counter</li>
                             </ul>
                         </div>
                         <div class="right">
@@ -4569,8 +4663,6 @@ db.crops.updateOne(
                     </div>
                 </section>
 
-
-                <!-- Slide: MongoDB Query Return Object -->
                 <section>
                     <h4>MongoDB <span class="highlight">Query Results</span></h4>
                     <div class="split">
@@ -4582,8 +4674,7 @@ db.crops.updateOne(
                             </ul>
                         </div>
                         <div class="right">
-                            <pre><code>
-// Insert query
+                            <pre><code>// Insert query
 const insertResult = db.flowers.insertOne({ 
   name: "Tulip", 
   color: "Yellow" 
@@ -4604,89 +4695,93 @@ const insertResult = db.flowers.insertOne({
                     <h4>CRUD <span class="highlight">Create</span></h4>
                     <div class="split">
                         <div class="left">
-                            <ul>
-                                <li>Create collection & insert</li>
-                            </ul>
+                            <pre><code>
+// SQL
+CREATE TABLE farm (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    crop VARCHAR(50)
+);
+
+INSERT INTO farm(crop)
+VALUES ('Rice');
+            </code></pre>
                         </div>
                         <div class="right">
                             <pre><code>
 // MongoDB
 use farmDB
+db.createCollection("farm")
 db.farm.insertOne({ crop:"Rice" })
-
-// SQL
-INSERT INTO farm(crop)
-VALUES ('Rice');
-      </code></pre>
+            </code></pre>
                         </div>
                     </div>
                 </section>
 
-                <!-- Slide 30 -->
+
                 <section>
                     <h4>CRUD <span class="highlight">Read</span></h4>
                     <div class="split">
                         <div class="left">
-                            <ul>
-                                <li>Find docs by condition</li>
-                            </ul>
+                            <pre><code>
+// SQL
+SELECT * 
+FROM farm
+WHERE crop = 'Rice';
+            </code></pre>
                         </div>
                         <div class="right">
                             <pre><code>
 // MongoDB
-db.farm.find({crop:"Rice"})
-
-// SQL
-SELECT * FROM farm
-WHERE crop='Rice';
-      </code></pre>
+db.farm.find({ crop: "Rice" })
+            </code></pre>
                         </div>
                     </div>
                 </section>
 
-                <!-- Slide 31 -->
+
                 <section>
                     <h4>CRUD <span class="highlight">Update</span></h4>
                     <div class="split">
                         <div class="left">
-                            <ul>
-                                <li>Update field values</li>
-                            </ul>
+                            <pre><code>
+// SQL
+UPDATE farm 
+SET yield_kg = 4000
+WHERE crop = 'Rice';
+            </code></pre>
                         </div>
                         <div class="right">
                             <pre><code>
 // MongoDB
-db.farm.updateOne({crop:"Rice"},
- {$set:{yieldKg:4000}})
-
-// SQL
-UPDATE farm SET yield_kg=4000
-WHERE crop='Rice';
-      </code></pre>
+db.farm.updateOne(
+    { crop: "Rice" },
+    { $set: { yieldKg: 4000 } }
+)
+            </code></pre>
                         </div>
                     </div>
                 </section>
-                <!-- Slide 32 -->
+
+
                 <section>
                     <h4>CRUD <span class="highlight">Delete</span></h4>
                     <div class="split">
                         <div class="left">
-                            <ul>
-                                <li>Remove docs</li>
-                            </ul>
+                            <pre><code>
+// SQL
+DELETE FROM farm
+WHERE crop = 'Rice';
+            </code></pre>
                         </div>
                         <div class="right">
                             <pre><code>
 // MongoDB
-db.farm.deleteOne({crop:"Rice"})
-
-// SQL
-DELETE FROM farm
-WHERE crop='Rice';
-      </code></pre>
+db.farm.deleteOne({ crop: "Rice" })
+            </code></pre>
                         </div>
                     </div>
                 </section>
+
 
                 <!-- OPERATORS -->
                 <!-- Slide 33 -->
@@ -4701,8 +4796,7 @@ WHERE crop='Rice';
                             </ul>
                         </div>
                         <div class="right">
-                            <pre><code>
-// MongoDB
+                            <pre><code>// MongoDB
 db.farm.find({yieldKg:{$gt:3000}})
 
 // SQL
@@ -4723,8 +4817,7 @@ WHERE yield_kg>3000;
                             </ul>
                         </div>
                         <div class="right">
-                            <pre><code>
-// MongoDB
+                            <pre><code>// MongoDB
 db.farm.find({$and:[
  {crop:"Wheat"},{yieldKg:{$gt:2000}}]})
 
@@ -4748,8 +4841,7 @@ WHERE crop='Wheat' AND yield_kg>2000;
                             </ul>
                         </div>
                         <div class="right">
-                            <pre><code>
-// MongoDB
+                            <pre><code>// MongoDB
 db.farm.find({crop:/^W/})
 
 // SQL
@@ -4760,220 +4852,144 @@ WHERE crop LIKE 'W%';
                     </div>
                 </section>
 
-                <!-- PRACTICE QUERIES -->
-                <!-- Slide 36 -->
+
                 <section>
                     <h4>Practice <span class="highlight">Query 1</span></h4>
                     <div class="split">
                         <div class="left">
-                            <ul>
-                                <li>Crops with yield > 6000</li>
-                            </ul>
-                        </div>
-                        <div class="right">
                             <pre><code>
-// MongoDB
-db.farm.find({yieldKg:{$gt:6000}})
-
 // SQL
 SELECT * FROM farm
-WHERE yield_kg>6000;
-      </code></pre>
+WHERE yield_kg > 6000;
+            </code></pre>
+                        </div>
+                        <div class="right">
+                            <!-- MQL appears on click -->
+                            <div class="fragment">
+                                <pre><code>
+// MongoDB
+db.farm.find({ yieldKg: { $gt: 6000 } })
+                </code></pre>
+                            </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- Slide 37 -->
+
                 <section>
                     <h4>Practice <span class="highlight">Query 2</span></h4>
                     <div class="split">
                         <div class="left">
-                            <ul>
-                                <li>Crops with no irrigation</li>
-                            </ul>
-                        </div>
-                        <div class="right">
                             <pre><code>
-// MongoDB
-db.farm.find({irrigation:null})
-
 // SQL
 SELECT * FROM farm
 WHERE irrigation IS NULL;
-      </code></pre>
+            </code></pre>
+                        </div>
+                        <div class="right">
+                            <!-- MQL appears on click -->
+                            <div class="fragment">
+                                <pre><code>
+// MongoDB
+db.farm.find({ irrigation: null })
+                </code></pre>
+                            </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- Slide 38 -->
+
                 <section>
                     <h4>Practice <span class="highlight">Query 3</span></h4>
                     <div class="split">
                         <div class="left">
-                            <ul>
-                                <li>Cheapest crop by price</li>
-                            </ul>
+                            <pre><code>
+// SQL
+SELECT * 
+FROM farm
+ORDER BY price ASC
+LIMIT 1;
+            </code></pre>
                         </div>
                         <div class="right">
-                            <pre><code>
+                            <!-- MQL appears on click -->
+                            <div class="fragment">
+                                <pre><code>
 // MongoDB
-db.farm.find().sort({price:1}).limit(1)
-
-// SQL
-SELECT * FROM farm
-ORDER BY price ASC LIMIT 1;
-      </code></pre>
+db.farm.find().sort({ price: 1 }).limit(1)
+                </code></pre>
+                            </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- Slide 39 -->
+
                 <section>
                     <h4>Practice <span class="highlight">Query 4</span></h4>
                     <div class="split">
                         <div class="left">
-                            <ul>
-                                <li>Update stock of maize +20</li>
-                            </ul>
+                            <pre><code>
+// SQL
+UPDATE farm
+SET stock = stock + 20
+WHERE crop = 'Maize';
+            </code></pre>
                         </div>
                         <div class="right">
-                            <pre><code>
+                            <!-- MQL appears on click -->
+                            <div class="fragment">
+                                <pre><code>
 // MongoDB
 db.farm.updateOne(
- {crop:"Maize"},
- {$inc:{stock:20}}
+    { crop: "Maize" },
+    { $inc: { stock: 20 } }
 )
-
-// SQL
-UPDATE farm SET stock=stock+20
-WHERE crop='Maize';
-      </code></pre>
+                </code></pre>
+                            </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- Slide 40 -->
                 <section>
                     <h4>Practice <span class="highlight">Query 5</span></h4>
                     <div class="split">
                         <div class="left">
-                            <ul>
-                                <li>Delete crops with yield < 1000</li>
-                            </ul>
-                        </div>
-                        <div class="right">
                             <pre><code>
-// MongoDB
-db.farm.deleteMany(
- {yieldKg:{$lt:1000}}
-)
-
 // SQL
 DELETE FROM farm
-WHERE yield_kg<1000;
-      </code></pre>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Slide 41 -->
-                <section>
-                    <h4>Practice <span class="highlight">Query 6</span></h4>
-                    <div class="split">
-                        <div class="left">
-                            <ul>
-                                <li>Crops priced 10–20</li>
-                            </ul>
+WHERE yield_kg < 1000;
+            </code></pre>
                         </div>
                         <div class="right">
-                            <pre><code>
+                            <!-- MQL appears on click -->
+                            <div class="fragment">
+                                <pre><code>
 // MongoDB
-db.farm.find({price:
- {$gte:10,$lte:20}})
-
-// SQL
-SELECT * FROM farm
-WHERE price BETWEEN 10 AND 20;
-      </code></pre>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Slide 42 -->
-                <section>
-                    <h4>Practice <span class="highlight">Query 7</span></h4>
-                    <div class="split">
-                        <div class="left">
-                            <ul>
-                                <li>List crops by yield desc</li>
-                            </ul>
-                        </div>
-                        <div class="right">
-                            <pre><code>
-// MongoDB
-db.farm.find().sort({yieldKg:-1})
-
-// SQL
-SELECT * FROM farm
-ORDER BY yield_kg DESC;
-      </code></pre>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Slide 43 -->
-                <section>
-                    <h4>Practice <span class="highlight">Query 8</span></h4>
-                    <div class="split">
-                        <div class="left">
-                            <ul>
-                                <li>Add soilType to all docs</li>
-                            </ul>
-                        </div>
-                        <div class="right">
-                            <pre><code>
-// MongoDB
-db.farm.updateMany(
- {},{$set:{soilType:"unset"}}
+db.farm.deleteMany(
+    { yieldKg: { $lt: 1000 } }
 )
-
-// SQL
-UPDATE farm SET soil_type='unset';
-      </code></pre>
+                </code></pre>
+                            </div>
                         </div>
                     </div>
                 </section>
 
-                <!-- Slide 44 -->
+                <section>Questions?</section>
+
                 <section>
-                    <h4>Practice <span class="highlight">Query 9</span></h4>
-                    <div class="split">
-                        <div class="left">
-                            <ul>
-                                <li>Farms not in Asia</li>
-                            </ul>
-                        </div>
-                        <div class="right">
-                            <pre><code>
-// MongoDB
-db.farm.find({region:
- {$ne:"Asia"}})
-
-// SQL
-SELECT * FROM farm
-WHERE region<>'Asia';
-      </code></pre>
-                        </div>
-                    </div>
+                    <h4>Practice <span class="highlight">Lab</span></h4>
+                    <p>
+                        <a href="https://onecompiler.com/mongodb" target="_blank">
+                            https://onecompiler.com/mongodb
+                        </a>
+                    </p>
                 </section>
 
-                <!-- CONCEPTUAL -->
-                <!-- Slide 45 -->
                 <section>
                     <h4>Conceptual <span class="highlight">Q1</span></h4>
                     <div class="split">
                         <div class="left">
-                            <p>In distributed <u>farm databases</u>, which <b>data quality metric</b>is the hardest to
+                            <p>In a farm databases, which <b>data quality metric</b>is the hardest to
                                 guarantee?</p>
                         </div>
                         <div class="right">
@@ -4990,93 +5006,178 @@ WHERE region<>'Asia';
                     </div>
                 </section>
 
-
-                <!-- Slide 46 -->
                 <section>
                     <h4>Conceptual <span class="highlight">Q2</span></h4>
                     <div class="split">
                         <div class="left">
                             <ul>
-                                <li>How would you automate data quality checks daily?</li>
+                                <li>Why is timeliness critical in IoT pipelines?</li>
                             </ul>
                         </div>
                         <div class="right">
-                            <div class="placeholder">Q</div>
+                            <img src="https://bernardmarr.com/wp-content/uploads/2021/07/How-Tesla-Is-Using-Artificial-Intelligence-to-Create-The-Autonomous-Cars-Of-The-Future.jpg"
+                                alt="Self-driving car" style="max-width:100%; height:auto;">
                         </div>
                     </div>
                 </section>
 
-                <!-- Slide 47 -->
-                <section>
-                    <h4>Conceptual <span class="highlight">Q3</span></h4>
+                <section id="sept-09">
+                    <h4>Today <span class="highlight">Agenda</span></h4>
                     <div class="split">
                         <div class="left">
                             <ul>
-                                <li>Why is timeliness more critical in IoT pipelines?</li>
+                                <li>Data Quality and Standards &check;</li>
+                                <li>MongoDB History & Features &check;</li>
+                                <li>CRUD, Operators, Practice &check;</li>
+                                <li>Homework, Lab, and Project</li>
                             </ul>
                         </div>
                         <div class="right">
-                            <div class="placeholder">Q</div>
+                            <img height="300px"
+                                src="https://quotefancy.com/media/wallpaper/1600x900/612095-W-Edwards-Deming-Quote-Quality-is-everyone-s-responsibility.jpg">
                         </div>
                     </div>
                 </section>
 
+                <section>Homework 1</section>
 
-                <!-- READING -->
-                <!-- Slide 48 -->
                 <section>
-                    <h4>Reading <span class="highlight">Material</span></h4>
+                    <h4> Homework 1</h4>
+                    <div class="center">
+                        <ul>
+                            <li class="fragment"><strong>SQL vs RDBMS:</strong> SQL is the language; RDBMS is the engine
+                                (Postgres/MySQL/Oracle/SQLite).</li>
+                            <li class="fragment"><strong>Systems differ by fit:</strong> MariaDB (MySQL-compatible,
+                                community), Oracle (enterprise HA), PostgreSQL (extensible), SQLite
+                                (embedded/serverless).</li>
+                            <li class="fragment"><strong>ACID vs CAP:</strong> ACID = single-node txn guarantees; CAP =
+                                distributed trade-offs, under partitions you choose CP or AP.</li>
+                            <li class="fragment"><strong>“Consistency” differs:</strong> ACID = rules/constraints; CAP =
+                                replica agreement.</li>
+                            <li class="fragment"><strong>DDL vs DML:</strong> Schema (CREATE/ALTER/DROP) vs Data
+                                (SELECT/INSERT/UPDATE/DELETE).</li>
+                            <li class="fragment"><strong>Strozzi NoSQL:</strong> “Not only SQL”, UNIX pipelines &
+                                simplicity/cost over heavyweight stacks.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Lab 1</h4>
                     <div class="split">
                         <div class="left">
                             <ul>
-                                <li><a target="_blank" href="https://academic.oup.com/erae/article/48/4/719/6316150">
-                                        Improving agricultural data systems</a></li>
-                                <li><a target="_blank" href="https://www.fao.org/statistics">
-                                        FAO Statistics Portal</a></li>
-                                <li><a target="_blank"
-                                        href="https://www.w3schools.com/mongodb/mongodb_query_operators.php">
-                                        MongoDB Query Operators</a></li>
+                                <li class="fragment"><strong>IDs & sync:</strong> auto-increment (local, ordered) vs
+                                    UUID (merge-friendly, global).</li>
+                                <li class="fragment"><strong>Images:</strong> store <em>path + CacheStorage</em> vs
+                                    <em>Blob</em> in IndexedDB vs <em>Base64</em> (size & perf trade-offs).
+                                </li>
+                                <li class="fragment"><strong>Create object stores by read or write:</strong> split
+                                    read-optimized vs write-optimized stores (e.g., FarmDataView vs
+                                    FarmDataRaw); use readonly/readwrite transactions appropriately.</li>
                             </ul>
                         </div>
                         <div class="right">
-                            <div class="placeholder">reading</div>
+                            <img src="./img/lab1-example.png" alt="IndexedDB DevTools view"
+                                style="max-width:100%; height:auto;">
+                            <!-- Replace src with your local asset path if needed -->
                         </div>
                     </div>
                 </section>
 
-                <!-- WRAP-UP -->
-                <!-- Slide 49 -->
-                <section id="sept-11">
-                    <h4>Today <span class="highlight">Wrap Up</span></h4>
-                    <div class="split">
-                        <div class="left">
-                            <ul>
-                                <li>Data Quality Motivation ✓</li>
-                                <li>Seven Metrics ✓</li>
-                                <li>MongoDB History ✓</li>
-                                <li>CRUD & Operators ✓</li>
-                                <li>Practice Queries ✓</li>
-                            </ul>
-                        </div>
-                        <div class="right">
-                            <div class="placeholder">wrapup</div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- Slide 50 -->
                 <section>
-                    <h4>Thanks <span class="highlight">Q&amp;A</span></h4>
+                    <h4>Lab 2 — <span class="highlight">Upload IndexedDB → MongoDB</span></h4>
                     <div class="split">
                         <div class="left">
-                            <p class="muted">Questions on Data Quality or MongoDB?</p>
+                            <ol>
+                                <li class="fragment">Run Lab 1 locally; start a server (Flask or Node.js) with a
+                                    <strong>POST /data</strong> endpoint.
+                                </li>
+                                <li class="fragment">Read from <strong>IndexedDB</strong> and send up to
+                                    <strong>1000</strong> records from lab 1.
+                                </li>
+                                <li class="fragment"><strong>Insert only if not exists</strong> (dedupe on a key you
+                                    choose).</li>
+                                <li class="fragment">Use collection name: <strong>lab2-firstname-6789</strong> (last 4
+                                    of student ID).</li>
+                                <li class="fragment">Download <strong>MongoDB Compass</strong>, connect to Atlas, and
+                                    verify the upload.</li>
+                            </ol>
                         </div>
                         <div class="right">
-                            <div class="placeholder">end</div>
+                            <ul>
+                                <li class="fragment"><strong>Naming example:</strong> <em>lab2-alice-6789</em></li>
+                                <li class="fragment"><strong>Dedupe strategy:</strong> findOne-before-insert <em>or</em>
+                                    unique index + upsert.</li>
+                                <li class="fragment"><strong>Submit:</strong> upload a <em>Compass (connected to
+                                        Atlas)</em> screenshot showing your collection and document count.</li>
+                            </ul>
                         </div>
                     </div>
                 </section>
 
+                <section>
+                    <p style="font-size:14pt; line-height:1.4;">
+                        <span class="highlight">NoSQL</span>, <span class="highlight">Key-Value Store</span>,
+                        <span class="highlight">Document Store</span>, Column Store,
+                        Graph Database, <span class="highlight">CAP Theorem</span>,
+                        BASE Model, Eventual Consistency, <span class="highlight">ACID Properties</span>, Strong
+                        Consistency,
+                        Sharding,Replication,
+                        Partitioning,<span class="highlight">Volume</span>,
+                        <span class="highlight">Velocity</span>,
+                        <span class="highlight">Variety</span>,
+                        <span class="highlight">Veracity</span>,
+                        <span class="highlight">Value</span>,
+                        Horizontal Scaling, Vertical Scaling, <span class="highlight">Consistency</span>, Availability,
+                        Partition Tolerance, Quorum, Vector Clock, Schema-less, Indexing, Secondary Index, Primary Key,
+                        Compound Key, MapReduce, Aggregation, Query Engine, Query
+                        Planner, Execution Plan,
+                        CRUD, Insert, Update, Delete, Read, Write Concern, Read Concern, Consistency Level, Tunable
+                        Consistency, <span class="highlight">onupgradeneeded</span>,
+                        <span class="highlight">createObjectStore</span>,
+                        <span class="highlight">keyPath</span>,
+                        <span class="highlight">autoIncrement</span>,
+                        <span class="highlight">transaction</span>,
+                        <span class="highlight">objectStore.add</span>,
+                        <span class="highlight">createIndex</span>,
+                        Latency, Throughput, Fault Tolerance, Failover, Replica Set,
+                        Leader Election, Cluster, Node, Data Center, Geo-Replication,
+                        <span class="highlight">Document Model</span>, <span class="highlight">JSON</span>, BSON, XML
+                        Store, Wide Column,
+                        Super Column, Column Family, CQL, <span class="highlight">MQL</span>, Cypher,
+                        Graph Traversal, Property Graph, RDF, Triple Store, Relationship,
+                        Node Label, Edge, <span class="highlight">NoSQL</span>,
+                        Index-Free Adjacency, Query Optimization, Materialized View, Denormalization, Data Redundancy,
+                        Write Amplification,
+                        Compaction, Commit Log, Snapshot, Backup, Restore, Hot Data, Cold Data, Data Lake,
+                        Data Warehouse, ETL, ELT, Streaming, Batch Processing,
+                        Lambda Architecture, Kappa Architecture, Pub/Sub, Message Queue,
+                        Idempotency,
+                        Conflict Resolution, Event Sourcing, CQRS, Distributed Cache,
+                        In-Memory Database, Time-Series Database, Search Index, Inverted
+                        Index,Full-Text Search,
+                        <span class="highlight">Accuracy</span>, <span class="highlight">Completeness</span>,
+                        <span class="highlight">Consistency</span>, <span class="highlight">Timeliness</span>,
+                        <span class="highlight">Validity</span>, <span class="highlight">Uniqueness</span>,
+                        <span class="highlight">Integrity</span>, <span class="highlight">Usability</span>.
+                        <span class="highlight">Atlas</span>, <span class="highlight">Compass</span>, <span
+                            class="highlight">Collection</span>,
+                        <span class="highlight">find</span>, <span class="highlight">updateOne</span>, <span
+                            class="highlight">deleteOne</span>,
+                        <span class="highlight">deleteMany</span>, <span class="highlight">aggregate</span>,
+                        <span class="highlight">$match</span>, $group, <span class="highlight">$sort</span>,
+                        <span class="highlight">$limit</span>, <span class="highlight">$set</span>, <span
+                            class="highlight">$inc</span>,$jsonSchema, <span class="highlight">createCollection</span>,
+                        createIndex, <span class="highlight">IndexedDB</span>,
+                        <span class="highlight">UUID</span>, <span class="highlight">ObjectId</span>.
+                    </p>
+                </section>
+
+
+                <section>
+                    Thanks
+                </section>
 
                 <!--
                 <section>
@@ -11081,48 +11182,6 @@ RETURN f.name, COUNT(neighbor) AS neighbor_count
                         <li>Data Analyst: Define KPIs & dashboards</li>
                     </ul>
                 </section>
-
-                <section>
-                    <h4>Course Goals by Terms</h4>
-                    <p style="font-size:14pt; line-height:1.4;">
-                        <span class="highlight">NoSQL</span>, <span class="highlight">Key-Value Store</span>,
-                        <span class="highlight">Document Store</span>, Column Store,
-                        <span class="highlight">Graph Database</span>, <span class="highlight">CAP Theorem</span>,
-                        BASE Model, ACID Properties, <span class="highlight">Eventual Consistency</span>, Strong
-                        Consistency,
-                        <span class="highlight">Sharding</span>, <span class="highlight">Replication</span>,
-                        Partitioning,
-                        Horizontal Scaling, Vertical Scaling, <span class="highlight">Consistency</span>, Availability,
-                        Partition Tolerance, Quorum, Vector Clock,
-                        Schema-less, Indexing, Secondary Index, Primary Key, Compound Key,
-                        <span class="highlight">MapReduce</span>, Aggregation, Query Engine, Query Planner, Execution
-                        Plan,
-                        CRUD, Insert, Update, Delete, Read, Write Concern, Read Concern, Consistency Level,
-                        Tunable Consistency, Latency,
-                        Throughput, Fault Tolerance, Failover, <span class="highlight">Replica Set</span>, Master-Slave
-                        Replication,
-                        Leader Election, <span class="highlight">Cluster</span>, Node, Data Center, Geo-Replication,
-                        <span class="highlight">Document Model</span>, <span class="highlight">JSON</span>, BSON, XML
-                        Store, Wide Column,
-                        Super Column, Column Family, CQL, <span class="highlight">Gremlin</span>, Cypher,
-                        <span class="highlight">Graph Traversal</span>, Property Graph, RDF, Triple Store, Relationship,
-                        Node Label, Edge,
-                        Index-Free Adjacency, Query Optimization, Materialized View,
-                        Denormalization, Data Redundancy, Write Amplification, Compaction, Commit Log, Snapshot, Backup,
-                        Restore, Hot Data, Cold Data,
-                        <span class="highlight">Data Lake</span>, <span class="highlight">Data Warehouse</span>, ETL,
-                        ELT,
-                        <span class="highlight">Streaming</span>, Batch Processing, Lambda Architecture, Kappa
-                        Architecture,
-                        <span class="highlight">Pub/Sub</span>, Message Queue,
-                        Idempotency, Conflict Resolution, <span class="highlight">Event Sourcing</span>, CQRS,
-                        Distributed Cache,
-                        In-Memory Database, <span class="highlight">Time-Series Database</span>, Search Index, Inverted
-                        Index,
-                        <span class="highlight">Full-Text Search</span>.
-                    </p>
-                </section>
-
 
                 <section>
                     <h4>Grading Schema</h4>
