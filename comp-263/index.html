@@ -3845,7 +3845,6 @@ date -u +"%Y-%m-%dT%H:%M:%SZ"
                     </div>
                 </section>
 
-
                 <section>
                     <h4>Data Quality: <span class="highlight">Consistency</span></h4>
                     <div class="split">
@@ -5165,7 +5164,780 @@ db.farm.deleteMany(
                     </div>
                 </section>
 
+                <section id="sept-11">
+                    <h4>Today <span class="highlight">Agenda</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>How to Validate Data Quality</li>
+                                <li>MongoDB History & Features</li>
+                                <li>CRUD, Operators, Practice</li>
+                                <li>Homework, Lab, and Project</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img height="300px"
+                                src="https://quotefancy.com/media/wallpaper/1600x900/612095-W-Edwards-Deming-Quote-Quality-is-everyone-s-responsibility.jpg">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <p>
+                        How to <span class="highlight">validate</span> data quality?
+                    </p>
+                </section>
+
+                <section>
+                    <div class="center">
+                        <table
+                            style="width:100%; text-align:center; font-size:1.5em; border-collapse:collapse; border:0px;">
+                            <tr style="border:0px;">
+                                <td style="padding:30px;">Accuracy</td>
+                                <td style="padding:30px;">Completeness</td>
+                                <td style="padding:30px;">Consistency</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:30px;">Timeliness</td>
+                                <td style="padding:30px;">Validity</td>
+                                <td style="padding:30px;">Uniqueness</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:30px;" colspan="3">Integrity</td>
+                            </tr>
+                        </table>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Minimum Schema & Types (Part 1)</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Use <span>$jsonSchema</span> for types & required.</li>
+                                <li>Disallow <span>NULL</span> for critical fields.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-javascript">// Validity
+// Enforce required fields
+db.createCollection("readings", {
+  validator: {
+    $jsonSchema: {
+      // Completeness
+      required: ["deviceId", "ts"]
+    }
+  }
+})
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Minimum Schema & Types (Part 2)</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Range checks for <span>moisture</span> (0–100).</li>
+                                <li>Enum for <span>unit</span> (e.g., "percent").</li>
+                                <li>Reject malformed docs on write.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-javascript">// Validity, Accuracy
+properties: {
+  deviceId: { bsonType: "string" },
+  ts: { bsonType: "date" },
+  moisture: { minimum: 0, maximum: 100 },
+  unit: { enum: ["percent"] }
+}
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>bsonType Example (Part 1)</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><span>bsonType</span> validates field data types.</li>
+                                <li>Ensures <span>string</span>, <span>date</span>, <span>int</span>.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-javascript">// Validity
+properties: {
+  deviceId: { bsonType: "string" },
+  ts: { bsonType: "date" },
+  moisture: { bsonType: "double" }
+}
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>bsonType Example (Part 2)</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Prevents accidental type drift.</li>
+                                <li>Supports arrays, objects, bool, null.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-javascript">// Consistency
+properties: {
+  battery: { bsonType: "int" },
+  healthy: { bsonType: "bool" },
+  tags: { bsonType: "array" },
+  meta: { bsonType: "object" }
+}
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Defaults & Normalization (Part 1)</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Normalize <span>unit</span> & numeric types.</li>
+                                <li>Prefer <span>upsert</span> for idempotence.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-javascript">// Normalize on write
+db.readings.updateOne(
+  { deviceId: "plant-007", ts: ts },
+  {
+    $set: {
+      unit: "percent",
+      moisture: { $toDecimal: "$moisture" }
+    }
+  },
+  { upsert: true }
+)
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Defaults & Normalization (Part 2)</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Apply defaults with <span>$ifNull</span>.</li>
+                                <li>Backfill <span>battery</span> if null.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-javascript">db.readings.updateOne(
+  { deviceId: "plant-007", ts: ts },
+  {
+    $set: {
+      battery: { $ifNull: ["$battery", 100] }
+    }
+  },
+  { upsert: true }
+)
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Bulk Normalize (Part 1)</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Use filter <span>{}</span> to target all docs.</li>
+                                <li>Cast types consistently in multiple fields.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-javascript">db.readings.updateMany(
+  {},
+  [{ $set: {
+    deviceId: { $toString: "$deviceId" },
+    ts: { $toDate: "$ts" },
+    moisture: { $toDecimal: "$moisture" },
+    battery: { $ifNull: ["$battery", 100] }
+  }}]
+)
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Bulk Normalize (Part 2)</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Cleaning historical IoT data.</li>
+                                <li>Safe to run multiple times (idempotent).</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-javascript">db.readings.updateMany(
+  {},
+  [{ $set: {
+    unit: "percent",
+    healthy: { $toBool: "$healthy" },
+    count: { $toInt: "$count" },
+    tags: { $ifNull: ["$tags", []] },
+    meta: { $ifNull: ["$meta", {}] }
+  }}]
+)
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Before vs After Normalization</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><strong>Before</strong>: Raw IoT readings can be messy.</li>
+                                <li>Types are inconsistent (string vs number).</li>
+                                <li>Null or missing fields (e.g., <span>battery</span>).</li>
+                                <li>Arrays or objects not initialized.</li>
+                            </ul>
+                            <pre><code class="language-javascript">{
+  deviceId: 12345,
+  ts: "2025-09-11",
+  moisture: "42",
+  battery: null,
+  healthy: "true"
+}
+</code></pre>
+                        </div>
+                        <div class="right">
+                            <ul>
+                                <li><strong>After</strong>: Normalized and validated.</li>
+                                <li>All types aligned with schema.</li>
+                                <li>Defaults filled (battery=100).</li>
+                                <li>Ready for analytics & actuation.</li>
+                            </ul>
+                            <pre><code class="language-javascript">{
+  deviceId: "12345",
+  ts: ISODate("2025-09-11T00:00:00Z"),
+  moisture: NumberDecimal("42"),
+  battery: 100,
+  healthy: true,
+  tags: [],
+  meta: {}
+}
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Enforce Uniqueness</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Prevent duplicates with <span>unique index</span>.</li>
+                                <li>Use compound key (deviceId + ts).</li>
+                                <li>Guarantee <span>uniqueness</span> of samples.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-javascript">// Uniqueness
+db.readings.createIndex(
+  { deviceId: 1, ts: 1 },
+  { unique: true }
+)
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Detect Outliers</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Run QA queries for invalid ranges.</li>
+                                <li>Quarantine suspicious documents.</li>
+                                <li>Protect <span>accuracy</span> of analytics.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-javascript">// Accuracy, Validity
+db.readings.find({
+  $or: [
+    { moisture: { $lt: 0 } },   // Accuracy
+    { moisture: { $gt: 100 } }  // Validity
+  ]
+})
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Use Partial Indexes</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Ensure rules only apply when fields exist.</li>
+                                <li>Avoid blocking inserts with missing keys.</li>
+                                <li>Supports <span>validity</span> and <span>uniqueness</span>.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-javascript">// Validity, Uniqueness
+db.readings.createIndex(
+  { deviceId: 1, ts: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      deviceId: { $exists: true },
+      ts: { $type: "date" }
+    }
+  }
+)
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Cross-Document Validation</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Check latest reading before actuation.</li>
+                                <li>Abort if invalid, out of range, or null.</li>
+                                <li>Protect <span>integrity</span> of control actions.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-javascript">// Integrity, Accuracy
+const r = db.readings.findOne(
+  { deviceId: "plant-007" },
+  { sort: { ts: -1 } }
+)
+
+if (!r || r.moisture < 0 || r.moisture > 100) {
+  throw "Invalid input"
+}
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Data Quality Dashboard</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Visualize data quality in real time.</li>
+                                <li>Good for operational monitoring.</li>
+                            </ul>
+                        </div>
+                        <div class="right" style="text-align:center;">
+                            <img src="https://www.scnsoft.com/blog-pictures/business-intelligence/data-quality-management-dashboard_1.png"
+                                alt="Data Quality Dashboard"
+                                style="max-width:100%; height:auto; border:1px solid #ccc;" />
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Business intelligence & decision-making</li>
+                                <li>Emphasizes data visibility and trust</li>
+                                <li>(Quality) Metrics for organization success</li>
+                            </ul>
+                        </div>
+                        <div class="right" style="text-align:center;">
+                            <img src="https://m.media-amazon.com/images/I/51tsXUzFJNL._UF1000,1000_QL80_.jpg"
+                                alt="Book Dashboard Effect"
+                                style="max-width:50%; height:auto; border:1px solid #ccc;" />
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>MQL Aggregation Functions</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>MQL aggregation.</li>
+                                <li>Functions for <span>sum</span>, <span>avg</span>, <span>min</span>,
+                                    <span>max</span>.
+                                </li>
+                                <li>Operators: <span>$group</span>, <span>$match</span>, <span>$project</span>.
+                                </li>
+                                <li>Pipeline for step-by-step transformation.</li>
+                                <li>Data quality checks & metrics calculation.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-javascript">// Accuracy, Completeness
+db.readings.aggregate([
+  { $match: { unit: "percent" } },
+  { $group: {
+      _id: "$deviceId",
+      avgMoisture: { $avg: "$moisture" },
+      minMoisture: { $min: "$moisture" },
+      maxMoisture: { $max: "$moisture" },
+      totalReadings: { $sum: 1 },
+      count: { $count: {} }
+])
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Count NULL and Inaccurate Data</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Run scheduled aggregates for QA reports.</li>
+                                <li>Surface % nulls, invalid ranges, duplicates.</li>
+                                <li>Improves <span>accuracy</span> and <span>completeness</span>.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-javascript">// Accuracy, Completeness
+db.readings.aggregate([
+  { $group: {
+      _id: null,
+      nullMoisture: { $sum: { 
+        $cond: [{$eq:["$moisture",null]},1,0] }},
+      outOfRange:   { $sum: { 
+        $cond: [
+            {
+                $or:[{$lt:["$moisture",0]},
+                {$gt:["$moisture",100]}]},1,0
+        ]}}
+  }}
+])
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Logging & Auditing</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Maintain audit trail of changes.</li>
+                                <li>Replay and verify historical decisions.</li>
+                                <li>Supports <span>integrity</span> & <span>traceability</span>.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-javascript">// Integrity
+db.audit.insertOne({
+  action: "UPDATE",
+  target: "readings",
+  ts: new Date(),
+  user: "system",
+  changes: { field: "moisture", old: "42", new: "42.0" }
+})
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="split" style="align-items:center; font-size:0.9em;">
+                        <div style="flex:1; text-align:center;">Unstructured</div>
+                        <div style="flex:0; font-size:1em;">&rarr;</div>
+                        <div style="flex:1; text-align:center;">Inconsistent</div>
+                        <div style="flex:0; font-size:1em;">&rarr;</div>
+                        <div style="flex:1; text-align:center;">Normalized</div>
+                        <div style="flex:0; font-size:1em;">&rarr;</div>
+                        <div style="flex:1; text-align:center;">Consistent</div>
+                    </div>
+                    <p class="fragment" style="text-align:center; margin-top:1em; font-weight:bold;">
+                        Eventually Consistent
+                    </p>
+                </section>
+
                 <section>Questions?</section>
+
+                <section>
+                    <div class="center">
+                        <table
+                            style="width:100%; text-align:center; font-size:1.1em; border-collapse:collapse; border:0px;">
+                            <tr style="border:0px;">
+                                <td style="padding:30px;">Accuracy &check;</td>
+                                <td style="padding:30px;">Completeness &check;</td>
+                                <td style="padding:30px;">Consistency &check;</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:30px;">Timeliness</td>
+                                <td style="padding:30px;">Validity &check;</td>
+                                <td style="padding:30px;">Uniqueness &check;</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:30px;" colspan="3">Integrity &check;</td>
+                            </tr>
+                        </table>
+                    </div>
+                </section>
+
+                <section>Questions?</section>
+
+                <section>Slowest component in realtime application?</section>
+
+                <section>
+                    <h4>Slowest Component in Realtime Application?</h4>
+                    <div class="split" style="align-items:center;">
+                        <div class="left">
+                            <ul>
+                                <li>Realtime apps rely on multiple tiers.</li>
+                                <li>Bottleneck decides end-to-end speed.</li>
+                                <li>Commonly database writes or <span class="highlight">network</span>.</li>
+                            </ul>
+                        </div>
+                        <div class="right" style="flex:1;">
+                            <div
+                                style="display:grid;grid-template-columns:1fr 60px 1fr 60px 1fr;gap:8px;align-items:center;text-align:center;">
+                                <div style="border:1px solid #999;border-radius:8px;padding:5px;">CLIENT</div>
+                                <div>&rarr;</div>
+                                <div style="border:1px solid #999;border-radius:8px;padding:5px;">SERVER</div>
+                                <div>&rarr;</div>
+                                <div style="border:1px solid #999;border-radius:8px;padding:5px;">DATABASE</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Term: Network Latency</h4>
+                    <div class="split">
+                        <div class="left">
+                            <strong>Definition:</strong> Time delay for data to travel
+                            from source to destination and back (round trip).
+                            Factors can be bandwidth, distance, routing,
+                            congestion, and packet size.
+                        </div>
+                        <div class="right">
+                            <img src="https://arzgu.ir/storage/images/shares/blog/what-is-latency/1.png"
+                                alt="Network Latency" style="max-width:90%; height:auto; border:1px solid #ccc;" />
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Slowest Component in Realtime Application?</h4>
+                    <div class="split" style="align-items:center;">
+                        <div class="left">
+                            <pre><code class="language-text">Big Data Transport Latency (100 MB)
+-----------------------------------
+1 Gbps : ~0.8 s one-way
+100 Mbps : ~8 s one-way
+10 Mbps : ~80 s one-way
+
+
+Round-trip ≈ 2x + small ACK delay
+</code></pre>
+                        </div>
+                        <div class="right" style="flex:1;">
+                            <div
+                                style="display:grid;grid-template-columns:1fr 60px 1fr 60px 1fr;gap:8px;align-items:center;text-align:center;">
+                                <div style="border:1px solid #999;border-radius:8px;padding:5px;">CLIENT</div>
+                                <div>&rarr;</div>
+                                <div style="border:1px solid #999;border-radius:8px;padding:5px;">SERVER</div>
+                                <div>&rarr;</div>
+                                <div style="border:1px solid #999;border-radius:8px;padding:5px;">DATABASE</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Timeliness via Sharded Architecture</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Supports horizontal scale (sharding).</li>
+                                <li>Each shard holds part of the dataset.</li>
+                                <li>Query router (<span>mongos</span>) directs requests.</li>
+                                <li>Config servers maintain cluster metadata.</li>
+                                <li><a href="https://www.mongodb.com/docs/manual/sharding/"
+                                        target="_blank">Documentation</a></li>
+                            </ul>
+                        </div>
+                        <div class="right" style="text-align:center;">
+                            <img src="https://www.practical-mongodb-aggregations.com/guides/pics/sharded-db-cluster.png"
+                                alt="MongoDB Sharded Cluster"
+                                style="max-width:90%; height:auto; border:1px solid #ccc;" />
+                        </div>
+                    </div>
+                </section>
+
+
+                <section>
+                    <h4>Horizontal Scaling for Timeliness</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Distribute workload in multiple nodes.</li>
+                                <li>Each shard holds a subset of the data.</li>
+                                <li>Improves <span>timeliness</span> of queries.</li>
+                                <li>Reduces latency under heavy IoT loads.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-javascript">// Timeliness
+// Shard readings by deviceId
+db.adminCommand({
+  shardCollection: "iot.readings",
+  key: { deviceId: 1 }
+})
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Balanced Cluster Load</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>MongoDB balancer moves chunks automatically.</li>
+                                <li>Keeps shards evenly loaded.</li>
+                                <li>Maintains <span>consistency</span> and speed.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-javascript">// Check balancer status
+db.adminCommand({ balancerStatus: 1 })
+
+// Move chunk manually if needed
+db.adminCommand({
+  moveChunk: "iot.readings",
+  find: { deviceId: "plant-007" },
+  to: "shard0001"
+})
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Scaling Reads & Writes</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Reads routed to appropriate shard.</li>
+                                <li>Writes distributed by shard key.</li>
+                                <li>Supports high-throughput IoT ingestion.</li>
+                                <li>Preserves <span>timeliness</span> under scale.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-javascript">// Example query routed by key
+db.readings.find({ deviceId: "plant-007" })
+
+// Query router (mongos)
+// ensures minimal latency
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>Other options?</section>
+
+                <section>
+                    <h4>Apply TTL for Ephemeral Data</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Auto-expire stale telemetry buffers.</li>
+                                <li>Preserve only fresh, relevant data.</li>
+                                <li>Supports <span>timeliness</span>.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-javascript">// Timeliness
+db.staging.createIndex(
+  { expiresAt: 1 },
+  { expireAfterSeconds: 0 }
+)
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>TTL Expiration Options</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><strong>Expire After 24h</strong></li>
+                                <li>Deletes docs 24 hours after <span>ts</span>.</li>
+                                <li>Good for temporary telemetry buffers.</li>
+                            </ul>
+                            <pre><code class="language-javascript">// Timeliness
+// Auto-delete 24h after ts
+db.staging.createIndex(
+  { ts: 1 },
+  { expireAfterSeconds: 86400 }
+)
+</code></pre>
+                        </div>
+                        <div class="right">
+                            <ul>
+                                <li><strong>Expire On Specific Date</strong></li>
+                                <li>Deletes docs at given <span>expiresAt</span>.</li>
+                                <li>Useful for fixed retention windows.</li>
+                            </ul>
+                            <pre><code class="language-javascript">// Timeliness
+// Auto-delete at expiresAt
+db.logs.createIndex(
+  { expiresAt: 1 },
+  { expireAfterSeconds: 0 }
+)
+
+db.logs.insertOne({
+  msg: "debug",
+  expiresAt: ISODate("2025-09-12T00:00:00Z")
+})
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="center">
+                        <table
+                            style="width:100%; text-align:center; font-size:1.1em; border-collapse:collapse; border:0px;">
+                            <tr style="border:0px;">
+                                <td style="padding:30px;">Accuracy &check;</td>
+                                <td style="padding:30px;">Completeness &check;</td>
+                                <td style="padding:30px;">Consistency &check;</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:30px;">Timeliness &check;</td>
+                                <td style="padding:30px;">Validity &check;</td>
+                                <td style="padding:30px;">Uniqueness &check;</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:30px;" colspan="3">Integrity &check;</td>
+                            </tr>
+                        </table>
+                    </div>
+                </section>
+
 
                 <section>
                     <h4>Practice <span class="highlight">Lab</span></h4>
@@ -5208,24 +5980,6 @@ db.farm.deleteMany(
                         <div class="right">
                             <img src="https://bernardmarr.com/wp-content/uploads/2021/07/How-Tesla-Is-Using-Artificial-Intelligence-to-Create-The-Autonomous-Cars-Of-The-Future.jpg"
                                 alt="Self-driving car" style="max-width:100%; height:auto;">
-                        </div>
-                    </div>
-                </section>
-
-                <section id="sept-09">
-                    <h4>Today <span class="highlight">Agenda</span></h4>
-                    <div class="split">
-                        <div class="left">
-                            <ul>
-                                <li>Data Quality and Standards &check;</li>
-                                <li>MongoDB History & Features &check;</li>
-                                <li>CRUD, Operators, Practice &check;</li>
-                                <li>Homework, Lab, and Project</li>
-                            </ul>
-                        </div>
-                        <div class="right">
-                            <img height="300px"
-                                src="https://quotefancy.com/media/wallpaper/1600x900/612095-W-Edwards-Deming-Quote-Quality-is-everyone-s-responsibility.jpg">
                         </div>
                     </div>
                 </section>
