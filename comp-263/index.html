@@ -194,11 +194,11 @@
         }
 
         .left {
-            min-width: 42%;
+            min-width: 50%;
         }
 
         .right {
-            min-width: 42%;
+            min-width: 40%;
         }
 
         /* Typography & alignment */
@@ -337,7 +337,8 @@
                             </tr>
                             <tr style="color:#ccc;">
                                 <td style="padding:6px; border:1px solid #666;">Week 4</td>
-                                <td style="padding:6px; border:1px solid #666;">Sep 16, Sep 18</td>
+                                <td style="padding:6px; border:1px solid #666;"><a href="#/sept-16">Sept 16</a>, Sep 18
+                                </td>
                                 <td style="padding:6px; border:1px solid #666;"><a href="#/225"
                                         style="color:#ccc; text-decoration:none;">Data Ingestion and Processing
                                         &#x1f517;</a></td>
@@ -5983,6 +5984,413 @@ db.logs.insertOne({
                         </div>
                     </div>
                 </section>
+
+                <section id="sept-16">
+                    <h4>Today <span class="highlight">Agenda</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Ingest/Digest Big Data</li>
+                                <li>Map: Transform <strong>data items</strong></li>
+                                <li>Filter: Transform <strong>data rows</strong></li>
+                                <li>Reduce: Transform <strong>data columns</strong></li>
+                                <li>Lab 2, Homework 2, Project Part 1</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img height="300px"
+                                src="https://d15shllkswkct0.cloudfront.net/wp-content/blogs.dir/1/files/2017/01/apache-sw-foundation-logo-100052312-gallery.jpg">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Ingest and Digest <span class="highlight">(1970)</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Ed Codd: relational db model</li>
+                                <li>Ingest/digest limited to SQL</li>
+                                <li>Transformations done in batch</li>
+                                <li>Big Data pipelines came later</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>-- Get all crop names
+SELECT name 
+FROM crops;
+
+-- Filter high-yield crops
+SELECT * 
+FROM crops 
+WHERE yield_per_hectare &gt; 5000;
+
+-- Sum total production
+SELECT SUM(production_tonnes) AS total 
+FROM crops;
+            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <pre class="mermaid">
+graph LR
+    Client[Client App] -->|Reads/Writes| DB[(Relational Database)]
+    DB -->|Responds| Client
+
+    %% Legend nodes
+    Ingest["Ingest: Sending data to DB"]
+    Digest["Digest: Reading/Processing data from DB"]
+
+    %% Connect legend
+    Ingest -.-> Client
+    Digest -.-> DB
+    </pre>
+                </section>
+
+                <section id="multi-source-ingest">
+                    <h4>Ingest and Digest at Scale (Post-2000s)</h4>
+                    <pre class="mermaid">
+graph LR
+    subgraph Clients
+        IoT1[IoT Device 1]
+        IoT2[IoT Device 2]
+        Phone1[Mobile Phone 1]
+        Phone2[Mobile Phone 2]
+        WebApp[Web App]
+    end
+
+    subgraph Pipeline
+        Kafka[(Message Broker)]
+        Spark[(Stream/Batch Processing)]
+    end
+
+    DB[(Distributed Database)]
+
+    %% Data flow
+    IoT1 -->|Ingest| Kafka
+    IoT2 -->|Ingest| Kafka
+    Phone1 -->|Ingest| Kafka
+    Phone2 -->|Ingest| Kafka
+    WebApp -->|Ingest| Kafka
+
+    Kafka --> Spark --> DB
+    DB -->|Digest| Spark
+    Spark -->|Processed Data| WebApp
+    </pre>
+                </section>
+
+
+                <section id="ingest-digest-transform">
+                    <h4>Ingest & Digest Using Data <span class="highlight">Transformations</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Ingest raw JSON from sources</li>
+                                <li>Transform using <strong>map, filter, reduce</strong></li>
+                                <li>Filter out invalid data</li>
+                                <li>Aggregate and processed data</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>
+Before:
+[
+  { "crop": "Wheat", "yield": 5000 },
+  { "crop": "Corn", "yield": null }
+]
+
+After:
+[
+  { "crop": "Wheat", "yield": 5000 }
+]
+Total Yield: 5000
+            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Data Transformations</h4>
+                    <div class="center">
+                        <ul>
+                            <li class="fragment">Poor quality data ⟶ Better quality data (e.g., remove nulls, fix typos)
+                            </li>
+                            <li class="fragment">Unnormalized data ⟶ Normalized data (e.g., split address:
+                                street/city/state)</li>
+                            <li class="fragment">Unstandardized data ⟶ Standardized data (e.g., timestamps → UTC)</li>
+                            <li class="fragment">Format 1 ⟶ Format 2 (e.g., English → Spanish)</li>
+                            <li class="fragment">Incomplete data ⟶ Complete data (e.g., fill missing yield with average)
+                            </li>
+                            <li class="fragment">Duplicate records ⟶ Unique dataset (e.g., remove repeated crop entries)
+                            </li>
+                            <li class="fragment">Inconsistent units ⟶ Standardized units (e.g., lbs → kg, gallons →
+                                liters)</li>
+                            <li class="fragment">Unstructured text ⟶ Structured fields (e.g., parse “Wheat, 5000kg” into
+                                JSON)</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Data Transformation with <span class="highlight">Map, Filter, Reduce</span></h4>
+                    <div class="center">
+                        <ul>
+                            <li><strong>Map</strong> – Transform individual data items</li>
+                            <li><strong>Filter</strong> – Select rows from a dataset</li>
+                            <li><strong>Reduce</strong> – Aggregate or summarize data</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Data Transformation <span class="highlight">without</span> Map, Filter, Reduce</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Manual loops</li>
+                                <li>Accessing object keys</li>
+                                <li>Conditional statements</li>
+                                <li>Harder to read, maintain, and scale</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>const data = [
+  { "crop": "Wheat", "yield": "5000" },
+  { "crop": "Corn", "yield": "4000" }
+];
+
+let result = [];
+for (let i = 0; i < data.length; i++) {
+  if (data[i].yield) {
+    result.push({ 
+      cropName: data[i].crop, 
+      cropYield: parseInt(data[i].yield) 
+    });
+  }
+}</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Map: Transform Data <span class="highlight">Item</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Map applies to item granularity</li>
+                                <li>Used for item requirements</li>
+                                <li>IndexedDB, MongoDB, and SQL</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>Before:
+[
+  { "crop": "Wheat", "yield": "5000" },
+  { "crop": "Corn", "yield": "4000" }
+]
+
+Map → convert yield to integer:
+[
+  { "crop": "Wheat", "yield": 5000 },
+  { "crop": "Corn", "yield": 4000 }
+]
+            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div style="display:flex; justify-content:center; align-items:center; height:100vh; width:100%;">
+                        <table border="1"
+                            style="border-collapse: collapse; width:90%; height:90%; text-align: center; font-size:1.1em;">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Map</th>
+                                    <th>Filter</th>
+                                    <th>Reduce</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>IndexedDB (JS)</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>MongoDB (MQL)</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>RDBMS (SQL)</td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Map Examples in JavaScript</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><strong>Translation:</strong> English → Spanish</li>
+                                <li><strong>Data Format:</strong> Date → ISO string</li>
+                                <li><strong>Type Conversion:</strong> String → Integer</li>
+                                <li><strong>Default Value:</strong> Fill missing fields</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code style="font-size: 11pt;">// Translation: English to Spanish
+["Wheat","Corn"].map(c=>c==="Wheat"?"Trigo":"Maíz");
+
+// Data Format: Local to UTC
+["01/12/25"].map(d => new Date(d).toISOString());
+
+// Type Conversion: String to Int
+["5000","4000"].map(y => parseInt(y));
+
+// Default Value: Region
+[{r:null}].map(x=>({r:x.r||"Unknown"}))
+            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Data Mapping Requirements</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Req 1: Fill missing data with default</li>
+                                <li>Req 2: Convert yield to integer</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>Before:
+[
+  { "crop": "Wheat", "yield": "5000" },
+  { "crop": "Corn" }
+]
+
+After Map:
+[
+  { "crop": "Wheat", "yield": 5000 },
+  { "crop": "Corn", "yield": "missing" }
+]
+            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <p>
+                        <a href="https://onecompiler.com/javascript" target="_blank">
+                            Map IndexedDB Data with JavaScript
+                        </a>
+                    </p>
+                </section>
+
+                <section>
+                    <pre><code>// Req 1:  Fill missing data with default
+const data = [
+  { crop: "Wheat", yield: "5000" },
+  { crop: "Corn" }
+];
+
+// Req 2: Convert yield to integer
+const mapped = data.map(d => ({
+  crop: d.crop,
+  yield: d.yield ? parseInt(d.yield) : "missing"
+}));
+    </code></pre>
+                </section>
+
+                <!-- MongoDB Example -->
+                <section>
+                    <p>
+                        <a href="https://onecompiler.com/mongodb" target="_blank">
+                            Map MongoDB Data with JavaScript
+                        </a>
+                    </p>
+                </section>
+
+                <section>
+                    <pre><code>// Req 1: Fill missing yield with default
+// Req 2: Convert yield to integer
+db.crops.aggregate([
+  {
+    $addFields: {
+      yield: { $ifNull: [ { $toInt: "$yield" }, "missing" ] }
+    }
+  }
+])
+</code></pre>
+                </section>
+
+                <!-- SQL Example -->
+                <section>
+                    <p>
+                        <a href="https://onecompiler.com/sql" target="_blank">
+                            Map RDBMS Data with SQL
+                        </a>
+                    </p>
+                </section>
+
+                <section>
+                    <pre><code>-- Req 1: Fill missing yield with default
+-- Req 2: Convert yield to integer
+SELECT 
+  crop,
+  COALESCE(CAST(yield AS INT), 0) AS yield
+FROM crops;
+</code></pre>
+                </section>
+
+                <section>
+                    <div style="display:flex; justify-content:center; align-items:center; height:100vh; width:100%;">
+                        <table border="1"
+                            style="border-collapse: collapse; width:90%; height:90%; text-align: center; font-size:30px; table-layout: fixed;">
+                            <thead>
+                                <tr>
+                                    <th style="width:25%"></th>
+                                    <th style="width:25%">Map</th>
+                                    <th style="width:25%">Filter</th>
+                                    <th style="width:25%">Reduce</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>IndexedDB (JS)</td>
+                                    <td>&#10003;</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>MongoDB (MQL)</td>
+                                    <td>&#10003;</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td>RDBMS (SQL)</td>
+                                    <td>&#10003;</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
 
                 <section>Homework 1</section>
 
