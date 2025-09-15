@@ -46,6 +46,14 @@
             border-radius: 4px;
         }
 
+        .mermaid {
+            text-align: center !important;
+            max-width: 100% !important;
+            ;
+            height: auto !important;
+            ;
+        }
+
         .global-footer {
             position: fixed;
             bottom: 0;
@@ -60,6 +68,19 @@
             background: black;
         }
 
+        ul {
+            margin: 0;
+            padding: 0 !important;
+            list-style-position: inside;
+            width: 100%;
+            /* optional: keeps bullets aligned */
+        }
+
+        li {
+            margin-left: 0;
+            padding-left: 0;
+        }
+
         .footer-link {
             color: #f8f8f2;
             text-decoration: none;
@@ -67,6 +88,29 @@
 
         .footer-link:hover {
             text-decoration: underline;
+        }
+
+        .left-image {
+            display: block;
+            width: 100%;
+            /* span the full width of left column */
+            height: auto;
+            /* keep aspect ratio */
+            max-height: 300px !important;
+            /* cap height */
+            object-fit: cover;
+            /* small gap below image */
+            border-radius: 6px;
+        }
+
+        .split .left {
+            margin: 0;
+            /* reduce padding inside left side */
+        }
+
+        .split .left ul {
+            margin: 0;
+            /* small indent for bullets */
         }
 
         .slides {
@@ -340,7 +384,7 @@
                                 <td style="padding:6px; border:1px solid #666;"><a href="#/sept-16">Sept 16</a>, Sep 18
                                 </td>
                                 <td style="padding:6px; border:1px solid #666;"><a href="#/225"
-                                        style="color:#ccc; text-decoration:none;">Data Ingestion and Processing
+                                        style="color:#ccc; text-decoration:none;">Data Transformation and Processing
                                         &#x1f517;</a></td>
                                 <td style="padding:6px; border:1px solid #666;"></td>
                                 <td style="padding:6px; border:1px solid #666;"></td>
@@ -5841,7 +5885,7 @@ db.adminCommand({
                             <ul>
                                 <li>Reads routed to appropriate shard.</li>
                                 <li>Writes distributed by shard key.</li>
-                                <li>Supports high-throughput IoT ingestion.</li>
+                                <li>Supports high-throughput IoT Transformation.</li>
                                 <li>Preserves <span>timeliness</span> under scale.</li>
                             </ul>
                         </div>
@@ -5990,7 +6034,7 @@ db.logs.insertOne({
                     <div class="split">
                         <div class="left">
                             <ul>
-                                <li>Ingest/Digest Big Data</li>
+                                <li>Data Transformation and Processing</li>
                                 <li>Map: Transform <strong>data items</strong></li>
                                 <li>Filter: Transform <strong>data rows</strong></li>
                                 <li>Reduce: Transform <strong>data columns</strong></li>
@@ -6005,21 +6049,18 @@ db.logs.insertOne({
                 </section>
 
                 <section>
-                    <h4>Ingest and Digest <span class="highlight">(1970)</span></h4>
+                    <h4>Data Transformation and Processing <span class="highlight">(1970)</span></h4>
                     <div class="split">
                         <div class="left">
+                            <img src="https://regmedia.co.uk/2013/08/16/tedd_codd.jpg" alt="Ed Codd" class="left-image">
                             <ul>
                                 <li>Ed Codd: relational db model</li>
-                                <li>Ingest/digest limited to SQL</li>
-                                <li>Transformations done in batch</li>
-                                <li>Big Data pipelines came later</li>
+                                <li>Data (table) transformation first</li>
+                                <li>SQL Transforming limited RDMS</li>
                             </ul>
                         </div>
                         <div class="right">
-                            <pre><code>-- Get all crop names
-SELECT name 
-FROM crops;
-
+                            <pre><code>
 -- Filter high-yield crops
 SELECT * 
 FROM crops 
@@ -6028,7 +6069,74 @@ WHERE yield_per_hectare &gt; 5000;
 -- Sum total production
 SELECT SUM(production_tonnes) AS total 
 FROM crops;
-            </code></pre>
+
+-- Update harvest_date to DATE format
+UPDATE crops
+SET harvest_date = DATE('2025-09-14')
+WHERE id = 1;
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Data Transformation and Processing <span class="highlight">(1966)</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <img src="https://www.cs.man.ac.uk/~pjj/cs2111/ho/img29.gif" alt="Böhm–Jacopini"
+                                class="left-image" style="background-color: white;padding: 0px 2px;">
+                            <ul>
+                                <li>Structured Program Theorem (Böhm–Jacopini)</li>
+                                <li>Algorithm first = Sequence, Selection, Iteration</li>
+                                <li>Minimal building blocks for computation</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>#include &lt;stdio.h&gt;
+
+int main() {
+    int yields[5] = {4000, 5200, 3100, 7000, 4800};
+    int total = 0;
+
+    for (int i = 0; i &lt; 5; i++) {          // Iteration
+        if (yields[i] &gt; 5000) {            // Selection
+            total += yields[i];            // Sequence
+        }
+    }
+    printf("Total high yield = %d\n", total);
+    return 0;
+}
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+
+                <section>
+                    <h4>Data Transformation and Processing <span class="highlight">(1972)</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <img src="https://s.hdnux.com/photos/07/00/07/1835478/12/1920x0.jpg" alt="Dennis Ritchie"
+                                class="left-image">
+                            <ul>
+                                <li>Dennis Ritchie: C programming language</li>
+                                <li>Transformations limited to if &amp; loops</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>// Example: transform yields with C
+#include &lt;stdio.h&gt;
+
+int main() {
+    int yields[5] = {4000, 5200, 3100, 7000, 4800};
+    for (int i = 0; i &lt; 5; i++) {
+        if (yields[i] &gt; 5000) {
+            printf("High yield: %d\n", yields[i]);
+        }
+    }
+    return 0;
+}
+</code></pre>
                         </div>
                     </div>
                 </section>
@@ -6036,51 +6144,9 @@ FROM crops;
                 <section>
                     <pre class="mermaid">
 graph LR
-    Client[Client App] -->|Reads/Writes| DB[(Relational Database)]
-    DB -->|Responds| Client
-
-    %% Legend nodes
-    Ingest["Ingest: Sending data to DB"]
-    Digest["Digest: Reading/Processing data from DB"]
-
-    %% Connect legend
-    Ingest -.-> Client
-    Digest -.-> DB
+    Client[Client Tier] --> Server[Server Tier] --> DB[(Database Tier)]
     </pre>
                 </section>
-
-                <section id="multi-source-ingest">
-                    <h4>Ingest and Digest at Scale (Post-2000s)</h4>
-                    <pre class="mermaid">
-graph LR
-    subgraph Clients
-        IoT1[IoT Device 1]
-        IoT2[IoT Device 2]
-        Phone1[Mobile Phone 1]
-        Phone2[Mobile Phone 2]
-        WebApp[Web App]
-    end
-
-    subgraph Pipeline
-        Kafka[(Message Broker)]
-        Spark[(Stream/Batch Processing)]
-    end
-
-    DB[(Distributed Database)]
-
-    %% Data flow
-    IoT1 -->|Ingest| Kafka
-    IoT2 -->|Ingest| Kafka
-    Phone1 -->|Ingest| Kafka
-    Phone2 -->|Ingest| Kafka
-    WebApp -->|Ingest| Kafka
-
-    Kafka --> Spark --> DB
-    DB -->|Digest| Spark
-    Spark -->|Processed Data| WebApp
-    </pre>
-                </section>
-
 
                 <section id="ingest-digest-transform">
                     <h4>Ingest & Digest Using Data <span class="highlight">Transformations</span></h4>
@@ -7063,7 +7129,7 @@ INSERT INTO Crops VALUES
                 <section>
                     <h4>What is Data Engineering?</h4>
                     <ul>
-                        <li><strong>Data Collection and Ingestion</strong></li>
+                        <li><strong>Data Collection and Transformation</strong></li>
                         <li><strong>Data Transformation and Cleaning</strong></li>
                         <li><strong>Data Storage and Management</strong></li>
                         <li><strong>Data Pipeline Development</strong></li>
@@ -7750,7 +7816,7 @@ console.assert(result.soilMoisture >= 0 && result.soilMoisture <= 100,
                     <ul>
                         <li>Practice NoSQL Queries &check;</li>
                         <li>Why Data?</li>
-                        <li>Ingestion (Extract)</li>
+                        <li>Transformation (Extract)</li>
                         <li>Processing (Transform)</li>
                         <li>Loading (Load)</li>
                     </ul>
@@ -7869,7 +7935,7 @@ console.assert(result.soilMoisture >= 0 && result.soilMoisture <= 100,
                     <ul>
                         <li>Practice NoSQL Queries &check;</li>
                         <li>Why Data? &check;</li>
-                        <li>Ingestion (Extract)</li>
+                        <li>Transformation (Extract)</li>
                         <li>Processing (Transform)</li>
                         <li>Loading (Load)</li>
                     </ul>
@@ -7989,7 +8055,7 @@ db.flowerCollection.find({
                     <ul>
                         <li>Practice NoSQL Queries &check;</li>
                         <li>Why Data? &check;</li>
-                        <li>Ingestion (Extract) &check;</li>
+                        <li>Transformation (Extract) &check;</li>
                         <li>Processing (Transform) &rarr; Thursday</li>
                         <li>Loading (Load) &rarr; Thursday</li>
                     </ul>
@@ -8023,7 +8089,7 @@ db.flowerCollection.find({
                     <ul>
                         <li>Practice NoSQL Queries &check;</li>
                         <li>Why Data? &check;</li>
-                        <li>Ingestion (Extract) &check;</li>
+                        <li>Transformation (Extract) &check;</li>
                         <li>Processing (Transform)</li>
                         <li>Loading (Load)</li>
                     </ul>
@@ -10629,7 +10695,7 @@ RETURN f.name, COUNT(neighbor) AS neighbor_count
                 </section>
 
                 <section>
-                    <p>Module 4 - Data Ingestion and Processing </p>
+                    <p>Module 4 - Data Transformation and Processing </p>
                 </section>
 
                 <section>
