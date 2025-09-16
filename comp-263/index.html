@@ -128,11 +128,6 @@
             width: 90% !important;
         }
 
-        .highlight {
-            color: #bf4a12;
-            font-weight: bold;
-        }
-
         .columns {
             display: flex;
             gap: 40px;
@@ -259,9 +254,12 @@
         /* Typography & alignment */
         .highlight {
             background: rgba(255, 234, 120, 0.25);
-            padding: 0 .25rem;
+            /* padding: 1px; */
             border-radius: .25rem;
-            outline: 1px solid rgba(240, 200, 50, .25);
+            /* outline: 1px solid rgba(240, 200, 50, .25); */
+            color: #bf4a12;
+            font-weight: normal;
+            margin: 1px;
         }
 
         .muted {
@@ -316,6 +314,46 @@
             justify-content: center;
             color: #999;
             font-size: .9em;
+        }
+
+        /* ---- Code Styling (inline + blocks) ------------------------------- */
+        :root {
+            --code-font: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+            --code-radius: 8px;
+            --code-tabsize: 2;
+
+            /* Light theme */
+            --code-bg: #f6f8fa;
+            --code-inline-bg: #f0f2f5;
+            --code-text: #1f2328;
+            --code-shadow: 0 1px 2px rgba(0, 0, 0, .04);
+            --code-accent: #0b6cff;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --code-bg: #0f172a;
+                /* slate-900 */
+                --code-inline-bg: #111827;
+                /* gray-900 */
+                /* gray-800 */
+                --code-text: #e5e7eb;
+                /* gray-200 */
+                --code-shadow: 0 1px 2px rgba(0, 0, 0, .25);
+                --code-accent: #60a5fa;
+                /* blue-400 */
+            }
+        }
+
+        /* Inline code like `map`, `filter`, `reduce` */
+        code {
+            font-family: var(--code-font);
+            font-size: 0.95em;
+            background: var(--code-inline-bg);
+            color: var(--code-text);
+            padding: 0.15em 0.4em;
+            border-radius: calc(var(--code-radius) - 4px);
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -6694,139 +6732,212 @@ db.tempObjects.aggregate([
                     <img src="./img/map-filter-reduce.png">
                 </section>
 
-
-                <section>Homework 1</section>
+                <section>Homework 2</section>
 
                 <section>
-                    <h4> Homework 1</h4>
+                    <h4> Homework 2 (due Sept/26)</h4>
                     <div class="center">
-                        <ul>
-                            <li class="fragment"><strong>SQL vs RDBMS:</strong> SQL is the language; RDBMS is the engine
-                                (Postgres/MySQL/Oracle/SQLite).</li>
-                            <li class="fragment"><strong>Systems differ by fit:</strong> MariaDB (MySQL-compatible,
-                                community), Oracle (enterprise HA), PostgreSQL (extensible), SQLite
-                                (embedded/serverless).</li>
-                            <li class="fragment"><strong>ACID vs CAP:</strong> ACID = single-node txn guarantees; CAP =
-                                distributed trade-offs, under partitions you choose CP or AP.</li>
-                            <li class="fragment"><strong>“Consistency” differs:</strong> ACID = rules/constraints; CAP =
-                                replica agreement.</li>
-                            <li class="fragment"><strong>DDL vs DML:</strong> Schema (CREATE/ALTER/DROP) vs Data
-                                (SELECT/INSERT/UPDATE/DELETE).</li>
-                            <li class="fragment"><strong>Strozzi NoSQL:</strong> “Not only SQL”, UNIX pipelines &
-                                simplicity/cost over heavyweight stacks.</li>
-                        </ul>
+                        <ol>
+                            <li>How does metadata (such as author, timestamp, and uuid) improve data quality during data
+                                synchronization?</li>
+                            <li>What are the seven dimensions of data quality?</li>
+                            <li>Imagine a dataset of crop yields collected from IoT sensors. Describe one real-world
+                                issue of poor data quality.</li>
+                            <li>How does metadata (such as author, timestamp, and uuid) improve data quality during data
+                                synchronization?</li>
+                            <li>Suppose two datasets of farm records are combined. The datasets use metric units (kg)
+                                and imperial units (lbs).</li>
+                            <li>Select which transformation function (map, filter, or reduce) is most appropriate.</li>
+                            <li>Why is filtering data before analysis an important step?</li>
+                            <li>How does the reduce function help in summarizing large datasets?</li>
+                            <li>Explain the purpose of map, filter, and reduce in data transformation?</li>
+                            <li>Describe a practical example of combining map, filter, and reduce in one pipeline for
+                                agricultural IoT data.</li>
+                        </ol>
                     </div>
                 </section>
 
-                <section>
-                    <h4>Lab 1</h4>
-                    <div class="split">
-                        <div class="left">
-                            <ul>
-                                <li class="fragment"><strong>IDs & sync:</strong> auto-increment (local, ordered) vs
-                                    UUID (merge-friendly, global).</li>
-                                <li class="fragment"><strong>Images:</strong> store <em>path + CacheStorage</em> vs
-                                    <em>Blob</em> in IndexedDB vs <em>Base64</em> (size & perf trade-offs).
-                                </li>
-                                <li class="fragment"><strong>Create object stores by read or write:</strong> split
-                                    read-optimized vs write-optimized stores (e.g., FarmDataView vs
-                                    FarmDataRaw); use readonly/readwrite transactions appropriately.</li>
-                            </ul>
-                        </div>
-                        <div class="right">
-                            <img src="./img/lab1-example.png" alt="IndexedDB DevTools view"
-                                style="max-width:100%; height:auto;">
-                            <!-- Replace src with your local asset path if needed -->
-                        </div>
-                    </div>
-                </section>
+                <section>Lab 2 - Upstream Data</section>
 
                 <section>
-                    <h4>Lab 2 — <span class="highlight">Upload IndexedDB → MongoDB</span></h4>
-                    <div class="split">
-                        <div class="left">
-                            <ol>
-                                <li class="fragment">Run Lab 1 locally; start a server (MEAN Stack) with a
-                                    <strong>POST /data</strong> endpoint.
-                                </li>
-                                <li class="fragment">Read from <strong>IndexedDB</strong> and send up to
-                                    <strong>1000</strong> records from lab 1.
-                                </li>
-                                <li class="fragment"><strong>Insert only if not exists</strong> (dedupe on a key you
-                                    choose).</li>
-                                <li class="fragment">Use collection name: <strong>lab2-firstname-6789</strong> (last 4
-                                    of student ID).</li>
-                                <li class="fragment">Download <strong>MongoDB Compass</strong>, connect to Atlas, and
-                                    verify the upload.</li>
-                            </ol>
-                        </div>
-                        <div class="right">
-                            <ul>
-                                <li class="fragment"><strong>Naming example:</strong> <em>lab2-alice-6789</em></li>
-                                <li class="fragment"><strong>Dedupe strategy:</strong> findOne-before-insert <em>or</em>
-                                    unique index + upsert.</li>
-                                <li class="fragment"><strong>Submit:</strong> upload a <em>Compass (connected to
-                                        Atlas)</em> screenshot showing your collection and document count.</li>
-                            </ul>
-                        </div>
-                    </div>
+                    <h4>Lab 2 (due Sept/26)</h4>
+                    <ol>
+                        <li>Download <a href="https://www.mongodb.com/try/download/compass" target="_blank">MongoDB
+                                Compass</a></li>
+                        <li>Prepare IndexedDB with exactly 10 objects (see Lab 1)</li>
+                        <li>Add metadata and convert all dates to UTC</li>
+                        <li>Sync data to MongoDB Atlas and verify using Compass</li>
+                        <li>Do not use loops or if-then-else conditions in any code, only <code>map</code>,
+                            <code>filter</code>, and <code>reduce</code>
+                        </li>
+                        <li>Push your code to your folder: <a
+                                href="https://github.com/SE4CPS/2025-COMP-263/tree/main/labs/lab2/"
+                                target="_blank">GitHub Repository</a></li>
+                    </ol>
                 </section>
 
+                <section>Project Part 1 - Upstream/Downstream Data</section>
+
                 <section>
-                    <p style="font-size:14pt; line-height:1.4;">
-                        <span class="highlight">NoSQL</span>, <span class="highlight">Key-Value Store</span>,
-                        <span class="highlight">Document Store</span>, Column Store,
-                        Graph Database, <span class="highlight">CAP Theorem</span>,
-                        BASE Model, Eventual Consistency, <span class="highlight">ACID Properties</span>, Strong
-                        Consistency,
-                        Sharding,Replication,
-                        Partitioning,<span class="highlight">Volume</span>,
+                    <h4>Project Part 1 (due Oct/24)</h4>
+                    <ol>
+                        <li>Create MongoDB with Sample Data</li>
+                        <li>Implement API Endpoints: <code>GET</code> and <code>POST</code></li>
+                        <li>Add Quality Validation and Indexes</li>
+                        <li>Push your code to your folder: <a
+                                href="https://github.com/SE4CPS/2025-COMP-263/tree/main/labs/lab2/"
+                                target="_blank">GitHub Repository</a></li>
+                    </ol>
+                </section>
+
+                <section>Questions</section>
+
+                <section>
+                    <p style="font-size:15pt; line-height:1.4;">
+                        <span class="highlight">NoSQL</span>,
+                        <span class="highlight">Key-Value Store</span>,
+                        <span class="highlight">Document Store</span>,
+                        Column Store,
+                        Graph Database,
+                        <span class="highlight">CAP Theorem</span>,
+                        BASE Model, Eventual Consistency,
+                        <span class="highlight">ACID Properties</span>,
+                        Strong Consistency,
+                        Sharding,
+                        Replication,
+                        Partitioning,
+                        <span class="highlight">Volume</span>,
                         <span class="highlight">Velocity</span>,
                         <span class="highlight">Variety</span>,
                         <span class="highlight">Veracity</span>,
                         <span class="highlight">Value</span>,
-                        Horizontal Scaling, Vertical Scaling, <span class="highlight">Consistency</span>, Availability,
-                        Partition Tolerance, Quorum, Vector Clock, Schema-less, Indexing, Secondary Index, Primary Key,
-                        Compound Key, MapReduce, Aggregation, Query Engine, Query
-                        Planner, Execution Plan,
-                        CRUD, Insert, Update, Delete, Read, Write Concern, Read Concern, Consistency Level, Tunable
-                        Consistency, <span class="highlight">onupgradeneeded</span>,
+                        Horizontal Scaling,
+                        Vertical Scaling,
+                        <span class="highlight">Consistency</span>,
+                        Availability,
+                        Partition Tolerance,
+                        Vector Clock,
+                        Schema-less,
+                        Indexing,
+                        Secondary Index,
+                        Primary Key,
+                        UUID,
+                        Compound Key,
+                        MapReduce,
+                        Aggregation,
+                        Query Engine,
+                        Query Planner,
+                        Execution Plan,
+                        CRUD,
+                        Insert,
+                        Update,
+                        Delete,
+                        Read,
+                        Write Concern,
+                        Read Concern,
+                        Consistency Level,
+                        Consistency,
+                        <span class="highlight">onupgradeneeded</span>,
                         <span class="highlight">createObjectStore</span>,
                         <span class="highlight">keyPath</span>,
                         <span class="highlight">autoIncrement</span>,
                         <span class="highlight">transaction</span>,
                         <span class="highlight">objectStore.add</span>,
                         <span class="highlight">createIndex</span>,
-                        Latency, Throughput, Fault Tolerance, Failover, Replica Set,
-                        Leader Election, Cluster, Node, Data Center, Geo-Replication,
-                        <span class="highlight">Document Model</span>, <span class="highlight">JSON</span>, BSON, XML
-                        Store, Wide Column,
-                        Super Column, Column Family, CQL, <span class="highlight">MQL</span>, Cypher,
-                        Graph Traversal, Property Graph, RDF, Triple Store, Relationship,
-                        Node Label, Edge, <span class="highlight">NoSQL</span>,
-                        Index-Free Adjacency, Query Optimization, Materialized View, Denormalization, Data Redundancy,
+                        Latency,
+                        Throughput,
+                        Fault Tolerance,
+                        Failover,
+                        Replica Set,
+                        Leader Election,
+                        Cluster,
+                        Node,
+                        Data Center,
+                        Geo-Replication,
+                        <span class="highlight">Document Model</span>,
+                        <span class="highlight">JSON</span>,
+                        BSON,
+                        XML
+                        Store,
+                        Wide Column,
+                        Super Column,
+                        Column Family,
+                        CQL,
+                        <span class="highlight">MQL</span>,
+                        Cypher,
+                        Graph Traversal,
+                        Property Graph,
+                        RDF,
+                        Triple Store,
+                        Relationship,
+                        Node Label,
+                        Edge,
+                        <span class="highlight">NoSQL</span>,
+                        Index-Free Adjacency,
+                        Query Optimization,
+                        Materialized View,
+                        Denormalization,
+                        Data Redundancy,
                         Write Amplification,
-                        Compaction, Commit Log, Snapshot, Backup, Restore, Hot Data, Cold Data, Data Lake,
-                        Data Warehouse, ETL, ELT, Streaming, Batch Processing,
-                        Lambda Architecture, Kappa Architecture, Pub/Sub, Message Queue,
+                        Compaction,
+                        Commit Log,
+                        Snapshot,
+                        Backup,
+                        Restore,
+                        Hot Data,
+                        Cold Data,
+                        Data Lake,
+                        Data Warehouse,
+                        ETL,
+                        ELT,
+                        Streaming,
+                        Batch Processing,
+                        <span class="highlight">Transformation</span>,
+                        Lambda Architecture,
+                        Pub/Sub,
+                        Message Queue,
                         Idempotency,
-                        Conflict Resolution, Event Sourcing, CQRS, Distributed Cache,
-                        In-Memory Database, Time-Series Database, Search Index, Inverted
-                        Index,Full-Text Search,
-                        <span class="highlight">Accuracy</span>, <span class="highlight">Completeness</span>,
-                        <span class="highlight">Consistency</span>, <span class="highlight">Timeliness</span>,
-                        <span class="highlight">Validity</span>, <span class="highlight">Uniqueness</span>,
-                        <span class="highlight">Integrity</span>, <span class="highlight">Usability</span>.
-                        <span class="highlight">Atlas</span>, <span class="highlight">Compass</span>, <span
-                            class="highlight">Collection</span>,
-                        <span class="highlight">find</span>, <span class="highlight">updateOne</span>, <span
-                            class="highlight">deleteOne</span>,
-                        <span class="highlight">deleteMany</span>, <span class="highlight">aggregate</span>,
-                        <span class="highlight">$match</span>, $group, <span class="highlight">$sort</span>,
-                        <span class="highlight">$limit</span>, <span class="highlight">$set</span>, <span
-                            class="highlight">$inc</span>,$jsonSchema, <span class="highlight">createCollection</span>,
-                        createIndex, <span class="highlight">IndexedDB</span>,
-                        <span class="highlight">UUID</span>, <span class="highlight">ObjectId</span>.
+                        Conflict Resolution,
+                        Event Sourcing,
+                        CQRS,
+                        Distributed Cache,
+                        In-Memory Database,
+                        Time-Series Database,
+                        Search Index,
+                        <span class="highlight">Map</span>,
+                        <span class="highlight">Filter</span>,
+                        <span class="highlight">Reduce</span>,
+                        Inverted
+                        Index,
+                        Full-Text Search,
+                        <span class="highlight">Accuracy</span>,
+                        <span class="highlight">Completeness</span>,
+                        <span class="highlight">Consistency</span>,
+                        <span class="highlight">Timeliness</span>,
+                        <span class="highlight">Validity</span>,
+                        <span class="highlight">Uniqueness</span>,
+                        <span class="highlight">Integrity</span>,
+                        <span class="highlight">Usability</span>.
+                        <span class="highlight">Atlas</span>,
+                        <span class="highlight">Compass</span>,
+                        <span class="highlight">Collection</span>,
+                        <span class="highlight">find</span>,
+                        <span class="highlight">updateOne</span>,
+                        <span class="highlight">deleteOne</span>,
+                        <span class="highlight">deleteMany</span>,
+                        <span class="highlight">aggregate</span>,
+                        <span class="highlight">$match</span>,
+                        $group,
+                        <span class="highlight">$sort</span>,
+                        <span class="highlight">$limit</span>,
+                        <span class="highlight">$set</span>,
+                        <span class="highlight">$inc</span>,
+                        $jsonSchema,
+                        <span class="highlight">createCollection</span>,
+                        createIndex,
+                        <span class="highlight">IndexedDB</span>,
+                        <span class="highlight">UUID</span>,
+                        <span class="highlight">ObjectId</span>
                     </p>
                 </section>
 
