@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Documentation</title>
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2em;
+            line-height: 1.6;
+            font-size: 10pt;
+        }
+
+        h2 {
+            border-bottom: 2px solid #444;
+            padding-bottom: 0.3em;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: 1em 0;
+        }
+
+        th,
+        td {
+            border: 1px solid #888;
+            padding: 0.6em;
+            text-align: left;
+        }
+
+        pre code {
+            display: block;
+            background-color: #f5f5f5;
+            padding: 12px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 10pt;
+            font-family: Consolas, monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .mermaid {
+            text-align: center;
+            margin: 2em 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Software Ecosystem Framework</h1>
+    <p>
+        This document presents the architecture, data flow, frontend components, and API surface of the
+        <strong>releasetrain.io</strong> platform.
+        The system is designed to ingest open-source ecosystem data (e.g., GitHub, Reddit, CVEs), classify and enrich
+        updates,
+        and support triage and visualization interfaces. The goal is to help designers, architects, testers,
+        and developers better maintain and evolve complex software ecosystems. Detailed diagrams, endpoint
+        documentation,
+        and references to prior publications are included below.
+    </p>
+
+    <h2>Prototype and GitHub</h2>
+    <ul>
+        <li>
+            🌐 <strong>Live Prototype:</strong>
+            <a href="https://releasetrain.io/" target="_blank">https://releasetrain.io/</a>
+        </li>
+        <li>
+            💻 <strong>Client Repository:</strong>
+            <a href="https://github.com/SE4CPS/releasetrain-client"
+                target="_blank">github.com/SE4CPS/releasetrain-client</a>
+        </li>
+        <li>
+            📋 <strong>Development Board:</strong>
+            <a href="https://github.com/orgs/SE4CPS/projects/24" target="_blank">SE4CPS GitHub Project #24</a>
+        </li>
+    </ul>
+
+    <h2>System Architecture Diagram</h2>
+    <div class="mermaid">
+        graph LR
+        A["a) Bot1 (GitHub) ✅"] --> D["d) MongoDB Data Lake ✅"]
+        B["b) Bot2 (CVE) ✅"] --> D
+        C["c) Bot3 (Reddit) ✅"] --> D
+
+        Note1["📝 Improve data quality ⏳"]:::green
+        Note1 --> D
+
+        subgraph E_SG["e) AI / ML"]
+        direction LR
+        Type["Type ✅"]
+        Security["Security ✅"]
+        Breaking["Breaking ✅"]
+        Sentimental["Sentimental ⏳"]:::green
+        LLM/RAG["LLM/RAG ⏳"]:::green
+        Type --> E["e) Classified Output"]
+        Security --> E
+        Breaking --> E
+        Sentimental --> E
+        LLM/RAG --> E
+        end
+
+        subgraph E_Azure["g) Azure Cloud"]
+        Azure(gpt-4o) <--> LLM/RAG
+            end
+
+            E <--> AgenticAI["🤖 Agentic AI (LLM+API+DB+Rules)
+                • Cross-source risk correlation
+                • Contextual sentiment-driven triage"]:::green
+
+                AgenticAI <--> D
+                    AgenticAI <--> F["f) Backend API"]
+
+                        F <--> FEEntry["Frontend"]
+
+                            subgraph H["h) Frontend"]
+                            direction LR
+                            FE1["1) Ecosystem Graph Architecture ✅"]
+                            FE2["2) Ecosystem UML Architecture ✅"]
+                            FE3["3) Ecosystem Software Updates ✅"]
+                            FE4["4) Ecosystem Triage Buttons ✅"]
+                            FE5["Ecosystem Release Notes Generator ⏳"]:::green
+
+                            FEEntry --> FE1
+                            FEEntry --> FE2
+                            FEEntry --> FE3
+                            FEEntry --> FE4
+                            FEEntry --> FE5
+                            end
+
+                            classDef green fill:#d4f4dd,stroke:#2b7a2b,color:#1c3c1c;
+    </div>
+
+    <h2>🤖 Agentic AI vs Traditional Software</h2>
+    <table>
+        <tr>
+            <th>Component</th>
+            <th>Description / Example</th>
+            <th>Technology / Tools</th>
+            <th>Difference from Software</th>
+        </tr>
+        <tr>
+            <td>Data Access & Reasoning</td>
+            <td>
+                Dynamically queries GitHub, CVE, and Reddit data.<br>
+                <strong>Example:</strong><br>
+                <code>
+if cve.severity >= 7:<br>
+&nbsp;&nbsp;&nbsp;trigger_triage()<br>
+else:<br>
+&nbsp;&nbsp;&nbsp;ignore()<br><br>
+prompt = """<br>
+I have a new CVE and a list of affected repos.<br>
+Consider GitHub data and Reddit sentiment.<br>
+Decide if this requires urgent triage and explain why.<br>
+"""<br>
+response = llm(prompt)
+        </code>
+            </td>
+            <td>Python, LangChain (<a href="https://python.langchain.com/docs/tutorials/agents/" target="_blank">agents
+                    tutorial</a>),
+                pymongo, requests</td>
+            <td>Software uses fixed if-else rules; Agentic AI reasons with data and context to decide actions
+                autonomously.</td>
+        </tr>
+        <tr>
+            <td>Action Orchestration</td>
+            <td>Triggers backend API calls, updates frontend, and manages multi-tool workflows based on goals.</td>
+            <td>Python, FastAPI, LangChain agents</td>
+            <td>Software executes pre-defined workflows; Agentic AI sequences tools dynamically based on reasoning and
+                priorities.</td>
+        </tr>
+        <tr>
+            <td>Contextual Interpretation</td>
+            <td>Uses LLM/RAG to interpret nuanced data, sentiment, and cross-source correlations.</td>
+            <td>Python, gpt-4o, LlamaIndex</td>
+            <td>Software cannot interpret nuanced text or correlate cross-domain data; Agentic AI can.</td>
+        </tr>
+    </table>
+
+    <h2>a–c) Bots Ingesting Ecosystem Data</h2>
+    <table>
+        <tr>
+            <th>Bot</th>
+            <th>Platform</th>
+            <th>Description</th>
+            <th>Technology Used</th>
+        </tr>
+        <tr>
+            <td>a) Bot1 (GitHub)</td>
+            <td>Ubuntu 22.04.1 LTS</td>
+            <td>Ingests GitHub repo and issue activity.</td>
+            <td>Python, GitHub API</td>
+        </tr>
+        <tr>
+            <td>b) Bot2 (CVE)</td>
+            <td>Ubuntu 22.04.1 LTS</td>
+            <td>Monitors Common Vulnerabilities and Exposures databases.</td>
+            <td>Python, Web Scraping, File Download (NVD JSON feeds)</td>
+        </tr>
+        <tr>
+            <td>c) Bot3 (Reddit)</td>
+            <td>Ubuntu 22.04.1 LTS</td>
+            <td>Extracts ecosystem-related discussions from Reddit forums.</td>
+            <td>Python, Reddit API</td>
+        </tr>
+    </table>
+
+    <h2>d) MongoDB Data Lake</h2>
+    <p>
+        Centralized, schemaless storage of ingested raw and enriched data. Serves as the source of truth for
+        classification and backend systems. The database is installed with MongoDB Atlas.
+    </p>
+
+    <h2>e) Classification Engine</h2>
+    <table>
+        <tr>
+            <th>Component</th>
+            <th>Platform</th>
+            <th>Description</th>
+            <th>Technology Used</th>
+        </tr>
+        <tr>
+            <td>Type</td>
+            <td>Ubuntu 22.04.1 LTS</td>
+            <td>Categorizes updates as feature, bugfix, or refactor.</td>
+            <td>Python, Updated Daily</td>
+        </tr>
+        <tr>
+            <td>Security</td>
+            <td>Ubuntu 22.04.1 LTS</td>
+            <td>Flags entries with potential or confirmed security implications.</td>
+            <td>Python, Updated Daily</td>
+        </tr>
+        <tr>
+            <td>Breaking</td>
+            <td>Ubuntu 22.04.1 LTS</td>
+            <td>Detects potential backward-incompatible changes [<a href="#ref3">3</a>].</td>
+            <td>Python, Updated Daily</td>
+        </tr>
+        <tr>
+            <td>Classified Output</td>
+            <td>Ubuntu 22.04.1 LTS</td>
+            <td>Unified enriched stream, fed back into the Data Lake [<a href="#ref4">4</a>].</td>
+            <td>Python, Stream Aggregation</td>
+        </tr>
+        <tr>
+            <td>LLM/RAG</td>
+            <td>Azure subscription 1</td>
+            <td>Reddit + CVE + Release Notes</td>
+            <td>Python, gpt-4o</td>
+        </tr>
+    </table>
+
+    <h2>f) Backend</h2>
+    <p>
+        Coordinates data processing, triggers classification, and interfaces with the frontend. May perform aggregation,
+        deduplication, and logging.
+    </p>
+    <table>
+        <tr>
+            <th>Technology</th>
+            <th>Platform</th>
+            <th>Details</th>
+        </tr>
+        <tr>
+            <td>Platform Stack</td>
+            <td>Ubuntu 22.04.1 LTS</td>
+            <td>Node.js, Express.js, JavaScript, NGINX (reverse proxy)</td>
+        </tr>
+        <tr>
+            <td>Python Support</td>
+            <td>Ubuntu 22.04.1 LTS</td>
+            <td>Python 3.10.12 — used for ML and data enrichment</td>
+        </tr>
+    </table>
+
+    <h2>h) Frontend Modules</h2>
+    <p>
+        The frontend modules are licensed under the MIT License and welcome community contributions from open-source
+        volunteers and researchers.
+    </p>
+    <table>
+        <tr>
+            <th>Component</th>
+            <th>Description</th>
+            <th>Technology Used</th>
+            <th>Repository</th>
+        </tr>
+        <tr>
+            <td>1) Ecosystem Graph Architecture</td>
+            <td>Visualizes relationships among software components [<a href="#ref5">5</a>].</td>
+            <td>JavaScript, Chart.js</td>
+            <td><a href="https://github.com/SE4CPS/releasetrain-client" target="_blank">GitHub</a></td>
+        </tr>
+        <tr>
+            <td>2) Ecosystem UML Architecture</td>
+            <td>Displays autogenerated UML diagrams for structural understanding [<a href="#ref1">1</a>].</td>
+            <td>PlantUML, JavaScript</td>
+            <td><a href="https://github.com/SE4CPS/releasetrain-client" target="_blank">GitHub</a></td>
+        </tr>
+        <tr>
+            <td>3) Ecosystem Software Updates</td>
+            <td>Summarizes recent changes, grouped by source and impact.</td>
+            <td>JavaScript, Chart.js</td>
+            <td><a href="https://github.com/SE4CPS/releasetrain-client" target="_blank">GitHub</a></td>
+        </tr>
+        <tr>
+            <td>4) Ecosystem Triage Buttons</td>
+            <td>Interactive UI to triage, tag, and escalate updates [<a href="#ref2">2</a>].</td>
+            <td>JavaScript</td>
+            <td><a href="https://github.com/SE4CPS/releasetrain-client" target="_blank">GitHub</a></td>
+        </tr>
+    </table>
+
+    <p>
+        <strong>License:</strong> MIT &nbsp;|&nbsp; <strong>Contributions:</strong> Developers and researchers are
+        invited to contribute via pull requests, issues, and feature suggestions on GitHub.
+    </p>
+
+    <h2>GET Request API Endpoints</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Method</th>
+                <th>Endpoint</th>
+                <th>Description</th>
+                <th>Example Request</th>
+                <th>Sample Response</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/aggregate/v/oldestTimestamp?count=1000</code></td>
+                <td>Get the oldest release date among the most recent <code>count</code> versions. Also returns delta in
+                    days from today.</td>
+                <td><a href="https://releasetrain.io/api/aggregate/v/oldestTimestamp?count=1000"
+                        target="_blank"><code>/api/aggregate/v/oldestTimestamp?count=1000</code></a></td>
+                <td>
+                    <pre><code>{ 
+    "oldest": "20240101", 
+    "deltaInDays": 212 
+}</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/aggregate/v/updateTypeCount?timestamp=YYYYMMDD</code></td>
+                <td>Count how many updates are classified as major, minor, patch, or other for a given date.</td>
+                <td><a href="https://releasetrain.io/api/aggregate/v/updateTypeCount?timestamp=20250723"
+                        target="_blank"><code>/api/aggregate/v/updateTypeCount?timestamp=20250723</code></a></td>
+                <td>
+                    <pre><code>{
+    "timestamp": "20250723",
+    "major": 2,
+    "minor": 3,
+    "patch": 1,
+    "other": 4
+}</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/aggregate/v/componentTypeCount?timestamp=YYYYMMDD</code></td>
+                <td>Count how many times each <code>componentType</code> label appears for a given date.</td>
+                <td><a href="https://releasetrain.io/api/aggregate/v/componentTypeCount?timestamp=20250730"
+                        target="_blank"><code>/api/aggregate/v/componentTypeCount?timestamp=20250730</code></a></td>
+                <td>
+                    <pre><code>{
+    "timestamp": "20250730",
+    "total": 8,
+    "components": {
+        "browser": 3,
+        "runtime": 5
+    }
+}</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/aggregate/v/sourceCountByType?sourceType=TYPE&timestamp=YYYYMMDD</code></td>
+                <td>Count how many updates were tagged with a specific source type (e.g., <code>CVE</code>,
+                    <code>major</code>, etc.) on a given date.
+                </td>
+                <td><a href="https://releasetrain.io/api/aggregate/v/sourceCountByType?sourceType=CVE&timestamp=20250723"
+                        target="_blank"><code>/api/aggregate/v/sourceCountByType?sourceType=CVE&timestamp=20250723</code></a>
+                </td>
+                <td>
+                    <pre><code>{
+    "timestamp": "20250723",
+    "sourceType": "CVE",
+    "count": 6
+}</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/aggregate/v/versionCountByDay?start=YYYYMMDD&end=YYYYMMDD</code></td>
+                <td>Get how many updates were released each day in a time window.</td>
+                <td><a href="https://releasetrain.io/api/aggregate/v/versionCountByDay?start=20250701&end=20250730"
+                        target="_blank"><code>/api/aggregate/v/versionCountByDay?start=20250701&end=20250730</code></a>
+                </td>
+                <td>
+                    <pre><code>{
+    "range": {
+        "start": "20250701",
+        "end": "20250730"
+    },
+    "days": [
+        { "_id": "20250701", "count": 4 },
+        ...
+    ]
+}</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/aggregate/v/missingFields?field=FIELDNAME&limit=50</code></td>
+                <td>Find documents missing a specific field (e.g., <code>versionNumber</code>) for data cleanup.</td>
+                <td><a href="https://releasetrain.io/api/aggregate/v/missingFields?field=versionNumber&limit=50"
+                        target="_blank"><code>/api/aggregate/v/missingFields?field=versionNumber&limit=50</code></a>
+                </td>
+                <td>
+                    <pre><code>{
+    "field": "versionNumber",
+    "missingCount": 3,
+    "sample": [ ... ]
+}</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/aggregate/v/classificationSummary?timestamp=YYYYMMDD</code></td>
+                <td>Summarize security and breaking classifications for a specific day.</td>
+                <td><a href="https://releasetrain.io/api/aggregate/v/classificationSummary?timestamp=20250723"
+                        target="_blank"><code>/api/aggregate/v/classificationSummary?timestamp=20250723</code></a></td>
+                <td>
+                    <pre><code>{
+    "timestamp": "20250723",
+    "total": 5,
+    "classification": {
+        "breakingAPI": 2,
+        "securityHigh": 3
+    }
+}</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/reddit</code></td>
+                <td>Get Reddit posts</td>
+                <td><a href="https://releasetrain.io/api/reddit" target="_blank"><code>/api/reddit</code></a></td>
+                <td>
+                    <pre><code>[
+    {
+        "title": "...",
+        "author": "...",
+        ...
+    }
+]</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/reddit/count</code></td>
+                <td>Get total Reddit post count (last 2 years)</td>
+                <td><a href="https://releasetrain.io/api/reddit/count"
+                        target="_blank"><code>/api/reddit/count</code></a></td>
+                <td>
+                    <pre><code>{
+    "totalRedditPosts": 248
+}</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/v/</code></td>
+                <td>Get filtered versions by component(s)</td>
+                <td><a href="https://releasetrain.io/api/v/?q=chrome,firefox"
+                        target="_blank"><code>/api/v/?q=chrome,firefox</code></a></td>
+                <td>
+                    <pre><code>{
+    "versions": [ ... ]
+}</code></pre>
+                </td>
+            </tr>
+
+            <tr>
+                <td>GET</td>
+                <td><code>/api/v/count</code></td>
+                <td>Get total version count (last 2 years)</td>
+                <td><a href="https://releasetrain.io/api/v/count" target="_blank"><code>/api/v/count</code></a></td>
+                <td>
+                    <pre><code>{
+    "totalVersions": 1221
+}</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/v/fcc</code></td>
+                <td>Get forecasted coincide release dates</td>
+                <td><a href="https://releasetrain.io/api/v/fcc?q=chrome,firefox"
+                        target="_blank"><code>/api/v/fcc?q=chrome,firefox</code></a></td>
+                <td>
+                    <pre><code>[
+    {
+        "component": "...",
+        "coincideReleaseDate": "..."
+    }
+]</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/v/fc</code></td>
+                <td>Get forecasted next release date</td>
+                <td><a href="https://releasetrain.io/api/v/fc?q=chrome"
+                        target="_blank"><code>/api/v/fc?q=chrome</code></a></td>
+                <td>
+                    <pre><code>[
+    {
+        "component": "...",
+        "releaseDate": "..."
+    }
+]</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/v/:id</code></td>
+                <td>Get version by MongoDB ObjectId</td>
+                <td><a href="https://releasetrain.io/api/v/660c38fce3cba9423e4f8f23"
+                        target="_blank"><code>/api/v/660c38fce3cba9423e4f8f23</code></a></td>
+                <td>
+                    <pre><code>{
+    "versionProductName": "...",
+    ...
+}</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/v/versionId/:versionId</code></td>
+                <td>Get version by versionId</td>
+                <td><a href="https://releasetrain.io/api/v/versionId/20250217component1.2.3"
+                        target="_blank"><code>/api/v/versionId/20250217component1.2.3</code></a></td>
+                <td>
+                    <pre><code>{
+    "versionNumber": "1.2.3",
+    ...
+}</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/v/d/versionsByComponent</code></td>
+                <td>Get detailed version data by component (name, version, OS)</td>
+                <td><a href="https://releasetrain.io/api/v/d/versionsByComponent?component=name:chrome,version:118"
+                        target="_blank"><code>/api/v/d/versionsByComponent?component=name:chrome,version:118</code></a>
+                </td>
+                <td>
+                    <pre><code>[
+    {
+        "latestVersion": { ... },
+        "currentVersion": { ... }
+    }
+]</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/c/name/:componentName/:versionNumber?</code></td>
+                <td>Get component data by name and optional version</td>
+                <td><a href="https://releasetrain.io/api/c/name/firefox"
+                        target="_blank"><code>/api/c/name/firefox</code></a></td>
+                <td>
+                    <pre><code>{
+    "firefox": [ ... ]
+}</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/c/os</code></td>
+                <td>Get distinct operating systems in the last 2 years</td>
+                <td><a href="https://releasetrain.io/api/c/os" target="_blank"><code>/api/c/os</code></a></td>
+                <td>
+                    <pre><code>[
+    "ubuntu",
+    "windows",
+    ...
+]</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/c/count</code></td>
+                <td>Get total distinct component count (last 2 years)</td>
+                <td><a href="https://releasetrain.io/api/c/count" target="_blank"><code>/api/c/count</code></a></td>
+                <td>
+                    <pre><code>{
+    "totalComponents": 142
+}</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/c/names</code></td>
+                <td>Get all distinct component names</td>
+                <td><a href="https://releasetrain.io/api/c/names" target="_blank"><code>/api/c/names</code></a></td>
+                <td>
+                    <pre><code>[
+    "chrome",
+    "firefox",
+    ...
+]</code></pre>
+                </td>
+            </tr>
+            <tr>
+                <td>GET</td>
+                <td><code>/api/c/frequency</code></td>
+                <td>Get most frequent and recently updated components</td>
+                <td><a href="https://releasetrain.io/api/c/frequency" target="_blank"><code>/api/c/frequency</code></a>
+                </td>
+                <td>
+                    <pre><code>{
+    "totalComponents": 20,
+    "components": [ ... ]
+}</code></pre>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Security </h2>
+    <p>
+        Security Overview: The security model of the releasetrain.io platform prioritizes both data integrity and secure
+        communication. API access is controlled through key-based authentication, ensuring only authorized users can
+        interact with backend services. All data transmissions occur over HTTPS, with certificates issued via the free,
+        automated Certbot utility powered by Let's Encrypt. The platform is hosted on DigitalOcean rather than MongoDB
+        Atlas for backend compute, allowing tighter integration with custom firewalls and container orchestration, while
+        Atlas remains the managed database layer for scalable, high-availability storage. MongoDB connections are
+        handled via authenticated URIs with TLS enabled, and the backend stack (Node.js/Express with NGINX reverse
+        proxy) is configured to enforce HTTPS-only traffic. While current component labels and test coverage need
+        refinement, the architecture supports future integration of access logs, intrusion detection, and data
+        validation pipelines.</p>
+
+    <h3>Current Limitations</h3>
+    <ul>
+        <li>API keys are hardcoded and not yet rotated regularly</li>
+        <li>Component names in the frontend are inconsistent
+        </li>
+        <li>No automated test cases are implemented for security-critical flows</li>
+        <li>Data inputs (e.g., Reddit and CVE feeds) are not fully validated
+        </li>
+    </ul>
+
+    <h2>References</h2>
+    <ul>
+        <li id="ref1">[1] Kan, V., Lnu, M. P., Berhe, S., El Kari, C., Maynard, M., & Khomh, F. (2025).<br>
+            <em><a href="https://www.sciencedirect.com/science/article/pii/S1877050925008440" target="_blank">
+                    Automated UML Visualization of Software Ecosystems: Tracking Versions, Dependencies, and Security
+                    Updates.<br>
+                </a></em><strong>Procedia Computer Science, 257</strong>, 834–841.
+        </li>
+        <li id="ref2">
+            [2] Veed, S. P., Daftary, S. M., Singh, B., Rudra, M., Berhe, S., Maynard, M., & Khomh, F. (2025).<br>
+            <em><a href="https://sdiotsec.github.io/accepted_papers_posters/sdiotsec25-final78.pdf" target="_blank">
+                    IoT Software Updates: User Perspectives in the Context of NIST IR 8259A.<br>
+                </a></em>Presented at <strong>SDIoTSec 2025 – Workshop on Security, Privacy, and Dependability for Smart
+                IoT</strong>.
+        </li>
+        <li id="ref3">
+            [3] Singh, B., Daftary, S., Rudra, M., Veed, S., Berhe, S., Maynard, M., & Khomh, F. (2024).<br>
+            <em><a href="https://okipublishing.com/book/index.php/okip/catalog/view/46/58/321" target="_blank">Enriching
+                    Release Notes with Reddit Feedback: Understanding How User Feedback Can Augment
+                    Maintaining Software Updates.<br>
+                </a></em>In <strong>Competitive Tools, Techniques, and Methods</strong>. Oklahoma International
+            Publishing eBooks.
+        </li>
+        <li id="ref4">
+            [4] Berhe, S., Kan, V., Khan, O., Pader, N., Farooqui, A. Z., Maynard, M., & Khomh, F. (2024).<br>
+            <em><a href="https://www.sciencedirect.com/science/article/pii/S187705092401305X" target="_blank">
+                    Triage Software Update Impact via Release Notes Classification.<br>
+                </a></em><strong>Procedia Computer Science, 238</strong>, 618–622.
+        </li>
+        <li id="ref5">
+            [5] Berhe, S., Maynard, M., & Khomh, F. (2023).<br>
+            <em><a href="https://www.sciencedirect.com/science/article/pii/S1877050923006129" target="_blank">
+                    Maintenance Cost of Software Ecosystem Updates.<br>
+                </a></em><strong>Procedia Computer Science, 220</strong>, 608–615.
+        </li>
+    </ul>
+</body>
+
+</html>
