@@ -430,7 +430,8 @@
                             </tr>
                             <tr style="color:#ccc;">
                                 <td style="padding:6px; border:1px solid #666;">Week 4</td>
-                                <td style="padding:6px; border:1px solid #666;"><a href="#/sept-16">Sept 16</a>, Sep 18
+                                <td style="padding:6px; border:1px solid #666;"><a href="#/sept-16">Sept 16</a>, <a
+                                        href="#/sept-18">Sept 18</a>
                                 </td>
                                 <td style="padding:6px; border:1px solid #666;"><a href="#/225"
                                         style="color:#ccc; text-decoration:none;">Data Transformation and Processing
@@ -440,9 +441,11 @@
                             </tr>
                             <tr style="color:#ccc;">
                                 <td style="padding:6px; border:1px solid #666;">Week 5</td>
-                                <td style="padding:6px; border:1px solid #666;">Sept 23, Sept 25</td>
+                                <td style="padding:6px; border:1px solid #666;"><a href="#/sept-23">Sept 23</a>, Sept 25
+                                </td>
                                 <td style="padding:6px; border:1px solid #666;"><a href="#/321"
-                                        style="color:#ccc; text-decoration:none;">Database Architecture &#x1f517;</a>
+                                        style="color:#ccc; text-decoration:none;">Database Pipeline Architecture
+                                        &#x1f517;</a>
                                 </td>
                                 <td style="padding:6px; border:1px solid #666;">Neo4j</td>
                                 <td style="padding:6px; border:1px solid #666;">Lab 3, HW 3</td>
@@ -4555,7 +4558,6 @@ db.farm.find({
                     </div>
                 </section>
 
-
                 <section>
                     <h4>MongoDB <span class="highlight">History</span></h4>
                     <div class="split">
@@ -7240,34 +7242,1226 @@ db.drinks.aggregate([
                     </div>
                 </section>
 
-                <section>Questions</section>
-
-                <section>Homework 2</section>
-
-                <section>
-                    <h4> Homework 2 (due Sept/26)</h4>
-                    <div class="center">
-                        <ol>
-                            <li>How does metadata (such as author, timestamp, and uuid) improve data quality during data
-                                synchronization?</li>
-                            <li>What are the seven dimensions of data quality?</li>
-                            <li>Imagine a dataset of crop yields collected from IoT sensors. Describe one real-world
-                                issue of poor data quality.</li>
-                            <li>How does metadata (such as author, timestamp, and uuid) improve data quality during data
-                                synchronization?</li>
-                            <li>Suppose two datasets of farm records are combined. The datasets use metric units (kg)
-                                and imperial units (lbs).</li>
-                            <li>Select which transformation function (map, filter, or reduce) is most appropriate.</li>
-                            <li>Why is filtering data before analysis an important step?</li>
-                            <li>How does the reduce function help in summarizing large datasets?</li>
-                            <li>Explain the purpose of map, filter, and reduce in data transformation?</li>
-                            <li>Describe a practical example of combining <code>map</code>,
-                                <code>filter</code>, and <code>reduce</code> in one pipeline for
-                                agricultural IoT data.
-                            </li>
-                        </ol>
+                <section id="sept-18">
+                    <h4>Today <span class="highlight">Agenda</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>MQL CRUD Query</li>
+                                <li>MQL Aggregation Pipeline</li>
+                                <li>Lab 2, Homework 2, Project Part 1</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://www.c-sharpcorner.com/article/aggregation-pipeline-in-mongodb/Images/image001.gif"
+                                alt="MongoDB Aggregation Pipeline Example" style="width: 100%;">
+                        </div>
                     </div>
                 </section>
+
+
+                <!-- Database Architecture -->
+                <section id="sept-23">
+                    <h4>Today <span class="highlight">Agenda</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ol>
+                                <li class="highlight">DB Architecture - End-to-End Aspects</li>
+                                <li>DB Architecture - Design Time Aspects</li>
+                                <li>DB Architecture - Runtime Aspects</li>
+                                <li>NoSQL Graph DB - Neo4j</li>
+                                <li>Lab 2, Homework 2, Project Part 1</li>
+                            </ol>
+
+                        </div>
+                        <div class="right">
+                            <!-- <img src="https://goldenbpuzzles.com/wp-content/uploads/2016/10/golden-b-before-and-after-cropped-101010.jpg" style="width: 100%;"> -->
+                            <img
+                                src="https://cdn.britannica.com/97/158797-050-ABECB32F/North-Cascades-National-Park-Lake-Ann-park.jpg?w=400&h=300&c=crop">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>End-to-End <span class="highlight">Database Pipeline</span> Aspects</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Pipeline connects data sources to sinks</li>
+                                <li>Ingest, process, store, and deliver data</li>
+                                <li>Supports both real-time and batch workloads</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="./img/source-to-sink.png" alt="End-to-end pipeline overview"
+                                style="max-width:100%; height:auto;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    Software Required to <span class="highlight">Transport</span> Data from Database to Database
+                </section>
+
+                <section>
+                    <h4><span class="highlight">ETL</span> Transport Software</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><b>E – Extract:</b> Pull data from source systems</li>
+                                <li><b>T – Transform:</b> Clean, validate, and reshape data</li>
+                                <li><b>L – Load:</b> Insert data into <b class="highlight">target system</b></li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <ul>
+                                <li class="example">E: databases, APIs, IoT devices, logs</li>
+                                <li class="example">T: quality checks, joins, aggregations</li>
+                                <li class="example">L: lake, warehouse, mart, dashboard</li>
+                                <li class="example">—</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>History of <span class="highlight">ETL vs ELT</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><b>1970s–80s:</b> ETL emerges relational databases</li>
+                                <li><b>1990s:</b> ETL dominates for data warehouses</li>
+                                <li><b>2000s:</b> Big data growth → lakes introduced</li>
+                                <li><b>2010s:</b> ELT rises with scalable cloud storage</li>
+                                <li><b>Today:</b> Hybrid pipelines mixing ETL + ELT</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://docs.aws.amazon.com/images/whitepapers/latest/serverless-multi-tier-architectures-api-gateway-lambda/images/image2.png"
+                                alt="ETL vs ELT history timeline" style="max-width:100%; height:auto;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Source</span> DB Systems</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Transactional databases (SQL/NoSQL)</li>
+                                <li>APIs, IoT devices, logs</li>
+                                <li>Streaming sources (Kafka, MQTT)</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://www.scylladb.com/wp-content/uploads/nosql-design-principles-diagram.png"
+                                alt="Data sources" style="max-width:100%; height:auto;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Data <span class="highlight">Extraction</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Captures raw data from sources</li>
+                                <li>Batch (files, APIs) and streaming (events)</li>
+                                <li>Ensures durability and availability</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-python"># extract.py - Example of extracting data from an API
+import requests
+import json
+
+url = "https://api.weather.com/data"
+response = requests.get(url)
+
+if response.status_code == 200:
+    data = response.json()
+    print("Data extracted:", data)
+else:
+    print("Failed:", response.status_code)
+            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    Where to <span class="highlight">Extract</span> Data To?
+                </section>
+
+                <section>
+                    <h4>Concept of <span class="highlight">Data Lake</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Central repository for <b>raw data</b></li>
+                                <li>Add <b>metadata</b> for context and discovery</li>
+                                <li>Schema-on-read: flexibility for data veriaty</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://cdn.prod.website-files.com/6130fa1501794e37c21867cf/642c76197e119095af0b0645_image3.png"
+                                alt="Data lake concept" style="max-width:100%; height:auto;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Concept of <span class="highlight">Data Lake</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Central repository for <b>raw data</b></li>
+                                <li>Add <b>metadata</b> for context and discovery</li>
+                                <li>Schema-on-read: flexibility for data variety</li>
+                                <li>One query language for multiple source db</li>
+                                <li>Raw data is read-only</li>
+                                <li>Data available even when source DB offline</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-python"># Example structure of a data lake
+lake = {
+    // READ ONLY
+    "uuid": "123e4567-e89b-12d3-a456-426614174000", 
+    "item": { 
+        "raw_data": {
+            "sensor_readings": [...],
+            "logs": [...],
+            "api_data": [...]
+        },
+        // READ AND WRITE
+        "meta_data": { 
+            "source": "IoT sensors",
+            "timestamp": "2025-09-23T08:00:00Z",
+            "tags": ["temperature", "humidity"]
+        }
+    }
+}
+            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Concept of <span class="highlight">Data Lake</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Holds <span class="highlight">source-of-truth</span> data in raw form</li>
+                                <li>Supports delayed or retrospective processing</li>
+                                <li>Minimizes risk of premature data loss</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://cdn.prod.website-files.com/6130fa1501794e37c21867cf/642c76197e119095af0b0645_image3.png"
+                                alt="Truth in data lake" style="max-width:100%; height:auto;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Concept of <span class="highlight">Data Lake</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><b>Transform:</b> Enrich raw data with <b>metadata</b></li>
+                                <li><b>Load:</b> Store enriched data in the <b>data lake</b></li>
+                                <li>Maintain <span class="highlight">read-only</span> raw data</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://cdn.prod.website-files.com/6130fa1501794e37c21867cf/642c76197e119095af0b0645_image3.png"
+                                alt="Truth in data lake" style="max-width:100%; height:auto;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Concept of <span class="highlight">Data Lake</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <p>
+                                In many data pipeline architectures, the <b class="highlight">data lake</b> is often the
+                                <b class="highlight">first and central component</b>.
+                            </p>
+                        </div>
+                        <div class="right">
+                            <img src="https://cdn.prod.website-files.com/6130fa1501794e37c21867cf/642c76197e119095af0b0645_image3.png"
+                                alt="Data lake as central component" style="max-width:100%; height:auto;">
+                        </div>
+                    </div>
+                </section>
+
+
+                <section>
+                    <h4>Concept of <span class="highlight">Data Lake</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <p>
+                                It is highly recommended to <b class="highlight">start with a data lake</b> to ensure flexibility and
+                                scalability.
+                            </p>
+                        </div>
+                        <div class="right">
+                            <img src="https://cdn.prod.website-files.com/6130fa1501794e37c21867cf/642c76197e119095af0b0645_image3.png"
+                                alt="Data lake as central component" style="max-width:100%; height:auto;">
+                        </div>
+                    </div>
+                </section>
+
+
+                <section>
+                    <h4>Case Study: <span class="highlight">Agriculture</span> Database Pipeline</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>IoT soil moisture sensors collect raw data</li>
+                                <li>DB sources: SQL, IndexedDB, and MongoDB</li>
+                                <li>Stored in a <b>data lake</b> with metadata</li>
+                                <li>Lake holds truth for delayed processing</li>
+                                <li><b>Task:</b> <span class="highlight">Draw</span> architecture up to lake</li>
+                                <li><b>Include:</b> Metadata on <i>quality Aspects</i></li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://www.openaccessgovernment.org/wp-content/uploads/2025/09/iStock-1402597686.jpg"
+                                alt="Agriculture data pipeline case study" style="max-width:100%; height:auto;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>When is software just a tool to transport data from one DB to another?</section>
+
+                <section>Example with MongoDB Compass</section>
+
+                <section>Questions?</section>
+
+                <section>
+                    <p>1. What is the main purpose of the <b>Extract</b> step in ETL?</p>
+                    <ul class="alpha-list">
+                        <li>Transform data for analysis</li>
+                        <li>Load data into the target system</li>
+                        <li>Capture raw data from source systems</li>
+                        <li>Generate reports for end users</li>
+                    </ul>
+                    <button onclick="document.getElementById('ans_X1a9b').style.display='block'">
+                        Show Answer
+                    </button>
+                    <p id="ans_X1a9b" style="display:none;"><strong>Correct Answer:</strong> Capture raw data from
+                        source systems</p>
+                </section>
+
+                <section>
+                    <p>2. Which of the following is a key characteristic of a <b>Data Lake</b>?</p>
+                    <ul class="alpha-list">
+                        <li>Only stores structured data</li>
+                        <li>Data is read-only and enriched with metadata</li>
+                        <li>Requires source databases to be always online</li>
+                        <li>Data is stored without any metadata or context</li>
+                    </ul>
+                    <button onclick="document.getElementById('ans_Q8f7z').style.display='block'">
+                        Show Answer
+                    </button>
+                    <p id="ans_Q8f7z" style="display:none;"><strong>Correct Answer:</strong> Data is read-only and
+                        enriched with metadata</p>
+                </section>
+
+                <section>
+                    <p>3. In ETL processes, what does the <b>Transform</b> step usually involve?</p>
+                    <ul class="alpha-list">
+                        <li>Pulling data from APIs and files</li>
+                        <li>Cleaning, validating, and reshaping data</li>
+                        <li>Loading data into dashboards</li>
+                        <li>Backing up the source database</li>
+                    </ul>
+                    <button onclick="document.getElementById('ans_Z3t5k').style.display='block'">
+                        Show Answer
+                    </button>
+                    <p id="ans_Z3t5k" style="display:none;"><strong>Correct Answer:</strong> Cleaning, validating, and
+                        reshaping data</p>
+                </section>
+
+                <section>
+                    <p>4. When would you recommend using <b>ETL</b> over <b>ELT</b>?</p>
+                    <ul class="alpha-list">
+                        <li>When the target system can handle large-scale raw data processing</li>
+                        <li>When you need to clean, validate, and transform data before loading</li>
+                        <li>When you want to load raw data first and transform later</li>
+                        <li>When working exclusively with streaming data</li>
+                    </ul>
+                    <button onclick="document.getElementById('ans_M9k2x').style.display='block'">
+                        Show Answer
+                    </button>
+                    <p id="ans_M9k2x" style="display:none;"><strong>Correct Answer:</strong> When you need to clean,
+                        validate, and transform data before loading</p>
+                </section>
+
+                <section>Questions?</section>
+
+                <section>
+                    <h4>Today <span class="highlight">Agenda</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ol>
+                                <li>DB Architecture - End-to-End Aspects &check;</li>
+                                <li class="highlight">DB Architecture - Design Time Aspects</li>
+                                <li>DB Architecture - Runtime Aspects</li>
+                                <li>NoSQL Graph DB - Neo4j</li>
+                                <li>Lab 2, Homework 2, Project Part 1</li>
+                            </ol>
+
+                        </div>
+                        <div class="right">
+                            <!-- <img src="https://goldenbpuzzles.com/wp-content/uploads/2016/10/golden-b-before-and-after-cropped-101010.jpg" style="width: 100%;"> -->
+                            <img
+                                src="https://www.juniperarchitecturaldesign.co.uk/wp-content/uploads/go-x/u/de34e77c-b53f-46c6-b6ae-bff80529d002/image.jpg">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Design-Time <span class="highlight">Aspects</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Choices made before pipeline runs</li>
+                                <li>Impact scalability, cost, reliability</li>
+                                <li>Guide long-term architecture quality</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://softwareag.scene7.com/is/image/softwareagprod/data-pipeline-architecture?wid=885&dpr=off"
+                                alt="Design-time planning" style="max-width:100%; height:auto;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Which Database for <span class="highlight">Lake</span>?</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Object storage (e.g., S3, GCS, Azure Blob)</li>
+                                <li>NoSQL (e.g., MongoDB, Cassandra)</li>
+                                <li>Columnar formats (Parquet, ORC)</li>
+                                <li>Relational Database (MySQL, OracleDB)</li>
+                                <li>Decision: scalability vs. query speed</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://cdn.britannica.com/97/158797-050-ABECB32F/North-Cascades-National-Park-Lake-Ann-park.jpg?w=400&h=300&c=crop"
+                                alt="Databases for data lake" style="max-width:100%; height:auto;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Which <span class="highlight">Sync Interval</span>?</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>How often to sync from sources</li>
+                                <li>Real-time (seconds) vs batch (hours)</li>
+                                <li>Impacts freshness and cost</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <table style="width:100%; font-size:0.9em;">
+                                <tr>
+                                    <th>Interval</th>
+                                    <th>Use Case</th>
+                                </tr>
+                                <tr>
+                                    <td>Real-time</td>
+                                    <td>IoT, fraud detection</td>
+                                </tr>
+                                <tr>
+                                    <td>Hourly</td>
+                                    <td>ETL jobs, logs</td>
+                                </tr>
+                                <tr>
+                                    <td>Daily</td>
+                                    <td>Reporting dashboards</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Which <span class="highlight">Sync Trigger</span>?</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Event-based: trigger on data arrival</li>
+                                <li>Schedule-based: run at fixed times</li>
+                                <li>Hybrid: schedule + event validation</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-python"># etl.py - all-in-one ETL script
+def etl():
+    extract()
+    transform()
+    load()
+
+# Separate modular files
+# extract.py
+def extract():
+    print("Extracting data from source...")
+
+# transform.py
+def transform():
+    print("Transforming and enriching data...")
+
+# load.py
+def load():
+    print("Loading data into target system...")
+            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+
+                <section>
+                    <h4><span class="highlight">Partial</span> or Full Sync?</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><b>Partial sync:</b> only changed data</li>
+                                <li><b>Full sync:</b> replace entire dataset</li>
+                                <li>Tradeoff: performance vs reliability</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <table style="width:100%; font-size:0.9em;">
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Pros</th>
+                                    <th>Cons</th>
+                                </tr>
+                                <tr>
+                                    <td>Partial</td>
+                                    <td>Faster, less storage</td>
+                                    <td>Risk missing updates</td>
+                                </tr>
+                                <tr>
+                                    <td>Full</td>
+                                    <td>Consistent snapshot</td>
+                                    <td>High cost & latency</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Schema</span> Design</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Schema-on-read: flexibility</li>
+                                <li>Schema-on-write: strict validation</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-python">db = MongoClient().Agriculture # connect to MongoDB
+print(db.flowers.count_documents({
+    "color": 
+        {"$exists": True}
+    }))  # verify data
+    </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>What is Data<span class="highlight">Retention</span> Policy?</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>How long to keep raw data in lake</li>
+                                <li>Short retention reduces cost</li>
+                                <li>Long retention supports audits</li>
+                                <li>May be driven by legal requirement</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-python"># Retention strategies for raw data
+def retention_policy(item):
+    # 1. Auto delete
+    if item.age_days > 30:
+        del item
+
+    # 2. Deletion flag
+    elif item.flag_for_deletion:
+        item.deleted = True
+
+    # 3. Do not delete
+    else:
+        pass  # keep indefinitely
+            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Security</span>, Access, and Integrity</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Data Integrity Check</li>
+                                <li>Encryption at rest & in transit</li>
+                                <li>Access control (RBAC, ABAC)</li>
+                                <li>Audit logs for compliance</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-python"># Verify checksum of metadata
+doc = db.Farm.find_one({"uuid": "123e4567-e89b-..."})
+meta_json = json.dumps(doc['meta_data'])
+checksum = hashlib.md5(meta_json).hexdigest()
+
+print("Stored checksum:", doc.get("checksum"))
+print("Calculated checksum:", checksum)
+print("Valid:", doc.get("checksum") == checksum)
+            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>How much<span class="highlight">traceability</span>?</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Track data origin and transformations</li>
+                                <li>Enable reproducibility & trust</li>
+                                <li>Metadata catalog for discovery</li>
+                                <li><a href="https://pubmed.ncbi.nlm.nih.gov/23684593/" target="_blank">PubMed Article:
+                                        23684593</a></li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://ars.els-cdn.com/content/image/1-s2.0-S1532046413000531-gr3.jpg"
+                                alt="Lineage and catalog" style="max-width:100%; height:auto;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Design-Time <span class="highlight">Summary</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Database type for lake</li>
+                                <li>Sync interval & trigger</li>
+                                <li>Partial vs full sync</li>
+                                <li>Schema, retention, format</li>
+                                <li>Integrity, Traceability</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://www.juniperarchitecturaldesign.co.uk/wp-content/uploads/go-x/u/de34e77c-b53f-46c6-b6ae-bff80529d002/image.jpg"
+                                alt="Design-time overview" style="max-width:100%; height:auto;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Case Study: <span class="highlight">Agriculture</span> Data Pipeline (Part 2)</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>IoT soil moisture sensors collect raw data</li>
+                                <li>Data ingested through batch and streaming</li>
+                                <li>Stored in a <b>data lake</b> with metadata</li>
+                                <li>Lake holds truth for delayed processing</li>
+                                <li><b>Task:</b> Draw end-to-end architecture up to lake</li>
+                                <li><b>Include: </b>Design Time<i> Aspects</i></li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://www.openaccessgovernment.org/wp-content/uploads/2025/09/iStock-1402597686.jpg"
+                                alt="Agriculture data pipeline case study" style="max-width:100%; height:auto;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>Questions?</section>
+
+                <section>
+                    <p>1. What is a key design-time consideration when choosing ETL vs ELT?</p>
+                    <ul class="alpha-list">
+                        <li>Whether to use Python or Java</li>
+                        <li>Data volume, source complexity, and processing capabilities</li>
+                        <li>Network bandwidth between users</li>
+                        <li>Time of day to run the pipeline</li>
+                    </ul>
+                    <button onclick="document.getElementById('ans_A1b2C').style.display='block'">Show Answer</button>
+                    <p id="ans_A1b2C" style="display:none;"><strong>Correct Answer:</strong> Data volume, source
+                        complexity, and processing capabilities</p>
+                </section>
+
+                <section>
+                    <p>2. Which design-time aspect involves defining cleaning, validation, and metadata?</p>
+                    <ul class="alpha-list">
+                        <li>Data Sources</li>
+                        <li>Transformation</li>
+                        <li>Retention & Security</li>
+                        <li>Sync Trigger</li>
+                    </ul>
+                    <button onclick="document.getElementById('ans_D3f9G').style.display='block'">Show Answer</button>
+                    <p id="ans_D3f9G" style="display:none;"><strong>Correct Answer:</strong> Transformation
+                    </p>
+                </section>
+
+                <section>
+                    <p>3. Which design-time aspect determines how long raw data is kept in the pipeline?</p>
+                    <ul class="alpha-list">
+                        <li>Data Sources</li>
+                        <li>ETL vs ELT choice</li>
+                        <li>Retention & Security</li>
+                        <li>Transformation & Metadata</li>
+                    </ul>
+                    <button onclick="document.getElementById('ans_H7k2L').style.display='block'">Show Answer</button>
+                    <p id="ans_H7k2L" style="display:none;"><strong>Correct Answer:</strong> Retention & Security</p>
+                </section>
+
+                <section>
+                    <p>4. When planning design-time aspects, what should you consider about data sources?</p>
+                    <ul class="alpha-list">
+                        <li>Connectivity requirements</li>
+                        <li>The color of the UI dashboard</li>
+                        <li>The font used in reports</li>
+                        <li>Only the database name</li>
+                    </ul>
+                    <button onclick="document.getElementById('ans_J5p8Q').style.display='block'">Show Answer</button>
+                    <p id="ans_J5p8Q" style="display:none;"><strong>Correct Answer:</strong> Connectivity requirements
+                    </p>
+                </section>
+
+
+                <section>Questions?</section>
+
+
+                <!-- GraphDB -->
+
+                <section>
+                    <h4>Today <span class="highlight">Agenda</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ol>
+                                <li>DB Architecture - End-to-End Aspects &check;</li>
+                                <li>DB Architecture - Design Time Aspects &check;</li>
+                                <li>DB Architecture - Runtime Aspects (Thu)</li>
+                                <li class="highlight">NoSQL Graph DB - Neo4j</li>
+                                <li>Lab 2, Homework 2, Project Part 1</li>
+                            </ol>
+
+                        </div>
+                        <div class="right">
+                            <!-- <img src="https://goldenbpuzzles.com/wp-content/uploads/2016/10/golden-b-before-and-after-cropped-101010.jpg" style="width: 100%;"> -->
+                            <img
+                                src="https://cdn.britannica.com/97/158797-050-ABECB32F/North-Cascades-National-Park-Lake-Ann-park.jpg?w=400&h=300&c=crop">
+                        </div>
+                    </div>
+                </section>
+
+                <section data-auto-animate style="font-size:14pt;" id="mongodb">
+                    <div style="
+    display:flex;
+    justify-content:center;
+    gap:25px;
+    flex-wrap:wrap; /* Allow wrapping to multiple rows */
+    max-width:800px;
+    margin:auto;
+  ">
+
+                        <div style="
+      border:2px solid #4CAF50;
+      background:#C8E6C9;   /* lighter green */
+      color:#1B5E20;        /* dark green text for contrast */
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      font-weight:bold;
+      min-width:120px;
+    ">
+                            IndexedDB
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            Redis
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      background:#C8E6C9;   /* lighter green */
+      color:#1B5E20;        /* dark green text for contrast */
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            MongoDB
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            CassandraDB
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            Faiss
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            ClickHouse
+                        </div>
+
+                        <div style="
+       border:2px solid #4CAF50;
+      background:#C8E6C9;   /* lighter green */
+      color:#1B5E20;        /* dark green text for contrast */
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            Neo4j
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <img src="https://www.scylladb.com/wp-content/uploads/nosql-design-principles-diagram.png"
+                        alt="NoSQL Design Principles Diagram" style="max-width:100%; height:auto;" />
+                </section>
+
+                <section>
+                    <h4>When to Use a Graph Database?</h4>
+                    <div style="text-align:center;">
+                        <p style="color:#27AE60; font-weight:bold;">
+                            To Query Relationships
+                        </p>
+                        <p>Query connections, paths, and patterns between entities.</p>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="split">
+                        <div class="left" style="height:100%;font-weight:bold; text-align: left;">
+                            <div>
+                                <span style="color:#2E86C1;">Subject</span>
+                                <span style="color:#27AE60;">Predict</span>
+                                <span style="color:#C0392B;">Object</span>
+                            </div>
+                            <div>
+                                <ul style="font-size:1.3em; line-height:1.8em; margin-top:1em;">
+                                    <li><span style="color:#2E86C1;">Alice</span> — <strong
+                                            style="color:#27AE60;">FRIEND_OF</strong> — <span
+                                            style="color:#C0392B;">Bob</span></li>
+                                    <li><span style="color:#2E86C1;">Paris</span> — <strong
+                                            style="color:#27AE60;">CAPITAL_OF</strong> — <span
+                                            style="color:#C0392B;">France</span></li>
+                                    <li><span style="color:#2E86C1;">Rose</span> — <strong
+                                            style="color:#27AE60;">GROWS_IN</strong> — <span
+                                            style="color:#C0392B;">Garden</span></li>
+                                    <li><span style="color:#2E86C1;">Car</span> — <strong
+                                            style="color:#27AE60;">MANUFACTURED_BY</strong> — <span
+                                            style="color:#C0392B;">Toyota</span></li>
+                                    <li><span style="color:#2E86C1;">Student</span> — <strong
+                                            style="color:#27AE60;">ENROLLED_IN</strong> — <span
+                                            style="color:#C0392B;">Course</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <img src="https://cdn.graphgrid.com/content/uploads/2016/01/11131322/WhatIsAGraphDatabase.png"
+                                alt="Graph Database Diagram" style="width:100%; height:auto;">
+                        </div>
+                    </div>
+                </section>
+
+
+                <section>
+                    <h4>History of Graph Databases</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>1960s–1970s: Early graph theory research</li>
+                                <li>1980s: OOP databases with graph-like features</li>
+                                <li>1990s: Semantic web and RDF for graph data</li>
+                                <li>2000s: Emergence of native graph databases</li>
+                                <li>2010s: GraphDB in social networks</li>
+                                <li>2010s: GraphDB in recommendation systems</li>
+                                <li>2010s: GraphDB in fraud detection</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://cdn.graphgrid.com/content/uploads/2016/01/11131322/WhatIsAGraphDatabase.png"
+                                style="width: 100%;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>History of Neo4j</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>2000: Neo4j project started in Sweden</li>
+                                <li>2007: First public release of Neo4j</li>
+                                <li>2010: Neo4j for social network</li>
+                                <li>2010: Neo4j for recommendation system</li>
+                                <li>2014–2020: Expanded support for clustering</li>
+                                <li>Today: Widely used native graph database</li>
+                                <li>Query language: Cypher</li>
+                                <li>Node/edge properties can use <span class="highlight">JSON</span> structures</li>
+                                <li>Schema-less: nodes/edges flexible properties</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://neo4j.com/docs/getting-started/_images/people-technologies-graph-arr.svg"
+                                style="width: 100%;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Neo4j Aura Console</h4>
+                    <a href="https://console-preview.neo4j.io/projects/1d88076f-1fef-47d9-9cad-5ba425efe758/instances"
+                        target="_blank">
+                        https://console-preview.neo4j.io/projects/1d88076f-1fef-47d9-9cad-5ba425efe758/instances
+                    </a>
+                </section>
+
+                <section>
+                    <h4>Create Nodes</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Create a node with label Person</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>// Create a Person node
+CREATE (p:Person {name: "Alice", age: 30})
+RETURN p;
+            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Create Relationships</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Connect two nodes with a FRIEND relationship</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>// Create FRIEND relationship
+MATCH (a:Person {name:"Alice"}),(b:Person {name:"Bob"})
+CREATE (a)-[:FRIEND]->(b)
+RETURN a, b;
+            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Find Nodes</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Retrieve all Person nodes</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>// Find all Person nodes
+MATCH (p:Person)
+RETURN p;
+
+// Sample return object
+{
+  "p": {
+    "name": "Alice",
+    "age": 30,
+    "email": "alice@example.com"
+  }
+}
+            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Filter Nodes</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Find Person nodes older than 25</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>// Filter by age
+MATCH (p:Person)
+WHERE p.age > 25
+RETURN p;
+
+// Sample return objects
+[
+  {"name": "Alice", "age": 30},
+  {"name": "Charlie", "age": 28}
+]
+            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Update Nodes</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Update the age of a Person</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>// Update age
+MATCH (p:Person {name: "Alice"})
+SET p.age = 31
+RETURN p;
+
+// Sample return object
+{"name": "Alice", "age": 31}
+            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Delete Nodes</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Remove a Person node</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>// Delete node
+MATCH (p:Person {name: "Bob"})
+DETACH DELETE p;
+
+// No return object; node is deleted
+            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Count Nodes</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Count how many Person nodes exist</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>// Count nodes
+MATCH (p:Person)
+RETURN count(p) AS totalPersons;
+
+// Sample return object
+{"totalPersons": 3}
+            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Find Relationships</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>List all FRIEND relationships</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>// Find all FRIEND relationships
+MATCH (a)-[r:FRIEND]->(b)
+RETURN a.name, b.name;
+
+// Sample return objects
+[
+  {"a.name": "Alice", "b.name": "Bob"},
+  {"a.name": "Charlie", "b.name": "Alice"}
+]
+            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Aggregate Data</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Calculate average age of Persons</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>// Average age
+MATCH (p:Person)
+RETURN avg(p.age) AS averageAge;
+
+// Sample return object
+{"averageAge": 29.7}
+            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Optional Match</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Find Persons and optional FRIENDs</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>// Optional FRIEND match
+MATCH (p:Person)
+OPTIONAL MATCH (p)-[:FRIEND]->(f)
+RETURN p.name, collect(f.name) AS friends;
+
+// Sample return objects
+[
+  {"p.name": "Alice", "friends": ["Bob", "Charlie"]},
+  {"p.name": "Charlie", "friends": []}
+]
+            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>SQL vs Cypher</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Find all friends of Alice</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>// SQL query
+SELECT f.name
+FROM Person p
+JOIN FRIENDS fr ON p.id = fr.person_id
+JOIN Person f ON fr.friend_id = f.id
+WHERE p.name = 'Alice';
+
+// Cypher query
+MATCH (a:Person {name: "Alice"})-[:FRIEND]->(f)
+RETURN f.name;
+            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>Questions</section>
+
+                <section>
+                    <h3>ACID Compatibility</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Database</th>
+                                <th>Atomicity</th>
+                                <th>Consistency</th>
+                                <th>Isolation</th>
+                                <th>Durability</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>IndexedDB</td>
+                                <td>Yes</td>
+                                <td>Yes</td>
+                                <td>Yes (per transaction)</td>
+                                <td>Yes</td>
+                            </tr>
+                            <tr>
+                                <td>MongoDB</td>
+                                <td>Yes (single document)</td>
+                                <td>Yes (single document)</td>
+                                <td>Limited</td>
+                                <td>Yes (with journaling)</td>
+                            </tr>
+                            <tr>
+                                <td>Neo4j</td>
+                                <td>Yes</td>
+                                <td>Yes</td>
+                                <td>Yes</td>
+                                <td>Yes</td>
+                            </tr>
+                            <tr>
+                                <td>SQL (e.g., MySQL, PostgreSQL)</td>
+                                <td>Yes</td>
+                                <td>Yes</td>
+                                <td>Yes</td>
+                                <td>Yes</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>Questions</section>
+
+                <section>
+                    <h4>Which NoSQL Database Would You Recommend?</h4>
+                    <ul style="font-size:1.2em; line-height:1.8em;">
+                        <li>You need an <strong>offline browser-based app</strong> to store user preferences → ?</li>
+                        <li>You want to manage a <strong>large product catalog</strong> with flexible schema → ?</li>
+                        <li>You need to model <strong>social network relationships</strong> like friends-of-friends → ?
+                        </li>
+                        <li>You are building a <strong>data lake for weather and IoT sensors</strong> → ?</li>
+                        <li>You need fast <strong>local caching of session data</strong> in a web app → ?</li>
+                    </ul>
+                </section>
+
+                <section>Questions</section>
 
                 <section>
                     <div class="split">
@@ -7312,6 +8506,33 @@ db.drinks.aggregate([
                     </div>
                 </section>
 
+                <section>Homework 2</section>
+
+                <section>
+                    <h4> Homework 2 (due Sept/26)</h4>
+                    <div class="center">
+                        <ol>
+                            <li>How does metadata (such as author, timestamp, and uuid) improve data quality during data
+                                synchronization?</li>
+                            <li>What are the seven dimensions of data quality?</li>
+                            <li>Imagine a dataset of crop yields collected from IoT sensors. Describe one real-world
+                                issue of poor data quality.</li>
+                            <li>How does metadata (such as author, timestamp, and uuid) improve data quality during data
+                                synchronization?</li>
+                            <li>Suppose two datasets of farm records are combined. The datasets use metric units (kg)
+                                and imperial units (lbs).</li>
+                            <li>Select which transformation function (map, filter, or reduce) is most appropriate.</li>
+                            <li>Why is filtering data before analysis an important step?</li>
+                            <li>How does the reduce function help in summarizing large datasets?</li>
+                            <li>Explain the purpose of map, filter, and reduce in data transformation?</li>
+                            <li>Describe a practical example of combining <code>map</code>,
+                                <code>filter</code>, and <code>reduce</code> in one pipeline for
+                                agricultural IoT data.
+                            </li>
+                        </ol>
+                    </div>
+                </section>
+
                 <section>
                     <h4>Project Part 1 (due Oct/24)</h4>
                     <ol>
@@ -7348,14 +8569,14 @@ db.drinks.aggregate([
                         Horizontal Scaling,
                         Vertical Scaling,
                         <span class="highlight">Consistency</span>,
-                        Availability,
+                        <span class="highlight">Availability</span>,
                         Partition Tolerance,
                         Vector Clock,
                         Schema-less,
                         Indexing,
                         Secondary Index,
                         Primary Key,
-                        UUID,
+                        <span class="highlight">Neo4j</span>,
                         Compound Key,
                         MapReduce,
                         Aggregation,
@@ -7385,11 +8606,9 @@ db.drinks.aggregate([
                         Replica Set,
                         Leader Election,
                         Cluster,
-                        Node,
                         Data Center,
                         Geo-Replication,
                         <span class="highlight">Document Model</span>,
-                        <span class="highlight">JSON</span>,
                         BSON,
                         XML
                         Store,
@@ -7398,14 +8617,14 @@ db.drinks.aggregate([
                         Column Family,
                         CQL,
                         <span class="highlight">MQL</span>,
-                        Cypher,
-                        Graph Traversal,
+                        <span class="highlight">Cypher</span>,
+                        <span class="highlight">Graph Traversal</span>,
                         Property Graph,
-                        RDF,
+                        <span class="highlight">RDF</span>,
                         Triple Store,
-                        Relationship,
-                        Node Label,
-                        Edge,
+                        <span class="highlight">Relationship</span>,
+                        <span class="highlight">Node</span>,
+                        <span class="highlight">Edge</span>,
                         <span class="highlight">NoSQL</span>,
                         Index-Free Adjacency,
                         Query Optimization,
@@ -7420,12 +8639,12 @@ db.drinks.aggregate([
                         Restore,
                         Hot Data,
                         Cold Data,
-                        Data Lake,
+                        <span class="highlight">Data Lake</span>,
                         Data Warehouse,
-                        ETL,
-                        ELT,
+                        <span class="highlight">ETL</span>,
+                        <span class="highlight">ELT</span>,
                         Streaming,
-                        Batch Processing,
+                        <span class="highlight">Batch Processing,</span>,
                         <span class="highlight">Transformation</span>,
                         Lambda Architecture,
                         Pub/Sub,
@@ -7466,6 +8685,10 @@ db.drinks.aggregate([
                         <span class="highlight">$limit</span>,
                         <span class="highlight">$set</span>,
                         <span class="highlight">$inc</span>,
+                        <span class="highlight">MATCH (alice:Person {name: 'Alice'})-[:FRIEND]->(friend)</span>,
+                        <span class="highlight">MATCH (bob:Person {name: 'Bob'})-[:FRIEND]->(friend)</span>,
+                        <span class="highlight">MATCH (alice:Person {name: 'Alice'})</span>,
+                        <span class="highlight">MATCH (bob:Person {name: 'Bob'})</span>,
                         $jsonSchema,
                         <span class="highlight">createCollection</span>,
                         createIndex,
