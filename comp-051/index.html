@@ -416,7 +416,8 @@
                             </tr>
                             <tr style="color:#ccc;">
                                 <td style="padding:6px; border:1px solid #666;">Week 5</td>
-                                <td style="padding:6px; border:1px solid #666;"><a href="./#sept-23">Sep 23</a>, Sep 25
+                                <td style="padding:6px; border:1px solid #666;"><a href="./#sept-23">Sep 23</a>, <a
+                                        href="./#sept-25">Sep 25</a>
                                 </td>
                                 <td style="padding:6px; border:1px solid #666;">Array/Vectors</td>
                                 <td style="padding:6px; border:1px solid #666;"></td>
@@ -5937,6 +5938,156 @@ flowers.push_back("Lily");
                     <li>Text or number-based pattern printing</li>
                 </ul>
             </section>
+
+            <!-- Agenda Slide -->
+            <section id="sept-25">
+                <div class="split">
+                    <div class="left">
+                        <h4>Today, Tuesday Sept 25</h4>
+                        <ol type="A">
+                            <li>Variables and Data Types</li>
+                            <li>Conditions</li>
+                            <li>Loops</li>
+                            <li>Arrays</li>
+                            <li>Vectors (optional)</li>
+                            <li>Combine all concepts in a complete program: Tic-Tac-Toe</li>
+                            <li>Homework and Lab: extend the game</li>
+                        </ol>
+                    </div>
+                    <div class="right">
+                        <img src="https://www.azocleantech.com/images/Article_Images/ImageForArticle_703(1).jpg"
+                            alt="Software Implementation Agenda" style="width:100%; max-width:400px;" />
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide: Variables -->
+            <section>
+                <h4>Step 1: Variables</h4>
+                <ul>
+                    <li>Store board, current player, and game state</li>
+                    <li>Example:</li>
+                    <pre><code>char board[3][3]; 
+char currentPlayer = 'X'; 
+bool gameOver = false;</code></pre>
+                </ul>
+            </section>
+
+            <!-- Slide: Conditions -->
+            <section>
+                <h4>Step 2: Conditions</h4>
+                <ul>
+                    <li>Check if a move is valid</li>
+                    <li>Check for a win or draw</li>
+                    <li>Switch players</li>
+                    <pre><code>if (board[row][col] == ' ') {
+    board[row][col] = currentPlayer;
+} else {
+    cout &lt;&lt; "Invalid move!";
+}
+if (checkWin(board, currentPlayer)) gameOver = true;</code></pre>
+                </ul>
+            </section>
+
+            <!-- Slide: Loops -->
+            <section>
+                <h4>Step 3: Loops</h4>
+                <ul>
+                    <li>Main game loop</li>
+                    <li>Keep the game running until gameOver is true</li>
+                    <pre><code>while (!gameOver) {
+    printBoard(board);
+    getPlayerMove();
+    updateBoard();
+    checkWinOrDraw();
+    switchPlayer();
+}</code></pre>
+                </ul>
+            </section>
+
+            <!-- Slide: Arrays -->
+            <section>
+                <h4>Step 4: Arrays</h4>
+                <ul>
+                    <li>Use a 2D array to store the 3x3 board</li>
+                    <li>Access and update elements using indices</li>
+                    <pre><code>board[0][0] = 'X';
+char cell = board[1][2];</code></pre>
+                </ul>
+            </section>
+
+            <!-- Slide: Vectors (Optional) -->
+            <section>
+                <h4>Step 5: Vectors (Optional)</h4>
+                <ul>
+                    <li>Track move history dynamically</li>
+                    <li>Example:</li>
+                    <pre><code>#include &lt;vector&gt;
+vector&lt;pair&lt;int,int&gt;&gt; moves;
+moves.push_back(make_pair(row, col));</code></pre>
+                </ul>
+            </section>
+
+            <!-- Slide: Print Board Function -->
+            <section>
+                <h4>Step 6: Helper Function - Print Board</h4>
+                <pre><code>void printBoard(char board[3][3]) {
+    for (int i=0; i&lt;3; i++) {
+        for (int j=0; j&lt;3; j++) {
+            cout &lt;&lt; board[i][j] &lt;&lt; ' ';
+        }
+        cout &lt;&lt; endl;
+    }
+}</code></pre>
+            </section>
+
+            <!-- Slide: Check Win Function -->
+            <section>
+                <h4>Step 7: Helper Function - Check Win</h4>
+                <pre><code>bool checkWin(char board[3][3], char player) {
+    // check rows, columns, diagonals
+    for (int i=0; i&lt;3; i++) {
+        if (board[i][0]==player &amp;&amp; board[i][1]==player &amp;&amp; board[i][2]==player) return true;
+        if (board[0][i]==player &amp;&amp; board[1][i]==player &amp;&amp; board[2][i]==player) return true;
+    }
+    if (board[0][0]==player &amp;&amp; board[1][1]==player &amp;&amp; board[2][2]==player) return true;
+    if (board[0][2]==player &amp;&amp; board[1][1]==player &amp;&amp; board[2][0]==player) return true;
+    return false;
+}</code></pre>
+            </section>
+
+            <!-- Slide: Full Game Loop -->
+            <section>
+                <h4>Step 8: Full Game Loop</h4>
+                <pre><code>while (!gameOver) {
+    printBoard(board);
+    int row, col;
+    cout &lt;&lt; "Enter row and column: ";
+    cin &gt;&gt; row &gt;&gt; col;
+    if (board[row][col]==' ') {
+        board[row][col] = currentPlayer;
+        if (checkWin(board, currentPlayer)) {
+            cout &lt;&lt; currentPlayer &lt;&lt; " wins!\n";
+            gameOver = true;
+        } else {
+            switchPlayer();
+        }
+    } else {
+        cout &lt;&lt; "Invalid move!\n";
+    }
+}</code></pre>
+            </section>
+
+            <!-- Slide: Homework and Lab -->
+            <section>
+                <h4>Homework / Lab</h4>
+                <ul>
+                    <li>Add move history using vectors</li>
+                    <li>Implement undo functionality</li>
+                    <li>Add a scoring system or play-again option</li>
+                </ul>
+            </section>
+
 
             <!-- END MODULE -->
 
