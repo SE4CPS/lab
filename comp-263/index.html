@@ -481,8 +481,8 @@
                                         style="color:#ccc; text-decoration:none;">Data Quality and Standards
                                         &#x1f517;</a></td>
                                 <td style="padding:6px; border:1px solid #666;"><a href="#/mongodb">MongoDB</a></td>
-                                <td style="padding:6px; border:1px solid #666;">Lab 2, HW 2, Project Part 1: <i>Data and
-                                        Scalability</i></td>
+                                <td style="padding:6px; border:1px solid #666;">Lab 2, HW 2, Project Part 1: <i>Data
+                                        Lake Queries</i></td>
                             </tr>
                             <tr style="color:#ccc;">
                                 <td style="padding:6px; border:1px solid #666;">Week 4</td>
@@ -517,7 +517,7 @@
                                         style="color:#ccc; text-decoration:none;">Database Pipeline Architecture and
                                         Data Warehouse &#x1f517;</a></td>
                                 <td style="padding:6px; border:1px solid #666;"></td>
-                                <td style="padding:6px; border:1px solid #666;">Lab 3, HW 3, Fall Student Break (Friday)
+                                <td style="padding:6px; border:1px solid #666;">Lab 3, HW 3
                                 </td>
                             </tr>
                             <tr style="color:#ccc;">
@@ -534,7 +534,7 @@
                                 <td style="padding:6px; border:1px solid #666;">Oct 14, Oct 16</td>
                                 <td style="padding:6px; border:1px solid #666;">Midterm Preparation</td>
                                 <td style="padding:6px; border:1px solid #666;"></td>
-                                <td style="padding:6px; border:1px solid #666;">Midterm</td>
+                                <td style="padding:6px; border:1px solid #666;">Midterm (Oct 16)</td>
                             </tr>
                             <tr style="color:#ccc;">
                                 <td style="padding:6px; border:1px solid #666;">Week 9</td>
@@ -9878,7 +9878,7 @@ db.lake.watch([
                             </ol>
                         </div>
                         <div class="right">
-                            <img src="https://assets-global.website-files.com/61f0aecf55af2565526f6a95/6358296b498b70261fabd7af_batch%20vs%20stream.png"
+                            <img src="https://media.istockphoto.com/id/584584284/photo/typical-lakeside-sauna-in-finland.jpg?s=612x612&w=0&k=20&c=hGq2EVvlnUzYpgOsULoM77d_l-bdkOyQIK9PcIEcDMs="
                                 alt="Data Lakehouse">
                         </div>
                     </div>
@@ -9949,19 +9949,67 @@ db.lake.watch([
                         <li class="fragment slide-in">Keep raw + curated together</li>
                         <li class="fragment slide-in">Get ACID and time travel</li>
                         <li class="fragment slide-in">Serve SQL, ML, streaming</li>
+                        <li class="fragment slide-in"><strong>Less ETL:</strong> no lake → warehouse
+                        </li>
                     </ul>
+                </section>
+
+                <section>
+                    <div class="split">
+                        <!-- Left: Lake + Warehouse -->
+                        <div class="left">
+                            <h5>Lake + Warehouse</h5>
+                            <div class="pipeline">
+                                <div class="box fragment">Sources</div>
+                                <div class="box fragment">ETL</div>
+                                <div class="box fragment">Data Lake</div>
+                                <div class="box fragment">ETL</div>
+                                <div class="box fragment">Data Warehouse</div>
+                                <div class="box fragment">ETL</div>
+                                <div class="box fragment">Marts / Dashboards</div>
+                                <div class="box fragment highlight">Consumers</div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Lakehouse -->
+                        <div class="right">
+                            <h5>Lakehouse</h5>
+                            <div class="pipeline">
+                                <div class="box fragment">Sources</div>
+                                <div class="box fragment">ETL</div>
+                                <div class="box fragment">Lakehouse (open formats + ACID)</div>
+                                <div class="box fragment">SQL / ML / Streaming Engines</div>
+                                <div class="box fragment highlight">Consumers</div>
+                            </div>
+                            <br>
+                            <ul>
+                                <li class="fragment">Single ingestion step</li>
+                                <li class="fragment">Less ETL (no lake → warehouse shuffle)</li>
+                                <li class="fragment">One store, many engines</li>
+                            </ul>
+                        </div>
+                    </div>
                 </section>
 
                 <!-- Slide 6: Introduce Lakehouse -->
                 <section>
-                    <h4>Enter the <span class="highlight">Lakehouse</span></h4>
-                    <ul>
-                        <li class="fragment slide-in">Tables on open files</li>
-                        <li class="fragment slide-in">ACID: safe merge and update</li>
-                        <li class="fragment slide-in">Schema evolve, time travel</li>
-                        <li class="fragment slide-in">One store, many engines</li>
-                        <li class="fragment slide-in">Strong catalog and lineage</li>
-                    </ul>
+                    <h4>Architectural Concept <span class="highlight">Lakehouse</span></h4>
+                    <div class="split">
+                        <div class="left box">
+                            <ul>
+                                <li class="fragment slide-in"><strong>SQL query engine on raw files</strong>
+                                <li class="fragment slide-in">Tables on open files format</li>
+                                <li class="fragment slide-in">ACID: safe merge and update</li>
+                                <li class="fragment slide-in">Schema evolve, time travel</li>
+                                <li class="fragment slide-in">One store, many engines</li>
+                                <li class="fragment slide-in">Strong catalog and lineage</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://www.oracle.com/a/ocom/img/rc24-data-lakehouse.jpg"
+                                alt="Lakehouse diagram placeholder" />
+                        </div>
+                    </div>
                 </section>
 
                 <!-- Slide 7: Ag Example - After (Lakehouse) -->
@@ -9971,10 +10019,11 @@ db.lake.watch([
                         <li class="fragment slide-in">Ingest sensors, drones, soil</li>
                         <li class="fragment slide-in">Store raw + curated tables</li>
                         <li class="fragment slide-in">Merge late yield updates</li>
-                        <li class="fragment slide-in">SQL for BI; ML on same data</li>
+                        <li class="fragment slide-in">SQL for Reports; ML on same data</li>
                     </ul>
                 </section>
 
+                <!-- Slide 8: Tool fit (allowed tech only) -->
                 <!-- Slide 8: Tool fit (allowed tech only) -->
                 <section>
                     <h4>Where tools fit</h4>
@@ -9983,17 +10032,33 @@ db.lake.watch([
                         <li class="fragment slide-in">MongoDB: raw field logs</li>
                         <li class="fragment slide-in">Neo4j: farm links, supply</li>
                         <li class="fragment slide-in">IndexedDB: offline tablets</li>
+                        <li class="fragment slide-in">
+                            Lakehouse:
+                            <a href="https://docs.delta.io/" target="_blank">Delta Lake</a> /
+                            <a href="https://iceberg.apache.org/docs/latest/" target="_blank">Apache Iceberg</a>
+                        </li>
                     </ul>
                 </section>
 
-                <!-- Slide 9: Quick Ag SQL (curated view) -->
+                <!-- 2. Agriculture Example - Lakehouse -->
                 <section>
-                    <h4>Query: <span class="highlight">Yield by soil zone</span></h4>
-                    <pre><code class="fragment slide-in">-- Curated table in lakehouse
-SELECT zone_id, AVG(yield_kg) AS avg_yield
+                    <h4>Agriculture with <span class="highlight">Lakehouse</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li class="fragment slide-in">Soil + yield → curated tables</li>
+                                <li class="fragment slide-in">Drone images → raw files</li>
+                                <li class="fragment slide-in">BI reports on zones</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>-- Daily report
+SELECT zone_id, AVG(yield_kg)
 FROM fact_yield
-JOIN dim_soil USING (soil_id)
-GROUP BY zone_id;</code></pre>
+GROUP BY zone_id;
+</code></pre>
+                        </div>
+                    </div>
                 </section>
 
                 <!-- Slide 10: Quick Ag Graph (links idea) -->
@@ -10030,27 +10095,6 @@ GROUP BY zone_id;</code></pre>
                     </ul>
                 </section>
 
-                <!-- 2. Agriculture Example - Lakehouse -->
-                <section>
-                    <h4>Agriculture with <span class="highlight">Lakehouse</span></h4>
-                    <div class="split">
-                        <div class="left">
-                            <ul>
-                                <li class="fragment slide-in">Soil + yield → curated tables</li>
-                                <li class="fragment slide-in">Drone images → raw files</li>
-                                <li class="fragment slide-in">BI reports on zones</li>
-                            </ul>
-                        </div>
-                        <div class="right">
-                            <pre><code>-- Daily report
-SELECT zone_id, AVG(yield_kg)
-FROM fact_yield
-GROUP BY zone_id;
-</code></pre>
-                        </div>
-                    </div>
-                </section>
-
                 <!-- 3. Limits of Batch -->
                 <section>
                     <h4>Limits of <span class="highlight">Batch</span></h4>
@@ -10061,9 +10105,34 @@ GROUP BY zone_id;
                     </ul>
                 </section>
 
+                <section>
+                    <div class="split">
+                        <div class="left box">
+                            <h5>Batch-Oriented</h5>
+                            <ul>
+                                <li class="fragment slide-in">Insurance risk modeling</li>
+                                <li class="fragment slide-in">Census & demographic statistics</li>
+                                <li class="fragment slide-in">Climate & weather simulations</li>
+                                <li class="fragment slide-in">Pharmaceutical clinical trial data</li>
+                                <li class="fragment slide-in">Corporate reporting</li>
+                            </ul>
+                        </div>
+                        <div class="right box">
+                            <h5>Real-Time (Streaming)</h5>
+                            <ul>
+                                <li class="fragment slide-in">Air traffic control & flight tracking</li>
+                                <li class="fragment slide-in">Emergency response & 911 dispatch systems</li>
+                                <li class="fragment slide-in">Healthcare monitoring (ICU sensors, wearables)</li>
+                                <li class="fragment slide-in">Power grid & smart meters</li>
+                                <li class="fragment slide-in">Autonomous vehicles & traffic systems</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
                 <!-- 4. New Need -->
                 <section>
-                    <h4>New Need: <span class="highlight">Real Time</span></h4>
+                    <h4>New Need: <span class="highlight">Real Time Pipelines</span></h4>
                     <ul>
                         <li class="fragment slide-in">Soil dries in minutes</li>
                         <li class="fragment slide-in">Machine breakdown alerts</li>
@@ -10072,7 +10141,6 @@ GROUP BY zone_id;
                 </section>
 
                 <section>
-                    <h4><span class="highlight">Batch vs Streaming Pipelines</span></h4>
                     <div class="split">
                         <!-- Left: Batch-first -->
                         <div class="left">
@@ -10272,6 +10340,77 @@ kafka-console-consumer.sh -t events
                         <li class="fragment slide-in">Often used together</li>
                         <li class="fragment slide-in">Agri farms need both</li>
                     </ul>
+                </section>
+
+                <section>Questions?</section>
+
+                <section style="font-family: 'Inter', 'Roboto', 'Open Sans', sans-serif;">
+                    <div class="split">
+                        <div class="left box">
+                            <p style="font-size: 1.1em; line-height: 1.5;">
+                                A city wants to track traffic flow in real time to adjust signals,
+                                while also keeping historical data for planning future road expansions.
+                            </p>
+                            <p style="font-size: 1.15em; font-style: italic; margin-top: 1em;">
+                                Would you choose a <strong>Data Lake</strong>, a <strong>Data Warehouse</strong>,
+                                a <strong>Lakehouse</strong>, or a <strong>Streaming Pipeline</strong>?
+                            </p>
+                        </div>
+                        <div class="right">
+                            <img src="https://www.awpsafety.com/wp-content/uploads/2024/09/traffic-control-texas-2-scaled-e1715020956915.jpg"
+                                alt="Traffic data illustration placeholder" />
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-family: 'Inter', 'Roboto', 'Open Sans', sans-serif;">
+                    <h4><span class="highlight">Sample Answer: Traffic Use Case</span></h4>
+                    <div class="split">
+                        <!-- Left: Recommendation -->
+                        <div class="left box">
+                            <h5>Recommendation</h5>
+                            <ul>
+                                <li><strong>Streaming pipeline</strong> for live traffic signals</li>
+                                <li><strong>Lakehouse</strong> (Delta/Iceberg) as shared store</li>
+                                <li><strong>SQL / ML</strong> for planning & forecasting</li>
+                                <li><strong>Consumers:</strong>
+                                    <ul>
+                                        <li>Real-time: traffic ops & systems</li>
+                                        <li>Reporting: planners, dashboards</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Right: Visual pipeline -->
+                        <div class="right">
+                            <div class="pipeline" style="gap:.5rem;">
+                                <div class="box">Traffic Sensors / Apps</div>
+                                <div class="box">Streaming Ingest</div>
+                                <div class="box highlight">Consumers (Real-Time)</div>
+                                <div class="box">Lakehouse Tables</div>
+                                <div class="box">SQL / ML Engines</div>
+                                <div class="box highlight">Consumers (Reporting)</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section style="font-family: 'Inter', 'Roboto', 'Open Sans', sans-serif;">
+                    <h4><span class="highlight">Realtime Data?</span></h4>
+                    <div class="split">
+                        <div class="left box">
+                            <p style="font-size:1.1em; line-height:1.5;">
+                                Realtime data processing enables immediate responses.
+                                Events are captured, streamed, and acted upon in seconds,
+                                supporting use cases like fraud detection, traffic signals,
+                                and IoT monitoring.
+                            </p>
+                        </div>
+                        <div class="right">
+                            <img src="./img/prototype_cat.jpg" alt="Realtime data flow placeholder" />
+                        </div>
+                    </div>
                 </section>
 
                 <section>Questions?</section>
