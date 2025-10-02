@@ -355,7 +355,63 @@
             border-radius: calc(var(--code-radius) - 4px);
             white-space: nowrap;
         }
+
+        @keyframes pulseHighlight {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 200, 0, 0.0);
+            }
+
+            50% {
+                box-shadow: 0 0 0 8px rgba(255, 200, 0, 0.15);
+            }
+        }
+
+        .highlight {
+            animation: pulseHighlight 6s ease-in-out infinite;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fragment.slide-in {
+            opacity: 0;
+        }
+
+        .fragment.visible.slide-in {
+            animation: slideInUp .6s ease-out forwards;
+        }
+
+        .pipeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .box {
+            padding: 0.6rem 1rem;
+            border: 1px solid #888;
+            border-radius: 6px;
+            /* background: #f5f7fa; */
+            text-align: center;
+            font-size: 0.9em;
+        }
+
+        h5 {
+            margin-bottom: 0.5rem;
+        }
     </style>
+
 </head>
 
 <body>
@@ -454,7 +510,8 @@
                             </tr>
                             <tr style="color:#ccc;">
                                 <td style="padding:6px; border:1px solid #666;">Week 6</td>
-                                <td style="padding:6px; border:1px solid #666;"><a href="#/sept-30">Sept 30</a>, Oct 2
+                                <td style="padding:6px; border:1px solid #666;"><a href="#/sept-30">Sept 30</a>, <a
+                                        href="#/oct-02">Oct 2</a>
                                 </td>
                                 <td style="padding:6px; border:1px solid #666;"><a href="#/377"
                                         style="color:#ccc; text-decoration:none;">Database Pipeline Architecture and
@@ -9808,7 +9865,689 @@ db.lake.watch([
                     </div>
                 </section>
 
-                <section>Homework 2</section>
+                <section id="oct-02">
+                    <h4><span class="highlight">Agenda</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ol>
+                                <li>DB Architecture - Data Lakehouse</li>
+                                <li>DB Architecture - Streaming Pipelines</li>
+                                <li>NoSQL Graph DB - Neo4j (Queries & Links)</li>
+                                <li>Lab 3 Sample Code, Homework 3</li>
+                                <li>Midterm & Project Part 1 – Guidelines</li>
+                            </ol>
+                        </div>
+                        <div class="right">
+                            <img src="https://assets-global.website-files.com/61f0aecf55af2565526f6a95/6358296b498b70261fabd7af_batch%20vs%20stream.png"
+                                alt="Data Lakehouse">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 0: Recap -->
+                <section>
+                    <h4>Recap: <span class="highlight">Lake → Warehouse → Mart</span></h4>
+                    <ul>
+                        <li class="fragment slide-in">Lake: raw, flexible, cheap</li>
+                        <li class="fragment slide-in">Warehouse: curated, reliable</li>
+                        <li class="fragment slide-in">Mart: focused, fast to use</li>
+                    </ul>
+                </section>
+
+                <!-- Slide 1: Ag Example - Before (Warehouse path) -->
+                <section>
+                    <h4>Agriculture: <span class="highlight">Warehouse path</span></h4>
+                    <ul>
+                        <li class="fragment slide-in">Soil tests → ETL → tables</li>
+                        <li class="fragment slide-in">Yields by field, by season</li>
+                        <li class="fragment slide-in">Reports for decisions</li>
+                    </ul>
+                    <p class="mini-note fragment slide-in">
+                        RDBMS for marts; clean, structured facts
+                    </p>
+                </section>
+
+                <!-- Slide 2: Limits of Warehouse -->
+                <section>
+                    <h4>Limits: <span class="highlight">Warehouse</span></h4>
+                    <ul>
+                        <li class="fragment slide-in">Rigid schemas; slow change</li>
+                        <li class="fragment slide-in">Costly scale for history</li>
+                        <li class="fragment slide-in">Weak for unstructured data</li>
+                        <li class="fragment slide-in">Weak for realtime data</li>
+                        <li class="fragment slide-in">Raw detail lost on ETL</li>
+                    </ul>
+                </section>
+
+                <!-- Slide 3: Ag Example - Before (Lake path) -->
+                <section>
+                    <h4>Agriculture: <span class="highlight">Lake path</span></h4>
+                    <ul>
+                        <li class="fragment slide-in">Sensor logs in object store</li>
+                        <li class="fragment slide-in">Realtime data, weather CSV</li>
+                        <li class="fragment slide-in">Ad hoc SQL and scripts</li>
+                    </ul>
+                    <p class="mini-note fragment slide-in">
+                        MongoDB for raw docs; flexible ingest
+                    </p>
+                </section>
+
+                <!-- Slide 4: Limits of Lake -->
+                <section>
+                    <h4>Limits: <span class="highlight">Data Lake</span></h4>
+                    <ul>
+                        <li class="fragment slide-in">Schema-on-read is fragile</li>
+                        <li class="fragment slide-in">No ACID across files</li>
+                        <li class="fragment slide-in">Catalog and lineage weak</li>
+                    </ul>
+                </section>
+
+                <!-- Slide 5: The Gap -->
+                <section>
+                    <h4>The <span class="highlight">Gap</span></h4>
+                    <ul>
+                        <li class="fragment slide-in">Keep raw + curated together</li>
+                        <li class="fragment slide-in">Get ACID and time travel</li>
+                        <li class="fragment slide-in">Serve SQL, ML, streaming</li>
+                    </ul>
+                </section>
+
+                <!-- Slide 6: Introduce Lakehouse -->
+                <section>
+                    <h4>Enter the <span class="highlight">Lakehouse</span></h4>
+                    <ul>
+                        <li class="fragment slide-in">Tables on open files</li>
+                        <li class="fragment slide-in">ACID: safe merge and update</li>
+                        <li class="fragment slide-in">Schema evolve, time travel</li>
+                        <li class="fragment slide-in">One store, many engines</li>
+                        <li class="fragment slide-in">Strong catalog and lineage</li>
+                    </ul>
+                </section>
+
+                <!-- Slide 7: Ag Example - After (Lakehouse) -->
+                <section>
+                    <h4>Agriculture: <span class="highlight">Lakehouse flow</span></h4>
+                    <ul>
+                        <li class="fragment slide-in">Ingest sensors, drones, soil</li>
+                        <li class="fragment slide-in">Store raw + curated tables</li>
+                        <li class="fragment slide-in">Merge late yield updates</li>
+                        <li class="fragment slide-in">SQL for BI; ML on same data</li>
+                    </ul>
+                </section>
+
+                <!-- Slide 8: Tool fit (allowed tech only) -->
+                <section>
+                    <h4>Where tools fit</h4>
+                    <ul>
+                        <li class="fragment slide-in">RDBMS: marts and reports</li>
+                        <li class="fragment slide-in">MongoDB: raw field logs</li>
+                        <li class="fragment slide-in">Neo4j: farm links, supply</li>
+                        <li class="fragment slide-in">IndexedDB: offline tablets</li>
+                    </ul>
+                </section>
+
+                <!-- Slide 9: Quick Ag SQL (curated view) -->
+                <section>
+                    <h4>Query: <span class="highlight">Yield by soil zone</span></h4>
+                    <pre><code class="fragment slide-in">-- Curated table in lakehouse
+SELECT zone_id, AVG(yield_kg) AS avg_yield
+FROM fact_yield
+JOIN dim_soil USING (soil_id)
+GROUP BY zone_id;</code></pre>
+                </section>
+
+                <!-- Slide 10: Quick Ag Graph (links idea) -->
+                <section>
+                    <h4>Graph view: <span class="highlight">Inputs → Fields</span></h4>
+                    <ul>
+                        <li class="fragment slide-in">Fertilizer → Field → Yield</li>
+                        <li class="fragment slide-in">Supplier → Batch → Field</li>
+                    </ul>
+                    <p class="mini-note fragment slide-in">
+                        Neo4j to explore causal chains
+                    </p>
+                </section>
+
+                <!-- Slide 11: Takeaways -->
+                <section>
+                    <h4><span class="highlight">Takeaways</span></h4>
+                    <ul>
+                        <li class="fragment slide-in">Warehouse: trust, but rigid</li>
+                        <li class="fragment slide-in">Lake: flexible, but messy</li>
+                        <li class="fragment slide-in">Lakehouse: both in one</li>
+                    </ul>
+                </section>
+
+
+                <!-- 1. Recap Lakehouse -->
+                <section>
+                    <h4>Recap: <span class="highlight">Lakehouse</span></h4>
+                    <ul>
+                        <li class="fragment slide-in">One platform for raw + curated</li>
+                        <li class="fragment slide-in">ACID transactions on open files</li>
+                        <li class="fragment slide-in">SQL, ML, and BI share same data</li>
+                        <li class="fragment slide-in">Good for batch, not always for now</li>
+                    </ul>
+                </section>
+
+                <!-- 2. Agriculture Example - Lakehouse -->
+                <section>
+                    <h4>Agriculture with <span class="highlight">Lakehouse</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li class="fragment slide-in">Soil + yield → curated tables</li>
+                                <li class="fragment slide-in">Drone images → raw files</li>
+                                <li class="fragment slide-in">BI reports on zones</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>-- Daily report
+SELECT zone_id, AVG(yield_kg)
+FROM fact_yield
+GROUP BY zone_id;
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. Limits of Batch -->
+                <section>
+                    <h4>Limits of <span class="highlight">Batch</span></h4>
+                    <ul>
+                        <li class="fragment slide-in">Updates only daily/hourly</li>
+                        <li class="fragment slide-in">Late data is hard to merge fast</li>
+                        <li class="fragment slide-in">Farm alerts need real time</li>
+                    </ul>
+                </section>
+
+                <!-- 4. New Need -->
+                <section>
+                    <h4>New Need: <span class="highlight">Real Time</span></h4>
+                    <ul>
+                        <li class="fragment slide-in">Soil dries in minutes</li>
+                        <li class="fragment slide-in">Machine breakdown alerts</li>
+                        <li class="fragment slide-in">Weather warnings on time</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Batch vs Streaming Pipelines</span></h4>
+                    <div class="split">
+                        <!-- Left: Batch-first -->
+                        <div class="left">
+                            <h5>Batch-first</h5>
+                            <div class="pipeline">
+                                <div class="box fragment">Sources</div>
+                                <div class="box fragment">ETL</div>
+                                <div class="box fragment">Data Lake</div>
+                                <div class="box fragment">ETL</div>
+                                <div class="box fragment">Warehouse</div>
+                                <div class="box fragment">ETL</div>
+                                <div class="box fragment">Marts</div>
+                                <div class="box fragment highlight">Consumers</div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Streaming-first -->
+                        <div class="right">
+                            <h5>Streaming-first</h5>
+                            <div class="pipeline">
+                                <div class="box fragment">Sources</div>
+                                <div class="box fragment">Stream Pipeline</div>
+                                <div class="box fragment highlight">Consumers</div>
+                                <div class="box fragment">ETL</div>
+                                <div class="box fragment">Lake</div>
+                                <div class="box fragment">...</div>
+                            </div>
+                            <br>
+                            <ul>
+                                <li class="fragment">Soil alerts in seconds</li>
+                                <li class="fragment">History still stored</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. Enter Streaming -->
+                <section>
+                    <h4>Enter <span class="highlight">Streaming Pipelines</span></h4>
+                    <ul>
+                        <li class="fragment slide-in">Data flows as events</li>
+                        <li class="fragment slide-in">Process as it arrives</li>
+                        <li class="fragment slide-in">Push alerts & dashboards</li>
+                        <li class="fragment slide-in">Store only what’s needed</li>
+                    </ul>
+                </section>
+
+                <!-- 6. Architecture -->
+                <section>
+                    <h4>Streaming Pipeline Flow</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ol>
+                                <li class="fragment slide-in">Source: sensors, tractors, APIs</li>
+                                <li class="fragment slide-in">Stream: Kafka topics</li>
+                                <li class="fragment slide-in">Process: filters, agg windows</li>
+                                <li class="fragment slide-in">Store: Elasticsearch, DBs</li>
+                                <li class="fragment slide-in">Consume: Kibana, alerts</li>
+                            </ol>
+                        </div>
+                        <div class="right">
+                            <img src="https://kafka.apache.org/images/streams-and-tables-p1_p4.png"
+                                alt="Streaming Flow">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 7. Agriculture Example - Stream -->
+                <section>
+                    <h4>Ag Example: <span class="highlight">Soil Moisture</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li class="fragment slide-in">Sensor sends event every 5 min</li>
+                                <li class="fragment slide-in">Stream joins with weather feed</li>
+                                <li class="fragment slide-in">Alert if below threshold</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>// Kafka consumer (Node.js)
+consumer.on("data", msg =&gt; {
+  if(msg.moisture &lt; 15){
+    sendAlert("Field A12 too dry!");
+  }
+});
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 8. Agriculture Example - Tractor -->
+                <section>
+                    <h4>Ag Example: <span class="highlight">Tractor Telemetry</span></h4>
+                    <ul>
+                        <li class="fragment slide-in">Streams engine heat + GPS</li>
+                        <li class="fragment slide-in">Detect overheating early</li>
+                        <li class="fragment slide-in">Notify operator instantly</li>
+                    </ul>
+                </section>
+
+                <!-- Slide 1: Streaming Pipeline Overview -->
+                <section>
+                    <h4>Streaming Pipeline Stack: <span class="highlight">Kafka</span></h4>
+                    <div class="split">
+                        <div class="left box">
+                            <ul>
+                                <li>Capture events as messages</li>
+                                <li>Process stream data</li>
+                                <li>Scale for high throughput</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code># producers → Kafka topics
+# consumers → Kafka topics
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 2: Kafka Overview -->
+                <section>
+                    <h4>Kafka: <span class="highlight">Distributed Event Streaming</span></h4>
+                    <div class="split">
+                        <div class="left box">
+                            <ul>
+                                <li>Distributed event streaming platform</li>
+                                <li>High throughput (&lt;2 ms latency)</li>
+                                <li>Scalable to thousands of brokers</li>
+                                <li>Durable, fault‑tolerant storage</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code># create topic
+kafka-topics.sh --create -t events
+# producer
+kafka-console-producer.sh -t events
+# consumer
+kafka-console-consumer.sh -t events
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 3: End-to-End Streaming Example -->
+                <section>
+                    <h4>End-to-End <span class="highlight">Streaming Example</span></h4>
+                    <div class="split">
+                        <div class="left box">
+                            <ul>
+                                <li>Producers send events to Kafka</li>
+                                <li>Consumers read and process events</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code># produce events via Kafka
+# consume events from Kafka
+</code></pre>
+                        </div>
+                    </div>
+                    <br>
+                    <a class="mini-note" target="_blank" href="https://kafka.apache.org/documentation/">
+                        Kafka Documentation
+                    </a>
+                </section>
+
+                <section>Lakehouse (eg MongoDB) vs Streaming (eg Kafka)</section>
+
+                <!-- 9. Compare Lakehouse vs Streaming -->
+                <section>
+                    <h4>Lakehouse vs Streaming</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li class="fragment slide-in"><strong>Lakehouse</strong></li>
+                                <li class="fragment slide-in">Batch load</li>
+                                <li class="fragment slide-in">SQL + ML unification</li>
+                                <li class="fragment slide-in">Daily/Hourly insights</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <ul>
+                                <li class="fragment slide-in"><strong>Streaming</strong></li>
+                                <li class="fragment slide-in">Event-by-event</li>
+                                <li class="fragment slide-in">Continuous joins</li>
+                                <li class="fragment slide-in">Alerts in seconds</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 10. Takeaways -->
+                <section>
+                    <h4><span class="highlight">Takeaways</span></h4>
+                    <ul>
+                        <li class="fragment slide-in">Lakehouse: unified batch</li>
+                        <li class="fragment slide-in">Streaming: real-time alerts</li>
+                        <li class="fragment slide-in">Often used together</li>
+                        <li class="fragment slide-in">Agri farms need both</li>
+                    </ul>
+                </section>
+
+                <section>Questions?</section>
+
+                <section>
+                    <h4><span class="highlight">Agenda</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ol>
+                                <li>DB Architecture - Data Lakehouse &check;</li>
+                                <li>DB Architecture - Streaming Pipelines &check;</li>
+                                <li>NoSQL Graph DB - Neo4j (Queries & Links)</li>
+                                <li>Lab 3 Sample Code, Homework 3</li>
+                                <li>Midterm & Project Part 1 – Guidelines</li>
+                            </ol>
+                        </div>
+                        <div class="right">
+                            <img src="https://www.onsetcomp.com/sites/default/files/styles/hero_banner/public/2022-09/HERO-HOBOnet1_0.jpg?itok=174tPXY0"
+                                alt="Data Lakehouse">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 1) Add nodes -->
+                <section>
+                    <h4>Neo4j: <span class="highlight">Add Nodes</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <div class="box">
+                                <strong>Requirement</strong>
+                                <ul>
+                                    <li class="fragment slide-in">Add Field A12</li>
+                                    <li class="fragment slide-in">Add Sensor S-001</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <pre><code class="fragment slide-in">MERGE (:Field {id:'A12', name:'North'})
+MERGE (:Sensor {id:'S-001', type:'soil'});</code></pre>
+                            <pre><code class="fragment slide-in">➜ Created/Found:
+  Field A12, Sensor S-001</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2) Add link -->
+                <section>
+                    <h4>Neo4j: <span class="highlight">Add Link</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <div class="box">
+                                <strong>Requirement</strong>
+                                <ul>
+                                    <li class="fragment slide-in">Link sensor to field</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <pre><code class="fragment slide-in">MATCH (f:Field {id:'A12'})
+MATCH (s:Sensor {id:'S-001'})
+MERGE (s)-[:LOCATED_IN]->(f)
+RETURN f.id AS field, s.id AS sensor;</code></pre>
+                            <pre><code class="fragment slide-in">➜ field | sensor
+  A12   | S-001</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3) Add a reading -->
+                <section>
+                    <h4>Neo4j: <span class="highlight">Add Reading</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <div class="box">
+                                <strong>Requirement</strong>
+                                <ul>
+                                    <li class="fragment slide-in">Store moisture=14</li>
+                                    <li class="fragment slide-in">Keep time of reading</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <pre><code class="fragment slide-in">MATCH (s:Sensor {id:'S-001'})
+CREATE (r:Reading {
+  at: datetime(), moisture:14
+})-[:FROM]->(s)
+RETURN s.id AS sensor, r.moisture AS m;</code></pre>
+                            <pre><code class="fragment slide-in">➜ sensor | m
+  S-001  | 14</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4) Read: latest sensor per field -->
+                <section>
+                    <h4>Neo4j: <span class="highlight">Read Latest</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <div class="box">
+                                <strong>Requirement</strong>
+                                <ul>
+                                    <li class="fragment slide-in">List sensors in A12</li>
+                                    <li class="fragment slide-in">Show latest moisture</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <pre><code class="fragment slide-in">MATCH (f:Field {id:'A12'})&lt;-[:LOCATED_IN]-
+      (s:Sensor)&lt;-[:FROM]-(r:Reading)
+WITH s, r
+ORDER BY r.at DESC
+WITH s, collect(r)[0] AS last
+RETURN s.id AS sensor, last.moisture AS m;</code></pre>
+                            <pre><code class="fragment slide-in">➜ sensor | m
+  S-001  | 14</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5) Aggregate: avg per field -->
+                <section>
+                    <h4>Neo4j: <span class="highlight">Aggregate</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <div class="box">
+                                <strong>Requirement</strong>
+                                <ul>
+                                    <li class="fragment slide-in">Avg moisture by field</li>
+                                    <li class="fragment slide-in">Sort lowest first</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="right">
+                            <pre><code class="fragment slide-in">MATCH (f:Field)&lt;-[:LOCATED_IN]-(s:Sensor)
+MATCH (r:Reading)-[:FROM]->(s)
+WITH f.id AS field, avg(r.moisture) AS avg_m
+RETURN field, round(avg_m,1) AS avg_m
+ORDER BY avg_m ASC;</code></pre>
+                            <pre><code class="fragment slide-in">➜ field | avg_m
+  A12   | 14.0</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Homework and Labs and Project and Midterm -->
+
+                <section>Questions?</section>
+
+                <section>ETL with Visual Studio</section>
+
+                <!-- Slide 1: Lab 3 Overview -->
+                <section>
+                    <h4>Lab 3 – <span class="highlight">Neo4j + Mongo Lake</span></h4>
+                    <div class="split">
+                        <div class="left box">
+                            <ul>
+                                <li>Pull graph data from Neo4j</li>
+                                <li>Push data into MongoDB Atlas</li>
+                                <li>Query and screenshot results</li>
+                                <li>Submit code + screenshots</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code># Repo
+git clone https://github.com/SE4CPS/2025-COMP-263.git
+cd 2025-COMP-263/labs/lab3
+
+# Install
+npm init -y
+npm install dotenv neo4j-driver mongodb
+
+# Env
+cp .env.template .env   # do NOT commit
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 2: Test Neo4j Connection -->
+                <section>
+                    <h4>Step 2 – <span class="highlight">Test Neo4j</span></h4>
+                    <div class="split">
+                        <div class="left box">
+                            <ul>
+                                <li>Use provided sample script</li>
+                                <li>Expect “Connected to Neo4j Aura!”</li>
+                                <li>Fix .env / network if it fails</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code># Run
+node labs/lab3/sampleNeo4jConnection.js
+
+# Expected
+Connected to Neo4j Aura!
+
+# Check if error
+# - URI / USER / PASSWORD in .env
+# - Internet/TLS reachable
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 3: Read / Select Data in Neo4j -->
+                <section>
+                    <h4>Step 3 – <span class="highlight">Read / Select Data (Neo4j)</span></h4>
+                    <div class="split">
+                        <div class="left box">
+                            <ul>
+                                <li>Open Neo4j Browser (Aura)</li>
+                                <li>Get only nodes and edges</li>
+                                <li>Run a generic read query</li>
+                                <li>Visualize graph and screenshot</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>// Read & visualize nodes and edges
+MATCH (n)-[r]->(m)
+RETURN n,r,m
+LIMIT 25;
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- Slide 4: Push Neo4j → Mongo Lake -->
+                <section>
+                    <h4>Step 4 – <span class="highlight">Push to Mongo</span></h4>
+                    <div class="split">
+                        <div class="left box">
+                            <ul>
+                                <li>Run integration script</li>
+                                <li>Expect insert count log</li>
+                                <li>Check Mongo Atlas project</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code># Run
+node labs/lab3/pushNeo4jToMongo.js
+
+# Expected log
+Inserted X docs into Mongo lake
+
+# Tip
+# If auth fails, check .env connection
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 5: Query in MongoDB Compass -->
+                <section>
+                    <h4>Step 5 – <span class="highlight">Query in Compass</span></h4>
+                    <div class="split">
+                        <div class="left box">
+                            <ul>
+                                <li>Connect via Compass URI</li>
+                                <li>Select <code>Project1.lake</code></li>
+                                <li>Run two finds</li>
+                                <li>Take two screenshots</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>// All docs
+db.lake.find({})
+
+// Only Neo4j-sourced
+db.lake.find({ sourceDB: "Neo4j" })
+
+# Submit: code + screenshots
+</code></pre>
+                        </div>
+                    </div>
+                </section>
 
                 <section>
                     <h4>Lab 3 – Extend Lab 2 with <span class="highlight">Neo4j</span> (due Oct 14)</h4>
