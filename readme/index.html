@@ -346,9 +346,9 @@ response = llm(prompt)
                 <td><a href="https://releasetrain.io/api/aggregate/v/oldestTimestamp?count=1000"
                         target="_blank"><code>/api/aggregate/v/oldestTimestamp?count=1000</code></a></td>
                 <td>
-                    <pre><code>{ 
-    "oldest": "20240101", 
-    "deltaInDays": 212 
+                    <pre><code>{
+    "oldest": "20240101",
+    "deltaInDays": 212
 }</code></pre>
                 </td>
             </tr>
@@ -454,6 +454,8 @@ response = llm(prompt)
 }</code></pre>
                 </td>
             </tr>
+
+            <!-- Reddit (existing) -->
             <tr>
                 <td>GET</td>
                 <td><code>/api/reddit</code></td>
@@ -461,11 +463,7 @@ response = llm(prompt)
                 <td><a href="https://releasetrain.io/api/reddit" target="_blank"><code>/api/reddit</code></a></td>
                 <td>
                     <pre><code>[
-    {
-        "title": "...",
-        "author": "...",
-        ...
-    }
+    { "title": "...", "author": "...", ... }
 ]</code></pre>
                 </td>
             </tr>
@@ -481,6 +479,51 @@ response = llm(prompt)
 }</code></pre>
                 </td>
             </tr>
+
+            <!-- Reddit (NEW) -->
+            <tr>
+                <td>GET</td>
+                <td><code>/api/reddit/by-subreddit?q=SUB1,SUB2&minScore=INT&minComments=INT&limit=INT&page=INT&fields=...</code></td>
+                <td>
+                    Fetch Reddit posts by exact subreddit name(s), case-insensitive, with optional score/comment
+                    thresholds, field projection, and pagination.
+                    <br><em>Params:</em> <code>q</code> (or <code>subreddit</code>) is required. Optional:
+                    <code>minScore</code>, <code>minComments</code>, <code>limit</code> (1–200), <code>page</code> (1+),
+                    <code>fields</code> (comma-separated).
+                </td>
+                <td>
+                    <div>
+                        <div><strong>Simple:</strong></div>
+                        <a href="https://releasetrain.io/api/reddit/by-subreddit?q=programming"
+                           target="_blank"><code>/api/reddit/by-subreddit?q=programming</code></a>
+                        <br><br>
+                        <div><strong>With filters & pagination:</strong></div>
+                        <a href="https://releasetrain.io/api/reddit/by-subreddit?q=programming,technology&minScore=50&minComments=10&limit=25&page=2&fields=title,subreddit,score,num_comments,created_utc"
+                           target="_blank"><code>/api/reddit/by-subreddit?q=programming,technology&minScore=50&minComments=10&limit=25&page=2&fields=title,subreddit,score,num_comments,created_utc</code></a>
+                    </div>
+                </td>
+                <td>
+<pre><code>{
+  "page": 2,
+  "limit": 25,
+  "count": 25,
+  "subreddits": ["programming", "technology"],
+  "data": [
+    {
+      "_id": "66f0a1c0e9b1e3a123456789",
+      "title": "Example post",
+      "subreddit": "programming",
+      "score": 124,
+      "num_comments": 37,
+      "created_utc": "2025-09-25T15:03:12Z"
+    },
+    ...
+  ]
+}</code></pre>
+                </td>
+            </tr>
+
+            <!-- Versions / Components -->
             <tr>
                 <td>GET</td>
                 <td><code>/api/v/</code></td>
@@ -493,7 +536,6 @@ response = llm(prompt)
 }</code></pre>
                 </td>
             </tr>
-
             <tr>
                 <td>GET</td>
                 <td><code>/api/v/count</code></td>
@@ -513,10 +555,7 @@ response = llm(prompt)
                         target="_blank"><code>/api/v/fcc?q=chrome,firefox</code></a></td>
                 <td>
                     <pre><code>[
-    {
-        "component": "...",
-        "coincideReleaseDate": "..."
-    }
+    { "component": "...", "coincideReleaseDate": "..." }
 ]</code></pre>
                 </td>
             </tr>
@@ -528,10 +567,7 @@ response = llm(prompt)
                         target="_blank"><code>/api/v/fc?q=chrome</code></a></td>
                 <td>
                     <pre><code>[
-    {
-        "component": "...",
-        "releaseDate": "..."
-    }
+    { "component": "...", "releaseDate": "..." }
 ]</code></pre>
                 </td>
             </tr>
@@ -570,10 +606,7 @@ response = llm(prompt)
                 </td>
                 <td>
                     <pre><code>[
-    {
-        "latestVersion": { ... },
-        "currentVersion": { ... }
-    }
+    { "latestVersion": { ... }, "currentVersion": { ... } }
 ]</code></pre>
                 </td>
             </tr>
