@@ -522,10 +522,10 @@
                             </tr>
                             <tr style="color:#ccc;">
                                 <td style="padding:6px; border:1px solid #666;">Week 7</td>
-                                <td style="padding:6px; border:1px solid #666;">Oct 7, Oct 9</td>
+                                <td style="padding:6px; border:1px solid #666;"><a href="#/oct-07">Oct 7</a>, Oct 9</td>
                                 <td style="padding:6px; border:1px solid #666;"><a href="#/429"
                                         style="color:#ccc; text-decoration:none;">Database Pipeline Architecture and
-                                        Data Dashboard &#x1f517;</a></td>
+                                        Performance / Security&#x1f517;</a></td>
                                 <td style="padding:6px; border:1px solid #666;">Redis</td>
                                 <td style="padding:6px; border:1px solid #666;"></td>
                             </tr>
@@ -541,7 +541,7 @@
                                 <td style="padding:6px; border:1px solid #666;">Oct 21, Oct 23</td>
                                 <td style="padding:6px; border:1px solid #666;"><a href="#/512"
                                         style="color:#ccc; text-decoration:none;">Database Pipeline Architecture and
-                                        Data Security &#x1f517;</a></td>
+                                        Data Dashboard &#x1f517;</a></td>
                                 <td style="padding:6px; border:1px solid #666;">ClickHouse</td>
                                 <td style="padding:6px; border:1px solid #666;"></td>
                             </tr>
@@ -10687,6 +10687,877 @@ db.lake.find({ sourceDB: "Neo4j" })
                         </div>
                     </div>
                 </section>
+
+                <section id="oct-07">
+                    <h4><span class="highlight">Agenda</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ol>
+                                <li>Pipeline Bottlenecks – Sources & Symptoms</li>
+                                <li>Throughput vs Latency – Metrics & Tradeoffs</li>
+                                <li>In-Memory Acceleration – <strong>Redis</strong> Overview</li>
+                                <li>Hands-On – Online Redis CLI (Key/Value, JSON)</li>
+                                <li>Pipeline Caching & Data Eviction Strategies</li>
+                                <li>Performance Tuning – Concurrency & Scaling</li>
+                            </ol>
+                        </div>
+                        <div class="right">
+                            <img src="https://miro.medium.com/v2/1*I5ZecsRIYNcB5WBMVEq4Ig.png"
+                                alt="Data Pipeline Performance">
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- Slide 1: Title -->
+                <section>
+                    <h3><span class="highlight">Pipeline Bottlenecks</span></h3>
+                    <p class="fragment fade-in">Sources & Symptoms in Modern Data Pipelines</p>
+                </section>
+
+                <!-- Slide 2: Sources of Bottlenecks -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Common Sources - Slow ETL</h4>
+                            <ul>
+                                <li class="fragment">Slow I/O – network or disk</li>
+                                <li class="fragment">Serialization & parsing overhead</li>
+                                <li class="fragment">Unbalanced workloads across nodes</li>
+                                <li class="fragment">Blocking APIs or synchronous flows</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://cribl.io/_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2Fxnqwd8kotbaj%2F62wFnQhpt5STjuOyNPogDa%2Fb1436e9c5a8f18219e6db93b7d55d5d2%2Fdata-pipeline_glossary.png&w=3840&q=75"
+                                alt="Bottleneck Icon">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 3: Typical Pipeline Diagram -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Data Flow Example</h4>
+                            <ul>
+                                <li class="fragment">Source → Ingest → Transform → Store</li>
+                                <li class="fragment">Single slow stage throttles the rest</li>
+                                <li class="fragment">Monitoring latency per stage is key</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://cribl.io/_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2Fxnqwd8kotbaj%2F62wFnQhpt5STjuOyNPogDa%2Fb1436e9c5a8f18219e6db93b7d55d5d2%2Fdata-pipeline_glossary.png&w=3840&q=75"
+                                alt="Pipeline Stages Diagram">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 4: Symptoms Table -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Symptoms</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Symptom</th>
+                                        <th>Likely Cause</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>High latency</td>
+                                        <td>I/O wait or serialization</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Low throughput</td>
+                                        <td>Network or CPU bottleneck</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Queue build-up</td>
+                                        <td>Backpressure not handled</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="right">
+                            <img src="https://cribl.io/_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2Fxnqwd8kotbaj%2F62wFnQhpt5STjuOyNPogDa%2Fb1436e9c5a8f18219e6db93b7d55d5d2%2Fdata-pipeline_glossary.png&w=3840&q=75"
+                                alt="Performance Bottleneck Diagram">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 5: Prevention Strategies -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Prevention Strategies</h4>
+                            <ul>
+                                <li class="fragment">Parallelize CPU-heavy transformations</li>
+                                <li class="fragment">Batch I/O and compress data blocks</li>
+                                <li class="fragment">Use async I/O and message queues</li>
+                                <li class="fragment">Profile and monitor each pipeline stage</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://cribl.io/_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2Fxnqwd8kotbaj%2F62wFnQhpt5STjuOyNPogDa%2Fb1436e9c5a8f18219e6db93b7d55d5d2%2Fdata-pipeline_glossary.png&w=3840&q=75"
+                                alt="Optimization Illustration">
+                        </div>
+                    </div>
+                </section>
+
+                </section>
+
+
+                <!-- Slide 1: Title -->
+                <section>
+                    <h3><span class="highlight">Throughput vs Latency</span></h3>
+                    <p class="fragment fade-in">Metrics, Tradeoffs, and Tuning Principles</p>
+                </section>
+
+                <!-- Slide 2: Definitions -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Core Definitions</h4>
+                            <ul>
+                                <li class="fragment"><strong>Latency:</strong> Time per request (ms)</li>
+                                <li class="fragment"><strong>Throughput:</strong> Requests per second</li>
+                                <li class="fragment">Low latency ≠ high throughput</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://www.totalphase.com/media/blog/2022/09/Latency-Throughput-Bandwidth.png"
+                                alt="Performance Graph">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 3: Tradeoff Table -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Tradeoffs</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Goal</th>
+                                        <th>Possible Tradeoff</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Increase throughput</td>
+                                        <td>Higher latency from batching</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Reduce latency</td>
+                                        <td>Less batching → CPU overhead</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Parallelize tasks</td>
+                                        <td>Coordination cost ↑</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="right">
+                            <img src="https://www.totalphase.com/media/blog/2022/09/Latency-Throughput-Bandwidth.png"
+                                alt="Tradeoff Balance Icon">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 4: Diagram -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Pipeline Example</h4>
+                            <ul>
+                                <li class="fragment">Each stage adds fixed latency</li>
+                                <li class="fragment">Parallelism boosts throughput</li>
+                                <li class="fragment">Balance stages to avoid choke points</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://cribl.io/_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2Fxnqwd8kotbaj%2F62wFnQhpt5STjuOyNPogDa%2Fb1436e9c5a8f18219e6db93b7d55d5d2%2Fdata-pipeline_glossary.png&w=3840&q=75"
+                                alt="Latency vs Throughput Diagram">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 5: Measurement & Tools -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Measurement Tools</h4>
+                            <ul>
+                                <li class="fragment">Prometheus & Grafana dashboards</li>
+                                <li class="fragment">Apache JMeter, k6, or Locust load tests</li>
+                                <li class="fragment">Redis Monitor (for in-memory ops)</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://www.totalphase.com/media/blog/2022/09/Latency-Throughput-Bandwidth.png"
+                                alt="Monitoring Dashboard">
+                        </div>
+                    </div>
+                </section>
+
+                <section id="monitoring-realtime">
+                    <div class="split">
+                        <div class="left">
+                            <h4><span class="highlight">Monitoring Frequent & Real-Time Requests</span></h4>
+                            <ul>
+                                <li class="fragment">Continuous soil & temperature readings from sensors</li>
+                                <li class="fragment">Buffer for ultra-fast ingestion</li>
+                                <li class="fragment">Sliding window to detect spikes or delays</li>
+                                <li class="fragment">Averages sent to dashboard every 10 s</li>
+                            </ul>
+                            <p class="fragment fade-in"><em>Example: Smart irrigation with 500+ sensors</em></p>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">
+// Core loop
+client.set(sensorId, JSON.stringify({
+  moisture: 34.8,
+  temp: 21.7,
+  ts: Date.now()
+}));
+
+// Windowed latency check
+avg = sum(latencies) / latencies.length;
+console.log(`avg latency ${avg.toFixed(1)} ms`);
+</code></pre>
+
+                            <pre><code class="language-json">
+// sample Redis data
+{
+  "sensor:field12": {
+    "moisture": 34.8,
+    "temp": 21.7,
+    "ts": 1738893421312
+  }
+}
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>How to Improve Data Pipeline Performance?</section>
+
+                <section data-auto-animate style="font-size:14pt;" id="redis">
+                    <div style="
+    display:flex;
+    justify-content:center;
+    gap:25px;
+    flex-wrap:wrap; /* Allow wrapping to multiple rows */
+    max-width:800px;
+    margin:auto;
+  ">
+
+                        <div style="
+      border:2px solid #4CAF50;
+      background:#C8E6C9;   /* lighter green */
+      color:#1B5E20;        /* dark green text for contrast */
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      font-weight:bold;
+      min-width:120px;
+    ">
+                            IndexedDB
+                        </div>
+
+                        <div style="
+      border:2px solid #4CAF50;
+      background:#C8E6C9;   /* lighter green */
+      color:#1B5E20;        /* dark green text for contrast */
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            Redis
+                        </div>
+
+                        <div style="
+      border:2px solid #4CAF50;
+      background:#C8E6C9;   /* lighter green */
+      color:#1B5E20;        /* dark green text for contrast */
+      border-radius:50% / 20%;
+      background:#C8E6C9;   /* lighter green */
+      color:#1B5E20;        /* dark green text for contrast */
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            MongoDB
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            CassandraDB
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            Faiss
+                        </div>
+
+                        <div style="
+      border:2px solid #ccc;
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            ClickHouse
+                        </div>
+
+                        <div style="
+      border:2px solid #4CAF50;
+      background:#C8E6C9;   /* lighter green */
+      color:#1B5E20;        /* dark green text for contrast */
+      border-radius:50% / 20%;
+      padding:20px 30px;
+      text-align:center;
+      min-width:120px;
+    ">
+                            Neo4j
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 1. Title -->
+                <section id="redis-intro">
+                    <div class="split">
+                        <div class="left">
+                            <h3><span class="highlight">In-Memory NoSQL DB – Redis Overview</span></h3>
+                            <p class="fragment fade-in">Fastest server-side database for real-time
+                                data</p>
+                            <ul>
+                                <li class="fragment">Data resides in RAM for microsecond access</li>
+                                <li class="fragment">Ideal for caching, queues, and streaming</li>
+                                <li class="fragment">Balances memory speed and persistence</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://assets.enterprisestorageforum.com/uploads/2021/02/memory-vs-storage_6019c498d2ad7.png"
+                                alt="Memory vs Storage"
+                                style="max-width: 90%; border-radius: 12px; box-shadow: 0 0 12px rgba(0,0,0,0.4);">
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- 2. History -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Chronology</h4>
+                            <ul>
+                                <li class="fragment">2009 – Salvatore Sanfilippo (antirez) releases Redis</li>
+                                <li class="fragment">Focus: <strong>speed, simplicity, in-memory design</strong></li>
+                                <li class="fragment">Open-sourced under BSD, later managed by Redis Ltd</li>
+                                <li class="fragment">Now a backbone for caching & streaming</li>
+                                <li><a href="https://github.com/redis/redis"
+                                        target="_blank">https://github.com/redis/redis</a></li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://miro.medium.com/v2/1*I5ZecsRIYNcB5WBMVEq4Ig.png" width="320"
+                                alt="Redis logo">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. Architecture -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Server-Side Architecture</h4>
+                            <ul>
+                                <li class="fragment">Runs as a <strong>server process</strong></li>
+                                <li class="fragment">Clients connect via TCP on port 6379</li>
+                                <li class="fragment">Stores data <em>in RAM</em> for low latency</li>
+                                <li class="fragment">Optional persistence to disk (RDB/AOF)</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-bash">
+$ redis-server
+$ redis-cli ping
+PONG
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="redis-eligible-data">
+                    <div class="split">
+                        <div class="left">
+                            <h4><span class="highlight">Data Eligible for Redis</span></h4>
+                            <ul>
+                                <li class="fragment">Small to medium objects (KB–MB range)</li>
+                                <li class="fragment">Frequently accessed or time-sensitive data</li>
+                                <li class="fragment">Ephemeral or cacheable state (sessions, tokens)</li>
+                                <li class="fragment">Real-time metrics (sensor readings, API counts)</li>
+                                <li class="fragment">JSON, integers, or serialized strings</li>
+                                <li class="fragment">Session tokens → <code>session:usr123</code></li>
+                                <li class="fragment">API key cache → <code>api:key:weather-service</code></li>
+                            </ul>
+                            <pre class="fragment"><code class="language-json">
+// Example: agriculture sensor data
+{
+  "sensor:field12": {
+    "moisture": 34.8,
+    "temperature": 21.7,
+    "timestamp": 1738893421312
+  }
+}
+</code></pre>
+                        </div>
+                        <div class="right">
+                            <pre class="fragment"><code class="language-json">
+// Session key
+"session:usr123" : {
+  "token": "eyJhbGciOiJIUzI1NiIs...",
+  "expires": 1738893999000
+}
+
+// API request count
+"api:weather:getCount" : 4821
+
+// Cache entry
+"cache:forecast:stockton" : {
+  "temp": 21.7,
+  "humidity": 65,
+  "ts": 1738893480000
+}
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- 4. Why In-Memory -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Why In-Memory?</h4>
+                            <ul>
+                                <li class="fragment">RAM access ≈ 10⁵ × faster than disk</li>
+                                <li class="fragment">Ideal for <strong>caching</strong> & <strong>real-time
+                                        analytics</strong></li>
+                                <li class="fragment">Used between app ↔ database</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://software.rajivprab.com/wp-content/uploads/2019/07/cache.png"
+                                alt="cache diagram">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. Key–Value Basics -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Key–Value Model</h4>
+                            <ul>
+                                <li class="fragment">Every record = unique key + value</li>
+                                <li class="fragment">Binary-safe strings → numbers, JSON, etc.</li>
+                                <li class="fragment">O(1) lookup</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-bash">
+SET crop:12 34.8
+GET crop:12
+# "34.8"
+</code></pre>
+                        </div>
+                    </div>
+                    <!-- IndexedDB also key-value (client). MongoDB/SQL are document/table. -->
+                </section>
+
+                <!-- 6. Data Types Overview -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Core Data Types</h4>
+                            <ul>
+                                <li class="fragment">String</li>
+                                <li class="fragment">List (linked list)</li>
+                                <li class="fragment">Set (unique items)</li>
+                                <li class="fragment">Hash (key–value map)</li>
+                                <li class="fragment">Sorted Set, Stream</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://miro.medium.com/v2/1*I5ZecsRIYNcB5WBMVEq4Ig.png"
+                                alt="Redis data types diagram">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 7. String Example -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Strings</h4>
+                            <p>Single value per key, atomic increment/decrement</p>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-bash">
+SET temp:field3 21.5
+INCRBYFLOAT temp:field3 0.3
+GET temp:field3
+# 21.8
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 8. List Example -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Lists</h4>
+                            <p>Push and pop like a queue or log</p>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-bash">
+LPUSH sensor:log 34.1
+LPUSH sensor:log 34.5
+LRANGE sensor:log 0 -1
+# ["34.5","34.1"]
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 9. Hash Example -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Hashes</h4>
+                            <p>Mini key-value maps (like JSON objects)</p>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-bash">
+HSET field:12 moisture 34.8 temp 21.7
+HGETALL field:12
+HGET field:12 temp
+# moisture:34.8, temp:21.7
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 10. Set Example -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Sets</h4>
+                            <p>Unordered unique elements</p>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-bash">
+SADD crops wheat barley maize
+SMEMBERS crops
+# wheat barley maize
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 11. Sorted Set Example -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Sorted Sets</h4>
+                            <p>Scores + values → leaderboards or metrics</p>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-bash">
+ZADD soil_moisture 34.8 field12 35.4 field13
+ZRANGE soil_moisture 0 -1 WITHSCORES
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 12. Stream Example -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Streams</h4>
+                            <p>Append-only logs for real-time pipelines</p>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-bash">
+XADD sensor:stream * moisture 34.8 temp 21.7
+XRANGE sensor:stream - +
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 13. Expiry & TTL -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Expiry & TTL</h4>
+                            <ul>
+                                <li class="fragment">Sets a time limit (in <strong>seconds</strong>) for key validity
+                                </li>
+                                <li class="fragment">After expiry → key is automatically deleted</li>
+                                <li class="fragment">Used for caches, sessions, temporary data</li>
+                            </ul>
+                            <p class="fragment"><em>TTL = Time-To-Live (measured in seconds)</em></p>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-bash">
+SET weather:now 21.7 EX 60
+TTL weather:now
+# 60  (seconds remaining)
+# ...after a few seconds...
+# 57
+# -2  (means key expired)
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 14. Persistence -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Persistence Modes</h4>
+                            <ul>
+                                <li class="fragment">RDB – snapshotting at intervals</li>
+                                <li class="fragment">AOF – append-only log of commands</li>
+                                <li class="fragment">Hybrid (default)</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://software.rajivprab.com/wp-content/uploads/2019/07/cache.png"
+                                alt="Persistence diagram">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 15. Pub/Sub -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Publish / Subscribe</h4>
+                            <p>Real-time messaging between clients</p>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-bash">
+SUBSCRIBE irrigation
+PUBLISH irrigation "Start pump A"
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 16. ACID Properties -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>ACID in Redis</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Property</th>
+                                        <th>Redis Support</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Atomicity</td>
+                                        <td>Yes (single command)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Consistency</td>
+                                        <td>Eventual, not strict</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Isolation</td>
+                                        <td>Transactions via MULTI/EXEC</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Durability</td>
+                                        <td class="highlight">No (by default)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="right">
+                            <img src="https://www.scylladb.com/wp-content/uploads/acid-diagram.png" alt="ACID diagram">
+                        </div>
+                    </div>
+                    <!-- SQL fully ACID; MongoDB partial; Redis configurable -->
+                </section>
+
+                <!-- 17. Comparison Snapshot -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Quick Comparison</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>DB</th>
+                                        <th>Model</th>
+                                        <th>Speed</th>
+                                        <th>Use Case</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Redis</td>
+                                        <td>Key-Value</td>
+                                        <td>★★★★★</td>
+                                        <td>Caching / Realtime</td>
+                                    </tr>
+                                    <tr>
+                                        <td>IndexedDB</td>
+                                        <td>Client KV</td>
+                                        <td>★★★☆☆</td>
+                                        <td>Browser storage</td>
+                                    </tr>
+                                    <tr>
+                                        <td>MongoDB</td>
+                                        <td>Document</td>
+                                        <td>★★★☆☆</td>
+                                        <td>Flexible schema</td>
+                                    </tr>
+                                    <tr>
+                                        <td>SQL</td>
+                                        <td>Relational</td>
+                                        <td>★★☆☆☆</td>
+                                        <td>Transactional data</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Neo4j</td>
+                                        <td>Graph</td>
+                                        <td>★★☆☆☆</td>
+                                        <td>Relationships</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="right">
+                            <img src="https://www.scylladb.com/wp-content/uploads/nosql-design-principles-diagram.png"
+                                alt="DB comparison diagram">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 18. Scaling & Clustering -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Scaling</h4>
+                            <ul>
+                                <li class="fragment">Master-replica replication</li>
+                                <li class="fragment">Redis Cluster for sharding</li>
+                                <li class="fragment">Horizontal scale for large datasets</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://miro.medium.com/v2/resize:fit:1400/0*pEsACHtH56a_V6oI.png"
+                                alt="Redis cluster">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 19. Typical Use Cases -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Common Use Cases</h4>
+                            <ul>
+                                <li class="fragment">Caching API responses</li>
+                                <li class="fragment">Session management</li>
+                                <li class="fragment">Real-time analytics</li>
+                                <li class="fragment">Message queues</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://cribl.io/_next/image/?url=https%3A%2F%2Fimages.ctfassets.net%2Fxnqwd8kotbaj%2F62wFnQhpt5STjuOyNPogDa%2Fb1436e9c5a8f18219e6db93b7d55d5d2%2Fdata-pipeline_glossary.png&w=3840&q=75"
+                                alt="Streaming use case">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 20. Summary -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4><span class="highlight">Redis – Strengths</span></h4>
+                            <ul>
+                                <li class="fragment">Server-side, in-memory key–value database</li>
+                                <li class="fragment">Ultra-low latency (<1 ms typical)</li>
+                                <li class="fragment">Supports rich data types (String, List, Hash, Set, Stream)</li>
+                                <li class="fragment">Ideal for caching, sessions, and real-time analytics</li>
+                                <li class="fragment">Complements MongoDB / SQL in pipelines</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <h4><span class="highlight">Redis – Limitations</span></h4>
+                            <ul>
+                                <li class="fragment">Volatile by default — data lost if not persisted</li>
+                                <li class="fragment">Not ideal for heavy, continuous writes to disk</li>
+                                <li class="fragment">RAM-based → limited by available memory</li>
+                                <li class="fragment">Lacks strong ACID durability (config-dependent)</li>
+                                <li class="fragment">No native query language (key-based access only)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section>Questions?</section>
+
+                <section style="font-family: 'Inter', 'Roboto', 'Open Sans', sans-serif;">
+                    <div class="split">
+                        <div class="left box">
+                            <p style="font-size: 1.1em; line-height: 1.5;">
+                                A city wants to track traffic flow in real time to adjust signals,
+                                while also keeping historical data for planning future road expansions.
+                            </p>
+                            <p style="font-size: 1.15em; font-style: italic; margin-top: 1em;">
+                                Would you choose a <strong>Data Lake</strong>, a <strong>Data Warehouse</strong>,
+                                a <strong>Lakehouse</strong>, or a <strong>Streaming Pipeline</strong>?
+                            </p>
+                        </div>
+                        <div class="right">
+                            <img src="https://www.awpsafety.com/wp-content/uploads/2024/09/traffic-control-texas-2-scaled-e1715020956915.jpg"
+                                alt="Traffic data illustration placeholder" />
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Homework and Labs -->
+
+                <section>Questions?</section>
+
+                <section>Midterm (Oct/16)</section>
 
                 <section>
                     <h4>Lab 3 – Extend Lab 2 with <span class="highlight">Neo4j</span> (due Oct 14)</h4>
