@@ -522,7 +522,8 @@
                             </tr>
                             <tr style="color:#ccc;">
                                 <td style="padding:6px; border:1px solid #666;">Week 7</td>
-                                <td style="padding:6px; border:1px solid #666;"><a href="#/oct-07">Oct 7</a>, Oct 9</td>
+                                <td style="padding:6px; border:1px solid #666;"><a href="#/oct-07">Oct 7</a>, <a
+                                        href="#/oct-09">Oct 9</a></td>
                                 <td style="padding:6px; border:1px solid #666;"><a href="#/429"
                                         style="color:#ccc; text-decoration:none;">Database Pipeline Architecture and
                                         Performance / Security&#x1f517;</a></td>
@@ -11553,11 +11554,1026 @@ PUBLISH irrigation "Start pump A"
                     </div>
                 </section>
 
-                <!-- Homework and Labs -->
+                <section id="oct-09">
+                    <h4><span class="highlight">Agenda</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ol>
+                                <li>Redis API and Performance</li>
+                                <li>Caching Strategies in Web Apps</li>
+                                <li>Midterm Review</li>
+                                <li>Midterm Mock Exam</li>
+                                <li>Q&A and Discussion</li>
+                            </ol>
+                        </div>
+                        <div class="right">
+                            <img src="https://miro.medium.com/v2/1*I5ZecsRIYNcB5WBMVEq4Ig.png"
+                                alt="Data Pipeline Performance">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 1. Goal & Setup -->
+                <section>
+                    <h3><span class="highlight">Node.js + MongoDB + Redis</span></h3>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Load agriculture docs from <strong>MongoDB</strong></li>
+                                <li>Cache results in <strong>Redis</strong></li>
+                                <li>Expose two GET endpoints with <strong>timing</strong> in JSON</li>
+                                <li>Compare latency: <em>Mongo only</em> vs <em>Redis cache</em></li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://www.scylladb.com/wp-content/uploads/database-caching-diagram.png"
+                                alt="Agriculture data">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. Environment & Dependencies -->
+                <section>
+                    <h3><span class="highlight">Install & Env</span></h3>
+                    <div class="split">
+                        <div class="left">
+                            <pre><code class="language-bash">npm i express mongodb ioredis dotenv
+# .env (example)
+PORT=3000
+MONGO_HOST=mongodb+srv://cluster0.lixbqmp.mongodb.net
+MONGO_USER=comp263_2025
+MONGO_PASS=***yourpass***
+REDIS_URL=redis://localhost:6379
+CACHE_TTL_SECONDS=60
+      </code></pre>
+                            <p>Keep secrets in <code>.env</code>. Don’t commit.</p>
+                        </div>
+                        <div class="right">
+                            <ul>
+                                <li><code>mongodb</code> official driver</li>
+                                <li><code>ioredis</code> robust Redis client</li>
+                                <li>Config validated at boot</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. MongoDB Connection (Given) -->
+                <section>
+                    <h3><span class="highlight">Connect to MongoDB</span></h3>
+                    <div class="split">
+                        <div class="left">
+                            <p><code>Lab2.Agriculture</code> and validates env.</p>
+                            <ul>
+                                <li>SRV URI + separate <code>auth</code></li>
+                                <li><code>estimatedDocumentCount()</code> on boot for sanity</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">
+const client = new MongoClient(`${HOST}/...`, {
+  useNewUrlParser: true, useUnifiedTopology: true,
+  auth: { username: USER, password: PASS }, authSource: "admin"
+});</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. Add Redis Client -->
+                <section>
+                    <h3><span class="highlight">Add Redis Client</span></h3>
+                    <div class="split">
+                        <div class="left">
+                            <pre><code class="language-js">const Redis = require("ioredis");
+const redis = new Redis(process.env.REDIS_URL);
+// Optional: redis.on("connect", ...) for logging
+      </code></pre>
+                            <ul>
+                                <li>Single instance is fine for class demos</li>
+                                <li>Use <code>SETEX</code>/<code>EX</code> TTL for freshness</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            &nbsp;
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. Timing Utility & Response Shape -->
+                <section>
+                    <h3><span class="highlight">Timing & Response</span></h3>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Start timer at request</li>
+                                <li>Return <code>{ source, timeMs, count, data }</code></li>
+                                <li>Also set <code>X-Response-Time</code> header</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">function withTimer(handler) {
+  return async (req, res) => {
+    const t0 = process.hrtime.bigint();
+    try { await handler(req, res, t0); }
+    catch (e) { res.status(500).json({ error: String(e) }); }
+  };
+}
+function elapsedMs(t0) {
+  return Number((process.hrtime.bigint() - t0) / 1000000n);
+}</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. Endpoint A: Mongo Only -->
+                <section>
+                    <h3><span class="highlight">GET /agriculture/mongo</span></h3>
+                    <div class="split">
+                        <div class="left">
+                            <pre><code class="language-js">app.get("/agriculture/mongo", withTimer(async (req, res, t0) => {
+  const docs = await collection.find({}).limit(500).toArray();
+  const body = { 
+    source: "mongo", timeMs: elapsedMs(t0), 
+    count: docs.length, data: docs 
+  };
+  res.set("X-Response-Time", body.timeMs + "ms").json(body);
+}));</code></pre>
+                        </div>
+                        <div class="right">
+                            <ul>
+                                <li>Baseline latency (no cache)</li>
+                                <li>Limit for demo readability</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 7. Endpoint B: Redis Cached -->
+                <section>
+                    <h3><span class="highlight">GET /agriculture/redis</span></h3>
+                    <div class="split">
+                        <div class="left">
+                            <pre><code class="language-js">app.get("/agriculture/redis", withTimer(async (req, res, t0) => {
+  const key = "agri:all:limit500";
+  const ttl = Number(process.env.CACHE_TTL_SECONDS || 60);
+
+  const cached = await redis.get(key);
+  if (cached) {
+    const data = JSON.parse(cached);
+    const body = { 
+        source: "redis", timeMs: elapsedMs(t0), 
+        count: data.length, data 
+    };
+    return res.set("X-Response-Time", body.timeMs + "ms").json(body);
+  }
+
+  const docs = await collection.find({}).limit(500).toArray();
+  await redis.set(key, JSON.stringify(docs), "EX", ttl);
+  const body = { 
+    source: "mongo→redis(set)", timeMs: elapsedMs(t0), 
+    count: docs.length, data: docs 
+  };
+  res.set("X-Response-Time", body.timeMs + "ms").json(body);
+}));</code></pre>
+                        </div>
+                        <div class="right">
+                            <ul>
+                                <li><strong>Hit:</strong> returns in micro-milliseconds</li>
+                                <li><strong>Miss:</strong> fetch + populate cache</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 8. Demo & Benchmark -->
+                <section>
+                    <h3><span class="highlight">See the Difference</span></h3>
+                    <div class="split">
+                        <div class="left">
+                            <pre><code class="language-bash"># Quick manual check (shows X-Response-Time)
+curl -i http://localhost:3000/agriculture/mongo | head
+curl -i http://localhost:3000/agriculture/redis | head
+curl -i http://localhost:3000/agriculture/redis | head  # 2nd</code></pre>
+                        </div>
+                        <div class="right">
+                            <ul>
+                                <li>Discuss <em>p50/p95</em> latencies</li>
+                                <li>Expect Redis to dominate on repeat calls</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h3><span class="highlight">Installing Redis on Ubuntu (WSL, macOS, Windows)</span></h3>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Windows (via WSL2 + Ubuntu)</h4>
+                            <pre><code class="language-bash"># 1. Install Ubuntu on Windows
+wsl --install -d Ubuntu
+# Restart when prompted, then open Ubuntu
+
+# 2. Inside Ubuntu
+sudo apt update
+sudo apt install -y redis-server
+sudo service redis-server start
+redis-cli ping   # → PONG
+      </code></pre>
+                            <ul>
+                                <li>Runs Redis inside Ubuntu under WSL2</li>
+                                <li>Works seamlessly with Node.js on Windows</li>
+                                <li>Use <code>REDIS_URL=redis://127.0.0.1:6379</code> in <code>.env</code></li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <h4>macOS (via Homebrew)</h4>
+                            <pre><code class="language-bash">brew update
+brew install redis
+brew services start redis
+redis-cli ping   # → PONG
+      </code></pre>
+                            <ul>
+                                <li>Uses Homebrew package manager</li>
+                                <li>Start/stop with <code>brew services</code></li>
+                                <li>Redis listens on <code>127.0.0.1:6379</code></li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- 10. Lab Tasks -->
+                <section>
+                    <h3><span class="highlight">Your Turn</span></h3>
+                    <a href="https://github.com/SE4CPS/2025-COMP-263/tree/main/nosql/redis" target="_blank"
+                        alt="Hands-on lab">NoSQL Lab Repository</a>
+                </section>
+
+                <section>
+                    <h3><span class="highlight">Performance Comparison: Redis vs MongoDB</span></h3>
+                    <p>Approximate time to retrieve <strong>one object</strong> at different data scales.</p>
+                    <table class="reveal-table">
+                        <thead>
+                            <tr>
+                                <th>Dataset Size</th>
+                                <th>Redis (In-Memory)</th>
+                                <th>MongoDB (Disk-Based)</th>
+                                <th>Relative Speed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1 record</td>
+                                <td>~1 ms</td>
+                                <td>~100 ms</td>
+                                <td>≈ 100× faster</td>
+                            </tr>
+                            <tr>
+                                <td>1,000 records</td>
+                                <td>~2 ms</td>
+                                <td>~120 ms</td>
+                                <td>≈ 60× faster</td>
+                            </tr>
+                            <tr>
+                                <td>100,000 records</td>
+                                <td>~5 ms</td>
+                                <td>~250 ms</td>
+                                <td>≈ 50× faster</td>
+                            </tr>
+                            <tr>
+                                <td>1,000,000 records</td>
+                                <td>~10 ms</td>
+                                <td>~600 ms</td>
+                                <td>≈ 60× faster</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <!-- 1. Slide: SET and GET -->
+                <section>
+                    <h3><span class="highlight">Redis Commands in Node.js — SET &amp; GET</span></h3>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><code>SET key value</code> stores a string value.</li>
+                                <li><code>GET key</code> retrieves it.</li>
+                                <li>Default behavior: value persists until deleted or replaced.</li>
+                                <li>Use for caching simple data (e.g., counts, tokens, JSON).</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">const Redis = require("ioredis");
+const redis = new Redis();
+
+// Store data
+await redis.set("crop:rice", JSON.stringify({ yield: 45 }));
+
+// Retrieve data
+const value = await redis.get("crop:rice");
+console.log(JSON.parse(value));</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. Slide: SETEX (with expiration) -->
+                <section>
+                    <h3><span class="highlight">Redis Commands — SETEX (Expire in Seconds)</span></h3>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><code>SETEX key ttl value</code></li>
+                                <li>Common for caching responses temporarily.</li>
+                                <li>Expires automatically — no need to delete manually.</li>
+                                <li>Node: <code>redis.set(key, value, "EX", ttl)</code></li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">await redis.set("weather:stockton", 
+  JSON.stringify({ temp: 29 }), 
+  "EX", 60); // expires in 60 seconds
+
+const cached = await redis.get("weather:stockton");
+console.log(cached ? "Cache hit" : "Expired");</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. Slide: DEL and EXISTS -->
+                <section>
+                    <h3><span class="highlight">Redis Commands — DEL &amp; EXISTS</span></h3>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><code>DEL key</code> removes one or more keys.</li>
+                                <li><code>EXISTS key</code> checks if a key is present.</li>
+                                <li>Useful for clearing outdated cache or validation.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">await redis.del("weather:stockton");
+
+const exists = await redis.exists("weather:stockton");
+if (exists) console.log("Still cached");
+else console.log("Cache cleared or expired");</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. Slide: TTL and EXPIRE -->
+                <section>
+                    <h3><span class="highlight">Redis Commands — TTL &amp; EXPIRE</span></h3>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><code>TTL key</code> shows remaining lifetime (in seconds).</li>
+                                <li><code>EXPIRE key seconds</code> sets a new TTL for an existing key.</li>
+                                <li>Can refresh cache without rewriting data.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">await redis.set("session:123", "active");
+await redis.expire("session:123", 120);
+
+const ttl = await redis.ttl("session:123");
+console.log("Time left:", ttl, "seconds");</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. Slide: MSET and MGET -->
+                <section>
+                    <h3><span class="highlight">Redis Commands — MSET &amp; MGET</span></h3>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><code>MSET</code> sets multiple keys at once.</li>
+                                <li><code>MGET</code> retrieves multiple keys in one call.</li>
+                                <li>Efficient for bulk reads/writes in Node.js.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">await redis.mset({
+  "crop:wheat": "good",
+  "crop:rice": "medium",
+  "crop:corn": "low"
+});
+
+const values = await redis.mget(
+    "crop:wheat", 
+    "crop:rice", 
+    "crop:corn"
+);
+console.log(values);</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. Slide: FLUSHDB and KEYS -->
+                <section>
+                    <h3><span class="highlight">Redis Commands — FLUSHDB &amp; KEYS</span></h3>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><code>FLUSHDB</code> removes all keys from the current database.</li>
+                                <li><code>KEYS pattern</code> lists keys matching a pattern.</li>
+                                <li>⚠️ <strong>Use with caution</strong> — affects all cached data.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">const allKeys = await redis.keys("crop:*");
+console.log("Found:", allKeys.length, "keys");
+
+await redis.flushdb(); // clears all keys in this DB
+console.log("Database cleared");</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Agenda</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ol>
+                                <li>Redis API and Performance &check;</li>
+                                <li>Caching Strategies in Web Apps</li>
+                                <li>Midterm Review</li>
+                                <li>Midterm Mock Exam</li>
+                                <li>Q&A and Discussion</li>
+                            </ol>
+                        </div>
+                        <div class="right">
+                            <img src="https://miro.medium.com/v2/1*I5ZecsRIYNcB5WBMVEq4Ig.png"
+                                alt="Data Pipeline Performance">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 1. Slide: Cache-Aside -->
+                <section>
+                    <h3><span class="highlight">Caching Strategy 1 — Cache-Aside (Lazy Loading)</span></h3>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Application checks cache first.</li>
+                                <li>If data is missing → load from DB and store in cache.</li>
+                                <li>Common in read-heavy APIs.</li>
+                                <li>Simple and cost-efficient.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre class="mermaid">
+        graph LR
+          A[Client Request] --> B[Check Cache]
+          B -->|Hit| C[Return from Cache]
+          B -->|Miss| D[Fetch from DB]
+          D --> E[Update Cache]
+          E --> F[Return to Client]
+      </pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. Slide: Write-Through -->
+                <section>
+                    <h3><span class="highlight">Caching Strategy 2 — Write-Through</span></h3>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Every write goes to cache and DB together.</li>
+                                <li>Keeps cache consistent with DB.</li>
+                                <li>Higher write latency, but consistent reads.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre class="mermaid">
+        graph LR
+          A[Client Write] --> B[Update Cache]
+          B --> C[Write to DB]
+          C --> D[Success Response]
+      </pre>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- 3. Slide: Write-Behind -->
+                <section>
+                    <h3><span class="highlight">Caching Strategy 3 — Write-Behind (Write-Back)</span></h3>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Writes go to the cache first.</li>
+                                <li>Cache flushes to the database asynchronously.</li>
+                                <li>Fast writes; risk if cache fails before flush.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre class="mermaid">flowchart LR
+A["Client Write"] --> B["Write to Cache"]
+B --> C["Async Queue"]
+C --> D["DB Update (Delayed)"]</pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. Slide: Read-Through -->
+                <section>
+                    <h3><span class="highlight">Caching Strategy 4 — Read-Through</span></h3>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>App always queries the cache.</li>
+                                <li>Cache fetches from DB automatically on a miss.</li>
+                                <li>Cache layer abstracts DB access logic.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre class="mermaid">
+        graph LR
+          A[Client Request] --> B[Cache Layer]
+          B -->|Hit| C[Return from Cache]
+          B -->|Miss| D[Cache Loads from DB]
+          D --> E[Store in Cache & Return]
+      </pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. Slide: TTL / Expiration-Based -->
+                <section>
+                    <h3><span class="highlight">Caching Strategy 5 — TTL / Expiration-Based</span></h3>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Each key has a time-to-live (TTL).</li>
+                                <li>Expired data automatically removed.</li>
+                                <li>Ensures freshness and reduces stale data.</li>
+                                <li>Common for APIs with time-sensitive data (e.g., weather).</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre class="mermaid">
+        graph TD
+          A[Data Stored] --> B[Timer Starts]
+          B -->|TTL Expires| C[Auto Delete]
+          C --> D[Cache Miss Next Time]
+          D --> E[Reload from DB]
+      </pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Agenda</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ol>
+                                <li>Redis API and Performance &check;</li>
+                                <li>Caching Strategies in Web Apps &check;</li>
+                                <li>Midterm Review</li>
+                                <li>Midterm Mock Exam</li>
+                                <li>Q&A and Discussion</li>
+                            </ol>
+                        </div>
+                        <div class="right">
+                            <img src="https://miro.medium.com/v2/1*I5ZecsRIYNcB5WBMVEq4Ig.png"
+                                alt="Data Pipeline Performance">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Quiz Slides: Weeks 1–7 (4 questions each).
+Now each slide reveals the correct answer on click using a Reveal.js fragment.
+The correct choice is also stored in data-answer for tooling/validation. -->
+
+                <!-- ======================= WEEK 1 ======================= -->
+                <section class="quiz" data-module="1" data-key="w1q1-8f2a" data-answer="B">
+                    <h4>Module 1</h4>
+                    <p>Which “V” primarily addresses the challenge of many formats (logs, images, JSON) in one system?
+                    </p>
+                    <ol type="A">
+                        <li>Veracity</li>
+                        <li>Variety</li>
+                        <li>Velocity</li>
+                        <li>Value</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> B — Variety</p>
+                </section>
+
+                <section class="quiz" data-module="1" data-key="w1q2-c41e" data-answer="C">
+                    <h4>Module 1</h4>
+                    <p>Why must IndexedDB operations be awaited in JavaScript?</p>
+                    <ol type="A">
+                        <li>They always run synchronously in the UI thread</li>
+                        <li>They require a service worker to complete</li>
+                        <li>They are asynchronous disk I/O behind a Promise</li>
+                        <li>They are limited to WebAssembly callbacks</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> C — Asynchronous I/O (Promise)</p>
+                </section>
+
+                <section class="quiz" data-module="1" data-key="w1q3-a7c9" data-answer="A">
+                    <h4>Module 1</h4>
+                    <p>What is automatically indexed in an IndexedDB object store?</p>
+                    <ol type="A">
+                        <li>The primary key</li>
+                        <li>All string fields</li>
+                        <li>All numeric fields</li>
+                        <li>Every nested property</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> A — Primary key</p>
+                </section>
+
+                <section class="quiz" data-module="1" data-key="w1q4-fd36" data-answer="D">
+                    <h4>Module 1</h4>
+                    <p>Which choice best explains why rigid SQL schemas struggle with fast-changing app fields?</p>
+                    <ol type="A">
+                        <li>SQL cannot store text</li>
+                        <li>SQL disallows new tables</li>
+                        <li>SQL has no indexes</li>
+                        <li>Require coordinated migrations</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> D — Migrations required</p>
+                </section>
+
+                <!-- ======================= WEEK 2 ======================= -->
+                <section class="quiz" data-module="2" data-key="w2q1-39b1" data-answer="C">
+                    <h4>Module 2</h4>
+                    <p>Which practice improves read performance for common UI queries in document models?</p>
+                    <ol type="A">
+                        <li>Eliminating all redundancy</li>
+                        <li>Using only flat structures</li>
+                        <li>Denormalizing fields</li>
+                        <li>Storing dates as locale strings</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> C — Denormalize frequent fields</p>
+                </section>
+
+                <section class="quiz" data-module="2" data-key="w2q2-7ab4" data-answer="B">
+                    <h4>Module 2</h4>
+                    <p>Which identifier minimizes cross-system collisions without coordination?</p>
+                    <ol type="A">
+                        <li>Auto-increment integer</li>
+                        <li>UUID (v4)</li>
+                        <li>Concatenated username+date</li>
+                        <li>Sequential timestamp</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> B — UUID v4</p>
+                </section>
+
+                <section class="quiz" data-module="2" data-key="w2q3-0d9f" data-answer="A">
+                    <h4>Module 2</h4>
+                    <p>What does the “Z” in <code>2025-09-04T10:15:30Z</code> denote?</p>
+                    <ol type="A">
+                        <li>UTC (Zulu) time</li>
+                        <li>Local browser timezone</li>
+                        <li>Zero-padded seconds</li>
+                        <li>Zigzag encoding</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> A — UTC</p>
+                </section>
+
+                <section class="quiz" data-module="2" data-key="w2q4-5e77" data-answer="D">
+                    <h4>Module 2</h4>
+                    <p>When is <em>embedding</em> (not reference) generally preferred in JSON document design?</p>
+                    <ol type="A">
+                        <li>When the related entity is reused by many parents</li>
+                        <li>When many-to-many links dominate</li>
+                        <li>When the child changes independently and often</li>
+                        <li>When data is always fetched together (tight 1:1)</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> D — Always fetched together</p>
+                </section>
+
+                <!-- ======================= WEEK 3 ======================= -->
+                <section class="quiz" data-module="3" data-key="w3q1-11ce" data-answer="B">
+                    <h4>Module 3</h4>
+                    <p>Which metric ensures each real-world entity appears only once?</p>
+                    <ol type="A">
+                        <li>Timeliness</li>
+                        <li>Uniqueness</li>
+                        <li>Accuracy</li>
+                        <li>Validity</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> B — Uniqueness</p>
+                </section>
+
+                <section class="quiz" data-module="3" data-key="w3q2-4c5a" data-answer="A">
+                    <h4>Module 3</h4>
+                    <p>What is the primary benefit of a UNIQUE index on a field such as <code>email</code>?</p>
+                    <ol type="A">
+                        <li>Prevents duplicate values</li>
+                        <li>Forces numeric storage</li>
+                        <li>Replicates values across shards</li>
+                        <li>Compresses documents</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> A — Prevent duplicates</p>
+                </section>
+
+                <section class="quiz" data-module="3" data-key="w3q3-b6f0" data-answer="D">
+                    <h4>Module 3</h4>
+                    <p>A dataset missing required fields most directly violates which quality dimension?</p>
+                    <ol type="A">
+                        <li>Consistency</li>
+                        <li>Veracity</li>
+                        <li>Integrity</li>
+                        <li>Completeness</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> D — Completeness</p>
+                </section>
+
+                <section class="quiz" data-module="3" data-key="w3q4-9a22" data-answer="C">
+                    <h4>Module 3</h4>
+                    <p>Stale sensor values mainly reduce which property?</p>
+                    <ol type="A">
+                        <li>Uniqueness</li>
+                        <li>Validity</li>
+                        <li>Timeliness</li>
+                        <li>Integrity</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> C — Timeliness</p>
+                </section>
+
+                <!-- ======================= WEEK 4 ======================= -->
+                <section class="quiz" data-module="4" data-key="w4q1-2f8d" data-answer="A">
+                    <h4>Module 4</h4>
+                    <p>In ELT, where is heavy transformation primarily performed?</p>
+                    <ol type="A">
+                        <li>In the target store</li>
+                        <li>In a pre-processing appliance</li>
+                        <li>At the message broker</li>
+                        <li>On the client UI thread</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> A — In the target store</p>
+                </section>
+
+                <section class="quiz" data-module="4" data-key="w4q2-77c3" data-answer="D">
+                    <h4>Module 4</h4>
+                    <p>Which workload fits streaming best?</p>
+                    <ol type="A">
+                        <li>Quarterly revenue consolidation</li>
+                        <li>Nightly dimension table rebuild</li>
+                        <li>Monthly GDPR export</li>
+                        <li>Millisecond IoT data ingestion</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> D — IoT telemetry</p>
+                </section>
+
+                <section class="quiz" data-module="4" data-key="w4q3-0ac1" data-answer="B">
+                    <h4>Module 4</h4>
+                    <p>In MapReduce, which phase combines intermediate key groups into final values?</p>
+                    <ol type="A">
+                        <li>Map</li>
+                        <li>Reduce</li>
+                        <li>Shuffle</li>
+                        <li>Partition</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> B — Reduce</p>
+                </section>
+
+                <section class="quiz" data-module="4" data-key="w4q4-e55a" data-answer="C">
+                    <h4>Module 4</h4>
+                    <p>Which choice improves throughput for many small writes?</p>
+                    <ol type="A">
+                        <li>Per-record transactions</li>
+                        <li>Deeply nested documents</li>
+                        <li>Batching operations</li>
+                        <li>Client-side polling</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> C — Batch operations</p>
+                </section>
+
+                <!-- ======================= WEEK 5 ======================= -->
+                <section class="quiz" data-module="5" data-key="w5q1-1d74" data-answer="B">
+                    <h4>Module 5</h4>
+                    <p>Which property distinguishes a data lake from a warehouse?</p>
+                    <ol type="A">
+                        <li>Schema-on-write</li>
+                        <li>Schema-on-read</li>
+                        <li>Requires star schema</li>
+                        <li>SQL-only ingestion</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> B — Schema-on-read</p>
+                </section>
+
+                <section class="quiz" data-module="5" data-key="w5q2-63f0" data-answer="B">
+                    <h4>Module 5</h4>
+                    <p>Where are raw, unprocessed files usually stored before cleaning and structuring?</p>
+                    <ol type="A">
+                        <li>Inside the main analytics dashboard</li>
+                        <li>In the initial lake for incoming data</li>
+                        <li>In the reporting database for end users</li>
+                        <li>In the API response cache</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> B — In the initial lake for incoming data
+                        data</p>
+                </section>
+
+
+                <section class="quiz" data-module="5" data-key="w5q3-9b33" data-answer="A">
+                    <h4>Module 5</h4>
+                    <p>Which query pattern is a strength of a graph database?</p>
+                    <ol type="A">
+                        <li>Multi-hop relationship traversal</li>
+                        <li>Massive table scans with joins</li>
+                        <li>Wide-column time bucketing</li>
+                        <li>Fast mulit-node joins</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> A — Multi-hop traversal</p>
+                </section>
+
+                <section class="quiz" data-module="5" data-key="w5q4-bc88" data-answer="C">
+                    <h4>Module 5</h4>
+                    <p>Which component most directly decouples producers and consumers?</p>
+                    <ol type="A">
+                        <li>Star schema</li>
+                        <li>Document index</li>
+                        <li>Message broker / queue</li>
+                        <li>Foreign key</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> C — Broker/Queue</p>
+                </section>
+
+                <!-- ======================= WEEK 6 ======================= -->
+                <section class="quiz" data-module="6" data-key="w6q1-0f5e" data-answer="D">
+                    <h4>Module 6</h4>
+                    <p>Which design is typical for an analytical warehouse model?</p>
+                    <ol type="A">
+                        <li>Third normal form only</li>
+                        <li>Adjacency lists</li>
+                        <li>Highly nested JSON</li>
+                        <li>Star/snowflake schema</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> D — Star/Snowflake</p>
+                </section>
+
+                <section class="quiz" data-module="6" data-key="w6q2-5a19" data-answer="C">
+                    <h4>Module 6</h4>
+                    <p>How do relational databases typically support aggregation such as SUM or AVG?</p>
+                    <ol type="A">
+                        <li>By duplicating data into multiple temporary tables</li>
+                        <li>By relying on external scripting languages for computation</li>
+                        <li>By using SQL aggregate functions processed by the query engine</li>
+                        <li>By exporting data to a file before calculation</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> C — SQL aggregate functions in the query
+                        engine</p>
+                </section>
+
+                <section class="quiz" data-module="6" data-key="w6q3-7d02" data-answer="B">
+                    <h4>Module 6</h4>
+                    <p>What is the main goal of moving data from a data lake into a data warehouse?</p>
+                    <ol type="A">
+                        <li>To store unstructured data in raw format</li>
+                        <li>To organize and optimize data for analytical queries</li>
+                        <li>To remove historical records and reduce cost</li>
+                        <li>To bypass schema validation entirely</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> B — Organize data for analytics</p>
+                </section>
+
+                <section class="quiz" data-module="6" data-key="w6q4-cd61" data-answer="C">
+                    <h4>Module 6</h4>
+                    <p>During transformation from data lake to data warehouse, which step typically occurs?</p>
+                    <ol type="A">
+                        <li>Deleting metadata and lineage records</li>
+                        <li>Compressing data without schema enforcement</li>
+                        <li>Cleaning, joining, and aggregating curated datasets</li>
+                        <li>Moving JSON directly without structural checks</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> C — Clean, join, and aggregate curated
+                        data</p>
+                </section>
+
+                <!-- ======================= WEEK 7 ======================= -->
+                <section class="quiz" data-module="7" data-key="w7q1-4e2b" data-answer="B">
+                    <h4>Module 7</h4>
+                    <p>In cache-aside, what happens on a cache miss?</p>
+                    <ol type="A">
+                        <li>Client returns 404 immediately</li>
+                        <li>App loads from DB, populates cache, returns result</li>
+                        <li>Cache fabricates a default value</li>
+                        <li>DB writes are skipped</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> B — Load DB → populate cache → return</p>
+                </section>
+
+                <section class="quiz" data-module="7" data-key="w7q2-88a0" data-answer="D">
+                    <h4>Module 7</h4>
+                    <p>Which Redis option sets expiration when writing a value?</p>
+                    <ol type="A">
+                        <li><code>SET ... NX</code></li>
+                        <li><code>SET ... PXAT</code> only</li>
+                        <li><code>PERSIST</code></li>
+                        <li><code>SET key value EX &lt;seconds&gt;</code></li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> D — SET ... EX &lt;seconds&gt;</p>
+                </section>
+
+                <section class="quiz" data-module="7" data-key="w7q3-a431" data-answer="A">
+                    <h4>Module 7</h4>
+                    <p>What best measures API latency difference between Mongo and Redis endpoints?</p>
+                    <ol type="A">
+                        <li>Server-side timing (e.g., <code>timeMs</code> &amp; <code>X-Response-Time</code>)</li>
+                        <li>Client clock only</li>
+                        <li>Counting HTTP headers</li>
+                        <li>Comparing payload sizes alone</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> A — Server-side timing</p>
+                </section>
+
+                <section class="quiz" data-module="7" data-key="w7q4-d9fe" data-answer="C">
+                    <h4>Module 7</h4>
+                    <p>Which practice balances speed and freshness for frequently changing data?</p>
+                    <ol type="A">
+                        <li>Infinite TTL on all keys</li>
+                        <li>Delete cache on every read</li>
+                        <li>Short TTL with cache-aside reloads</li>
+                        <li>Write-through for read-only data</li>
+                    </ol>
+                    <p class="fragment reveal-answer"><strong>Answer:</strong> C — Short TTL + cache-aside</p>
+                </section>
+
+                <section>Questions?</section>
+
+                <section>
+                    <h3><span class="highlight">Agriculture Dataset — Data Quality</span></h3>
+                    <div class="split">
+                        <div class="left">
+                            <ol>
+                                <li>Are JSON keys consistent in naming?</li>
+                                <li>How to handle missing <code>yield</code> values?</li>
+                                <li>Is <code>harvest_date</code> in valid ISO format?</li>
+                                <li>How to standardize <code>region</code> names?</li>
+                                <li>How to record units accurately for <code>yield</code>?</li>
+                                <li>Which field relationships need validation?</li>
+                                <li>How to find duplicate <code>farm_id</code>?</li>
+                            </ol>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-json">
+{
+  "farm_id": "F123",
+  "crop": "rice",
+  "region": "California",
+  "yield": "72 tons",
+  "soil": {
+    "type": "clay",
+    "ph": 9.8
+  },
+  "harvest_date": "10-09-25"
+}</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Agenda</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ol>
+                                <li>Redis API and Performance &check;</li>
+                                <li>Caching Strategies in Web Apps &check;</li>
+                                <li>Midterm Review &check;</li>
+                                <li>Midterm Mock Exam</li>
+                                <li>Q&A and Discussion</li>
+                            </ol>
+                        </div>
+                        <div class="right">
+                            <img src="https://miro.medium.com/v2/1*I5ZecsRIYNcB5WBMVEq4Ig.png"
+                                alt="Data Pipeline Performance">
+                        </div>
+                    </div>
+                </section>
+
 
                 <section>Questions?</section>
 
                 <section>Midterm (Oct/16)</section>
+
+                <section>
+                    <h4><span class="highlight">Agenda</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ol>
+                                <li>Redis API and Performance &check;</li>
+                                <li>Caching Strategies in Web Apps &check;</li>
+                                <li>Midterm Review &check;</li>
+                                <li>Midterm Mock Exam &check;</li>
+                                <li>Q&A and Discussion</li>
+                            </ol>
+                        </div>
+                        <div class="right">
+                            <img src="https://miro.medium.com/v2/1*I5ZecsRIYNcB5WBMVEq4Ig.png"
+                                alt="Data Pipeline Performance">
+                        </div>
+                    </div>
+                </section>
+
+                <section>Q&A and Discussion</section>
+
+                <!-- Homework and Labs -->
 
                 <section>
                     <h4>Lab 3 – Extend Lab 2 with <span class="highlight">Neo4j</span> (due Oct 14)</h4>
