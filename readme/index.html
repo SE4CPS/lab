@@ -32,32 +32,15 @@
     a { color: #0366d6; text-decoration: none; word-break: break-word; }
     a:hover { text-decoration: underline; }
     .muted { color: var(--muted); }
-
-    /* Tables: no horizontal scroll by enabling wrapping and fixed layout */
     table { width: 100%; border-collapse: collapse; margin: .75rem 0 1.2rem; table-layout: fixed; }
-    th, td {
-      border: 1px solid var(--line);
-      padding: .6rem .55rem;
-      vertical-align: top;
-      word-break: break-word;
-      overflow-wrap: anywhere;
-    }
+    th, td { border: 1px solid var(--line); padding: .6rem .55rem; vertical-align: top; word-break: break-word; overflow-wrap: anywhere; }
     thead th { background: #f3f4f6; }
-    /* Make first columns a bit narrower to help wrap examples better */
     th:nth-child(1), td:nth-child(1) { width: 80px; }
     th:nth-child(2), td:nth-child(2) { width: 280px; }
-
-    /* Code blocks and inline code */
     code, pre code { font-family: var(--mono); font-size: 13px; }
-    pre code {
-      display: block; background: var(--code-bg); border: 1px solid var(--line);
-      padding: .75rem .9rem; border-radius: 6px; white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere;
-    }
+    pre code { display: block; background: var(--code-bg); border: 1px solid var(--line); padding: .75rem .9rem; border-radius: 6px; white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere; }
     code.inline { background: var(--code-bg); border: 1px solid var(--line); padding: .05rem .25rem; border-radius: 4px; }
-
     .mermaid { text-align: center; margin: 1.2rem 0 1.6rem; }
-
-    /* Badges */
     .badge { display: inline-block; padding: .15rem .45rem; border-radius: 999px; font-size: .8rem; border: 1px solid var(--line); background: #fff; }
     .ok { background: var(--accent-2); color: var(--accent-3); border-color: #98d9a7; }
     .todo { background: #fff6cc; color: #6b5900; border-color: #f1d36b; }
@@ -194,13 +177,32 @@ const result = llm.invoke(prompt);</code></pre>
  -d '{"redditId":"1nq0h33","title":"Example","created_utc":"2025-09-28T12:00:00Z"}'</code></pre></td>
         <td><pre><code>{"success":true,"message":"Reddit post added/updated.","redditId":"1nq0h33"}</code></pre></td>
       </tr>
+
+      <!-- UPDATED ROW -->
       <tr>
         <td>GET</td>
         <td><code>/api/reddit</code></td>
-        <td>Newest-first listing with <em>page/limit</em> or stable <em>cursor</em> pagination.</td>
-        <td><a href="https://releasetrain.io/api/reddit?limit=25" target="_blank" rel="noopener">/api/reddit?limit=25</a></td>
-        <td><pre><code>[ { "title":"...", "created_utc":"..." }, ... ]</code></pre></td>
+        <td>
+          Newest-first listing with <em>page/limit</em> or stable <em>cursor</em> pagination.<br/>
+          <strong>Query params:</strong>
+          <code class="inline">limit</code>, <code class="inline">page</code>, <code class="inline">cursor</code>,
+          <code class="inline">isUpdateRelated=true|false</code> (filter on <code class="inline">metadata.isUpdateRelated</code>),
+          <code class="inline">showCount=true</code> (returns <code class="inline">totalCount</code> in body).
+        </td>
+        <td>
+          <a href="https://releasetrain.io/api/reddit?limit=25" target="_blank" rel="noopener">/api/reddit?limit=25</a><br/>
+          <a href="https://releasetrain.io/api/reddit?isUpdateRelated=true&limit=25" target="_blank" rel="noopener">/api/reddit?isUpdateRelated=true&amp;limit=25</a><br/>
+          <a href="https://releasetrain.io/api/reddit?isUpdateRelated=false&showCount=true" target="_blank" rel="noopener">/api/reddit?isUpdateRelated=false&amp;showCount=true</a>
+        </td>
+        <td>
+<pre><code>[ { "title":"...", "created_utc":"..." }, ... ]           // default
+</code></pre>
+<pre><code>{ "data":[{...},{...}], "totalCount":123 }                 // when showCount=true
+</code></pre>
+        </td>
       </tr>
+      <!-- /UPDATED ROW -->
+
       <tr>
         <td>GET</td>
         <td><code>/api/reddit/count</code></td>
