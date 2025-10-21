@@ -540,7 +540,8 @@
                             </tr>
                             <tr style="color:#ccc;">
                                 <td style="padding:6px; border:1px solid #666;">Week 9</td>
-                                <td style="padding:6px; border:1px solid #666;">Oct 21, Oct 23</td>
+                                <td style="padding:6px; border:1px solid #666;"><a href="#/oct-21">Oct 21</a>, Oct 23
+                                </td>
                                 <td style="padding:6px; border:1px solid #666;"><a href="#/512"
                                         style="color:#ccc; text-decoration:none;">Database Pipeline Architecture and
                                         Data Dashboard &#x1f517;</a></td>
@@ -12623,6 +12624,744 @@ The correct choice is also stored in data-answer for tooling/validation. -->
                 </section>
 
                 <section>Q&A and Discussion</section>
+
+
+                <section id="oct-21">
+                    <h4><span class="highlight">Today, October 21, 2025</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Midterm Review</li>
+                                <li>Database Pipeline Architecture and
+                                    Data Dashboard</li>
+                                <li>Column-based Database - ClickHouse</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://clickhouse.com/images/engineering-resources/0_columnstore.png"
+                                alt="ClickHouse Columnar Database Diagram" class="slide-image" />
+                        </div>
+                    </div>
+                </section>
+
+                <section>Midterm Review</section>
+
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h3>Database Pipeline Architecture and Data Dashboard</h3>
+                            <ul>
+                                <li>Metric</li>
+                                <li>KPI</li>
+                                <li>Target</li>
+                                <li>Benchmark</li>
+                        </div>
+                        <div class="right">
+                            <img src="https://m.media-amazon.com/images/I/51tsXUzFJNL._AC_UF1000,1000_QL80_.jpg"
+                                alt="Book Cover" style="height: 400px;">
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- Metric -->
+                <section>
+                    <h4><span class="highlight">Metric</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><strong>What it is:</strong> A single measurement.</li>
+                                <li><strong>Agriculture example:</strong> <em>Rainfall today = 8 mm</em>.</li>
+                                <li><strong>Use:</strong> Simple observation collected daily.</li>
+                            </ul>
+                            <pre><code>{
+  "metric": "rainfall",
+  "value": 8,
+  "unit": "mm",
+  "timestamp_utc": "2025-10-21T00:00:00Z"
+}</code></pre>
+                        </div>
+                        <div class="right">
+                            <img src="https://www.azolifesciences.com/images/Article_Images/ImageForArticle_1013_16696504239455940.jpg"
+                                alt="Raindrops on leaves" style="height: 350px;">
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- KPI -->
+                <section>
+                    <h4><span class="highlight">Key Performance Indicator (KPI)</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>A group of metrics that describe performance or trend.
+                                </li>
+                                <li><em>Average weekly rainfall</em> across all
+                                    fields.</li>
+                                <li><strong>Use:</strong> Helps farmers understand overall water supply.</li>
+                            </ul>
+                            <pre><code>{
+  "kpi": "weekly_rainfall",
+  "average_value": 42,
+  "unit": "mm/week",
+  "week_start_utc": "2025-10-20T00:00:00Z",
+  "data_points": 7
+}</code></pre>
+                        </div>
+                        <div class="right">
+                            <img src="https://i.ytimg.com/vi/R6cQxv0291I/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCX9JuVyu6x7wpgl_TmTJMFR92wjg"
+                                alt="Weekly Rainfall Chart" style="height: 350px;">
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- Target -->
+                <section>
+                    <h4><span class="highlight">Target</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>A goal or threshold value for a KPI.</li>
+                                <li><em>Target weekly rainfall = 40 mm</em> for
+                                    optimal crop growth.</li>
+                                <li>Guides irrigation planning when rainfall is below target.</li>
+                            </ul>
+                            <pre><code>{
+  "target": "weekly_rainfall",
+  "goal_value": 40,
+  "unit": "mm/week",
+  "valid_from_utc": "2025-10-01T00:00:00Z",
+  "valid_to_utc": "2025-12-31T23:59:59Z"
+}</code></pre>
+                        </div>
+                        <div class="right">
+                            <img src="https://www.staceybarr.com/images/kpiwiththresholdandtarget.jpg"
+                                alt="Rainfall KPI with Target and Threshold" style="height: 350px;">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Benchmark -->
+                <section>
+                    <h4><span class="highlight">Benchmark</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Reference point by crop type, season,
+                                    or region.</li>
+                                <li><em>Average weekly rainfall needs:</em> Corn =
+                                    40 mm</li>
+                                <li>Compare crop’s rainfall KPI to historical benchmark</li>
+                            </ul>
+                            <pre><code>{
+  "benchmark": "weekly_rainfall_by_crop",
+  "crops": {
+    "corn": 40,
+    "wheat": 30,
+    "soybean": 35
+  },
+  "unit": "mm/week",
+  "reference_period": "2024",
+  "source": "historical_weather_data"
+}</code></pre>
+                        </div>
+                        <div class="right">
+                            <img src="https://www.no-tillfarmer.com/ext/resources/Irmak-irrigation-value-F2.jpg"
+                                alt="Crop-specific Rainfall Benchmark" style="height: 350px;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">How They Relate</span></h4>
+                    <table style="width: 100%; border-collapse: collapse; font-size: 18px;">
+                        <thead>
+                            <tr>
+                                <th style="text-align: left; padding: 8px;">Relationship</th>
+                                <th style="text-align: left; padding: 8px;">Description</th>
+                                <th style="text-align: left; padding: 8px;">Example</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 8px;"><strong>Metric → KPI</strong></td>
+                                <td style="padding: 8px;">Daily rainfall readings combine to calculate weekly averages.
+                                </td>
+                                <td style="padding: 8px;"><code>{"rainfall_daily":[8,5,6,7,10,4,2]}</code></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px;"><strong>KPI ↔ Benchmark</strong></td>
+                                <td style="padding: 8px;">Compare weekly rainfall KPI to historical averages by crop
+                                    type.</td>
+                                <td style="padding: 8px;">Corn = 40 mm, Wheat = 30 mm, Soybean = 35 mm</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px;"><strong>KPI → Target</strong></td>
+                                <td style="padding: 8px;">If the KPI is below the 40 mm target, schedule additional
+                                    irrigation.</td>
+                                <td style="padding: 8px;">Current = 32 mm → Add irrigation</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px;"><strong>Loop</strong></td>
+                                <td style="padding: 8px;">Metrics feed into KPI → compared to benchmark → adjusted
+                                    toward target.</td>
+                                <td style="padding: 8px;">Continuous weekly update and correction cycle</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+
+                <section>
+                    <h4><span class="highlight">From KPI to Aggregate Functions</span></h4>
+                    <div class="split">
+                        <div class="left" style="text-align: left;">KPIs are often derived from aggregate functions
+                            applied to
+                            raw metrics. These functions summarize multiple values to reveal overall trends or
+                            conditions.
+                            <br> <br>
+                            <ul>
+                                <li><strong>MIN:</strong> Lowest rainfall recorded this week.</li>
+                                <li><strong>MAX:</strong> Highest rainfall recorded this week.</li>
+                                <li><strong>SUM:</strong> Total rainfall across all days.</li>
+                                <li><strong>AVG:</strong> Average rainfall — the weekly KPI value.</li>
+                            </ul>
+                            <pre><code>{
+  "rainfall_daily": [8, 5, 6, 7, 10, 4, 2],
+  "min": 2,
+  "max": 10,
+  "sum": 42,
+  "avg": 6.0
+}</code></pre>
+                        </div>
+                        <div class="right">
+                            <img src="https://clickhouse.com/images/engineering-resources/0_columnstore.png"
+                                alt="ClickHouse Columnar Database Diagram" class="slide-image" />
+                        </div>
+                    </div>
+                </section>
+
+
+                <section>Column-based Database - ClickHouse</section>
+
+                <section>
+                    <div style="display: flex; align-items: center;">
+                        <div style="width: 50%;">
+                            <h5>The Dashboard Effect</h5>
+                            <ul>
+                                <li>Real-Time Data Monitoring</li>
+                                <li>Improved Decision-Making</li>
+                                <li>Improved Team Collaboration</li>
+                                <li>Increased Efficiency and Productivity</li>
+                                <li>Better Performance Tracking</li>
+                            </ul>
+                        </div>
+                        <div style="width: 50%; text-align: center;">
+                            <img src="https://m.media-amazon.com/images/I/51tsXUzFJNL._AC_UF1000,1000_QL80_.jpg"
+                                alt="The Dashboard Effect Book Cover"
+                                style="width: 100%; max-width: 280px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);" />
+                        </div>
+                    </div>
+                </section>
+
+                <section data-background="white">
+                    <img src="https://images.klipfolio.com/website/public/43d1163c-613a-4709-b29f-c9e48a2dd27e/supply-chain-dashboard-example.png"
+                        alt="Row vs Column Storage"
+                        style="width: 60%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);" />
+                </section>
+
+                <section>
+                    <h5>Row-Based vs Column-Based Storage</h5>
+                </section>
+
+                <section data-background="white">
+                    <img src="https://tinybird-blog.ghost.io/content/images/2023/11/columnar-vs-row-oriented-min.jpeg"
+                        alt="Row vs Column Storage"
+                        style="width: 80%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);" />
+                </section>
+
+                <section>
+                    <h5>How columnar databases store and access data</h5>
+                </section>
+
+                <section data-background="white">
+                    <div style="display: flex; align-items: center;">
+                        <div style="width: 60%;">
+                            <ul>
+                                <li>Data is stored <span class="highlight">column by column</span> instead of row by
+                                    row
+                                </li>
+                                <li>Each column is stored as a contiguous block on disk</li>
+                                <li>Efficient for scanning specific columns during queries</li>
+                                <li>Enables <span class="highlight">better compression</span> due to uniform data
+                                    types
+                                </li>
+                                <li>Reduces I/O by skipping irrelevant columns</li>
+                                <li>Ideal for <span class="highlight">analytics and aggregation</span> use cases
+                                </li>
+                            </ul>
+                        </div>
+                        <div style="width: 40%;">
+                            <!-- Placeholder for image -->
+                            <img src="https://i0.wp.com/softwareengineeringdaily.com/wp-content/uploads/2017/01/column-oriented-database1.jpg?w=539&ssl=1"
+                                alt="Columnar Storage Diagram" style="width: 100%;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h5>Row-Based Tables</h5>
+                    <h3>Overview & Disadvantages</h3>
+                    <ul>
+                        <li><strong><span class="highlight">Row-Based</span> Storage</strong></li>
+                        <ul>
+                            <li>Stores entire rows together on disk</li>
+                            <li>Optimized for transactional workloads (OLTP)</li>
+                            <li>Used in systems like MySQL and PostgreSQL</li>
+                        </ul>
+                        <li><strong>Disadvantages</strong></li>
+                        <ul>
+                            <li>Inefficient for <span class="highlight">analytical</span> queries (OLAP)</li>
+                            <li>Loads full rows even when only one column is needed</li>
+                            <li>Limited compression opportunities</li>
+                            <li>Slower for large-scale filtering and aggregation</li>
+                        </ul>
+                    </ul>
+                </section>
+
+                <section>
+                    <h5>When not to use a columnar database</h5>
+                </section>
+
+                <section>
+                    <h5>When Should I Use a Columnar Database?</h5>
+                    <ul>
+                        <li>Heavy read and analytics workloads</li>
+                        <li>Large-scale aggregation and filtering</li>
+                        <li>Dashboards and business intelligence tools</li>
+                        <li>Event logging or time-series data</li>
+                        <li>Need for high compression and fast scans</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h5>When to Use Row vs Column-Based Databases</h5>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Query Type</th>
+                                <th>Use Row-Based DB</th>
+                                <th>Use Column-Based DB</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Inserts and Updates</td>
+                                <td class="highlight">✔</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Single-row lookups</td>
+                                <td class="highlight">✔</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>Aggregations over large datasets</td>
+                                <td></td>
+                                <td class="highlight">✔</td>
+                            </tr>
+                            <tr>
+                                <td>Reporting and analytics</td>
+                                <td></td>
+                                <td class="highlight">✔</td>
+                            </tr>
+                            <tr>
+                                <td>Real-time dashboards</td>
+                                <td></td>
+                                <td class="highlight">✔</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <h5>When to Use Columnar vs Row-Oriented Databases</h5>
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Use <span class="highlight">Columnar</span> Databases When...</th>
+                                <th>Use <span class="highlight">Row-Oriented</span> Databases When...</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Your primary use case is analytics</td>
+                                <td>Your primary use case is transactions</td>
+                            </tr>
+                            <tr>
+                                <td>You need low query latency for large scans</td>
+                                <td>You don't need low latency for analytics</td>
+                            </tr>
+                            <tr>
+                                <td>You have large amounts of analytical data</td>
+                                <td>You're working with smaller data sets</td>
+                            </tr>
+                            <tr>
+                                <td>You don't need strict ACID compliance</td>
+                                <td>You need strict ACID compliance</td>
+                            </tr>
+                            <tr>
+                                <td>You're using event sourcing principles</td>
+                                <td>You perform frequent, small updates or deletes</td>
+                            </tr>
+                            <tr>
+                                <td>You store and analyze time series data</td>
+                                <td>You access records by unique IDs</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section data-background="white">
+                    <h5>Row-Based vs Column-Based Storage</h5>
+                    <img src="https://tinybird-blog.ghost.io/content/images/2023/11/columnar-vs-row-oriented-min.jpeg"
+                        alt="Row vs Column Storage"
+                        style="width: 80%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);" />
+                </section>
+
+                <section>
+                    <h5>Use Column Store: Monthly Spending Totals</h5>
+                    <pre><code class="sql">
+        SELECT SUM(balance) 
+        FROM bike_payments 
+        WHERE user_id > 1000;
+          </code></pre>
+                    <ul>
+                        <li>Scans only the <span class="highlight">balance</span> column</li>
+                        <li>Efficient for large-scale aggregation</li>
+                        <li>Faster with compressed columnar storage</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h5>Use Column Store: Ride Distance by Region</h5>
+                    <pre><code class="sql">
+        SELECT region, SUM(distance_km) 
+        FROM rides 
+        GROUP BY region;
+          </code></pre>
+                    <ul>
+                        <li>Focus on <span class="highlight">region</span> and <span
+                                class="highlight">distance_km</span> columns
+                        </li>
+                        <li>Columnar format avoids loading unused data</li>
+                        <li>Perfect for dashboards and analytics</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h5>Use Column Store: Hourly Usage Trends</h5>
+                    <pre><code class="sql">
+        SELECT hour, COUNT(*) 
+        FROM usage_logs 
+        WHERE station_id = 42 
+        GROUP BY hour;
+          </code></pre>
+                    <ul>
+                        <li>Ideal for fast grouping over time series</li>
+                        <li>Reads only <span class="highlight">hour</span> and <span class="highlight">station_id</span>
+                        </li>
+                        <li>Minimizes I/O load on large logs</li>
+                    </ul>
+                </section>
+
+                <section data-background="white">
+                    <h5>Row-Based vs Column-Based Storage</h5>
+                    <img src="https://tinybird-blog.ghost.io/content/images/2023/11/columnar-vs-row-oriented-min.jpeg"
+                        alt="Row vs Column Storage"
+                        style="width: 80%; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);" />
+                </section>
+
+                <section>
+                    <h5>Use Row Store: User Registration</h5>
+                    <pre><code class="sql">
+        INSERT INTO users (name, email, password, signup_date) 
+        VALUES ('Bob', 'bob@aol.com', 'hash', NOW());
+          </code></pre>
+                    <ul>
+                        <li>Row store writes full records efficiently</li>
+                        <li>Transactional consistency is key</li>
+                        <li>Best for frequent inserts/updates</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h5>Use Row Store: Full Trip History Lookup</h5>
+                    <pre><code class="sql">
+        SELECT * 
+        FROM trips 
+        WHERE user_id = 105;
+          </code></pre>
+                    <ul>
+                        <li>Returns entire row for user context</li>
+                        <li>Faster access in row-oriented storage</li>
+                        <li>Suited for operational queries</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h5>Compression and performance advantages</h5>
+                </section>
+
+                <section data-background="white">
+                    <div style="display: flex; align-items: center;">
+                        <div style="width: 60%;">
+                            <h5>Compression in Column-Based Databases</h5>
+                            <ul>
+                                <li>Columns store <span class="highlight">uniform data types</span></li>
+                                <li>Enables use of <span class="highlight">efficient compression algorithms</span>
+                                </li>
+                                <li>Examples: run-length encoding, dictionary encoding</li>
+                                <li>Significantly reduces storage footprint</li>
+                                <li>Faster query performance due to fewer bytes read</li>
+                                <li>Compression often applied <span class="highlight">automatically</span> by the
+                                    engine
+                                </li>
+                            </ul>
+                        </div>
+                        <div style="width: 40%;">
+                            <!-- Placeholder for future diagram -->
+                            <img src="https://miro.medium.com/v2/resize:fit:640/format:webp/1*WeV93TOFn_NMlTb-QGwxXA.png"
+                                alt="Compression Diagram" style="width: 100%;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h5>Aggregation Query: Time Complexity</h5>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Storage Type</th>
+                                <th>Aggregation Time Complexity</th>
+                                <th>Reason</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="highlight">Row-Based</span></td>
+                                <td>O(n × m)</td>
+                                <td>Scans all rows and all columns</td>
+                            </tr>
+                            <tr>
+                                <td><span class="highlight">Column-Based</span></td>
+                                <td>O(n)</td>
+                                <td>Scans only the relevant column</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p><em>n = number of rows, m = number of columns</em></p>
+                </section>
+
+                <section>
+                    <h5>Indexing strategies in column stores</h5>
+                </section>
+
+                <section>
+                    <h5>Indexing in Column-Based Databases</h5>
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Concept</th>
+                                <th>Column-Based DB</th>
+                                <th>Row-Based DB</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Data Layout</td>
+                                <td>Columns stored independently</td>
+                                <td>Rows stored together</td>
+                            </tr>
+                            <tr>
+                                <td>Indexing Need</td>
+                                <td>Often reduced due to scan efficiency</td>
+                                <td>Critical for performance</td>
+                            </tr>
+                            <tr>
+                                <td>Default Access</td>
+                                <td>Column filters without indexes are fast</td>
+                                <td>Needs indexes for efficient filtering</td>
+                            </tr>
+                            <tr>
+                                <td>Index Type</td>
+                                <td>Skip indexes, min-max indexes, sparse indexes</td>
+                                <td>B-tree, hash, GIN, GiST</td>
+                            </tr>
+                            <tr>
+                                <td>Compression & Filtering</td>
+                                <td>Efficient filtering via compressed column blocks</td>
+                                <td>Filtering depends on explicit indexes</td>
+                            </tr>
+                            <tr>
+                                <td>Example</td>
+                                <td>ClickHouse: Primary index is skip-based by default</td>
+                                <td>PostgreSQL: Uses B-tree indexes by default</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <h5>Comparing PostgreSQL vs. ClickHouse</h5>
+                </section>
+
+                <section>
+                    <h5>ClickHouse vs PostgreSQL: Key Differences</h5>
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>ClickHouse</th>
+                                <th>PostgreSQL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Storage Model</td>
+                                <td>Column-based</td>
+                                <td>Row-based</td>
+                            </tr>
+                            <tr>
+                                <td>Primary Use Case</td>
+                                <td>Analytics (OLAP)</td>
+                                <td>Transactions (OLTP)</td>
+                            </tr>
+                            <tr>
+                                <td>Indexing</td>
+                                <td>Skip index (min-max, sparse)</td>
+                                <td>B-tree, hash, GIN, GiST</td>
+                            </tr>
+                            <tr>
+                                <td>Write Performance</td>
+                                <td>High-throughput batch inserts</td>
+                                <td>Optimized for single-row inserts</td>
+                            </tr>
+                            <tr>
+                                <td>Read Performance</td>
+                                <td>Fast scans on large datasets</td>
+                                <td>Fast lookups and joins</td>
+                            </tr>
+                            <tr>
+                                <td>Compression</td>
+                                <td>Built-in, column-aware compression</td>
+                                <td>Optional extensions</td>
+                            </tr>
+                            <tr>
+                                <td>SQL Support</td>
+                                <td>Subset of ANSI SQL (e.g., no FULL OUTER JOIN, no foreign keys)</td>
+                                <td>Full ANSI SQL with rich extensions</td>
+                            </tr>
+                            <tr>
+                                <td>ACID Compliance</td>
+                                <td>Eventual consistency, no full ACID</td>
+                                <td>Full ACID compliance</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <h5>Case studies and performance benchmarks</h5>
+                </section>
+
+                <section>
+                    <h5>Open Source Columnar Databases</h5>
+                    <ul>
+                        <li><span class="highlight">MonetDB</span> – <a href="https://www.monetdb.org/"
+                                target="_blank">monetdb.org</a> (2004, <span class="license">Mozilla Public License
+                                2.0</span>) –
+                            Supports SQL</li>
+                        <li><span class="highlight">Apache Druid</span> – <a href="https://druid.apache.org/"
+                                target="_blank">druid.apache.org</a> (2012, <span class="license">Apache License
+                                2.0</span>) – Supports
+                            SQL</li>
+                        <li><span class="highlight">ClickHouse</span> – <a href="https://clickhouse.com/"
+                                target="_blank">clickhouse.com</a> (2016, <span class="license">Apache License
+                                2.0</span>) – Supports
+                            SQL</li>
+                        <li><span class="highlight">Apache Kudu</span> – <a href="https://kudu.apache.org/"
+                                target="_blank">kudu.apache.org</a> (2016, <span class="license">Apache License
+                                2.0</span>) – Supports
+                            SQL via Impala</li>
+                        <li><span class="highlight">Apache Parquet</span> – <a href="https://parquet.apache.org/"
+                                target="_blank">parquet.apache.org</a> (2013, <span class="license">Apache License
+                                2.0</span>) –
+                            Columnar storage format; SQL support depends on engine</li>
+                        <li><span class="highlight">DuckDB</span> – <a href="https://duckdb.org/"
+                                target="_blank">duckdb.org</a>
+                            (2019, <span class="license">MIT License</span>) – Supports SQL</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h5>Average Queries on trips Table</h5>
+                    <table style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>SQL Query</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Average trip distance</td>
+                                <td>
+                                    <pre><code class="sql" style="font-size: 16pt;">SELECT AVG(trip_distance) FROM trips;</code></pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Average fare amount</td>
+                                <td>
+                                    <pre><code class="sql"  style="font-size: 16pt;">SELECT AVG(fare_amount) FROM trips;</code></pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Average tip by payment type</td>
+                                <td>
+                                    <pre><code class="sql"  style="font-size: 16pt;">SELECT payment_type_, AVG(tip_amount) FROM trips GROUP BY payment_type_;</code></pre>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Average total amount by vendor</td>
+                                <td>
+                                    <pre><code class="sql"  style="font-size: 16pt;">SELECT vendor_id, AVG(total_amount) FROM trips GROUP BY vendor_id;</code></pre>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section>
+                    <div style="display: flex; align-items: center;">
+                        <div style="width: 60%;">
+                            <h5>ClickHouse Playground</h5>
+                            <ul>
+                                <li>Web-based platform to experiment with ClickHouse queries</li>
+                                <li>No setup required; start querying instantly</li>
+                                <li>Access to various sample datasets for testing</li>
+                                <li>Supports SQL queries with real-time results</li>
+                            </ul>
+                        </div>
+                        <div style="width: 40%;">
+                            <!-- Placeholder for ClickHouse Playground Screenshot -->
+                            <p><a href="https://play.clickhouse.com/play?user=play#c2VsZWN0ICogZnJvbSB0cmlwczs="
+                                    target="_blank">ClickHouse Playground</a></p>
+                        </div>
+                    </div>
+                </section>
 
                 <!-- Homework and Labs -->
 
