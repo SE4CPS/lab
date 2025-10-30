@@ -553,9 +553,10 @@
                             </tr>
                             <tr style="color:#ccc;">
                                 <td style="padding:6px; border:1px solid #666;">Week 10</td>
-                                <td style="padding:6px; border:1px solid #666;"> <a href="#/oct-28">Oct 28</a>, Oct 30
+                                <td style="padding:6px; border:1px solid #666;"> <a href="#/oct-28">Oct 28</a>, <a
+                                        href="#/oct-30">Oct 30</a>
                                 </td>
-                                <td style="padding:6px; border:1px solid #666;">Database Sharding and Replication/td>
+                                <td style="padding:6px; border:1px solid #666;">Database Sharding and Replication</td>
                                 <td style="padding:6px; border:1px solid #666;">Cassandra | MongoDB</td>
                                 <td style="padding:6px; border:1px solid #666;">Lab 4, HW 4, Project Part 2</td>
                             </tr>
@@ -14184,9 +14185,337 @@ LIMIT 2;
                         alt="Illustration of Scaling">
                 </section> -->
 
+                <section id="oct-30">
+                    <h4><span class="highlight">Today, October 30, 2025</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ol>
+                                <li>Brief Review: 2 Questions on Paper</li>
+                                <li>Brief Review: Big Data and CAP Theorem</li>
+                                <li>Concept of Eventually Consistency</li>
+                                <li>MongoDB and CassandraDB</li>
+                                <li>Homework 4, Lab 4, Project Part 1, Final Exam Date</li>
+                            </ol>
+                        </div>
+                        <div class="right">
+                            <img src="https://miro.medium.com/v2/1*wxUhC8UsMYWUwLvediEGHQ.png"
+                                alt="ClickHouse Columnar Database Diagram" class="slide-image" />
+                        </div>
+                    </div>
+                </section>
+
+                <section>Brief Review: 2 Questions on Paper</section>
+
+                <section>Brief Review: Big Data and CAP Theorem</section>
+
+                <section>Concept Eventually Consistency</section>
+
+                <section>MongoDB and CassandraDB</section>
+
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>What is Cassandra?</h4>
+                            <ul>
+                                <li>Open-source, distributed NoSQL wide-column store</li>
+                                <li>Designed for massive scale, no single point of failure</li>
+                                <li>Prioritises availability & partition-tolerance (AP in CAP)</li>
+                                <li>Built for Systems Engineers, less for Developers</li>
+                                <li><a href="https://github.com/apache/cassandra"
+                                        target="_blank">github.com/apache/cassandra</a></li>
+                            </ul>
+                        </div>
+                        <div the="right">
+                            <img src="https://media.geeksforgeeks.org/wp-content/uploads/20200501155836/Capturedistributeddb.png"
+                                alt="Cassandra logo" style="max-width:100%; border-radius:12px;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Cassandra Chronology</h4>
+                            <ul>
+                                <li>2007 – Developed at Facebook for Inbox Search</li>
+                                <li>2008 – Open-sourced on Google Code</li>
+                                <li>2009 – Entered Apache Incubator</li>
+                                <li>2010 – Became Apache top-level project</li>
+                                <li>2015+ – Adopted by Netflix, Instagram, Uber, etc</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://scalegrid.io/wp-content/uploads/Most-Popular-Databases-Used-MySQL-MongoDB-PostgreSQL-Redis-Cassandra-Oracle.png"
+                                alt="Cassandra version history" style="max-width:100%; border-radius:12px;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Cluster Architecture</h4>
+                            <ul>
+                                <li>Peer-to-peer design, no master node</li>
+                                <li>Gossip protocol for node discovery</li>
+                                <li>Data partitioned via consistent hashing</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://www.scylladb.com/wp-content/uploads/apache-cassandra-architecture-diagram.png"
+                                alt="Cassandra cluster ring" style="max-width:100%; border-radius:12px;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Gossip Protocol in Cassandra</h4>
+                            <ul>
+                                <li>Nodes share status info with random peers</li>
+                                <li>No master, fully peer-to-peer</li>
+                                <li>Spreads state quickly across the cluster</li>
+                                <li>Shares node health, schema, and load data</li>
+                                <li>Seed nodes help new nodes join</li>
+                            </ul>
+                            <p style="font-size:0.9em;opacity:0.8;">Keeps cluster consistent and fault-aware.</p>
+                        </div>
+                        <div class="right">
+                            <img src="https://krazysql.wordpress.com/wp-content/uploads/2014/06/cassandra2-jpg.png"
+                                alt="Cassandra Gossip Protocol Diagram" style="max-width:100%; border-radius:12px;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Data Model & CQL</h4>
+                            <ul>
+                                <li>Keyspace → Table → Rows → Columns.</li>
+                                <li>CQL syntax is SQL-like but denormalized.</li>
+                                <li><a href="https://cassandra.apache.org/doc/trunk/cassandra/developing/cql/index.html"
+                                        target="_blank">CQL Documentation</a></li>
+                            </ul>
+                            <pre>
+CREATE KEYSPACE farm_data
+ WITH REPLICATION = {'class':'SimpleStrategy', 'replication_factor':3};
+
+CREATE TABLE crop_yields (
+  farm_id text,
+  crop_type text,
+  year int,
+  yield double,
+  PRIMARY KEY ((farm_id), crop_type, year)
+);
+      </pre>
+                        </div>
+                        <div class="right">
+                            <img src="https://www.scylladb.com/wp-content/uploads/cassandra-data-model-diagram.png"
+                                alt="Cassandra table structure" style="max-width:100%; border-radius:12px;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Write & Read Path</h4>
+                            <ul>
+                                <li><strong>Coordinator:</strong> Routes client requests to replicas</li>
+                                <li><strong>RF:</strong> Number of data copies in the cluster</li>
+                                <li>Consistency: ONE, QUORUM, or ALL</li>
+                            </ul>
+                            <p style="font-size:0.9em;opacity:0.8;">Coordinator enforces consistency across replicas</p>
+                        </div>
+                        <div class="right">
+                            <img src="https://cassandra.apache.org/_/_images/diagrams/apache-cassandra-diagrams-05.jpg"
+                                alt="Cassandra write path" style="max-width:100%; border-radius:12px;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Why Cassandra Chooses Availability</h4>
+                            <ul>
+                                <li>Remains available during node or network failure.</li>
+                                <li>Writes accepted even if some replicas are unreachable.</li>
+                                <li>Consistency achieved later via replication and repair.</li>
+                            </ul>
+                            <p><strong>→ Cassandra is AP (Availability + Partition Tolerance)</strong></p>
+                        </div>
+                        <div class="right">
+                            <img src="https://cassandra.apache.org/_/_images/diagrams/apache-cassandra-diagrams-05.jpg"
+                                alt="Cassandra write path" style="max-width:100%; border-radius:12px;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Agriculture Sensor Data Example</h4>
+                            <ul>
+                                <li>IoT sensors generate time-series data</li>
+                                <li>Scales for thousands of farms globally</li>
+                                <li>Optimized for high <span class="highlight">write throughput</span></li>
+                            </ul>
+                            <pre>
+CREATE TABLE sensor_data (
+  farm_id text,
+  sensor_id text,
+  ts timestamp,
+  temp float,
+  moisture float,
+  PRIMARY KEY ((farm_id, sensor_id), ts)
+) WITH CLUSTERING ORDER BY (ts DESC);
+      </pre>
+                        </div>
+                        <div class="right">
+                            <img src="https://i.sstatic.net/ZlfXZ.png" alt="Agriculture IoT sensors"
+                                style="max-width:100%; border-radius:12px;">
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>High Cardinality</h4>
+                            <ul>
+                                <li>Means many unique key values</li>
+                                <li>Example: user_id, sensor_id</li>
+                                <li>Spreads data evenly across nodes</li>
+                                <li>Prevents hotspots and imbalance</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <h4>Eventual Consistency</h4>
+                            <ul>
+                                <li>Replicas may differ right after a write</li>
+                                <li>System stays available during updates</li>
+                                <li>Data converges as replicas sync over time</li>
+                                <li>Achieved via read repair and background sync</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Partition Key</h4>
+                            <ul>
+                                <li>Determines where data is stored in the cluster</li>
+                                <li>Same key → same node and partition</li>
+                                <li>Used for data distribution and lookup</li>
+                                <li>Example: <code>(farm_id)</code></li>
+                            </ul>
+
+                            <h4>Clustering Key</h4>
+                            <ul>
+                                <li>Defines how rows are ordered within a partition</li>
+                                <li>Supports range queries and sorting</li>
+                                <li>Example: <code>(sensor_id, ts)</code></li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <h4>Example Table</h4>
+                            <pre>
+CREATE TABLE sensor_data (
+  farm_id text,
+  sensor_id text,
+  ts timestamp,
+  value float,
+  PRIMARY KEY ((farm_id), sensor_id, ts)
+);
+            </pre>
+
+                            <p style="font-size:0.9em;opacity:0.8;">
+                                <strong>Partition Key:</strong> farm_id → decides node placement<br>
+                                <strong>Clustering Keys:</strong> sensor_id, ts → order within partition
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Best Practices</h4>
+                            <ul>
+                                <li>Design tables for queries (no joins)</li>
+                                <li>Choose partition keys carefully to avoid hotspots</li>
+                                <li>Monitor compaction, tombstones, and repair frequency</li>
+                                <li>Use QUORUM for balanced consistency vs availability</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://www.scylladb.com/wp-content/uploads/cassandra-clustering-key-diagram.png"
+                                alt="Compaction and tombstones" style="max-width:100%; border-radius:12px;">
+                        </div>
+                    </div>
+                </section>
+
                 <section>
                     <h4>Questions?</h4>
                 </section>
+
+                <section>
+                    <h4>Agriculture Data Pipeline — Choosing the Right Database</h4>
+                    <table style="width:100%; border-collapse:collapse; font-size:0.9em;">
+                        <thead style="background-color:#444; color:#fff;">
+                            <tr>
+                                <th style="padding:8px; border:1px solid #666;">Pipeline Stage</th>
+                                <th style="padding:8px; border:1px solid #666;">Data Type / Need</th>
+                                <th style="padding:8px; border:1px solid #666;">Best Database</th>
+                                <th style="padding:8px; border:1px solid #666;">Reason</th>
+                            </tr>
+                        </thead>
+                        <tbody style="color:#ccc;">
+                            <tr>
+                                <td style="padding:6px; border:1px solid #666;">Sensor Ingestion</td>
+                                <td style="padding:6px; border:1px solid #666;">High-volume IoT readings (temperature,
+                                    soil, humidity)</td>
+                                <td style="padding:6px; border:1px solid #666;">?</td>
+                                <td style="padding:6px; border:1px solid #666;">Handles fast writes, distributed and
+                                    fault-tolerant</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:6px; border:1px solid #666;">Short-term Analytics</td>
+                                <td style="padding:6px; border:1px solid #666;">Recent sensor trends (last 24h)</td>
+                                <td style="padding:6px; border:1px solid #666;">?</td>
+                                <td style="padding:6px; border:1px solid #666;">Flexible schema, easy aggregation
+                                    pipelines</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:6px; border:1px solid #666;">Long-term Storage</td>
+                                <td style="padding:6px; border:1px solid #666;">Historical yields and weather data</td>
+                                <td style="padding:6px; border:1px solid #666;">?</td>
+                                <td style="padding:6px; border:1px solid #666;">Supports structured queries and
+                                    analytics</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:6px; border:1px solid #666;">Real-time Alerts</td>
+                                <td style="padding:6px; border:1px solid #666;">Threshold-based triggers (low moisture)
+                                </td>
+                                <td style="padding:6px; border:1px solid #666;">?</td>
+                                <td style="padding:6px; border:1px solid #666;">In-memory, fast pub/sub messaging</td>
+                            </tr>
+                            <tr>
+                                <td style="padding:6px; border:1px solid #666;">Visualization & Dashboards</td>
+                                <td style="padding:6px; border:1px solid #666;">Aggregated farm metrics and KPIs</td>
+                                <td style="padding:6px; border:1px solid #666;">?</td>
+                                <td style="padding:6px; border:1px solid #666;">Optimized for analytics and fast
+                                    group-by queries</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
 
                 <section>
                     <h4>Data Storage Distribution Questions</h4>
@@ -14195,11 +14524,6 @@ LIMIT 2;
                         <li>Is distribution needed for a data warehouse's performance?</li>
                         <li>Does a data mart require distribution for efficiency?</li>
                     </ol>
-                </section>
-
-                <section data-background-color="white">
-                    <img src="https://cassandra.apache.org/_/_images/diagrams/apache-cassandra-diagrams-10.jpg"
-                        alt="Illustration of Scaling">
                 </section>
 
                 <section>Questions</section>
