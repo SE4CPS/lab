@@ -459,7 +459,8 @@
                             </tr>
                             <tr style="color:#ccc;">
                                 <td style="padding:6px; border:1px solid #666;">Week 10</td>
-                                <td style="padding:6px; border:1px solid #666;"><a href="./#oct-28">Oct 28</a>, Oct 30
+                                <td style="padding:6px; border:1px solid #666;"><a href="./#oct-28">Oct 28</a>, <a
+                                        href="./#oct-30">Oct 30</a>
                                 </td>
                                 <td style="padding:6px; border:1px solid #666;">Data Streams</td>
                                 <td style="padding:6px; border:1px solid #666;"></td>
@@ -8075,7 +8076,507 @@ log.close();
                 </div>
             </section>
 
-            
+            <section id="oct-30">
+                <div class="split">
+                    <div class="left">
+                        <h4>Today, Tuesday Oct 30th</h4>
+                        <ol type="A">
+                            <li>Introduction to Data Streams</li>
+                            <li>Saving Data Streams to File in C++</li>
+                            <li>Examples and Exercises</li>
+                        </ol>
+                    </div>
+                    <div class="right">
+                        <img src="https://iq.opengenus.org/content/images/2022/12/pic1-1.png"
+                            alt="Writing to a File Diagram" style="max-width:100%; height:auto;">
+                    </div>
+                </div>
+            </section>
+
+            <section id="oct-30-arch-table">
+                <div class="split">
+                    <div class="left">
+                        <h4>Slide: C++ Stream Class Hierarchy</h4>
+                        <ul>
+                            <li>Shows inheritance from ios base class</li>
+                            <li>Separation of input (istream) and output (ostream)</li>
+                            <li>Specialized classes for files and combined streams</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <table border="1" style="border-collapse:collapse; width:100%;">
+                            <tr>
+                                <th>Class</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                            </tr>
+                            <tr>
+                                <td>ios</td>
+                                <td>Base</td>
+                                <td>Base class for all stream operations</td>
+                            </tr>
+                            <tr>
+                                <td>ostream</td>
+                                <td>Output</td>
+                                <td>Provides output operations (<<)< /td>
+                            </tr>
+                            <tr>
+                                <td>istream</td>
+                                <td>Input</td>
+                                <td>Provides input operations (>>)</td>
+                            </tr>
+                            <tr>
+                                <td>ofstream</td>
+                                <td>Output File</td>
+                                <td>Write to files</td>
+                            </tr>
+                            <tr>
+                                <td>ifstream</td>
+                                <td>Input File</td>
+                                <td>Read from files</td>
+                            </tr>
+                            <tr>
+                                <td>iostream</td>
+                                <td>Input/Output</td>
+                                <td>Supports both reading and writing</td>
+                            </tr>
+                            <tr>
+                                <td>fstream</td>
+                                <td>File I/O</td>
+                                <td>Read and write files</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+
+            <section id="oct-30-1">
+                <div class="split">
+                    <div class="left">
+                        <h4>Introduction to Streams</h4>
+                        <ul>
+                            <li>What is a stream?</li>
+                            <li>Input vs Output streams</li>
+                            <li>Standard streams: cin, cout, cerr</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+// Input and output streams
+#include <iostream>
+using namespace std;
+
+int main() {
+    int x;
+    cout << "Enter a number: ";
+    cin >> x;
+    cout << "You entered: " << x << endl;
+    return 0;
+}
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="oct-30-2">
+                <div class="split">
+                    <div class="left">
+                        <h4>File Streams</h4>
+                        <ul>
+                            <li>ofstream: write to file</li>
+                            <li>ifstream: read from file</li>
+                            <li>fstream: read/write</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+#include <fstream>
+using namespace std;
+
+ofstream outFile("data.txt");
+outFile << "Hello, file!" << endl;
+outFile.close();
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="oct-30-3">
+                <div class="split">
+                    <div class="left">
+                        <h4>Opening Files</h4>
+                        <ul>
+                            <li>Open in text mode</li>
+                            <li>Open in binary mode</li>
+                            <li>Check if open succeeded</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+#include <fstream>
+#include <iostream>
+using namespace std;
+
+ifstream inFile("data.txt");
+if(!inFile) {
+    cerr << "Error opening file!" << endl;
+}
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="oct-30-4">
+                <div class="split">
+                    <div class="left">
+                        <h4>Writing to a File</h4>
+                        <ul>
+                            <li>Use << operator</li>
+                            <li>Write strings or numbers</li>
+                            <li>Close after writing</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+ofstream outFile("output.txt");
+outFile << "C++ streams are easy!" << endl;
+outFile << 42 << endl;
+outFile.close();
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="oct-30-5">
+                <div class="split">
+                    <div class="left">
+                        <h4>Reading from a File</h4>
+                        <ul>
+                            <li>Use >> operator or getline</li>
+                            <li>Read strings or numbers</li>
+                            <li>Check for EOF</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+ifstream inFile("output.txt");
+string line;
+while(getline(inFile, line)) {
+    cout << line << endl;
+}
+inFile.close();
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="oct-30-6">
+                <div class="split">
+                    <div class="left">
+                        <h4>Stream States</h4>
+                        <ul>
+                            <li>good(), eof(), fail(), bad()</li>
+                            <li>Check before read/write</li>
+                            <li>Recover from errors</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+ifstream inFile("data.txt");
+if(inFile.good()) {
+    cout << "Ready to read." << endl;
+}
+if(inFile.eof()) {
+    cout << "End of file reached." << endl;
+}
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="oct-30-7">
+                <div class="split">
+                    <div class="left">
+                        <h4>Binary Files</h4>
+                        <ul>
+                            <li>Use ios::binary</li>
+                            <li>Store data efficiently</li>
+                            <li>Read/write raw bytes</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+ofstream outFile("data.bin", ios::binary);
+int x = 12345;
+outFile.write(reinterpret_cast<char*>(&x), sizeof(x));
+outFile.close();
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="oct-30-8">
+                <div class="split">
+                    <div class="left">
+                        <h4>Reading Binary Files</h4>
+                        <ul>
+                            <li>Read using read()</li>
+                            <li>Use reinterpret_cast</li>
+                            <li>Know data type size</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+ifstream inFile("data.bin", ios::binary);
+int x;
+inFile.read(reinterpret_cast<char*>(&x), sizeof(x));
+cout << x << endl;
+inFile.close();
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="oct-30-9">
+                <div class="split">
+                    <div class="left">
+                        <h4>File Modes</h4>
+                        <ul>
+                            <li>ios::in, ios::out</li>
+                            <li>ios::app, ios::trunc</li>
+                            <li>Combine modes with | operator</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+ofstream outFile("data.txt", ios::app); // append
+outFile << "More text" << endl;
+outFile.close();
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="oct-30-10">
+                <div class="split">
+                    <div class="left">
+                        <h4>Formatted Output</h4>
+                        <ul>
+                            <li>Use manipulators</li>
+                            <li>setw(), setprecision()</li>
+                            <li>Fixed and scientific formats</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+#include <iomanip>
+cout << setw(10) << 123 << endl;
+cout << fixed << setprecision(2) << 3.14159 << endl;
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="oct-30-11">
+                <div class="split">
+                    <div class="left">
+                        <h4>Unformatted Output</h4>
+                        <ul>
+                            <li>Use put(), write()</li>
+                            <li>Character or byte-wise output</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+ofstream outFile("char.txt");
+outFile.put('A');
+outFile.write("Hello", 5);
+outFile.close();
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="oct-30-12">
+                <div class="split">
+                    <div class="left">
+                        <h4>Unformatted Input</h4>
+                        <ul>
+                            <li>Use get(), getline(), read()</li>
+                            <li>Character or binary input</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+ifstream inFile("char.txt");
+char c;
+inFile.get(c);
+cout << c << endl;
+inFile.close();
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="oct-30-13">
+                <div class="split">
+                    <div class="left">
+                        <h4>String Streams</h4>
+                        <ul>
+                            <li>istringstream, ostringstream</li>
+                            <li>Parse strings like files</li>
+                            <li>Useful for conversion</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+#include <sstream>
+string data = "10 20 30";
+istringstream ss(data);
+int x;
+while(ss >> x) {
+    cout << x << endl;
+}
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="oct-30-14">
+                <div class="split">
+                    <div class="left">
+                        <h4>Flushing Streams</h4>
+                        <ul>
+                            <li>Use flush() or endl</li>
+                            <li>Ensure output is written</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+cout << "Hello, world!" << endl; // flushes
+cout << "Hello again!";
+cout.flush();
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="oct-30-15">
+                <div class="split">
+                    <div class="left">
+                        <h4>Stream Manipulators</h4>
+                        <ul>
+                            <li>hex, dec, oct</li>
+                            <li>boolalpha, nouppercase</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+cout << hex << 255 << endl; // ff
+cout << boolalpha << true << endl; // true
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="oct-30-16">
+                <div class="split">
+                    <div class="left">
+                        <h4>Stream Buffers</h4>
+                        <ul>
+                            <li>Underlying storage for streams</li>
+                            <li>Use rdbuf() for custom buffer</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+ofstream out("buf.txt");
+streambuf* buf = out.rdbuf();
+cout << "Using same buffer as file" << endl;
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="oct-30-17">
+                <div class="split">
+                    <div class="left">
+                        <h4>Error Handling</h4>
+                        <ul>
+                            <li>Check fail(), bad()</li>
+                            <li>Clear errors with clear()</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+ifstream in("data.txt");
+if(in.fail()) {
+    cerr << "Read failed!" << endl;
+    in.clear(); // reset state
+}
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="oct-30-18">
+                <div class="split">
+                    <div class="left">
+                        <h4>Closing Streams</h4>
+                        <ul>
+                            <li>Always close files</li>
+                            <li>Destructor also closes</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+ofstream out("file.txt");
+out << "Some text" << endl;
+out.close(); // important!
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="oct-30-19">
+                <div class="split">
+                    <div class="left">
+                        <h4>Exercises</h4>
+                        <ul>
+                            <li>Write numbers 1-10 to a file</li>
+                            <li>Read them back and sum</li>
+                            <li>Use binary mode</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+// Exercise code here
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section id="oct-30-20">
+                <div class="split">
+                    <div class="left">
+                        <h4>Quiz</h4>
+                        <ul>
+                            <li>What class is used for writing files?</li>
+                            <li>How to open binary file?</li>
+                            <li>What is flush() used for?</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+// Answer review in class
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+
+
             <!-- Slide 21: Concept Questions -->
             <section>
                 <div class="split">
