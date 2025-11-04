@@ -553,7 +553,7 @@
                             </tr>
                             <tr style="color:#ccc;">
                                 <td style="padding:6px; border:1px solid #666;">Week 10</td>
-                                <td style="padding:6px; border:1px solid #666;"> <a href="#/oct-28">Oct 28</a>, <a
+                                <td style="padding:6px; border:1px solid #666;"><a href="#/oct-28">Oct 28</a>, <a
                                         href="#/oct-30">Oct 30</a>
                                 </td>
                                 <td style="padding:6px; border:1px solid #666;">Database Sharding and Replication</td>
@@ -562,7 +562,7 @@
                             </tr>
                             <tr style="color:#ccc;">
                                 <td style="padding:6px; border:1px solid #666;">Week 11</td>
-                                <td style="padding:6px; border:1px solid #666;">Nov 4, Nov 6</td>
+                                <td style="padding:6px; border:1px solid #666;"><a href="#/nov-04">Nov 4</a>, Nov 6</td>
                                 <td style="padding:6px; border:1px solid #666;"><a href="#/563"
                                         style="color:#ccc; text-decoration:none;">Database Migration from SQL to NoSQL
                                         &#x1f517;</a></td>
@@ -14516,7 +14516,6 @@ CREATE TABLE sensor_data (
                     </table>
                 </section>
 
-
                 <section>
                     <h4>Data Storage Distribution Questions</h4>
                     <ol>
@@ -14524,6 +14523,1072 @@ CREATE TABLE sensor_data (
                         <li>Is distribution needed for a data warehouse's performance?</li>
                         <li>Does a data mart require distribution for efficiency?</li>
                     </ol>
+                </section>
+
+                <section id="nov-04">
+                    <h4><span class="highlight">Today, November 4, 2025</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Why migrate: scalability, flexibility, performance</li>
+                                <li>Model shift: relational → document</li>
+                                <li>1:1 → merge into one document</li>
+                                <li>1:N → embed child array</li>
+                                <li>N:N → use references or link collection</li>
+                                <li>Case Study</li>
+                                <li>Homework, Lab, Project</li>
+                                <li>Review Distributed Databases</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="./img/sqlTonosql.png" alt="SQL to NoSQL Migration Diagram" class="slide-image" />
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Big Data 5V slides: SQL → NoSQL migration (Agriculture domain, compact & readable) -->
+
+                <section>
+                    <h4><span class="highlight">Volume — Why migrate?</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Massive farm data exceeds vertical limits</li>
+                                <li>Horizontal sharding handles big datasets</li>
+                                <li>Denormalized documents reduce joins</li>
+                                <li>Better compression for repetitive data</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-sql">-- SQL
+SELECT f.id, f.name, h.crop, h.yield_kg
+FROM farmers f
+JOIN harvest_lots h ON h.farmer_id = f.id
+WHERE f.id = 42;
+</code></pre>
+                            <pre><code class="language-json">-- MQL
+db.farmers.find(
+  { _id: 42 },
+  { name: 1, harvestLots: 1 }
+);
+</code></pre>
+                            <pre><code class="language-json">{
+  "_id": 42,
+  "name": "Alice Farms",
+  "harvestLots": [
+    { "crop": "Wheat", "yieldKg": 18000 },
+    { "crop": "Corn",  "yieldKg": 24500 }
+  ]
+}
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Velocity — Why migrate?</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>High-frequency sensor data overloads SQL</li>
+                                <li>Append-only writes scale horizontally</li>
+                                <li>Partitioned by time or field</li>
+                                <li>Native time-series storage in NoSQL</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-sql">-- SQL
+INSERT INTO soil_events(sensor_id, ts, moisture, temp)
+VALUES (17, NOW(), 23.4, 21.7);
+</code></pre>
+                            <pre><code class="language-json">-- MQL
+db.soilSensors.updateOne(
+  { _id: "sensor-17" },
+  { $push: { readings: { ts: ISODate(), moisture: 23.4 } } },
+  { upsert: true }
+);
+</code></pre>
+                            <pre><code class="language-json">{
+  "_id": "sensor-17",
+  "readings": [
+    { "ts": "2025-11-05T04:00:00Z", "moisture": 23.4 }
+  ]
+}
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Big Data 5V: Velocity — SQL vs NoSQL Complexity (Agriculture Domain) -->
+
+                <section>
+                    <h4><span class="highlight">Velocity — Query Complexity Comparison</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <h5>Relational (SQL)</h5>
+                            <ul>
+                                <li>Join operations across multiple tables</li>
+                                <li>Query cost grows as <strong>O(n × n)</strong></li>
+                                <li>Each join multiplies row combinations</li>
+                                <li>High latency under concurrent writes</li>
+                                <li>Difficult to parallelize across nodes</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <h5>NoSQL (Document / Sharded)</h5>
+                            <ul>
+                                <li>Related data stored in the same document</li>
+                                <li>Query cost reduces to <strong>O(shard count)</strong></li>
+                                <li>Shards handle independent partitions</li>
+                                <li>Linear scalability for inserts and reads</li>
+                                <li>Natural fit for distributed sensor data</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Variety — Why migrate?</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Flexible schema for diverse crop data</li>
+                                <li>No ALTER TABLE for new fields</li>
+                                <li>Store structured and unstructured data</li>
+                                <li>Adapt quickly to new sensor formats</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-sql">-- SQL
+ALTER TABLE crops ADD COLUMN agronomy_json JSON;
+</code></pre>
+                            <pre><code class="language-json">-- MQL
+db.crops.insertOne({
+  _id: "crop-123",
+  name: "Tomato",
+  agronomy: { variety: "Roma", irrigation: "drip" },
+  inputs: [{ name: "NPK-10-10-10", rateKgPerHa: 120 }]
+});
+</code></pre>
+                            <pre><code class="language-json">{
+  "_id": "crop-123",
+  "name": "Tomato",
+  "agronomy": { "variety": "Roma", "irrigation": "drip" },
+  "inputs": [{ "name": "NPK-10-10-10", "rateKgPerHa": 120 }]
+}
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Veracity — Why migrate?</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Retain both raw and cleaned data</li>
+                                <li>Preserve source and lineage info</li>
+                                <li>Track quality and validation issues</li>
+                                <li>Allow flexible schema-on-read</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-sql">-- SQL
+INSERT INTO yield_clean
+SELECT * FROM yield_stage WHERE valid = TRUE;
+</code></pre>
+                            <pre><code class="language-json">-- MQL
+db.yieldReports.insertOne({
+  _id: "YR-7",
+  fieldId: "F-101",
+  raw: { yieldKg: "??", moisture: "N/A", source: "c_csv" },
+  clean: { yieldKg: 17450, moisture: 13.2 },
+  quality: { valid: false, issues: ["missing_yield"] },
+  lineage: { file: "coop_2025-11-05.csv" }
+});
+</code></pre>
+                            <pre><code class="language-json">{
+  "_id": "YR-7",
+  "fieldId": "F-101",
+  "raw": { "yieldKg": "??", "moisture": "N/A", "source": "c_csv" },
+  "clean": { "yieldKg": 17450, "moisture": 13.2 },
+  "quality": { "valid": false, "issues": ["missing_yield"] },
+  "lineage": { "file": "coop_2025-11-05.csv" }
+}
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Value — Why migrate?</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Faster reads for farm dashboards</li>
+                                <li>Pre-aggregate crop yields</li>
+                                <li>Reduce multiple joins per query</li>
+                                <li>Enable quick insights and analytics</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-sql">-- SQL
+SELECT * FROM farmers WHERE id=42;
+SELECT SUM(yield_kg)
+FROM harvest_lots WHERE farmer_id=42;
+</code></pre>
+                            <pre><code class="language-json">-- MQL
+db.farmers.find(
+  { _id: 42 },
+  { name: 1, harvestLots: 1, metrics: 1 }
+);
+</code></pre>
+                            <pre><code class="language-json">{
+  "_id": 42,
+  "name": "Alice Farms",
+  "harvestLots": [
+    { "crop": "Wheat", "yieldKg": 18000 },
+    { "crop": "Corn", "yieldKg": 24500 }
+  ],
+  "metrics": { "totalYieldKg": 42500, "lastHarvestId": 902 }
+}
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+
+                <section>Questions</section>
+
+                <!-- Slides: Model Shift — Relational → Document (Agriculture Domain) -->
+
+                <section>
+                    <h4><span class="highlight">Model Shift — From Relational to Document</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Relational model organizes data into fixed tables</li>
+                                <li>Each entity stored separately, linked by foreign keys</li>
+                                <li>Designed for transactional integrity (ACID)</li>
+                                <li>Requires joins to reconstruct complete context</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="./img/sqlAndnosqlData.png" alt="Relational Model Diagram" class="slide-image" />
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Model Shift — Document-Centric Thinking</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Documents store all related data together</li>
+                                <li>Supports nested and flexible structures</li>
+                                <li>Optimized for read-heavy agricultural analytics</li>
+                                <li>Fewer joins, faster access for field-level summaries</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-json">{
+  "_id": "...",
+  "farmerName": "...",
+  "fields": [
+    {
+      "fieldId": "...",
+      "crop": {
+        "name": "...",
+        "variety": "...",
+        "agronomy": {
+          "irrigation": "...",
+          "spacingCm": ...
+        }
+      },
+      "sensors": [
+        {
+          "sensorId": "...",
+          "type": "...",
+          "readings": [
+            { "ts": "...", "moisture": ..., "temp": ... },
+            ...
+          ]</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Model Shift — Example Mapping</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>1:1 → merge entities into a single document</li>
+                                <li>1:N → embed related items as arrays (e.g., harvest lots)</li>
+                                <li>N:N → use reference arrays or link collections</li>
+                                <li>Allows mixed, dynamic attributes per document</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-json">-- 1:1
+{
+  "_id": "farmer-101",
+  "profile": { "name": "Alice", "address": "..." }
+}
+</code></pre>
+                            <pre><code class="language-json">-- 1:N
+{
+  "_id": "field-22",
+  "crop": "Wheat",
+  "harvestLots": [
+    { "lotId": "L-1", "yieldKg": 18000 },
+    { "lotId": "L-2", "yieldKg": 24500 }
+  ]
+}
+</code></pre>
+                            <pre><code class="language-json">-- N:N (using references)
+{
+  "_id": "coop-7",
+  "name": "Central Farm Cooperative",
+  "farmers": [
+    { "$ref": "farmers", "$id": "farmer-101" },
+    { "$ref": "farmers", "$id": "farmer-102" }
+  ],
+  "equipment": [
+    { "$ref": "equipment", "$id": "tractor-55" },
+    { "$ref": "equipment", "$id": "harvester-21" }
+  ]
+}
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Model Shift — Query Perspective</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>SQL: reconstruct context through joins</li>
+                                <li>NoSQL: retrieve complete document in one read</li>
+                                <li>Better for data lakes and farm dashboards</li>
+                                <li>Natural alignment with JSON-based APIs</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="./img/sqlJoins_6.png" alt="Query Perspective Comparison" class="slide-image" />
+                        </div>
+                    </div>
+                </section>
+
+                <section>Questions</section>
+
+                <!-- Slides: 1:1 → Merge into One Document (Agriculture Domain) -->
+
+                <section>
+                    <h4><span class="highlight">1:1 Relationship — Concept</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Two entities linked one-to-one in SQL</li>
+                                <li>Each record in one table has exactly one in the other</li>
+                                <li>In NoSQL, we merge them into a single document</li>
+                                <li>Reduces joins and simplifies retrieval</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            &nbsp;
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">1:1 Relationship — Relational Design</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><strong>farmer</strong> table: stores identity info</li>
+                                <li><strong>farmer_profile</strong> table: stores extended details</li>
+                                <li>Linked through a foreign key: <code>farmer.id = farmer_profile.farmer_id</code></li>
+                                <li>Retrieving data requires a join</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-sql">-- SQL tables
+farmers
+ ├─ id
+ ├─ name
+ └─ region
+
+farmer_profile
+ ├─ farmer_id (FK)
+ ├─ address
+ └─ contact_number
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">1:1 Relationship — Document Design</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Merge <strong>farmer</strong> and <strong>profile</strong> into one document</li>
+                                <li>All details stored together under one key</li>
+                                <li>No need for joins — a single read is enough</li>
+                                <li>Best for frequently accessed combined data</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-json">{
+  "_id": "farmer-101",
+  "name": "Alice Farms",
+  "region": "Central Valley",
+  "profile": {
+    "address": "...",
+    "contactNumber": "...",
+    "farmSizeHectares": ...,
+    "certifications": ["Organic", "Sustainable"]
+  }
+}
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">1:1 Relationship — When to Merge</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>When both entities are always queried together</li>
+                                <li>When updates to one imply updates to the other</li>
+                                <li>When storage size per document remains moderate</li>
+                                <li>When data lifecycle is shared (CRUD together)</li>
+                            </ul>
+                        </div>
+                        <div class="right">&nbsp;
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">1:1 Relationship — When Not to Merge</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>When one entity changes much more frequently</li>
+                                <li>When one field grows large or optional (e.g.,notes)</li>
+                                <li>When separation simplifies access control or privacy</li>
+                                <li>When embedding violates document limit constraints</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            &nbsp;
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Discussion Questions</span></h4>
+                    <ul>
+                        <li>What are examples of 1:1 relationships in your datasets?</li>
+                        <li>Would merging them simplify or complicate your queries?</li>
+                        <li>How do you decide which side becomes the parent document?</li>
+                        <li>What trade-offs exist between normalization and embedding?</li>
+                        <li>Can a 1:1 merge evolve into a 1:N case over time?</li>
+                    </ul>
+                </section>
+
+                <!-- Slide: 1:1 Relationship — SQL to JSON Transformation with Map, Filter, Reduce -->
+
+                <section>
+                    <h4><span class="highlight">1:1 Relationship — Transforming SQL to JSON</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>ETL processes related SQL rows into a single document</li>
+                                <li>Use <strong>map</strong> to project SQL rows into objects</li>
+                                <li>Use <strong>filter</strong> to select valid or matching pairs</li>
+                                <li>Use <strong>reduce</strong> to merge each farmer–profile pair</li>
+                                <li>Final output: one JSON document per farmer</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-javascript">// SQL source rows
+const farmers = [
+  { id: 1, name: "Alice Farms", region: "Central" },
+  { id: 2, name: "Bob Fields", region: "South" }
+];
+
+const profiles = [
+  { farmer_id: 1, address: "...", contact: "...", size_ha: 12 },
+  { farmer_id: 2, address: "...", contact: "...", size_ha: 9 }
+];
+
+// Transformation
+const merged = farmers
+  .map(f => {
+    const profile = profiles.find(p => p.farmer_id === f.id);
+    return { ...f, profile };
+  })
+  .filter(d => d.profile)        // ensure valid links
+  .reduce((acc, doc) => [...acc, doc], []);
+
+// Result → JSON documents
+console.log(JSON.stringify(merged, null, 2));
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">1:1 Relationship — Example Output</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Each SQL pair becomes one JSON document</li>
+                                <li>No joins required at query time</li>
+                                <li>Data is ready for direct NoSQL insertion</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-json">[
+  {
+    "_id": 1,
+    "name": "Alice Farms",
+    "region": "Central",
+    "profile": {
+      "address": "...",
+      "contact": "...",
+      "sizeHa": 12
+    }
+  },
+  {
+    "_id": 2,
+    "name": "Bob Fields",
+    "region": "South",
+    "profile": {
+      "address": "...",
+      "contact": "...",
+      "sizeHa": 9
+    }
+  }
+]
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>Questions</section>
+
+                <!-- Slides: 1:N → Embed Children as Array (Agriculture Domain) -->
+
+                <section>
+                    <h4><span class="highlight">1:N Relationship — Concept</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>One parent record has many child records in SQL</li>
+                                <li>Examples: farmer → harvest lots, field → sensor readings</li>
+                                <li>In NoSQL, embed children as an array inside the parent</li>
+                                <li>Reduces joins; one read returns complete context</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            &nbsp;
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">1:N Relationship — Relational Design</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><strong>farmers</strong> table: parent entity</li>
+                                <li><strong>harvest_lots</strong> table: child rows per farmer</li>
+                                <li>Linked by foreign key: <code>harvest_lots.farmer_id → farmers.id</code></li>
+                                <li>Queries typically require joins and grouping</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-sql">-- SQL tables
+farmers
+ ├─ id
+ ├─ name
+ └─ region
+
+harvest_lots
+ ├─ id
+ ├─ farmer_id (FK)
+ ├─ crop
+ └─ yield_kg
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">1:N Relationship — Document Design</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Embed child records under a descriptive key</li>
+                                <li>Keep keys readable and domain-specific</li>
+                                <li>Single document read serves the common access path</li>
+                                <li>Great for dashboards and farmer-centric queries</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-json">{
+  "_id": "farmer-101",
+  "name": "Alice Farms",
+  "region": "Central Valley",
+  "harvestLots": [
+    { "lotId": "L-1", "crop": "Wheat", "yieldKg": 18000 },
+    { "lotId": "L-2", "crop": "Corn",  "yieldKg": 24500 }
+  ]
+}
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">1:N Relationship — When to Embed</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Children are usually read with the parent</li>
+                                <li>Child count per parent is bounded/moderate</li>
+                                <li>Updates are mostly append or small edits</li>
+                                <li>Lifecycle of parent and children is aligned</li>
+                            </ul>
+                        </div>
+                        <div class="right">&nbsp;</div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">1:N Relationship — When Not to Embed</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Very large arrays (e.g., millions of readings)</li>
+                                <li>Children are updated independently at high write rates</li>
+                                <li>Children are queried independently of the parent</li>
+                                <li>Document size or hot-spotting becomes a bottleneck</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            &nbsp;
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Discussion Questions</span></h4>
+                    <ul>
+                        <li>Which parent→child pairs in your data are read together most often?</li>
+                        <li>What is a safe upper bound for children per parent in your case?</li>
+                        <li>Do children need independent permissions or lifecycles?</li>
+                        <li>Where would embedding vs. referencing change performance the most?</li>
+                        <li>Could today’s 1:N become many-to-many in the future?</li>
+                    </ul>
+                </section>
+
+                <!-- Slide: 1:N Relationship — SQL to JSON Transformation with Map, Filter, Reduce -->
+
+                <section>
+                    <h4><span class="highlight">1:N — Transforming SQL to JSON</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><strong>map()</strong> — project parent rows (farmers) into base docs</li>
+                                <li><strong>filter()</strong> — select child rows that belong to each parent</li>
+                                <li><strong>reduce()</strong> — aggregate children into an embedded array</li>
+                                <li>Output: one parent document with a <code>harvestLots</code> array</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-javascript">// SQL source rows
+const farmers = [
+  { id: 1, name: "Alice Farms", region: "Central" },
+];
+
+const harvestLots = [
+  { id: "L-1", farmer_id: 1, crop: "Wheat", yield_kg: 18000 },
+  { id: "L-2", farmer_id: 1, crop: "Corn",  yield_kg: 24500 },
+];
+
+// Transformation (group lots under each farmer)
+const docs = farmers.map(f => {
+  const lots = harvestLots
+    .filter(l => l.farmer_id === f.id)
+    .reduce((acc, l) => [
+      ...acc,
+      { lotId: l.id, crop: l.crop, yieldKg: l.yield_kg }
+    ], []);
+  return { _id: f.id, name: f.name, region: f.region,... };
+});
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">1:N — Example Output</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Parent documents embed multiple child records</li>
+                                <li>No join required at query time</li>
+                                <li>Ideal for farmer-centric dashboards and APIs</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-json">[
+  {
+    "_id": 1,
+    "name": "Alice Farms",
+    "region": "Central",
+    "harvestLots": [
+      { "lotId": "L-1", "crop": "Wheat",  "yieldKg": 18000 },
+      { "lotId": "L-2", "crop": "Corn",   "yieldKg": 24500 }
+    ]
+  },
+  {
+    "_id": 2,
+    "name": "Bob Fields",
+    "region": "South",
+    "harvestLots": [
+      { "lotId": "L-3", "crop": "Tomato", "yieldKg": 9000 }
+    ]
+  }
+]
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>Questions</section>
+
+                <!-- Slides: N:N → References or Linking Collection (Agriculture Domain) -->
+
+                <section>
+                    <h4><span class="highlight">N:N Relationship — Concept</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Many farmers share many equipment units (and vice versa)</li>
+                                <li>Other examples: farmers ↔ co-ops, crops ↔ suppliers</li>
+                                <li>In NoSQL, prefer references or a linking collection</li>
+                                <li>Avoid duplicating the same child across many parents</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            &nbsp;
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">N:N Relationship — Relational Design</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><strong>farmers</strong> and <strong>equipment</strong> are peer tables</li>
+                                <li><strong>farmer_equipment</strong> is the join (pivot) table</li>
+                                <li>Queries join across three tables to resolve links</li>
+                                <li>Scales poorly for wide, deep associations</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-sql">-- SQL tables
+farmers
+ ├─ id
+ └─ name
+
+equipment
+ ├─ id
+ └─ type
+
+farmer_equipment
+ ├─ farmer_id (FK → farmers.id)
+ └─ equipment_id (FK → equipment.id)
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">N:N Relationship — Document Design (References)</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Store arrays of IDs (manual references) on each side</li>
+                                <li>Resolve lookups in the application or with aggregation</li>
+                                <li>Good when association count is moderate</li>
+                                <li>Keeps documents small and avoids duplication</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-json">{
+  "_id": "farmer-101",
+  "name": "Alice Farms",
+  "equipmentIds": ["tractor-55", "harvester-21"]
+}
+</code></pre>
+                            <pre><code class="language-json">{
+  "_id": "tractor-55",
+  "type": "Tractor",
+  "farmerIds": ["farmer-101", "farmer-204"]
+}
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">N:N Relationship — Document Design (Linking Collection)</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Create a separate collection of link docs</li>
+                                <li>Each link holds <code>farmerId</code> and <code>equipmentId</code></li>
+                                <li>Best for high-cardinality or frequently changing links</li>
+                                <li>Enables independent indexing and TTL/policies on links</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-json">{
+  "_id": "link-9001",
+  "farmerId": "farmer-101",
+  "equipmentId": "tractor-55",
+  "since": "..."
+}
+</code></pre>
+                            <pre><code class="language-json">{
+  "_id": "link-9002",
+  "farmerId": "farmer-204",
+  "equipmentId": "tractor-55",
+  "since": "..."
+}
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">N:N — When to Use Which Pattern?</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><strong>Reference arrays</strong>: moderate link counts, read with parent</li>
+                                <li><strong>Linking collection</strong>: high churn, volume, or analytics</li>
+                                <li>Consider index needs and shard keys</li>
+                                <li>Prefer small, stable parent documents</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            &nbsp;
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Discussion Questions</span></h4>
+                    <ul>
+                        <li>Are links mostly read with one side (farmer or equipment) or both?</li>
+                        <li>What is the maximum expected degree per node (links per farmer/equipment)?</li>
+                        <li>Do links change frequently or require their own lifecycle?</li>
+                        <li>Could you start with reference arrays and later move to a linking collection?</li>
+                    </ul>
+                </section>
+
+                <!-- Slide: N:N — SQL to JSON Transformation with Map, Filter, Reduce -->
+
+                <section>
+                    <h4><span class="highlight">N:N — Transforming SQL to JSON (Build Reference Arrays)</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><strong>map()</strong> — initialize farmer docs</li>
+                                <li><strong>filter()</strong> — select links for each farmer</li>
+                                <li><strong>reduce()</strong> — aggregate equipment IDs per farmer</li>
+                                <li>Output: farmers with <code>equipmentIds</code> arrays</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-javascript">// SQL source rows
+const farmers = [
+  { id: 101, name: "Alice Farms" }
+];
+
+const equipment = [
+  { id: "tractor-55", type: "Tractor" }
+];
+
+const farmerEquipment = [
+  { farmer_id: 101, equipment_id: "tractor-55" },
+  { farmer_id: 101, equipment_id: "harvester-21" }
+];
+
+// Build reference arrays on farmer docs
+const farmerDocs = farmers.map(f => {
+  const eqIds = farmerEquipment
+    .filter(link => link.farmer_id === f.id)
+    .reduce((acc, link) => [...acc, link.equipment_id], []);
+  return { _id: `farmer-${f.id}`, name: f.name, equipIds: eqIds };
+});
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">N:N — Example Output (Reference Arrays)</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Farmers reference many equipment by ID</li>
+                                <li>Simple, compact parent documents</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-json">[
+  {
+    "_id": "farmer-101",
+    "name": "Alice Farms",
+    "equipmentIds": ["tractor-55", "harvester-21"]
+  },
+  {
+    "_id": "farmer-204",
+    "name": "Bob Fields",
+    "equipmentIds": ["tractor-55"]
+  }
+]
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">N:N — Transforming SQL to JSON (Linking Collection)</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li><strong>map()</strong> — project each join row into a link doc</li>
+                                <li><strong>filter()</strong> — optional constraints (e.g., active links)</li>
+                                <li><strong>reduce()</strong> — accumulate into a link collection array</li>
+                                <li>Output: independent <code>farmerEquipmentLinks</code> docs</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-javascript">// Build linking collection documents
+const farmerEquipmentLinks = farmerEquipment
+  .map((l, i) => ({
+    _id: `link-${i + 1}`,
+    farmerId: `farmer-${l.farmer_id}`,
+    equipmentId: l.equipment_id,
+    since: "..."
+  }))
+  .filter(link => link) // placeholder for conditions
+  .reduce((acc, link) => [...acc, link], []);
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">N:N — Example Output (Linking Collection)</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Links can be indexed and sharded independently</li>
+                                <li>Supports high-cardinality and fast-changing relations</li>
+                                <li>Clean separation of entity and association lifecycles</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-json">[
+  {
+    "_id": "link-1",
+    "farmerId": "farmer-101",
+    "equipmentId": "tractor-55",
+    "since": "..."
+  },
+  {
+    "_id": "link-2",
+    "farmerId": "farmer-101",
+    "equipmentId": "harvester-21",
+    "since": "..."
+  },
+  {
+    "_id": "link-3",
+    "farmerId": "farmer-204",
+    "equipmentId": "tractor-55",
+    "since": "..."
+  }
+]
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>Questions</section>
+
+                <section>
+                    <h4><span class="highlight">Best Practices - Migrating from SQL to NoSQL</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Know your query patterns first</li>
+                                <li>Start with one feature or domain</li>
+                                <li>Choose embed or reference carefully</li>
+                                <li>Keep documents small and consistent</li>
+                                <li>Validate and index critical fields</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <ul>
+                                <li>Automate ETL for repeat runs</li>
+                                <li>Monitor read and write latency</li>
+                                <li>Track original table lineage</li>
+                                <li>Test integrity before switching traffic</li>
+                                <li>Iterate design as data grows</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Homework Lab Project -->
+
+                <section>Questions</section>
+
+                <section>
+                    <h4><span class="highlight">Class Case Study — Migrating from SQL to NoSQL</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <p style="margin: 0px; padding: 0px;">You are managing a small agricultural tracking system with two SQL tables:
+                                <code>farmers(id, name, region)</code>
+                                <code>harvest_lots(id, farmer_id, crop, yield_kg)</code>.
+                                Reports are slow because of frequent joins.
+                                The goal is to migrate to a document-oriented NoSQL model
+                                (e.g., MongoDB) while maintaining accuracy and improving performance.
+                                The system will eventually serve a dashboard showing each farmer’s total yield.
+                            </p>
+                        </div>
+                        <div class="right">
+                            <ul>
+                                <li>How to design the new NoSQL document structure?</li>
+                                <li>Which data would you embed vs. reference?</li>
+                                <li>How would you extract and transform SQL data?</li>
+                                <li>What metrics would you use to measure success?</li>
+                            </ul>
+                        </div>
+                    </div>
                 </section>
 
                 <section>Questions</section>
