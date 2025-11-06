@@ -562,7 +562,8 @@
                             </tr>
                             <tr style="color:#ccc;">
                                 <td style="padding:6px; border:1px solid #666;">Week 11</td>
-                                <td style="padding:6px; border:1px solid #666;"><a href="#/nov-04">Nov 4</a>, Nov 6</td>
+                                <td style="padding:6px; border:1px solid #666;"><a href="#/nov-04">Nov 4</a>, <a
+                                        href="#/nov-06">Nov 6</a></td>
                                 <td style="padding:6px; border:1px solid #666;"><a href="#/563"
                                         style="color:#ccc; text-decoration:none;">Database Migration from SQL to NoSQL
                                         &#x1f517;</a></td>
@@ -15563,69 +15564,1003 @@ const farmerEquipmentLinks = farmerEquipment
                     </div>
                 </section>
 
+                <section id="nov-06">
+                    <h4><span class="highlight">Today, November 4, 2025</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Why migrate: scalability, flexibility, performance</li>
+                                <li>Model shift: relational → document</li>
+                                <li>1:1 → merge into one document</li>
+                                <li>1:N → embed child array</li>
+                                <li>N:N → use references or link collection</li>
+                                <li>Case Study</li>
+                                <li>Homework, Lab, Project</li>
+                                <li>Review Distributed Databases</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="./img/sqlTonosql.png" alt="SQL to NoSQL Migration Diagram" class="slide-image" />
+                        </div>
+                    </div>
+                </section>
+
+
+                <section>
+                    <h4><span class="highlight">Case Study — SQL to NoSQL (Agriculture)</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <p>Agriculture system tables:</p>
+
+                            <table class="mini-table">
+                                <tr>
+                                    <th>farmers</th>
+                                    <td>id</td>
+                                    <td>name</td>
+                                    <td>region</td>
+                                </tr>
+                                <tr>
+                                    <th>farmer_profiles</th>
+                                    <td>id</td>
+                                    <td>farmer_id</td>
+                                    <td>phone</td>
+                                    <td>email</td>
+                                </tr>
+                                <tr>
+                                    <th>harvest_lots</th>
+                                    <td>id</td>
+                                    <td>farmer_id</td>
+                                    <td>crop</td>
+                                    <td>yield_kg</td>
+                                </tr>
+                                <tr>
+                                    <th>buyers</th>
+                                    <td>id</td>
+                                    <td>name</td>
+                                </tr>
+                                <tr>
+                                    <th>contracts</th>
+                                    <td>farmer_id</td>
+                                    <td>buyer_id</td>
+                                </tr>
+                            </table>
+
+                            <p>Reports are slow due to joins.</p>
+                        </div>
+                        <div class="right">
+                            <ul>
+                                <li>Goal: one document per farmer</li>
+                                <li>Embed harvests inside farmer</li>
+                                <li>Reference buyers if needed</li>
+                                <li>Compute total yield</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Data Flow — From SQL to JSON</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <p><strong>ETL (Extract → Transform → Load)</strong></p>
+                            <ul>
+                                <li>Extract from SQL tables</li>
+                                <li>Transform to JSON documents</li>
+                                <li>Load into NoSQL (e.g., MongoDB)</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>SQL → map/filter/reduce → JSON</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Data Flow — From JSON to Enriched Data</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <p><strong>ELT (Extract → Load → Transform)</strong></p>
+                            <ul>
+                                <li>Extract raw JSON</li>
+                                <li>Load into data lake</li>
+                                <li>Transform with metadata & KPIs</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>JSON → load → enrich(meta, totals)</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ===================================== -->
+                <!-- Simple Q/A Slides: SQL -> JSON (Agriculture only) -->
+                <!-- One question slide, then one answer slide -->
+                <!-- Keep left/right minimal -->
+                <!-- ===================================== -->
+
+                <!-- 0. Setup: tables as arrays (agriculture) -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4><span class="highlight">Setup</span></h4>
+                            <ul>
+                                <li>All examples use agriculture</li>
+                                <li>1x1, 1xn, nxn</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">const farmers=[{id:1,name:"Alem",region:"Delta"},
+{ id:2,name:"Maya",region:"Central" }];
+
+const farmer_profiles=[{farmer_id:1,phone:"555-1111"},
+{ farmer_id:2,phone:"555-2222" }];
+
+const harvests=[{id:1,farmer_id:1,crop:"Tomato",yield_kg:300},
+{ id:2,farmer_id:1,crop:"Onion",yield_kg:200 },
+{ id:3,farmer_id:2,crop:"Wheat",yield_kg:500 }];
+
+const buyers=[{id:10,name:"FreshMart"},
+{ id:20,name:"AgriCo" }];
+
+const contracts=[{farmer_id:1,buyer_id:10},
+{ farmer_id:1,buyer_id:20 },
+{ farmer_id:2,buyer_id:10 }];</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 1x1: Question -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Q1</h4>
+                            <ul>
+                                <li>How to model 1x1</li>
+                                <li>farmer with profile</li>
+                                <li>Target is one document</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>farmers ⟷ farmer_profiles</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 1x1: Answer -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>A1</h4>
+                            <ul>
+                                <li>Merge fields</li>
+                                <li>map + find</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">const farmerDocs_1x1=farmers.map(f=>{
+  const p=farmer_profiles.find(x=>x.farmer_id===f.id);
+  return {...f,profile:p};
+});</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 1xn: Question -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Q2</h4>
+                            <ul>
+                                <li>How to model 1xn</li>
+                                <li>farmer with harvests</li>
+                                <li>Embed array</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>farmers ⟷ harvests</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 0. Setup: tables as arrays (agriculture) -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4><span class="highlight">Setup</span></h4>
+                            <ul>
+                                <li>All examples use agriculture</li>
+                                <li>1x1, 1xn, nxn</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">const farmers=[{id:1,name:"Alem",region:"Delta"},
+{ id:2,name:"Maya",region:"Central" }];
+
+const farmer_profiles=[{farmer_id:1,phone:"555-1111"},
+{ farmer_id:2,phone:"555-2222" }];
+
+const harvests=[{id:1,farmer_id:1,crop:"Tomato",yield_kg:300},
+{ id:2,farmer_id:1,crop:"Onion",yield_kg:200 },
+{ id:3,farmer_id:2,crop:"Wheat",yield_kg:500 }];
+
+const buyers=[{id:10,name:"FreshMart"},
+{ id:20,name:"AgriCo" }];
+
+const contracts=[{farmer_id:1,buyer_id:10},
+{ farmer_id:1,buyer_id:20 },
+{ farmer_id:2,buyer_id:10 }];</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 1xn: Answer -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>A2</h4>
+                            <ul>
+                                <li>map + filter</li>
+                                <li>child array</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">const farmerDocs_1xn=farmers.map(f=>({
+  ...f,
+  harvests:harvests.filter(h=>h.farmer_id===f.id)
+}));</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Aggregate: Question -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Q3</h4>
+                            <ul>
+                                <li>Total yield per farmer</li>
+                                <li>Which array tool</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>sum yield_kg</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 0. Setup: tables as arrays (agriculture) -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4><span class="highlight">Setup</span></h4>
+                            <ul>
+                                <li>All examples use agriculture</li>
+                                <li>1x1, 1xn, nxn</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">const farmers=[{id:1,name:"Alem",region:"Delta"},
+{ id:2,name:"Maya",region:"Central" }];
+
+const farmer_profiles=[{farmer_id:1,phone:"555-1111"},
+{ farmer_id:2,phone:"555-2222" }];
+
+const harvests=[{id:1,farmer_id:1,crop:"Tomato",yield_kg:300},
+{ id:2,farmer_id:1,crop:"Onion",yield_kg:200 },
+{ id:3,farmer_id:2,crop:"Wheat",yield_kg:500 }];
+
+const buyers=[{id:10,name:"FreshMart"},
+{ id:20,name:"AgriCo" }];
+
+const contracts=[{farmer_id:1,buyer_id:10},
+{ farmer_id:1,buyer_id:20 },
+{ farmer_id:2,buyer_id:10 }];</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Aggregate: Answer -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>A3</h4>
+                            <ul>
+                                <li>reduce inside map</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">const withTotals=farmerDocs_1xn.map(f=>({
+  ...f,
+  total_yield:f.harvests.reduce((s,h)=>s+h.yield_kg,0)
+}));</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Filter: Question -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Q4</h4>
+                            <ul>
+                                <li>Keep only high yield lots</li>
+                                <li>Which array tool</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>yield_kg >= 300</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 0. Setup: tables as arrays (agriculture) -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4><span class="highlight">Setup</span></h4>
+                            <ul>
+                                <li>All examples use agriculture</li>
+                                <li>1x1, 1xn, nxn</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">const farmers=[{id:1,name:"Alem",region:"Delta"},
+{ id:2,name:"Maya",region:"Central" }];
+
+const farmer_profiles=[{farmer_id:1,phone:"555-1111"},
+{ farmer_id:2,phone:"555-2222" }];
+
+const harvests=[{id:1,farmer_id:1,crop:"Tomato",yield_kg:300},
+{ id:2,farmer_id:1,crop:"Onion",yield_kg:200 },
+{ id:3,farmer_id:2,crop:"Wheat",yield_kg:500 }];
+
+const buyers=[{id:10,name:"FreshMart"},
+{ id:20,name:"AgriCo" }];
+
+const contracts=[{farmer_id:1,buyer_id:10},
+{ farmer_id:1,buyer_id:20 },
+{ farmer_id:2,buyer_id:10 }];</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Filter: Answer -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>A4</h4>
+                            <ul>
+                                <li>filter nested</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">const highYield=withTotals.map(f=>({
+  ...f,
+  harvests:f.harvests.filter(h=>h.yield_kg>=300)
+}));</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- nxn: Question -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Q5</h4>
+                            <ul>
+                                <li>How to model nxn</li>
+                                <li>farmers with buyers</li>
+                                <li>contracts link</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>farmers ⟷ contracts ⟷ buyers</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 0. Setup: tables as arrays (agriculture) -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4><span class="highlight">Setup</span></h4>
+                            <ul>
+                                <li>All examples use agriculture</li>
+                                <li>1x1, 1xn, nxn</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">const farmers=[{id:1,name:"Alem",region:"Delta"},
+{ id:2,name:"Maya",region:"Central" }];
+
+const farmer_profiles=[{farmer_id:1,phone:"555-1111"},
+{ farmer_id:2,phone:"555-2222" }];
+
+const harvests=[{id:1,farmer_id:1,crop:"Tomato",yield_kg:300},
+{ id:2,farmer_id:1,crop:"Onion",yield_kg:200 },
+{ id:3,farmer_id:2,crop:"Wheat",yield_kg:500 }];
+
+const buyers=[{id:10,name:"FreshMart"},
+{ id:20,name:"AgriCo" }];
+
+const contracts=[{farmer_id:1,buyer_id:10},
+{ farmer_id:1,buyer_id:20 },
+{ farmer_id:2,buyer_id:10 }];</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- nxn: Answer -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>A5</h4>
+                            <ul>
+                                <li>map + filter + includes</li>
+                                <li>embed buyer list</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">const farmerWithBuyers=farmers.map(f=>{
+  const buyerIds=contracts
+    .filter(c=>c.farmer_id===f.id)
+    .map(c=>c.buyer_id);
+  const myBuyers=buyers.filter(b=>buyerIds.includes(b.id));
+  return {...f,buyers:myBuyers};
+});</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- nxn alt: Question -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Q6</h4>
+                            <ul>
+                                <li>Alternative for nxn</li>
+                                <li>keep link collection</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>contract documents</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 0. Setup: tables as arrays (agriculture) -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4><span class="highlight">Setup</span></h4>
+                            <ul>
+                                <li>All examples use agriculture</li>
+                                <li>1x1, 1xn, nxn</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">const farmers=[{id:1,name:"Alem",region:"Delta"},
+{ id:2,name:"Maya",region:"Central" }];
+
+const farmer_profiles=[{farmer_id:1,phone:"555-1111"},
+{ farmer_id:2,phone:"555-2222" }];
+
+const harvests=[{id:1,farmer_id:1,crop:"Tomato",yield_kg:300},
+{ id:2,farmer_id:1,crop:"Onion",yield_kg:200 },
+{ id:3,farmer_id:2,crop:"Wheat",yield_kg:500 }];
+
+const buyers=[{id:10,name:"FreshMart"},
+{ id:20,name:"AgriCo" }];
+
+const contracts=[{farmer_id:1,buyer_id:10},
+{ farmer_id:1,buyer_id:20 },
+{ farmer_id:2,buyer_id:10 }];</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- nxn alt: Answer -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>A6</h4>
+                            <ul>
+                                <li>reference by id</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-json">{
+  "farmer_id": 1,
+  "buyer_id": 10
+}</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Practice 1: Question -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Q7</h4>
+                            <ul>
+                                <li>Create farmer document</li>
+                                <li>Embed harvests</li>
+                                <li>Add total_yield</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>map + filter + reduce</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 0. Setup: tables as arrays (agriculture) -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4><span class="highlight">Setup</span></h4>
+                            <ul>
+                                <li>All examples use agriculture</li>
+                                <li>1x1, 1xn, nxn</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">const farmers=[{id:1,name:"Alem",region:"Delta"},
+{ id:2,name:"Maya",region:"Central" }];
+
+const farmer_profiles=[{farmer_id:1,phone:"555-1111"},
+{ farmer_id:2,phone:"555-2222" }];
+
+const harvests=[{id:1,farmer_id:1,crop:"Tomato",yield_kg:300},
+{ id:2,farmer_id:1,crop:"Onion",yield_kg:200 },
+{ id:3,farmer_id:2,crop:"Wheat",yield_kg:500 }];
+
+const buyers=[{id:10,name:"FreshMart"},
+{ id:20,name:"AgriCo" }];
+
+const contracts=[{farmer_id:1,buyer_id:10},
+{ farmer_id:1,buyer_id:20 },
+{ farmer_id:2,buyer_id:10 }];</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Practice 1: Answer -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>A7</h4>
+                            <ul>
+                                <li>one pass build</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">const farmerDocs=farmers.map(f=>{
+  const hs=harvests.filter(h=>h.farmer_id===f.id);
+  const total=hs.reduce((s,h)=>s+h.yield_kg,0);
+  return {...f,harvests:hs,total_yield:total};
+});</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Practice 2: Question -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Q8</h4>
+                            <ul>
+                                <li>Top farmers by total</li>
+                                <li>Keep total greater than 400</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>filter by total_yield</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 0. Setup: tables as arrays (agriculture) -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4><span class="highlight">Setup</span></h4>
+                            <ul>
+                                <li>All examples use agriculture</li>
+                                <li>1x1, 1xn, nxn</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">const farmers=[{id:1,name:"Alem",region:"Delta"},
+{ id:2,name:"Maya",region:"Central" }];
+
+const farmer_profiles=[{farmer_id:1,phone:"555-1111"},
+{ farmer_id:2,phone:"555-2222" }];
+
+const harvests=[{id:1,farmer_id:1,crop:"Tomato",yield_kg:300},
+{ id:2,farmer_id:1,crop:"Onion",yield_kg:200 },
+{ id:3,farmer_id:2,crop:"Wheat",yield_kg:500 }];
+
+const buyers=[{id:10,name:"FreshMart"},
+{ id:20,name:"AgriCo" }];
+
+const contracts=[{farmer_id:1,buyer_id:10},
+{ farmer_id:1,buyer_id:20 },
+{ farmer_id:2,buyer_id:10 }];</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Practice 2: Answer -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>A8</h4>
+                            <ul>
+                                <li>filter outer array</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">const topFarmers=farmerDocs.filter(f=>f.total_yield>400);</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Recap: Question -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Q9</h4>
+                            <ul>
+                                <li>Rules for mapping</li>
+                                <li>1x1, 1xn, nxn</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>state your rule</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Recap: Answer -->
+                <section>
+                    <div class="split">
+                        <div class="left">
+                            <h4>A9</h4>
+                            <ul>
+                                <li>1x1 merge</li>
+                                <li>1xn embed array</li>
+                                <li>nxn reference or link</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code>use map filter reduce</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+
                 <!-- Homework Lab Project -->
 
                 <section>Questions</section>
 
+
+                <!-- ===================================== -->
+                <!-- Slides: Each Metadata Field Explained -->
+                <!-- ===================================== -->
+
                 <section>
-                    <h4><span class="highlight">Class Case Study — Migrating from SQL to NoSQL</span></h4>
+                    <h4><span class="highlight">Metadata Field — uuid</span></h4>
                     <div class="split">
                         <div class="left">
-                            <p style="margin: 0px; padding: 0px;">You are managing a small agricultural tracking system
-                                with two SQL tables:
-                                <code>farmers(id, name, region)</code>
-                                <code>harvest_lots(id, farmer_id, crop, yield_kg)</code>.
-                                Reports are slow because of frequent joins.
-                                The goal is to migrate to a document-oriented NoSQL model
-                                (e.g., MongoDB) while maintaining accuracy and improving performance.
-                                The system will eventually serve a dashboard showing each farmer’s total yield.
-                            </p>
+                            <ul>
+                                <li>Globally unique identifier</li>
+                                <li>Allows traceability across systems</li>
+                                <li>Prevents duplicate records</li>
+                                <li>Useful for merges and sync</li>
+                            </ul>
                         </div>
                         <div class="right">
+                            <pre><code class="language-js">meta.uuid = crypto.randomUUID();</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Metadata Field — checksum</span></h4>
+                    <div class="split">
+                        <div class="left">
                             <ul>
-                                <li>How to design the new NoSQL document structure?</li>
-                                <li>Which data would you embed vs. reference?</li>
-                                <li>How would you extract and transform SQL data?</li>
-                                <li>What metrics would you use to measure success?</li>
+                                <li>Represents data size or hash</li>
+                                <li>Detects data changes or corruption</li>
+                                <li>Used to verify sync integrity</li>
+                                <li>Lightweight alternative to full hash</li>
                             </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">meta.checksum = JSON.stringify(obj).length;</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Metadata Field — databaseType</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Identifies storage model</li>
+                                <li>Helps route queries correctly</li>
+                                <li>Useful for ETL pipelines supporting multiple DBs</li>
+                                <li>Examples: "SQL", "NoSQL", "Cache"</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">meta.databaseType = "NoSQL";</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Metadata Field — databaseSource</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Specifies data origin</li>
+                                <li>Useful for audit trails</li>
+                                <li>Supports hybrid architectures (e.g., SQL + MongoDB)</li>
+                                <li>Enables source-based filtering</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">meta.databaseSource = "MongoDB";</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Metadata Field — databaseDestination</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Specifies where the enriched data will be stored</li>
+                                <li>Includes database and collection (or table) name</li>
+                                <li>Useful for routing during ETL or ELT</li>
+                                <li>Enables multi-database deployment tracking</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">meta.databaseDestination = {
+  db: "agriculture",
+  collection: "farmers_enriched"
+};</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Metadata Field — lastSync</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Records last update timestamp</li>
+                                <li>Used to detect stale data</li>
+                                <li>Supports incremental synchronization</li>
+                                <li>Enables time-based analytics</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">meta.lastSync = new Date().toISOString();</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Metadata Field — sourceTimestamp</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Records when the data was first captured</li>
+                                <li>Distinguishes original event time and sync time</li>
+                                <li>Essential for timeline reconstruction</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">meta.sourceTimestamp = "2025-11-06T08:00Z";</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Metadata Field — processedBy</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Marks the script, pipeline that processed the record</li>
+                                <li>Supports auditability and debugging</li>
+                                <li>Helps track different ETL versions</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">meta.processedBy = "etl_pipeline_v2";</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Metadata Field — recordStatus</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Indicates lifecycle stage of the record</li>
+                                <li>Examples: "new", "validated", "archived"</li>
+                                <li>Useful for incremental updates</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">meta.recordStatus = "validated";</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Metadata Field — dataVersion</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Tracks schema or transformation version</li>
+                                <li>Prevents mismatches: old and new data formats</li>
+                                <li>Critical for reproducibility</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">meta.dataVersion = "v1.3";</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Metadata Field — verifiedBy</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Specifies who or what validated the data</li>
+                                <li>Can be a QA process, script, or user</li>
+                                <li>Useful for accountability and quality logs</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">meta.verifiedBy = "qualityCheckerBot";</code></pre>
                         </div>
                     </div>
                 </section>
 
                 <section>Questions</section>
 
-                <section>Project, Homework , Lab, Final Exam Date</section>
+                <section>Lab, Project, Homework, Final Exam Date</section>
+
+                <section>Lab 4</section>
+
+                <!-- ===================================== -->
+                <!-- Slides: Lab 4 Results (Farheen Shabbir Shaikh) -->
+                <!-- ===================================== -->
 
                 <section>
-                    <h4>Project Part 1 - Validation Rules</h4>
-                </section>
-
-                <section>
-                    <h4>Homework 3</h4>
+                    <h4><span class="highlight">Lab 4 — Question 1</span></h4>
                     <div class="split">
                         <div class="left">
                             <ul>
-                                <li>Source to Lake</li>
-                                <li>Lake to Warehouse/li>
-                                <li>Warehouse to Mart/li>
+                                <li>Install Redis locally and verify it runs (PONG test)</li>
+                                <li>Deliverable: screenshots connections active</li>
                             </ul>
                         </div>
                         <div class="right">
-                            <img src="./img/hw4.jpg" alt="Pipeline Overview" class="slide-image" />
+                            <img src="./img/lab4_q1.png" alt="Lab 4 Q1 Result" class="slide-image" />
                         </div>
                     </div>
                 </section>
 
                 <section>
-                    <h4>Lab 3</h4>
+                    <h4><span class="highlight">Lab 4 — Question 2</span></h4>
                     <div class="split">
                         <div class="left">
                             <ul>
-                                <li>Neo4j to Lake</li>
+                                <li>Insert 2,000 documents (AgriDB::readings)</li>
+                                <li>SensorId, reading, unit, updatedAt, meta.author</li>
+                                <li>Deliverable: Compass screenshot filtered by author</li>
                             </ul>
                         </div>
                         <div class="right">
-                            <img src="./img/lab3.jpg" alt="Pipeline Overview" class="slide-image" />
+                            <img src="./img/lab4_q2.png" alt="Lab 4 Q2 Result" class="slide-image" />
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Lab 4 — Question 3</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Implement caching patterns using Redis</li>
+                                <li>Cache-Aside, Read-Through, TTL Expiration</li>
+                                <li>Deliverable: screenshots of requests & responses</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="./img/lab4_q3.png" alt="Lab 4 Q3 Result" class="slide-image" />
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Lab 4 — Question 4</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Measures system performance over time</li>
+                                <li><strong>End-to-end latency:</strong> request to user response</li>
+                                <li><strong>Server GET latency:</strong> server to return data only</li>
+                                <li>Useful for monitoring, optimization, and alerts</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-js">meta.latency = {
+  endToEndMs: 420,
+  serverGetMs: 180
+};</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Lab 4 — Question 4</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Measure performance with and without cache</li>
+                                <li>Compare average response times (DB-only vs cached)</li>
+                                <li>Observe TTL effects before and after expiry</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="./img/lab4_q4_1.png" alt="Lab 4 Q4 Result 1" class="slide-image" />
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Lab 4 — Question 4 (continued)</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Visual comparison of timing outputs</li>
+                                <li>Shows Cache-Aside warm vs cold latency</li>
+                                <li>Demonstrates Redis TTL refresh behavior</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="./img/lab4_q4_2.png" alt="Lab 4 Q4 Result 2" class="slide-image" />
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Lab 4 — Question 5</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Prepare a short presentation (3 slides):</li>
+                                <li>• Architecture & ETL Data Flow</li>
+                                <li>• Lessons Learned from caching pipeline</li>
+                                <li>• Challenges and key insights</li>
+                                <li>Upload slides and project to GitHub</li>
+                            </ul>
+                        </div>
+                        <div class="right" style="text-align:center;">
+                            <p><strong>Repository Link</strong></p>
+                            <a href="https://github.com/SE4CPS/2025-COMP-263/tree/main/labs/lab4" target="_blank"
+                                style="font-size:1.1em; word-break:break-all;">
+                                github.com/SE4CPS/2025-COMP-263/labs/lab4
+                            </a>
                         </div>
                     </div>
                 </section>
