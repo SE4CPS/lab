@@ -572,7 +572,8 @@
                             </tr>
                             <tr style="color:#ccc;">
                                 <td style="padding:6px; border:1px solid #666;">Week 12</td>
-                                <td style="padding:6px; border:1px solid #666;">Nov 11, Nov 13</td>
+                                <td style="padding:6px; border:1px solid #666;"><a href="#/nov-11">Nov 11</a>, Nov 13
+                                </td>
                                 <td style="padding:6px; border:1px solid #666;"><a href="#/592"
                                         style="color:#ccc; text-decoration:none;">Vector Indexing and Similarity Search
                                         in NoSQL
@@ -15585,7 +15586,6 @@ const farmerEquipmentLinks = farmerEquipment
                     </div>
                 </section>
 
-
                 <section>
                     <h4><span class="highlight">Case Study — SQL to NoSQL (Agriculture)</span></h4>
                     <div class="split">
@@ -16434,15 +16434,653 @@ const contracts=[{farmer_id:1,buyer_id:10},
                     </div>
                 </section>
 
+                <section id="nov-11">
+                    <h4><span class="highlight">Today, November 11, 2025</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Vector Databases: purpose, embeddings, similarity search</li>
+                                <li>Use case: FAISS for agricultural data similarity and search</li>
+                                <li>Collect & land data (weather, soil, crop reports)</li>
+                                <li>Transform & clean (units, dates, regions) → ETL pipeline</li>
+                                <li>Generate embeddings & store in FAISS vector database</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="https://miro.medium.com/v2/resize:fit:1200/1*4Z90ZgAq7nDdkuWe1bWnlg.jpeg"
+                                alt="FAISS Agriculture Pipeline" class="slide-image" />
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- Slide 1: Why Vector Databases -->
+                <section>
+                    <h4><span class="highlight">Why Vector Databases?</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Traditional SQL/NoSQL rely on exact matching of values</li>
+                                <li>Vector DBs enable *semantic* matching/meaning</li>
+                                <li>AI systems: Find similar text, images, or signals</li>
+                                <li>Recommendation, question answering, and pattern search</li>
+                                <li>Run efficiently on billions of high-dimensional vectors</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <table class="simple-table">
+                                <tr>
+                                    <th>Query Type</th>
+                                    <th>Example</th>
+                                </tr>
+                                <tr>
+                                    <td>Keyword Search</td>
+                                    <td>“corn yield”</td>
+                                </tr>
+                                <tr>
+                                    <td>Vector Search</td>
+                                    <td>“find farms like this one”</td>
+                                </tr>
+                                <tr>
+                                    <td>Result</td>
+                                    <td>Semantically similar records, not just identical text</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 2: Limitations of SQL and NoSQL -->
+                <section>
+                    <h4><span class="highlight">Limitations of SQL and NoSQL Databases</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Designed for *exact* equality or range conditions</li>
+                                <li>No built-in understanding of semantic similarity</li>
+                                <li>Indexes can’t handle high-dimensional vectors</li>
+                                <li>JOINs and WHERE clauses cannot rank by similarity score</li>
+                                <li>Struggle with unstructured or contextual data</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <table class="simple-table">
+                                <tr>
+                                    <th>Query</th>
+                                    <th>Limitation</th>
+                                </tr>
+                                <tr>
+                                    <td>SELECT * FROM farms WHERE crop='corn'</td>
+                                    <td>Exact only</td>
+                                </tr>
+                                <tr>
+                                    <td>SELECT * FROM soils WHERE pH BETWEEN 6 AND 7</td>
+                                    <td>Numeric range only</td>
+                                </tr>
+                                <tr>
+                                    <td>Find farms “like” Farm X</td>
+                                    <td>Not supported natively</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 3: Core Concept — Embeddings -->
+                <section>
+                    <h4><span class="highlight">Core Concept — Embeddings</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Embeddings turn objects into numeric vectors</li>
+                                <li>Each dimension represents a latent feature</li>
+                                <li>Nearby vectors represent similar meaning or context</li>
+                                <li>Enable search by *meaning* instead of keywords</li>
+                                <li>Used across modern AI and ML applications</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <table class="simple-table">
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Embedding (3D)</th>
+                                </tr>
+                                <tr>
+                                    <td>“Wheat yield in dry soil”</td>
+                                    <td>[0.22, 0.45, 0.10]</td>
+                                </tr>
+                                <tr>
+                                    <td>“Corn yield in low rainfall”</td>
+                                    <td>[0.21, 0.44, 0.11]</td>
+                                </tr>
+                                <tr>
+                                    <td>“Rice yield in wet soil”</td>
+                                    <td>[0.10, 0.30, 0.50]</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 4: How Similarity Search Works -->
+                <section>
+                    <h4><span class="highlight">How Similarity Search Works</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Each record stored as a vector in multi-dimensional space</li>
+                                <li>Query is also embedded as a vector</li>
+                                <li>Compute distance between query and stored vectors</li>
+                                <li>Return top-k nearest vectors (most similar meanings)</li>
+                                <li>FAISS optimizes this with efficient indexing structures</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <table class="simple-table">
+                                <tr>
+                                    <th>Farm</th>
+                                    <th>Vector</th>
+                                    <th>Distance</th>
+                                </tr>
+                                <tr>
+                                    <td>F1 (Corn)</td>
+                                    <td>[0.20, 0.40, 0.15]</td>
+                                    <td>0.02</td>
+                                </tr>
+                                <tr>
+                                    <td>F2 (Wheat)</td>
+                                    <td>[0.25, 0.30, 0.18]</td>
+                                    <td>0.10</td>
+                                </tr>
+                                <tr>
+                                    <td>F3 (Rice)</td>
+                                    <td>[0.15, 0.45, 0.20]</td>
+                                    <td>0.04</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 5: Why Vector DBs Are the Future -->
+                <section>
+                    <h4><span class="highlight">Why Vector Databases Are the Future</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Bridge between AI models and data storage</li>
+                                <li>Handle unstructured, semantic, and contextual data</li>
+                                <li>Support hybrid filtering (metadata + similarity)</li>
+                                <li>Enable real-time discovery of “similar” conditions</li>
+                                <li>Transform data-driven decision making eg, agriculture</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <table class="simple-table">
+                                <tr>
+                                    <th>Aspect</th>
+                                    <th>SQL/NoSQL</th>
+                                    <th>Vector DB</th>
+                                </tr>
+                                <tr>
+                                    <td>Query Type</td>
+                                    <td>Exact</td>
+                                    <td>Semantic</td>
+                                </tr>
+                                <tr>
+                                    <td>Data Type</td>
+                                    <td>Structured</td>
+                                    <td>Unstructured + Numeric</td>
+                                </tr>
+                                <tr>
+                                    <td>Example</td>
+                                    <td>WHERE crop='corn'</td>
+                                    <td>Farms similar to F1</td>
+                                </tr>
+                                <tr>
+                                    <td>Result</td>
+                                    <td>Identical matches</td>
+                                    <td>Similar contexts</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide: Identify the Operation Type -->
+                <section>
+                    <h4><span class="highlight">Exercise: Similarity, Aggregation, or Document/Row?</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ol>
+                                <li>“Find farms similar to Farm A in rainfall pattern.”</li>
+                                <li>“Calculate average crop yield per region.”</li>
+                                <li>“Retrieve all records where crop = ‘Corn’”</li>
+                                <li>“List farms with soil vectors closest to [0.3, 0.4, 0.2].”</li>
+                                <li>“Group by fertilizer type and count number of farms.”</li>
+                            </ol>
+                        </div>
+                        <div class="right">
+                            <table class="simple-table">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Likely Type</th>
+                                    <th>Typical System</th>
+                                    <th>Key Value Fit</th>
+                                    <th>Graph Fit</th>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>Similarity</td>
+                                    <td>Vector DB</td>
+                                    <td>No</td>
+                                    <td>Sometimes</td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Aggregation</td>
+                                    <td>SQL or OLAP</td>
+                                    <td>No</td>
+                                    <td>Rare</td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Document or Row</td>
+                                    <td>SQL or NoSQL</td>
+                                    <td>Yes for id lookup</td>
+                                    <td>No</td>
+                                </tr>
+                                <tr>
+                                    <td>4</td>
+                                    <td>Similarity</td>
+                                    <td>Vector DB</td>
+                                    <td>No</td>
+                                    <td>Sometimes</td>
+                                </tr>
+                                <tr>
+                                    <td>5</td>
+                                    <td>Aggregation</td>
+                                    <td>SQL</td>
+                                    <td>No</td>
+                                    <td>Rare</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Vector Databases</h3>
+                </section>
+
+                <!-- Slide: Common Vector Databases -->
+                <section>
+                    <h4><span class="highlight">Common Vector Databases</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>FAISS: optimized for local, high-speed similarity search</li>
+                                <li>Milvus: scalable distributed vector database</li>
+                                <li>Weaviate: semantic vector DB with GraphQL API</li>
+                                <li>Qdrant: lightweight, production-ready, supports filters</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <table class="simple-table">
+                                <tr>
+                                    <th>Name</th>
+                                    <th>License</th>
+                                    <th>GitHub / Website</th>
+                                </tr>
+                                <tr>
+                                    <td>FAISS</td>
+                                    <td>Open Source</td>
+                                    <td><a href="https://github.com/facebookresearch/faiss"
+                                            target="_blank">github.com/facebookresearch/faiss</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Milvus</td>
+                                    <td>Open Source</td>
+                                    <td><a href="https://github.com/milvus-io/milvus"
+                                            target="_blank">github.com/milvus-io/milvus</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Weaviate</td>
+                                    <td>Open Source</td>
+                                    <td><a href="https://github.com/weaviate/weaviate"
+                                            target="_blank">github.com/weaviate/weaviate</a></td>
+                                </tr>
+                                <tr>
+                                    <td>Qdrant</td>
+                                    <td>Open Source</td>
+                                    <td><a href="https://github.com/qdrant/qdrant"
+                                            target="_blank">github.com/qdrant/qdrant</a></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide: Chronology of FAISS -->
+                <section>
+                    <h4><span class="highlight">Chronology of FAISS</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>2017 — Released by Facebook AI Research</li>
+                                <li>2018 — GPU acceleration and wide adoption</li>
+                                <li>2020 — Integrated into ML and AI pipelines</li>
+                                <li>2022 — Added hybrid and hierarchical indexes</li>
+                                <li>2024 — Core engine for many vector databases</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            &nbsp;
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide: FAISS Example in Python -->
+                <!-- Slide: FAISS Example in Python -->
+                <section>
+                    <h4><span class="highlight">FAISS Example — Finding Similar Farms</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Create sample data for farms (numeric features)</li>
+                                <li>Build a FAISS index using L2 distance</li>
+                                <li>Add all farm vectors to the index</li>
+                                <li>Query with one farm to find its nearest neighbors</li>
+                                <li>Full example:
+                                    <a href="https://github.com/SE4CPS/2025-COMP-263/tree/main/nosql/vector"
+                                        target="_blank">
+                                        GitHub — /nosql/vector
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <pre><code class="language-python">
+import numpy as np
+import faiss
+# Sample farm data (rainfall, soil_pH, yield)
+data = np.array([
+  [0.75, 0.60, 0.82],
+  [0.80, 0.62, 0.81],
+  [0.25, 0.30, 0.28],
+  [0.78, 0.65, 0.85]
+], dtype='float32')
+
+# Build index (L2 distance)
+index = faiss.IndexFlatL2(3)
+index.add(data)  # add all farm vectors
+
+# Query: find 3 nearest farms to first one
+query = np.array([[0.75, 0.60, 0.82]], dtype='float32')
+D, I = index.search(query, k=3)
+
+print(I)  # indices of similar farms → [[0 3 1]]
+print(D)  # similarity distances → [[0.0000 0.0013 0.0025]]
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Slide 1: Sources → Lake (Raw) -->
+<section>
+  <h4><span class="highlight">Sources → Lake (Raw)</span></h4>
+  <div class="split">
+    <div class="left">
+      <ul>
+        <li>Ingest weather, soil, yield as raw JSONL</li>
+        <li>Keep source and timestamps unchanged</li>
+        <li>Append-only in lake/raw</li>
+      </ul>
+    </div>
+    <div class="right">
+      <pre><code class="language-json">{"src":"weather","ts":"2025-11-10","farm":"F1","rain_mm":3.4,"temp_c":22.1}
+{"src":"soil","ts":"2025-11-10","farm":"F1","ph":6.3,"moist_pct":31}
+{"src":"yield","season":2025,"farm":"F1","crop":"corn","yield_t_ha":4.8}</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 2: Lake (Raw) → Curated: map / filter / reduce (weather) -->
+<section>
+  <h4><span class="highlight">Raw → Curated (Weather) with map/filter/reduce</span></h4>
+  <div class="split">
+    <div class="left">
+      <ul>
+        <li><strong>map</strong>: project fields, coerce units</li>
+        <li><strong>filter</strong>: drop invalid rows</li>
+        <li><strong>reduce</strong>: daily averages</li>
+      </ul>
+    </div>
+    <div class="right">
+      <pre><code class="language-python">from functools import reduce
+weather = [
+  {"farm":"F1","rain_mm":3.4,"temp_c":22.1},
+  {"farm":"F1","rain_mm":2.6,"temp_c":24.0}
+]
+# map
+rows = list(map(lambda r: {"farm":r["farm"],
+                           "rain_mm":float(r["rain_mm"]),
+                           "temp_c":float(r["temp_c"])}, weather))
+# filter
+rows = list(filter(lambda r: r["rain_mm"] >= 0, rows))
+# reduce (avg)
+acc = reduce(lambda a,r: {"farm":r["farm"],
+                          "rain_mm":a["rain_mm"]+r["rain_mm"],
+                          "temp_c":a["temp_c"]+r["temp_c"],
+                          "n":a["n"]+1},
+             rows, {"rain_mm":0,"temp_c":0,"n":0})
+curated_weather = {"farm":"F1",
+                   "rain_mm_avg":acc["rain_mm"]/acc["n"],
+                   "temp_c_avg":acc["temp_c"]/acc["n"]}</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 3: Lake (Raw) → Curated: map / filter (soil, yield) -->
+<section>
+  <h4><span class="highlight">Raw → Curated (Soil & Yield) with map/filter</span></h4>
+  <div class="split">
+    <div class="left">
+      <ul>
+        <li><strong>map</strong>: normalize ids/types</li>
+        <li><strong>filter</strong>: keep season, valid pH</li>
+        <li>Join later by farm</li>
+      </ul>
+    </div>
+    <div class="right">
+      <pre><code class="language-python">soil = [{"farm":"F1","ph":6.3,"moist_pct":31},
+        {"farm":"F1","ph":None,"moist_pct":29}]
+soil = list(map(lambda r: {"farm":r["farm"].upper(),
+                           "ph":(r["ph"] or 0.0),
+                           "moist_pct":float(r["moist_pct"])}, soil))
+soil = list(filter(lambda r: 4.0 <= r["ph"] <= 9.0, soil))
+
+yield_rows = [{"farm":"F1","season":2025,"yield_t_ha":4.8},
+              {"farm":"F1","season":2023,"yield_t_ha":4.2}]
+yield_rows = list(filter(lambda r: r["season"]==2025, yield_rows))</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 4: Curated Join → Analytics (Features) -->
+<section>
+  <h4><span class="highlight">Curated Join → Analytics Features</span></h4>
+  <div class="split">
+    <div class="left">
+      <ul>
+        <li>Join on farm</li>
+        <li>Minimal numeric features</li>
+        <li>Keep metadata for filters</li>
+      </ul>
+    </div>
+    <div class="right">
+      <pre><code class="language-python">features = {
+  "farm":"F1",
+  "season":2025,
+  "rain_mm_avg": round(curated_weather["rain_mm_avg"],2),
+  "soil_ph": soil[0]["ph"],
+  "yield_t_ha": yield_rows[0]["yield_t_ha"]
+}
+# → write to lake/analytics/farm_features.jsonl</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 5: Analytics → Vectors: map / reduce scaling -->
+<section>
+  <h4><span class="highlight">Analytics → Vectors (scale with map/reduce)</span></h4>
+  <div class="split">
+    <div class="left">
+      <ul>
+        <li>Collect numeric columns</li>
+        <li>Min–max via reduce</li>
+        <li>map to 0–1; cast float32</li>
+      </ul>
+    </div>
+    <div class="right">
+      <pre><code class="language-python">import numpy as np
+rows = [
+ {"farm":"F1","rain":3.0,"ph":6.3,"y":4.8},
+ {"farm":"F2","rain":1.0,"ph":6.7,"y":4.2}
+]
+mins = reduce(lambda a,r: {"rain":min(a["rain"],r["rain"]),
+                           "ph":min(a["ph"],r["ph"]),
+                           "y":min(a["y"],r["y"])},
+              rows, {"rain":9e9,"ph":9e9,"y":9e9})
+maxs = reduce(lambda a,r: {"rain":max(a["rain"],r["rain"]),
+                           "ph":max(a["ph"],r["ph"]),
+                           "y":max(a["y"],r["y"])},
+              rows, {"rain":-9e9,"ph":-9e9,"y":-9e9})
+vecs = list(map(lambda r: [
+  (r["rain"]-mins["rain"])/(maxs["rain"]-mins["rain"] or 1),
+  (r["ph"]  -mins["ph"]  )/(maxs["ph"]  -mins["ph"]   or 1),
+  (r["y"]   -mins["y"]   )/(maxs["y"]   -mins["y"]    or 1)
+], rows))
+X = np.array(vecs, dtype="float32")</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 6: Build FAISS Index -->
+<section>
+  <h4><span class="highlight">Lake → FAISS (Index Build)</span></h4>
+  <div class="split">
+    <div class="left">
+      <ul>
+        <li>Exact search with IndexFlatL2</li>
+        <li>Add all vectors</li>
+        <li>Persist index</li>
+      </ul>
+    </div>
+    <div class="right">
+      <pre><code class="language-python">import faiss
+d = X.shape[1]                 # 3
+index = faiss.IndexFlatL2(d)   # exact L2
+index.add(X)                   # add all farms
+faiss.write_index(index,"farm.index")</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 7: Query FAISS -->
+<section>
+  <h4><span class="highlight">Query FAISS (Top-k Similar)</span></h4>
+  <div class="split">
+    <div class="left">
+      <ul>
+        <li>Create query vector</li>
+        <li>Search k neighbors</li>
+        <li>Return indices and distances</li>
+      </ul>
+    </div>
+    <div class="right">
+      <pre><code class="language-python">q = X[0:1]        # F1
+D, I = index.search(q, k=3)
+print(I)  # [[0 1 ...]]
+print(D)  # [[0.00 ...]]</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 8: Post-process → API JSON -->
+<section>
+  <h4><span class="highlight">Neighbors → API JSON</span></h4>
+  <div class="split">
+    <div class="left">
+      <ul>
+        <li>Attach farm ids</li>
+        <li>Compact payload</li>
+        <li>Ready for UI</li>
+      </ul>
+    </div>
+    <div class="right">
+      <pre><code class="language-json">{
+  "query_farm":"F1",
+  "metric":"L2",
+  "top_k":3,
+  "neighbors":[
+    {"rank":1,"farm":"F1","dist":0.00},
+    {"rank":2,"farm":"F2","dist":0.07},
+    {"rank":3,"farm":"F3","dist":0.12}
+  ]
+}</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 9: Optional — Filter then Vector Search -->
+<section>
+  <h4><span class="highlight">Filter → Search (map/filter)</span></h4>
+  <div class="split">
+    <div class="left">
+      <ul>
+        <li>Subset by season/region</li>
+        <li>Build temporary index</li>
+      </ul>
+    </div>
+    <div class="right">
+      <pre><code class="language-python"># metadata parallel to X:
+meta = ["F1:VALLEY:2025","F2:VALLEY:2025"]
+keep = list(filter(lambda m: ":VALLEY:" in m, meta))
+subX = np.array(list(map(lambda i: X[i], [0,1])), dtype="float32")
+tmp = faiss.IndexFlatL2(d); tmp.add(subX)
+D,I = tmp.search(q, k=2)</code></pre>
+    </div>
+  </div>
+</section>
+
+<!-- Slide 10: Summary -->
+<section>
+  <h4><span class="highlight">Summary — Source → Lake → FAISS</span></h4>
+  <div class="split">
+    <div class="left">
+      <ul>
+        <li>Raw JSONL in lake/raw (preserve truth)</li>
+        <li>map/filter/reduce to curated & analytics</li>
+        <li>Scale, cast → vectors (float32)</li>
+        <li>FAISS index → fast similarity</li>
+      </ul>
+    </div>
+    <div class="right">
+      <pre><code class="language-json">{
+  "pipeline":"source→lake→etl→vectors→faiss",
+  "ops":["map","filter","reduce"],
+  "qps":"ms-level on CPU"
+}</code></pre>
+    </div>
+  </div>
+</section>
+
                 <section>Questions</section>
 
                 <section>Lab, Project, Homework, Final Exam Date</section>
 
                 <section>Lab 4</section>
-
-                <!-- ===================================== -->
-                <!-- Slides: Lab 4 Results (Farheen Shabbir Shaikh) -->
-                <!-- ===================================== -->
 
                 <section>
                     <h4><span class="highlight">Lab 4 — Question 1</span></h4>
