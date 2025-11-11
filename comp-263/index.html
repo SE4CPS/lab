@@ -410,6 +410,37 @@
         h5 {
             margin-bottom: 0.5rem;
         }
+
+        .pillars {
+            display: flex;
+            justify-content: space-around;
+            align-items: stretch;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .pillar {
+            flex: 1;
+            min-width: 200px;
+            max-width: 220px;
+            min-height: 180px;
+            background: rgba(96, 165, 250, 0.1);
+            border: 2px solid #60a5fa;
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .pillar span {
+            font-size: 0.85em;
+            color: #9ca3af;
+            display: block;
+            margin-top: 0.5rem;
+        }
     </style>
 
 </head>
@@ -16445,114 +16476,343 @@ const contracts=[{farmer_id:1,buyer_id:10},
                             </ol>
                         </div>
                         <div class="right">
-                            <img src="https://miro.medium.com/v2/resize:fit:1200/1*4Z90ZgAq7nDdkuWe1bWnlg.jpeg"
-                                alt="FAISS Agriculture Pipeline" class="slide-image" />
+                            <img src="./img/hospital.png" alt="FAISS Agriculture Pipeline" class="slide-image" />
                         </div>
                     </div>
                 </section>
 
                 <section>
                     <h3>NoSQL Database Security — Overview</h3>
-                    <ul>
-                        <li>Protect confidentiality, integrity, and availability</li>
-                        <li>Prevent breaches and legal exposure; align with compliance</li>
-                        <li>Model threats across pipeline: ingest → transform → store → serve</li>
-                    </ul>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Protect confidentiality, integrity, and availability</li>
+                                <li>Prevent breaches and legal exposure compliance</li>
+                                <li>Model threats across pipeline: ETL</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="./img/hospital.png" alt="Interconnected Systems: Data paths at risk"
+                                class="slide-image" />
+                        </div>
+                    </div>
                 </section>
 
                 <section>
-                    <h4>Why Security Matters</h4>
-                    <ul>
-                        <li>Unauthorized access risks and data monetization by attackers</li>
-                        <li>Integrity loss through tampering, poisoning, or schema drift</li>
-                        <li>Operational impact: downtime, ransom, regulatory penalties</li>
-                    </ul>
-                </section>
-
-                <section data-background-color="white">
-                    <img src="https://www.researchgate.net/publication/329353549/figure/fig1/AS:961825814376458@1606328552167/Communication-network-in-a-telecare-medicine-information-system.png"
-                        alt="Interconnected Systems: Data paths at risk">
+                    <h3>NoSQL Database Security — Overview</h3>
+                    <div class="split">
+                        <div class="left">
+                            <h4>Why Security Matters</h4>
+                            <ul>
+                                <li>Unauthorized access risks and data monetization</li>
+                                <li>Integrity loss: tampering, poisoning, or schema drift</li>
+                                <li>Ops. impact: downtime, ransom, regulatory penalties</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <img src="./img/hospital.png" alt="Interconnected Systems: Data paths at risk"
+                                class="slide-image" />
+                        </div>
+                    </div>
                 </section>
 
                 <section>
                     <h4>Core Security Pillars</h4>
-                    <ul>
-                        <li>Encryption (in transit, at rest, client side)</li>
-                        <li>Access control (authn, authz, RBAC/ABAC)</li>
-                        <li>Auditing and monitoring (logs, alerts, anomaly detection)</li>
-                        <li>Key management and secrets hygiene</li>
-                    </ul>
+                    <div class="pillars">
+                        <div class="pillar">Encryption<br><span>(in transit, at rest, client side)</span></div>
+                        <div class="pillar">Access Control<br><span>(authn, authz, RBAC/ABAC)</span></div>
+                        <div class="pillar">Auditing & Monitoring<br><span>(logs, alerts, anomaly detection)</span>
+                        </div>
+                        <div class="pillar">Data Fragmentation<br><span>(sharding, isolation, minimal exposure)</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Encryption and Decryption</h4>
                 </section>
 
                 <section>
                     <h4>Encryption — Where It Applies</h4>
+                    <div class="split">
+                        <div class="left">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Layer</th>
+                                        <th>Goal</th>
+                                        <th>Example</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>In transit</td>
+                                        <td>Prevent snooping</td>
+                                        <td>TLS for drivers, HTTPS for APIs</td>
+                                    </tr>
+                                    <tr>
+                                        <td>At rest</td>
+                                        <td>Protect disks/snapshots</td>
+                                        <td>Database/volume encryption</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Client side</td>
+                                        <td>Minimize trust</td>
+                                        <td>Field-level AES before insert</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="right">
+                            <img src="./img/hospital.png" alt="Data encryption across systems" class="slide-image" />
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>IndexedDB — Minimal Field Encryption (AES-GCM)</h4>
+                    <div class="split" style="display:flex; align-items:center; justify-content:space-between;">
+                        <div class="left" style="width:80%; padding-right:2%;">
+                            <pre><code>
+// Generate a key
+const key = await crypto.subtle.generateKey(
+  { name: "AES-GCM", length: 256 },
+  true,
+  ["encrypt", "decrypt"]
+);
+
+// Encrypt a string field
+const iv = crypto.getRandomValues(new Uint8Array(12));
+const enc = await crypto.subtle.encrypt(
+  { name: "AES-GCM", iv },
+  key,
+  new TextEncoder().encode("secret")
+);
+
+// Decrypt
+const dec = await crypto.subtle.decrypt({ 
+    name: "AES-GCM", iv 
+}, key, enc);
+new TextDecoder().decode(dec); // "secret"
+            </code></pre>
+                        </div>
+                        <div class="right" style="width:15%; text-align:center;">
+                            <img src="https://www.iconpacks.net/icons/1/free-iphone-icon-709-thumb.png"
+                                alt="Smartphone encryption visualization" class="slide-image"
+                                style="max-width:80%; height:auto; border-radius:10px;" />
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Transport Encryption — Client ↔ Server</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Protects data in motion between app and database</li>
+                                <li>Prevents eavesdropping and MITM attacks</li>
+                                <li>Use <strong>TLS 1.2+</strong> with verified certificates</li>
+                                <li>Apply to drivers, APIs, and cluster communication</li>
+                            </ul>
+                            <pre><code>
+// Example: MongoDB connection with TLS
+mongodb+srv://user:pass@cluster.mongodb.net/
+  ?ssl=true&retryWrites=true&w=majority
+            </code></pre>
+                        </div>
+                        <div class="right">
+                            <img src="./img/hospital.png" alt="Encrypted connection between client and server"
+                                class="slide-image" />
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Data Lake Security — When to Encrypt or Decrypt</h4>
+                    <div class="split">
+                        <div class="left" style="width:48%; padding-right:2%;">
+                            <h5>🔒 Encrypt & Store in Lake</h5>
+                            <ul>
+                                <li>Data remains secure at rest in the lake</li>
+                                <li>Minimizes exposure during ingestion</li>
+                                <li>Ideal for sensitive or regulated datasets</li>
+                                <li>Query requires authorized decryption layer</li>
+                            </ul>
+                            <pre><code>
+// Example: encrypt before upload
+const enc = encryptAES(record);
+lake.store(enc);
+            </code></pre>
+                        </div>
+                        <div class="right" style="width:48%;">
+                            <h5>📊 Decrypt & Query Before Storing</h5>
+                            <ul>
+                                <li>Allows transformations and analytics pre-lake</li>
+                                <li>Useful when encryption breaks query performance</li>
+                                <li>Requires trusted compute and short-term exposure</li>
+                                <li>Re-encrypt before final lake ingestion</li>
+                            </ul>
+                            <pre><code>
+// Example: decrypt → query → store
+const data = decryptAES(blob);
+runQuery(data);
+lake.store(reEncrypt(data));
+            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Encryption Models: Public vs Private Key</h4>
+                    <div class="split">
+                        <div class="left" style="width:48%; padding-right:2%;">
+                            <h5>🔐 Private (Symmetric) Key Encryption</h5>
+                            <ul>
+                                <li>Same key used for encryption and decryption</li>
+                                <li>Fast and efficient for large data volumes</li>
+                                <li>Common in storage, backups, and data lakes</li>
+                                <li><strong>Challenges:</strong> secure key distribution, rotation</li>
+                                <li><strong>Performance:</strong> high speed, minimal overhead</li>
+                                <li><strong>Security:</strong> compromised key = total data loss risk</li>
+                            </ul>
+                            <pre><code>
+// Example: AES-GCM symmetric encryption
+const enc = await crypto.subtle.encrypt({
+    name:"AES-GCM", iv
+}, key, data);
+            </code></pre>
+                        </div>
+
+                        <div class="right" style="width:48%;">
+                            <h5>🔑 Public (Asymmetric) Key Encryption</h5>
+                            <ul>
+                                <li>Uses a key pair: public to encrypt, private to decrypt</li>
+                                <li>Ideal for secure exchange and identity verification</li>
+                                <li>Used in TLS, SSH, and digital signatures</li>
+                                <li><strong>Challenges:</strong> slower, complex key management</li>
+                                <li><strong>Performance:</strong> higher CPU cost per operation</li>
+                                <li><strong>Security:</strong> stronger for transmission, less for bulk data</li>
+                            </ul>
+                            <pre><code>
+// Example: RSA public key encryption
+const enc = await crypto.subtle.encrypt({
+    name:"RSA-OAEP"
+}, pubKey, data);
+            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Discussion: Encryption in Practice</h4>
+                    <div class="split">
+                        <div class="left" style="width:55%; padding-right:2%;">
+                            <ul>
+                                <li>How is a symmetric key shared for sensor data?</li>
+                                <li>How does encryption affect queries in NoSQL?</li>
+                                <li>Encrypt early or in the lake — which is better?</li>
+                                <li>How to balance strong encryption with speed?</li>
+                            </ul>
+                        </div>
+                        <div class="right" style="width:40%; text-align:center;">
+                            <img src="./img/hospital.png" alt="Data security in interconnected hospital systems"
+                                class="slide-image" style="max-width:100%; height:auto; border-radius:10px;" />
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>NoSQL Databases: Encryption at Rest Support</h4>
                     <table>
                         <thead>
                             <tr>
-                                <th>Layer</th>
-                                <th>Goal</th>
-                                <th>Example</th>
+                                <th>Database</th>
+                                <th>Encryption at Rest</th>
+                                <th>Notes</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>In transit</td>
-                                <td>Prevent snooping</td>
-                                <td>TLS for drivers, HTTPS for APIs</td>
+                                <td>Cassandra</td>
+                                <td>✅ Supported</td>
+                                <td>Transparent Data Encryption (TDE) for SSTables and commit logs</td>
                             </tr>
                             <tr>
-                                <td>At rest</td>
-                                <td>Protect disks/snapshots</td>
-                                <td>Database/volume encryption</td>
+                                <td>MongoDB</td>
+                                <td>✅ Supported</td>
+                                <td>Encrypted storage engine; integrates with external KMS</td>
                             </tr>
                             <tr>
-                                <td>Client side</td>
-                                <td>Minimize trust</td>
-                                <td>Field-level AES before insert</td>
+                                <td>Redis</td>
+                                <td>⚠️ Partial</td>
+                                <td>Enterprise and Redis Stack support disk-level encryption</td>
+                            </tr>
+                            <tr>
+                                <td>IndexedDB</td>
+                                <td>⚠️ Browser dependent</td>
+                                <td>Relies on OS or browser sandbox; no built-in encryption</td>
+                            </tr>
+                            <tr>
+                                <td>Lakehouse (e.g., Delta, Iceberg)</td>
+                                <td>✅ Supported</td>
+                                <td>Encryption handled by storage layer (S3, Azure, GCS)</td>
+                            </tr>
+                            <tr>
+                                <td>Neo4j</td>
+                                <td>✅ Supported</td>
+                                <td>Native file and log encryption (Enterprise edition)</td>
+                            </tr>
+                            <tr>
+                                <td>FAISS</td>
+                                <td>❌ Not native</td>
+                                <td>Relies on external filesystem or disk encryption</td>
                             </tr>
                         </tbody>
                     </table>
                 </section>
 
                 <section>
-                    <h4>IndexedDB — Minimal Field Encryption (AES-GCM)</h4>
-                    <pre><code>
-// Generate a key
-const key = await crypto.subtle.generateKey({name:"AES-GCM",length:256}, true, ["encrypt","decrypt"]);
-
-// Encrypt a string field
-const iv = crypto.getRandomValues(new Uint8Array(12));
-const enc = await crypto.subtle.encrypt({name:"AES-GCM", iv}, key, new TextEncoder().encode("secret"));
-
-// Decrypt
-const dec = await crypto.subtle.decrypt({name:"AES-GCM", iv}, key, enc);
-new TextDecoder().decode(dec); // "secret"
-  </code></pre>
+                    <h4>Access Control</h4>
                 </section>
 
                 <section>
-                    <h4>MongoDB / Neo4j / Redis — Encryption Options</h4>
-                    <ul>
-                        <li>Transport: enable TLS for client-driver connections</li>
-                        <li>At rest: enable native encryption or encrypted volumes</li>
-                        <li>Field-level: encrypt sensitive fields before insert</li>
-                        <li>Keys: store KMS keys outside the DB; rotate regularly</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h4>Access Control — Models</h4>
-                    <ul>
-                        <li>RBAC: roles map to privileges (read, write, admin)</li>
-                        <li>ABAC: attributes and policies (tenant, region, label)</li>
-                        <li>Principle of least privilege and separation of duties</li>
-                    </ul>
+                    <h4>Access Control: Models</h4>
+                    <div class="split">
+                        <div class="left" style="width:55%; padding-right:2%;">
+                            <ul>
+                                <li>RBAC: roles map to privileges (read, write, admin)</li>
+                                <li>DAC: user-level control to access data</li>
+                                <li>Implements identity and authorization rules only</li>
+                                <li><strong>Note:</strong> data is not encrypted, access control ≠ encryption</li>
+                                <li>Apply least privilege and separation of duties</li>
+                            </ul>
+                        </div>
+                        <div class="right" style="width:40%; text-align:center;">
+                            <img src="./img/hospital.png" alt="Access control in interconnected hospital systems"
+                                class="slide-image" style="max-width:100%; height:auto; border-radius:10px;" />
+                        </div>
+                    </div>
                 </section>
 
                 <section>
                     <h4>RBAC Concept</h4>
-                    <img src="https://ars.els-cdn.com/content/image/1-s2.0-S1532046412000913-gr1.jpg"
-                        alt="Core RBAC Model" style="width:80%;height:auto;">
+                    <div class="split">
+                        <div class="left" style="width:55%; padding-right:2%;">
+                            <ol>
+                                <li><strong>Role Assignment:</strong> users get roles before access.</li>
+                                <li><strong>Role Authorization:</strong> only approved roles are valid.</li>
+                                <li><strong>Permission Authorization:</strong> roles define actions.</li>
+                            </ol>
+                            <p style="margin-top:1em;">
+                                RBAC groups permissions by role, not by user.
+                            </p>
+                        </div>
+                        <div class="right" style="width:40%; text-align:center;">
+                            <img src="https://ars.els-cdn.com/content/image/1-s2.0-S1532046412000913-gr1.jpg"
+                                alt="Core RBAC Model" class="slide-image"
+                                style="max-width:100%; height:auto; border-radius:10px;" />
+                        </div>
+                    </div>
                 </section>
 
                 <section>
@@ -16560,6 +16820,232 @@ new TextDecoder().decode(dec); // "secret"
                     <img src="https://miro.medium.com/v2/resize:fit:1400/1*2XRdyD3uHCnjK-5WXpAfQw.png"
                         alt="IndexedDB Same-Origin" style="width:80%;height:auto;">
                     <p>The same-origin policy restricts DB access to the same protocol, host, and port.</p>
+                </section>
+
+                <section>
+                    <h4>Access Control: Device, Browser, Tab</h4>
+                    <div class="split">
+                        <div class="left" style="width:55%; padding-right:2%;">
+                            <h5>Device scope</h5>
+                            <ul>
+                                <li>OS user account is the root boundary</li>
+                                <li>Disk and keychain hold secrets for apps</li>
+                                <li>Use full disk encryption and per user key stores</li>
+                            </ul>
+
+                            <h5 style="margin-top:1rem;">Browser scope</h5>
+                            <ul>
+                                <li>Profile and origin define isolation</li>
+                                <li>Cookies with SameSite and Secure limit exposure</li>
+                                <li>LocalStorage and IndexedDB are per origin</li>
+                                <li>Service Worker gates network for the origin</li>
+                            </ul>
+
+                            <h5 style="margin-top:1rem;">Tab scope</h5>
+                            <ul>
+                                <li>Per tab state in sessionStorage</li>
+                                <li>Carry role in the key for checks</li>
+                                <li>Avoid sharing across tabs unless needed</li>
+                                <li>Use BroadcastChannel only for safe signals</li>
+                            </ul>
+                        </div>
+
+                        <div class="right" style="width:40%; text-align:center;">
+                            <table
+                                style="width:100%; font-size:0.9em; border-collapse:separate; border-spacing:0.5rem;">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align:left;">Scope</th>
+                                        <th style="text-align:left;">Control</th>
+                                        <th style="text-align:left;">Example</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Device</td>
+                                        <td>OS user, key store</td>
+                                        <td>OS login, keychain, disk crypto</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Browser</td>
+                                        <td>Origin, profile</td>
+                                        <td>Cookie flags, IDB per origin</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Tab</td>
+                                        <td>Session state</td>
+                                        <td>sessionStorage role for API checks</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4><span class="highlight">Soft</span> RBAC with API Keys in IndexedDB (tab scoped)</h4>
+                    <div class="split">
+                        <div class="left" style="width:55%; padding-right:2%;">
+                            <ul>
+                                <li>Store API key in <strong>sessionStorage</strong> so it is per tab</li>
+                                <li>Key encodes the role (patient, nurse, physician)</li>
+                                <li>Middleware checks role before each read or write</li>
+                            </ul>
+
+                            <pre><code>// set per tab
+sessionStorage.setItem("API_KEY", "idb_apikey:nurse:98D1B7");
+
+// read role
+const role = (sessionStorage.getItem("API_KEY") || "").split(":")[1];
+
+// tiny ACL
+const ACL = {
+  patient:   ["read:own"],
+  nurse:     ["read:any","write:notes"],
+  physician: ["read:any","write:any"]
+};
+const can = (r,a) => ACL[r]?.includes(a);
+      </code></pre>
+                        </div>
+
+                        <div class="right" style="width:40%; text-align:center;">
+                            <pre><code>// guarded IndexedDB write
+if (!can(role, "write:notes")) throw new Error("forbidden");
+
+const db = await new Promise((res, rej) => {
+  const req = indexedDB.open("clinic", 1);
+  req.onupgradeneeded = () => 
+    req.result.createObjectStore("notes", { 
+        keyPath: "_id" 
+    });
+  req.onsuccess = () => res(req.result);
+  req.onerror = () => rej(req.error);
+});
+
+const tx = db.transaction("notes", "readwrite");
+tx.objectStore("notes").put({ _id, patientId, text });
+await tx.done; // or listen to tx.oncomplete
+      </code></pre>
+
+                            <pre><code>// example keys per role
+"idb_apikey:patient:72F3A9"
+"idb_apikey:nurse:98D1B7"
+"idb_apikey:physician:65A4C2"
+      </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Access Control: Backend Layer</h4>
+                    <div class="split">
+                        <div class="left" style="width:55%; padding-right:2%;">
+                            <ul>
+                                <li>Applies before database queries are executed</li>
+                                <li>Backend enforces user roles, tokens, and scopes</li>
+                                <li>Prevents direct client-to-database connections</li>
+                                <li>Central place to log, audit, and throttle requests</li>
+                                <li>Decouples business logic from database access rules</li>
+                            </ul>
+
+                            <pre><code>// Example: Express middleware
+app.use((req, res, next) => {
+  const token = req.headers.authorization;
+  const role = verifyJWT(token).role; // patient, nurse, physician
+  req.role = role;
+  next();
+});
+
+app.get("/records/:id", (req, res) => {
+  if (req.role !== "physician") 
+    return res.status(403).send("forbidden");
+  db.records.findOne({ _id: req.params.id }).then(r => res.json(r));
+});
+      </code></pre>
+
+                            <pre><code>// API key example
+API_KEY = "backend_apikey:physician:65A4C2"
+role = API_KEY.split(":")[1]; // physician
+      </code></pre>
+                        </div>
+
+                        <div class="right" style="width:40%; text-align:center;">
+                            <img src="./img/hospital.png" alt="Backend enforcing access before database"
+                                class="slide-image" style="max-width:100%; height:auto; border-radius:10px;" />
+                            <p style="font-size:0.9em; margin-top:0.5rem;">
+                                Access decisions occur in the backend: not the database.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>IP-Based Access Control: Backend and MongoDB</h4>
+                    <div class="split">
+                        <div class="left" style="width:55%; padding-right:2%;">
+                            <ul>
+                                <li>Restricts database access by client IP address</li>
+                                <li>Acts as a network-level access control layer</li>
+                                <li>Common in managed clusters (MongoDB Atlas, Firewalls)</li>
+                                <li>Only trusted subnets or devices can connect</li>
+                                <li><strong>Note:</strong> IP filtering ≠ authentication: still use user roles</li>
+                            </ul>
+
+                            <pre><code># Example: MongoDB Atlas IP access list
+Project → Network Access → IP Whitelist
+Add IP: 203.0.113.15 (office)
+Add CIDR: 203.0.113.0/24 (VPN subnet)
+      </code></pre>
+
+                            <pre><code>// Self-hosted: bind and firewall
+net:
+  bindIp: 127.0.0.1,192.168.10.5
+  port: 27017
+
+# OS firewall
+sudo ufw allow from 192.168.10.0/24 to any port 27017
+      </code></pre>
+                        </div>
+
+                        <div class="right" style="width:40%; text-align:center;">
+                            <img src="./img/hospital.png" alt="IP-based access control for MongoDB cluster"
+                                class="slide-image" style="max-width:100%; height:auto; border-radius:10px;" />
+                            <p style="font-size:0.9em; margin-top:0.5rem;">
+                                Only approved network sources can reach the database.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+
+                <section>
+                    <h4>RBAC with API Keys in MongoDB</h4>
+                    <div class="split">
+                        <div class="left" style="width:55%; padding-right:2%;">
+                            <ul>
+                                <li>Each API key encodes a role (patient, nurse, physician)</li>
+                                <li>API gateway checks key → extracts role → applies rule</li>
+                                <li>MongoDB grants permissions by role</li>
+                            </ul>
+
+                            <pre><code>// Example API keys
+API_KEY_PATIENT   = "mongo_apikey:patient:72F3A9";
+API_KEY_NURSE     = "mongo_apikey:nurse:98D1B7";
+API_KEY_PHYSICIAN = "mongo_apikey:physician:65A4C2";
+      </code></pre>
+
+                            <pre><code>// Check and enforce
+const role = req.get("x-api-key").split(":")[1];
+if (role === "nurse") db.notes.updateOne({ patientId }, update);
+else if (role === "patient") db.notes.find({ self: true });
+      </code></pre>
+                        </div>
+
+                        <div class="right" style="width:40%; text-align:center;">
+                            <img src="./img/hospital.png" alt="API key roles controlling MongoDB access"
+                                class="slide-image" style="max-width:100%; height:auto; border-radius:10px;" />
+                        </div>
+                    </div>
                 </section>
 
                 <section>
@@ -16612,44 +17098,76 @@ new TextDecoder().decode(dec); // "secret"
                 </section>
 
                 <section>
-                    <h4>API and Data Access Security</h4>
-                    <ul>
-                        <li>Authenticate: OAuth2/OIDC, API keys with scopes</li>
-                        <li>Authorize: per-tenant roles, row/field policies</li>
-                        <li>Validate: schema checks, size limits, content rules</li>
-                        <li>Rate-limit, audit logs, request tracing</li>
-                    </ul>
+                    <h4>Data Fragmentation</h4>
                 </section>
 
                 <section>
-                    <h4>NoSQL Threats and Mitigations</h4>
-                    <ul>
-                        <li>Injection in query builders → input validation, allowlists</li>
-                        <li>Over-permissive roles → least privilege, reviews</li>
-                        <li>Key/secret leakage → KMS, short-lived creds</li>
-                        <li>Replica eavesdropping → TLS everywhere</li>
-                        <li>Backup exposure → encrypt backups, access logs</li>
-                    </ul>
+                    <h4>Data Fragmentation — Concept</h4>
+                    <div class="split">
+                        <div class="left" style="width:55%; padding-right:2%;">
+                            <ul>
+                                <li>Divide large datasets into smaller, manageable fragments</li>
+                                <li>Improve performance, scalability, and data isolation</li>
+                                <li>Fragments can be distributed across nodes or regions</li>
+                                <li>Supports privacy by storing sensitive data separately</li>
+                            </ul>
+                            <pre><code>// Example split
+patients_core     → demographics, ID
+patients_medical  → diagnoses, treatments
+patients_billing  → invoices, payments
+      </code></pre>
+                        </div>
+                        <div class="right" style="width:40%; text-align:center;">
+                            <img src="./img/hospital.png" alt="Data fragmentation across healthcare systems"
+                                class="slide-image" style="max-width:100%; height:auto; border-radius:10px;" />
+                        </div>
+                    </div>
                 </section>
 
                 <section>
-                    <h4>Operational Guardrails</h4>
-                    <ul>
-                        <li>Automated baselines and drift detection</li>
-                        <li>Replica health, lag, and failover drills</li>
-                        <li>Backup restore tests and RTO/RPO tracking</li>
-                        <li>Security runbooks and incident playbooks</li>
-                    </ul>
+                    <h4>Horizontal Fragmentation — Sharding</h4>
+                    <div class="split">
+                        <div class="left" style="width:55%; padding-right:2%;">
+                            <ul>
+                                <li>Each shard holds a subset of records (horizontal split)</li>
+                                <li>Common shard keys: region, department, or patient group</li>
+                                <li>Queries route to the correct shard via the router</li>
+                                <li>MongoDB, Cassandra, and Neo4j support native sharding</li>
+                            </ul>
+                            <pre><code>// Example shard keys
+hospital_east   → patients.region = "East"
+hospital_west   → patients.region = "West"
+hospital_central → patients.region = "Central"
+      </code></pre>
+                        </div>
+                        <div class="right" style="width:40%; text-align:center;">
+                            <img src="./img/hospital.png" alt="Horizontal data sharding in hospital systems"
+                                class="slide-image" style="max-width:100%; height:auto; border-radius:10px;" />
+                        </div>
+                    </div>
                 </section>
 
                 <section>
-                    <h4>Hands-On Lab Ideas</h4>
-                    <ul>
-                        <li>Enable TLS and test driver connections</li>
-                        <li>Create roles and verify least-privilege queries</li>
-                        <li>Encrypt a field client side and query patterns</li>
-                        <li>Rotate keys and validate read continuity</li>
-                    </ul>
+                    <h4>Vertical Fragmentation — Data Marts</h4>
+                    <div class="split">
+                        <div class="left" style="width:55%; padding-right:2%;">
+                            <ul>
+                                <li>Each mart stores topic-specific slices of data</li>
+                                <li>Feeds from the lake or ETL pipelines</li>
+                                <li>Optimized for analytics or departmental access</li>
+                                <li>Finance, clinical, and operations marts stay separate</li>
+                            </ul>
+                            <pre><code>// Example marts
+mart_clinical  → patient outcomes
+mart_billing   → payments, reimbursements
+mart_staffing  → scheduling, hours
+      </code></pre>
+                        </div>
+                        <div class="right" style="width:40%; text-align:center;">
+                            <img src="./img/hospital.png" alt="Data marts built from a unified hospital data lake"
+                                class="slide-image" style="max-width:100%; height:auto; border-radius:10px;" />
+                        </div>
+                    </div>
                 </section>
 
                 <section>
