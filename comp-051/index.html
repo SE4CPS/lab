@@ -477,7 +477,8 @@
                             </tr>
                             <tr style="color:#ccc;">
                                 <td style="padding:6px; border:1px solid #666;">Week 12</td>
-                                <td style="padding:6px; border:1px solid #666;"><a href="./#nov-11">Nov 11</a>, Nov 13
+                                <td style="padding:6px; border:1px solid #666;"><a href="./#nov-11">Nov 11</a>, <a
+                                        href="./#nov-13">Nov 13</a>
                                 </td>
                                 <td style="padding:6px; border:1px solid #666;">Recursion and Module Review</td>
                                 <td style="padding:6px; border:1px solid #666;"></td>
@@ -9777,7 +9778,6 @@ searchTree(root);
             </section>
 
             <!-- Slide: Question -->
-            <!-- Slide: Question -->
             <section>
                 <h4><span class="highlight">In-Class Exercise: Recursive Search</span></h4>
                 <div class="split">
@@ -10237,7 +10237,676 @@ const int ROUNDS_TO_WIN = 2;
                 </div>
             </section>
 
+            <section id="nov-13">
+                <div class="split">
+                    <div class="left">
+                        <h4>Today, Thursday Nov 13th</h4>
+                        <ol type="A">
+                            <li>Review Functions</li>
+                            <li>Review Namespaces</li>
+                            <li>Module Review</li>
+                            <li>Homework, Lab</li>
+                        </ol>
+                    </div>
+                    <div class="right"
+                        style="display: flex; align-items: center; justify-content: center; background-color: #f5f5f5; border-radius: 12px; height: 250px; overflow: hidden;">
+                        <img src="https://www.programiz.com/sites/tutorial2program/files/cpp-function-recursion-working.png"
+                            alt="Exception Handling Concept"
+                            style="max-width: 100%; max-height: 100%; border-radius: 12px; object-fit: cover;" />
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 1: Function Signature -->
+            <section>
+                <h4><span class="highlight">Function Signature</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>The function’s name and parameter list form its signature.</li>
+                            <li>Return type is not part of the signature.</li>
+                            <li>The compiler matches calls using the signature.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+int add(int a, int b);
+// name: add, params: (int, int)
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 2: Parameters vs Arguments -->
+            <section>
+                <h4><span class="highlight">Parameters vs Arguments</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Parameters are placeholders in the function definition.</li>
+                            <li>Arguments are the actual values passed at the call site.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+void greet(string name);   // parameter
+greet("Alice");            // argument
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 3: Return Types -->
+            <section>
+                <h4><span class="highlight">Return Types</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Every function specifies a return type.</li>
+                            <li>void means no value is returned.</li>
+                            <li>Return type guides how the function is used.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+double square(double x) {
+    return x * x;
+}
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 4: Passing by Value -->
+            <section>
+                <h4><span class="highlight">Passing by Value</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>A copy of the argument is passed to the function.</li>
+                            <li>Original data remains unchanged.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+void test(int x) {
+    x = 50; // affects only local copy
+}
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 5: Passing by Reference -->
+            <section>
+                <h4><span class="highlight">Passing by Reference</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>The function receives an alias of the argument.</li>
+                            <li>Changes affect the original variable.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+void update(int& x) {
+    x = 50; // changes caller's variable
+}
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 6: Constant Parameters -->
+            <section>
+                <h4><span class="highlight">Constant Parameters</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>const prevents modification of the parameter.</li>
+                            <li>Useful for large objects passed by reference.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+int length(const string& s) {
+    return s.size();
+}
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 7: Default Parameters -->
+            <section>
+                <h4><span class="highlight">Default Parameters</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Provide fallback values when arguments are omitted.</li>
+                            <li>Placed at the end of the parameter list.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+void log(string msg, int level = 1);
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 8: Function Overloading -->
+            <section>
+                <h4><span class="highlight">Function Overloading</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Same name, different parameter lists.</li>
+                            <li>Compiler chooses based on matching signature.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+int sum(int a, int b);
+double sum(double a, double b);
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 9: Scope of Variables -->
+            <section>
+                <h4><span class="highlight">Variable Scope</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Local variables exist only inside the function.</li>
+                            <li>Global variables exist throughout the program.</li>
+                            <li>Local names hide global names.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+int x = 10;
+void test() {
+    int x = 5; // hides global x
+}
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 10: Returning Multiple Values -->
+            <section>
+                <h4><span class="highlight">Returning Multiple Values</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>A function returns one value directly.</li>
+                            <li>Pairs, structs, or references allow more.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+pair<int,int> getPair() {
+    return {3, 7};
+}
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 11: Helper Functions -->
+            <section>
+                <h4><span class="highlight">Helper Functions</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Small functions keep code readable.</li>
+                            <li>Reduces repetition.</li>
+                            <li>Makes testing easier.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+bool isEven(int x) {
+    return x % 2 == 0;
+}
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 12: Function Documentation -->
+            <section>
+                <h4><span class="highlight">Function Documentation</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Brief comments explain purpose.</li>
+                            <li>Clarifies input and output expectations.</li>
+                            <li>Helps future readers of the code.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+// Returns true if n is prime
+bool isPrime(int n) { ... }
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 13: Order of Parameters -->
+            <section>
+                <h4><span class="highlight">Order of Parameters</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>The sequence of parameter types forms the signature.</li>
+                            <li>Changing the order changes the signature.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+void mix(int a, double b);
+void mix(double b, int a); // different
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 14: Missing Return Warning -->
+            <section>
+                <h4><span class="highlight">Missing Return</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Non-void functions must return a value.</li>
+                            <li>Reaching the end without return is undefined.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+int test() {
+    // no return → unsafe
+}
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 15: Why We Use Functions -->
+            <section>
+                <h4><span class="highlight">Why We Use Functions</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Breaks programs into smaller tasks.</li>
+                            <li>Makes code easier to read and maintain.</li>
+                            <li>Encourages reuse of common logic.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+void printLine() {
+    cout << "----------\n";
+}
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Namespaces -->
+
+            <!-- Slide 1: What is a Namespace? -->
+            <section>
+                <h4><span class="highlight">What is a Namespace?</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>A way to group related names together.</li>
+                            <li>Prevents naming conflicts in large programs.</li>
+                            <li>Keeps functions, classes, and variables organized.</li>
+                            <li>Accessed using scope resolution (::).</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+namespace mathTools {
+    int add(int a, int b) {
+        return a + b;
+    }
+}
+
+int x = mathTools::add(3, 4);
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 2: The std Namespace -->
+            <section>
+                <h4><span class="highlight">The std Namespace</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Holds the standard C++ library names.</li>
+                            <li>Includes cout, cin, string, vector, and more.</li>
+                            <li>Created to avoid collisions with user code.</li>
+                            <li>Introduced with C++ standardization.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+std::cout << "Hello";
+std::string name = "Solo";
+std::vector<int> v = {1,2,3};
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 3: Brief History -->
+            <section>
+                <h4><span class="highlight">Brief History of std</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Early C++ had no namespaces at all.</li>
+                            <li>Library names sat in the global scope.</li>
+                            <li>C++98 introduced namespaces to solve conflicts.</li>
+                            <li>std created to hold all standard library names.</li>
+                            <li>Helped unify code across compilers.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+// Before namespaces
+// cout lived in global scope
+
+// After C++98
+std::cout << "Now organized";
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 4: Using std with Scope Resolution -->
+            <section>
+                <h4><span class="highlight">Using std with ::</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Most common way to access names inside std.</li>
+                            <li>Clear and avoids accidental conflicts.</li>
+                            <li>Shows exactly where each name comes from.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+std::cout << "Enter age: ";
+int age;
+std::cin >> age;
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 5: using namespace std -->
+            <section>
+                <h4><span class="highlight">using namespace std</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Brings all std names into the local scope.</li>
+                            <li>Makes code shorter for small programs.</li>
+                            <li>Not ideal for large projects.</li>
+                            <li>Can cause naming collisions.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+using namespace std;
+
+cout << "Shorter to write";
+string s = "Hello";
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 6: using std::cout (Selective Use) -->
+            <section>
+                <h4><span class="highlight">Selective Using</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>You can import only certain names.</li>
+                            <li>Safer than using the whole namespace.</li>
+                            <li>Keeps the code clear and clean.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+using std::cout;
+using std::string;
+
+cout << "Clean style";
+string name = "Solo";
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 7: Why std Matters -->
+            <section>
+                <h4><span class="highlight">Why std Matters</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Organizes the entire standard library.</li>
+                            <li>Makes code safer in large projects.</li>
+                            <li>Supports development across decades.</li>
+                            <li>Respects the tradition of clean structure.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+std::vector<int> data = {1,2,3};
+std::sort(data.begin(), data.end());
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
             <!-- End of Class Slides -->
+
+            <!-- Slide 1 -->
+            <section>
+                <h4><span class="highlight">1. Write a function that returns the absolute value of an integer.</span>
+                </h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Takes one integer.</li>
+                            <li>Returns positive version.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+int absolute(int n);
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 2 -->
+            <section>
+                <h4><span class="highlight">2. Write a function that counts how many vowels are in a string.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Input: string reference.</li>
+                            <li>Returns number of vowels.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+int countVowels(const std::string& text);
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 3 -->
+            <section>
+                <h4><span class="highlight">3. Write a function that returns true if a character is a digit.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>One character input.</li>
+                            <li>Checks 0–9.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+bool isDigit(char c);
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 4 -->
+            <section>
+                <h4><span class="highlight">4. Write a function that returns the middle value of three integers.</span>
+                </h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Three integer inputs.</li>
+                            <li>Returns the median.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+int middleOfThree(int a, int b, int c);
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 5 -->
+            <section>
+                <h4><span class="highlight">5. Write a function that checks if a string ends with a period.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>One string input.</li>
+                            <li>Return true if last char is '.'.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+bool endsWithPeriod(const std::string& s);
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 6 -->
+            <section>
+                <h4><span class="highlight">6. Write a function that multiplies all elements of an integer array by a
+                        constant factor.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Array pointer + size + factor.</li>
+                            <li>No return value.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+void scaleArray(int arr[], int size, int factor);
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 7 -->
+            <section>
+                <h4><span class="highlight">7. Write a function that returns the number of words in a sentence.</span>
+                </h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>String input.</li>
+                            <li>Count spaces + 1.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+int wordCount(const std::string& s);
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 8 -->
+            <section>
+                <h4><span class="highlight">8. Write a function that returns whether an integer is within a given
+                        range.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Input: value, min, max.</li>
+                            <li>Return true if min ≤ value ≤ max.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+bool inRange(int value, int low, int high);
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 9 -->
+            <section>
+                <h4><span class="highlight">9. Write a function that returns a new string containing only uppercase
+                        characters from the original.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>String input.</li>
+                            <li>Return filtered uppercase copy.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+std::string extractUpper(const std::string& s);
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 10 -->
+            <section>
+                <h4><span class="highlight">10. Write a function that swaps two integers by reference.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Two integer references.</li>
+                            <li>No return value.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+void swapValues(int& a, int& b);
+</code></pre>
+                    </div>
+                </div>
+            </section>
 
             <section>
                 <h4>Questions?</h4>
