@@ -615,7 +615,8 @@
                             </tr>
                             <tr style="color:#ccc;">
                                 <td style="padding:6px; border:1px solid #666;">Week 13</td>
-                                <td style="padding:6px; border:1px solid #666;">Nov 18, Nov 20</td>
+                                <td style="padding:6px; border:1px solid #666;"><a href="#/nov-18">Nov 18</a>, Nov 20
+                                </td>
                                 <td style="padding:6px; border:1px solid #666;">Course Review</td>
                                 <td style="padding:6px; border:1px solid #666;"></td>
                                 <td style="padding:6px; border:1px solid #666;"></td>
@@ -18134,7 +18135,1058 @@ After:
                     </div>
                 </section>
 
+                <section id="nov-18">
+                    <h4><span class="highlight">Today, November 18, 2025</span></h4>
+                    <div class="split">
+                        <div class="left">
+                            <ol>
+                                <li>Review: NoSQL Database</li>
+                                <li>Homework: Lab 4 & HW 4</li>
+                                <li>Homework: Lab 5 & HW 5</li>
+                                <li>Project: Part 2</li>
+                            </ol>
+                        </div>
+                    </div>
+                </section>
+
+                <section>IndexedDB vs SQL Recap</section>
+
+                <!-- SLIDE: Sample Weather Data Storage (IndexedDB vs SQL) -->
+                <section>
+                    <div class="split">
+
+                        <!-- LEFT: IndexedDB -->
+                        <div class="left">
+                            <p><strong>IndexedDB Structure</strong></p>
+                            <ul>
+                                <li>Key–value storage.</li>
+                                <li>Object store: <code>weatherStore</code>.</li>
+                                <li>Each record is a full JSON object.</li>
+                                <li>No schema; fields may vary.</li>
+                                <li>Lookups use B-tree → <span class="highlight">O(log n)</span>.</li>
+                            </ul>
+
+                            <pre><code class="language-javascript">
+// IndexedDB stored record
+{
+  id: 101,
+  city: "Stockton",
+  temp: 92,
+  humidity: 40,
+  date: "2025-08-01"
+}
+</code></pre>
+                        </div>
+
+                        <!-- RIGHT: SQL -->
+                        <div class="right">
+                            <p><strong>SQL Table Structure</strong></p>
+                            <ul>
+                                <li>Tabular storage.</li>
+                                <li>Fixed schema defined with CREATE TABLE.</li>
+                                <li>Types enforced (INT, VARCHAR, DATE).</li>
+                                <li>Indexes improve lookup → <span class="highlight">O(log n)</span>.</li>
+                            </ul>
+
+                            <pre><code class="language-sql">
+-- SQL row stored in table
+id | city      | temp | humidity | date
+-----------------------------------------
+101 | Stockton |  92  |    40    | 2025-08-01
+</code></pre>
+
+                        </div>
+
+                    </div>
+                </section>
+
+
+                <!-- SLIDE 1: Conceptual Difference (SQL vs IndexedDB) -->
+                <section>
+                    <h4>SQL vs IndexedDB: Core Concepts</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>IndexedDB stores key–value weather records.</li>
+                                <li>Uses object stores (e.g., "weatherStore").</li>
+                                <li>Queries rely on JavaScript functions (map/filter/reduce).</li>
+                                <li>Designed for browser local caching.</li>
+                                <li>Typical full-scan operations cost <span class="highlight">O(n)</span>.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <ul>
+                                <li>SQL stores weather rows in tables with fixed columns.</li>
+                                <li>Queries use SELECT, INSERT, UPDATE, DELETE.</li>
+                                <li>Indexes on city/date can give <span class="highlight">O(log n)</span> lookups.</li>
+                                <li>Runs on server-based weather databases.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- SLIDE 2: CRUD Difference -->
+                <section>
+                    <h4>CRUD in IndexedDB vs SQL</h4>
+                    <div class="split">
+                        <div class="left">
+                            <ul>
+                                <li>Create: store.add(weather).</li>
+                                <li>Read: store.get(key) or store.getAll().</li>
+                                <li>Update: store.put(weather).</li>
+                                <li>Delete: store.delete(key).</li>
+                                <li>Filtering usually costs <span class="highlight">O(n)</span>
+                                    with getAll + filter.</li>
+                            </ul>
+                        </div>
+                        <div class="right">
+                            <ul>
+                                <li>INSERT INTO weather VALUES (...).</li>
+                                <li>SELECT * FROM weather WHERE city='Stockton'.</li>
+                                <li>UPDATE weather SET temp = ... WHERE id = ...;</li>
+                                <li>DELETE FROM weather WHERE id = ...;</li>
+                                <li>With index on city/date, single-row lookup ~<span class="highlight">O(log n)</span>.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- SLIDE 3: Query Style Difference -->
+                <section>
+                    <h4>Query Style Difference</h4>
+                    <div class="split">
+                        <div class="left">
+                            <pre><code class="language-javascript">
+// IndexedDB Read (weather)
+store.get(cityKey);   // primary key lookup (B-tree)
+store.getAll();       // load all records
+</code></pre>
+                            <ul>
+                                <li>get(cityKey) uses a B-tree → <span class="highlight">O(log n)</span>.</li>
+                                <li>Scanning all weather entries with getAll is <span class="highlight">O(n)</span>.
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="right">
+                            <pre><code class="language-sql">
+SELECT * FROM weather
+WHERE city = 'Stockton';
+
+SELECT * FROM weather w
+JOIN regions r
+  ON w.region_id = r.id;
+</code></pre>
+                            <ul>
+                                <li>Without indexes, SQL filter is <span class="highlight">O(n)</span>.</li>
+                                <li>With index on city, SQL lookup is <span class="highlight">O(log n)</span>.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SLIDE 4: Performance MCQ -->
+                <section>
+                    <h4>Performance Question (MCQ)</h4>
+                    <div class="split">
+                        <div class="left">
+                            <p><strong>Query fastest to find yesterday’s temperature record?</strong></p>
+                            <ul>
+                                <li>A: IndexedDB getAll() then filter by date.</li>
+                                <li>B: IndexedDB cursor scan over all records.</li>
+                                <li>C: SQL SELECT date='yesterday' without index.</li>
+                                <li>D: SQL SELECT date='yesterday' with date index.</li>
+                            </ul>
+                        </div>
+
+                        <div class="right">
+                            <pre><code class="language-sql">
+SELECT * FROM weather
+WHERE date = 'yesterday';
+
+-- or with index
+SELECT * FROM weather
+WHERE date = 'yesterday';
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SLIDE 5: Write the Weather Query -->
+                <section>
+                    <h4>Write the Query (IndexedDB + JS)</h4>
+                    <div class="split">
+                        <div class="left">
+                            <p><strong>Write an IndexedDB query:</strong></p>
+                            <ul>
+                                <li>Find all cities where temperature ≥ 90°F.</li>
+                                <li>Use JavaScript map / filter / reduce.</li>
+                                <li>Think about cost: reading all then filtering is <span class="highlight">O(n)</span>.
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="right fragment">
+                            <pre><code class="language-javascript">
+// Load all weather records, then filter and map
+store.getAll().onsuccess = (event) =&gt; {
+    const weather = event.target.result; // n records
+
+    const hotCities =
+        weather
+            .filter(w =&gt; w.temp &gt;= 90)  // O(n)
+            .map(w =&gt; w.city);          // O(n)
+
+    // Total time ~ O(n) for n records
+};
+</code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>MongoDB vs SQL Recap</section>
+
+                <!-- SLIDE 1: Sample Weather Data (MongoDB vs SQL) -->
+                <section>
+                    <div class="split">
+
+                        <!-- LEFT -->
+                        <div class="left">
+                            <p><strong>MongoDB Document</strong></p>
+                            <ul>
+                                <li>JSON-like document.</li>
+                                <li>Collection: <code>weather</code>.</li>
+                                <li>Flexible fields.</li>
+                                <li>Index lookup → <span class="highlight">O(log n)</span>.</li>
+                            </ul>
+                            <pre><code class="language-javascript">
+{
+  _id: 101,
+  city: "Stockton",
+  temp: 92,
+  hum: 40,
+  date: "2025-08-01"
+}
+</code></pre>
+                        </div>
+
+                        <!-- RIGHT -->
+                        <div class="right">
+                            <p><strong>SQL Row</strong></p>
+                            <ul>
+                                <li>Fixed table schema.</li>
+                                <li>Defined types (INT, VARCHAR).</li>
+                                <li>Strict column structure.</li>
+                                <li>Index lookup → <span class="highlight">O(log n)</span>.</li>
+                            </ul>
+                            <pre><code class="language-sql">
+id | city     | temp | hum | date
+-----------------------------------
+101| Stockton | 92   | 40  | 2025-08-01
+</code></pre>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- SLIDE 2: Core Concepts -->
+                <section>
+                    <h4>SQL vs MongoDB: Core Concepts</h4>
+                    <div class="split">
+
+                        <div class="left">
+                            <ul>
+                                <li>MongoDB uses <strong>documents</strong>.</li>
+                                <li>No schema enforcement.</li>
+                                <li>Nested fields allowed.</li>
+                                <li>Aggregation pipeline for queries.</li>
+                                <li>Full scans often <span class="highlight">O(n)</span>.</li>
+                            </ul>
+                        </div>
+
+                        <div class="right">
+                            <ul>
+                                <li>SQL uses <strong>tables</strong>.</li>
+                                <li>Strict schemas with DDL.</li>
+                                <li>Rows + typed columns.</li>
+                                <li>Joins supported.</li>
+                                <li>Index lookup <span class="highlight">O(log n)</span>.</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- SLIDE 3: CRUD Differences -->
+                <section>
+                    <h4>CRUD in MongoDB vs SQL</h4>
+                    <div class="split">
+
+                        <div class="left">
+                            <ul>
+                                <li>Create: <code>insertOne()</code></li>
+                                <li>Read: <code>find()</code></li>
+                                <li>Update: <code>updateOne()</code></li>
+                                <li>Delete: <code>deleteOne()</code></li>
+                                <li>Filters rely on document fields.</li>
+                                <li>Non-indexed queries → <span class="highlight">O(n)</span>.</li>
+                            </ul>
+                        </div>
+
+                        <div class="right">
+                            <ul>
+                                <li>INSERT INTO weather ...</li>
+                                <li>SELECT * FROM weather ...</li>
+                                <li>UPDATE weather SET ...</li>
+                                <li>DELETE FROM weather ...</li>
+                                <li>Relational filtering.</li>
+                                <li>Indexed lookup → <span class="highlight">O(log n)</span>.</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- SLIDE 4: Query Style (Example) -->
+                <section>
+                    <h4>Find Hot Cities (MongoDB vs SQL)</h4>
+                    <div class="split">
+
+                        <div class="left">
+                            <pre><code class="language-javascript">
+db.weather.find({
+  temp: { $gte: 90 }
+})
+</code></pre>
+                            <ul>
+                                <li>Document filter.</li>
+                                <li>Indexed filter → <span class="highlight">O(log n)</span>.</li>
+                                <li>No joins; embed or reference.</li>
+                            </ul>
+                        </div>
+
+                        <div class="right">
+                            <pre><code class="language-sql">
+SELECT city FROM weather
+WHERE temp >= 90;
+</code></pre>
+                            <ul>
+                                <li>Column filter.</li>
+                                <li>Index improves to <span class="highlight">O(log n)</span>.</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- SLIDE 5: Performance MCQ -->
+                <section>
+                    <h4>Performance Question (MCQ)</h4>
+                    <div class="split">
+
+                        <div class="left">
+                            <p><strong>Fastest way to find all cities with temp ≥ 90?</strong></p>
+                            <ul>
+                                <li>A: MongoDB full scan (<code>find()</code> no index)</li>
+                                <li>B: MongoDB indexed temp field</li>
+                                <li>C: SQL full table scan</li>
+                                <li>D: SQL indexed temp column</li>
+                            </ul>
+                        </div>
+
+                        <div class="right fragment">
+                            <ul>
+                                <li>A and C → full scans <span class="highlight">O(n)</span></li>
+                                <li>B and D → index lookup <span class="highlight">O(log n)</span></li>
+                                <li><strong>Best: B or D</strong> (both indexed)</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- SLIDE 6: Write the Query -->
+                <section>
+                    <h4>Write the Query (MongoDB + SQL)</h4>
+                    <div class="split">
+
+                        <div class="left">
+                            <p><strong>Write a MongoDB query:</strong></p>
+                            <ul>
+                                <li>Find weather records for “Stockton”.</li>
+                                <li>Short written answer expected.</li>
+                                <li>Hint: index lookup → <span class="highlight">O(log n)</span>.</li>
+                            </ul>
+                        </div>
+
+                        <div class="right fragment">
+                            <pre><code class="language-javascript">
+// MongoDB MQL
+db.weather.find({ city: "Stockton" })
+</code></pre>
+
+                            <pre><code class="language-sql">
+-- SQL
+SELECT * FROM weather
+WHERE city = 'Stockton';
+</code></pre>
+                        </div>
+
+                    </div>
+                </section>
+
+                <section>Redis vs SQL Recap</section>
+
+                <!-- SLIDE 1: Sample Weather Data (Redis vs SQL) -->
+                <section>
+                    <div class="split">
+
+                        <!-- LEFT: Redis -->
+                        <div class="left">
+                            <p><strong>Redis Hash</strong></p>
+                            <ul>
+                                <li>In-memory key–value store.</li>
+                                <li>Key pattern: <code>weather:101</code>.</li>
+                                <li>Stores fields in a hash.</li>
+                                <li>Key lookup ~<span class="highlight">O(1)</span> average.</li>
+                            </ul>
+                            <pre><code class="language-text">
+KEY: weather:101
+FIELDS:
+  city = "Stockton"
+  temp = "92"
+  hum  = "40"
+  date = "2025-08-01"
+</code></pre>
+                        </div>
+
+                        <!-- RIGHT: SQL -->
+                        <div class="right">
+                            <p><strong>SQL Row</strong></p>
+                            <ul>
+                                <li>Row in table <code>weather</code>.</li>
+                                <li>Schema defined with DDL.</li>
+                                <li>Types fixed (INT, VARCHAR, DATE).</li>
+                                <li>Indexed lookup → <span class="highlight">O(log n)</span>.</li>
+                            </ul>
+                            <pre><code class="language-sql">
+id | city     | temp | hum | date
+-----------------------------------
+101| Stockton | 92   | 40  | 2025-08-01
+</code></pre>
+                        </div>
+
+                    </div>
+                </section>
+
+
+
+                <!-- SLIDE 2: Core Concepts -->
+                <section>
+                    <h4>SQL vs Redis: Core Concepts</h4>
+                    <div class="split">
+
+                        <div class="left">
+                            <ul>
+                                <li>Redis is key–value, in memory.</li>
+                                <li>Data types: strings, hashes, sets, lists.</li>
+                                <li>No joins, no SQL parser.</li>
+                                <li>Key lookup ~<span class="highlight">O(1)</span> average.</li>
+                                <li>SCAN over many keys → <span class="highlight">O(n)</span>.</li>
+                            </ul>
+                        </div>
+
+                        <div class="right">
+                            <ul>
+                                <li>SQL is table and row based.</li>
+                                <li>Relational queries with SELECT.</li>
+                                <li>Supports joins and aggregates.</li>
+                                <li>Index lookup → <span class="highlight">O(log n)</span>.</li>
+                                <li>Full table scan → <span class="highlight">O(n)</span>.</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </section>
+
+
+
+                <!-- SLIDE 3: CRUD Differences -->
+                <section>
+                    <h4>CRUD in Redis vs SQL</h4>
+                    <div class="split">
+
+                        <div class="left">
+                            <ul>
+                                <li>Create: <code>HSET</code> weather hash.</li>
+                                <li>Read: <code>HGETALL</code> / <code>HGET</code>.</li>
+                                <li>Update: <code>HSET</code> same key.</li>
+                                <li>Delete: <code>DEL weather:101</code>.</li>
+                                <li>Single key ops ~<span class="highlight">O(1)</span>.</li>
+                                <li>Global searches need SCAN → <span class="highlight">O(n)</span>.</li>
+                            </ul>
+                        </div>
+
+                        <div class="right">
+                            <ul>
+                                <li>INSERT INTO weather (...).</li>
+                                <li>SELECT * FROM weather ...</li>
+                                <li>UPDATE weather SET ...</li>
+                                <li>DELETE FROM weather ...</li>
+                                <li>Indexed search → <span class="highlight">O(log n)</span>.</li>
+                                <li>Full scan → <span class="highlight">O(n)</span>.</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </section>
+
+
+
+                <!-- SLIDE 4: Query Style (Example) -->
+                <section>
+                    <h4>Find One Weather Record</h4>
+                    <div class="split">
+
+                        <div class="left">
+                            <pre><code class="language-text">
+HGETALL weather:101
+</code></pre>
+                            <ul>
+                                <li>Direct key lookup for id 101.</li>
+                                <li>Average cost ~<span class="highlight">O(1)</span>.</li>
+                            </ul>
+                        </div>
+
+                        <div class="right">
+                            <pre><code class="language-sql">
+SELECT * FROM weather
+WHERE id = 101;
+</code></pre>
+                            <ul>
+                                <li>With index on id → <span class="highlight">O(log n)</span>.</li>
+                                <li>Without index → <span class="highlight">O(n)</span> scan.</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- SLIDE 5: Performance MCQ -->
+                <section>
+                    <h4>Performance Question (MCQ)</h4>
+                    <div class="split">
+
+                        <div class="left">
+                            <p><strong>Fastest way to get yesterday’s weather for id 101?</strong></p>
+                            <ul>
+                                <li>A: Redis SCAN all keys then filter by date field.</li>
+                                <li>B: Redis HGETALL weather:101.</li>
+                                <li>C: SQL full scan on weather table by date.</li>
+                                <li>D: SQL indexed lookup on (id, date).</li>
+                            </ul>
+                        </div>
+
+                        <div class="right fragment">
+                            <ul>
+                                <li>A and C read many rows → <span class="highlight">O(n)</span>.</li>
+                                <li>B uses Redis key → ~<span class="highlight">O(1)</span>.</li>
+                                <li>D uses SQL index → <span class="highlight">O(log n)</span>.</li>
+                                <li><strong>Best for id 101: B or D.</strong></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </section>
+
+
+
+                <!-- SLIDE 6: Write the Query -->
+                <section>
+                    <h4>Write the Query (Redis + SQL)</h4>
+                    <div class="split">
+
+                        <div class="left">
+                            <p><strong>Task:</strong></p>
+                            <ul>
+                                <li>Get all fields for weather id 101.</li>
+                                <li>Write Redis command and SQL query.</li>
+                                <li>Key lookup is <span class="highlight">O(1)</span> in Redis, <span
+                                        class="highlight">O(log n)</span> with index in SQL.</li>
+                            </ul>
+                        </div>
+
+                        <div class="right fragment">
+                            <pre><code class="language-text">
+HGETALL weather:101
+</code></pre>
+
+                            <pre><code class="language-sql">
+SELECT * FROM weather
+WHERE id = 101;
+</code></pre>
+                        </div>
+
+                    </div>
+                </section>
+
+                <section>ClickHouse vs SQL Recap</section>
+
+                <!-- SLIDE 1: Aggregate Storage (ClickHouse vs Row-Store SQL) -->
+                <section>
+                    <h4>Weather Aggregates: ClickHouse vs Row-Store</h4>
+                    <div class="split">
+
+                        <!-- LEFT: ClickHouse aggregate table -->
+                        <div class="left">
+                            <p><strong>ClickHouse (Daily Aggregates)</strong></p>
+                            <ul>
+                                <li>Pre-aggregated table: <code>weather_daily_city</code>.</li>
+                                <li>One row per city per day.</li>
+                                <li>Built via materialized view.</li>
+                                <li>Query cost vs raw data ~<span class="highlight">O(1)</span> (fixed small set).</li>
+                            </ul>
+                            <pre><code class="language-sql">
+-- ClickHouse aggregate row
+city  | date       | avg_temp | max_temp | count
+-------------------------------------------------
+Stock | 2025-08-01 |   87.2   |   102    | 1440
+</code></pre>
+                        </div>
+
+                        <!-- RIGHT: Row-store raw table -->
+                        <div class="right">
+                            <p><strong>Row-Store SQL (Raw Readings)</strong></p>
+                            <ul>
+                                <li>Raw table: <code>weather_raw</code>.</li>
+                                <li>Many rows per city per day.</li>
+                                <li>Aggregates computed at query time.</li>
+                                <li>Full scan over readings ~<span class="highlight">O(n)</span>.</li>
+                            </ul>
+                            <pre><code class="language-sql">
+-- Row-store raw row
+city  | date       | time  | temp | hum
+----------------------------------------
+Stock | 2025-08-01 | 12:00 |  92  | 40
+</code></pre>
+                        </div>
+
+                    </div>
+                </section>
+
+
+
+                <!-- SLIDE 2: Core Concept of O(1) Aggregates -->
+                <section>
+                    <h4>Why ClickHouse Feels O(1) for Aggregates</h4>
+                    <div class="split">
+
+                        <div class="left">
+                            <ul>
+                                <li>Aggregates precomputed into small tables.</li>
+                                <li>Query reads a few rows, not millions.</li>
+                                <li>Fixed-size result per day/city.</li>
+                                <li>Work vs original N readings ~<span class="highlight">O(1)</span>.</li>
+                            </ul>
+                        </div>
+
+                        <div class="right">
+                            <ul>
+                                <li>Row-store computes aggregates on raw data.</li>
+                                <li>Must scan many readings each query.</li>
+                                <li>Cost grows with history size.</li>
+                                <li>Work vs N readings ~<span class="highlight">O(n)</span>.</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </section>
+
+
+
+                <!-- SLIDE 3: CRUD / Pipeline for Aggregates -->
+                <section>
+                    <h4>Aggregate Pipeline: ClickHouse vs Row-Store</h4>
+                    <div class="split">
+
+                        <div class="left">
+                            <ul>
+                                <li>INSERT raw readings into <code>weather_raw</code>.</li>
+                                <li>Materialized view updates <code>weather_daily_city</code>.</li>
+                                <li>SELECT aggregates from small table.</li>
+                                <li>Read queries on aggregates ~<span class="highlight">O(1)</span>.</li>
+                            </ul>
+                        </div>
+
+                        <div class="right">
+                            <ul>
+                                <li>INSERT into single raw table.</li>
+                                <li>No pre-aggregate table.</li>
+                                <li>SELECT uses GROUP BY on raw data.</li>
+                                <li>Aggregate queries ~<span class="highlight">O(n)</span> over readings.</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </section>
+
+
+
+                <!-- SLIDE 4: Query Style (Daily Avg per City) -->
+                <section>
+                    <h4>Daily Average Temperature per City</h4>
+                    <div class="split">
+
+                        <div class="left">
+                            <pre><code class="language-sql">
+-- ClickHouse (pre-aggregated)
+SELECT city, avg_temp
+FROM weather_daily_city
+WHERE date = '2025-08-01';
+</code></pre>
+                            <ul>
+                                <li>Reads a few rows from aggregate table.</li>
+                                <li>Work vs raw N readings ~<span class="highlight">O(1)</span>.</li>
+                            </ul>
+                        </div>
+
+                        <div class="right">
+                            <pre><code class="language-sql">
+-- Row-store (raw)
+SELECT city,
+       AVG(temp) AS avg_temp
+FROM weather_raw
+WHERE date = '2025-08-01'
+GROUP BY city;
+</code></pre>
+                            <ul>
+                                <li>Scans all readings for that date.</li>
+                                <li>Work vs N daily readings ~<span class="highlight">O(n)</span>.</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- SLIDE 5: Performance MCQ (3 Years of Data) -->
+                <section>
+                    <h4>Performance Question (MCQ)</h4>
+                    <div class="split">
+
+                        <div class="left">
+                            <p><strong>Average temperature per city for 3 years of data.</strong></p>
+                            <ul>
+                                <li>A: Row-store SQL on <code>weather_raw</code> (GROUP BY).</li>
+                                <li>B: ClickHouse on <code>weather_raw</code> (GROUP BY).</li>
+                                <li>C: Row-store SQL on daily aggregate table.</li>
+                                <li>D: ClickHouse on daily aggregate table <code>weather_daily_city</code>.</li>
+                            </ul>
+                        </div>
+
+                        <div class="right fragment">
+                            <ul>
+                                <li>A, B: scan many raw rows → <span class="highlight">O(n)</span>.</li>
+                                <li>C: smaller table, but still grows with days → ~<span class="highlight">O(n)</span>
+                                    in days.</li>
+                                <li>D: fixed-size aggregates per city, optimized columnar read.</li>
+                                <li>With bounded #cities and pre-aggregates, query cost ~<span
+                                        class="highlight">O(1)</span> vs raw N.</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </section>
+
+
+
+                <!-- SLIDE 6: Write the Aggregate Query -->
+                <section>
+                    <h4>Write the Aggregate Query</h4>
+                    <div class="split">
+
+                        <div class="left">
+                            <p><strong>Task:</strong></p>
+                            <ul>
+                                <li>Return max temperature per city for August 2025.</li>
+                                <li>Use ClickHouse aggregate table and row-store raw table.</li>
+                                <li>ClickHouse aggregate query ~<span class="highlight">O(1)</span> vs raw N readings.
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="right fragment">
+                            <pre><code class="language-sql">
+-- ClickHouse (aggregate table)
+SELECT city,
+       max_temp
+FROM weather_daily_city
+WHERE date &gt;= '2025-08-01'
+  AND date &lt;= '2025-08-31';
+</code></pre>
+
+                            <pre><code class="language-sql">
+-- Row-store (raw table)
+SELECT city,
+       MAX(temp) AS max_temp
+FROM weather_raw
+WHERE date BETWEEN '2025-08-01'
+              AND '2025-08-31'
+GROUP BY city;
+</code></pre>
+                        </div>
+
+                    </div>
+                </section>
+
+                <section>Recap Faiss and SQL</section>
+
+                <!-- SLIDE 1: Vector Storage (FAISS vs SQL) -->
+                <section>
+                    <h4>Vector Storage: FAISS vs SQL</h4>
+                    <div class="split">
+
+                        <!-- LEFT: FAISS -->
+                        <div class="left">
+                            <p><strong>FAISS Index</strong></p>
+                            <ul>
+                                <li>Stores dense vectors in an index.</li>
+                                <li>Example: weather embedding per city.</li>
+                                <li>Precomputed structure for fast search.</li>
+                                <li>Query cost vs raw scan ~<span class="highlight">O(1)</span> (fixed probes).</li>
+                            </ul>
+                            <pre><code class="language-python">
+# vector for a city
+[0.12, -0.30, 0.75, ...]
+</code></pre>
+                        </div>
+
+                        <!-- RIGHT: SQL -->
+                        <div class="right">
+                            <p><strong>SQL Table with Vectors</strong></p>
+                            <ul>
+                                <li>Table: <code>weather_vectors</code>.</li>
+                                <li>One row per city.</li>
+                                <li>Vector stored as array/JSON/BLOB.</li>
+                                <li>Brute-force distance scan ~<span class="highlight">O(n)</span>.</li>
+                            </ul>
+                            <pre><code class="language-sql">
+city  | vec
+-----------------------
+"Stock" | [0.12,-0.30,...]
+</code></pre>
+                        </div>
+
+                    </div>
+                </section>
+
+
+
+                <!-- SLIDE 2: Core Concept of O(1) Nearest Neighbor -->
+                <section>
+                    <h4>Why FAISS Feels O(1) for Similarity Search</h4>
+                    <div class="split">
+
+                        <div class="left">
+                            <ul>
+                                <li>Index partitions space (IVF, HNSW, etc.).</li>
+                                <li>Search probes only a few clusters.</li>
+                                <li>For fixed index params, work per query is bounded.</li>
+                                <li>Cost vs n vectors ~<span class="highlight">O(1)</span> (approximate).</li>
+                            </ul>
+                        </div>
+
+                        <div class="right">
+                            <ul>
+                                <li>SQL has no vector index by default.</li>
+                                <li>Must compute distance to many rows.</li>
+                                <li>Work grows with number of vectors.</li>
+                                <li>Cost vs n vectors ~<span class="highlight">O(n)</span>.</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </section>
+
+
+
+                <!-- SLIDE 3: Pipeline / CRUD for Vectors -->
+                <section>
+                    <h4>Vector Pipeline: FAISS vs SQL Only</h4>
+                    <div class="split">
+
+                        <div class="left">
+                            <ul>
+                                <li>Store metadata in SQL (city, region).</li>
+                                <li>Store vectors in FAISS index.</li>
+                                <li>Search in FAISS, then join IDs to SQL.</li>
+                                <li>Nearest neighbor queries ~<span class="highlight">O(1)</span> vs n.</li>
+                            </ul>
+                        </div>
+
+                        <div class="right">
+                            <ul>
+                                <li>Store everything in one SQL table.</li>
+                                <li>No dedicated vector index.</li>
+                                <li>Compute distance for many rows.</li>
+                                <li>Nearest neighbor queries ~<span class="highlight">O(n)</span>.</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </section>
+
+
+
+                <!-- SLIDE 4: Query Style (Top-k Similar Cities) -->
+                <section>
+                    <h4>Find Top-k Similar Weather Patterns</h4>
+                    <div class="split">
+
+                        <div class="left">
+                            <pre><code class="language-python">
+# FAISS: query q, get top-k
+D, I = index.search(q, k)
+# I = vector ids for nearest cities
+</code></pre>
+                            <ul>
+                                <li>Index search with fixed probes.</li>
+                                <li>Cost vs n vectors ~<span class="highlight">O(1)</span> (approximate).</li>
+                            </ul>
+                        </div>
+
+                        <div class="right">
+                            <pre><code class="language-sql">
+-- SQL pseudo (no vector index)
+SELECT city,
+       distance(vec, :q) AS d
+FROM weather_vectors
+ORDER BY d
+LIMIT 10;
+</code></pre>
+                            <ul>
+                                <li>Distance computed for many rows.</li>
+                                <li>Cost vs n vectors ~<span class="highlight">O(n)</span>.</li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </section>
+
+
+
+                <!-- SLIDE 5: Performance MCQ -->
+                <section>
+                    <h4>Performance Question (MCQ)</h4>
+                    <div class="split">
+
+                        <div class="left">
+                            <p><strong>Task: Top 10 similar cities for a weather embedding.</strong></p>
+                            <ul>
+                                <li>A: SQL, full scan, ORDER BY distance.</li>
+                                <li>B: SQL, prefilter by region, then full scan.</li>
+                                <li>C: FAISS index with fixed probes.</li>
+                                <li>D: FAISS + cached results for common queries.</li>
+                            </ul>
+                        </div>
+
+                        <div class="right fragment">
+                            <ul>
+                                <li>A, B: distance on many rows → <span class="highlight">O(n)</span>.</li>
+                                <li>C: bounded work per query → ~<span class="highlight">O(1)</span> vs n.</li>
+                                <li>D: cache makes repeated queries almost <span class="highlight">O(1)</span> lookups.
+                                </li>
+                                <li><strong>Best practical answer: C (or D if cache fits use case).</strong></li>
+                            </ul>
+                        </div>
+
+                    </div>
+                </section>
+
+
+
+                <!-- SLIDE 6: Write the Vector Query -->
+                <section>
+                    <h4>Write the Vector Query</h4>
+                    <div class="split">
+
+                        <div class="left">
+                            <p><strong>Task:</strong></p>
+                            <ul>
+                                <li>Return ids of 5 nearest cities for query vector q.</li>
+                                <li>Write FAISS code and SQL-style pseudo query.</li>
+                                <li>FAISS behaves ~<span class="highlight">O(1)</span>, SQL ~<span
+                                        class="highlight">O(n)</span>.</li>
+                            </ul>
+                        </div>
+
+                        <div class="right fragment">
+                            <pre><code class="language-python">
+# FAISS
+k = 5
+D, I = index.search(q, k)
+# I = nearest vector ids
+</code></pre>
+
+                            <pre><code class="language-sql">
+-- SQL pseudo
+SELECT id
+FROM weather_vectors
+ORDER BY distance(vec, :q)
+LIMIT 5;
+</code></pre>
+                        </div>
+
+                    </div>
+                </section>
+
                 <section>Questions</section>
+
+                <section>Lab 4 and Homework 4</section>
+
+                <!-- SLIDE 1 -->
+                <section>
+                    <h4>Lab 4 – Question 1</h4>
+                    <div class="center">
+                        <img src="./img/lab4-q1.png" alt="Lab 4 Q1" style="max-width: 80%; height: auto;">
+                    </div>
+                </section>
+
+                <!-- SLIDE 2 -->
+                <section>
+                    <h4>Lab 4 – Question 2</h4>
+                    <div class="center">
+                        <img src="./img/lab4-q2.png" alt="Lab 4 Q2" style="max-width: 80%; height: auto;">
+                    </div>
+                </section>
+
+                <!-- SLIDE 3 -->
+                <section>
+                    <h4>Lab 4 – Question 3</h4>
+                    <div class="center">
+                        <img src="./img/lab4-q3.png" alt="Lab 4 Q3" style="max-width: 80%; height: auto;">
+                    </div>
+                </section>
+
+                <!-- SLIDE 4 -->
+                <section>
+                    <h4>Lab 4 – Question 4</h4>
+                    <div class="center">
+                        <img src="./img/lab4-q4.png" alt="Lab 4 Q4" style="max-width: 80%; height: auto;">
+                    </div>
+                </section>
+
+                <!-- SLIDE 5 -->
+                <section>
+                    <h4>PowerPoint Download</h4>
+                    <p>Use the link below to access the Lab 4 presentation:</p>
+                    <p>
+                        <a href="https://github.com/SE4CPS/2025-COMP-263/tree/main/labs/lab4" target="_blank">
+                            GitHub – Lab 4 Presentation
+                        </a>
+                    </p>
+                </section>
 
                 <section>Lab 5 and Homework 5</section>
 
