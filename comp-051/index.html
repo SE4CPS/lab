@@ -487,7 +487,8 @@
                             </tr>
                             <tr style="color:#ccc;">
                                 <td style="padding:6px; border:1px solid #666;">Week 13</td>
-                                <td style="padding:6px; border:1px solid #666;"><a href="./#nov-18">Nov 18</a>, Nov 20
+                                <td style="padding:6px; border:1px solid #666;"><a href="./#nov-18">Nov 18</a>, <a
+                                        href="./#nov-20">Nov 20</a>
                                 </td>
                                 <td style="padding:6px; border:1px solid #666;">Module Review
                                 </td>
@@ -11509,6 +11510,616 @@ if(moisture < 30){ cout<<"Irrigate"; }</code></pre>
                     <li>A) Recommend irrigation</li>
                     <li>B) Print random numbers</li>
                 </ul>
+            </section>
+
+            <section id="nov-20">
+                <div class="split">
+                    <div class="left">
+                        <h4>Today, Thursday Nov. 20th</h4>
+                        <ol type="A">
+                            <li>Build a farm game</li>
+                            <li>Practice Final Exam</li>
+                        </ol>
+                    </div>
+
+                    <div class="right">
+                        <img src="https://cozygamereviews.com/wp-content/uploads/2023/08/image-20.png"
+                            alt="Agenda Image" style="width:100%; border-radius:12px;" />
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h4><span class="highlight">1. Game setup: headers and basic structure.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Basic console input and output.</li>
+                            <li>Store player names with <code>string</code>.</li>
+                            <li>Single <span class="highlight">.cpp</span> file for simplicity.</li>
+                            <li>Declare functions before <code>main()</code>.</li>
+                            <li>Simple, reusable functions only.</li>
+                            <li>Each round players pick a crop to earn coins.</li>
+                            <li>Player with the most coins after all rounds wins.</li>
+                        </ul>
+                    </div>
+                    <div class="right" style="font-size: 16pt;">
+                        <p>
+                        This program uses a simple setup: a Farmer class to store each player’s name and coins, small
+                        helper functions to initialize farmers, show the crop menu, read a player’s choice, map that
+                        choice to a coin reward, run each round, and finally print the winner after all rounds. The
+                        signatures keep the structure clean so the game logic in main() stays easy to follow.
+                        </p>
+                    </div>
+                </div>
+
+            </section>
+
+            <section>
+                <h4><span class="highlight">2. Explain the game setup and forward declarations.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li><code>#include &lt;iostream&gt;</code> for <code>cin</code> / <code>cout</code>.</li>
+                            <li><code>#include &lt;string&gt;</code> to store farmer names.</li>
+                            <li><code>using namespace std;</code> to avoid writing <code>std::</code>.</li>
+                            <li>Declarations specify functions and classes.</li>
+                            <li>All functions in <code>main()</code> declared before <code>main()</code>.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+// Signantures and setup
+class Farmer;
+void initFarmer(Farmer& farmer, const string& name);
+void printCropMenu();
+int readCropChoice(const string& playerName);
+int cropReward(int cropChoice);
+int askNumberOfRounds();
+void printRoundResult(const Farmer& p1, const Farmer& p2, int roundNumber);
+void printFinalResult(const Farmer& p1, const Farmer& p2, int rounds);
+void playSingleRound(Farmer& p1, Farmer& p2, int roundNumber);
+</code></pre>
+                    </div>
+                </div>
+
+            </section>
+
+            <section>
+                <h4><span class="highlight">3. Farmer building block: requirements and structure.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Each farmer needs a <span class="highlight">name</span>.</li>
+                            <li>Each farmer tracks total <span class="highlight">coins</span>.</li>
+                            <li>No complex methods, just data.</li>
+                            <li>Use a simple C++ <code>class</code>.</li>
+                            <li>Keep all data public to avoid getters/setters.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+class Farmer {
+
+};
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h4><span class="highlight">4. Explain the Farmer class and its role.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li><code>Farmer</code> groups together related data.</li>
+                            <li><code>name</code>: used when asking for choices and scores.</li>
+                            <li><code>coins</code>: starts at 0 and increases each round.</li>
+                            <li>All data is public for simple access in this game.</li>
+                            <li>No behavior inside the class;.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+class Farmer {
+public:
+    string name;
+    int coins;
+};
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h4><span class="highlight">5. Initialize a farmer: requirements and function signature.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Set the farmer’s name.</li>
+                            <li>Set the initial coin count to 0.</li>
+                            <li>Modify an existing <code>Farmer</code> object.</li>
+                            <li>Do not create or return a new object.</li>
+                            <li>Use reference so changes are visible to caller.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+void initFarmer(Farmer&amp; farmer, const string&amp; name);
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h4><span class="highlight">6. Initialize a farmer: implementation and logic.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Assign the provided name directly to <code>farmer.name</code>.</li>
+                            <li>Reset <code>farmer.coins</code> to 0 at the start of every game.</li>
+                            <li><code>Farmer&amp; farmer</code> passes the object by reference.</li>
+                            <li><code>const string&amp; name</code> avoids copying the string.</li>
+                            <li>This is a re-usable building block for any farmer.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+void initFarmer(Farmer&amp; farmer, const string&amp; name) {
+    farmer.name = name;
+    farmer.coins = 0;
+}
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h4><span class="highlight">7. Crop menu: requirements and function signature.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Show all available crops and their rewards.</li>
+                            <li>Use very simple reward values.</li>
+                            <li>Use fixed integer choices (0, 1, 2).</li>
+                            <li>Do not read any input here, only print.</li>
+                            <li>Use a <code>void</code> function, no return value.</li>
+                            <li>0) Wheat +2, 1) Corn +3, 2) Cows +4 coins</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+void printCropMenu();
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h4><span class="highlight">8. Crop menu: implementation and logic.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Print a short title so players know what to do.</li>
+                            <li>Use one line per option for clarity.</li>
+                            <li>Keep the rewards small and easy to remember.</li>
+                            <li>Match numbers with the later input handling.</li>
+                            <li>Use <code>cout</code> for all output.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+void printCropMenu() {
+    cout &lt;&lt; "Choose your crop (enter the number):\n";
+    cout &lt;&lt; "  0 = Wheat (+2 coins)\n";
+    cout &lt;&lt; "  1 = Corn  (+3 coins)\n";
+    cout &lt;&lt; "  2 = Cows  (+4 coins)\n";
+}
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h4><span class="highlight">9. Read a crop choice: requirements and signature.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Ask one specific farmer for a choice.</li>
+                            <li>Use the farmer’s name in the prompt.</li>
+                            <li>Read an integer from the keyboard.</li>
+                            <li>If input is outside [0, 2], fall back to 0 (Wheat).</li>
+                            <li>Return the validated choice as an <code>int</code>.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+int readCropChoice(const string&amp; playerName);
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h4><span class="highlight">10. Read a crop choice: implementation and validation.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Print a prompt that includes <code>playerName</code>.</li>
+                            <li>Store the answer in a local <code>int choice</code>.</li>
+                            <li>Check if <code>choice</code> is outside the valid range.</li>
+                            <li>Print warning and correct invalid input to 0.</li>
+                            <li>Return the final valid <code>choice</code> value.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+int readCropChoice(const string&amp; playerName) {
+    int choice;
+    cout &lt;&lt; playerName &lt;&lt; ", enter 0, 1, or 2: ";
+    cin &gt;&gt; choice;
+
+if (choice &lt; 0 || choice &gt; 2) {
+    cout &lt;&lt; "Invalid choice, using Wheat (0).\n";
+    choice = 0;
+}
+
+return choice;
+
+} </code></pre>
+                    </div>
+                </div>
+
+            </section>
+
+            <section>
+                <h4><span class="highlight">11. Map crop choice to reward: requirements and signature.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Take a validated crop choice (0, 1, or 2).</li>
+                            <li>Return the number of coins for that crop.</li>
+                            <li>Use a simple mapping:
+                                <ul>
+                                    <li>0 → 2 coins</li>
+                                    <li>1 → 3 coins</li>
+                                    <li>2 → 4 coins</li>
+                                </ul>
+                            </li>
+                            <li>Keep the function pure: no input and no output.</li>
+                            <li>Return an <code>int</code> with the reward.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+int cropReward(int cropChoice);
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h4><span class="highlight">12. Map crop choice to reward: implementation.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Use simple <code>if</code> statements (no complex logic).</li>
+                            <li>Assume the input is already validated (0, 1, or 2).</li>
+                            <li>Return 2 for Wheat, 3 for Corn, 4 for Cows.</li>
+                            <li>Use a final <code>else</code> as a default for Cows.</li>
+                            <li>Keep the function short and easy to read.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+int cropReward(int cropChoice) {
+    if (cropChoice == 0) {
+        return 2; // Wheat
+    }
+    if (cropChoice == 1) {
+        return 3; // Corn
+    }
+    return 4;     // Cows
+}
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h4><span class="highlight">13. Ask for number of rounds: requirements and signature.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Let the players decide how many rounds to play.</li>
+                            <li>Read an integer from the keyboard.</li>
+                            <li>Enforce range, for example 1 to 10 rounds.</li>
+                            <li>If input is outside range, use a default value (3).</li>
+                            <li>Return the final number of rounds as an <code>int</code>.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+int askNumberOfRounds();
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h4><span class="highlight">14. Ask for number of rounds: implementation and range checking.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Print a prompt that explains the allowed range.</li>
+                            <li>Read the user input into a local variable.</li>
+                            <li>Check if it is smaller than 1 or larger than 10.</li>
+                            <li>If invalid, print a message and set it to 3.</li>
+                            <li>Return the chosen number of rounds.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+int askNumberOfRounds() {
+    int rounds;
+    cout &lt;&lt; "How many rounds do you want to play (1-10)? ";
+    cin &gt;&gt; rounds;
+
+if (rounds &lt; 1 || rounds &gt; 10) {
+    cout &lt;&lt; "Invalid number, using 3 rounds.\n";
+    rounds = 3;
+}
+
+return rounds;
+
+} </code></pre>
+                    </div>
+                </div>
+
+            </section>
+
+            <section>
+                <h4><span class="highlight">15. Print the result after each round: requirements and signature.</span>
+                </h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Show which round just finished.</li>
+                            <li>Show both farmers’ current coin totals.</li>
+                            <li>Do not change any values; only print.</li>
+                            <li>Use <code>const Farmer&amp;</code> to avoid copying.</li>
+                            <li>Return nothing (type <code>void</code>).</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+void printRoundResult(const Farmer&amp; p1,
+                      const Farmer&amp; p2,
+                      int roundNumber);
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h4><span class="highlight">16. Print the result after each round: implementation.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Print a small header for the round.</li>
+                            <li>Display farmer’s name/coins on separate lines.</li>
+                            <li>Use <code>const Farmer&amp;</code> because we only read data.</li>
+                            <li>Keep the output format consistent every round.</li>
+                            <li>Provide blank line for readability after scores.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+void printRoundResult(const Farmer&amp; p1,
+                      const Farmer&amp; p2,
+                      int roundNumber) {
+    cout &lt;&lt; "\n=== End of round "
+         &lt;&lt; roundNumber &lt;&lt; " ===\n";
+    cout &lt;&lt; p1.name &lt;&lt; " has "
+         &lt;&lt; p1.coins &lt;&lt; " coins.\n";
+    cout &lt;&lt; p2.name &lt;&lt; " has "
+         &lt;&lt; p2.coins &lt;&lt; " coins.\n\n";
+}
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h4><span class="highlight">17. Print final result and winner: requirements and signature.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Show the total number of rounds played.</li>
+                            <li>Print each farmer’s final coin count.</li>
+                            <li>Announce the winner or a draw.</li>
+                            <li>Use <code>const Farmer&amp;</code> for both farmers.</li>
+                            <li>Return nothing (type <code>void</code>).</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+void printFinalResult(const Farmer&amp; p1,
+                      const Farmer&amp; p2,
+                      int rounds);
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h4><span class="highlight">18. Print final result and winner: implementation.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Print a clear final header.</li>
+                            <li>Show both farmers’ total coins.</li>
+                            <li>Compare the two values.</li>
+                            <li>If one is larger, declare that farmer the winner.</li>
+                            <li>If they are equal, print that it is a draw.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+void printFinalResult(const Farmer&amp; p1,
+                      const Farmer&amp; p2,
+                      int rounds) {
+    cout &lt;&lt; "\n=== Final result after "
+         &lt;&lt; rounds &lt;&lt; " rounds ===\n";
+    cout &lt;&lt; p1.name &lt;&lt; ": "
+         &lt;&lt; p1.coins &lt;&lt; " coins\n";
+    cout &lt;&lt; p2.name &lt;&lt; ": "
+         &lt;&lt; p2.coins &lt;&lt; " coins\n";
+
+if (p1.coins &gt; p2.coins) {
+    cout &lt;&lt; p1.name
+         &lt;&lt; " wins the farm game!\n";
+} else if (p2.coins &gt; p1.coins) {
+    cout &lt;&lt; p2.name
+         &lt;&lt; " wins the farm game!\n";
+} else {
+    cout &lt;&lt; "It is a draw.\n";
+}
+
+} </code></pre>
+                    </div>
+                </div>
+
+            </section>
+
+            <section>
+                <h4><span class="highlight">19. Play a single round: requirements and signature.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Print the round header.</li>
+                            <li>Show the crop menu once.</li>
+                            <li>Ask each farmer to choose a crop.</li>
+                            <li>Update both farmers’ coin totals.</li>
+                            <li>Call <code>printRoundResult</code> at the end of the round.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+void playSingleRound(Farmer&amp; p1,
+                     Farmer&amp; p2,
+                     int roundNumber);
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h4><span class="highlight">20. Play a single round: implementation and flow.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Print a header such as “Round 1”.</li>
+                            <li>Call <code>printCropMenu()</code> once.</li>
+                            <li>Call <code>readCropChoice</code> for each farmer.</li>
+                            <li>Compute each reward using <code>cropReward</code>.</li>
+                            <li>Add rewards to each farmer and show result.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+void playSingleRound(Farmer&amp; p1,
+                     Farmer&amp; p2,
+                     int roundNumber) {
+    cout &lt;&lt; "\n=== Round "
+         &lt;&lt; roundNumber &lt;&lt; " ===\n";
+    printCropMenu();
+
+int choice1 = readCropChoice(p1.name);
+int choice2 = readCropChoice(p2.name);
+
+int reward1 = cropReward(choice1);
+int reward2 = cropReward(choice2);
+
+p1.coins += reward1;
+p2.coins += reward2;
+
+printRoundResult(p1, p2, roundNumber);
+
+} </code></pre>
+                    </div>
+                </div>
+
+            </section>
+
+            <section>
+                <h4><span class="highlight">21. Main game loop: requirements and signature.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Ask for both farmers’ names.</li>
+                            <li>Initialize each <code>Farmer</code> with 0 coins.</li>
+                            <li>Ask for the number of rounds.</li>
+                            <li>Run a <code>for</code> loop calling <code>playSingleRound</code>.</li>
+                            <li>Call <code>printFinalResult</code> at the end.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+int main();
+</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h4><span class="highlight">22. Main game loop: full implementation.</span></h4>
+                <div class="split">
+                    <div class="left">
+                        <ul>
+                            <li>Read names using <code>getline</code> to accept spaces.</li>
+                            <li>Use <code>initFarmer</code> to set name and coins.</li>
+                            <li>Call <code>askNumberOfRounds</code> once.</li>
+                            <li>Loop from 1 to <code>rounds</code> and call <code>playSingleRound</code>.</li>
+                            <li>Finally, call <code>printFinalResult</code> and return 0.</li>
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <pre><code class="language-cpp">
+int main() {
+    Farmer p1;
+    Farmer p2;
+
+cout &lt;&lt; "Enter name for Farmer 1: ";
+getline(cin, p1.name);
+if (p1.name.empty()) {
+    p1.name = "Farmer 1";
+}
+
+cout &lt;&lt; "Enter name for Farmer 2: ";
+string name2;
+getline(cin, name2);
+if (name2.empty()) {
+    name2 = "Farmer 2";
+}
+
+initFarmer(p1, p1.name);
+initFarmer(p2, name2);
+
+int rounds = askNumberOfRounds();
+
+for (int r = 1; r &lt;= rounds; ++r) {
+    playSingleRound(p1, p2, r);
+}
+
+printFinalResult(p1, p2, rounds);
+
+return 0;
+
+} </code></pre>
+                    </div>
+                </div>
+
             </section>
 
             <section>
