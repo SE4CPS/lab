@@ -21,20 +21,26 @@
   <!-- Add Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+
   <style>
-    /* Additional custom styles can go here */
     body {
       margin: 0;
+    }
+
+    section {
+      font-size: 20pt;
     }
 
     code {
       font-size: 12pt;
     }
 
-    /* 
-        pre {
-            background-color: #444 !important;
-        } */
+    pre {
+      /* background-color: #444 !important; */
+      box-shadow: none !important;
+      margin: 0px;
+      padding: 0px;
+    }
 
     table {
       width: 100%;
@@ -43,56 +49,51 @@
     }
 
     li {
-      font-size: 16pt;
+      font-size: 18pt;
     }
 
-    p {
-      margin: 0px 0px;
-    }
-
-    pre {
-      font-size: 14pt;
-    }
-
-    section pre code {
-      font-size: 20pt;
-      line-height: 1.6;
-    }
-
-    code {
-      font-size: 20pt;
-      line-height: 1.6;
-    }
-
-    .copy-btn {
-      padding: 8px 12px;
-      font-size: 14px;
-      cursor: pointer;
+    img {
       border-radius: 4px;
-      border: 1px solid #ccc;
-      background-color: #f9f9f9;
+      margin: 0px !important;
     }
 
-    .copy-btn:hover {
-      background-color: #e6e6e6;
+    .code-wrapper {
+      margin: 0px !important;
     }
 
-    /* Global Footer Styling */
+    .mermaid {
+      text-align: center !important;
+      max-width: 100% !important;
+      ;
+      height: auto !important;
+      ;
+    }
+
     .global-footer {
       position: fixed;
       bottom: 0;
       left: 0;
       width: 100%;
       text-align: left;
-      /* Align the text to the left */
       font-size: 0.3em;
       color: #f8f8f2;
-      /* Monokai's light foreground color */
       background-color: rgba(0, 0, 0, 0.2);
-      /* Darker transparent black */
       padding: 0px 20px;
       z-index: 10;
       background: black;
+    }
+
+    ul {
+      margin: 0;
+      padding: 0 !important;
+      list-style-position: inside;
+      width: 100%;
+      /* optional: keeps bullets aligned */
+    }
+
+    li {
+      margin: 0;
+      padding: 0;
     }
 
     .footer-link {
@@ -104,19 +105,361 @@
       text-decoration: underline;
     }
 
+    .left-image {
+      display: block;
+      width: 100%;
+      /* span the full width of left column */
+      height: auto;
+      /* keep aspect ratio */
+      max-height: 300px !important;
+      /* cap height */
+      object-fit: cover;
+      /* small gap below image */
+      border-radius: 6px;
+    }
+
+    .split .left {
+      margin: 0;
+      /* reduce padding inside left side */
+    }
+
+    .split .left ul {
+      margin: 0;
+      /* small indent for bullets */
+    }
+
     .slides {
       width: 90% !important;
     }
 
-    .highlight {
-      color: rgb(0, 255, 72);
-      font-weight: bold;
+    .columns {
+      display: flex;
+      gap: 40px;
+      align-items: flex-start;
+      justify-content: space-between;
     }
 
-    .alpha-list {
-      list-style-type: upper-alpha !important;
+    .columns .col {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .columns pre {
+      font-size: 0.7em;
+    }
+
+    .hljs {
+      background-color: inherit !important;
+    }
+
+    /* Generic styling for any .json-bridge block */
+    .json-bridge {
+      --box-bg: #eef;
+      --hub-bg: #ffd86b;
+      --border: #333;
+      --text: #111;
+
+      position: relative;
+      width: min(1200px, 92vw);
+      margin: 0 auto;
+      padding-top: 6px;
+      text-align: center;
+    }
+
+    /* Put arrows under the boxes */
+    .json-bridge .arrows {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      /* behind */
+    }
+
+    .json-bridge .arrows line {
+      stroke: var(--border);
+      stroke-width: 2.5;
+      opacity: 0.9;
+    }
+
+    /* Boxes sit above arrows */
+    .json-bridge .hub,
+    .json-bridge .tiers {
+      position: relative;
+      z-index: 1;
+      /* above */
+    }
+
+    .json-bridge .hub {
+      margin: 0 auto 40px auto;
+      padding: 20px 48px;
+      background: var(--hub-bg);
+      color: var(--text);
+      border: 3px solid var(--border);
+      border-radius: 14px;
+      font-size: clamp(24px, 3.2vw, 36px);
+      font-weight: 800;
+      width: fit-content;
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+    }
+
+    .json-bridge .tiers {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: clamp(18px, 3vw, 30px);
+      margin-top: 60px;
+      align-items: start;
+    }
+
+    .json-bridge .tier {
+      background: var(--box-bg);
+      color: var(--text);
+      /* ensure readable on dark theme */
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: clamp(18px, 2.2vw, 28px);
+      text-align: center;
+      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+    }
+
+    .json-bridge .tier-title {
+      font-size: clamp(20px, 2.6vw, 30px);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 6px;
+    }
+
+    .json-bridge .tier-sub {
+      font-size: clamp(16px, 1.8vw, 22px);
+      opacity: 0.95;
+    }
+
+    /* Layout */
+    .split {
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+    }
+
+    .left,
+    .right {
+      flex: 1 1 0;
+    }
+
+    .left {
+      min-width: 50%;
+    }
+
+    .right {
+      min-width: 40%;
+    }
+
+    /* Typography & alignment */
+    .highlight {
+      background: rgba(255, 234, 120, 0.25);
+      /* padding: 1px; */
+      border-radius: .25rem;
+      /* outline: 1px solid rgba(240, 200, 50, .25); */
+      color: #bf4a12;
+      font-weight: normal;
+      margin: 1px;
+    }
+
+    .muted {
+      opacity: .88;
+    }
+
+    ul,
+    ol {
+      text-align: left;
+      padding-top: 30px;
+    }
+
+    .tight li {
+      margin: .25rem 0;
+    }
+
+    .small {
+      font-size: .9em;
+    }
+
+    /* Tables */
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table thead th {
+      background: #fafafa;
+      color: #111;
+    }
+
+    .table th,
+    .table td {
+      border: 1px solid #ddd;
+      padding: .5rem .6rem;
+      text-align: left;
+    }
+
+    /* Right-side image placeholder */
+    .img-fit {
+      width: 100%;
+      height: auto;
+    }
+
+    .placeholder {
+      width: 100%;
+      min-height: 220px;
+      border: 2px dashed #e0e0e0;
+      border-radius: .5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #999;
+      font-size: .9em;
+    }
+
+    /* ---- Code Styling (inline + blocks) ------------------------------- */
+    :root {
+      --code-font: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      --code-radius: 8px;
+      --code-tabsize: 2;
+
+      /* Light theme */
+      --code-bg: #f6f8fa;
+      --code-inline-bg: #f0f2f5;
+      --code-text: #1f2328;
+      --code-shadow: 0 1px 2px rgba(0, 0, 0, .04);
+      --code-accent: #0b6cff;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --code-bg: #0f172a;
+        /* slate-900 */
+        --code-inline-bg: #111827;
+        /* gray-900 */
+        /* gray-800 */
+        --code-text: #e5e7eb;
+        /* gray-200 */
+        --code-shadow: 0 1px 2px rgba(0, 0, 0, .25);
+        --code-accent: #60a5fa;
+        /* blue-400 */
+      }
+    }
+
+    /* Inline code like `map`, `filter`, `reduce` */
+    code {
+      font-family: var(--code-font);
+      font-size: 0.95em;
+      background: var(--code-inline-bg);
+      color: var(--code-text);
+      padding: 0.15em 0.4em;
+      border-radius: calc(var(--code-radius) - 4px);
+      white-space: nowrap;
+    }
+
+    @keyframes pulseHighlight {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 0 rgba(255, 200, 0, 0.0);
+      }
+
+      50% {
+        box-shadow: 0 0 0 8px rgba(255, 200, 0, 0.15);
+      }
+    }
+
+    .highlight {
+      animation: pulseHighlight 6s ease-in-out infinite;
+    }
+
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fragment.slide-in {
+      opacity: 0;
+    }
+
+    .fragment.visible.slide-in {
+      animation: slideInUp .6s ease-out forwards;
+    }
+
+    .pipeline {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .box {
+      padding: 0.6rem 1rem;
+      border: 1px solid #888;
+      border-radius: 6px;
+      /* background: #f5f7fa; */
+      text-align: center;
+      font-size: 0.9em;
+    }
+
+    h5 {
+      margin-bottom: 0.5rem;
+    }
+
+    .pillars {
+      display: flex;
+      justify-content: space-around;
+      align-items: stretch;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .pillar {
+      flex: 1;
+      min-width: 200px;
+      max-width: 220px;
+      min-height: 180px;
+      background: rgba(96, 165, 250, 0.1);
+      border: 2px solid #60a5fa;
+      border-radius: 12px;
+      padding: 1rem;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .pillar span {
+      font-size: 0.85em;
+      color: #9ca3af;
+      display: block;
+      margin-top: 0.5rem;
+    }
+
+    ul.alpha-list,
+    ol.alpha-list {
+      list-style-type: upper-alpha;
+      padding-left: 25px;
+      margin-left: 0;
+    }
+
+    /* Ensures nice spacing in Reveal.js */
+    ul.alpha-list li,
+    ol.alpha-list li {
+      margin: 4px 0;
     }
   </style>
+
 </head>
 
 <body>
@@ -165,7 +508,7 @@
                             - Email course on Friday with weekly summary
                         -->
                 <td style="padding: 6px; border: 1px solid #666;">Lab 1 + Homework 1 (2w)</td>
-                <td style="padding: 6px; border: 1px solid #666;">SQLite</td>
+                <td style="padding: 6px; border: 1px solid #666;"><a href="./#/sqlite">SQLite</a></td>
                 <td style="padding: 6px; border: 1px solid #666;"></td>
               </tr>
               <tr style="color: #ccc;">
@@ -1174,247 +1517,547 @@ entity "Entity3" as E3 {
                     </pre>
         </section>
 
-        <section>
-          <h5>Which SQL Database do you Recommend?</h5>
-          <img
-            src="https://www.sciencebuddies.org/vjILwvvTWMYzqFiF1Nw6v2mkhro=/700x449/-/https/www.sciencebuddies.org/cdn/Files/19606/9/arduino-soil-moisture-sensor.jpg"
-            alt="Arduino Soil Moisture Sensor" style="max-width: 100%; height: auto;">
+        <!-- ========================= -->
+        <!-- Why SQLite -->
+        <!-- ========================= -->
+        <section id="sqlite">
+          <h5>Why SQLite for Mobile Apps?</h5>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Lightweight engine ideal for phones</li>
+                <li>No setup required on iOS or Android</li>
+                <li>Works fully offline inside the app</li>
+                <li>Fast local storage for user data</li>
+                <li>Reliable: used by thousands of mobile apps</li>
+                <li>Free and built into both platforms</li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <br>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/3/38/SQLite370.svg">
+            </div>
+          </div>
         </section>
 
         <section>
-          <h5>Why SQLite?</h5>
-          <ul>
-            <li>Lightweight and fast</li>
-            <li>Zero configuration required</li>
-            <li>Self-contained, no server needed</li>
-            <li>Widely used in embedded systems</li>
-            <li>Reliable with extensive testing</li>
-            <li>Open source and free to use</li>
-          </ul>
+          <h5>Where SQLite Is Installed by Default</h5>
+
+          <div class="split">
+            <div class="left">
+              <p>SQLite is included out of the box on many devices and operating systems.</p>
+            </div>
+
+            <div class="right">
+              <ul>
+                <li><strong>iPhone / iOS:</strong> Core Data can store data in SQLite</li>
+                <li><strong>Android:</strong> Every device includes SQLite for app storage</li>
+                <li><strong>macOS:</strong> System utilities and Spotlight use SQLite</li>
+                <li><strong>Windows 10/11:</strong> Many system tools rely on SQLite</li>
+                <li><strong>Linux distributions:</strong> Included in most installations</li>
+                <li><strong>Smart TVs / Set-top boxes:</strong> Used for settings and logs</li>
+                <li><strong>Gaming consoles:</strong> Stores local game and device data</li>
+                <li><strong>IoT devices:</strong> Favored for low-memory environments</li>
+              </ul>
+            </div>
+          </div>
         </section>
 
+
+        <!-- ========================= -->
+        <!-- Chronology -->
+        <!-- ========================= -->
         <section>
           <h5>Chronology of SQLite Versions</h5>
-          <ul>
-            <li><strong>Version 1.0 (2000):</strong> Initial release, basic SQL support</li>
-            <li><strong>Version 2.0 (2001):</strong> Added transactions and improved stability</li>
-            <li><strong>Version 3.0 (2004):</strong> Major update with support for UTF-8, BLOBs, and more
-              queries</li>
-          </ul>
-          <p><a href="https://sqlite.org/docsrc/timeline" target="_blank">View the complete SQLite
-              timeline</a></p>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><strong>2000 – Version 1.0:</strong> Basic SQL support</li>
+                <li><strong>2001 – Version 2.0:</strong> Transactions added</li>
+                <li><strong>2004 – Version 3.0:</strong> UTF-8, BLOBs, improved queries</li>
+              </ul>
+              <p><a href="https://sqlite.org/docsrc/timeline" target="_blank">
+                  Full SQLite timeline
+                </a></p>
+            </div>
+            <div class="right">
+              <br>
+              <img src="https://www.sqlite.org/images/sqlite370_banner.gif">
+            </div>
+          </div>
         </section>
 
+        <section>
+          <h5>Recent SQLite Updates (Example)</h5>
+
+          <div class="split">
+            <div class="left">
+              <p><strong>Fix typos in climode.html</strong></p>
+
+              <ul>
+                <li>Update corrected spelling issues in CLI documentation.</li>
+                <li>Small changes improve clarity for developers.</li>
+                <li>SQLite team maintains quality careful refinement.</li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <img src="sqlite_example_changelog.png" style="width:100%;">
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h5>SQLite Licensing</h5>
+
+          <div class="split">
+            <div class="left">
+              <p><strong>Open Parts ✔️</strong></p>
+              <ul>
+                <li>You may read the full source code</li>
+                <li>You may download the code freely</li>
+                <li>You may change or modify the code</li>
+                <li>SQLite is in the <strong class="highlight">public domain</strong></li>
+                <li>No royalties, no restrictions for commercial use</li>
+                <li>GitHub: <a href="https://github.com/sqlite/sqlite" target="_blank">github.com/sqlite/sqlite</a></li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <p><strong>Closed or Protected Parts 🔒</strong></p>
+              <ul>
+                <li>The official main branch is write protected</li>
+                <li>Core maintainers may commit main repository</li>
+                <li>Public contributions require review before merging</li>
+                <li>No direct write access to SQLite’s Fossil repo</li>
+                <li>Release process is controlled by core team</li>
+                <li>Trademark usage (SQLite logos) has restrictions</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================= -->
+        <!-- Install SQLite -->
+        <!-- ========================= -->
         <section>
           <h5>Install SQLite</h5>
-          <ul>
-            <li><a href="https://www.sqlite.org/download.html" target="_blank">SQLite Download
-                Page</a></li>
-            <li><a href="https://www.sqlite.org/2025/sqlite-tools-win-x64-3480000.zip" target="_blank">Download SQLite
-                Tools for Windows (x64)</a></li>
-            <li>Unzip the downloaded file</li>
-            <li>Add the folder to your system's PATH variable for command-line use</li>
-          </ul>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><a href="https://www.sqlite.org/download.html" target="_blank">SQLite Download Page</a></li>
+                <li><a href="https://www.sqlite.org/2025/sqlite-tools-win-x64-3480000.zip" target="_blank">
+                    Download SQLite Tools (Windows x64)
+                  </a></li>
+                <li>Unzip the package</li>
+                <li>Add the folder to your PATH</li>
+                <li><a href="https://onecompiler.com/sqlite" target="_blank">SQLite Online Editor</a></li>
+              </ul>
+            </div>
+            <div class="right"></div>
+          </div>
         </section>
 
+        <section>
+          <h5>SQLite Browser Admin Interface</h5>
+
+          <div class="split">
+            <div class="left">
+              <p><strong>DB Browser for SQLite</strong> offers a simple graphical interface to manage SQLite databases.
+              </p>
+
+              <ul>
+                <li>Create, browse, and edit tables</li>
+                <li>Run SQL queries interactively</li>
+                <li>Import and export CSV, SQL, JSON</li>
+                <li>View data without writing commands</li>
+                <li>Works on Windows, macOS, and Linux</li>
+                <li><a href="https://sqlitebrowser.org" target="_blank">https://sqlitebrowser.org</a></li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <img src="sqlite_admin_interface.png" style="width:100%;">
+            </div>
+          </div>
+        </section>
+
+
+        <!-- ========================= -->
+        <!-- Workflow -->
+        <!-- ========================= -->
         <section>
           <h5>SQLite Workflow</h5>
-          <ol>
-            <li><strong>Create Database:</strong></li>
-            <pre style="font-size: 10pt; white-space: pre-wrap; word-break: break-word;">
-sqlite3 database_name.db
-                        </pre>
-            <li><strong>Create Table:</strong></li>
-            <pre style="font-size: 10pt; white-space: pre-wrap; word-break: break-word;">
+          <div class="split">
+            <div class="left">
+              <ol>
+                <li><strong>Create Database</strong></li>
+                <pre>sqlite3 database_name.db</pre>
+
+                <li><strong>Create Table</strong></li>
+                <pre>
 CREATE TABLE table_name (
     column1 datatype,
-    column2 datatype,
-    ...
+    column2 datatype
 );
-                        </pre>
-            <li><strong>Insert Data:</strong></li>
-            <pre style="font-size: 10pt; white-space: pre-wrap; word-break: break-word;">
-INSERT INTO table_name (column1, column2, ...)
-VALUES (value1, value2, ...);
-                        </pre>
-          </ol>
+        </pre>
+
+                <li><strong>Insert Data</strong></li>
+                <pre>
+INSERT INTO table_name (column1, column2)
+VALUES (value1, value2);
+        </pre>
+              </ol>
+            </div>
+            <div class="right"></div>
+          </div>
         </section>
 
+        <!-- ========================= -->
+        <!-- Executing SQL -->
+        <!-- ========================= -->
         <section>
           <h5>Executing SQL Commands</h5>
-          <ul>
-            <li><strong>From a File:</strong></li>
-            <pre style="font-size: 10pt; white-space: pre-wrap; word-break: break-word;">
-sqlite3 database_name.db < script.sql
-                        </pre>
-            <li><strong>Directly in Command Line:</strong></li>
-            <pre style="font-size: 10pt; white-space: pre-wrap; word-break: break-word;">
-sqlite3 database_name.db
-> .read script.sql
-> SELECT * FROM table_name;
-                        </pre>
-          </ul>
+          <div class="split">
+
+            <div class="left">
+              <ul>
+                <li><strong>From Python</strong></li>
+                <pre>
+import sqlite3
+
+conn = sqlite3.connect("db.db")
+cur = conn.cursor()
+cur.execute("SELECT * FROM table_name;")
+        </pre>
+
+                <li><strong>From Kotlin</strong></li>
+                <pre>
+val db = SQLiteDatabase.openOrCreateDatabase("db.db", null)
+val cursor = db.rawQuery("SELECT * FROM table_name;", null)
+        </pre>
+              </ul>
+            </div>
+
+            <div class="right">
+              <ul>
+                <li><strong>From C++</strong></li>
+                <pre>
+#include "sqlite3.h"
+
+sqlite3 *db;
+sqlite3_open("db.db", &db);
+sqlite3_exec(db, "SELECT * FROM table_name;", 0, 0, 0);
+        </pre>
+
+                <li><strong>From Swift</strong></li>
+                <pre>
+import SQLite3
+
+var db: OpaquePointer?
+sqlite3_open("db.db", &db)
+sqlite3_exec(db, "SELECT * FROM table_name;", nil, nil, nil)
+        </pre>
+              </ul>
+            </div>
+
+          </div>
         </section>
 
+
+        <section>
+          <h5>ACID in SQLite ✔️</h5>
+
+          <div class="split">
+
+            <div class="left">
+              <p><strong>ACID Basics</strong></p>
+              <ul>
+                <li>All-or-nothing writes</li>
+                <li>Consistent state after commits</li>
+                <li>Snapshot isolation for readers</li>
+                <li>Data stored safely on disk</li>
+              </ul>
+
+              <p><strong>Isolation</strong></p>
+              <ul>
+                <li>Many readers allowed</li>
+                <li>One writer at a time</li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <p><strong>Multi-User Limits ⚠️</strong></p>
+              <ul>
+                <li>Not built for many writers</li>
+                <li>Writes lock the whole DB</li>
+                <li>High write load slows apps</li>
+                <li>No client-server model</li>
+                <li>Use server DBs for scale</li>
+              </ul>
+            </div>
+
+          </div>
+        </section>
+
+
+        <section>
+          <h5>SQLite and SQL Standards</h5>
+
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>SQLite follows the traditional SQL syntax</li>
+                <li>Most commands align with long-standing SQL practice</li>
+                <li>Constraint enforcement is <span class="highlight">relaxed</span> by default</li>
+                <li>Foreign keys exist but are not enforced automatically</li>
+                <li>Developers must turn enforcement on manually</li>
+                <li>This behavior comes from SQLite’s embedded roots</li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <pre>
+PRAGMA foreign_keys = ON;
+PRAGMA foreign_keys;
+              </pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================= -->
+        <!-- Dot Commands -->
+        <!-- ========================= -->
         <section>
           <h5>SQLite Dot Commands</h5>
-          <ul>
-            <li><strong>.databases:</strong> Lists all attached databases</li>
-            <li><strong>.tables:</strong> Displays all tables in the current database</li>
-            <li><strong>.schema:</strong> Shows the schema of a table or the entire database</li>
-            <li><strong>.read:</strong> Execute SQL scripts without typing them manually (e.g., create.sql).
-            </li>
-            <li><strong>.exit:</strong> Exits the SQLite shell</li>
-            <li><strong>.help:</strong> Lists all available dot commands</li>
-          </ul>
-          <p><a href="https://www.sqlite.org/cli.html" target="_blank">Documentation</a></p>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><strong>.databases</strong> – List all attached DBs</li>
+                <li><strong>.tables</strong> – Show tables</li>
+                <li><strong>.schema</strong> – Show schema</li>
+                <li><strong>.read</strong> – Execute script</li>
+                <li><strong>.exit</strong> – Leave shell</li>
+                <li><strong>.help</strong> – All commands</li>
+                <li><a href="https://www.sqlite.org/cli.html" target="_blank">documentation</a></li>
+              </ul>
+            </div>
+            <div class="right"></div>
+          </div>
         </section>
 
         <section>
-          <h5>SQL Query: Plants Needing Water</h5>
-          <pre style="font-size: 10pt; white-space: pre-wrap; word-break: break-word;">
-SELECT 
-    PlantID,
-    Name,
-    WaterLevel,
-    WaterThreshold
-FROM 
-    SensorData
-WHERE 
-    WaterLevel < (SELECT WaterThreshold FROM Plant WHERE Plant.PlantID = SensorData.PlantID)
-ORDER BY 
-    Name;
-                    </pre>
+          <h5>Plant Watering App: Two Tables</h5>
+
+          <div class="split">
+
+            <div class="left">
+              <p><strong>Plant Table</strong></p>
+              <pre>
+CREATE TABLE Plant (
+  PlantID INTEGER PRIMARY KEY,
+  Name TEXT NOT NULL,
+  WaterThreshold FLOAT
+);
+      </pre>
+
+              <p><strong>SensorData Table</strong></p>
+              <pre>
+CREATE TABLE SensorData (
+  SensorDataID INTEGER PRIMARY KEY,
+  PlantID INTEGER NOT NULL,
+  WaterLevel FLOAT,
+  Timestamp DATETIME,
+  FOREIGN KEY (PlantID) REFERENCES Plant(PlantID)
+);
+      </pre>
+            </div>
+
+            <div class="right"></div>
+          </div>
         </section>
 
         <section>
-          <h5>Plant Watering Application: ERD to SQL (1/3)</h5>
-          <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;">
-            <thead>
-              <tr>
-                <th style="width: 50%;">PlantUML</th>
-                <th style="width: 50%;">SQL Create Query</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <pre style="font-size: 10pt; white-space: pre-wrap; word-break: break-word;">
-                entity "Plant" as Plant {
-                    +PlantID : INTEGER
-                    +Name : VARCHAR(100)
-                    +WaterThreshold : FLOAT
-                }
-                                    </pre>
-                </td>
-                <td>
-                  <pre style="font-size: 10pt; white-space: pre-wrap; word-break: break-word;">
-                CREATE TABLE Plant (
-                    PlantID INTEGER PRIMARY KEY,
-                    Name VARCHAR(100) NOT NULL,
-                    WaterThreshold FLOAT
-                );
-                                    </pre>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <h5>CRUD Operations (Create + Read)</h5>
+
+          <div class="split">
+
+            <div class="left">
+              <p><strong>Create</strong></p>
+              <pre>
+INSERT INTO Plant (Name, WaterThreshold)
+VALUES ('Aloe Vera', 30);
+      </pre>
+
+              <pre>
+INSERT INTO SensorData (PlantID, WaterLevel, Timestamp)
+VALUES (1, 22, '2025-11-27 10:00');
+      </pre>
+            </div>
+
+            <div class="right">
+              <p><strong>Read</strong></p>
+              <pre>
+SELECT * 
+FROM Plant;
+      </pre>
+
+              <pre>
+SELECT PlantID, WaterLevel
+FROM SensorData
+ORDER BY Timestamp DESC;
+      </pre>
+            </div>
+
+          </div>
         </section>
 
         <section>
-          <h5>Plant Watering Application: ERD to SQL (2/3)</h5>
-          <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;">
-            <thead>
-              <tr>
-                <th style="width: 50%;">PlantUML</th>
-                <th style="width: 50%;">SQL Create Query</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <pre style="font-size: 10pt; white-space: pre-wrap; word-break: break-word;">
-                entity "Sensor" as Sensor {
-                    +SensorID : INTEGER
-                    +Location : VARCHAR(100)
-                    +Type : VARCHAR(50)
-                }
-                                    </pre>
-                </td>
-                <td>
-                  <pre style="font-size: 10pt; white-space: pre-wrap; word-break: break-word;">
-                CREATE TABLE Sensor (
-                    SensorID INTEGER PRIMARY KEY,
-                    Location VARCHAR(100),
-                    Type VARCHAR(50)
-                );
-                                    </pre>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <pre style="font-size: 10pt; white-space: pre-wrap; word-break: break-word;">
-                entity "SensorData" as SensorData {
-                    +SensorDataID : INTEGER
-                    +SensorID : INTEGER
-                    +PlantID : INTEGER
-                    +WaterLevel : FLOAT
-                    +Timestamp : DATETIME
-                }
-                                    </pre>
-                </td>
-                <td>
-                  <pre style="font-size: 10pt; white-space: pre-wrap; word-break: break-word;">
-                CREATE TABLE SensorData (
-                    SensorDataID INTEGER PRIMARY KEY,
-                    SensorID INTEGER NOT NULL,
-                    PlantID INTEGER NOT NULL,
-                    WaterLevel FLOAT,
-                    Timestamp DATETIME,
-                    FOREIGN KEY (SensorID) REFERENCES Sensor(SensorID),
-                    FOREIGN KEY (PlantID) REFERENCES Plant(PlantID)
-                );
-                                    </pre>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <h5>CRUD Operations (Update + Delete)</h5>
+
+          <div class="split">
+
+            <div class="left">
+              <p><strong>Update</strong></p>
+              <pre>
+UPDATE Plant
+SET WaterThreshold = 40
+WHERE PlantID = 1;
+      </pre>
+
+              <pre>
+UPDATE SensorData
+SET WaterLevel = 18
+WHERE SensorDataID = 1;
+      </pre>
+            </div>
+
+            <div class="right">
+              <p><strong>Delete</strong></p>
+              <pre>
+DELETE FROM Plant
+WHERE PlantID = 3;
+      </pre>
+
+              <pre>
+DELETE FROM SensorData
+WHERE Timestamp < '2025-01-01';
+      </pre>
+            </div>
+
+          </div>
         </section>
 
         <section>
-          <h5>Plant Watering Application: ERD to SQL (3/3)</h5>
-          <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;">
-            <thead>
-              <tr>
-                <th style="width: 50%;">PlantUML</th>
-                <th style="width: 50%;">SQL Create Query</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>
-                  <pre style="font-size: 10pt; white-space: pre-wrap; word-break: break-word;">
-                entity "WateringLog" as WateringLog {
-                    +LogID : INTEGER
-                    +PlantID : INTEGER
-                    +WateredAt : DATETIME
-                }
-                                    </pre>
-                </td>
-                <td>
-                  <pre style="font-size: 10pt; white-space: pre-wrap; word-break: break-word;">
-                CREATE TABLE WateringLog (
-                    LogID INTEGER PRIMARY KEY,
-                    PlantID INTEGER NOT NULL,
-                    WateredAt DATETIME,
-                    FOREIGN KEY (PlantID) REFERENCES Plant(PlantID)
-                );
-                                    </pre>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <h5>SQLite CLI Commands and Pragmas</h5>
+
+          <div class="split">
+
+            <div class="left">
+              <p><strong>Dot Commands</strong></p>
+              <ul>
+                <li>.database</li>
+                <li>.table</li>
+                <li>.schema</li>
+                <li>.help</li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <p><strong>PRAGMA Settings</strong></p>
+              <pre>
+PRAGMA foreign_keys = ON;
+PRAGMA foreign_keys;
+      </pre>
+
+              <p><strong>Foreign Key Violation</strong></p>
+              <pre>
+INSERT INTO SensorData (PlantID, WaterLevel, Timestamp)
+VALUES (999, 50, '2025-11-27 11:00');
+      </pre>
+            </div>
+
+          </div>
         </section>
+
+        <section>
+          <h5>SQLite Data Types: Declared vs Enforced</h5>
+
+          <div class="split">
+
+            <div class="left">
+              <strong>Declared Types (What You Write)</strong>
+              <ul>
+                <li>VARCHAR(2)</li>
+                <li>CHAR(5)</li>
+                <li>TEXT NOT NULL</li>
+                <li>BOOLEAN</li>
+                <li>DATE / DATETIME</li>
+                <li>Custom names (EMAIL, NAME, PHONE)</li>
+              </ul>
+
+              <pre>
+CREATE TABLE User (
+  Name VARCHAR(2)
+);
+      </pre>
+            </div>
+
+            <div class="right">
+              <strong>Actual Enforcement (What SQLite Does)</strong>
+              <ul>
+                <li>No length checking on VARCHAR</li>
+                <li>VARCHAR(2) is stored as TEXT</li>
+                <li>Strings of any length allowed</li>
+                <li>BOOLEAN becomes INTEGER</li>
+                <li>DATE stored as TEXT/REAL/INTEGER</li>
+                <li>Only NULL, INTEGER, REAL, TEXT, BLOB enforced</li>
+              </ul>
+
+              <pre>
+INSERT INTO User (Name)
+VALUES ('ABCDE');   -- Works!
+      </pre>
+
+              <pre>
+-- Strict mode needed for real enforcement
+CREATE TABLE UserStrict (
+  Name TEXT
+) STRICT;
+      </pre>
+            </div>
+
+          </div>
+        </section>
+
+        <section>
+          <h5>Useful SQLite Links</h5>
+
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><a href="https://sqlite.org" target="_blank">https://sqlite.org</a></li>
+                <li><a href="https://www.sqlite.org/download.html"
+                    target="_blank">https://www.sqlite.org/download.html</a></li>
+                <li><a href="https://sqlitebrowser.org" target="_blank">https://sqlitebrowser.org</a></li>
+                <li><a href="https://github.com/sqlite/sqlite" target="_blank">https://github.com/sqlite/sqlite</a></li>
+                <li><a href="https://www.sqlite.org/cli.html" target="_blank">https://www.sqlite.org/cli.html</a></li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <ul>
+                <li><a href="https://www.sqlite.org/docs.html" target="_blank">https://www.sqlite.org/docs.html</a></li>
+                <li><a href="https://www.sqlite.org/lang.html" target="_blank">https://www.sqlite.org/lang.html</a></li>
+                <li><a href="https://sqlite.org/docsrc/timeline" target="_blank">https://sqlite.org/docsrc/timeline</a>
+                </li>
+                <li><a href="https://www.sqlite.org/fiddle/" target="_blank">https://www.sqlite.org/fiddle/</a></li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
 
         <section id="jan-22">
           <h5>Today: January 22, 2025</h5>
@@ -13511,7 +14154,7 @@ insert_by_type("Rose", '{"color": "Red", "season": "Spring"}')
           <a href="https://sqlzoo.net/wiki/SQL_Tutorial" target="_blank">SQLZoo – SQL Questions</a>
         </section>
 
-       
+
         <section id="apr-16">
           <h5>April 16, 2025</h5>
           <ul>
@@ -14054,7 +14697,7 @@ insert_by_type("Rose", '{"color": "Red", "season": "Spring"}')
           <h5>Thanks</h5>
         </section>
 
-        
+
         <section>
           <h5>Questions</h5>
         </section>
