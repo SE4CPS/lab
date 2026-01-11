@@ -89,6 +89,14 @@
       overflow: hidden;
     }
 
+    .full-visual svg {
+      pointer-events: none;
+    }
+
+    .full-visual {
+      height: 60vh;
+    }
+
     /* Table (full slide) */
     table.big {
       width: 100%;
@@ -138,25 +146,235 @@
     .global-footer a:hover {
       border-bottom-color: rgba(223, 231, 255, 0.7);
     }
+
+    .warn {
+      color: #ffb347;
+    }
+
+    .diagram-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75em;
+      margin-top: 1.5em;
+    }
+
+    .diagram-box {
+      border: 1px solid #999;
+      padding: 0.8em 1em;
+      min-width: 120px;
+      text-align: center;
+      border-radius: 4px;
+    }
+
+    .diagram-box.highlight {
+      border-width: 2px;
+    }
+
+    .diagram-arrow {
+      font-size: 1.4em;
+    }
   </style>
 </head>
 
 <body>
+
+  <img src="https://upload.wikimedia.org/wikipedia/en/b/bb/University_of_the_Pacific_seal.svg"
+    alt="University of the Pacific seal"
+    style="position: fixed; top: 18px; right: 18px; width: 120px; height: auto; z-index: 9999; opacity: 0.92;" />
+
   <div class="reveal">
     <div class="slides">
 
-      <!-- Title -->
-      <section>
-        <h3>Welcome to Introduction to SQL</h3>
-        <p class="muted">
-          Course: <strong>DATA 013</strong><br />
-          Format: <span class="small">Asynchronous</span><br />
-          Semester: <span class="small">Spring 2026</span>
-        </p>
-        <p class="tiny muted">Focus: core SQL concepts with portable examples across multiple database systems.</p>
+      <!-- Title + intro stack -->
+      <section id="module-welcome">
+
+        <!-- Lead slide (unchanged) -->
+        <section>
+          <h3>Welcome to Introduction to SQL</h3>
+          <p class="muted">
+            Course: <strong>DATA 013</strong><br />
+            Format: <span class="small">Asynchronous</span><br />
+            Semester: <span class="small">Spring 2026</span>
+          </p>
+          <p class="tiny muted">Focus: core SQL concepts with portable examples across multiple database systems.</p>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- ASSUMPTIONS -->
+        <!-- ===================================================== -->
+
+        <section>
+          <h3>Course Assumptions</h3>
+          <p class="muted">What is expected before starting this course.</p>
+        </section>
+
+        <section>
+          <h3>No Database Background Required</h3>
+          <ul>
+            <li>No prior SQL required</li>
+            <li>No database theory required</li>
+            <li>All concepts start from zero</li>
+            <li>We build skill through practice</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Programming Basics Assumed</h3>
+          <ul>
+            <li>Variables and values</li>
+            <li>Basic types: numbers, text</li>
+            <li>Conditionals: if / else</li>
+            <li>Reading structured syntax</li>
+          </ul>
+          <p class="tiny muted">Any modern programming language background is sufficient.</p>
+        </section>
+
+        <section>
+          <h3>How SQL Will Be Taught</h3>
+          <ul>
+            <li>Concept and syntax</li>
+            <li>Short, focused examples</li>
+          </ul>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- SQL → DBMS → DATA DIAGRAM -->
+        <!-- ===================================================== -->
+
+        <section>
+          <h3>How SQL Fits In</h3>
+          <p class="muted">
+            We learn SQL as the language that talks to a database system and, through it, to the data.
+          </p>
+
+          <div class="diagram-row">
+            <div class="diagram-box">
+              <strong>You</strong><br />
+            </div>
+
+            <div class="diagram-arrow">→</div>
+
+            <div class="diagram-box highlight" style="color: orange">
+              <strong>SQL</strong><br />
+            </div>
+
+            <div class="diagram-arrow">→</div>
+
+            <div class="diagram-box">
+              <strong>DBMS</strong><br />
+            </div>
+
+            <div class="diagram-arrow">→</div>
+
+            <div class="diagram-box">
+              <strong>Data</strong><br />
+            </div>
+          </div>
+
+          <p class="tiny muted" style="margin-top: 1em;">
+            SQL stays the same; the DBMS may change.
+          </p>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- SQL STANDARD USED IN THIS COURSE -->
+        <!-- ===================================================== -->
+
+        <section>
+          <h3>Which SQL Standard We Use</h3>
+
+          <ul>
+            <li>Based primarily on the <strong>ANSI / ISO SQL standard</strong></li>
+            <li>Core concepts shared by all major DBMSs</li>
+            <li>Limited vendor specific extensions at the start</li>
+          </ul>
+
+          <p class="muted">
+            If SQL works here, it will generally work in:
+          </p>
+
+          <ul class="tiny">
+            <li>PostgreSQL</li>
+            <li>MySQL / MariaDB</li>
+            <li>SQLite</li>
+            <li>SQL Server</li>
+          </ul>
+
+          <p class="tiny muted" style="margin-top: 1em;">
+            Reference (informal but practical):
+            <a href="https://www.w3schools.com/sql/sql_ref_keywords.asp" target="_blank" rel="noreferrer">
+              SQL Standard Keywords Reference
+            </a>
+          </p>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- CANVAS + SYLLABUS -->
+        <!-- ===================================================== -->
+
+        <section>
+          <h3>Canvas Course Home</h3>
+          <p class="muted">All official course activity runs through Canvas.</p>
+        </section>
+
+        <section>
+          <h3>Where to Find Everything</h3>
+          <ul>
+            <li>Assignments and due dates</li>
+            <li>Labs and homework instructions</li>
+            <li>Grades and feedback</li>
+            <li>Official announcements</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>Syllabus on Canvas</h3>
+          <p class="muted">The syllabus is the authoritative course reference.</p>
+          <p>
+            <a href="https://pacific.instructure.com/courses/143361/assignments/syllabus" target="_blank"
+              rel="noreferrer">
+              Open Syllabus in Canvas
+            </a>
+          </p>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- INTRO FRAMING -->
+        <!-- ===================================================== -->
+
+        <section>
+          <h3>What This Course Is</h3>
+          <ul>
+            <li>Practical introduction to SQL</li>
+            <li>Focused on querying real data</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>What This Course Is Not</h3>
+          <ul>
+            <li>Not database administration training</li>
+            <li>Not vendor specific certification</li>
+            <li>Not tool focused</li>
+            <li>Not theory heavy</li>
+          </ul>
+        </section>
+
+        <section>
+          <h3>How to Do Well</h3>
+          <ul>
+            <li>Write SQL regularly</li>
+            <li>Run every example yourself</li>
+            <li>Read errors carefully</li>
+            <li>Repeat until fluent</li>
+          </ul>
+        </section>
+
       </section>
 
-      <section>
+      <!-- Table of Contents  -->
+      <section id="module-toc">
         <table style="margin: 0 auto; width: 100%; border-collapse: collapse; font-size: 0.85rem; table-layout: fixed;">
           <thead>
             <tr style="background-color: #444; color: #fff;">
@@ -520,410 +738,501 @@
         </table>
       </section>
 
+      <!-- MODULE 1 -->
+      <!-- ===================================================== -->
+      <!-- MODULE 1 (REFACTORED): DATABASE, SCHEMA, TABLE -->
+      <!-- Keep this entire block and replace your existing #module-1 section -->
+      <!-- ===================================================== -->
       <section id="module-1">
 
         <!-- Title -->
         <section>
           <h2>Module 1</h2>
-          <h3>Create Database, Schema, Table</h3>
-          <p class="muted">Spring 2026 · SQL Only Track · SQLite examples</p>
+          <h3>SQL Objects: Database, Schema, Table</h3>
+          <p class="muted">
+            CREATE · SELECT · DROP · ALTER · RENAME · TABLE · COLUMN · TYPES
+          </p>
+          <p class="tiny muted">
+            Structure first: we define containers, then organization, then tables and columns.
+          </p>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- PART 1: DATABASE -->
+        <!-- ===================================================== -->
+        <section>
+          <h3>Part 1: Database</h3>
+          <p class="muted">Goal: create, inspect, rename, and drop a database safely.</p>
         </section>
 
         <section>
           <h3>Agenda</h3>
           <ul>
-            <li>Review Syllabus</li>
-            <li>Review Topics</li>
-            <li>Review Module 1</li>
-          </ul>
-        </section>
-
-        <!-- ===================================================== -->
-        <!-- 1) General motivation and history (no more than 6 words per bullet) -->
-        <!-- ===================================================== -->
-
-        <section>
-          <h2>Agenda Module 1</h2>
-          <ul>
-            <li>Why SQL matters</li>
-            <li>Short SQL history</li>
-            <li>Create database</li>
-            <li>Create schema</li>
-            <li>Create table with columns</li>
-            <li>Three live demos</li>
+            <li>Concept: database as top container</li>
+            <li>Diagram: where it sits</li>
+            <li>Syntax: create, select, drop</li>
+            <li>Rename and update name</li>
+            <li>Naming conventions</li>
+            <li>Common errors and mitigation</li>
+            <li>Support table by database system</li>
           </ul>
         </section>
 
         <section>
-          <h2>Why learn SQL</h2>
-          <div style="display:grid; grid-template-columns: 1.15fr 0.85fr; gap: 22px; align-items:center;">
-            <div>
-              <ul>
-                <li>Industry language for data</li>
-                <li>Readable and structured thinking</li>
-                <li>Works across many systems</li>
-                <li>Useful for daily tasks</li>
-                <li>Stable skill over decades</li>
-              </ul>
-            </div>
-            <div style="display:flex; justify-content:center;">
-              <svg viewBox="0 0 420 260" style="width:100%; max-width:360px; height:auto;">
-                <rect x="20" y="30" width="380" height="200" rx="18" fill="rgba(255,255,255,0.06)"
-                  stroke="rgba(255,255,255,0.25)" stroke-width="3" />
-                <text x="210" y="95" text-anchor="middle" font-size="30" fill="#fff">Question</text>
-                <text x="210" y="140" text-anchor="middle" font-size="20" fill="rgba(255,255,255,0.75)">→ SQL →</text>
-                <text x="210" y="190" text-anchor="middle" font-size="30" fill="#fff">Answer</text>
+          <div class="full-visual">
+            <div class="frame">
+              <svg viewBox="0 0 1200 650" style="width:100%; height:90%; pointer-events:none;">
+                <rect x="120" y="90" width="960" height="470" rx="28" fill="rgba(255,255,255,0.06)"
+                  stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+                <text x="600" y="150" text-anchor="middle" font-size="34" fill="#fff">Database</text>
+                <text x="600" y="190" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">
+                  Top level container
+                </text>
+
+                <rect x="210" y="260" width="330" height="240" rx="22" fill="rgba(255,255,255,0.07)"
+                  stroke="rgba(255,255,255,0.28)" stroke-width="3" />
+                <text x="375" y="315" text-anchor="middle" font-size="26" fill="#fff">Schema A</text>
+                <text x="375" y="350" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">
+                  tables
+                </text>
+
+                <rect x="660" y="260" width="330" height="240" rx="22" fill="rgba(255,255,255,0.07)"
+                  stroke="rgba(255,255,255,0.28)" stroke-width="3" />
+                <text x="825" y="315" text-anchor="middle" font-size="26" fill="#fff">Schema B</text>
+                <text x="825" y="350" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">
+                  tables
+                </text>
               </svg>
             </div>
           </div>
         </section>
 
         <section>
-          <h2>Where SQL fits</h2>
-          <div style="width:100%; height:70vh; display:flex; align-items:center; justify-content:center;">
-            <svg viewBox="0 0 1200 600" style="width:100%; height:100%;">
-              <rect x="60" y="110" width="300" height="200" rx="18" fill="rgba(255,255,255,0.07)"
-                stroke="rgba(255,255,255,0.35)" stroke-width="3" />
-              <text x="210" y="195" text-anchor="middle" font-size="34" fill="#fff">You</text>
-              <text x="210" y="240" text-anchor="middle" font-size="20" fill="rgba(255,255,255,0.75)">intent</text>
-
-              <rect x="450" y="110" width="300" height="200" rx="18" fill="rgba(255,255,255,0.07)"
-                stroke="rgba(255,255,255,0.35)" stroke-width="3" />
-              <text x="600" y="195" text-anchor="middle" font-size="34" fill="#fff">SQL</text>
-              <text x="600" y="240" text-anchor="middle" font-size="20" fill="rgba(255,255,255,0.75)">statements</text>
-
-              <rect x="840" y="110" width="300" height="200" rx="18" fill="rgba(255,255,255,0.07)"
-                stroke="rgba(255,255,255,0.35)" stroke-width="3" />
-              <text x="990" y="195" text-anchor="middle" font-size="34" fill="#fff">Database</text>
-              <text x="990" y="240" text-anchor="middle" font-size="20" fill="rgba(255,255,255,0.75)">stored
-                facts</text>
-
-              <path d="M360 210 L450 210" stroke="rgba(255,255,255,0.7)" stroke-width="5" marker-end="url(#m1a)" />
-              <path d="M750 210 L840 210" stroke="rgba(255,255,255,0.7)" stroke-width="5" marker-end="url(#m1a)" />
-
-              <defs>
-                <marker id="m1a" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
-                  <polygon points="0 0, 10 5, 0 10" fill="rgba(255,255,255,0.85)" />
-                </marker>
-              </defs>
-            </svg>
-          </div>
-        </section>
-
-        <section>
-          <h2>SQL history, in brief</h2>
-          <div style="display:grid; grid-template-columns: 1.15fr 0.85fr; gap: 22px; align-items:center;">
-            <div>
+          <h3>Create database</h3>
+          <div class="split">
+            <div class="left">
               <ul>
-                <li>Relational model: 1970</li>
-                <li>SQL languages: 1970s</li>
-                <li>Standardization: ANSI and ISO</li>
-                <li>Adoption: decades and counting</li>
+                <li>Use a stable project name</li>
+                <li>Create once during setup</li>
+                <li>Prefer predictable ownership</li>
+                <li>Keep it simple at first</li>
               </ul>
             </div>
-            <div style="display:flex; justify-content:center; flex-direction:column; gap:10px; align-items:center;">
-              <img src="https://upload.wikimedia.org/wikipedia/en/5/58/Edgar_F_Codd.jpg" alt="Edgar F. Codd"
-                style="max-width: 320px; width: 100%; height: auto; border-radius: 12px; border: 2px solid rgba(255,255,255,0.18);" />
-              <div class="muted" style="font-size:0.85em;">Edgar F. Codd</div>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <h2>How you write SQL</h2>
-          <ul>
-            <li>CLI tools and terminals</li>
-            <li>Admin tools and consoles</li>
-            <li>Inside application code</li>
-            <li>Inside notebooks sometimes</li>
-          </ul>
-        </section>
-
-        <!-- ===================================================== -->
-        <!-- 2) CREATE DATABASE: concept + examples -->
-        <!-- ===================================================== -->
-
-        <section>
-          <h2>CREATE DATABASE</h2>
-          <ul>
-            <li>Start a new project container</li>
-            <li>Keep names simple, stable</li>
-            <li>One project, one database</li>
-            <li>We use flower domain</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>What is a database</h2>
-          <ul>
-            <li>Top level data container</li>
-            <li>Holds schemas and tables</li>
-            <li>Defines ownership and scope</li>
-            <li>Supports backups and access</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Database analogy</h2>
-          <ul>
-            <li>Greenhouse building</li>
-            <li>Rooms inside for categories</li>
-            <li>Shelves for labeled bins</li>
-            <li>Labels prevent mix ups</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Database container picture</h2>
-          <div style="width:100%; height:70vh; display:flex; align-items:center; justify-content:center;">
-            <svg viewBox="0 0 1200 650" style="width:100%; height:100%;">
-              <rect x="120" y="90" width="960" height="470" rx="28" fill="rgba(255,255,255,0.06)"
-                stroke="rgba(255,255,255,0.35)" stroke-width="4" />
-              <text x="600" y="145" text-anchor="middle" font-size="34" fill="#fff">Database: flower_shop</text>
-
-              <rect x="200" y="220" width="420" height="290" rx="22" fill="rgba(255,255,255,0.07)"
-                stroke="rgba(255,255,255,0.28)" stroke-width="3" />
-              <text x="410" y="280" text-anchor="middle" font-size="26" fill="#fff">Schemas</text>
-
-              <rect x="670" y="220" width="330" height="140" rx="18" fill="rgba(255,255,255,0.07)"
-                stroke="rgba(255,255,255,0.28)" stroke-width="3" />
-              <text x="835" y="275" text-anchor="middle" font-size="24" fill="#fff">Tables</text>
-
-              <rect x="670" y="395" width="330" height="115" rx="18" fill="rgba(255,255,255,0.07)"
-                stroke="rgba(255,255,255,0.28)" stroke-width="3" />
-              <text x="835" y="450" text-anchor="middle" font-size="24" fill="#fff">Other objects</text>
-            </svg>
-          </div>
-        </section>
-
-        <section>
-          <h2>Flower project name</h2>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items:start;">
-            <div>
-              <ul>
-                <li>Store name: flower_shop</li>
-                <li>Goal: track inventory</li>
-                <li>Later: track orders</li>
-                <li>Later: track customers</li>
-              </ul>
-            </div>
-            <div>
+            <div class="right">
               <pre><code class="language-sql">CREATE DATABASE flower_shop;</code></pre>
             </div>
           </div>
         </section>
 
         <section>
-          <h2>SQLite note</h2>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items:start;">
-            <div>
+          <h3>Select and inspect databases</h3>
+          <div class="split">
+            <div class="left">
               <ul>
-                <li>SQLite uses a file</li>
-                <li>Database is the file</li>
-                <li>Concept still applies</li>
-                <li>Keep one file per project</li>
+                <li>Systems use different queries</li>
+                <li>Goal is the same: confirm it exists</li>
+                <li>Always verify before continuing</li>
               </ul>
             </div>
-            <div>
-              <pre><code class="language-sql">-- Open or create file
-sqlite3 flower_shop.db</code></pre>
+            <div class="right">
+              <pre><code class="language-sql">-- PostgreSQL
+\l
+
+-- MySQL and MariaDB
+SHOW DATABASES;
+
+-- SQLite
+-- database is a file; list attached
+PRAGMA database_list;</code></pre>
             </div>
           </div>
         </section>
 
         <section>
-          <h2>Defining a Database Name</h2>
-
+          <h3>Rename database or update name</h3>
           <div class="split">
             <div class="left">
               <ul>
-                <li>Use meaningful nouns</li>
-                <li>Use lowercase consistently</li>
-                <li>Avoid spaces and symbols</li>
-                <li>Avoid abbreviations</li>
-                <li>Avoid reserved words</li>
-                <li>Be stable over time</li>
+                <li>Rename is not portable</li>
+                <li>Rename requires admin access</li>
+                <li>Plan naming to avoid renames</li>
+              </ul>
+              <p class="tiny muted">
+                In many teams, rename is avoided in production.
+              </p>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- PostgreSQL (typical)
+ALTER DATABASE flower_shop RENAME TO flower_store;
+
+-- MySQL and MariaDB
+-- often: create new database, migrate data
+
+-- SQLite
+-- rename the file (outside SQL)</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3>Drop database ⚠️</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Deletes all data</li>
+                <li>Drops schemas, tables</li>
+                <li>Backups before drop</li>
               </ul>
             </div>
-
             <div class="right">
-              <pre><code class="language-sql">-- Good examples
-flower_shop
-inventory_db
-sales_data
+              <pre><code class="language-sql">DROP DATABASE flower_shop;</code></pre>
+            </div>
+          </div>
+        </section>
 
--- Bad examples
-FlowerDatabase
+        <section>
+          <h3>Database naming conventions</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Lowercase, underscore naming</li>
+                <li>Use meaningful nouns</li>
+                <li>Avoid spaces and punctuation</li>
+                <li>Avoid reserved words</li>
+                <li>Prefer stable names over dates</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Good
+flower_shop
+sales_data
+inventory
+
+-- Risky
 my database
 db1
-FLOWERS_2026
-select</code></pre>
+select
+FLOWERS_2026</code></pre>
             </div>
           </div>
         </section>
 
         <section>
-          <h2>Before demo: commands</h2>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items:start;">
-            <div>
-              <ul>
-                <li>Create database container</li>
-                <li>Open SQLite database file</li>
-                <li>Check you are connected</li>
-                <li>List existing tables</li>
-              </ul>
-            </div>
-            <div>
-              <pre><code class="language-sql">-- SQLite workflow
-sqlite3 flower_shop.db
-
--- Optional: list tables
-.tables</code></pre>
-            </div>
-          </div>
+          <h3>Common database errors and mitigation</h3>
+          <table class="big">
+            <thead>
+              <tr>
+                <th>Error pattern</th>
+                <th>Cause</th>
+                <th>Mitigation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Already exists</td>
+                <td>Name collision</td>
+                <td>Inspect first, then choose unique name</td>
+              </tr>
+              <tr>
+                <td>Permission denied</td>
+                <td>Missing privileges</td>
+                <td>Use correct account, request access, document roles</td>
+              </tr>
+              <tr>
+                <td>Connected to wrong environment</td>
+                <td>Wrong host or database</td>
+                <td>Verify connection string and current database before running DDL</td>
+              </tr>
+              <tr>
+                <td>Rename not supported</td>
+                <td>Vendor limitation</td>
+                <td>Choose stable name early, use migrate strategy if needed</td>
+              </tr>
+            </tbody>
+          </table>
         </section>
 
         <section>
-          <h2>Creating Existing Objects</h2>
-
-          <div class="split">
-            <div class="left">
-              <ul>
-                <li>Names must be unique</li>
-                <li>Database names are global</li>
-                <li>Schema names must differ</li>
-                <li>Table names must differ</li>
-                <li>Duplicates cause error</li>
-                <li>Execution stops immediately</li>
-              </ul>
-            </div>
-
-            <div class="right">
-              <pre><code class="language-sql">-- Will fail if already exists
-CREATE DATABASE flower_shop;
-
-CREATE SCHEMA inventory;
-
-CREATE TABLE flowers (
-  id INTEGER,
-  name TEXT
-);
-
--- Typical result
--- ERROR: object already exists</code></pre>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <h2>Live SQL Demo</h2>
-          <p class="muted">Open: <a href="https://onecompiler.com/" target="_blank" rel="noreferrer">onecompiler.com</a>
-          </p>
+          <h3>Database support by system</h3>
+          <table class="big">
+            <thead>
+              <tr>
+                <th>Operation</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>MySQL</th>
+                <th>MariaDB</th>
+                <th>Oracle</th>
+                <th>SQL Server</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>CREATE DATABASE</td>
+                <td>Concept via file</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td>List databases</td>
+                <td>PRAGMA database_list</td>
+                <td>\l</td>
+                <td>SHOW DATABASES</td>
+                <td>SHOW DATABASES</td>
+                <td>SELECT from data dictionary</td>
+                <td>sys.databases</td>
+              </tr>
+              <tr>
+                <td>Rename database</td>
+                <td>Rename file</td>
+                <td>ALTER DATABASE RENAME</td>
+                <td>Not standard</td>
+                <td>Not standard</td>
+                <td>Admin workflow</td>
+                <td>ALTER DATABASE MODIFY NAME</td>
+              </tr>
+              <tr>
+                <td>DROP DATABASE</td>
+                <td>Delete file</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="tiny muted">Portable habit: plan names early; treat rename as exceptional.</p>
         </section>
 
         <!-- ===================================================== -->
-        <!-- 3) CREATE SCHEMA: concept + examples -->
+        <!-- PART 2: SCHEMA -->
         <!-- ===================================================== -->
+        <section>
+          <h3>Part 2: Schema</h3>
+          <p class="muted">Goal: organize objects using schemas when the system supports them.</p>
+        </section>
 
         <section>
-          <h2>CREATE SCHEMA</h2>
+          <h3>Agenda</h3>
           <ul>
-            <li>Organize objects by purpose</li>
-            <li>Keep names predictable</li>
-            <li>Separate inventory from sales</li>
-            <li>Reduce naming collisions</li>
+            <li>Concept: namespace inside database</li>
+            <li>Diagram: schema and qualified names</li>
+            <li>Syntax: create, select, drop</li>
+            <li>Rename and update name</li>
+            <li>Naming conventions</li>
+            <li>Common errors and mitigation</li>
+            <li>Support table by database system</li>
           </ul>
         </section>
 
         <section>
-          <h2>What is a schema</h2>
-          <ul>
-            <li>Named grouping inside database</li>
-            <li>Holds tables and views</li>
-            <li>Supports modular database design</li>
-            <li>Improves clarity at scale</li>
-          </ul>
-        </section>
+          <div class="full-visual">
+            <div class="frame">
+              <svg viewBox="0 0 1200 650" style="width:100%; height:100%;">
 
-        <section>
-          <h2>Schema analogy</h2>
-          <ul>
-            <li>Room inside greenhouse</li>
-            <li>One room per category</li>
-            <li>Inventory room is first</li>
-            <li>Sales room comes later</li>
-          </ul>
-        </section>
+                <!-- Database -->
+                <rect x="120" y="90" width="960" height="470" rx="28" fill="rgba(255,255,255,0.06)"
+                  stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+                <text x="600" y="150" text-anchor="middle" font-size="34" fill="#fff">
+                  Database: flower_shop
+                </text>
 
-        <section>
-          <div style="width:100%; height:70vh; display:flex; align-items:center; justify-content:center;">
-            <svg viewBox="0 0 1200 650" style="width:100%; height:100%;">
+                <!-- Schema: inventory -->
+                <rect x="210" y="240" width="360" height="310" rx="22" fill="rgba(255,255,255,0.07)"
+                  stroke="rgba(255,255,255,0.28)" stroke-width="3" />
+                <text x="390" y="295" text-anchor="middle" font-size="26" fill="#fff">
+                  Schema: inventory
+                </text>
 
-              <!-- Database -->
-              <rect x="120" y="80" width="960" height="500" rx="28" fill="rgba(255,255,255,0.06)"
-                stroke="rgba(255,255,255,0.35)" stroke-width="4" />
-              <text x="600" y="135" text-anchor="middle" font-size="34" fill="#fff">
-                Database: flower_shop
-              </text>
+                <!-- Table: inventory.flowers (more vertical space) -->
+                <rect x="255" y="330" width="270" height="110" rx="16" fill="rgba(255,255,255,0.12)"
+                  stroke="rgba(255,255,255,0.4)" stroke-width="2" />
+                <text x="390" y="380" text-anchor="middle" font-size="22" fill="#fff">
+                  flowers
+                </text>
+                <text x="390" y="410" text-anchor="middle" font-size="14" fill="rgba(255,255,255,0.7)">
+                  inventory.flowers
+                </text>
 
-              <!-- Schema: inventory -->
-              <rect x="200" y="200" width="360" height="300" rx="22" fill="rgba(255,255,255,0.07)"
-                stroke="rgba(255,255,255,0.28)" stroke-width="3" />
-              <text x="380" y="245" text-anchor="middle" font-size="26" fill="#fff">
-                Schema: inventory
-              </text>
+                <!-- Schema: sales -->
+                <rect x="630" y="240" width="360" height="310" rx="22" fill="rgba(255,255,255,0.07)"
+                  stroke="rgba(255,255,255,0.28)" stroke-width="3" />
+                <text x="810" y="295" text-anchor="middle" font-size="26" fill="#fff">
+                  Schema: sales
+                </text>
 
-              <!-- Table: inventory.flowers -->
-              <rect x="245" y="285" width="270" height="90" rx="16" fill="rgba(255,255,255,0.12)"
-                stroke="rgba(255,255,255,0.4)" stroke-width="2" />
-              <text x="380" y="340" text-anchor="middle" font-size="22" fill="#fff">
-                flowers
-              </text>
-              <text x="380" y="370" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.7)">
-                inventory.flowers
-              </text>
+                <!-- Table: sales.orders (more vertical space) -->
+                <rect x="675" y="330" width="270" height="110" rx="16" fill="rgba(255,255,255,0.12)"
+                  stroke="rgba(255,255,255,0.4)" stroke-width="2" />
+                <text x="810" y="380" text-anchor="middle" font-size="22" fill="#fff">
+                  orders
+                </text>
+                <text x="810" y="410" text-anchor="middle" font-size="14" fill="rgba(255,255,255,0.7)">
+                  sales.orders
+                </text>
 
-              <!-- Schema: sales -->
-              <rect x="640" y="200" width="360" height="300" rx="22" fill="rgba(255,255,255,0.07)"
-                stroke="rgba(255,255,255,0.28)" stroke-width="3" />
-              <text x="820" y="245" text-anchor="middle" font-size="26" fill="#fff">
-                Schema: sales
-              </text>
-
-              <!-- Table: sales.flowers -->
-              <rect x="685" y="285" width="270" height="90" rx="16" fill="rgba(255,255,255,0.12)"
-                stroke="rgba(255,255,255,0.4)" stroke-width="2" />
-              <text x="820" y="340" text-anchor="middle" font-size="22" fill="#fff">
-                flowers
-              </text>
-              <text x="820" y="370" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.7)">
-                sales.flowers
-              </text>
-
-            </svg>
+              </svg>
+            </div>
           </div>
         </section>
 
         <section>
-          <h2>Schema names</h2>
+          <div class="full-visual">
+            <div class="frame">
+              <svg viewBox="0 0 1200 650" style="width:100%; height:100%;">
 
+                <!-- Database -->
+                <rect x="120" y="90" width="960" height="470" rx="28" fill="rgba(255,255,255,0.06)"
+                  stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+                <text x="600" y="150" text-anchor="middle" font-size="34" fill="#fff">
+                  Database: flower_shop
+                </text>
+
+                <!-- Schema: inventory -->
+                <rect x="210" y="240" width="360" height="310" rx="22" fill="rgba(255,255,255,0.07)"
+                  stroke="rgba(255,255,255,0.28)" stroke-width="3" />
+                <text x="390" y="295" text-anchor="middle" font-size="26" fill="#fff">
+                  Schema: inventory
+                </text>
+
+                <!-- Table: inventory.items -->
+                <rect x="255" y="330" width="270" height="110" rx="16" fill="rgba(255,255,255,0.12)"
+                  stroke="rgba(255,255,255,0.4)" stroke-width="2" />
+                <text x="390" y="380" text-anchor="middle" font-size="22" fill="#fff">
+                  items
+                </text>
+                <text x="390" y="410" text-anchor="middle" font-size="14" fill="rgba(255,255,255,0.7)">
+                  inventory.items
+                </text>
+
+                <!-- Schema: sales -->
+                <rect x="630" y="240" width="360" height="310" rx="22" fill="rgba(255,255,255,0.07)"
+                  stroke="rgba(255,255,255,0.28)" stroke-width="3" />
+                <text x="810" y="295" text-anchor="middle" font-size="26" fill="#fff">
+                  Schema: sales
+                </text>
+
+                <!-- Table: sales.items -->
+                <rect x="675" y="330" width="270" height="110" rx="16" fill="rgba(255,255,255,0.12)"
+                  stroke="rgba(255,255,255,0.4)" stroke-width="2" />
+                <text x="810" y="380" text-anchor="middle" font-size="22" fill="#fff">
+                  items
+                </text>
+                <text x="810" y="410" text-anchor="middle" font-size="14" fill="rgba(255,255,255,0.7)">
+                  sales.items
+                </text>
+
+              </svg>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3>Create schema</h3>
           <div class="split">
             <div class="left">
               <ul>
-                <li>Use short nouns</li>
-                <li>No spaces or punctuation</li>
-                <li>Prefer lowercase names</li>
+                <li>Use schema to separate domains</li>
+                <li>Inventory, sales common splits</li>
+                <li>Qualified names reduce collisions</li>
               </ul>
             </div>
-
             <div class="right">
-              <pre><code class="language-sql">-- Good examples
+              <pre><code class="language-sql">CREATE SCHEMA inventory;
+CREATE SCHEMA sales;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3>Select and inspect schemas</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Check existing schema</li>
+                <li>Check existingconventions</li>
+                <li>Match team structure</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Standard information schema (many systems)
+SELECT schema_name
+FROM information_schema.schemata
+ORDER BY schema_name;
+
+-- PostgreSQL
+\dn</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3>Rename schema or update name</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Rename exists in some systems</li>
+                <li>Not consistent across vendors</li>
+                <li>Prefer stable names up front</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- PostgreSQL
+ALTER SCHEMA inventory RENAME TO stock;
+
+-- MySQL and MariaDB
+-- schema is the database name in practice
+
+-- SQLite
+-- schemas are limited; prefer clear table names</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3>Drop schema ⚠️</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>May require <code>CASCADE</code></li>
+                <li><code>CASCADE</code> drops dependents</li>
+                <li>Use only for demos</li>
+                <li class="warn">Drops tables and data</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">DROP SCHEMA inventory;
+
+-- If objects exist (system dependent)
+DROP SCHEMA inventory CASCADE;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3>Schema naming conventions</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Short nouns, lowercase</li>
+                <li>One purpose per schema</li>
+                <li>Avoid spaces and punctuation</li>
+                <li>Avoid reserved words</li>
+                <li>Match business domain terms</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Good
 inventory
 sales
 customers
 
--- Bad examples
-InventorySchema
+-- Risky
+SalesSchema
 sales-data
 my schema
 select</code></pre>
@@ -932,203 +1241,179 @@ select</code></pre>
         </section>
 
         <section>
-          <h2>Flower schemas</h2>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items:start;">
-            <div>
-              <ul>
-                <li>inventory: flowers, suppliers</li>
-                <li>sales: orders, customers</li>
-                <li>We start with inventory</li>
-                <li>Keep structure minimal first</li>
-              </ul>
-            </div>
-            <div>
-              <pre><code class="language-sql">CREATE SCHEMA inventory;
-CREATE SCHEMA sales;</code></pre>
+          <h3>Common schema errors and mitigation</h3>
+          <table class="big">
+            <thead>
+              <tr>
+                <th>Error pattern</th>
+                <th>Cause</th>
+                <th>Mitigation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Schema not found</td>
+                <td>Wrong database or search path</td>
+                <td>Confirm current database; use qualified names</td>
+              </tr>
+              <tr>
+                <td>Already exists</td>
+                <td>Duplicate name</td>
+                <td>Inspect schemas first; follow naming standard</td>
+              </tr>
+              <tr>
+                <td>Cannot drop, objects exist</td>
+                <td>Tables and views inside</td>
+                <td>Drop objects first; use CASCADE only in demos</td>
+              </tr>
+              <tr>
+                <td>Feature not supported</td>
+                <td>Vendor differences</td>
+                <td>Use database namespaces or clear table prefixes</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h3>Schema support by system</h3>
+          <table class="big">
+            <thead>
+              <tr>
+                <th>Operation</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>MySQL</th>
+                <th>MariaDB</th>
+                <th>Oracle</th>
+                <th>SQL Server</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>CREATE SCHEMA</td>
+                <td>Limited</td>
+                <td>Yes</td>
+                <td>Yes (often equals database)</td>
+                <td>Yes (often equals database)</td>
+                <td>Yes (user centric)</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td>List schemas</td>
+                <td>Limited</td>
+                <td>\dn or information schema</td>
+                <td>information schema</td>
+                <td>information schema</td>
+                <td>Data dictionary</td>
+                <td>sys.schemas</td>
+              </tr>
+              <tr>
+                <td>Rename schema</td>
+                <td>No</td>
+                <td>ALTER SCHEMA RENAME</td>
+                <td>Not standard</td>
+                <td>Not standard</td>
+                <td>Admin workflow</td>
+                <td>ALTER SCHEMA</td>
+              </tr>
+              <tr>
+                <td>DROP SCHEMA</td>
+                <td>Limited</td>
+                <td>Yes</td>
+                <td>Yes (drop database)</td>
+                <td>Yes (drop database)</td>
+                <td>Yes</td>
+                <td>Yes</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="tiny muted">Portable habit: always use qualified names in examples.</p>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- PART 3: TABLE + COLUMNS + COMMON DATA TYPES -->
+        <!-- ===================================================== -->
+        <section>
+          <h3>Part 3: Table</h3>
+          <p class="muted">Goal: create tables, inspect them, rename them, and define columns with common types.</p>
+        </section>
+
+        <section>
+          <h3>Agenda</h3>
+          <ul>
+            <li>Concept: rows and columns</li>
+            <li>Diagram: table shape</li>
+            <li>Syntax: create, select, drop</li>
+            <li>Rename and update name</li>
+            <li>Columns and common data types</li>
+            <li>Naming conventions</li>
+            <li>Common errors and mitigation</li>
+            <li>Support table by database system</li>
+          </ul>
+        </section>
+
+        <section>
+          <div class="full-visual">
+            <div class="frame">
+              <svg viewBox="0 0 1200 650" style="width:100%; height:100%;">
+                <rect x="140" y="120" width="920" height="420" rx="22" fill="rgba(255,255,255,0.06)"
+                  stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+                <text x="600" y="175" text-anchor="middle" font-size="30" fill="#fff">Table: flowers</text>
+                <text x="600" y="210" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">Rows are
+                  items, columns are attributes</text>
+
+                <!-- header row -->
+                <rect x="190" y="260" width="820" height="70" rx="14" fill="rgba(255,255,255,0.07)"
+                  stroke="rgba(255,255,255,0.22)" stroke-width="2" />
+                <text x="260" y="305" text-anchor="middle" font-size="16" fill="#fff">flower_id</text>
+                <text x="420" y="305" text-anchor="middle" font-size="16" fill="#fff">name</text>
+                <text x="580" y="305" text-anchor="middle" font-size="16" fill="#fff">color</text>
+                <text x="740" y="305" text-anchor="middle" font-size="16" fill="#fff">price</text>
+                <text x="900" y="305" text-anchor="middle" font-size="16" fill="#fff">in_stock</text>
+
+                <!-- row 1 -->
+                <rect x="190" y="345" width="820" height="70" rx="14" fill="rgba(255,255,255,0.03)"
+                  stroke="rgba(255,255,255,0.18)" stroke-width="2" />
+                <text x="260" y="390" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.9)">101</text>
+                <text x="420" y="390" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.9)">Rose</text>
+                <text x="580" y="390" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.9)">Red</text>
+                <text x="740" y="390" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.9)">3.99</text>
+                <text x="900" y="390" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.9)">1</text>
+
+                <!-- row 2 -->
+                <rect x="190" y="430" width="820" height="70" rx="14" fill="rgba(255,255,255,0.03)"
+                  stroke="rgba(255,255,255,0.18)" stroke-width="2" />
+                <text x="260" y="475" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.9)">102</text>
+                <text x="420" y="475" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.9)">Tulip</text>
+                <text x="580" y="475" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.9)">Yellow</text>
+                <text x="740" y="475" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.9)">2.49</text>
+                <text x="900" y="475" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.9)">1</text>
+              </svg>
             </div>
           </div>
         </section>
 
         <section>
-          <h2>Qualified names</h2>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items:start;">
-            <div>
-              <ul>
-                <li>Schema prefixes the table</li>
-                <li>Read as “inventory flowers”</li>
-                <li>Helps when many tables exist</li>
-                <li>Common in large systems</li>
-              </ul>
-            </div>
-            <div>
-              <pre><code class="language-sql">-- Example qualified table
-inventory.flowers</code></pre>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <h2>SQLite note</h2>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items:start;">
-            <div>
-              <ul>
-                <li>SQLite treats schema differently</li>
-                <li>We keep concept for portability</li>
-                <li>We still name clearly</li>
-                <li>We use table prefixes later</li>
-              </ul>
-            </div>
-            <div>
-              <pre><code class="language-sql">-- SQLite habit:
--- use clear table names
--- inventory_flowers</code></pre>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <h2>Before demo: checklist</h2>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items:start;">
-            <div>
-              <ul>
-                <li>Pick schema purpose</li>
-                <li>Name it consistently</li>
-                <li>Create it using SQL</li>
-                <li>Confirm it exists</li>
-              </ul>
-            </div>
-            <div>
-              <pre><code class="language-sql">-- In systems with schemas:
-CREATE SCHEMA inventory;</code></pre>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <h2>Viewing Schemas in a Database</h2>
-
+          <h3>Create table with common column types</h3>
           <div class="split">
             <div class="left">
               <ul>
-                <li>Schemas list database structure</li>
-                <li>Names define object scope</li>
-                <li>Different systems show differently</li>
-                <li>Always inspect before creating</li>
+                <li>Start small, add constraints later</li>
+                <li>Use obvious names for columns</li>
+                <li>Pick types that match meaning</li>
+                <li>Prefer explicit identifiers</li>
               </ul>
+              <p class="tiny muted">
+                This is a portable baseline; vendors add extra types.
+              </p>
             </div>
-
             <div class="right">
-              <pre><code class="language-sql">-- Standard SQL (most systems)
-SELECT schema_name
-FROM information_schema.schemata;
-
--- PostgreSQL
-\dn
-
--- SQLite note
--- SQLite has main and temp only
-PRAGMA database_list;</code></pre>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <h2>Live SQL Demo</h2>
-          <p class="muted">Open: <a href="https://onecompiler.com/" target="_blank" rel="noreferrer">onecompiler.com</a>
-          </p>
-        </section>
-
-        <!-- ===================================================== -->
-        <!-- 4) CREATE TABLE: most time here (columns) -->
-        <!-- ===================================================== -->
-
-        <section>
-          <h2>CREATE TABLE</h2>
-          <ul>
-            <li>Table stores rows of facts</li>
-            <li>Columns define the shape</li>
-            <li>Types guide valid values</li>
-            <li>We start with inventory</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>What is a table</h2>
-          <ul>
-            <li>Named set of rows</li>
-            <li>Each row has columns</li>
-            <li>Columns have data types</li>
-            <li>Rows represent real items</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Table analogy</h2>
-          <ul>
-            <li>Shelf of labeled bins</li>
-            <li>One bin per row</li>
-            <li>Same labels on each bin</li>
-            <li>Labels are the columns</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Our first table</h2>
-          <ul>
-            <li>Table name: flowers</li>
-            <li>Each row is a flower</li>
-            <li>Inventory only, for now</li>
-            <li>Keep it small first</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Columns for flowers</h2>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items:start;">
-            <div>
-              <ul>
-                <li>flower_id: internal identifier</li>
-                <li>name: product name</li>
-                <li>color: display color</li>
-                <li>price: unit price</li>
-                <li>in_stock: available flag</li>
-              </ul>
-            </div>
-            <div>
-              <pre><code class="language-sql">-- We will define:
--- id, name, color,
--- price, stock flag</code></pre>
-            </div>
-          </div>
-        </section>
-
-        <section>
-          <h2>Types you will use</h2>
-          <ul>
-            <li>INTEGER for identifiers</li>
-            <li>TEXT for names</li>
-            <li>REAL for prices</li>
-            <li>INTEGER for flags</li>
-          </ul>
-        </section>
-
-        <section>
-          <h2>Start with minimal table</h2>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items:start;">
-            <div>
-              <ul>
-                <li>Just columns and types</li>
-                <li>No constraints yet</li>
-                <li>We add safety later</li>
-                <li>First focus: structure</li>
-              </ul>
-            </div>
-            <div>
               <pre><code class="language-sql">CREATE TABLE flowers (
   flower_id INTEGER,
   name      TEXT,
   color     TEXT,
-  price     REAL,
+  price     DECIMAL,
   in_stock  INTEGER
 );</code></pre>
             </div>
@@ -1136,48 +1421,16 @@ PRAGMA database_list;</code></pre>
         </section>
 
         <section>
-          <h2>Table preview</h2>
-          <table style="width:100%; border-collapse: collapse; font-size: 0.95em; table-layout: fixed;">
-            <thead>
-              <tr>
-                <th style="border:1px solid rgba(255,255,255,0.25); padding:10px;">flower_id</th>
-                <th style="border:1px solid rgba(255,255,255,0.25); padding:10px;">name</th>
-                <th style="border:1px solid rgba(255,255,255,0.25); padding:10px;">color</th>
-                <th style="border:1px solid rgba(255,255,255,0.25); padding:10px;">price</th>
-                <th style="border:1px solid rgba(255,255,255,0.25); padding:10px;">in_stock</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td style="border:1px solid rgba(255,255,255,0.2); padding:10px;">101</td>
-                <td style="border:1px solid rgba(255,255,255,0.2); padding:10px;">Rose</td>
-                <td style="border:1px solid rgba(255,255,255,0.2); padding:10px;">Red</td>
-                <td style="border:1px solid rgba(255,255,255,0.2); padding:10px;">3.99</td>
-                <td style="border:1px solid rgba(255,255,255,0.2); padding:10px;">1</td>
-              </tr>
-              <tr>
-                <td style="border:1px solid rgba(255,255,255,0.2); padding:10px;">102</td>
-                <td style="border:1px solid rgba(255,255,255,0.2); padding:10px;">Tulip</td>
-                <td style="border:1px solid rgba(255,255,255,0.2); padding:10px;">Yellow</td>
-                <td style="border:1px solid rgba(255,255,255,0.2); padding:10px;">2.49</td>
-                <td style="border:1px solid rgba(255,255,255,0.2); padding:10px;">1</td>
-              </tr>
-            </tbody>
-          </table>
-        </section>
-
-        <section>
-          <h2>Inspect after creating</h2>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items:start;">
-            <div>
+          <h3>Select and inspect table structure</h3>
+          <div class="split">
+            <div class="left">
               <ul>
-                <li>Confirm table exists</li>
-                <li>Confirm column names</li>
-                <li>Confirm column types</li>
-                <li>Fix issues immediately</li>
+                <li>Inspect immediately after create</li>
+                <li>Confirm columns and types</li>
+                <li>Fix early when it is cheap</li>
               </ul>
             </div>
-            <div>
+            <div class="right">
               <pre><code class="language-sql">-- SQLite: list tables
 SELECT name
 FROM sqlite_master
@@ -1185,86 +1438,256 @@ WHERE type='table'
 ORDER BY name;
 
 -- SQLite: inspect columns
-PRAGMA table_info(flowers);</code></pre>
+PRAGMA table_info(flowers);
+
+-- PostgreSQL: describe
+-- \d flowers</code></pre>
             </div>
           </div>
         </section>
 
         <section>
-          <h2>Before demo: practice set</h2>
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items:start;">
-            <div>
+          <h3>Rename table or update name</h3>
+          <div class="split">
+            <div class="left">
               <ul>
-                <li>Create the flowers table</li>
-                <li>List tables to verify</li>
-                <li>Inspect columns to verify</li>
-                <li>Repeat until confident</li>
+                <li>Rename is widely supported</li>
+                <li>Still check dependencies</li>
+                <li>Update software references</li>
+                <li>Restart software server</li>
               </ul>
             </div>
-            <div>
-              <pre><code class="language-sql">CREATE TABLE flowers (
-  flower_id INTEGER,
-  name      TEXT,
-  color     TEXT,
-  price     REAL,
-  in_stock  INTEGER
-);
+            <div class="right">
+              <pre><code class="language-sql">ALTER TABLE flowers RENAME TO flower;
 
-SELECT name
-FROM sqlite_master
-WHERE type='table';
-
-PRAGMA table_info(flowers);</code></pre>
+-- Some systems also support:
+-- RENAME TABLE flowers TO flower;</code></pre>
             </div>
           </div>
         </section>
 
         <section>
-          <h2>Live SQL Demo</h2>
-          <p class="muted">Open: <a href="https://onecompiler.com/" target="_blank" rel="noreferrer">onecompiler.com</a>
+          <h3>Drop table ⚠️</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li class="warn">Deletes data</li>
+                <li>Deletes structure</li>
+                <li>Use for demos</li>
+                <li>Backups recommended</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">DROP TABLE flowers;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3>Common SQL data types by meaning</h3>
+          <table class="big">
+            <thead>
+              <tr>
+                <th>Meaning</th>
+                <th>Common type</th>
+                <th>Examples</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Identifier</td>
+                <td>INTEGER</td>
+                <td>flower_id, customer_id</td>
+                <td>Often paired with primary key later</td>
+              </tr>
+              <tr>
+                <td>Short text</td>
+                <td>TEXT or VARCHAR</td>
+                <td>name, color</td>
+                <td>VARCHAR is length bounded in many systems</td>
+              </tr>
+              <tr>
+                <td>Money</td>
+                <td>INTEGER cents or DECIMAL</td>
+                <td>price_cents, unit_price</td>
+                <td>Prefer integer cents to avoid rounding issues</td>
+              </tr>
+              <tr>
+                <td>Boolean flag</td>
+                <td>BOOLEAN or INTEGER</td>
+                <td>in_stock</td>
+                <td>SQLite commonly uses 0 and 1</td>
+              </tr>
+              <tr>
+                <td>Date and time</td>
+                <td>TEXT or TIMESTAMP</td>
+                <td>created_at, order_date</td>
+                <td>SQLite stores as text by convention; others have native types</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h3>Table naming conventions</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Lowercase, underscore naming</li>
+                <li>Use id suffix for identifiers</li>
+                <li>Avoid reserved words</li>
+                <li>Keep names stable over time</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Good
+flowers
+order_item
+customer
+
+-- Risky
+Order
+MyTable
+flower data
+select</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3>Common table errors and mitigation</h3>
+          <table class="big">
+            <thead>
+              <tr>
+                <th>Error pattern</th>
+                <th>Cause</th>
+                <th>Mitigation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Syntax error near keyword</td>
+                <td>Reserved word used as name</td>
+                <td>Rename object or quote carefully; prefer safe names</td>
+              </tr>
+              <tr>
+                <td>No such table</td>
+                <td>Wrong schema or typo</td>
+                <td>Use qualified names; inspect tables list</td>
+              </tr>
+              <tr>
+                <td>Type mismatch or constraint failure</td>
+                <td>Bad data inserted later</td>
+                <td>Validate inputs; add constraints gradually</td>
+              </tr>
+              <tr>
+                <td>Cannot drop due to dependencies</td>
+                <td>Foreign keys and views reference it</td>
+                <td>Drop dependents first; avoid CASCADE in real systems</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h3>Table support by system</h3>
+          <table class="big">
+            <thead>
+              <tr>
+                <th>Operation</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>MySQL</th>
+                <th>MariaDB</th>
+                <th>Oracle</th>
+                <th>SQL Server</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>CREATE TABLE</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td>Inspect columns</td>
+                <td>PRAGMA table_info</td>
+                <td>\d or information schema</td>
+                <td>DESCRIBE or information schema</td>
+                <td>DESCRIBE or information schema</td>
+                <td>Data dictionary</td>
+                <td>sp_help or sys.columns</td>
+              </tr>
+              <tr>
+                <td>Rename table</td>
+                <td>ALTER TABLE RENAME</td>
+                <td>ALTER TABLE RENAME</td>
+                <td>RENAME TABLE or ALTER TABLE</td>
+                <td>RENAME TABLE or ALTER TABLE</td>
+                <td>RENAME (or ALTER TABLE)</td>
+                <td>sp_rename or ALTER SCHEMA</td>
+              </tr>
+              <tr>
+                <td>DROP TABLE</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td>Common types</td>
+                <td>INTEGER, TEXT, REAL</td>
+                <td>INT, TEXT, NUMERIC</td>
+                <td>INT, VARCHAR, DECIMAL</td>
+                <td>INT, VARCHAR, DECIMAL</td>
+                <td>NUMBER, VARCHAR2, DATE</td>
+                <td>INT, NVARCHAR, DECIMAL</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="tiny muted">Portable habit: use simple types first, then specialize per vendor.</p>
+        </section>
+
+        <section>
+          <h3>IF EXISTS</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Prevents runtime errors</li>
+                <li>Safe cleanup operations</li>
+                <li>Useful in automation</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Drop only if present
+DROP TABLE IF EXISTS flowers;
+
+DROP SCHEMA IF EXISTS inventory;
+
+DROP DATABASE IF EXISTS flower_shop;</code></pre>
+            </div>
+          </div>
+          <p class="tiny muted">
+            Not all databases support <code>IF EXISTS</code> in every statement. Check vendor support.
           </p>
         </section>
 
         <!-- Close module -->
         <section>
-          <h2>Module 1 recap</h2>
+          <h3>Module 1 recap</h3>
           <ul>
-            <li>Database concept is clear</li>
-            <li>Schema concept is clear</li>
-            <li>Table and columns created</li>
-            <li>Next: insert flower rows</li>
+            <li>Database defines top level scope</li>
+            <li>Schema organizes objects by domain</li>
+            <li>Table stores rows with typed columns</li>
+            <li>Next: insert, update, delete rows</li>
           </ul>
-        </section>
-
-        <section>
-          <h2>CREATE Statements in Practice</h2>
-
-          <div class="split">
-            <div class="left">
-              <ul>
-                <li>Run during setup only</li>
-                <li>Not part of daily work</li>
-                <li>Define long term structure</li>
-                <li>Change requires planning</li>
-                <li>Often written once</li>
-                <li>Reviewed before execution</li>
-              </ul>
-            </div>
-
-            <div class="right">
-              <pre><code class="language-sql">-- Typical lifecycle
-
--- Once per project
-CREATE DATABASE flower_shop;
-CREATE SCHEMA inventory;
-CREATE TABLE flowers (...);
-
--- Many times per day
-SELECT ...
-INSERT ...
-UPDATE ...</code></pre>
-            </div>
-          </div>
         </section>
 
       </section>
@@ -1272,208 +1695,647 @@ UPDATE ...</code></pre>
       <!-- MODULE 2 -->
       <section id="module-2">
 
+        <!-- Title -->
         <section>
           <h2>Module 2</h2>
-          <h3>SQL Query: INSERT, VALUES, INTO, UPDATE, SET, DELETE</h3>
-          <p class="muted small">
-            Goal: add, modify, and remove data rows in existing tables using SQL statements.
+          <h3>SQL Rows: INSERT, UPDATE, DELETE</h3>
+          <p class="muted">
+            INSERT · INTO · VALUES · SELECT · UPDATE · SET · DELETE · WHERE
+          </p>
+          <p class="tiny muted">
+            Data changes next: we add rows, modify rows, and remove rows safely.
           </p>
         </section>
 
-        <!-- M2 setup: more tables -->
+        <!-- ===================================================== -->
+        <!-- PART 1: INSERT -->
+        <!-- ===================================================== -->
         <section>
-          <h3>Module 2 setup (create 3 tables quickly)</h3>
-          <div class="split">
-            <div class="left">
-              <ul>
-                <li>Add customers, orders, and order items.</li>
-                <li>Introduce foreign keys as “rules the database can enforce”.</li>
-                <li>SQLite note: foreign keys must be enabled per connection.</li>
-              </ul>
-            </div>
-            <div class="right">
-              <pre><code class="language-sql">PRAGMA foreign_keys = ON;
+          <h3>Part 1: Insert</h3>
+          <p class="muted">Goal: add new rows using INSERT, VALUES, and INSERT FROM SELECT.</p>
+        </section>
 
-CREATE TABLE Customer (
-  CustomerId INTEGER PRIMARY KEY,
-  Name       TEXT NOT NULL,
-  Email      TEXT UNIQUE
-);
+        <section>
+          <h3>Agenda</h3>
+          <ul>
+            <li>Concept: new rows</li>
+            <li>Diagram: row added</li>
+            <li>Syntax: insert values</li>
+            <li>Insert from select</li>
+            <li>Naming conventions</li>
+            <li>Common errors and mitigation</li>
+            <li>Support table by database system</li>
+          </ul>
+        </section>
 
-CREATE TABLE "Order" (
-  OrderId     INTEGER PRIMARY KEY,
-  CustomerId  INTEGER NOT NULL,
-  OrderDate   TEXT NOT NULL,
-  Status      TEXT NOT NULL DEFAULT 'NEW',
-  TotalCents  INTEGER NOT NULL DEFAULT 0,
-  FOREIGN KEY (CustomerId) REFERENCES Customer(CustomerId)
-);
+        <section>
+          <div class="full-visual">
+            <div class="frame">
+              <svg viewBox="0 0 1200 650" style="width:100%; height:100%; pointer-events:none;">
+                <rect x="140" y="120" width="920" height="420" rx="22" fill="rgba(255,255,255,0.06)"
+                  stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+                <text x="600" y="170" text-anchor="middle" font-size="30" fill="#fff">Table: flowers</text>
+                <text x="600" y="205" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">
+                  INSERT adds a new row
+                </text>
 
-CREATE TABLE OrderItem (
-  OrderItemId    INTEGER PRIMARY KEY,
-  OrderId        INTEGER NOT NULL,
-  FlowerId       INTEGER NOT NULL,
-  Qty            INTEGER NOT NULL,
-  UnitPriceCents INTEGER NOT NULL,
-  FOREIGN KEY (OrderId)  REFERENCES "Order"(OrderId),
-  FOREIGN KEY (FlowerId) REFERENCES Flower(FlowerId)
-);</code></pre>
+                <!-- header -->
+                <rect x="190" y="250" width="820" height="70" rx="14" fill="rgba(255,255,255,0.07)"
+                  stroke="rgba(255,255,255,0.22)" stroke-width="2" />
+                <text x="300" y="295" text-anchor="middle" font-size="16" fill="#fff">flower_id</text>
+                <text x="480" y="295" text-anchor="middle" font-size="16" fill="#fff">name</text>
+                <text x="660" y="295" text-anchor="middle" font-size="16" fill="#fff">color</text>
+                <text x="840" y="295" text-anchor="middle" font-size="16" fill="#fff">price</text>
+
+                <!-- existing row -->
+                <rect x="190" y="335" width="820" height="70" rx="14" fill="rgba(255,255,255,0.03)"
+                  stroke="rgba(255,255,255,0.18)" stroke-width="2" />
+                <text x="300" y="380" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.9)">101</text>
+                <text x="480" y="380" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.9)">Rose</text>
+                <text x="660" y="380" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.9)">Red</text>
+                <text x="840" y="380" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.9)">3.99</text>
+
+                <!-- new row highlight -->
+                <rect x="190" y="420" width="820" height="70" rx="14" fill="rgba(255,255,255,0.06)"
+                  stroke="rgba(255,255,255,0.55)" stroke-width="3" />
+                <text x="300" y="465" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.95)">103</text>
+                <text x="480" y="465" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.95)">Lily</text>
+                <text x="660" y="465" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.95)">White</text>
+                <text x="840" y="465" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.95)">4.50</text>
+              </svg>
             </div>
           </div>
         </section>
 
-        <!-- M2 Query 1 -->
         <section>
-          <h3>1/6 UPDATE (maintain inventory)</h3>
+          <h3>Insert row</h3>
           <div class="split">
             <div class="left">
               <ul>
-                <li><code>UPDATE</code> changes existing rows (always use a WHERE in class).</li>
-                <li>Inventory is a natural example: stock goes down after sale.</li>
-                <li>Teach “check before and after” with SELECT.</li>
+                <li>Specify table name</li>
+                <li>List target columns</li>
+                <li>Match value order</li>
+                <li>Insert one row</li>
               </ul>
             </div>
             <div class="right">
-              <pre><code class="language-sql">-- Sell 6 red roses
-UPDATE Flower
-SET InStockQty = InStockQty - 6
-WHERE CommonName = 'Rose'
-  AND Color = 'Red';</code></pre>
+              <pre><code class="language-sql">INSERT INTO flowers (flower_id, name, color, price)
+VALUES (103, 'Lily', 'White', 4.50);</code></pre>
             </div>
           </div>
         </section>
 
-        <!-- M2 Query 2 -->
         <section>
-          <h3>2/6 DELETE (with caution)</h3>
+          <h3>Select and inspect rows</h3>
           <div class="split">
             <div class="left">
               <ul>
-                <li><code>DELETE</code> removes rows. This is permanent unless you have a backup.</li>
-                <li>In teaching: delete only demo rows (e.g., test data).</li>
-                <li>Practice safe pattern: SELECT first, then DELETE.</li>
+                <li>Verify after insert</li>
+                <li>Check row count</li>
+                <li>Check inserted values</li>
               </ul>
             </div>
             <div class="right">
-              <pre><code class="language-sql">-- Remove a test row (if it exists)
-DELETE FROM Flower
-WHERE CommonName = 'TestFlower'
-  AND Color = 'Blue';</code></pre>
+              <pre><code class="language-sql">SELECT *
+FROM flowers
+ORDER BY flower_id;</code></pre>
             </div>
           </div>
         </section>
 
-        <!-- M2 Query 3 -->
         <section>
-          <h3>3/6 JOIN (connect meaning)</h3>
+          <h3>Insert from SELECT</h3>
           <div class="split">
             <div class="left">
               <ul>
-                <li>Joins answer real questions across tables.</li>
-                <li>Start with an inner join (only matching rows).</li>
-                <li>Teach join keys explicitly: <code>OrderItem.FlowerId = Flower.FlowerId</code>.</li>
+                <li>Copy rows safely</li>
+                <li>Transform on insert</li>
+                <li>Useful for migration</li>
               </ul>
+              <p class="tiny muted">Often used to backfill or stage data.</p>
             </div>
             <div class="right">
-              <pre><code class="language-sql">SELECT
-  oi.OrderId,
-  f.CommonName,
-  oi.Qty,
-  oi.UnitPriceCents
-FROM OrderItem oi
-JOIN Flower f
-  ON f.FlowerId = oi.FlowerId
-WHERE oi.OrderId = 1;</code></pre>
+              <pre><code class="language-sql">INSERT INTO flowers (flower_id, name, color, price)
+SELECT flower_id + 1000, name, color, price
+FROM flowers
+WHERE color = 'Red';</code></pre>
             </div>
           </div>
         </section>
 
-        <!-- M2 Query 4 -->
         <section>
-          <h3>4/6 GROUP BY (summaries)</h3>
+          <h3>Insert naming conventions</h3>
           <div class="split">
             <div class="left">
               <ul>
-                <li>Grouping turns many rows into one line per category.</li>
-                <li>Teach aggregates: <code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code>,
-                  <code>MAX</code>.
-                </li>
-                <li>Use categories students understand (color is simple).</li>
+                <li>Use clear column names</li>
+                <li>Use id suffix</li>
+                <li>Avoid reserved words</li>
+                <li>Keep names stable</li>
               </ul>
             </div>
             <div class="right">
-              <pre><code class="language-sql">SELECT
-  Color,
-  COUNT(*)           AS flower_types,
-  SUM(InStockQty)    AS total_stock,
-  AVG(PriceCents)    AS avg_price_cents
-FROM Flower
-GROUP BY Color
-ORDER BY total_stock DESC;</code></pre>
+              <pre><code class="language-sql">-- Good
+flower_id
+created_at
+price_cents
+
+-- Risky
+id
+date
+order</code></pre>
             </div>
           </div>
         </section>
 
-        <!-- M2 Query 5 -->
         <section>
-          <h3>5/6 HAVING (filter groups)</h3>
-          <div class="split">
-            <div class="left">
-              <ul>
-                <li><code>WHERE</code> filters rows.</li>
-                <li><code>HAVING</code> filters groups (after aggregation).</li>
-                <li>Classic demo: show only colors with “enough” stock.</li>
-              </ul>
-            </div>
-            <div class="right">
-              <pre><code class="language-sql">SELECT
-  Color,
-  SUM(InStockQty) AS total_stock
-FROM Flower
-GROUP BY Color
-HAVING SUM(InStockQty) &gt;= 100
-ORDER BY total_stock DESC;</code></pre>
+          <h3>Common insert errors and mitigation</h3>
+          <table class="big">
+            <thead>
+              <tr>
+                <th>Error pattern</th>
+                <th>Cause</th>
+                <th>Mitigation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Column count mismatch</td>
+                <td>Values do not align</td>
+                <td>List columns; match order and count</td>
+              </tr>
+              <tr>
+                <td>Constraint failure</td>
+                <td>NOT NULL or UNIQUE</td>
+                <td>Validate inputs; insert required fields</td>
+              </tr>
+              <tr>
+                <td>Type mismatch</td>
+                <td>Wrong value type</td>
+                <td>Use correct types; cast explicitly when needed</td>
+              </tr>
+              <tr>
+                <td>Primary key conflict</td>
+                <td>Duplicate id</td>
+                <td>Inspect existing ids; use sequences where available</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h3>Insert support by system</h3>
+          <table class="big">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>MySQL</th>
+                <th>MariaDB</th>
+                <th>Oracle</th>
+                <th>SQL Server</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>INSERT INTO VALUES</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td>INSERT INTO SELECT</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td>UPSERT syntax</td>
+                <td>ON CONFLICT</td>
+                <td>ON CONFLICT</td>
+                <td>ON DUPLICATE KEY</td>
+                <td>ON DUPLICATE KEY</td>
+                <td>MERGE</td>
+                <td>MERGE</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="tiny muted">Portable habit: always list columns in INSERT statements.</p>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- PART 2: UPDATE -->
+        <!-- ===================================================== -->
+        <section>
+          <h3>Part 2: Update</h3>
+          <p class="muted">Goal: modify existing rows using UPDATE and SET safely.</p>
+        </section>
+
+        <section>
+          <h3>Agenda</h3>
+          <ul>
+            <li>Concept: change rows</li>
+            <li>Diagram: row edited</li>
+            <li>Syntax: update set</li>
+            <li>Use where filter</li>
+            <li>Naming conventions</li>
+            <li>Common errors and mitigation</li>
+            <li>Support table by database system</li>
+          </ul>
+        </section>
+
+        <section>
+          <div class="full-visual">
+            <div class="frame">
+              <svg viewBox="0 0 1200 650" style="width:100%; height:100%; pointer-events:none;">
+                <rect x="140" y="120" width="920" height="420" rx="22" fill="rgba(255,255,255,0.06)"
+                  stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+                <text x="600" y="170" text-anchor="middle" font-size="30" fill="#fff">Table: flowers</text>
+                <text x="600" y="205" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">
+                  UPDATE edits existing rows
+                </text>
+
+                <!-- header -->
+                <rect x="190" y="250" width="820" height="70" rx="14" fill="rgba(255,255,255,0.07)"
+                  stroke="rgba(255,255,255,0.22)" stroke-width="2" />
+                <text x="300" y="295" text-anchor="middle" font-size="16" fill="#fff">flower_id</text>
+                <text x="480" y="295" text-anchor="middle" font-size="16" fill="#fff">name</text>
+                <text x="660" y="295" text-anchor="middle" font-size="16" fill="#fff">price</text>
+                <text x="840" y="295" text-anchor="middle" font-size="16" fill="#fff">in_stock</text>
+
+                <!-- row highlight -->
+                <rect x="190" y="335" width="820" height="70" rx="14" fill="rgba(255,255,255,0.06)"
+                  stroke="rgba(255,255,255,0.55)" stroke-width="3" />
+                <text x="300" y="380" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.95)">101</text>
+                <text x="480" y="380" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.95)">Rose</text>
+                <text x="660" y="380" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.95)">3.99 →
+                  4.25</text>
+                <text x="840" y="380" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.95)">1</text>
+              </svg>
             </div>
           </div>
         </section>
 
-        <!-- M2 Query 6 -->
         <section>
-          <h3>6/6 INDEX + EXPLAIN QUERY PLAN (performance)</h3>
+          <h3>Update rows</h3>
           <div class="split">
             <div class="left">
               <ul>
-                <li>Indexes speed up lookups (at the cost of extra storage and slower writes).</li>
-                <li>SQLite can show how it plans a query: <code>EXPLAIN QUERY PLAN</code>.</li>
-                <li>Good teaching moment: “data structures meet databases”.</li>
+                <li>Always use WHERE</li>
+                <li>Update specific rows</li>
+                <li>Set one or more</li>
+                <li>Verify after change</li>
               </ul>
             </div>
             <div class="right">
-              <pre><code class="language-sql">CREATE INDEX idx_flower_color_price
-ON Flower(Color, PriceCents);
-
-EXPLAIN QUERY PLAN
-SELECT CommonName, PriceCents
-FROM Flower
-WHERE Color = 'Red'
-ORDER BY PriceCents DESC
-LIMIT 5;</code></pre>
+              <pre><code class="language-sql">UPDATE flowers
+SET price = 4.25
+WHERE flower_id = 101;</code></pre>
             </div>
           </div>
         </section>
 
-        <!-- Module 2 recap -->
+        <section>
+          <h3>Update multiple columns</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Set several values</li>
+                <li>Keep updates readable</li>
+                <li>One row at time</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">UPDATE flowers
+SET price = 4.25,
+    color = 'Deep Red'
+WHERE flower_id = 101;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3>Update naming conventions</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Use verb free names</li>
+                <li>Use consistent casing</li>
+                <li>Prefer underscore style</li>
+                <li>Avoid abbreviations</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Good
+unit_price_cents
+created_at
+
+-- Risky
+UnitPrice
+dt
+val</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3>Common update errors and mitigation</h3>
+          <table class="big">
+            <thead>
+              <tr>
+                <th>Error pattern</th>
+                <th>Cause</th>
+                <th>Mitigation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Updated too many rows</td>
+                <td>Missing WHERE</td>
+                <td>SELECT first; use WHERE always</td>
+              </tr>
+              <tr>
+                <td>No rows updated</td>
+                <td>Wrong filter</td>
+                <td>Confirm keys; check data exists</td>
+              </tr>
+              <tr>
+                <td>Constraint failure</td>
+                <td>Unique or FK rule</td>
+                <td>Update dependents in correct order</td>
+              </tr>
+              <tr>
+                <td>Type mismatch</td>
+                <td>Wrong value type</td>
+                <td>Use correct types; cast explicitly</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h3>Update support by system</h3>
+          <table class="big">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>MySQL</th>
+                <th>MariaDB</th>
+                <th>Oracle</th>
+                <th>SQL Server</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>UPDATE ... SET</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td>UPDATE ... FROM</td>
+                <td>No</td>
+                <td>Yes</td>
+                <td>Limited</td>
+                <td>Limited</td>
+                <td>MERGE</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td>RETURNING clause</td>
+                <td>Yes (new)</td>
+                <td>Yes</td>
+                <td>Limited</td>
+                <td>Limited</td>
+                <td>RETURNING</td>
+                <td>OUTPUT</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="tiny muted">Portable habit: select first, then update with a narrow WHERE.</p>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- PART 3: DELETE -->
+        <!-- ===================================================== -->
+        <section>
+          <h3>Part 3: Delete</h3>
+          <p class="muted">Goal: remove rows safely using DELETE and WHERE.</p>
+        </section>
+
+        <section>
+          <h3>Agenda</h3>
+          <ul>
+            <li>Concept: remove rows</li>
+            <li>Diagram: row removed</li>
+            <li>Syntax: delete where</li>
+            <li>Verify before delete</li>
+            <li>Naming conventions</li>
+            <li>Common errors and mitigation</li>
+            <li>Support table by database system</li>
+          </ul>
+        </section>
+
+        <section>
+          <div class="full-visual">
+            <div class="frame">
+              <svg viewBox="0 0 1200 650" style="width:100%; height:100%; pointer-events:none;">
+                <rect x="140" y="120" width="920" height="420" rx="22" fill="rgba(255,255,255,0.06)"
+                  stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+                <text x="600" y="170" text-anchor="middle" font-size="30" fill="#fff">Table: flowers</text>
+                <text x="600" y="205" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">
+                  DELETE removes rows
+                </text>
+
+                <!-- header -->
+                <rect x="190" y="250" width="820" height="70" rx="14" fill="rgba(255,255,255,0.07)"
+                  stroke="rgba(255,255,255,0.22)" stroke-width="2" />
+                <text x="300" y="295" text-anchor="middle" font-size="16" fill="#fff">flower_id</text>
+                <text x="480" y="295" text-anchor="middle" font-size="16" fill="#fff">name</text>
+                <text x="660" y="295" text-anchor="middle" font-size="16" fill="#fff">color</text>
+                <text x="840" y="295" text-anchor="middle" font-size="16" fill="#fff">price</text>
+
+                <!-- row shown as removed -->
+                <rect x="190" y="335" width="820" height="70" rx="14" fill="rgba(255,255,255,0.02)"
+                  stroke="rgba(255,255,255,0.25)" stroke-width="2" stroke-dasharray="10 8" />
+                <text x="300" y="380" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.6)">102</text>
+                <text x="480" y="380" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.6)">Tulip</text>
+                <text x="660" y="380" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.6)">Yellow</text>
+                <text x="840" y="380" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.6)">2.49</text>
+
+                <text x="600" y="460" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">
+                  Row removed after DELETE
+                </text>
+              </svg>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3>Delete rows ⚠️</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li class="warn">⚠️ Deletes data</li>
+                <li>Always use WHERE</li>
+                <li>Select before delete</li>
+                <li>Backups recommended</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">DELETE FROM flowers
+WHERE flower_id = 102;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3>Verify before delete</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Preview delete set</li>
+                <li>Confirm row count</li>
+                <li>Then run DELETE</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT *
+FROM flowers
+WHERE flower_id = 102;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3>Delete naming conventions</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Use clear key columns</li>
+                <li>Prefer stable identifiers</li>
+                <li>Avoid ambiguous names</li>
+                <li>Use id suffix</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Good filters
+WHERE flower_id = 102
+WHERE created_at &lt; '2026-01-01'
+
+-- Risky filters
+WHERE name = 'Rose'</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3>Common delete errors and mitigation</h3>
+          <table class="big">
+            <thead>
+              <tr>
+                <th>Error pattern</th>
+                <th>Cause</th>
+                <th>Mitigation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Deleted too many rows</td>
+                <td>Missing WHERE</td>
+                <td>SELECT first; use WHERE always</td>
+              </tr>
+              <tr>
+                <td>Foreign key failure</td>
+                <td>Dependent rows exist</td>
+                <td>Delete dependents first; use FK rules intentionally</td>
+              </tr>
+              <tr>
+                <td>No rows deleted</td>
+                <td>Wrong filter</td>
+                <td>Confirm key values before deleting</td>
+              </tr>
+              <tr>
+                <td>Permissions error</td>
+                <td>Missing rights</td>
+                <td>Use correct role; request needed privileges</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h3>Delete support by system</h3>
+          <table class="big">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>MySQL</th>
+                <th>MariaDB</th>
+                <th>Oracle</th>
+                <th>SQL Server</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>DELETE ... WHERE</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td>DELETE with JOIN</td>
+                <td>No</td>
+                <td>USING</td>
+                <td>Yes</td>
+                <td>Yes</td>
+                <td>MERGE</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td>TRUNCATE alternative</td>
+                <td>DELETE all rows</td>
+                <td>TRUNCATE</td>
+                <td>TRUNCATE</td>
+                <td>TRUNCATE</td>
+                <td>TRUNCATE</td>
+                <td>TRUNCATE</td>
+              </tr>
+            </tbody>
+          </table>
+          <p class="tiny muted">Portable habit: treat DELETE like a power tool and verify first.</p>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- MODULE 2 RECAP -->
+        <!-- ===================================================== -->
         <section>
           <h3>Module 2 recap</h3>
           <ul>
-            <li><strong>Maintain</strong>: UPDATE, DELETE</li>
-            <li><strong>Connect</strong>: JOIN</li>
-            <li><strong>Summarize</strong>: GROUP BY, HAVING</li>
-            <li><strong>Speed</strong>: INDEX, EXPLAIN QUERY PLAN</li>
+            <li>INSERT adds new rows</li>
+            <li>UPDATE modifies existing</li>
+            <li>DELETE removes data</li>
+            <li>Always verify first</li>
           </ul>
-          <p class="muted tiny">Next: deeper joins, constraints, transactions, and query patterns (still in the same
-            flower domain).</p>
         </section>
+
       </section>
 
     </div>
