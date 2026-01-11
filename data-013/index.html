@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>COMP 163 - SQL Only</title>
+
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/9850/9850812.png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/black.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/monokai.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+  <style>
+    body {
+      margin: 0;
+    }
+
+    .reveal {
+      font-size: 30px;
+    }
+
+    .reveal h1,
+    .reveal h2,
+    .reveal h3 {
+      text-transform: none;
+    }
+
+    .muted {
+      opacity: 0.85;
+      font-size: 0.85em;
+    }
+
+    .small {
+      font-size: 0.8em;
+    }
+
+    .tiny {
+      font-size: 0.7em;
+    }
+
+    /* 2-column split: left list, right SQL example */
+    .split {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .split .left {
+      text-align: left;
+    }
+
+    .split .right {
+      text-align: left;
+    }
+
+    .split ul {
+      margin: 0.2em 0 0.2em 1.0em;
+    }
+
+    .split li {
+      margin: 0.25em 0;
+    }
+
+    /* Code block sizing */
+    pre code {
+      font-size: 0.72em;
+      line-height: 1.25em;
+    }
+
+    /* Full slide visuals */
+    .full-visual {
+      width: 100%;
+      height: 78vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .full-visual .frame {
+      width: 100%;
+      height: 100%;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      border-radius: 16px;
+      padding: 12px;
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+
+    /* Table (full slide) */
+    table.big {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.72em;
+    }
+
+    table.big th,
+    table.big td {
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      padding: 10px 10px;
+      vertical-align: top;
+    }
+
+    table.big th {
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    /* Footer */
+    .global-footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+
+      font-family: system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 0.8em;
+      line-height: 1.5;
+
+      color: #f0f2f5;
+      /* dark blue, not black */
+
+      padding: 6px 24px;
+      z-index: 10;
+
+      letter-spacing: 0.02em;
+    }
+
+    /* Footer links */
+    .global-footer a {
+      color: #dfe7ff;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(223, 231, 255, 0.35);
+    }
+
+    .global-footer a:hover {
+      border-bottom-color: rgba(223, 231, 255, 0.7);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Title -->
+      <section>
+        <h3>Welcome to Introduction to SQL</h3>
+        <p class="muted">
+          Course: <strong>DATA 013</strong><br />
+          Format: <span class="small">Asynchronous</span><br />
+          Semester: <span class="small">Spring 2026</span>
+        </p>
+        <p class="tiny muted">Focus: core SQL concepts with portable examples across multiple database systems.</p>
+      </section>
+
+      <section>
+        <table style="margin: 0 auto; width: 100%; border-collapse: collapse; font-size: 0.85rem; table-layout: fixed;">
+          <thead>
+            <tr style="background-color: #444; color: #fff;">
+              <th
+                style="padding: 8px; border: 1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;width: 120px;">
+                Week</th>
+              <th
+                style="padding: 8px; border: 1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;width: 30%;">
+                Topic</th>
+              <th
+                style="padding: 8px; border: 1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                Assignment (Canvas)</th>
+              <th
+                style="padding: 8px; border: 1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;width: 70px;">
+                Database</th>
+              <th
+                style="padding: 8px; border: 1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;width: 150px;">
+                Comment</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr style="color:#ccc;">
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                1 (Jan 12, 14, 16)</td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                <a href="./#/2/"
+                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">CREATE,
+                  DATABASE, SCHEMA, TABLE</a>
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                Lab 1, Homework 1 (2w)</td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                SQLite</td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+            </tr>
+
+            <tr style="color:#ccc;">
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                2 (Jan 21, 23)</td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                <a href="./#/3"
+                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">INSERT, VALUES,
+                  INTO, UPDATE, SET, DELETE</a>
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                Holiday on Monday (Jan 19)</td>
+            </tr>
+
+            <tr style="color:#ccc;">
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                3 (Jan 26, 28, 30)</td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                <a href="./#/4"
+                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">SELECT, FROM,
+                  WHERE, GROUP, BY, HAVING</a>
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                Lab 2, Homework 2 (2w)</td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+            </tr>
+
+            <tr style="color:#ccc;">
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                4 (Feb 2, 4, 6)</td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                <a href="./#/module-4"
+                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">ORDER,
+                  DISTINCT, AS, ALL, LIMIT, OFFSET</a>
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                PostgreSQL</td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+            </tr>
+
+            <tr style="color:#ccc;">
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                5 (Feb 9, 11, 13)</td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                <a href="./#/module-5"
+                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">FETCH, TOP,
+                  RETURNING, CURRENT, READ, WRITE</a>
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                Lab 3, Homework 3 (2w), Project 1 (4w)</td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+            </tr>
+
+            <tr style="color:#ccc;">
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                6 (Feb 18, 20)</td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                <a href="./#/module-6"
+                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">JOIN, INNER,
+                  LEFT, RIGHT, FULL, OUTER</a>
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                Holiday on Monday (Feb 16)</td>
+            </tr>
+
+            <tr style="color:#ccc;">
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                7 (Feb 23, 25, 27)</td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                <a href="./#/module-7"
+                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">CROSS, ON,
+                  USING, UNION, INTERSECT, EXCEPT</a>
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                Lab 4, Homework 4 (2w) (Mar 6)
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                MariaDB
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+
+              </td>
+            </tr>
+
+            <tr style="color:#ccc;">
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                8 (Mar 2, 4, 6)</td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                <a href="./#/module-8"
+                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">EXISTS, IN,
+                  ANY, BETWEEN, LIKE, ESCAPE</a>
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+            </tr>
+
+            <tr style="color:#ccc;">
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                9 (–)</td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                Spring Break</td>
+            </tr>
+
+            <tr style="color:#ccc;">
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                10 (Mar 16, 18, 20)</td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                <a href="./#/module-9"
+                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">NULL, IS, NOT,
+                  DEFAULT, CASE, WHEN</a>
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                Lab 5, Homework 5 (2w), Project 2 (4w)</td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                Oracle
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+            </tr>
+
+            <tr style="color:#ccc;">
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                11 (Mar 23, 25, 27)</td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                <a href="./#/module-10"
+                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">SCHEMA, COLUMN,
+                  SEQUENCE, REFERENCES, DATABASE, INDEX</a>
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+            </tr>
+
+            <tr style="color:#ccc;">
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                12 (Mar 30, Apr 1, 3)</td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                <a href="./#/module-11"
+                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">CONSTRAINT,
+                  PRIMARY, FOREIGN, KEY, UNIQUE, CHECK</a>
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                Lab 6, Homework 6 (2w)</td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+            </tr>
+
+            <tr style="color:#ccc;">
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                13 (Apr 6, 8, 10)</td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                <a href="./#/module-12"
+                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">CASCADE,
+                  RESTRICT, NO, ACTION, DEFERRABLE, INITIALLY</a>
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                ClickHouse
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+            </tr>
+
+            <tr style="color:#ccc;">
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                14 (Apr 13, 15, 17)</td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                <a href="./#/module-13"
+                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">TRANSACTION,
+                  BEGIN, COMMIT, ROLLBACK, SAVEPOINT, RELEASE</a>
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                Lab 7, Homework 7 (2w)</td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+            </tr>
+
+            <tr style="color:#ccc;">
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                15 (Apr 20, 22, 24)</td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                <a href="./#/module-14"
+                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">LOCK, GRANT,
+                  REVOKE, USER, ROLE, SESSION</a>
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+            </tr>
+
+            <tr style="color:#ccc;">
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                16 (Apr 27)</td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                <a href="./#/module-15"
+                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Semester SQL
+                  Query Review</a>
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+              </td>
+              <td
+                style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
+                Classes End (April 28)</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="module-1">
+
+        <!-- Title -->
+        <section>
+          <h2>Module 1</h2>
+          <h3>Create Database, Schema, Table</h3>
+          <p class="muted">Spring 2026 · SQL Only Track · SQLite examples</p>
+        </section>
+
+        <section>
+          <h3>Agenda</h3>
+          <ul>
+            <li>Review Syllabus</li>
+            <li>Review Topics</li>
+            <li>Review Module 1</li>
+          </ul>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 1) General motivation and history (no more than 6 words per bullet) -->
+        <!-- ===================================================== -->
+
+        <section>
+          <h2>Agenda Module 1</h2>
+          <ul>
+            <li>Why SQL matters</li>
+            <li>Short SQL history</li>
+            <li>Create database</li>
+            <li>Create schema</li>
+            <li>Create table with columns</li>
+            <li>Three live demos</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Why learn SQL</h2>
+          <div style="display:grid; grid-template-columns: 1.15fr 0.85fr; gap: 22px; align-items:center;">
+            <div>
+              <ul>
+                <li>Industry language for data</li>
+                <li>Readable and structured thinking</li>
+                <li>Works across many systems</li>
+                <li>Useful for daily tasks</li>
+                <li>Stable skill over decades</li>
+              </ul>
+            </div>
+            <div style="display:flex; justify-content:center;">
+              <svg viewBox="0 0 420 260" style="width:100%; max-width:360px; height:auto;">
+                <rect x="20" y="30" width="380" height="200" rx="18" fill="rgba(255,255,255,0.06)"
+                  stroke="rgba(255,255,255,0.25)" stroke-width="3" />
+                <text x="210" y="95" text-anchor="middle" font-size="30" fill="#fff">Question</text>
+                <text x="210" y="140" text-anchor="middle" font-size="20" fill="rgba(255,255,255,0.75)">→ SQL →</text>
+                <text x="210" y="190" text-anchor="middle" font-size="30" fill="#fff">Answer</text>
+              </svg>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Where SQL fits</h2>
+          <div style="width:100%; height:70vh; display:flex; align-items:center; justify-content:center;">
+            <svg viewBox="0 0 1200 600" style="width:100%; height:100%;">
+              <rect x="60" y="110" width="300" height="200" rx="18" fill="rgba(255,255,255,0.07)"
+                stroke="rgba(255,255,255,0.35)" stroke-width="3" />
+              <text x="210" y="195" text-anchor="middle" font-size="34" fill="#fff">You</text>
+              <text x="210" y="240" text-anchor="middle" font-size="20" fill="rgba(255,255,255,0.75)">intent</text>
+
+              <rect x="450" y="110" width="300" height="200" rx="18" fill="rgba(255,255,255,0.07)"
+                stroke="rgba(255,255,255,0.35)" stroke-width="3" />
+              <text x="600" y="195" text-anchor="middle" font-size="34" fill="#fff">SQL</text>
+              <text x="600" y="240" text-anchor="middle" font-size="20" fill="rgba(255,255,255,0.75)">statements</text>
+
+              <rect x="840" y="110" width="300" height="200" rx="18" fill="rgba(255,255,255,0.07)"
+                stroke="rgba(255,255,255,0.35)" stroke-width="3" />
+              <text x="990" y="195" text-anchor="middle" font-size="34" fill="#fff">Database</text>
+              <text x="990" y="240" text-anchor="middle" font-size="20" fill="rgba(255,255,255,0.75)">stored
+                facts</text>
+
+              <path d="M360 210 L450 210" stroke="rgba(255,255,255,0.7)" stroke-width="5" marker-end="url(#m1a)" />
+              <path d="M750 210 L840 210" stroke="rgba(255,255,255,0.7)" stroke-width="5" marker-end="url(#m1a)" />
+
+              <defs>
+                <marker id="m1a" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+                  <polygon points="0 0, 10 5, 0 10" fill="rgba(255,255,255,0.85)" />
+                </marker>
+              </defs>
+            </svg>
+          </div>
+        </section>
+
+        <section>
+          <h2>SQL history, in brief</h2>
+          <div style="display:grid; grid-template-columns: 1.15fr 0.85fr; gap: 22px; align-items:center;">
+            <div>
+              <ul>
+                <li>Relational model: 1970</li>
+                <li>SQL languages: 1970s</li>
+                <li>Standardization: ANSI and ISO</li>
+                <li>Adoption: decades and counting</li>
+              </ul>
+            </div>
+            <div style="display:flex; justify-content:center; flex-direction:column; gap:10px; align-items:center;">
+              <img src="https://upload.wikimedia.org/wikipedia/en/5/58/Edgar_F_Codd.jpg" alt="Edgar F. Codd"
+                style="max-width: 320px; width: 100%; height: auto; border-radius: 12px; border: 2px solid rgba(255,255,255,0.18);" />
+              <div class="muted" style="font-size:0.85em;">Edgar F. Codd</div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>How you write SQL</h2>
+          <ul>
+            <li>CLI tools and terminals</li>
+            <li>Admin tools and consoles</li>
+            <li>Inside application code</li>
+            <li>Inside notebooks sometimes</li>
+          </ul>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 2) CREATE DATABASE: concept + examples -->
+        <!-- ===================================================== -->
+
+        <section>
+          <h2>CREATE DATABASE</h2>
+          <ul>
+            <li>Start a new project container</li>
+            <li>Keep names simple, stable</li>
+            <li>One project, one database</li>
+            <li>We use flower domain</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>What is a database</h2>
+          <ul>
+            <li>Top level data container</li>
+            <li>Holds schemas and tables</li>
+            <li>Defines ownership and scope</li>
+            <li>Supports backups and access</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Database analogy</h2>
+          <ul>
+            <li>Greenhouse building</li>
+            <li>Rooms inside for categories</li>
+            <li>Shelves for labeled bins</li>
+            <li>Labels prevent mix ups</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Database container picture</h2>
+          <div style="width:100%; height:70vh; display:flex; align-items:center; justify-content:center;">
+            <svg viewBox="0 0 1200 650" style="width:100%; height:100%;">
+              <rect x="120" y="90" width="960" height="470" rx="28" fill="rgba(255,255,255,0.06)"
+                stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+              <text x="600" y="145" text-anchor="middle" font-size="34" fill="#fff">Database: flower_shop</text>
+
+              <rect x="200" y="220" width="420" height="290" rx="22" fill="rgba(255,255,255,0.07)"
+                stroke="rgba(255,255,255,0.28)" stroke-width="3" />
+              <text x="410" y="280" text-anchor="middle" font-size="26" fill="#fff">Schemas</text>
+
+              <rect x="670" y="220" width="330" height="140" rx="18" fill="rgba(255,255,255,0.07)"
+                stroke="rgba(255,255,255,0.28)" stroke-width="3" />
+              <text x="835" y="275" text-anchor="middle" font-size="24" fill="#fff">Tables</text>
+
+              <rect x="670" y="395" width="330" height="115" rx="18" fill="rgba(255,255,255,0.07)"
+                stroke="rgba(255,255,255,0.28)" stroke-width="3" />
+              <text x="835" y="450" text-anchor="middle" font-size="24" fill="#fff">Other objects</text>
+            </svg>
+          </div>
+        </section>
+
+        <section>
+          <h2>Flower project name</h2>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items:start;">
+            <div>
+              <ul>
+                <li>Store name: flower_shop</li>
+                <li>Goal: track inventory</li>
+                <li>Later: track orders</li>
+                <li>Later: track customers</li>
+              </ul>
+            </div>
+            <div>
+              <pre><code class="language-sql">CREATE DATABASE flower_shop;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>SQLite note</h2>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items:start;">
+            <div>
+              <ul>
+                <li>SQLite uses a file</li>
+                <li>Database is the file</li>
+                <li>Concept still applies</li>
+                <li>Keep one file per project</li>
+              </ul>
+            </div>
+            <div>
+              <pre><code class="language-sql">-- Open or create file
+sqlite3 flower_shop.db</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Defining a Database Name</h2>
+
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Use meaningful nouns</li>
+                <li>Use lowercase consistently</li>
+                <li>Avoid spaces and symbols</li>
+                <li>Avoid abbreviations</li>
+                <li>Avoid reserved words</li>
+                <li>Be stable over time</li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <pre><code class="language-sql">-- Good examples
+flower_shop
+inventory_db
+sales_data
+
+-- Bad examples
+FlowerDatabase
+my database
+db1
+FLOWERS_2026
+select</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Before demo: commands</h2>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items:start;">
+            <div>
+              <ul>
+                <li>Create database container</li>
+                <li>Open SQLite database file</li>
+                <li>Check you are connected</li>
+                <li>List existing tables</li>
+              </ul>
+            </div>
+            <div>
+              <pre><code class="language-sql">-- SQLite workflow
+sqlite3 flower_shop.db
+
+-- Optional: list tables
+.tables</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Creating Existing Objects</h2>
+
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Names must be unique</li>
+                <li>Database names are global</li>
+                <li>Schema names must differ</li>
+                <li>Table names must differ</li>
+                <li>Duplicates cause error</li>
+                <li>Execution stops immediately</li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <pre><code class="language-sql">-- Will fail if already exists
+CREATE DATABASE flower_shop;
+
+CREATE SCHEMA inventory;
+
+CREATE TABLE flowers (
+  id INTEGER,
+  name TEXT
+);
+
+-- Typical result
+-- ERROR: object already exists</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Live SQL Demo</h2>
+          <p class="muted">Open: <a href="https://onecompiler.com/" target="_blank" rel="noreferrer">onecompiler.com</a>
+          </p>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 3) CREATE SCHEMA: concept + examples -->
+        <!-- ===================================================== -->
+
+        <section>
+          <h2>CREATE SCHEMA</h2>
+          <ul>
+            <li>Organize objects by purpose</li>
+            <li>Keep names predictable</li>
+            <li>Separate inventory from sales</li>
+            <li>Reduce naming collisions</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>What is a schema</h2>
+          <ul>
+            <li>Named grouping inside database</li>
+            <li>Holds tables and views</li>
+            <li>Supports modular database design</li>
+            <li>Improves clarity at scale</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Schema analogy</h2>
+          <ul>
+            <li>Room inside greenhouse</li>
+            <li>One room per category</li>
+            <li>Inventory room is first</li>
+            <li>Sales room comes later</li>
+          </ul>
+        </section>
+
+        <section>
+          <div style="width:100%; height:70vh; display:flex; align-items:center; justify-content:center;">
+            <svg viewBox="0 0 1200 650" style="width:100%; height:100%;">
+
+              <!-- Database -->
+              <rect x="120" y="80" width="960" height="500" rx="28" fill="rgba(255,255,255,0.06)"
+                stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+              <text x="600" y="135" text-anchor="middle" font-size="34" fill="#fff">
+                Database: flower_shop
+              </text>
+
+              <!-- Schema: inventory -->
+              <rect x="200" y="200" width="360" height="300" rx="22" fill="rgba(255,255,255,0.07)"
+                stroke="rgba(255,255,255,0.28)" stroke-width="3" />
+              <text x="380" y="245" text-anchor="middle" font-size="26" fill="#fff">
+                Schema: inventory
+              </text>
+
+              <!-- Table: inventory.flowers -->
+              <rect x="245" y="285" width="270" height="90" rx="16" fill="rgba(255,255,255,0.12)"
+                stroke="rgba(255,255,255,0.4)" stroke-width="2" />
+              <text x="380" y="340" text-anchor="middle" font-size="22" fill="#fff">
+                flowers
+              </text>
+              <text x="380" y="370" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.7)">
+                inventory.flowers
+              </text>
+
+              <!-- Schema: sales -->
+              <rect x="640" y="200" width="360" height="300" rx="22" fill="rgba(255,255,255,0.07)"
+                stroke="rgba(255,255,255,0.28)" stroke-width="3" />
+              <text x="820" y="245" text-anchor="middle" font-size="26" fill="#fff">
+                Schema: sales
+              </text>
+
+              <!-- Table: sales.flowers -->
+              <rect x="685" y="285" width="270" height="90" rx="16" fill="rgba(255,255,255,0.12)"
+                stroke="rgba(255,255,255,0.4)" stroke-width="2" />
+              <text x="820" y="340" text-anchor="middle" font-size="22" fill="#fff">
+                flowers
+              </text>
+              <text x="820" y="370" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.7)">
+                sales.flowers
+              </text>
+
+            </svg>
+          </div>
+        </section>
+
+        <section>
+          <h2>Schema names</h2>
+
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Use short nouns</li>
+                <li>No spaces or punctuation</li>
+                <li>Prefer lowercase names</li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <pre><code class="language-sql">-- Good examples
+inventory
+sales
+customers
+
+-- Bad examples
+InventorySchema
+sales-data
+my schema
+select</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Flower schemas</h2>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items:start;">
+            <div>
+              <ul>
+                <li>inventory: flowers, suppliers</li>
+                <li>sales: orders, customers</li>
+                <li>We start with inventory</li>
+                <li>Keep structure minimal first</li>
+              </ul>
+            </div>
+            <div>
+              <pre><code class="language-sql">CREATE SCHEMA inventory;
+CREATE SCHEMA sales;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Qualified names</h2>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items:start;">
+            <div>
+              <ul>
+                <li>Schema prefixes the table</li>
+                <li>Read as “inventory flowers”</li>
+                <li>Helps when many tables exist</li>
+                <li>Common in large systems</li>
+              </ul>
+            </div>
+            <div>
+              <pre><code class="language-sql">-- Example qualified table
+inventory.flowers</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>SQLite note</h2>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items:start;">
+            <div>
+              <ul>
+                <li>SQLite treats schema differently</li>
+                <li>We keep concept for portability</li>
+                <li>We still name clearly</li>
+                <li>We use table prefixes later</li>
+              </ul>
+            </div>
+            <div>
+              <pre><code class="language-sql">-- SQLite habit:
+-- use clear table names
+-- inventory_flowers</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Before demo: checklist</h2>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items:start;">
+            <div>
+              <ul>
+                <li>Pick schema purpose</li>
+                <li>Name it consistently</li>
+                <li>Create it using SQL</li>
+                <li>Confirm it exists</li>
+              </ul>
+            </div>
+            <div>
+              <pre><code class="language-sql">-- In systems with schemas:
+CREATE SCHEMA inventory;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Viewing Schemas in a Database</h2>
+
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Schemas list database structure</li>
+                <li>Names define object scope</li>
+                <li>Different systems show differently</li>
+                <li>Always inspect before creating</li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <pre><code class="language-sql">-- Standard SQL (most systems)
+SELECT schema_name
+FROM information_schema.schemata;
+
+-- PostgreSQL
+\dn
+
+-- SQLite note
+-- SQLite has main and temp only
+PRAGMA database_list;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Live SQL Demo</h2>
+          <p class="muted">Open: <a href="https://onecompiler.com/" target="_blank" rel="noreferrer">onecompiler.com</a>
+          </p>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 4) CREATE TABLE: most time here (columns) -->
+        <!-- ===================================================== -->
+
+        <section>
+          <h2>CREATE TABLE</h2>
+          <ul>
+            <li>Table stores rows of facts</li>
+            <li>Columns define the shape</li>
+            <li>Types guide valid values</li>
+            <li>We start with inventory</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>What is a table</h2>
+          <ul>
+            <li>Named set of rows</li>
+            <li>Each row has columns</li>
+            <li>Columns have data types</li>
+            <li>Rows represent real items</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Table analogy</h2>
+          <ul>
+            <li>Shelf of labeled bins</li>
+            <li>One bin per row</li>
+            <li>Same labels on each bin</li>
+            <li>Labels are the columns</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Our first table</h2>
+          <ul>
+            <li>Table name: flowers</li>
+            <li>Each row is a flower</li>
+            <li>Inventory only, for now</li>
+            <li>Keep it small first</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Columns for flowers</h2>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items:start;">
+            <div>
+              <ul>
+                <li>flower_id: internal identifier</li>
+                <li>name: product name</li>
+                <li>color: display color</li>
+                <li>price: unit price</li>
+                <li>in_stock: available flag</li>
+              </ul>
+            </div>
+            <div>
+              <pre><code class="language-sql">-- We will define:
+-- id, name, color,
+-- price, stock flag</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Types you will use</h2>
+          <ul>
+            <li>INTEGER for identifiers</li>
+            <li>TEXT for names</li>
+            <li>REAL for prices</li>
+            <li>INTEGER for flags</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>Start with minimal table</h2>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items:start;">
+            <div>
+              <ul>
+                <li>Just columns and types</li>
+                <li>No constraints yet</li>
+                <li>We add safety later</li>
+                <li>First focus: structure</li>
+              </ul>
+            </div>
+            <div>
+              <pre><code class="language-sql">CREATE TABLE flowers (
+  flower_id INTEGER,
+  name      TEXT,
+  color     TEXT,
+  price     REAL,
+  in_stock  INTEGER
+);</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Table preview</h2>
+          <table style="width:100%; border-collapse: collapse; font-size: 0.95em; table-layout: fixed;">
+            <thead>
+              <tr>
+                <th style="border:1px solid rgba(255,255,255,0.25); padding:10px;">flower_id</th>
+                <th style="border:1px solid rgba(255,255,255,0.25); padding:10px;">name</th>
+                <th style="border:1px solid rgba(255,255,255,0.25); padding:10px;">color</th>
+                <th style="border:1px solid rgba(255,255,255,0.25); padding:10px;">price</th>
+                <th style="border:1px solid rgba(255,255,255,0.25); padding:10px;">in_stock</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="border:1px solid rgba(255,255,255,0.2); padding:10px;">101</td>
+                <td style="border:1px solid rgba(255,255,255,0.2); padding:10px;">Rose</td>
+                <td style="border:1px solid rgba(255,255,255,0.2); padding:10px;">Red</td>
+                <td style="border:1px solid rgba(255,255,255,0.2); padding:10px;">3.99</td>
+                <td style="border:1px solid rgba(255,255,255,0.2); padding:10px;">1</td>
+              </tr>
+              <tr>
+                <td style="border:1px solid rgba(255,255,255,0.2); padding:10px;">102</td>
+                <td style="border:1px solid rgba(255,255,255,0.2); padding:10px;">Tulip</td>
+                <td style="border:1px solid rgba(255,255,255,0.2); padding:10px;">Yellow</td>
+                <td style="border:1px solid rgba(255,255,255,0.2); padding:10px;">2.49</td>
+                <td style="border:1px solid rgba(255,255,255,0.2); padding:10px;">1</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h2>Inspect after creating</h2>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items:start;">
+            <div>
+              <ul>
+                <li>Confirm table exists</li>
+                <li>Confirm column names</li>
+                <li>Confirm column types</li>
+                <li>Fix issues immediately</li>
+              </ul>
+            </div>
+            <div>
+              <pre><code class="language-sql">-- SQLite: list tables
+SELECT name
+FROM sqlite_master
+WHERE type='table'
+ORDER BY name;
+
+-- SQLite: inspect columns
+PRAGMA table_info(flowers);</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Before demo: practice set</h2>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items:start;">
+            <div>
+              <ul>
+                <li>Create the flowers table</li>
+                <li>List tables to verify</li>
+                <li>Inspect columns to verify</li>
+                <li>Repeat until confident</li>
+              </ul>
+            </div>
+            <div>
+              <pre><code class="language-sql">CREATE TABLE flowers (
+  flower_id INTEGER,
+  name      TEXT,
+  color     TEXT,
+  price     REAL,
+  in_stock  INTEGER
+);
+
+SELECT name
+FROM sqlite_master
+WHERE type='table';
+
+PRAGMA table_info(flowers);</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Live SQL Demo</h2>
+          <p class="muted">Open: <a href="https://onecompiler.com/" target="_blank" rel="noreferrer">onecompiler.com</a>
+          </p>
+        </section>
+
+        <!-- Close module -->
+        <section>
+          <h2>Module 1 recap</h2>
+          <ul>
+            <li>Database concept is clear</li>
+            <li>Schema concept is clear</li>
+            <li>Table and columns created</li>
+            <li>Next: insert flower rows</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2>CREATE Statements in Practice</h2>
+
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Run during setup only</li>
+                <li>Not part of daily work</li>
+                <li>Define long term structure</li>
+                <li>Change requires planning</li>
+                <li>Often written once</li>
+                <li>Reviewed before execution</li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <pre><code class="language-sql">-- Typical lifecycle
+
+-- Once per project
+CREATE DATABASE flower_shop;
+CREATE SCHEMA inventory;
+CREATE TABLE flowers (...);
+
+-- Many times per day
+SELECT ...
+INSERT ...
+UPDATE ...</code></pre>
+            </div>
+          </div>
+        </section>
+
+      </section>
+
+      <!-- MODULE 2 -->
+      <section id="module-2">
+
+        <section>
+          <h2>Module 2</h2>
+          <h3>SQL Query: INSERT, VALUES, INTO, UPDATE, SET, DELETE</h3>
+          <p class="muted small">
+            Goal: add, modify, and remove data rows in existing tables using SQL statements.
+          </p>
+        </section>
+
+        <!-- M2 setup: more tables -->
+        <section>
+          <h3>Module 2 setup (create 3 tables quickly)</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Add customers, orders, and order items.</li>
+                <li>Introduce foreign keys as “rules the database can enforce”.</li>
+                <li>SQLite note: foreign keys must be enabled per connection.</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">PRAGMA foreign_keys = ON;
+
+CREATE TABLE Customer (
+  CustomerId INTEGER PRIMARY KEY,
+  Name       TEXT NOT NULL,
+  Email      TEXT UNIQUE
+);
+
+CREATE TABLE "Order" (
+  OrderId     INTEGER PRIMARY KEY,
+  CustomerId  INTEGER NOT NULL,
+  OrderDate   TEXT NOT NULL,
+  Status      TEXT NOT NULL DEFAULT 'NEW',
+  TotalCents  INTEGER NOT NULL DEFAULT 0,
+  FOREIGN KEY (CustomerId) REFERENCES Customer(CustomerId)
+);
+
+CREATE TABLE OrderItem (
+  OrderItemId    INTEGER PRIMARY KEY,
+  OrderId        INTEGER NOT NULL,
+  FlowerId       INTEGER NOT NULL,
+  Qty            INTEGER NOT NULL,
+  UnitPriceCents INTEGER NOT NULL,
+  FOREIGN KEY (OrderId)  REFERENCES "Order"(OrderId),
+  FOREIGN KEY (FlowerId) REFERENCES Flower(FlowerId)
+);</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- M2 Query 1 -->
+        <section>
+          <h3>1/6 UPDATE (maintain inventory)</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><code>UPDATE</code> changes existing rows (always use a WHERE in class).</li>
+                <li>Inventory is a natural example: stock goes down after sale.</li>
+                <li>Teach “check before and after” with SELECT.</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Sell 6 red roses
+UPDATE Flower
+SET InStockQty = InStockQty - 6
+WHERE CommonName = 'Rose'
+  AND Color = 'Red';</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- M2 Query 2 -->
+        <section>
+          <h3>2/6 DELETE (with caution)</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><code>DELETE</code> removes rows. This is permanent unless you have a backup.</li>
+                <li>In teaching: delete only demo rows (e.g., test data).</li>
+                <li>Practice safe pattern: SELECT first, then DELETE.</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Remove a test row (if it exists)
+DELETE FROM Flower
+WHERE CommonName = 'TestFlower'
+  AND Color = 'Blue';</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- M2 Query 3 -->
+        <section>
+          <h3>3/6 JOIN (connect meaning)</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Joins answer real questions across tables.</li>
+                <li>Start with an inner join (only matching rows).</li>
+                <li>Teach join keys explicitly: <code>OrderItem.FlowerId = Flower.FlowerId</code>.</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT
+  oi.OrderId,
+  f.CommonName,
+  oi.Qty,
+  oi.UnitPriceCents
+FROM OrderItem oi
+JOIN Flower f
+  ON f.FlowerId = oi.FlowerId
+WHERE oi.OrderId = 1;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- M2 Query 4 -->
+        <section>
+          <h3>4/6 GROUP BY (summaries)</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Grouping turns many rows into one line per category.</li>
+                <li>Teach aggregates: <code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code>,
+                  <code>MAX</code>.
+                </li>
+                <li>Use categories students understand (color is simple).</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT
+  Color,
+  COUNT(*)           AS flower_types,
+  SUM(InStockQty)    AS total_stock,
+  AVG(PriceCents)    AS avg_price_cents
+FROM Flower
+GROUP BY Color
+ORDER BY total_stock DESC;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- M2 Query 5 -->
+        <section>
+          <h3>5/6 HAVING (filter groups)</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><code>WHERE</code> filters rows.</li>
+                <li><code>HAVING</code> filters groups (after aggregation).</li>
+                <li>Classic demo: show only colors with “enough” stock.</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT
+  Color,
+  SUM(InStockQty) AS total_stock
+FROM Flower
+GROUP BY Color
+HAVING SUM(InStockQty) &gt;= 100
+ORDER BY total_stock DESC;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- M2 Query 6 -->
+        <section>
+          <h3>6/6 INDEX + EXPLAIN QUERY PLAN (performance)</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Indexes speed up lookups (at the cost of extra storage and slower writes).</li>
+                <li>SQLite can show how it plans a query: <code>EXPLAIN QUERY PLAN</code>.</li>
+                <li>Good teaching moment: “data structures meet databases”.</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">CREATE INDEX idx_flower_color_price
+ON Flower(Color, PriceCents);
+
+EXPLAIN QUERY PLAN
+SELECT CommonName, PriceCents
+FROM Flower
+WHERE Color = 'Red'
+ORDER BY PriceCents DESC
+LIMIT 5;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- Module 2 recap -->
+        <section>
+          <h3>Module 2 recap</h3>
+          <ul>
+            <li><strong>Maintain</strong>: UPDATE, DELETE</li>
+            <li><strong>Connect</strong>: JOIN</li>
+            <li><strong>Summarize</strong>: GROUP BY, HAVING</li>
+            <li><strong>Speed</strong>: INDEX, EXPLAIN QUERY PLAN</li>
+          </ul>
+          <p class="muted tiny">Next: deeper joins, constraints, transactions, and query patterns (still in the same
+            flower domain).</p>
+        </section>
+      </section>
+
+    </div>
+  </div>
+
+  <div class="global-footer">
+    <p>
+      <a href="./#/1" class="footer-link">Table of Contents</a> |
+      Office Hours: Mon, Wed, 2:00 PM - 3:00 PM, CTC 117 |
+      <a href="mailto:sberhe@pacific.edu" class="footer-link">sberhe@pacific.edu</a> |
+      <a href="https://pacific.instructure.com/courses/143361/assignments/syllabus" target="_blank">Syllabus</a> |
+      <a href="https://pacific.zoom.us/my/berhe" class="footer-link" target="_blank">Join Zoom</a> |
+      <a href="https://onecompiler.com/" class="footer-link" target="_blank">OneCompiler (SQL Editor)</a>
+    </p>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/markdown/markdown.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/notes/notes.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/zoom/zoom.min.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: true,
+      plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom]
+    });
+  </script>
+</body>
+
+</html>
