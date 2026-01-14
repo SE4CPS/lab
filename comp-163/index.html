@@ -464,6 +464,10 @@
 
 <body>
 
+  <img src="https://upload.wikimedia.org/wikipedia/en/b/bb/University_of_the_Pacific_seal.svg"
+    alt="University of the Pacific seal"
+    style="position: fixed; top: 18px; right: 18px; width: 120px; height: auto; z-index: 9999; opacity: 0.92;" />
+
   <div class="reveal">
 
     <div class="slides">
@@ -495,7 +499,8 @@
             </thead>
             <tbody>
               <tr style="color:#ccc;">
-                <td style="padding:6px; border:1px solid #666;">1 (Jan 12, 14, 16)</td>
+                <td style="padding:6px; border:1px solid #666;">1 (<a href="./#/c1">Jan 12</a>, <a href="./#/c2">Jan
+                    14</a>, 16)</td>
                 <td style="padding:6px; border:1px solid #666;">
                   <a href="./#/module-1">Introduction to Database Management System</a>
                 </td>
@@ -646,10 +651,10 @@
             <h5>Introduction to Database Management Systems</h5>
           </section>
 
-          <section>
+          <section id="c1">
             <h5>Agenda</h5>
             <ol>
-              <li>Review Module 1</li>
+              <li>Start Module 1</li>
               <li>Review Topics</li>
               <li>Review Syllabus</li>
             </ol>
@@ -1462,10 +1467,746 @@ orders(id, flowerId, qty)
             </div>
           </section>
 
+          <!-- ===================== CLASS 2: DATABASE CREATION WITH SQLITE ===================== -->
+
+          <section id="c2">
+            <h5>Agenda</h5>
+            <ol>
+              <li>Review Module 1 (DBMS foundations)</li>
+              <li>CREATE: database and table structure</li>
+              <li>SQLite dialect and file based model</li>
+              <li>SQLite data types and type affinity</li>
+              <li>Flower domain schema design</li>
+              <li>Preview: installation and coding</li>
+            </ol>
+          </section>
+
+          <!-- ===================== C1 REVIEW: TECHNICAL MCQs ===================== -->
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h6>Question</h6>
+                <pre><code>
+SELECT name, price
+FROM flowers
+WHERE price &gt; 2.00;
+      </code></pre>
+
+                <p>Can this query be used in programs written in <strong>Java, C++, and Python</strong>?</p>
+
+                <ol>
+                  <li>No, SQL queries are specific to Java</li>
+                  <li>Each program requires a different query syntax</li>
+                  <li>Yes, but only if the database is SQLite</li>
+                  <li>Yes, SQL is programming language </li>
+                </ol>
+              </div>
+
+              <div class="right">
+                <h6>Answer (click)</h6>
+                <details>
+                  <summary>Show answer</summary>
+                  <p><strong>Correct:</strong> D</p>
+                  <p>SQL is a database query language. The same SQL query can be sent from Java, C++, Python, or any
+                    other language through a database API.</p>
+                </details>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="json-bridge" style="margin-top:1.2rem;">
+              <div class="tiers" style="grid-template-columns: repeat(2, 1fr); gap:18px;">
+
+                <div class="tier" style="background:transparent;">
+                  <h4>Java</h4>
+                  <pre><code>
+Connection conn = DriverManager.getConnection(url);
+Statement stmt = conn.createStatement();
+ResultSet rs = stmt.executeQuery("""
+SELECT name, price
+FROM flowers
+WHERE price > 2.00
+""");
+        </code></pre>
+                </div>
+
+                <div class="tier" style="background:transparent;">
+                  <h4>Python</h4>
+                  <pre><code>
+conn = sqlite3.connect("flowers.db")
+cur = conn.cursor()
+cur.execute("""
+SELECT name, price
+FROM flowers
+WHERE price > 2.00
+""")
+        </code></pre>
+                </div>
+
+                <div class="tier" style="background:transparent;">
+                  <h4>C++</h4>
+                  <pre><code>
+sqlite3* db;
+sqlite3_open("flowers.db", &db);
+sqlite3_exec(db,
+"SELECT name, price FROM flowers WHERE price > 2.00",
+nullptr, nullptr, nullptr);
+        </code></pre>
+                </div>
+
+                <div class="tier" style="background:transparent;">
+                  <h4>JavaScript</h4>
+                  <pre><code>
+const db = new sqlite3.Database("flowers.db");
+db.all(
+`SELECT name, price
+ FROM flowers
+ WHERE price > 2.00`, callback);
+        </code></pre>
+                </div>
+
+              </div>
+            </div>
+          </section>
+
+          <section id="c1-mcq-tech-2">
+            <div class="split">
+              <div class="left">
+                <h6>Question</h6>
+                <p>Which component is <strong>executing</strong> the SQL query?</p>
+
+                <ol>
+                  <li>The programming language runtime</li>
+                  <li>The operating system</li>
+                  <li>The database managment system</li>
+                  <li>The text editor used to write the query</li>
+                </ol>
+              </div>
+
+              <div class="right">
+                <h6>Answer (click)</h6>
+                <details>
+                  <summary>Show answer</summary>
+                  <p><strong>Correct:</strong> C</p>
+                  <p>The DBMS parses, plans, and executes SQL. Programming languages only send the query and receive
+                    results.</p>
+                </details>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-top:1.6rem;">
+
+              <!-- BOX 1 -->
+              <div class="tier" style="flex:1; text-align:center; min-height:220px; background:transparent;
+         border:2px solid rgba(255,255,255,0.25); border-radius:16px; padding:1.2rem;">
+                <h5>PROGRAM</h5>
+                <pre><code>
+Java · Python · C++ · JS
+
+send SQL string
+      </code></pre>
+              </div>
+
+              <!-- ARROW 1 -->
+              <div style="flex:0 0 80px; text-align:center; font-size:2rem; opacity:0.7;">
+                →
+              </div>
+
+              <!-- BOX 2 -->
+              <div class="tier" style="flex:1; text-align:center; min-height:220px; background:transparent;
+         border:2px solid rgba(255,255,255,0.25); border-radius:16px; padding:1.2rem;">
+                <h5>DBMS</h5>
+                <pre><code>
+parse
+plan
+execute
+      </code></pre>
+              </div>
+
+              <!-- ARROW 2 -->
+              <div style="flex:0 0 80px; text-align:center; font-size:2rem; opacity:0.7;">
+                →
+              </div>
+
+              <!-- BOX 3 -->
+              <div class="tier" style="flex:1; text-align:center; min-height:220px; background:transparent;
+         border:2px solid rgba(255,255,255,0.25); border-radius:16px; padding:1.2rem;">
+                <h5>DATABASE</h5>
+                <pre><code>
+flowers.db
+
+tables
+rows
+indexes
+      </code></pre>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h6>Question</h6>
+                <p>What is the role of a programming language when working with a database?</p>
+
+                <ol>
+                  <li>To replace SQL entirely</li>
+                  <li>To store data directly on disk</li>
+                  <li>To send SQL commands to the DBMS</li>
+                  <li>To define how tables are physically stored</li>
+                </ol>
+              </div>
+              <div class="right">
+                <h6>Answer (click)</h6>
+                <details>
+                  <summary>Show answer</summary>
+                  <p><strong>Correct:</strong> C</p>
+                  <p>Applications use programming languages to communicate with the DBMS, but SQL remains the interface
+                    for data access.</p>
+                </details>
+              </div>
+            </div>
+          </section>
+
+          <section>Questions?</section>
+
+          <section>
+            <h5>From Concepts to Structure</h5>
+            <ul>
+              <li>So far: what databases and DBMSs are</li>
+              <li>Now: how structure is defined</li>
+              <li>Focus today is <strong>CREATE</strong>, not querying</li>
+            </ul>
+          </section>
+
+          <section>
+            <h5>What Does CREATE Mean?</h5>
+            <ul>
+              <li><strong>CREATE</strong> defines structure</li>
+              <li>No data is stored yet</li>
+              <li>It defines tables, columns, and rules</li>
+            </ul>
+          </section>
+
+          <section>
+            <h5>Database vs Table (SQLite)</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li><strong>Database</strong>: one file (<code>.db</code>)</li>
+                  <li><strong>Table</strong>: structure inside the file</li>
+                  <li>SQLite has <span class="highlight">no server process</span></li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+flowers.db
+ ├─ flowers
+ ├─ suppliers
+ └─ orders
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div style="display:flex; align-items:flex-start; gap:60px; margin-top:1.6rem;">
+
+              <!-- PROGRAM -->
+              <div class="tier" style="flex:1; text-align:center; min-height:220px;
+         border:2px solid rgba(255,255,255,0.25);
+         border-radius:16px; padding:1.2rem;">
+                <h5>PROGRAM</h5>
+                <pre><code>
+Java · Python · C++ · JS
+
+send SQL string
+      </code></pre>
+              </div>
+
+              <!-- ARROW -->
+              <div style="font-size:2rem; opacity:0.7; margin-top:90px;">→</div>
+
+              <!-- DBMS -->
+              <div class="tier" style="flex:1; text-align:center; min-height:220px;
+         border:2px solid rgba(255,255,255,0.25);
+         border-radius:16px; padding:1.2rem;">
+                <h5>DBMS</h5>
+                <pre><code>
+parse
+plan
+execute
+      </code></pre>
+              </div>
+
+              <!-- ARROW -->
+              <div style="font-size:2rem; opacity:0.7; margin-top:90px;">→</div>
+
+              <!-- DATABASE + CLI COLUMN -->
+              <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:20px;">
+
+                <!-- DATABASE -->
+                <div class="tier" style="width:100%; text-align:center; min-height:220px;
+           border:2px solid rgba(255,255,255,0.25);
+           border-radius:16px; padding:1.2rem;">
+                  <h5>DATABASE</h5>
+                  <pre><code>
+flowers.db
+
+tables
+rows
+indexes
+        </code></pre>
+                </div>
+
+                <!-- UP ARROW -->
+                <div style="font-size:2rem; opacity:0.7;">↑</div>
+
+                <!-- CLI (PERFECTLY ALIGNED) -->
+                <div class="tier" style="width:100%; text-align:center; min-height:220px;
+           border:2px dashed rgba(255,255,255,0.35);
+           border-radius:16px; padding:1.2rem;">
+                  <h5>CLI</h5>
+                  <pre><code>
+sqlite3 flowers.db
+
+enter SQL
+        </code></pre>
+                </div>
+
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>SQLite as a SQL Dialect</h5>
+            <ul>
+              <li>SQLite follows standard SQL closely</li>
+              <li>Some syntax differences exist</li>
+              <li>Most important difference: typing model</li>
+            </ul>
+          </section>
+
+          <section>
+            <h5>SQLite Type System</h5>
+            <ul>
+              <li>SQLite uses <strong>dynamic typing</strong></li>
+              <li>Columns have <strong>type affinity</strong></li>
+              <li>Values decide their type at runtime</li>
+            </ul>
+          </section>
+
+          <section>
+            <h5>Five Core SQLite Data Types</h5>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Description</th>
+                  <th>Flower Example</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>INTEGER</td>
+                  <td>Whole numbers</td>
+                  <td>flower_id</td>
+                </tr>
+                <tr>
+                  <td>REAL</td>
+                  <td>Decimal numbers</td>
+                  <td>price</td>
+                </tr>
+                <tr>
+                  <td>TEXT</td>
+                  <td>Strings</td>
+                  <td>name, color</td>
+                </tr>
+                <tr>
+                  <td>BLOB</td>
+                  <td>Binary data</td>
+                  <td>image</td>
+                </tr>
+                <tr>
+                  <td>NULL</td>
+                  <td>Missing value</td>
+                  <td>unknown_color</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>Flower Domain</h5>
+            <ul>
+              <li>Simple and familiar example</li>
+              <li>Focus on structure, not complexity</li>
+              <li>Used consistently across examples</li>
+            </ul>
+          </section>
+
+          <section>
+            <h5>Flower Table: Logical Design</h5>
+            <pre><code>
+flowers(
+  id,
+  name,
+  color,
+  price
+)
+  </code></pre>
+          </section>
+
+          <section>
+            <h5>Choosing SQLite Data Types</h5>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Column</th>
+                  <th>Type</th>
+                  <th>Reason</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>id</td>
+                  <td>INTEGER</td>
+                  <td>Primary identifier</td>
+                </tr>
+                <tr>
+                  <td>name</td>
+                  <td>TEXT</td>
+                  <td>Flower name</td>
+                </tr>
+                <tr>
+                  <td>color</td>
+                  <td>TEXT</td>
+                  <td>Readable attribute</td>
+                </tr>
+                <tr>
+                  <td>price</td>
+                  <td>REAL</td>
+                  <td>Decimal value</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>CREATE TABLE (Preview)</h5>
+            <pre><code>
+CREATE TABLE flowers (
+  id INTEGER PRIMARY KEY,
+  name TEXT,
+  color TEXT,
+  price REAL
+);
+  </code></pre>
+          </section>
+
+          <section>
+            <h5>Constraints Still Matter</h5>
+            <ul>
+              <li>Flexible typing does not mean no rules</li>
+              <li>Constraints protect data quality</li>
+            </ul>
+            <pre><code>
+price REAL CHECK (price >= 0)
+  </code></pre>
+          </section>
+
+          <section>
+            <h5>What We Are Not Doing Yet</h5>
+            <ul>
+              <li>No INSERT</li>
+              <li>No SELECT</li>
+              <li>Structure comes first</li>
+            </ul>
+          </section>
+
+          <section>
+            <h5>Next: Installing SQLite</h5>
+            <ul>
+              <li>sqlite3 command line tool</li>
+              <li>Verify installation</li>
+              <li>Create first database file</li>
+            </ul>
+          </section>
+
+          <section>
+            <h5>Then: Hands On SQL</h5>
+            <ul>
+              <li>Create tables</li>
+              <li>Insert flower data</li>
+              <li>Run simple queries</li>
+            </ul>
+          </section>
+
+          <section>
+            <h5>Summary</h5>
+            <ul>
+              <li>CREATE defines structure</li>
+              <li>SQLite uses type affinity</li>
+              <li>Good design still matters</li>
+            </ul>
+          </section>
+
+          <section>Questions?</section>
+
+          <section>
+            <h5>Agenda</h5>
+            <ol>
+              <li>Concept: Database and Schema</li>
+              <li>SQLite data types</li>
+              <li>Designing a flower database</li>
+              <li>Preparing for installation and coding</li>
+            </ol>
+          </section>
+
+          <section>
+            <h5>What Does CREATE Mean?</h5>
+            <ul>
+              <li><strong>CREATE</strong> defines structure, not data</li>
+              <li>It tells the DBMS what tables look like</li>
+              <li>No rows yet, only rules</li>
+            </ul>
+          </section>
+
+          <section>
+            <h5>Database vs Table</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li><strong>Database</strong>: container (file in SQLite)</li>
+                  <li><strong>Table</strong>: structured collection of rows</li>
+                  <li>SQLite database = single <code>.db</code> file</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+flowers.db
+ ├─ flowers
+ ├─ suppliers
+ └─ orders
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>SQLite Is File Based</h5>
+            <ul>
+              <li>No server to start</li>
+              <li>No username or password by default</li>
+              <li>Database is a file you can copy</li>
+            </ul>
+          </section>
+
+          <section>
+            <h5>SQLite Dialect of SQL</h5>
+            <ul>
+              <li>SQLite supports most standard SQL</li>
+              <li>Some differences from MySQL / PostgreSQL</li>
+              <li>Flexible typing (important!)</li>
+            </ul>
+          </section>
+
+          <section>
+            <h5>SQLite Type System</h5>
+            <ul>
+              <li>SQLite uses <strong>dynamic typing</strong></li>
+              <li>Columns have an <strong>affinity</strong>, not a strict type</li>
+              <li>Values decide their type at runtime</li>
+            </ul>
+          </section>
+
+          <section>
+            <h5>Five Core SQLite Data Types</h5>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Type</th>
+                  <th>Description</th>
+                  <th>Flower Example</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>INTEGER</td>
+                  <td>Whole numbers</td>
+                  <td>flower_id</td>
+                </tr>
+                <tr>
+                  <td>REAL</td>
+                  <td>Decimal numbers</td>
+                  <td>price</td>
+                </tr>
+                <tr>
+                  <td>TEXT</td>
+                  <td>Strings</td>
+                  <td>name, color</td>
+                </tr>
+                <tr>
+                  <td>BLOB</td>
+                  <td>Binary data</td>
+                  <td>image</td>
+                </tr>
+                <tr>
+                  <td>NULL</td>
+                  <td>Missing value</td>
+                  <td>unknown_color</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>Type Affinity in SQLite</h5>
+            <ul>
+              <li>INTEGER, TEXT, REAL are <em>preferred</em></li>
+              <li>SQLite does not strictly enforce types</li>
+              <li>Design discipline matters</li>
+            </ul>
+          </section>
+
+          <section>
+            <h5>Flower Domain</h5>
+            <ul>
+              <li>We model a simple flower shop</li>
+              <li>Flowers, prices, colors, stock</li>
+              <li>Simple and familiar domain</li>
+            </ul>
+          </section>
+
+          <section>
+            <h5>Flower Table: First Design</h5>
+            <pre><code>
+flowers(
+  id,
+  name,
+  color,
+  price
+)
+    </code></pre>
+          </section>
+
+          <section>
+            <h5>Choosing Data Types</h5>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Column</th>
+                  <th>Type</th>
+                  <th>Reason</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>id</td>
+                  <td>INTEGER</td>
+                  <td>Unique identifier</td>
+                </tr>
+                <tr>
+                  <td>name</td>
+                  <td>TEXT</td>
+                  <td>Flower name</td>
+                </tr>
+                <tr>
+                  <td>color</td>
+                  <td>TEXT</td>
+                  <td>Human readable</td>
+                </tr>
+                <tr>
+                  <td>price</td>
+                  <td>REAL</td>
+                  <td>Decimal value</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>CREATE TABLE (Preview)</h5>
+            <pre><code>
+CREATE TABLE flowers (
+  id INTEGER PRIMARY KEY,
+  name TEXT,
+  color TEXT,
+  price REAL
+);
+    </code></pre>
+          </section>
+
+          <section>
+            <h5>Primary Key in SQLite</h5>
+            <ul>
+              <li><code>INTEGER PRIMARY KEY</code> is special</li>
+              <li>Aliases the internal rowid</li>
+              <li>Auto increments by default</li>
+            </ul>
+          </section>
+
+          <section>
+            <h5>Constraints Matter</h5>
+            <ul>
+              <li>Even with flexible typing</li>
+              <li>Rules protect data quality</li>
+            </ul>
+            <pre><code>
+price REAL CHECK (price >= 0)
+    </code></pre>
+          </section>
+
+          <section>
+            <h5>What We Are NOT Doing Yet</h5>
+            <ul>
+              <li>No inserts</li>
+              <li>No queries</li>
+              <li>Focus is structure</li>
+            </ul>
+          </section>
+
+          <section>
+            <h5>Next: Installing SQLite</h5>
+            <ul>
+              <li>sqlite3 command line tool</li>
+              <li>Verify installation</li>
+              <li>Create first database file</li>
+            </ul>
+          </section>
+
+          <section>
+            <h5>Then: Hands On Coding</h5>
+            <ul>
+              <li>Create tables</li>
+              <li>Insert flower data</li>
+              <li>Run simple queries</li>
+            </ul>
+          </section>
+
+          <section>
+            <h5>Summary</h5>
+            <ul>
+              <li>CREATE defines structure</li>
+              <li>SQLite uses flexible typing</li>
+              <li>Good design still matters</li>
+            </ul>
+          </section>
+
           <section>Questions?</section>
 
         </section>
 
+
+        <section>Questions?</section>
+
+        </section>
 
         <!-- ===================== MODULE 2 ===================== -->
 
