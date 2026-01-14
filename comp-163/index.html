@@ -1673,7 +1673,81 @@ indexes
             </div>
           </section>
 
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>Imperative</h5>
+                <pre><code>
+# step-by-step instructions
+# how to do it
+
+for flower in flowers:
+  if flower.price > 2.00:
+    print(flower.name, flower.price)
+      </code></pre>
+
+                <ul>
+                  <li>Tell the computer <strong>how</strong></li>
+                  <li>Explicit steps</li>
+                  <li>Order matters</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h5>Declarative</h5>
+                <pre><code>
+-- describe the result
+-- what you want
+
+SELECT name, price
+FROM flowers
+WHERE price > 2.00;
+      </code></pre>
+
+                <ul>
+                  <li>Tell the DBMS <strong>what</strong></li>
+                  <li>DBMS decides <strong>how</strong></li>
+                  <li>SQL is descriptive</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
           <section>Questions?</section>
+
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <pre><code>
+Query A:
+SELECT * FROM flowers;
+
+Query B:
+INSERT INTO flowers(name, price)
+VALUES ('Rose', 2.50);
+      </code></pre>
+
+                <ul>
+                  <li>Does the <strong>order</strong> of these queries matter?</li>
+                  <li>Would the result be the same if we swap them?</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <details>
+                  <summary>Show answer</summary>
+                  <ul>
+                    <li><strong>Yes, sometimes order matters</strong></li>
+                    <li>If queries depend on earlier changes</li>
+                    <li>Read-only operations are not affected by order </li>
+                    <li>SQL is descriptive, but <strong>execution order still matters</strong></li>
+                  </ul>
+                </details>
+              </div>
+
+            </div>
+          </section>
 
           <section>
             <h5>From Concepts to Structure</h5>
@@ -2201,10 +2275,275 @@ price REAL CHECK (price >= 0)
 
           <section>Questions?</section>
 
+          <!-- ===================== CASE STUDY: FURNITURE STORE (STUDENTS WRITE) ===================== -->
+
+          <section>
+            <h5>Case Study: Furniture Store Inventory (SQLite)</h5>
+            <ul>
+              <li>Goal: Draft each query</li>
+              <li>After each step: run a SELECT to verify</li>
+              <li>Then: new requirement → ALTER TABLE → verify again</li>
+            </ul>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>Step 1: Create the Table</h5>
+                <ul>
+                  <li>Create a table named <code>inventory</code></li>
+                  <li>Columns:</li>
+                  <ul>
+                    <li><code>id</code> INTEGER PRIMARY KEY</li>
+                    <li><code>name</code> TEXT NOT NULL</li>
+                    <li><code>category</code> TEXT NOT NULL</li>
+                    <li><code>price</code> REAL NOT NULL</li>
+                    <li><code>quantity</code> INTEGER NOT NULL</li>
+                  </ul>
+                </ul>
+              </div>
+              <div class="right">
+                <details>
+                  <summary>Show answer</summary>
+                  <pre><code>
+CREATE TABLE inventory (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  category TEXT NOT NULL,
+  price REAL NOT NULL,
+  quantity INTEGER NOT NULL
+);
+        </code></pre>
+                </details>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>Verify 1</h5>
+                <ul>
+                  <li>Verify the table exists and columns are correct</li>
+                  <li>Use a SQLite CLI command (not SQL)</li>
+                </ul>
+              </div>
+              <div class="right">
+                <details>
+                  <summary>Show answer</summary>
+                  <pre><code>
+.schema inventory
+        </code></pre>
+                </details>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>Step 2: Insert Data</h5>
+                <ul>
+                  <li>Insert three rows:</li>
+                  <ul>
+                    <li>Oak Table, Table, 299.99, 4</li>
+                    <li>Leather Sofa, Sofa, 899.00, 2</li>
+                    <li>Desk Lamp, Lamp, 39.50, 12</li>
+                  </ul>
+                  <li>Write three INSERT statements</li>
+                </ul>
+              </div>
+              <div class="right">
+                <details>
+                  <summary>Show answer</summary>
+                  <pre><code>
+INSERT INTO inventory (name, category, price, quantity)
+VALUES ('Oak Table', 'Table', 299.99, 4);
+
+INSERT INTO inventory (name, category, price, quantity)
+VALUES ('Leather Sofa', 'Sofa', 899.00, 2);
+
+INSERT INTO inventory (name, category, price, quantity)
+VALUES ('Desk Lamp', 'Lamp', 39.50, 12);
+        </code></pre>
+                </details>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>Verify 2</h5>
+                <ul>
+                  <li>Read the inventory table</li>
+                  <li>Show: id, name, category, price, quantity</li>
+                </ul>
+              </div>
+              <div class="right">
+                <details>
+                  <summary>Show answer</summary>
+                  <pre><code>
+SELECT id, name, category, price, quantity
+FROM inventory;
+        </code></pre>
+                </details>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>Business Question</h5>
+                <ul>
+                  <li>List items with low stock</li>
+                  <li>Definition: quantity &lt;= 3</li>
+                  <li>Return: name, quantity</li>
+                </ul>
+              </div>
+              <div class="right">
+                <details>
+                  <summary>Show answer</summary>
+                  <pre><code>
+SELECT name, quantity
+FROM inventory
+WHERE quantity <= 3;
+        </code></pre>
+                </details>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>New Requirement</h5>
+            <ul>
+              <li>The store now needs to track the supplier for each item</li>
+              <li>Add a new column: <code>supplier</code> (TEXT)</li>
+              <li>Then fill it for existing rows</li>
+            </ul>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>Step 3: ALTER TABLE</h5>
+                <ul>
+                  <li>Add a new column <code>supplier</code> to <code>inventory</code></li>
+                  <li>Type: TEXT</li>
+                </ul>
+              </div>
+              <div class="right">
+                <details>
+                  <summary>Show answer</summary>
+                  <pre><code>
+ALTER TABLE inventory
+ADD COLUMN supplier TEXT;
+        </code></pre>
+                </details>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>Verify 3</h5>
+                <ul>
+                  <li>Verify the new column exists</li>
+                  <li>Use a SQLite CLI command</li>
+                </ul>
+              </div>
+              <div class="right">
+                <details>
+                  <summary>Show answer</summary>
+                  <pre><code>
+.schema inventory
+        </code></pre>
+                </details>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>Step 4: Update Existing Rows</h5>
+                <ul>
+                  <li>Set supplier values:</li>
+                  <ul>
+                    <li>Oak Table → Pacific Furnishings</li>
+                    <li>Leather Sofa → West Coast Leather</li>
+                    <li>Desk Lamp → BrightHome</li>
+                  </ul>
+                  <li>Write three UPDATE statements</li>
+                </ul>
+              </div>
+              <div class="right">
+                <details>
+                  <summary>Show answer</summary>
+                  <pre><code>
+UPDATE inventory
+SET supplier = 'Pacific Furnishings'
+WHERE name = 'Oak Table';
+
+UPDATE inventory
+SET supplier = 'West Coast Leather'
+WHERE name = 'Leather Sofa';
+
+UPDATE inventory
+SET supplier = 'BrightHome'
+WHERE name = 'Desk Lamp';
+        </code></pre>
+                </details>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>Verify 4</h5>
+                <ul>
+                  <li>Read and confirm supplier values</li>
+                  <li>Return: id, name, supplier, quantity</li>
+                </ul>
+              </div>
+              <div class="right">
+                <details>
+                  <summary>Show answer</summary>
+                  <pre><code>
+SELECT id, name, supplier, quantity
+FROM inventory;
+        </code></pre>
+                </details>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>Final Check</h5>
+                <ul>
+                  <li>List all items supplied by BrightHome</li>
+                  <li>Return: name, category, quantity</li>
+                </ul>
+              </div>
+              <div class="right">
+                <details>
+                  <summary>Show answer</summary>
+                  <pre><code>
+SELECT name, category, quantity
+FROM inventory
+WHERE supplier = 'BrightHome';
+        </code></pre>
+                </details>
+              </div>
+            </div>
+          </section>
+
         </section>
-
-
-        <section>Questions?</section>
 
         </section>
 
@@ -3545,6 +3884,70 @@ WHERE Book.libraryId = Library.libraryId;
           </section>
 
           <section>
+            <div class="split">
+
+              <div class="left">
+                <h5>Embedded Database</h5>
+                <ul>
+                  <li>An <strong>embedded database</strong> runs inside an application</li>
+                  <li>No separate database server process</li>
+                  <li>Database engine is a <strong>library</strong></li>
+                  <li>Data stored in a <strong>single file</strong></li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <pre><code>
+Application
+  |
+  |  SQLite library
+  |
+flowers.db   ← file on disk
+      </code></pre>
+
+                <ul>
+                  <li>SQLite is embedded</li>
+                  <li>No network connection needed</li>
+                  <li>Ideal for local apps, tools, mobile</li>
+                </ul>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <div style="display:flex; justify-content:center; margin-top:1.6rem;">
+
+              <!-- SINGLE PROCESS -->
+              <div class="tier" style="
+         width:70%;
+         text-align:center;
+         min-height:260px;
+         background:transparent;
+         border:2px solid rgba(255,255,255,0.25);
+         border-radius:18px;
+         padding:1.4rem;">
+
+                <h5>Single Process (Embedded SQLite)</h5>
+
+                <pre><code>
+Application Code
+(Java · Python · C++ · JS)
+        │
+        │  SQLite library
+        │  parse · plan · execute
+        │
+Database File
+flowers.db
+(tables · rows · indexes)
+      </code></pre>
+
+              </div>
+
+            </div>
+          </section>
+
+          <section>
             <h5>Where SQLite Is Installed by Default</h5>
 
             <div class="split">
@@ -3639,6 +4042,61 @@ WHERE Book.libraryId = Library.libraryId;
                   <li>Trademark usage (SQLite logos) has restrictions</li>
                 </ul>
               </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+
+              <!-- LEFT: SUPPORTED -->
+              <div class="left">
+                <h5>ALTER TABLE: Supported in SQLite</h5>
+                <pre><code>
+-- rename a table
+ALTER TABLE flowers
+RENAME TO plants;
+
+-- add a new column
+ALTER TABLE flowers
+ADD COLUMN origin TEXT;
+
+-- rename a column
+ALTER TABLE flowers
+RENAME COLUMN price TO unit_price;
+      </code></pre>
+
+                <ul>
+                  <li>Limited but safe operations</li>
+                  <li>No data rewrite needed</li>
+                  <li>Works directly on the file</li>
+                </ul>
+              </div>
+
+              <!-- RIGHT: NOT SUPPORTED -->
+              <div class="right">
+                <h5>ALTER TABLE: Not Supported</h5>
+                <pre><code>
+-- remove a column
+ALTER TABLE flowers
+DROP COLUMN color;
+
+-- change column type
+ALTER TABLE flowers
+ALTER COLUMN price REAL;
+
+-- add multiple columns
+ALTER TABLE flowers
+ADD COLUMN size TEXT,
+ADD COLUMN stock INTEGER;
+      </code></pre>
+
+                <ul>
+                  <li>Requires table rebuild</li>
+                  <li>Not part of SQLite ALTER TABLE</li>
+                  <li>Handled via create-copy-drop</li>
+                </ul>
+              </div>
+
             </div>
           </section>
 
