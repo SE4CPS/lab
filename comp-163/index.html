@@ -458,6 +458,39 @@
     ol.alpha-list li {
       margin: 4px 0;
     }
+
+    /* Container for diagrams made of boxes */
+    .tiers {
+      display: grid;
+      width: 100%;
+      align-items: stretch;
+      justify-items: stretch;
+    }
+
+    /* Individual box */
+    .tier {
+      background: #1e1e1e;
+      border: 1px solid #3a3a3a;
+      border-radius: 10px;
+      padding: 14px 12px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #e6e6e6;
+      line-height: 1.3;
+    }
+
+    /* Optional title inside a tier */
+    .tier-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #ffffff;
+    }
+
+    /* Optional subtitle inside a tier */
+    .tier-sub {
+      font-size: 0.72rem;
+      color: #bdbdbd;
+    }
   </style>
 
 </head>
@@ -500,11 +533,12 @@
             <tbody>
               <tr style="color:#ccc;">
                 <td style="padding:6px; border:1px solid #666;">1 (<a href="./#/c1">Jan 12</a>, <a href="./#/c2">Jan
-                    14</a>, 16)</td>
+                    14</a>, <a href="./#/c3">Jan 16</a>)</td>
                 <td style="padding:6px; border:1px solid #666;">
                   <a href="./#/module-1">Introduction to Database Management System</a>
                 </td>
-                <td style="padding:6px; border:1px solid #666;">Lab 1 + Homework 1 (2w)</td>
+                <td style="padding:6px; border:1px solid #666;"><a href="./#/lab-1">Lab 1</a> + <a
+                    href="./#/homework-1">Homework 1</a> (2w)</td>
                 <td style="padding:6px; border:1px solid #666;"><a href="./#/sqlite">SQLite</a></td>
                 <td style="padding:6px; border:1px solid #666;"></td>
               </tr>
@@ -2543,7 +2577,1136 @@ WHERE supplier = 'BrightHome';
             </div>
           </section>
 
-        </section>
+          <section id="c3">
+            <h5>Agenda</h5>
+            <ol>
+              <li>Primary key</li>
+              <li>Constraints: <code>UNIQUE</code>, <code>NOT NULL</code>, <code>DEFAULT</code></li>
+              <li>Relationships: foreign keys</li>
+              <li>Lab 1 overview</li>
+              <li>Homework 1 overview</li>
+            </ol>
+          </section>
+
+
+          <!-- 1 -->
+          <section>
+            <h5>Primary Key</h5>
+            <p class="muted">First the concept, then the SQL (using our Furniture Store case study).</p>
+          </section>
+
+          <!-- 2 (split: enums left, example right) -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>Definition (No Meaning)</h5>
+                <ul>
+                  <li>A primary key is a column (or columns) to identify rows</li>
+                  <li>It is an identifier only (no semantic meaning required)</li>
+                  <li>It exists so rows can be referenced precisely</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+inventory
+---------
+id | name         | category | price  | quantity
+1  | Oak Table    | Table    | 299.99 | 4
+2  | Leather Sofa | Sofa     | 899.00 | 2
+3  | Desk Lamp    | Lamp     | 39.50  | 12
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3 (diagram only) -->
+          <section>
+            <h5>Row Identity</h5>
+            <div class="tiers" style="grid-template-columns: repeat(3, 1fr); gap: 18px;">
+              <div class="tier">
+                <div class="tier-title">Row</div>
+                <div class="tier-sub">a record</div>
+              </div>
+              <div class="tier">
+                <div class="tier-title">Primary Key</div>
+                <div class="tier-sub">identifier</div>
+              </div>
+              <div class="tier">
+                <div class="tier-title">Reference</div>
+                <div class="tier-sub">update/delete safely</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4 (split: enums left, example right) -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>What a Primary Key Enforces</h5>
+                <ul>
+                  <li>Uniqueness (no duplicates)</li>
+                  <li>Stability (used for references)</li>
+                  <li>One row ↔ one key value</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Good:
+id = 1, 2, 3, 4, ...
+
+Bad:
+id = 1, 1, 2, 3  (duplicate)
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 5 (split: enums left, example right) -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>Why We Need It</h5>
+                <ul>
+                  <li>Target exactly one row</li>
+                  <li>Avoid accidental multi-row updates</li>
+                  <li>Enable relationships later (foreign keys)</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Without a key:
+UPDATE inventory
+SET price = 10
+WHERE category = 'Lamp';
+
+Could affect many rows.
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 6 (split: enums left, example right) -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>Primary Key in Our Case Study</h5>
+                <ul>
+                  <li>Table: <code>inventory</code></li>
+                  <li>Primary key: <code>id</code></li>
+                  <li>Chosen as a simple numeric identifier</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+id is not "meaningful".
+It is just an identifier.
+
+name/category can change
+id should not.
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 7 (SQL only) -->
+          <section>
+            <h5>SQL: Defining the Primary Key</h5>
+            <pre><code>
+CREATE TABLE inventory (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  category TEXT NOT NULL,
+  price REAL NOT NULL,
+  quantity INTEGER NOT NULL
+);
+  </code></pre>
+          </section>
+
+          <!-- 8 (split: enums left, example right) -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>SQLite: Auto-Generated IDs</h5>
+                <ul>
+                  <li><code>INTEGER PRIMARY KEY</code> can be auto-generated</li>
+                  <li>You can omit <code>id</code> during INSERT</li>
+                  <li>SQLite assigns a new integer value</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+INSERT INTO inventory (name, category, price, quantity)
+VALUES ('Oak Table', 'Table', 299.99, 4);
+
+-- id assigned automatically
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 9 (split: enums left, example right) -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>AUTOINCREMENT (When to Use)</h5>
+                <ul>
+                  <li>For stricter "never reuse old ids" behavior</li>
+                  <li>Prevents reusing a deleted id later</li>
+                  <li>Usually not needed, but good to know</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+id INTEGER PRIMARY KEY AUTOINCREMENT
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 10 (SQL only) -->
+          <section>
+            <h5>SQL: Primary Key with AUTOINCREMENT</h5>
+            <pre><code>
+CREATE TABLE inventory (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  category TEXT NOT NULL,
+  price REAL NOT NULL,
+  quantity INTEGER NOT NULL
+);
+  </code></pre>
+            <p class="tiny muted">SQLite will keep increasing id values even if rows are deleted.</p>
+          </section>
+
+          <!-- 11 (diagram only) -->
+          <section>
+            <h5>ID Generation Concept</h5>
+            <div class="tiers" style="grid-template-columns: repeat(4, 1fr); gap: 16px;">
+              <div class="tier">INSERT</div>
+              <div class="tier">New Row</div>
+              <div class="tier">New ID</div>
+              <div class="tier">Stored</div>
+            </div>
+          </section>
+
+          <!-- 12 (split: enums left, example right) -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>Verify the ID Was Assigned</h5>
+                <ul>
+                  <li>Always run a SELECT after inserts</li>
+                  <li>Confirm rows and IDs match expectations</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+SELECT id, name, category, price, quantity
+FROM inventory;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 13 (split: enums left, example right) -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>Safe Updates Use the Key</h5>
+                <ul>
+                  <li>Primary key targets one row</li>
+                  <li>Reduces risk of mass updates</li>
+                  <li>More reliable than matching on names</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+UPDATE inventory
+SET price = 279.99
+WHERE id = 1;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 14 (split: enums left, example right) -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>Safe Deletes Use the Key</h5>
+                <ul>
+                  <li>Primary key targets one row</li>
+                  <li>Prevents deleting multiple matches</li>
+                  <li>Use with care</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+DELETE FROM inventory
+WHERE id = 1;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 15 (diagram only) -->
+          <section>
+            <h5>Key Takeaway</h5>
+            <div class="tiers" style="grid-template-columns: repeat(3, 1fr); gap: 18px;">
+              <div class="tier">No meaning</div>
+              <div class="tier">Unique identity</div>
+              <div class="tier">Safe operations</div>
+            </div>
+            <p class="tiny muted" style="margin-top: 0.8rem;">Primary keys exist for correctness and control.</p>
+          </section>
+
+          <section>Questions?</section>
+
+          <!-- 11 -->
+          <section>
+            <h5>Constraints</h5>
+            <p class="muted">Rules enforced by the database to protect data quality.</p>
+          </section>
+
+          <!-- 12 (split: enums + example) -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>Common Constraints</h5>
+                <ul>
+                  <li><strong>NOT NULL</strong> — value must exist</li>
+                  <li><strong>UNIQUE</strong> — no duplicates allowed</li>
+                  <li><strong>DEFAULT</strong> — value assigned automatically</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+price REAL NOT NULL
+sku TEXT UNIQUE
+quantity INTEGER DEFAULT 0
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 13 -->
+          <section>
+            <h5>NOT NULL</h5>
+            <p class="muted">Prevents missing critical information.</p>
+          </section>
+
+          <!-- 14 (split) -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Column must always have a value</li>
+                  <li>INSERT fails if value is missing</li>
+                  <li>Useful for required attributes</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+name TEXT NOT NULL,
+category TEXT NOT NULL,
+price REAL NOT NULL
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 15 -->
+          <section>
+            <h5>UNIQUE</h5>
+            <p class="muted">Prevents duplicate values across rows.</p>
+          </section>
+
+          <!-- 16 (split) -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Ensures values do not repeat</li>
+                  <li>Often used for identifiers</li>
+                  <li>Different from primary key</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+sku TEXT UNIQUE
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 17 -->
+          <section>
+            <h5>DEFAULT</h5>
+            <p class="muted">Provides a value when none is supplied.</p>
+          </section>
+
+          <!-- 18 (split) -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Reduces required input</li>
+                  <li>Prevents NULL values</li>
+                  <li>Encodes common assumptions</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+quantity INTEGER DEFAULT 0
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 19 -->
+          <section>
+            <h5>Updated Inventory Table</h5>
+            <pre><code>
+CREATE TABLE inventory (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  category TEXT NOT NULL,
+  sku TEXT UNIQUE,
+  price REAL NOT NULL,
+  quantity INTEGER DEFAULT 0
+);
+    </code></pre>
+          </section>
+
+          <!-- 20 -->
+          <section>
+            <h5>Why Constraints Matter</h5>
+            <ul>
+              <li>Catch errors early</li>
+              <li>Protect data integrity</li>
+              <li>Reduce application complexity</li>
+            </ul>
+          </section>
+
+          <!-- 21 -->
+          <section>
+            <h5>Relationships Between Tables</h5>
+            <p class="muted">Real systems connect data across tables.</p>
+          </section>
+
+          <!-- 22 (diagram only) -->
+          <section>
+            <h5>Inventory and Suppliers</h5>
+            <div class="tiers" style="grid-template-columns: repeat(2, 1fr); gap: 24px;">
+              <div class="tier">
+                <div class="tier-title">supplier</div>
+                <div class="tier-sub">supplier_id (PK)</div>
+              </div>
+              <div class="tier">
+                <div class="tier-title">inventory</div>
+                <div class="tier-sub">supplier_id (FK)</div>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Foreign Key Example: Referencing Values</h5>
+
+            <div class="split">
+              <div class="left">
+                <h5>Supplier Table (Parent)</h5>
+                <table class="table" style="font-size:0.8rem;">
+                  <thead>
+                    <tr>
+                      <th>id (PK)</th>
+                      <th>name</th>
+                      <th>country</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>1</td>
+                      <td>Pacific Furnishings</td>
+                      <td>USA</td>
+                    </tr>
+                    <tr>
+                      <td>2</td>
+                      <td>West Coast Leather</td>
+                      <td>USA</td>
+                    </tr>
+                    <tr>
+                      <td>3</td>
+                      <td>BrightHome</td>
+                      <td>Canada</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="right">
+                <h5>Inventory Table (Child)</h5>
+                <table class="table" style="font-size:0.8rem;">
+                  <thead>
+                    <tr>
+                      <th>id (PK)</th>
+                      <th>name</th>
+                      <th>category</th>
+                      <th>supplier_id (FK)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>101</td>
+                      <td>Oak Table</td>
+                      <td>Table</td>
+                      <td>1</td>
+                    </tr>
+                    <tr>
+                      <td>102</td>
+                      <td>Leather Sofa</td>
+                      <td>Sofa</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>103</td>
+                      <td>Desk Lamp</td>
+                      <td>Lamp</td>
+                      <td>3</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Example: Supplier and Inventory Relationship</h5>
+            <p class="muted">
+              Each inventory item references exactly one supplier using a foreign key.
+            </p>
+
+            <div class="tiers" style="grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 1rem;">
+
+              <div class="tier">
+                <div class="tier-title">supplier</div>
+                <div class="tier-sub">id (PK)</div>
+                <div class="tier-sub">name</div>
+                <div class="tier-sub">email</div>
+                <div class="tiny muted" style="margin-top:6px;">
+                  id = 1<br>
+                  name = "Pacific Furnishings"
+                </div>
+              </div>
+
+              <div class="tier">
+                <div class="tier-title">Foreign Key</div>
+                <div class="tier-sub">supplier_id</div>
+                <div class="tiny muted" style="margin-top:6px;">
+                  inventory.supplier_id<br>
+                  references supplier.id
+                </div>
+              </div>
+
+              <div class="tier">
+                <div class="tier-title">inventory</div>
+                <div class="tier-sub">id (PK)</div>
+                <div class="tier-sub">name</div>
+                <div class="tier-sub">supplier_id (FK)</div>
+                <div class="tiny muted" style="margin-top:6px;">
+                  id = 12<br>
+                  name = "Oak Table"<br>
+                  supplier_id = 1
+                </div>
+              </div>
+
+            </div>
+
+            <p class="tiny muted" style="margin-top: 0.8rem;">
+              The database enforces that <code>supplier_id = 1</code> must exist in the
+              <code>supplier</code> table before the inventory row can be inserted.
+            </p>
+          </section>
+
+          <!-- 23 -->
+          <section>
+            <h5>Foreign Key</h5>
+            <p class="muted">A reference to a primary key in another table.</p>
+          </section>
+
+          <!-- 24 (split) -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Links rows across tables</li>
+                  <li>Preserves consistency</li>
+                  <li>Prevents invalid references</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+supplier_id INTEGER
+REFERENCES supplier(id)
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 25 -->
+          <section>
+            <h5>Create Supplier Table</h5>
+            <pre><code>
+CREATE TABLE supplier (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  contact_email TEXT UNIQUE
+);
+    </code></pre>
+          </section>
+
+          <!-- 26 -->
+          <section>
+            <h5>Link Inventory to Supplier</h5>
+            <pre><code>
+CREATE TABLE inventory (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  category TEXT NOT NULL,
+  price REAL NOT NULL,
+  quantity INTEGER DEFAULT 0,
+  supplier_id INTEGER,
+  FOREIGN KEY (supplier_id)
+    REFERENCES supplier(id)
+);
+    </code></pre>
+          </section>
+
+          <!-- 27 -->
+          <section>
+            <h5>What the Foreign Key Enforces</h5>
+            <ul>
+              <li>Supplier must exist before assignment</li>
+              <li>No orphan records</li>
+              <li>Clear ownership relationships</li>
+            </ul>
+          </section>
+
+          <!-- 28 (diagram only) -->
+          <section>
+            <h5>Key Relationships Summary</h5>
+            <div class="tiers" style="grid-template-columns: repeat(3, 1fr); gap: 18px;">
+              <div class="tier">Primary Key</div>
+              <div class="tier">Foreign Key</div>
+              <div class="tier">Constraints</div>
+            </div>
+          </section>
+
+          <!-- 29 -->
+          <section>
+            <h5>Takeaway</h5>
+            <p class="muted">
+              Constraints and keys are not optional.
+              They are the foundation of reliable, maintainable databases.
+            </p>
+          </section>
+
+          <section>Questions?</section>
+
+          <!-- 30 -->
+          <section>
+            <h5>Case Study Extension</h5>
+            <p class="muted">The furniture store now wants to manage suppliers separately.</p>
+          </section>
+
+          <!-- 31 -->
+          <section>
+            <h5>New Requirement</h5>
+            <ul>
+              <li>Each item is supplied by exactly one supplier</li>
+              <li>A supplier can provide many inventory items</li>
+              <li>Supplier information must be stored only once</li>
+            </ul>
+          </section>
+
+          <!-- 32 -->
+          <section>
+            <h5>New Entity: Supplier</h5>
+            <ul>
+              <li>Track supplier identity and contact information</li>
+              <li>Enforce data quality using constraints</li>
+              <li>Prepare for relationships with inventory</li>
+            </ul>
+          </section>
+
+          <!-- 33 (split: task + hint) -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>Task 1: Design the Supplier Table</h5>
+                <ul>
+                  <li>Table name: <code>supplier</code></li>
+                  <li>At least 3 attributes</li>
+                  <li>Include a primary key</li>
+                  <li>Use NOT NULL and UNIQUE where appropriate</li>
+                </ul>
+              </div>
+              <div class="right">
+                <p class="tiny muted">
+                  Think about what uniquely identifies a supplier and
+                  what information should never be missing.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 34 -->
+          <section>
+            <h5>Suggested Attributes</h5>
+            <ul>
+              <li><code>id</code> — unique supplier identifier</li>
+              <li><code>name</code> — supplier name</li>
+              <li><code>email</code> — contact email</li>
+              <li><code>phone</code> — optional contact number</li>
+            </ul>
+          </section>
+
+          <!-- 35 (split: SQL task + example) -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>Task 2: Create the Supplier Table</h5>
+                <ul>
+                  <li>Use <code>INTEGER PRIMARY KEY AUTOINCREMENT</code></li>
+                  <li>Ensure <code>name</code> is NOT NULL</li>
+                  <li>Ensure <code>email</code> is UNIQUE</li>
+                </ul>
+              </div>
+              <div class="right">
+                <details>
+                  <summary>Show example</summary>
+                  <pre><code>
+CREATE TABLE supplier (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  email TEXT UNIQUE NOT NULL,
+  phone TEXT
+);
+          </code></pre>
+                </details>
+              </div>
+            </div>
+          </section>
+
+          <!-- 36 -->
+          <section>
+            <h5>Verify the Supplier Table</h5>
+            <ul>
+              <li>Use a SQLite shell command</li>
+              <li>Confirm columns and constraints</li>
+            </ul>
+            <pre><code>
+.schema supplier
+    </code></pre>
+          </section>
+
+          <!-- 37 -->
+          <section>
+            <h5>Relationship Requirement</h5>
+            <ul>
+              <li>Each inventory item references one supplier</li>
+              <li>This is a one-to-many relationship</li>
+              <li>Implemented using a foreign key</li>
+            </ul>
+          </section>
+
+          <!-- 38 (diagram only) -->
+          <section>
+            <h5>Inventory–Supplier Relationship</h5>
+            <div class="tiers" style="grid-template-columns: repeat(2, 1fr); gap: 24px;">
+              <div class="tier">
+                <div class="tier-title">supplier</div>
+                <div class="tier-sub">id (PK)</div>
+              </div>
+              <div class="tier">
+                <div class="tier-title">inventory</div>
+                <div class="tier-sub">supplier_id (FK)</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- 39 (split: task + hint) -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>Task 3: Add Supplier Reference</h5>
+                <ul>
+                  <li>Add <code>supplier_id</code> to inventory</li>
+                  <li>Use a foreign key constraint</li>
+                  <li>Reference <code>supplier(id)</code></li>
+                </ul>
+              </div>
+              <div class="right">
+                <p class="tiny muted">
+                  In SQLite, foreign keys must be enabled explicitly.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 40 -->
+          <section>
+            <h5>SQLite Foreign Key Reminder</h5>
+            <pre><code>
+PRAGMA foreign_keys = ON;
+    </code></pre>
+            <p class="tiny muted">
+              Run this before creating or using foreign key constraints.
+            </p>
+          </section>
+
+          <!-- 41 -->
+          <section>
+            <h5>Updated Inventory Table (With Supplier)</h5>
+            <pre><code>
+CREATE TABLE inventory (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  category TEXT NOT NULL,
+  price REAL NOT NULL,
+  quantity INTEGER DEFAULT 0,
+  supplier_id INTEGER NOT NULL,
+  FOREIGN KEY (supplier_id)
+    REFERENCES supplier(id)
+);
+    </code></pre>
+          </section>
+
+          <!-- 42 -->
+          <section>
+            <h5>What This Prevents</h5>
+            <ul>
+              <li>Assigning non-existent suppliers</li>
+              <li>Duplicate supplier data</li>
+              <li>Inconsistent relationships</li>
+            </ul>
+          </section>
+
+          <!-- 43 -->
+          <section>
+            <h5>Checkpoint</h5>
+            <p class="muted">
+              You now have:
+              entities, primary keys, constraints, and a foreign key relationship
+              enforced by SQLite.
+            </p>
+          </section>
+
+          <section>Questions?</section>
+
+          <!-- ===================== LAB 1 OVERVIEW ===================== -->
+
+          <section id="lab-1">
+            <!-- Slide 1 -->
+            <h5>Lab 1: Library Database</h5>
+            <p class="muted">
+              Due: <strong>January 30, 11:59 PM</strong><br>
+              Goal: model, design, and implement a small relational database from a real-world
+              scenario.
+            </p>
+          </section>
+
+          <!-- Slide 2 -->
+          <section>
+            <h5>Problem Scenario</h5>
+            <p class="muted">
+              A local library wants to track books loaned to members.
+            </p>
+            <ul>
+              <li>Members can borrow multiple books</li>
+              <li>Each book is borrowed by only one member at a time</li>
+              <li>Library staff manage the loans</li>
+            </ul>
+          </section>
+
+          <!-- Slide 3 -->
+          <section>
+            <h5>Step 1: Identify Entities</h5>
+            <p class="muted">
+              Entities are the <strong>things</strong> the system needs to track.
+            </p>
+            <ul>
+              <li>Look for nouns in the scenario</li>
+              <li>Ignore vague or irrelevant objects</li>
+              <li>Each entity represents a table later</li>
+            </ul>
+          </section>
+
+          <!-- Slide 4 -->
+          <section>
+            <h5>Entity Examples (Correct vs Incorrect)</h5>
+            <table class="table" style="font-size:0.8rem;">
+              <thead>
+                <tr>
+                  <th>Good Entities</th>
+                  <th>Bad Entities</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Book</td>
+                  <td>City</td>
+                </tr>
+                <tr>
+                  <td>Member</td>
+                  <td>Chair</td>
+                </tr>
+                <tr>
+                  <td>Staff</td>
+                  <td>Building</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- Slide 5 -->
+          <section>
+            <h5>Step 2: Identify Relationships</h5>
+            <p class="muted">
+              Relationships describe how entities are connected.
+            </p>
+            <ul>
+              <li>Who borrows what?</li>
+              <li>Who manages which action?</li>
+              <li>Think in verbs, not nouns</li>
+            </ul>
+          </section>
+
+          <!-- Slide 6 -->
+          <section>
+            <h5>Step 3: Create a UML-based ERD</h5>
+            <ul>
+              <li>Use PlantUML to define entities</li>
+              <li>Each entity needs at least 3 attributes</li>
+              <li>Include a primary key</li>
+              <li>Add data types and constraints</li>
+            </ul>
+            <p class="tiny muted">
+              Output: <strong>libraryERD.png</strong>
+            </p>
+          </section>
+
+          <!-- Slide 7 -->
+          <section>
+            <h5>ERD Structure Reminder</h5>
+            <pre><code>@startuml
+entity "Book" {
+  +book_id : INTEGER
+  title : TEXT
+  isbn : TEXT
+}
+
+entity "Member" {
+  +member_id : INTEGER
+  name : TEXT
+  email : TEXT
+}
+
+Book -- Member : borrows
+@enduml</code></pre>
+          </section>
+
+          <!-- Slide 8 -->
+          <section>
+            <h5>Step 4: Create Tables in SQLite</h5>
+            <ul>
+              <li>Translate ERD into CREATE TABLE statements</li>
+              <li>Use PRIMARY KEY and FOREIGN KEY</li>
+              <li>Apply NOT NULL and UNIQUE where needed</li>
+            </ul>
+            <p class="tiny muted">
+              Verify using the <code>.schema</code> command
+            </p>
+          </section>
+
+          <!-- Slide 9 -->
+          <section>
+            <h5>Step 5: Perform CRUD Operations</h5>
+            <table class="table" style="font-size:0.8rem;">
+              <thead>
+                <tr>
+                  <th>Operation</th>
+                  <th>What You Do</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Create</td>
+                  <td>INSERT at least 3 rows</td>
+                </tr>
+                <tr>
+                  <td>Read</td>
+                  <td>SELECT all rows</td>
+                </tr>
+                <tr>
+                  <td>Update</td>
+                  <td>Change a value in one row</td>
+                </tr>
+                <tr>
+                  <td>Delete</td>
+                  <td>Remove one specific row</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- Slide 10 -->
+          <section>
+            <h5>What to Submit</h5>
+            <ul>
+              <li><strong>libraryERD.png</strong> – UML diagram</li>
+              <li><strong>librarySchema.png</strong> – SQLite .schema output</li>
+              <li><strong>libraryCrud.png</strong> – CRUD operation screenshots</li>
+            </ul>
+            <p class="muted">
+              This lab connects <strong>concepts → design → SQL implementation</strong>.
+            </p>
+          </section>
+
+          <section id="homework-1">
+
+            <!-- Slide 1 -->
+
+            <h5>Homework 1: SQL Foundations</h5>
+            <p class="muted">
+              Due: <strong>January 30, 11:59 PM</strong><br>
+              Focus: conceptual understanding of SQL, SQLite, and course expectations.
+            </p>
+          </section>
+
+          <!-- Slide 2 -->
+          <section>
+            <h5>Purpose of This Homework</h5>
+            <p class="muted">
+              This homework ensures you understand the <strong>role of SQL</strong>,
+              the <strong>difference between language and system</strong>,
+              and the <strong>scope of the course</strong>.
+            </p>
+            <ul>
+              <li>No advanced syntax required</li>
+              <li>Focus on ideas, not memorization</li>
+              <li>Your own words matter</li>
+            </ul>
+          </section>
+
+          <!-- Slide 3 -->
+          <section>
+            <h5>Required Reading</h5>
+            <p class="muted">
+              Please read <strong>Chapters 1 and 2</strong> of the following books:
+            </p>
+            <ul>
+              <li><em>SQL: The Complete Reference</em></li>
+              <li><em>The Definitive Guide to SQLite</em></li>
+            </ul>
+            <p class="tiny muted">
+              Goal: general understanding, not mastery of syntax.
+            </p>
+          </section>
+
+          <!-- Slide 4 -->
+          <section>
+            <h5>Reading Guidance</h5>
+            <ul>
+              <li>What problem does SQL solve?</li>
+              <li>What role does a DBMS play?</li>
+              <li>How data is created, queried, and changed</li>
+            </ul>
+            <p class="muted">
+              Do not worry about remembering every command.
+            </p>
+          </section>
+
+          <!-- Slide 5 -->
+          <section>
+            <h5>Homework Questions (Conceptual)</h5>
+            <ul>
+              <li>Why is SQL important?</li>
+              <li>What is the difference between SQL and SQLite?</li>
+            </ul>
+            <p class="tiny muted">
+              Answer in your own words. Short, clear explanations are preferred.
+            </p>
+          </section>
+
+          <!-- Slide 6 -->
+          <section>
+            <h5>SQL Keywords to Explain</h5>
+            <p class="muted">
+              Explain the <strong>purpose</strong> of each keyword:
+            </p>
+            <ul>
+              <li><code>CREATE</code></li>
+              <li><code>SELECT</code></li>
+              <li><code>UPDATE</code></li>
+              <li><code>DELETE</code></li>
+              <li><code>INSERT</code></li>
+            </ul>
+          </section>
+
+          <!-- Slide 7 -->
+          <section>
+            <h5>What We Are Looking For</h5>
+            <ul>
+              <li>What each keyword does conceptually</li>
+              <li>When it is used</li>
+              <li>No complex SQL examples required</li>
+            </ul>
+            <p class="muted">
+              Precision of thought matters more than syntax.
+            </p>
+          </section>
+
+          <!-- Slide 8 -->
+          <section>
+            <h5>Syllabus Acknowledgment</h5>
+            <p class="muted">
+              Please read the course syllabus carefully:
+            </p>
+            <p>
+              <a href="https://pacific.instructure.com/courses/140645/assignments/syllabus" target="_blank">Link to
+                Syllabus</a>
+            </p>
+            <ul>
+              <li>List any questions or points of clarification</li>
+            </ul>
+          </section>
+
+          <!-- Slide 9 -->
+          <section>
+            <h5>Why the Syllabus Matters</h5>
+            <ul>
+              <li>Defines course structure and expectations</li>
+              <li>Explains grading and policies</li>
+              <li>Clarifies responsibilities on both sides</li>
+            </ul>
+            <p class="tiny muted">
+              Submitting this homework confirms that you reviewed the syllabus.
+            </p>
+          </section>
+
+          <!-- Slide 10 -->
+          <section>
+            <h5>Submission Summary</h5>
+            <ul>
+              <li>Answer all questions clearly</li>
+              <li>Use your own words</li>
+              <li>Submit via Canvas</li>
+            </ul>
+            <p class="muted">
+              This homework sets the foundation for everything that follows.
+            </p>
+          </section>
+
 
         </section>
 
