@@ -3712,202 +3712,458 @@ Book -- Member : borrows
 
         <!-- ===================== MODULE 2 ===================== -->
 
+
         <section id="module-2">
 
+          <!-- 01 -->
           <section>
-            <h5>Module 2</h5>
-            <h5>Entity Relationship Model (ERM)</h5>
+            <div class="full-visual">
+              <div class="frame" style="display:flex;align-items:center;justify-content:center;flex-direction:column;">
+                <h2 style="margin:0;">Module 2</h2>
+                <h2 style="margin:10px 0 0 0;">Entity Relationship Model (ERM)</h2>
+              </div>
+            </div>
           </section>
 
+          <!-- 02 -->
           <section>
-            <h5>Every Database Management System Starts with <span class="highlight">Requirements</span></h5>
+            <div class="split">
+              <div class="left">
+                <h3>Agenda</h3>
+                <ul class="tight">
+                  <li>Requirements → entities</li>
+                  <li>Entities and relationships</li>
+                  <li>Cardinality: 1:1, 1:N, N:N</li>
+                  <li>Attributes, data types, constraints</li>
+                  <li>ERD → SQL schema</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Work order:
+-- 1) requirements
+-- 2) ERD
+-- 3) SQL schema
+-- 4) queries</code></pre>
+              </div>
+            </div>
           </section>
 
+          <!-- 03 -->
+          <section>
+            <div class="full-visual">
+              <div class="frame" style="display:flex;align-items:center;justify-content:center;flex-direction:column;">
+                <h3 style="margin:0;">Every Database Management System Starts with</h3>
+                <h2 style="margin:10px 0 0 0;"><span class="highlight">Requirements</span></h2>
+              </div>
+            </div>
+          </section>
+
+          <!-- 04 -->
           <section
             style="padding: 30px; font-family: 'Georgia', serif; background-color: #fff; border: 2px solid #000; border-radius: 5px; box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); color: #000;">
-            <h2 style="text-align: center; text-decoration: underline;">Requirement</h5>
-              <p>The system should allow users to rent bikes easily</p>
+            <h2 style="text-align: center; text-decoration: underline;">Requirement</h2>
+            <p>The system should allow users to rent bikes easily</p>
           </section>
 
+          <!-- 05 -->
           <section
             style="padding: 30px; font-family: 'Georgia', serif; background-color: #fff; border: 2px solid #000; border-radius: 5px; box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); color: #000;">
-            <h2 style="text-align: center; text-decoration: underline;">Requirement</h5>
-              <p>The system should allow registered users to rent a bike by selecting a location, choosing an
-                available bike,
-                and completing payment through the application within three steps</p>
+            <h2 style="text-align: center; text-decoration: underline;">Requirement</h2>
+            <p>The system should allow registered users to rent a bike by selecting a location, choosing an available
+              bike, and completing payment through the application within three steps</p>
           </section>
 
+          <!-- 06 -->
           <section
             style="padding: 30px; font-family: 'Georgia', serif; background-color: #fff; border: 2px solid #000; border-radius: 5px; box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); color: #000;">
-            <h2 style="text-align: center; text-decoration: underline;">Requirement</h5>
-              <p><strong>Purpose:</strong>Bike Rental Database System to Manage rentals and track customers,
-                bikes, and transactions</p>
-              <hr style="border: 1px solid #000; margin: 15px 0;">
-              <ul>
-                <li>Track the availability of bikes, including their unique ID, condition, and location</li>
-                <li>Log rental transactions, incl. the bike ID, customer ID, rental start and return time
-                </li>
-                <li>Maintain customer records, including name, contact details, and rental history</li>
-                </li>
-              </ul>
+            <h2 style="text-align: center; text-decoration: underline;">Requirement</h2>
+            <p><strong>Purpose:</strong> Bike Rental Database System to manage rentals and track customers, bikes, and
+              transactions</p>
+            <hr style="border: 1px solid #000; margin: 15px 0;">
+            <ul>
+              <li>Track availability of bikes, including unique id, condition, and location</li>
+              <li>Log rental transactions, including bike id, customer id, start time, return time</li>
+              <li>Maintain customer records, including name, contact details, rental history</li>
+            </ul>
           </section>
 
+          <!-- 07 -->
           <section>
-            <h5>Translating Requirements into Entities and Relationships</h5>
+            <div class="split">
+              <div class="left">
+                <h3>Translate Requirements → Model</h3>
+                <ul class="tight">
+                  <li>Underline nouns → candidate entities</li>
+                  <li>Underline verbs → candidate relationships</li>
+                  <li>Details become attributes</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Nouns: user, bike, location, payment, transaction
+-- Verbs: rent, select, choose, pay
+-- Candidate entities: 
+--  - Customer 
+--  - Bike 
+--  - Location
+--  - Payment
+--  - RentalTransaction</code></pre>
+              </div>
+            </div>
           </section>
 
+          <!-- 08 -->
           <section>
-            <h5>What Are Entities?</h5>
-            <strong>Definition:</strong> Entities represent <span class="highlight">real-world objects</span> or
-            concepts.
+            <div class="full-visual">
+              <div class="frame">
+                <svg viewBox="0 0 1200 650" style="width:100%; height:100%; pointer-events:none;">
+                  <text x="600" y="85" text-anchor="middle" font-size="30" fill="#fff">ERM pipeline</text>
+
+                  <rect x="110" y="210" width="300" height="160" rx="18" fill="rgba(255,255,255,0.06)"
+                    stroke="rgba(255,255,255,0.35)" stroke-width="3" />
+                  <text x="260" y="265" text-anchor="middle" font-size="22" fill="#fff">Requirements</text>
+                  <text x="260" y="300" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.8)">Text</text>
+                  <text x="260" y="330" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.8)">Nouns,
+                    verbs</text>
+
+                  <rect x="450" y="210" width="300" height="160" rx="18" fill="rgba(255,255,255,0.06)"
+                    stroke="rgba(255,255,255,0.35)" stroke-width="3" />
+                  <text x="600" y="265" text-anchor="middle" font-size="22" fill="#fff">ERD</text>
+                  <text x="600" y="300" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.8)">Entities</text>
+                  <text x="600" y="330" text-anchor="middle" font-size="16"
+                    fill="rgba(255,255,255,0.8)">Relationships</text>
+
+                  <rect x="790" y="210" width="300" height="160" rx="18" fill="rgba(255,255,255,0.06)"
+                    stroke="rgba(255,255,255,0.35)" stroke-width="3" />
+                  <text x="940" y="265" text-anchor="middle" font-size="22" fill="#fff">Schema</text>
+                  <text x="940" y="300" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.8)">CREATE
+                    TABLE</text>
+                  <text x="940" y="330" text-anchor="middle" font-size="16"
+                    fill="rgba(255,255,255,0.8)">Constraints</text>
+
+                  <line x1="410" y1="290" x2="450" y2="290" stroke="rgba(255,255,255,0.7)" stroke-width="6" />
+                  <polygon points="450,290 435,280 435,300" fill="rgba(255,255,255,0.7)" />
+
+                  <line x1="750" y1="290" x2="790" y2="290" stroke="rgba(255,255,255,0.7)" stroke-width="6" />
+                  <polygon points="790,290 775,280 775,300" fill="rgba(255,255,255,0.7)" />
+                </svg>
+              </div>
+            </div>
           </section>
 
+          <!-- 09 -->
           <section>
-            <h5>What Are Entities?</h5>
-            <p>Entities are <span class="highlight">nouns</span></p>
-            <p>Examples: Customer, Bike, Rental Transaction</p>
+            <div class="split">
+              <div class="left">
+                <h3>Entities</h3>
+                <ul class="tight">
+                  <li>Real world objects or concepts</li>
+                  <li>Usually nouns</li>
+                  <li>Later implemented as tables</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Entity candidates:
+-- Customer
+-- Bike
+-- RentalTransaction
+-- Location
+-- Payment</code></pre>
+              </div>
+            </div>
           </section>
 
+          <!-- 10 -->
           <section>
-            <h5>What Are Relationships?</h5>
-            <p><strong>Definition:</strong> Relationships define <span class="highlight">how entities are
-                connected</span></p>
+            <div class="split">
+              <div class="left">
+                <h3>Relationships</h3>
+                <ul class="tight">
+                  <li>Connections between entities</li>
+                  <li>Usually verbs</li>
+                  <li>Shown as lines in ERD</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Relationship examples:
+-- Customer rents Bike
+-- Bike located at Location
+-- Customer pays Payment</code></pre>
+              </div>
+            </div>
           </section>
 
+          <!-- 11 -->
           <section>
-            <h5>What Are Relationships?</h5>
-            <p>Relationships are <span class="highlight">verbs</span></p>
-            <p>Examples: Rents, Is part of</p>
+            <div class="split">
+              <div class="left">
+                <h3>Quick Check</h3>
+                <ul class="tight">
+                  <li>Question: "Customer rents a Bike"</li>
+                  <li>Is it an entity or a relationship?</li>
+                </ul>
+                <button onclick="document.getElementById('m2_ans_11').style.display='block'">Show Answer</button>
+                <div id="m2_ans_11" style="display:none; margin-top:12px;" class="highlight">Relationship</div>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- ERD view:
+-- Customer  --(rents)-->  Bike</code></pre>
+              </div>
+            </div>
           </section>
 
+          <!-- 12 -->
           <section>
-            <h5>Question?</h5>
+            <div class="split">
+              <div class="left">
+                <h3>Quick Check</h3>
+                <ul class="tight">
+                  <li>Question: "Bike"</li>
+                  <li>Is it an entity or a relationship?</li>
+                </ul>
+                <button onclick="document.getElementById('m2_ans_12').style.display='block'">Show Answer</button>
+                <div id="m2_ans_12" style="display:none; margin-top:12px;" class="highlight">Entity</div>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Entity will have attributes:
+-- BikeID, Model, Color, Condition, Availability</code></pre>
+              </div>
+            </div>
           </section>
 
+          <!-- 13 -->
           <section>
-            <h5>Can Two Entities Have the Same Name?</h5>
-            <button onclick="document.getElementById('answer1').style.display='block'"
-              style="padding: 10px 20px; font-size: 16px; margin-top: 20px; cursor: pointer;">Show
-              Answer</button>
-            <p id="answer1" style="display:none;">Conceptually (ERD) yes, technically no</p>
+            <div class="split">
+              <div class="left">
+                <h3>Name Rules</h3>
+                <ul class="tight">
+                  <li>Conceptually, ERD names can overlap</li>
+                  <li>Technically, table names must be unique</li>
+                  <li>Use consistent casing</li>
+                </ul>
+                <button onclick="document.getElementById('m2_ans_13').style.display='block'">Show Answer</button>
+                <div id="m2_ans_13" style="display:none; margin-top:12px;" class="highlight">Conceptually yes,
+                  technically no</div>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Prefer consistent names:
+-- Customer, Bike, RentalTransaction
+-- Avoid reserved words for table names</code></pre>
+              </div>
+            </div>
           </section>
 
+          <!-- 14 -->
           <section>
-            <h5>Are Entity Names Case-Sensitive?</h5>
-            <p>Does it matter if you name an entity <strong>Customer</strong> or <strong>customer</strong></p>
-            <button onclick="document.getElementById('answer2').style.display='block'"
-              style="padding: 10px 20px; font-size: 16px; margin-top: 20px; cursor: pointer;">Show
-              Answer</button>
-            <p id="answer2" style="display:none;">Conceptually (ERD) no, technically it depends (Windows MySQL:
-              no, Unix MySQL: yes)</p>
+            <div class="split">
+              <div class="left">
+                <h3>Case Sensitivity</h3>
+                <ul class="tight">
+                  <li>Conceptually, case does not matter in ERD</li>
+                  <li>Technically, it depends on DB and OS</li>
+                </ul>
+                <button onclick="document.getElementById('m2_ans_14').style.display='block'">Show Answer</button>
+                <div id="m2_ans_14" style="display:none; margin-top:12px;" class="highlight">Depends on system</div>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Safe habit:
+-- Pick a naming style and keep it.
+-- Example: PascalCase tables, snake_case columns</code></pre>
+              </div>
+            </div>
           </section>
 
-          <section>
-            <h5>Is it an Entity or a Relationship?</h5>
-            <p><strong>Question:</strong> A "Customer rents a Bike."</p>
-            <button onclick="document.getElementById('answer3').style.display = 'block';"
-              style="padding: 10px 20px; font-size: 16px; margin-top: 20px; cursor: pointer;">
-              Show Answer
-            </button>
-            <p id="answer3" style="display: none; margin-top: 20px; font-weight: bold;">
-              Answer: This is a <em>Relationship</em> connecting the "Customer" and "Bike" entities.
+          <!-- 15 -->
+          <section
+            style="padding: 30px; font-family: 'Georgia', serif; background-color: #fff; border: 2px solid #000; border-radius: 5px; box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); color: #000;">
+            <h2 style="text-align: center; text-decoration: underline;">Requirement</h2>
+            <p>A travel booking system should allow users to search for, compare, and book flights, hotels, and rental
+              cars. Users must be able to filter results by price, date, and location, and securely complete payments
             </p>
           </section>
 
-          <section>
-            <h5>Is it an Entity or a Relationship?</h5>
-            <p><strong>Question:</strong> A "Bike."</p>
-            <button onclick="document.getElementById('answer4').style.display = 'block';"
-              style="padding: 10px 20px; font-size: 16px; margin-top: 20px; cursor: pointer;">
-              Show Answer
-            </button>
-            <p id="answer4" style="display: none; margin-top: 20px; font-weight: bold;">
-              Answer: This is an <em>Entity</em> representing a real-world object with attributes like
-              "BikeID," "Model," and "Color."
+          <!-- 16 -->
+          <section
+            style="padding: 30px; font-family: 'Georgia', serif; background-color: #fff; border: 2px solid #000; border-radius: 5px; box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); color: #000;">
+            <h2 style="text-align: center; text-decoration: underline;">Requirement (highlight nouns/verbs)</h2>
+            <p>
+              A travel booking system should allow <span class="highlight">users</span> to search for, compare, and
+              <span class="highlight">book</span>
+              <span class="highlight">flights</span>, <span class="highlight">hotels</span>, and <span
+                class="highlight">rental cars</span>.
+              Users must be able to filter results by price, date, and location, and securely complete payments.
             </p>
           </section>
 
-          <section
-            style="padding: 30px; font-family: 'Georgia', serif; background-color: #fff; border: 2px solid #000; border-radius: 5px; box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); color: #000;">
-            <h2 style="text-align: center; text-decoration: underline;">Requirement</h5>
-              <p>A travel booking system should allow users to search for, compare, and book flights, hotels,
-                and
-                rental cars.
-                Users must be able to filter results by price, date, and location, and securely complete
-                payments</p>
-          </section>
-
-          <section
-            style="padding: 30px; font-family: 'Georgia', serif; background-color: #fff; border: 2px solid #000; border-radius: 5px; box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1); color: #000;">
-            <h2 style="text-align: center; text-decoration: underline;">Requirement</h5>
-              <p>
-                A travel booking system should
-                allow
-                <span class="highlight">users</span> to search for, compare,
-                and
-                <span class="highlight">book</span>
-                <span class="highlight">flights</span>,
-                <span class="highlight">hotels</span>, and
-                <span class="highlight">rental cars</span>.
-                Users must be able to filter results by price, date, and location, and securely complete
-                payments
-              </p>
-          </section>
-
+          <!-- 17 -->
           <section>
-            <h5>Question?</h5>
+            <div class="split">
+              <div class="left">
+                <h3>Text → Visual</h3>
+                <ul class="tight">
+                  <li>Text is good for brainstorming</li>
+                  <li>ERD is good for precision and review</li>
+                  <li>ERD is easier to validate as a group</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Practice:
+-- turn nouns into entity boxes
+-- connect boxes with verb labels</code></pre>
+              </div>
+            </div>
           </section>
 
+          <!-- 18 -->
           <section>
-            <h5>Translating <span class="highlight">Textual</span> Requirements into <span
-                class="highlight">Visual</span>
-              Requirements</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Conceptual model of the database</li>
+                  <li>Shows entities and their attributes</li>
+                  <li>Illustrates relationships between entities</li>
+                  <li>Independent of any database system</li>
+                </ul>
+              </div>
+              <div class="right">
+                <img class="img-fit" src="erd1.png" alt="Entity-Relationship Diagram (ERD)">
+              </div>
+            </div>
           </section>
 
+          <!-- 19 -->
           <section>
-            <h5>Entity-Relationship Diagram (ERD)</h5>
-            <img src="erd1.png" alt="Entity-Relationship Diagram (ERD)">
+            <div class="split">
+              <div class="left">
+                <h3>Attributes</h3>
+                <ul class="tight">
+                  <li>Entities are not enough</li>
+                  <li>Each entity has a list of attributes</li>
+                  <li>Attributes become columns</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Customer attributes:
+-- CustomerID, Name, Email, Phone
+
+-- Bike attributes:
+-- BikeID, Model, Color, Condition, Availability</code></pre>
+              </div>
+            </div>
           </section>
 
+          <!-- 20 -->
           <section>
-            <h5>Each Entity has a list of <span class="highlight">Attributes</span></h5>
+            <div class="split">
+              <div class="left">
+                <h3>Primary Key Attribute</h3>
+                <ul class="tight">
+                  <li>Mandatory technical attribute</li>
+                  <li>Unique per row</li>
+                  <li>Often integer</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Primary key examples:
+-- Customer(CustomerID)
+-- Bike(BikeID)
+-- RentalTransaction(RentalID)</code></pre>
+              </div>
+            </div>
           </section>
 
+          <!-- 21 -->
           <section>
-            <h5>Technical Mandatory Attributes</h5>
-            <p><strong>ID Attributes:</strong> IDs are <span class="highlight">technically mandatory</span> and
-              serve as the <span class="highlight">primary key</span> to uniquely identify each entity record.
-            </p>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Each entity includes a primary key</li>
+                  <li>Primary key uniquely identifies each record</li>
+                  <li>Primary key cannot be NULL</li>
+                  <li>Primary key remains stable over time</li>
+                </ul>
+              </div>
+              <div class="right">
+                <img class="img-fit" src="erd2.png" alt="ERD with primary key attribute">
+              </div>
+            </div>
           </section>
 
+          <!-- 22 -->
           <section>
-            <h5>ERD with primary key attribute</h5>
-            <img src="erd2.png" alt="Entity-Relationship Diagram (ERD)">
+            <div class="split">
+              <div class="left">
+                <h3>Optional Attributes</h3>
+                <ul class="tight">
+                  <li>Extra details keeps the system useful</li>
+                  <li>Not needed to identify the entity</li>
+                  <li>Often nullable</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Optional examples:
+-- Customer.Email, Customer.Phone
+-- Bike.Color, Bike.Condition
+-- RentalTransaction.ReturnDate</code></pre>
+              </div>
+            </div>
           </section>
 
+          <!-- 23 -->
           <section>
-            <h5>Conceptual Attributes</h5>
-            <p><strong>Description:</strong> Optional attributes provide <span class="highlight">additional
-                details</span> about an entity but are <span class="highlight">not required</span> to
-              uniquely identify it</p>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Entities can have multiple descriptive attributes</li>
+                  <li>Attributes store detailed information</li>
+                  <li>Not all attributes are required for identification</li>
+                  <li>Attributes refine the meaning of an entity</li>
+                </ul>
+              </div>
+              <div class="right">
+                <img class="img-fit" src="erd3.png" alt="ERD with additional attributes">
+              </div>
+            </div>
           </section>
 
+          <!-- 24 -->
           <section>
-            <h5>ERD with additional attributes</h5>
-            <img src="erd3.png" alt="Entity-Relationship Diagram (ERD)">
+            <div class="split">
+              <div class="left">
+                <h3>Data Types</h3>
+                <ul class="tight">
+                  <li>Each attribute has a data type</li>
+                  <li>Data types impact validation and storage</li>
+                  <li>Keep types aligned across layers</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- BookingDate DATE
+-- Availability BOOLEAN
+-- Name VARCHAR(100)</code></pre>
+              </div>
+            </div>
           </section>
 
+          <!-- 25 -->
           <section>
-            <h5>Each Attribute Has a <span class="highlight">Data Type</span></h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Each attribute is assigned a data type</li>
+                  <li>Data types define how values are stored</li>
+                  <li>Correct types prevent invalid data</li>
+                  <li>Data types must align with application logic</li>
+                </ul>
+              </div>
+              <div class="right">
+                <img class="img-fit" src="erd4.png" alt="ERD showcasing attributes and their data types">
+              </div>
+            </div>
           </section>
 
+          <!-- 26 -->
           <section>
-            <h5>Entity Attributes with Data Types</h5>
-            <img src="erd4.png" alt="Entity-Relationship Diagram (ERD) showcasing attributes and their data types">
-          </section>
-
-          <section>
-            <h5>SQL Standard Data Types</h5>
+            <h3>SQL Standard Data Types</h3>
             <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;">
               <thead>
                 <tr>
@@ -3920,94 +4176,109 @@ Book -- Member : borrows
                 <tr>
                   <td>INTEGER</td>
                   <td>A whole number, no decimal points</td>
-                  <td>42 (Max: ±2,147,483,647)</td>
+                  <td>42</td>
                 </tr>
                 <tr>
                   <td>BIGINT</td>
                   <td>A large integer value</td>
-                  <td>9223372036854775807 (Max: ±9,223,372,036,854,775,807)</td>
+                  <td>9223372036854775807</td>
                 </tr>
                 <tr>
                   <td>DECIMAL(p, s)</td>
-                  <td>Exact numeric value with specified precision (p) and scale (s)</td>
-                  <td>DECIMAL(10, 2): 12345.67 (Max: 10 digits, 2 after decimal)</td>
+                  <td>Exact numeric value</td>
+                  <td>DECIMAL(10, 2)</td>
                 </tr>
                 <tr>
                   <td>FLOAT</td>
-                  <td>Approximate numeric value with floating-point precision</td>
-                  <td>3.14159 (Precision depends on implementation)</td>
+                  <td>Approximate numeric value</td>
+                  <td>3.14159</td>
                 </tr>
                 <tr>
                   <td>CHAR(n)</td>
-                  <td>Fixed-length character string with length n</td>
-                  <td>CHAR(5): 'Hello' (Max: Defined by n)</td>
+                  <td>Fixed length string</td>
+                  <td>CHAR(5)</td>
                 </tr>
                 <tr>
                   <td>VARCHAR(n)</td>
-                  <td>Variable-length character string with maximum length n</td>
-                  <td>VARCHAR(50): 'Mountain Bike' (Max: Defined by n)</td>
+                  <td>Variable length string</td>
+                  <td>VARCHAR(50)</td>
                 </tr>
                 <tr>
                   <td>TEXT</td>
-                  <td>Variable-length text data</td>
-                  <td>'This is a long text.' (Max: Implementation dependent, e.g., 4GB in MySQL)</td>
+                  <td>Variable length text</td>
+                  <td>"long notes"</td>
                 </tr>
                 <tr>
                   <td>DATE</td>
-                  <td>Date value (YYYY-MM-DD)</td>
-                  <td>2025-01-14 (Range: 1000-01-01 to 9999-12-31)</td>
+                  <td>Date</td>
+                  <td>2025-01-14</td>
                 </tr>
                 <tr>
                   <td>TIME</td>
-                  <td>Time value (HH:MM:SS)</td>
-                  <td>14:30:00 (Range: -838:59:59 to 838:59:59 in MySQL)</td>
+                  <td>Time</td>
+                  <td>14:30:00</td>
                 </tr>
                 <tr>
                   <td>TIMESTAMP</td>
-                  <td>Date and time value (YYYY-MM-DD HH:MM:SS)</td>
-                  <td>2025-01-14 14:30:00 (Range: 1970-01-01 to 2038-01-19 in UNIX-based systems)</td>
+                  <td>Date and time</td>
+                  <td>2025-01-14 14:30:00</td>
                 </tr>
                 <tr>
                   <td>BOOLEAN</td>
-                  <td>Logical value (TRUE or FALSE)</td>
-                  <td>TRUE (Stored as 1 or 0 in most databases)</td>
+                  <td>TRUE or FALSE</td>
+                  <td>TRUE</td>
                 </tr>
                 <tr>
                   <td>BLOB</td>
-                  <td>Binary Large Object for storing binary data</td>
-                  <td>[Binary data] (Max: Implementation dependent, e.g., 4GB in MySQL)</td>
+                  <td>Binary data</td>
+                  <td>[bytes]</td>
                 </tr>
               </tbody>
             </table>
           </section>
 
+          <!-- 27 -->
           <section>
-            <h5>Question?</h5>
+            <div class="split">
+              <div class="left">
+                <h3>Constraints</h3>
+                <ul class="tight">
+                  <li>Rules that protect the database</li>
+                  <li>Improve correctness</li>
+                  <li>Make errors visible early</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Common constraints:
+-- PRIMARY KEY
+-- FOREIGN KEY
+-- NOT NULL
+-- UNIQUE
+-- DEFAULT</code></pre>
+              </div>
+            </div>
           </section>
 
+          <!-- 28 -->
           <section>
-            <h5>What Data Type Do You Recommend?</h5>
-            <img src="erd5.png" style="max-height: 300px; width: auto;"
-              alt="Entity-Relationship Diagram (ERD) showcasing attributes and their data types">
-            <p style="font-size: 18pt;">INTEGER, BIGINT, DECIMAL(p, s), FLOAT, CHAR(n), VARCHAR(n), TEXT, DATE,
-              TIME, TIMESTAMP, BOOLEAN, BLOB</p>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Constraints enforce data correctness</li>
+                  <li>Primary keys ensure uniqueness</li>
+                  <li>NOT NULL prevents missing values</li>
+                  <li>UNIQUE avoids duplicate data</li>
+                </ul>
+              </div>
+              <div class="right">
+                <img class="img-fit" src="erd6.png" alt="ERD showcasing attributes and their constraints">
+              </div>
+            </div>
           </section>
 
+          <!-- 29 -->
           <section>
-            <h5>Question?</h5>
-          </section>
-
-          <section>
-            <h5>Each Attribute Can Have <span class="highlight">Constraints</span></h5>
-          </section>
-
-          <section>
-            <h5>Entity Attributes with Constraints</h5>
-            <img src="erd6.png" alt="Entity-Relationship Diagram (ERD) showcasing attributes and their constraints">
-          </section>
-
-          <section>
-            <h5>SQL Attribute Constraints</h5>
+            <h3>SQL Attribute Constraints</h3>
             <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;">
               <thead>
                 <tr>
@@ -4018,51 +4289,35 @@ Book -- Member : borrows
               <tbody>
                 <tr>
                   <td>PRIMARY KEY</td>
-                  <td>Uniquely identifies each record in a table. Automatically implies NOT NULL</td>
+                  <td>Uniquely identifies each record; implies NOT NULL</td>
                 </tr>
                 <tr>
                   <td>FOREIGN KEY</td>
-                  <td>Ensures referential integrity by linking a column to the primary key in another
-                    table</td>
+                  <td>Ensures referential integrity by linking to another table</td>
                 </tr>
                 <tr>
                   <td>NOT NULL</td>
-                  <td>Ensures a column cannot have NULL values</td>
+                  <td>Column cannot be NULL</td>
                 </tr>
                 <tr>
                   <td>UNIQUE</td>
-                  <td>Ensures all values in a column are distinct</td>
+                  <td>All values in a column are distinct</td>
                 </tr>
                 <tr>
                   <td>DEFAULT</td>
-                  <td>Sets a default value for a column when no value is provided</td>
-                </tr>
-                <tr>
-                  <td>INDEX</td>
-                  <td>Improves the speed of data retrieval operations on a table</td>
+                  <td>Default value when no value is provided</td>
                 </tr>
                 <tr>
                   <td>AUTO_INCREMENT</td>
-                  <td>Automatically generates a unique value for each new record in a column</td>
-                </tr>
-                <tr>
-                  <td>UNIQUE + NOT NULL</td>
-                  <td>Combination often used for candidate keys or alternate unique identifiers</td>
+                  <td>Auto generates unique integer id (DB specific)</td>
                 </tr>
               </tbody>
             </table>
           </section>
 
+          <!-- 30 -->
           <section>
-            <h5>Question?</h5>
-          </section>
-
-          <section>
-            <h5>From ERD to <span class="highlight">Database Schema</span></h5>
-          </section>
-
-          <section>
-            <h5>Conceptual vs. Technical (SQL) Terms</h5>
+            <h3>Conceptual vs Technical (SQL) Terms</h3>
             <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;">
               <thead>
                 <tr>
@@ -4107,104 +4362,66 @@ Book -- Member : borrows
             </table>
           </section>
 
+          <!-- 31 (left SQL, right figure) -->
           <section>
+            <h3>From ERD to Database Schema</h3>
+            <div class="split">
+              <div class="left">
+                <pre style="white-space: pre-wrap; word-break: break-word;font-size: 9pt"><code class="sql">CREATE TABLE Customer (
+  CustomerID INTEGER PRIMARY KEY AUTOINCREMENT,
+  Name VARCHAR(100) NOT NULL,
+  Email VARCHAR(100) UNIQUE,
+  Phone VARCHAR(15)
+);
 
-            <div style="display: flex;">
+CREATE TABLE Bike (
+  BikeID INTEGER PRIMARY KEY AUTOINCREMENT,
+  Model VARCHAR(100) NOT NULL,
+  Color VARCHAR(50),
+  Condition VARCHAR(50),
+  Availability BOOLEAN DEFAULT TRUE
+);
 
-              <div style="width: 50%;">
-                <img src="erd6.png" alt="Entity-Relationship Diagram (ERD) showcasing attributes and their constraints"
-                  style="width: 100%; height: auto;">
+CREATE TABLE RentalTransaction (
+  RentalID INTEGER PRIMARY KEY AUTOINCREMENT,
+  CustomerID INTEGER NOT NULL,
+  BikeID INTEGER NOT NULL,
+  BookingDate DATE NOT NULL,
+  ReturnDate DATE,
+  FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
+  FOREIGN KEY (BikeID) REFERENCES Bike(BikeID)
+);
+</code></pre>
               </div>
-              <div style="width: 50%;">
-                <pre style="white-space: pre-wrap; word-break: break-word;font-size: 9pt"><code class="sql">    CREATE TABLE Customer (
-          CustomerID INTEGER PRIMARY KEY AUTOINCREMENT,
-          Name VARCHAR(100) NOT NULL,
-          Email VARCHAR(100) UNIQUE,
-          Phone VARCHAR(15)
-      );
-
-      CREATE TABLE Bike (
-          BikeID INTEGER PRIMARY KEY AUTOINCREMENT,
-          Model VARCHAR(100) NOT NULL,
-          Color VARCHAR(50),
-          Condition VARCHAR(50),
-          Availability BOOLEAN DEFAULT TRUE
-      );
-
-      CREATE TABLE RentalTransaction (
-          RentalID INTEGER PRIMARY KEY AUTOINCREMENT,
-          CustomerID INTEGER NOT NULL,
-          BikeID INTEGER NOT NULL,
-          BookingDate DATE NOT NULL,
-          ReturnDate DATE,
-          FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
-          FOREIGN KEY (BikeID) REFERENCES Bike(BikeID)
-      );
-                        </code></pre>
+              <div class="right">
+                <img class="img-fit" src="erd6.png" alt="ERD showcasing constraints">
               </div>
-
             </div>
           </section>
 
+          <!-- 32 -->
           <section>
-            <h5>Question?</h5>
+            <div class="split">
+              <div class="left">
+                <h3>Misaligned Data Types</h3>
+                <ul class="tight">
+                  <li>Same data, different types across layers</li>
+                  <li>Causes validation failures and data loss</li>
+                  <li>DB rejects invalid formats</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Example risk:
+-- UI collects phone as text "+1-123-456"
+-- DB column INTEGER
+-- Insert fails or loses formatting</code></pre>
+              </div>
+            </div>
           </section>
 
+          <!-- 33 -->
           <section>
-            <h5>Practice SQL Queries</h5>
-
-            <pre style="white-space: pre-wrap; word-break: break-word;font-size: 9pt"><code class="sql">
-    CREATE TABLE Customer (
-        CustomerID INTEGER PRIMARY KEY AUTOINCREMENT,
-        Name VARCHAR(100) NOT NULL,
-        Email VARCHAR(100) UNIQUE,
-        Phone VARCHAR(15)
-    );
-
-    CREATE TABLE Bike (
-        BikeID INTEGER PRIMARY KEY AUTOINCREMENT,
-        Model VARCHAR(100) NOT NULL,
-        Color VARCHAR(50),
-        Condition VARCHAR(50),
-        Availability BOOLEAN DEFAULT TRUE
-    );
-
-    CREATE TABLE RentalTransaction (
-        RentalID INTEGER PRIMARY KEY AUTOINCREMENT,
-        CustomerID INTEGER NOT NULL,
-        BikeID INTEGER NOT NULL,
-        BookingDate DATE NOT NULL,
-        ReturnDate DATE,
-        FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
-        FOREIGN KEY (BikeID) REFERENCES Bike(BikeID)
-    );
-                </code></pre>
-
-          </section>
-
-          <section id="jan-17">
-            <h5>Agenda</h5>
-            <ul>
-              <li>Review Questions</li>
-              <li>Case Study:</li>
-              <ul>
-                <li>Plant Watering Database Application</li>
-                <li>Entity Relationship Diagram</li>
-                <li>SQLite: Embedded Device Database</li>
-                <li>SQLite: Installation</li>
-                <li>SQLite: CRUD Query</li>
-              </ul>
-              <li>Review Lab 1, Homework 1</li>
-            </ul>
-          </section>
-
-          <section>
-            <h5>Review Questions</h5>
-            <p>Why must Front-End, Back-End, and Database data types be aligned?</p>
-          </section>
-
-          <section>
-            <h5>Examples of Misaligned Data Types</h5>
+            <h3>Examples of Misaligned Data Types</h3>
             <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;">
               <thead>
                 <tr>
@@ -4219,368 +4436,106 @@ Book -- Member : borrows
                   <td>Text input for phone number</td>
                   <td>String validation for format</td>
                   <td>INTEGER type</td>
-                  <td>Formatted numbers (e.g., +1-123-456) are rejected by the database</td>
+                  <td>Formatted numbers rejected</td>
                 </tr>
                 <tr>
                   <td>Dropdown allows decimal selection</td>
                   <td>Expects integer values</td>
                   <td>FLOAT type</td>
-                  <td>Back-end fails due to unexpected decimal input</td>
+                  <td>Unexpected decimal input</td>
                 </tr>
                 <tr>
                   <td>Date picker with local format</td>
-                  <td>Assumes ISO 8601 format</td>
+                  <td>Assumes ISO format</td>
                   <td>DATE type</td>
-                  <td>Date conversion errors lead to failed database insertion</td>
+                  <td>Date conversion errors</td>
                 </tr>
               </tbody>
             </table>
           </section>
 
+          <!-- 34 -->
           <section>
-            <h5>Challenges of Misaligned Data Types</h5>
-            <ul>
-              <li>Validation Errors</li>
-              <li>Data Loss</li>
-              <li>Format Mismatch</li>
-              <li>Database Rejections</li>
-              <li>Unexpected Behavior</li>
-            </ul>
+            <div class="split">
+              <div class="left">
+                <h3>ERD Quiz (1/3)</h3>
+                <ul class="tight">
+                  <li><strong>Question:</strong> What does an entity represent?</li>
+                  <li>A. A database table</li>
+                  <li>B. A real world object or concept</li>
+                  <li>C. A relationship between tables</li>
+                  <li>D. A data attribute</li>
+                </ul>
+                <button onclick="document.getElementById('m2_q1').style.display='block'">Show Correct Answer</button>
+                <div id="m2_q1" style="display:none; margin-top:12px;" class="highlight">Correct Answer: B</div>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Entity → table later
+-- Example: Customer, Bike</code></pre>
+              </div>
+            </div>
           </section>
 
+          <!-- 35 -->
           <section>
-            <h5>Entity-Relationship Diagram: Quiz (1/3)</h5>
-            <p><strong>Question 1:</strong> What does an entity represent in an ERD?</p>
-            <ul>
-              <li>A. A database table</li>
-              <li>B. A real-world object or concept</li>
-              <li>C. A relationship between tables</li>
-              <li>D. A data attribute</li>
-            </ul>
-            <button onclick="document.getElementById('correctX1Y3').style.display='block'">Show Correct
-              Answer</button>
-            <p id="correctX1Y3" style="display:none;" class="highlight">Correct Answer: B. A real-world object or
-              concept</p>
+            <div class="split">
+              <div class="left">
+                <h3>ERD Quiz (2/3)</h3>
+                <ul class="tight">
+                  <li><strong>Question:</strong> What is the purpose of a relationship?</li>
+                  <li>A. To store data</li>
+                  <li>B. To define data types</li>
+                  <li>C. To show how entities connect</li>
+                  <li>D. To create unique identifiers</li>
+                </ul>
+                <button onclick="document.getElementById('m2_q2').style.display='block'">Show Correct Answer</button>
+                <div id="m2_q2" style="display:none; margin-top:12px;" class="highlight">Correct Answer: C</div>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Relationship example:
+-- Customer rents Bike</code></pre>
+              </div>
+            </div>
           </section>
 
+          <!-- 36 -->
           <section>
-            <h5>Entity-Relationship Diagram: Quiz (2/3)</h5>
-            <p><strong>Question 2:</strong> What is the purpose of a relationship in an ERD?</p>
-            <ul>
-              <li>A. To store data</li>
-              <li>B. To define data types</li>
-              <li>C. To show how entities connect</li>
-              <li>D. To create unique identifiers</li>
-            </ul>
-            <button onclick="document.getElementById('correctA4B2Z').style.display='block'">Show Correct
-              Answer</button>
-            <p id="correctA4B2Z" style="display:none;" class="highlight">Correct Answer: C. To show how entities
-              connect</p>
+            <div class="split">
+              <div class="left">
+                <h3>ERD Quiz (3/3)</h3>
+                <ul class="tight">
+                  <li><strong>Question:</strong> What is the purpose of a primary key?</li>
+                  <li>A. Allow duplicate rows</li>
+                  <li>B. Uniquely identify each row</li>
+                  <li>C. Establish relationships</li>
+                  <li>D. Enforce data types</li>
+                </ul>
+                <button onclick="document.getElementById('m2_q3').style.display='block'">Show Correct Answer</button>
+                <div id="m2_q3" style="display:none; margin-top:12px;" class="highlight">Correct Answer: B</div>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Primary key column:
+-- CustomerID INTEGER PRIMARY KEY</code></pre>
+              </div>
+            </div>
           </section>
 
+          <!-- 37 -->
           <section>
-            <h5>Entity-Relationship Diagram: Quiz (3/3)</h5>
-            <p><strong>Question 3:</strong> What is the purpose of the primary key in a database?</p>
-            <ul>
-              <li>A. To allow duplicate rows in a table</li>
-              <li>B. To uniquely identify each row in a table</li>
-              <li>C. To establish a relationship between two tables</li>
-              <li>D. To enforce data types for attributes</li>
-            </ul>
-            <button onclick="document.getElementById('correctPrimaryKeyQ3').style.display='block'">Show Correct
-              Answer</button>
-            <p id="correctPrimaryKeyQ3" style="display:none;" class="highlight">Correct Answer: B. To uniquely
-              identify each row in a table</p>
+            <div class="full-visual">
+              <div class="frame" style="display:flex;align-items:center;justify-content:center;flex-direction:column;">
+                <h3 style="margin:0;">How to Model Relationships in ERD?</h3>
+                <p style="margin:10px 0 0 0;" class="muted">Cardinality matters: 1:1, 1:N, N:N</p>
+              </div>
+            </div>
           </section>
 
-          <section>
-            <h5>Database Quiz: Tables (1/3)</h5>
-            <p><strong>Question 1:</strong> What does a table in a database represent?</p>
-            <ul>
-              <li>A. A collection of databases</li>
-              <li>B. A structured collection of rows and columns</li>
-              <li>C. A single data type</li>
-              <li>D. A relationship between entities</li>
-            </ul>
-            <button onclick="document.getElementById('correctTableQ1').style.display='block'">Show Correct
-              Answer</button>
-            <p id="correctTableQ1" style="display:none;" class="highlight">Correct Answer: B. A structured
-              collection of rows and columns</p>
-          </section>
-
-          <section>
-            <h5>Database Quiz: Table Attributes (2/3)</h5>
-            <p><strong>Question 2:</strong> What does a table attribute represent?</p>
-            <ul>
-              <li>A. A row in the table</li>
-              <li>B. A unique identifier</li>
-              <li>C. A column that defines a property of the entity</li>
-              <li>D. A collection of tables</li>
-            </ul>
-            <button onclick="document.getElementById('correctAttrQ2').style.display='block'">Show Correct
-              Answer</button>
-            <p id="correctAttrQ2" style="display:none;" class="highlight">Correct Answer: C. A column that defines a
-              property of the entity</p>
-          </section>
-
-          <section>
-            <h5>Database Quiz: Data Types (3/3)</h5>
-            <p><strong>Question 3:</strong> Which of the following is a valid SQL data type?</p>
-            <ul>
-              <li>A. INTEGER</li>
-              <li>B. COLUMN</li>
-              <li>C. TABLE</li>
-              <li>D. RELATION</li>
-            </ul>
-            <button onclick="document.getElementById('correctDataTypeQ3').style.display='block'">Show Correct
-              Answer</button>
-            <p id="correctDataTypeQ3" style="display:none;" class="highlight">Correct Answer: A. INTEGER</p>
-          </section>
-
-          <section>
-            <h5>Database Quiz: Tables (1/3)</h5>
-            <p><strong>Question 1:</strong> What does a table in a database represent?</p>
-            <ul>
-              <li>A. A collection of databases</li>
-              <li>B. A structured collection of rows and columns</li>
-              <li>C. A single data type</li>
-              <li>D. A relationship between entities</li>
-            </ul>
-            <button onclick="document.getElementById('correctTableQ1').style.display='block'">Show Correct
-              Answer</button>
-            <p id="correctTableQ1" style="display:none;" class="highlight">Correct Answer: B. A structured
-              collection of rows and columns</p>
-          </section>
-
-          <section>
-            <h5>Database Quiz: Constraints (1/3)</h5>
-            <p><strong>Question 1:</strong> What is the purpose of a primary key?</p>
-            <ul>
-              <li>A. To ensure a column accepts NULL values</li>
-              <li>B. To uniquely identify each row in a table</li>
-              <li>C. To define relationships between databases</li>
-              <li>D. To store default values</li>
-            </ul>
-            <button onclick="document.getElementById('correctPrimaryKeyQ1').style.display='block'">Show Correct
-              Answer</button>
-            <p id="correctPrimaryKeyQ1" style="display:none;" class="highlight">Correct Answer: B. To uniquely
-              identify each row in a table</p>
-          </section>
-
-          <section>
-            <h5>Database Quiz: Constraints (2/3)</h5>
-            <p><strong>Question 2:</strong> What does the NOT NULL constraint ensure?</p>
-            <ul>
-              <li>A. A column cannot have duplicate values</li>
-              <li>B. A column cannot have NULL values</li>
-              <li>C. A column must be a primary key</li>
-              <li>D. A column stores only numeric values</li>
-            </ul>
-            <button onclick="document.getElementById('correctNotNullQ2').style.display='block'">Show Correct
-              Answer</button>
-            <p id="correctNotNullQ2" style="display:none;" class="highlight">Correct Answer: B. A column cannot have
-              NULL values</p>
-          </section>
-
-          <section>
-            <h5>Database Quiz: SQL Queries (1/2)</h5>
-            <p><strong>Question 1:</strong> How do you select all bicycles that are available?</p>
-            <ul>
-              <li>A. SELECT * FROM Bicycle WHERE Available = TRUE;</li>
-              <li>B. SELECT BicycleID FROM Bicycle;</li>
-              <li>C. SELECT * FROM Bicycle WHERE Available = FALSE;</li>
-              <li>D. SELECT All FROM Bicycle;</li>
-            </ul>
-            <button onclick="document.getElementById('correctSelectBikeQ1').style.display='block'">Show Correct
-              Answer</button>
-            <p id="correctSelectBikeQ1" style="display:none;" class="highlight">Correct Answer: A. SELECT * FROM
-              Bicycle WHERE Available = TRUE;</p>
-          </section>
-
-          <section>
-            <h5>Database Quiz: SQL Queries (2/2)</h5>
-            <p><strong>Question 2:</strong> How do you update bicycle 2 to set it as unavailable?</p>
-            <ul>
-              <li>A. UPDATE Bicycle SET Available = TRUE WHERE BicycleID = 2;</li>
-              <li>B. UPDATE Bicycle SET Available = FALSE WHERE BicycleID = 2;</li>
-              <li>C. UPDATE Bicycle SET BicycleID = 2 WHERE Available = FALSE;</li>
-              <li>D. UPDATE Bicycle SET Availability = FALSE;</li>
-            </ul>
-            <button onclick="document.getElementById('correctUpdateBikeQ2').style.display='block'">Show Correct
-              Answer</button>
-            <p id="correctUpdateBikeQ2" style="display:none;" class="highlight">Correct Answer: B. UPDATE Bicycle
-              SET Available = FALSE WHERE BicycleID = 2;</p>
-          </section>
-
-          <section>
-            <h5>Question?</h5>
-          </section>
-
-          <section>
-            <h5>Case Study</h5>
-            <p>Plant Watering Database Application</p>
-          </section>
-
-          <section>
-            <h5>Plant Watering Database Application</h5>
-            <img src="https://maker.pro/storage/7acb33c/7acb33ce932a4ace3d4364566e107dce.jpeg"
-              alt="Arduino Soil Moisture Sensor" style="max-width: 100%; height: auto;">
-          </section>
-
-          <section>
-            <h5>Database Requirements</h5>
-            <ul>
-              <li>Store sensor readings</li>
-              <li>Save plant-specific moisture thresholds</li>
-              <li>Log watering events and timestamps</li>
-            </ul>
-            <p><a
-                href="https://docs.google.com/document/d/1l3y3GKZYv2LRjdzHWMYrX2vNiZYTBISHz7ebnxm4a0s/edit?usp=sharing"
-                target="_blank">What entities do you recommend?</a></p>
-          </section>
-
-          <section>
-            <h5><a href="https://plantuml-editor.kkeisuke.com/" target="_blank">PlantUML Template Editor</a>
-            </h5>
-            <pre style="font-size: 10pt;">
-@startuml
-entity "Entity1" as E1 {
-    +Attribute1 : 
-    +Attribute2 : 
-    +Attribute3 : 
-}
-
-entity "Entity2" as E2 {
-    +Attribute1 : 
-    +Attribute2 : 
-    +Attribute3 : 
-}
-
-entity "Entity3" as E3 {
-    +Attribute1 : 
-    +Attribute2 : 
-    +Attribute3 : 
-}
-@enduml
-                    </pre>
-          </section>
-
-          <section>
-            <h5>Agenda</h5>
-            <ul>
-              <li>Review Questions</li>
-              <li>Modeling Relationship in ERM</li>
-              <li>Modeling Relationship in SQL</li>
-              <li>Query Types in SQL</li>
-              <li>Review Lab 1, Homework 1</li>
-            </ul>
-          </section>
-
-          <section>
-            <h5>SQLite Queries</h5>
-            <p>What is a difference between SQL and SQLite?</p>
-            <ul>
-              <li>A. SQL is a standard language, while SQLite is a database management system</li>
-              <li>B. SQLite is serverless, while SQL databases usually require a server</li>
-              <li>C. SQL does not support transactions, but SQLite does</li>
-              <li>D. SQLite can only be used with web applications</li>
-            </ul>
-            <button onclick="document.getElementById('correctSqliteQ3').style.display='block'">Show Correct
-              Answer</button>
-            <p id="correctSqliteQ3" style="display:none;" class="highlight">Correct Answers: A. and B</p>
-          </section>
-
-          <section>
-            <h5>SQLite Queries</h5>
-            <p>Which SQLite command is used to display the table schema?</p>
-            <ul>
-              <li>A. .show table_name;</li>
-              <li>B. DESCRIBE table_name;</li>
-              <li>C. .schema table_name;</li>
-              <li>D. SHOW COLUMNS FROM table_name;</li>
-            </ul>
-            <button onclick="document.getElementById('correctSqliteQ1').style.display='block'">Show Correct
-              Answer</button>
-            <p id="correctSqliteQ1" style="display:none;" class="highlight">Correct Answer: C. .schema table_name;
-            </p>
-          </section>
-
-          <section>
-            <h5>SQLite Queries</h5>
-            <p>Which SQLite command executes SQL statements from a file?</p>
-            <ul>
-              <li>A. .import file_name.sql;</li>
-              <li>B. .run file_name.sql;</li>
-              <li>C. .execute file_name.sql;</li>
-              <li>D. .read file_name.sql;</li>
-            </ul>
-            <button onclick="document.getElementById('correctSqliteQ2').style.display='block'">Show Correct
-              Answer</button>
-            <p id="correctSqliteQ2" style="display:none;" class="highlight">Correct Answer: D. .read file_name.sql;
-            </p>
-          </section>
-
-          <section>
-            <h5>SQL Queries</h5>
-            <p>Which is the correct syntax to create a table in SQLite?</p>
-            <ul>
-              <li>A. CREATE DATABASE Students;</li>
-              <li>B. CREATE TABLE Students (ID INTEGER PRIMARY KEY, Name TEXT, Age INTEGER);</li>
-              <li>C. CREATE Students TABLE (ID INTEGER PRIMARY KEY, Name TEXT, Age INTEGER);</li>
-              <li>D. MAKE TABLE Students (ID INTEGER, Name TEXT, Age INTEGER);</li>
-            </ul>
-            <button onclick="document.getElementById('correctSqliteQ4').style.display='block'">Show Correct
-              Answer</button>
-            <p id="correctSqliteQ4" style="display:none;" class="highlight">Correct Answer: B</p>
-          </section>
-
-          <section>
-            <h5>SQL Queries</h5>
-            <p>Which syntax updates the age of student 'Alice' in the table?</p>
-            <ul>
-              <li>A. UPDATE Students SET Age = 23 WHERE Name = 'Alice';</li>
-              <li>B. MODIFY Students SET Age = 23 WHERE Name = 'Alice';</li>
-              <li>C. CHANGE Students SET Age = 23 WHERE Name = 'Alice';</li>
-              <li>D. ALTER Students SET Age = 23 WHERE Name = 'Alice';</li>
-            </ul>
-            <button onclick="document.getElementById('correctSqliteQ6').style.display='block'">Show Correct
-              Answer</button>
-            <p id="correctSqliteQ6" style="display:none;" class="highlight">Correct Answer: A</p>
-          </section>
-
-          <section>
-            <h5>SQL Queries</h5>
-            <p>How do you write an SQL query to create a table named 'Book' with columns for ID, Title, and
-              Author?</p>
-            <p>Please write answer <a
-                href="https://docs.google.com/document/d/1l3y3GKZYv2LRjdzHWMYrX2vNiZYTBISHz7ebnxm4a0s/edit?usp=sharing"
-                target="_blank">here</a></p>
-          </section>
-
-          <section>
-            <h5>Question?</h5>
-          </section>
-
-          <section>
-            <h5>Agenda</h5>
-            <ul>
-              <li>Review Questions &check;</li>
-              <li>Modeling Relationship in ERM</li>
-              <li>Modeling Relationship in SQL</li>
-              <li>Query Types in SQL</li>
-              <li>Review Lab 1, Homework 1</li>
-            </ul>
-          </section>
-
-          <section>
-            <p>How to model relationships between entities in ERD?</p>
-          </section>
-
+          <!-- 38 -->
           <section>
             <div style="display: flex; justify-content: space-around; align-items: flex-start;">
               <div style="width: 33%; text-align: center;">
                 <p>1 Entity<br>0 Relationship</p>
-                <img src="./booknton.png" alt="One-to-One ERD" style="width: 100%;">
+                <img src="./union1.png" alt="One-to-One ERD" style="width: 100%;">
               </div>
               <div style="width: 33%; text-align: center;">
                 <p>2 Entity<br>1 Relationship</p>
@@ -4588,46 +4543,78 @@ entity "Entity3" as E3 {
               </div>
               <div style="width: 33%; text-align: center;">
                 <p>3 Entity<br>2 Relationship</p>
-                <img src="bookLibrary1ton.png" alt="Many-to-Many ERD" style="width: 100%;">
+                <img src="booknton.png" alt="Many-to-Many ERD" style="width: 100%;">
               </div>
             </div>
           </section>
 
           <section>
-            <h5>Why Use Minimum Relationships?</h5>
-            <ul>
-              <li><strong>Performance:</strong> Fewer relationships mean faster queries</li>
-              <li><strong>Simplicity:</strong> Easier to design, maintain, and understand</li>
-              <li><strong>Storage Efficiency:</strong> Reduces unnecessary data duplication</li>
-              <li><strong>Query Optimization:</strong> Minimizes complex joins and indexing overhead</li>
-              <li><strong>Consistency:</strong> Less chance of data inconsistencies</li>
-            </ul>
-          </section>
-
-          <section>
-            <h5>Relationship Types (Cardinality)</h5>
-            <div style="display: flex; justify-content: space-around;">
-              <div>
-                <h5>1:1</h5>
-                <p>Each record links to one record</p>
-                <p><strong>Entities:</strong> 1</p>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Travel booking application domain</li>
+                  <li>Users search and compare options</li>
+                  <li>Bookings include flights, hotels, and rental cars</li>
+                  <li>Attributes capture price, date, and location</li>
+                </ul>
               </div>
-              <div>
-                <h5>1:N</h5>
-                <p>One record links to many records</p>
-                <p><strong>Entities:</strong> 2</p>
-              </div>
-              <div>
-                <h5>N:N</h5>
-                <p>Many records link to many records</p>
-                <p><strong>Entities:</strong> 3</p>
+              <div class="right">
+                <img class="img-fit" src="erd5.png" alt="ERD for booking application">
               </div>
             </div>
           </section>
 
+          <!-- 39 -->
           <section>
-            <h5>When to Use Relationship Type?</h5>
-            <table border="1" width="100%">
+            <div class="split">
+              <div class="left">
+                <h3>Why Minimum Relationships?</h3>
+                <ul class="tight">
+                  <li>Performance: fewer joins</li>
+                  <li>Simplicity: easier to maintain</li>
+                  <li>Clarity: easier to explain and test</li>
+                  <li>Consistency: fewer places for mismatch</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Design tip:
+-- prefer the simplest ERD that meets requirements
+-- add complexity only when needed</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 40 -->
+          <section>
+            <h3>Relationship Types (Cardinality)</h3>
+            <table border="1" width="100%" style="border-collapse: collapse;">
+              <tr>
+                <th>Cardinality</th>
+                <th>Meaning</th>
+                <th>Example</th>
+              </tr>
+              <tr>
+                <td><strong>1:1</strong></td>
+                <td>Each record links to one record</td>
+                <td>User and Profile</td>
+              </tr>
+              <tr>
+                <td><strong>1:N</strong></td>
+                <td>One record links to many records</td>
+                <td>Customer and Rentals</td>
+              </tr>
+              <tr>
+                <td><strong>N:N</strong></td>
+                <td>Many records link to many records</td>
+                <td>Students and Courses</td>
+              </tr>
+            </table>
+          </section>
+
+          <!-- 41 -->
+          <section>
+            <h3>When to Use Relationship Type?</h3>
+            <table border="1" width="100%" style="border-collapse: collapse;">
               <tr>
                 <th>Cardinality</th>
                 <th>When to Use</th>
@@ -4635,40 +4622,56 @@ entity "Entity3" as E3 {
               </tr>
               <tr>
                 <td><strong>1:1</strong></td>
-                <td>When each record in one table corresponds to exactly one record in another table</td>
+                <td>Each record in one table corresponds to exactly one record in another table</td>
                 <td>User and Profile</td>
               </tr>
               <tr>
                 <td><strong>1:N</strong></td>
-                <td>When one record can be associated with multiple records in another table</td>
+                <td>One record can be associated with multiple records in another table</td>
                 <td>Library and Books</td>
               </tr>
               <tr>
                 <td><strong>N:N</strong></td>
-                <td>When multiple records in both tables can be related to each other</td>
+                <td>Multiple records in both tables can be related to each other</td>
                 <td>Students and Courses</td>
               </tr>
             </table>
           </section>
 
+          <!-- 42 -->
           <section>
-            <p>How to query relationships between entities in ERD?</p>
-            <div style="display: flex; justify-content: center;">
-              <div>
-                <pre><code class="sql" style="font-size: 9pt; white-space: pre-wrap; word-wrap: break-word; width: 960px;">
-SELECT Book.title FROM Book WHERE Book.isbnId = '978-1-';
+            <div class="split">
+              <div class="left">
+                <h3>Querying Relationships</h3>
+                <ul class="tight">
+                  <li>One relationship → one join</li>
+                  <li>More relationships → more joins</li>
+                  <li>Start from the filtering table</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql" style="font-size: 9pt; white-space: pre-wrap; word-wrap: break-word;">SELECT Book.title
+FROM Book
+WHERE Book.isbnId = '978-1-';
 
-SELECT Book.title FROM Book, ISBN WHERE Book.bookId = ISBN.bookId AND ISBN.isbnId = '978-1-';
+SELECT Book.title
+FROM Book, ISBN
+WHERE Book.bookId = ISBN.bookId
+  AND ISBN.isbnId = '978-1-';
 
-SELECT Book.title FROM Book, ISBN, Book_ISBN WHERE Book.bookId = Book_ISBN.bookId AND ISBN.isbnId = Book_ISBN.isbnId AND ISBN.isbnId = '978-1-';
-                </code></pre>
+SELECT Book.title
+FROM Book, ISBN, Book_ISBN
+WHERE Book.bookId = Book_ISBN.bookId
+  AND ISBN.isbnId = Book_ISBN.isbnId
+  AND ISBN.isbnId = '978-1-';</code></pre>
               </div>
             </div>
           </section>
 
+          <!-- 43 -->
           <section>
-            <h5>Which Relationship?</h5>
-            <table border="1" width="100%">
+            <h3>Which Relationship?</h3>
+            <table border="1" width="100%" style="border-collapse: collapse;">
               <tr>
                 <th>#</th>
                 <th>Scenario</th>
@@ -4727,297 +4730,66 @@ SELECT Book.title FROM Book, ISBN, Book_ISBN WHERE Book.bookId = Book_ISBN.bookI
             </table>
           </section>
 
+          <!-- 44 -->
           <section>
-            <h5>Agenda</h5>
-            <ul>
-              <li>Review Questions &check;</li>
-              <li>Modeling Relationship in ERM &check;</li>
-              <li>Modeling Relationship in SQL</li>
-              <li>Query Types in SQL</li>
-              <li>Review Lab 1, Homework 1</li>
-            </ul>
+            <div class="split">
+              <div class="left">
+                <h3>Module 2 Recap</h3>
+                <ul class="tight">
+                  <li>Requirements drive the model</li>
+                  <li>Entities (nouns) become tables</li>
+                  <li>Relationships (verbs) connect entities</li>
+                  <li>Attributes need types and constraints</li>
+                  <li>ERD becomes SQL schema</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Next step:
+-- use your ERD to justify every CREATE TABLE line</code></pre>
+              </div>
+            </div>
           </section>
 
           <section>
-            <h5>Implement Relationships in SQL</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Draft an ERD for a bike rental store</li>
+                  <li>Identify core entities (e.g., Bike, Customer, Rental)</li>
+                  <li>List key attributes for each entity</li>
+                  <li>Mark primary key attributes</li>
+                  <li>Decide which entities are connected</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="plantuml">
+@startuml
+entity "EntityA" as A {
+  +id : INTEGER
+  attribute_1 : VARCHAR
+  attribute_2 : INTEGER
+}
+
+entity "EntityB" as B {
+  +id : INTEGER
+  attribute_1 : VARCHAR
+}
+
+A -- B : "relationship"
+@enduml
+      </code></pre>
+              </div>
+            </div>
+
             <div>
-              <img src="bookLibrary1ton.png" alt="Book to Library Relationship">
+              <a href="https://sujoyu.github.io/plantuml-previewer/" target="_blank">
+                https://sujoyu.github.io/plantuml-previewer/
+              </a>
             </div>
+
           </section>
 
-          <section>
-            <h5>Implement Relationships in SQL</h5>
-            <ul>
-              <li><strong>Primary Key:</strong> Uniquely identifies a record in a table</li>
-              <li><strong>Foreign Key:</strong> A reference to a primary key in another table</li>
-            </ul>
-          </section>
-
-          <section>
-            <h5>Implement Relationships in SQL</h5>
-            <table border="1" width="100%">
-              <tr>
-                <th>Property</th>
-                <th>Description</th>
-              </tr>
-              <tr>
-                <td><strong>Uniqueness</strong></td>
-                <td>Each value must be unique across all records</td>
-              </tr>
-              <tr>
-                <td><strong>Non-null</strong></td>
-                <td>Primary key values cannot be NULL</td>
-              </tr>
-              <tr>
-                <td><strong>Immutability</strong></td>
-                <td>Once assigned, the primary key value should not change</td>
-              </tr>
-              <tr>
-                <td><strong>Single-column or Composite</strong></td>
-                <td>Can consist of one column or a combination of multiple columns</td>
-              </tr>
-              <tr>
-                <td><strong>Indexed</strong></td>
-                <td>Primary keys are automatically indexed for faster lookups</td>
-              </tr>
-            </table>
-          </section>
-
-          <section>
-            <div style="display: flex; align-items: center;">
-              <div style="width: 40%;">
-                <img src="bookLibrary1ton.png" alt="Book to Library Relationship" style="width: 100%;">
-              </div>
-              <div style="width: 60%;">
-                <pre><code class="sql">
-CREATE TABLE Book (
-    bookId INTEGER PRIMARY KEY,
-    title VARCHAR(255),
-    libraryId INTEGER FOREIGN KEY REFERENCES Library(libraryId)
-);
-
-CREATE TABLE Library (
-    libraryId INTEGER PRIMARY KEY,
-    name VARCHAR(255),
-    location VARCHAR(255)
-);
-                            </code></pre>
-              </div>
-            </div>
-          </section>
-
-          <section>
-            <h5>Implement Relationships in SQL</h5>
-            <p>
-            <pre><code class="sql">libraryId INTEGER FOREIGN KEY REFERENCES Library(libraryId) -- establishes a one-to-many relationship:</code></pre>
-            </p>
-
-            <ul>
-              <li><strong>One Library:</strong> A single library can have multiple books</li>
-              <li><strong>Many Books:</strong> Each book belongs to exactly one library</li>
-              <li><strong>Foreign Key:</strong> Ensures referential integrity by linking Book.libraryId to
-                Library.libraryId</li>
-              <li><strong>Cardinality:</strong> 1:N (One library to many books)</li>
-            </ul>
-          </section>
-
-          <section>
-            <h5>SQL Queries on Book and Library</h5>
-            <pre><code class="sql" style="font-size: 10pt; white-space: pre-wrap; word-wrap: break-word; width: 100%;">
--- Insert data into Library
-INSERT INTO Library (libraryId, name, location) 
-VALUES (1, 'Central Library', 'Downtown');
-
--- Insert data into Book
-INSERT INTO Book (bookId, title, libraryId) 
-VALUES (101, 'Database Design', 1);
-
--- Retrieve books and their library details
-SELECT Book.title, Library.name, Library.location 
-FROM Book, Library 
-WHERE Book.libraryId = Library.libraryId;
-                    </code></pre>
-          </section>
-
-          <section>
-            <h5>SQL Queries on Book and Library</h5>
-            <table border="1" width="100%">
-              <tr>
-                <th>bookId</th>
-                <th>title</th>
-                <th>libraryId</th>
-              </tr>
-              <tr>
-                <td>1</td>
-                <td>Introduction to SQL</td>
-                <td>101</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Database Design Principles</td>
-                <td>101</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>Advanced Database Systems</td>
-                <td>102</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>Big Data Analytics</td>
-                <td>103</td>
-              </tr>
-              <tr>
-                <td>5</td>
-                <td>Machine Learning with SQL</td>
-                <td>101</td>
-              </tr>
-            </table>
-          </section>
-
-          <section>
-            <h5>Question?</h5>
-          </section>
-
-          <section>
-            <h5>Agenda</h5>
-            <ul>
-              <li>Review Questions &check;</li>
-              <li>Modeling Relationship in ERM &check;</li>
-              <li>Modeling Relationship in SQL &check;</li>
-              <li>Query Types in SQL</li>
-              <li>Review Lab 1, Homework 1</li>
-            </ul>
-          </section>
-
-          <section>
-            <h5>SQL Query Types</h5>
-            <table border="1" width="100%">
-              <tr>
-                <th>Query Type</th>
-                <th>Description</th>
-                <th>Example</th>
-              </tr>
-              <tr>
-                <td><strong>Data Definition (DDL)</strong></td>
-                <td>Used to define and modify database schema and attributes</td>
-                <td><code>CREATE TABLE Library (...);</code></td>
-              </tr>
-              <tr>
-                <td><strong>Data Control (DCL)</strong></td>
-                <td>Used to control access to data within the database</td>
-                <td><code>GRANT SELECT ON Book TO user;</code></td>
-              </tr>
-              <tr>
-                <td><strong>Data Manipulation (DML)</strong></td>
-                <td>Used to retrieve, insert, update, and delete data in tables</td>
-                <td><code>SELECT * FROM Book;</code></td>
-              </tr>
-              <tr>
-                <td><strong>Transaction Control (TCL)</strong></td>
-                <td>Used to manage transactions and ensure data integrity</td>
-                <td><code>COMMIT;</code></td>
-              </tr>
-            </table>
-          </section>
-
-          <section>
-            <h5>SQL Query Types</h5>
-            <table border="1" width="100%">
-              <tr>
-                <th>#</th>
-                <th>SQL Keyword</th>
-                <th>Type (DDL, DML, DCL, TCL)</th>
-              </tr>
-              <tr>
-                <td>1</td>
-                <td>SELECT</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>INSERT</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>UPDATE</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>DELETE</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>5</td>
-                <td>CREATE</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>6</td>
-                <td>ALTER</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>7</td>
-                <td>DROP</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>9</td>
-                <td>GRANT</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>10</td>
-                <td>REVOKE</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>11</td>
-                <td>COMMIT</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>12</td>
-                <td>ROLLBACK</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>15</td>
-                <td>BEGIN</td>
-                <td></td>
-              </tr>
-            </table>
-          </section>
-
-          <section>
-            <h5>Agenda</h5>
-            <ul>
-              <li>Review Questions &check;</li>
-              <li>Modeling Relationship in ERM &check;</li>
-              <li>Modeling Relationship in SQL &check;</li>
-              <li>Query Types in SQL &check;</li>
-              <li>Review Lab 1, Homework 1</li>
-            </ul>
-          </section>
-
-          <section>
-            <h5>Lab 1 & Homework 1</h5>
-            <ul>
-              <li><strong>Lab 1:</strong> Introduction to SQL and basic queries</li>
-              <li><strong>Homework 1:</strong> Read literature and answer questions</li>
-              <li><strong>Reminder:</strong> Please install SQLite by Friday</li>
-            </ul>
-          </section>
-
-          <section id="jan-24">
-            <h5>Agenda</h5>
-            <p>Lab Exercise: Relationships and Foreign Keys in SQLite</p>
-            <p><a href="https://github.com/SE4CPS/DMS/tree/main/database/SQLite" target="_blank">GitHub
-                Repository</a></p>
-          </section>
+          <section>Questions</section>
 
         </section>
 
@@ -5945,7 +5717,8 @@ CREATE TABLE UserStrict (
         <a href="https://docs.google.com/document/d/1l3y3GKZYv2LRjdzHWMYrX2vNiZYTBISHz7ebnxm4a0s/edit?usp=sharing"
           class="footer-link" target="_blank">SQL Docs</a> |
         <a href="https://onecompiler.com/" class="footer-link" target="_blank">SQL OneCompiler</a> |
-        <!-- <a href="https://plantuml-editor.kkeisuke.com/" class="footer-link" target="_blank">PlantUML</a> -->
+        <a href="https://sujoyu.github.io/plantuml-previewer/" class="footer-link" target="_blank">PlantUML ERD
+          Editor</a>
       </p>
     </div>
 
