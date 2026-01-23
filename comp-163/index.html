@@ -534,7 +534,7 @@
               <tr style="color:#ccc;">
                 <td style="padding:6px; border:1px solid #666;">1 (<a href="./#/c1">Jan 12</a>, <a href="./#/c2">Jan
                     14</a>, <a href="./#/c3">Jan 16</a>)</td>
-                <td style="padding:6px; border:1px solid #666;">
+                <td style="padding:6px; border:1px solid #666;">d
                   <a href="./#/module-1">Introduction to Database Management System</a>
                 </td>
                 <td style="padding:6px; border:1px solid #666;"><a href="./#/lab-1">Lab 1</a> + <a
@@ -544,7 +544,8 @@
               </tr>
 
               <tr style="color:#ccc;">
-                <td style="padding:6px; border:1px solid #666;">2 (Jan 21, 23)</td>
+                <td style="padding:6px; border:1px solid #666;">2 (<a href="./#/c4">Jan 21</a>, <a href="./#/c5">Jan
+                    23</a>)</td>
                 <td style="padding:6px; border:1px solid #666;">
                   <a href="./#/module-2">Entity Relationship Model</a>
                 </td>
@@ -3716,7 +3717,7 @@ Book -- Member : borrows
         <section id="module-2">
 
           <!-- 01 -->
-          <section>
+          <section id="c4">
             <div class="full-visual">
               <div class="frame" style="display:flex;align-items:center;justify-content:center;flex-direction:column;">
                 <h2 style="margin:0;">Module 2</h2>
@@ -4787,6 +4788,839 @@ A -- B : "relationship"
               </a>
             </div>
 
+          </section>
+
+          <!-- 01 -->
+          <section id="c5">
+            <div class="full-visual">
+              <div class="frame" style="display:flex;align-items:center;justify-content:center;flex-direction:column;">
+                <h2 style="margin:0;">Case Study</h2>
+                <h2 style="margin:10px 0 0 0;">Furniture Store Database</h2>
+                <p class="muted" style="margin:12px 0 0 0;">Requirements → ERM → Tables → Data</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- 02 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Agenda</h3>
+                <ul class="tight">
+                  <li>Gather requirements</li>
+                  <li>Extract entities and relationships</li>
+                  <li>Build ERM (PlantUML)</li>
+                  <li>Convert to SQL tables</li>
+                  <li>Insert sample data</li>
+                  <li>Query and maintain data</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Work order:
+-- 1) requirements
+-- 2) ERM / ERD
+-- 3) schema
+-- 4) data
+-- 5) queries</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 03 -->
+          <section>
+            <div class="full-visual">
+              <div class="frame">
+                <svg viewBox="0 0 1200 650" style="width:100%; height:100%; pointer-events:none;">
+                  <text x="600" y="85" text-anchor="middle" font-size="30" fill="#fff">Pipeline</text>
+
+                  <rect x="110" y="220" width="300" height="170" rx="18" fill="rgba(255,255,255,0.06)"
+                    stroke="rgba(255,255,255,0.35)" stroke-width="3" />
+                  <text x="260" y="275" text-anchor="middle" font-size="22" fill="#fff">Requirements</text>
+                  <text x="260" y="312" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.8)">Rules +
+                    scope</text>
+
+                  <rect x="450" y="220" width="300" height="170" rx="18" fill="rgba(255,255,255,0.06)"
+                    stroke="rgba(255,255,255,0.35)" stroke-width="3" />
+                  <text x="600" y="275" text-anchor="middle" font-size="22" fill="#fff">ERM</text>
+                  <text x="600" y="312" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.8)">Entities +
+                    links</text>
+
+                  <rect x="790" y="220" width="300" height="170" rx="18" fill="rgba(255,255,255,0.06)"
+                    stroke="rgba(255,255,255,0.35)" stroke-width="3" />
+                  <text x="940" y="275" text-anchor="middle" font-size="22" fill="#fff">Tables</text>
+                  <text x="940" y="312" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.8)">CREATE
+                    TABLE</text>
+
+                  <line x1="410" y1="305" x2="450" y2="305" stroke="rgba(255,255,255,0.7)" stroke-width="6" />
+                  <polygon points="450,305 435,295 435,315" fill="rgba(255,255,255,0.7)" />
+                  <line x1="750" y1="305" x2="790" y2="305" stroke="rgba(255,255,255,0.7)" stroke-width="6" />
+                  <polygon points="790,305 775,295 775,315" fill="rgba(255,255,255,0.7)" />
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- 04 -->
+          <section
+            style="padding:30px; font-family:'Georgia', serif; background-color:#fff; border:2px solid #000; border-radius:5px; box-shadow:2px 2px 8px rgba(0,0,0,0.1); color:#000;">
+            <h2 style="text-align:center; text-decoration:underline;">Requirement</h2>
+            <p>The store should sell furniture products to customers and record each order.</p>
+          </section>
+
+          <!-- 05 -->
+          <section
+            style="padding:30px; font-family:'Georgia', serif; background-color:#fff; border:2px solid #000; border-radius:5px; box-shadow:2px 2px 8px rgba(0,0,0,0.1); color:#000;">
+            <h2 style="text-align:center; text-decoration:underline;">Requirement</h2>
+            <p>Each order can include multiple products with quantities and prices at the time of purchase.</p>
+          </section>
+
+          <!-- 06 -->
+          <section
+            style="padding:30px; font-family:'Georgia', serif; background-color:#fff; border:2px solid #000; border-radius:5px; box-shadow:2px 2px 8px rgba(0,0,0,0.1); color:#000;">
+            <h2 style="text-align:center; text-decoration:underline;">Requirement</h2>
+            <p>The store should track inventory per product, so staff know what is in stock and what needs reordering.
+            </p>
+          </section>
+
+          <!-- 07 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Requirements</h3>
+                <ul class="tight">
+                  <li>One store location (for now)</li>
+                  <li>Basic customer info</li>
+                  <li>Orders with line items</li>
+                  <li>Inventory count per product</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Design choice:
+-- Keep the first version small.
+-- Add delivery, returns, warehouses later.</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 08 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Nouns → Entities</h3>
+                <ul class="tight">
+                  <li>Customer</li>
+                  <li>Product</li>
+                  <li>Order</li>
+                  <li>OrderItem</li>
+                  <li>Inventory</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Minimal set of tables:
+-- 1) Product   (includes inventory count)
+-- 2) Customer
+-- 3) CustomerProductSales (captures sales rows with two FKs)</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 09 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Key Modeling Decision</h3>
+                <ul class="tight">
+                  <li>We want max 3 tables</li>
+                  <li>Orders still need multiple items</li>
+                  <li>We store each sale as a row with two foreign keys</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Tradeoff:
+-- Normalized: Order + OrderItem (best design)
+-- Constrained: store each sale inCustomerProductSales</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 10 -->
+          <section>
+            <div class="full-visual">
+              <div class="frame" style="padding:28px;">
+                <h3 style="margin-top:0;">What we lose with 3 tables</h3>
+                <ul class="tight">
+                  <li>No separate order header (shipping, payment, etc.)</li>
+                  <li>Harder to model one order with many line items as a single unit</li>
+                  <li>Still acceptable for a first prototype and class demo</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- 11 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Relationships (conceptual)</h3>
+                <ul class="tight">
+                  <li>Customer buys Products (N:N)</li>
+                  <li>Sales rows store qty and unit_price at purchase time</li>
+                  <li>Product stock quantity (1:1 inventory)</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Conceptual ERM:
+-- Customer N:N Product (via CustomerProductSales)
+-- Product carries stock columns (qty_on_hand, reorder_level)</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 12 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>ERM Diagram (PlantUML)</h3>
+                <ul class="tight">
+                  <li>3 tables only</li>
+                  <li>Sales captured as rows with 2 foreign keys</li>
+                  <li>Still shows true business relationships</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="plantuml">@startuml
+hide circle
+skinparam linetype ortho
+skinparam shadowing false
+
+entity "Customer" as Customer {
+  +customer_id : INTEGER
+  --
+  name : VARCHAR
+  email : VARCHAR
+  phone : VARCHAR
+}
+
+entity "Product" as Product {
+  +product_id : INTEGER
+  --
+  sku : VARCHAR
+  name : VARCHAR
+  category : VARCHAR
+  price : DECIMAL
+  qty_on_hand : INTEGER
+  reorder_level : INTEGER
+}
+
+entity "CustomerProductSales" as CustomerProductSales {
+  +sale_id : INTEGER
+  --
+  customer_id : INTEGER (FK)
+  product_id  : INTEGER (FK)
+  sale_date   : DATE
+  qty         : INTEGER
+  unit_price  : DECIMAL
+  status      : VARCHAR
+}
+
+Customer ||--o{ CustomerProductSales : buys
+Product  ||--o{ CustomerProductSales : sold_in
+
+@enduml</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 13 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Sales row format</h3>
+                <ul class="tight">
+                  <li>Each row = one purchased product</li>
+                  <li>Records customer_id and product_id (two FKs)</li>
+                  <li>Captures qty and unit_price at purchase time</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Example row meaning:
+-- customer 1 bought product 5
+-- qty = 2 at unit_price = 89.00 on 2026-01-10</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 14 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Primary Keys</h3>
+                <ul class="tight">
+                  <li>Customer: customer_id</li>
+                  <li>Product: product_id</li>
+                  <li>CustomerProductSales: sale_id</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Primary keys are stable identifiers.
+-- They should not carry meaning.</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 15 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Constraints (simple)</h3>
+                <ul class="tight">
+                  <li>sku UNIQUE</li>
+                  <li>qty_on_hand NOT NULL DEFAULT 0</li>
+                  <li>Sales.customer_id must exist</li>
+                  <li>Sales.product_id must exist</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Constraints catch errors early.
+-- They protect data quality.</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 16 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>From ERM → Tables</h3>
+                <ul class="tight">
+                  <li>Entities become tables</li>
+                  <li>Attributes become columns</li>
+                  <li>Relationships become foreign keys</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Customer ||--o{ CustomerProductSales
+-- FK: CustomerProductSales.customer_id → Customer.customer_id
+-- FK: CustomerProductSales.product_id  → Product.product_id</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 17 (TABLE SLIDE 1/3) -->
+          <section>
+            <h3>Tables Overview (3 only)</h3>
+            <table border="1" cellpadding="6" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+              <thead>
+                <tr>
+                  <th>Table</th>
+                  <th>Purpose</th>
+                  <th>Key Columns</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Customer</td>
+                  <td>Who buys</td>
+                  <td>customer_id (PK), email (UNIQUE)</td>
+                </tr>
+                <tr>
+                  <td>Product</td>
+                  <td>What is sold and stock count</td>
+                  <td>product_id (PK), sku (UNIQUE), qty_on_hand</td>
+                </tr>
+                <tr>
+                  <td>CustomerProductSales</td>
+                  <td>Sales rows (customer ↔ product)</td>
+                  <td>sale_id (PK), customer_id (FK), product_id (FK)</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- 18 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Schema: Customer</h3>
+                <ul class="tight">
+                  <li>Keep identity separate from email</li>
+                  <li>Email is unique but can change</li>
+                  <li>Phone stored as text</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">CREATE TABLE Customer (
+  customer_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name        VARCHAR(100) NOT NULL,
+  email       VARCHAR(100) UNIQUE,
+  phone       VARCHAR(30)
+);</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 19 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Schema: Product</h3>
+                <ul class="tight">
+                  <li>sku is a business identifier (unique)</li>
+                  <li>qty_on_hand defaults to 0</li>
+                  <li>reorder_level helps restocking</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">CREATE TABLE Product (
+  product_id    INTEGER PRIMARY KEY AUTOINCREMENT,
+  sku           VARCHAR(40) NOT NULL UNIQUE,
+  name          VARCHAR(120) NOT NULL,
+  category      VARCHAR(60),
+  price         DECIMAL(10,2) NOT NULL,
+  qty_on_hand   INTEGER NOT NULL DEFAULT 0,
+  reorder_level INTEGER NOT NULL DEFAULT 0
+);</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 20 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Schema: CustomerProductSales</h3>
+                <ul class="tight">
+                  <li>References Customer and Product</li>
+                  <li>Stores qty and unit_price per purchase</li>
+                  <li>Status kept simple for demo</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">CREATE TABLE CustomerProductSales (
+  sale_id     INTEGER PRIMARY KEY AUTOINCREMENT,
+  customer_id INTEGER NOT NULL,
+  product_id  INTEGER NOT NULL,
+  sale_date   DATE NOT NULL,
+  status      VARCHAR(30) NOT NULL DEFAULT 'NEW',
+  qty         INTEGER NOT NULL,
+  unit_price  DECIMAL(10,2) NOT NULL,
+  FOREIGN KEY (customer_id) REFERENCES Customer(customer_id),
+  FOREIGN KEY (product_id)  REFERENCES Product(product_id)
+);</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 21 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Sample Data Plan</h3>
+                <ul class="tight">
+                  <li>2 customers</li>
+                  <li>6 products</li>
+                  <li>Sales rows represent purchases</li>
+                  <li>Multiple rows can share the same sale_date</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Insert order:
+-- 1) Customer
+-- 2) Product
+-- 3) CustomerProductSales</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 22 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Insert Customers</h3>
+                <ul class="tight">
+                  <li>Keep it realistic</li>
+                  <li>Email optional but unique when present</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">INSERT INTO Customer (name, email, phone) VALUES
+('Ava Kim', 'ava.kim@example.com', '209-555-0101'),
+('Noah Patel', 'noah.patel@example.com', '209-555-0112');</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 23 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Insert Products (part 1)</h3>
+                <ul class="tight">
+                  <li>sku is the business identifier</li>
+                  <li>qty_on_hand reflects current stock</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">INSERT INTO Product (sku, name, category, price, qty_on_hand, reorder_level) VALUES
+('SOFA-1001', 'Linen Sofa 3 Seat', 'Sofa', 899.00, 5, 2),
+('TBLE-2001', 'Oak Dining Table', 'Table', 749.00, 2, 1),
+('CHAI-3001', 'Walnut Accent Chair', 'Chair', 299.00, 7, 3);</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 24 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Insert Products (part 2)</h3>
+                <ul class="tight">
+                  <li>Mix high and low cost items</li>
+                  <li>Reorder level supports planning</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">INSERT INTO Product (sku, name, category, price, qty_on_hand, reorder_level) VALUES
+('DSKR-4001', 'Standing Desk', 'Desk', 499.00, 3, 1),
+('LAMP-5001', 'Floor Lamp', 'Lighting', 89.00, 12, 5),
+('RUGG-6001', 'Wool Rug 5x8', 'Rug', 179.00, 4, 2);</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 25 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Create Sales</h3>
+                <ul class="tight">
+                  <li>Each row captures one purchased product</li>
+                  <li>unit_price captured at purchase time</li>
+                  <li>Multiple rows on same date can represent one "order"</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">INSERT INTO CustomerProductSales (customer_id, product_id, sale_date, status, qty, unit_price)
+VALUES
+(1, 1, '2026-01-10', 'PAID', 1, 899.00),
+(1, 5, '2026-01-10', 'PAID', 2, 89.00);</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 26 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Create Sales (more)</h3>
+                <ul class="tight">
+                  <li>Multiple items represented as multiple rows</li>
+                  <li>Different customer</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">INSERT INTO CustomerProductSales (customer_id, product_id, sale_date, status, qty, unit_price)
+VALUES
+(2, 2, '2026-01-11', 'NEW', 1, 749.00),
+(2, 3, '2026-01-11', 'NEW', 2, 299.00),
+
+(1, 6, '2026-01-12', 'PAID', 1, 179.00),
+(1, 4, '2026-01-12', 'PAID', 1, 499.00);</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 27 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Read: List Products</h3>
+                <ul class="tight">
+                  <li>Start with simple SELECT</li>
+                  <li>Show inventory and reorder level</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">SELECT product_id, sku, name, price, qty_on_hand, reorder_level
+FROM Product
+ORDER BY category, price DESC;</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 28 (TABLE SLIDE 2/3) -->
+          <section>
+            <h3>Stock Check Rule</h3>
+            <table border="1" cellpadding="6" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+              <thead>
+                <tr>
+                  <th>Condition</th>
+                  <th>Meaning</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>qty_on_hand = 0</td>
+                  <td>Out of stock</td>
+                  <td>Block purchase</td>
+                </tr>
+                <tr>
+                  <td>qty_on_hand ≤ reorder_level</td>
+                  <td>Low stock</td>
+                  <td>Restock soon</td>
+                </tr>
+                <tr>
+                  <td>qty_on_hand > reorder_level</td>
+                  <td>Healthy stock</td>
+                  <td>No action</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- 29 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Read: Low Stock Report</h3>
+                <ul class="tight">
+                  <li>Common operational query</li>
+                  <li>Used by staff daily</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">SELECT sku, name, qty_on_hand, reorder_level
+FROM Product
+WHERE qty_on_hand &lt;= reorder_level
+ORDER BY qty_on_hand ASC;</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 30 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Read: Orders per Customer</h3>
+                <ul class="tight">
+                  <li>Simple join (Customer → Sales)</li>
+                  <li>Counts sales rows, shows totals</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">SELECT c.name,
+       COUNT(s.sale_id) AS sale_rows,
+       SUM(s.qty * s.unit_price) AS total_spent
+FROM Customer c
+JOIN CustomerProductSales s ON s.customer_id = c.customer_id
+GROUP BY c.customer_id
+ORDER BY total_spent DESC;</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 31 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Update: Restock Inventory</h3>
+                <ul class="tight">
+                  <li>Staff receives shipment</li>
+                  <li>Increase qty_on_hand</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">UPDATE Product
+SET qty_on_hand = qty_on_hand + 10
+WHERE sku = 'TBLE-2001';</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 32 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Update: Price Change</h3>
+                <ul class="tight">
+                  <li>Price changes over time</li>
+                  <li>Sales keep old unit_price per row</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">UPDATE Product
+SET price = 799.00
+WHERE sku = 'SOFA-1001';</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 33 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Update: Sale Status</h3>
+                <ul class="tight">
+                  <li>Sale rows move through states</li>
+                  <li>NEW → PAID → FULFILLED</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">UPDATE CustomerProductSales
+SET status = 'FULFILLED'
+WHERE sale_id = 1;</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 34 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Delete: Remove a Test Sale</h3>
+                <ul class="tight">
+                  <li>Common during development</li>
+                  <li>Only delete safe rows</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">DELETE FROM CustomerProductSales
+WHERE sale_id = 2
+  AND status = 'NEW';</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 35 (TABLE SLIDE 3/3) -->
+          <section>
+            <h3>CRUD Summary</h3>
+            <table border="1" cellpadding="6" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+              <thead>
+                <tr>
+                  <th>Goal</th>
+                  <th>SQL</th>
+                  <th>Example</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Read data</td>
+                  <td>SELECT</td>
+                  <td>List low stock products</td>
+                </tr>
+                <tr>
+                  <td>Add data</td>
+                  <td>INSERT</td>
+                  <td>Create new sales rows</td>
+                </tr>
+                <tr>
+                  <td>Change data</td>
+                  <td>UPDATE</td>
+                  <td>Restock inventory</td>
+                </tr>
+                <tr>
+                  <td>Remove data</td>
+                  <td>DELETE</td>
+                  <td>Delete a test sale</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- 36 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Data Quality Check</h3>
+                <ul class="tight">
+                  <li>Never allow negative stock</li>
+                  <li>Never allow negative prices</li>
+                  <li>Use constraints or checks when available</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Guard rails:
+-- qty_on_hand >= 0
+-- price > 0
+-- qty > 0
+-- valid status values</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 37 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Why 3 tables is a good start?</h3>
+                <ul class="tight">
+                  <li>Shows minimum viable schema</li>
+                  <li>Makes tradeoffs explicit</li>
+                  <li>Sets up normalization discussion</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Next iteration:
+-- Add Order and OrderItem tables
+-- Group line items under an order_id
+-- Stronger constraints + joins</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 38 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Optional Extension (later)</h3>
+                <ul class="tight">
+                  <li>Delivery address per order</li>
+                  <li>Payments table</li>
+                  <li>Warehouses and multi location stock</li>
+                  <li>Returns and refunds</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Grow the model only when needed.
+-- Keep the first version stable.</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 39 -->
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Recap</h3>
+                <ul class="tight">
+                  <li>Requirements define scope</li>
+                  <li>ERM clarifies entities and relationships</li>
+                  <li>Tables implement the model</li>
+                  <li>Data and CRUD prove the design works</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">-- Habit:
+-- justify each column with a requirement</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 40 -->
+          <section>
+            <div class="full-visual">
+              <div class="frame" style="display:flex;align-items:center;justify-content:center;flex-direction:column;">
+                <h2 style="margin:0;">Practice</h2>
+                <p style="margin:12px 0 0 0;" class="muted">Modify requirements and update the ERM and tables</p>
+                <ul class="tight" style="margin-top:16px; text-align:left; max-width:720px;">
+                  <li>Add delivery support</li>
+                  <li>Add returns</li>
+                  <li>Add multiple warehouses</li>
+                  <li>Replace items_json with OrderItem table</li>
+                </ul>
+              </div>
+            </div>
           </section>
 
           <section>Questions</section>
