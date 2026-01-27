@@ -3142,57 +3142,244 @@ HAVING SUM(quantity) &gt; 5;</code></pre>
         </section>
 
         <!-- ===================================================== -->
-        <!-- 30. MINI HIGHLIGHT -->
-        <!-- ===================================================== -->
-        <section>
-          <h2>Think in stages</h2>
-        </section>
-
-        <!-- ===================================================== -->
         <!-- 31–50 RECAP & REINFORCEMENT -->
         <!-- ===================================================== -->
 
         <section>
           <h3>Common mistake: WHERE with SUM</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>WHERE works on rows</li>
+                <li>SUM works on groups</li>
+                <li>This combination is invalid</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Incorrect
+SELECT bike_type, SUM(quantity)
+FROM bicycle_orders
+WHERE SUM(quantity) > 5
+GROUP BY bike_type;</code></pre>
+            </div>
+          </div>
         </section>
+
         <section>
           <h3>Fix: use HAVING</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>HAVING filters groups</li>
+                <li>Aggregates belong here</li>
+                <li>Runs after GROUP BY</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Correct
+SELECT bike_type, SUM(quantity)
+FROM bicycle_orders
+GROUP BY bike_type
+HAVING SUM(quantity) > 5;</code></pre>
+            </div>
+          </div>
         </section>
+
         <section>
           <h3>Common mistake: missing GROUP BY</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Mixing aggregates and columns</li>
+                <li>DBMS cannot infer grouping</li>
+                <li>Leads to errors or ambiguity</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Incorrect
+SELECT bike_type, SUM(quantity)
+FROM bicycle_orders;</code></pre>
+            </div>
+          </div>
         </section>
+
         <section>
           <h3>Fix: group non aggregates</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Every non aggregate column</li>
+                <li>Must appear in GROUP BY</li>
+                <li>This defines the grouping key</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Correct
+SELECT bike_type, SUM(quantity)
+FROM bicycle_orders
+GROUP BY bike_type;</code></pre>
+            </div>
+          </div>
         </section>
+
         <section>
           <h3>Practice reading queries</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Read top to bottom</li>
+                <li>Translate to plain language</li>
+                <li>Do not rush to execution</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT bike_type, COUNT(*)
+FROM bicycle_orders
+GROUP BY bike_type;</code></pre>
+            </div>
+          </div>
         </section>
+
         <section>
           <h3>Practice predicting output</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Look at input rows</li>
+                <li>Form groups mentally</li>
+                <li>Compute results before running</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT bike_type, SUM(quantity)
+FROM bicycle_orders
+GROUP BY bike_type;</code></pre>
+            </div>
+          </div>
         </section>
+
         <section>
           <h3>Practice drawing tables</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Sketch rows first</li>
+                <li>Then sketch groups</li>
+                <li>Visual thinking reduces errors</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code>Road      → 2 + 1 + 3 = 6
+Mountain  → 4 + 2     = 6
+Hybrid    → 6 + 1     = 7
+BMX       → 5 + 2     = 7</code></pre>
+            </div>
+          </div>
         </section>
+
         <section>
           <h3>Rows → Groups → Filter</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>WHERE filters rows</li>
+                <li>GROUP BY forms groups</li>
+                <li>HAVING filters groups</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT bike_type, SUM(quantity)
+FROM bicycle_orders
+WHERE quantity >= 2
+GROUP BY bike_type
+HAVING SUM(quantity) > 5;</code></pre>
+            </div>
+          </div>
         </section>
+
         <section>
           <h3>SQL is declarative</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>You state what you want</li>
+                <li>Not how to compute it</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code>-- You describe the result,
+-- not the algorithm.</code></pre>
+            </div>
+          </div>
         </section>
+
         <section>
           <h3>You describe results</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Focus on output shape</li>
+                <li>Columns and rows matter</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT bike_type, COUNT(*)
+FROM bicycle_orders
+GROUP BY bike_type;</code></pre>
+            </div>
+          </div>
         </section>
+
         <section>
-          <h3>The DBMS decides how</h3>
+          <h3>Clarity</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Readable queries survive</li>
+                <li>Explicit is better than clever</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Prefer this:
+SELECT bike_type, SUM(quantity)
+FROM bicycle_orders
+GROUP BY bike_type;</code></pre>
+            </div>
+          </div>
         </section>
+
         <section>
-          <h3>Clarity beats cleverness</h3>
+          <h3>Readable queries</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Others must maintain this</li>
+                <li>You will revisit it later</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code>-- Clear structure
+-- Predictable formatting
+-- Minimal surprises</code></pre>
+            </div>
+          </div>
         </section>
-        <section>
-          <h3>Readable queries last</h3>
-        </section>
+
         <section>
           <h3>Module 3 complete</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Rows vs groups understood</li>
+                <li>WHERE vs HAVING clear</li>
+                <li>Query flow internalized</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code>SELECT → WHERE → GROUP BY → HAVING
+A complete mental model</code></pre>
+            </div>
+          </div>
         </section>
 
       </section>
