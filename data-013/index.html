@@ -2626,6 +2626,577 @@ SELECT ... WHERE ...;   -- confirm</code></pre>
 
       </section>
 
+      <section id="module-3">
+
+        <!-- ===================================================== -->
+        <!-- 1. TITLE -->
+        <!-- ===================================================== -->
+        <section>
+          <h2>Module 3</h2>
+          <h3>SQL Queries: SELECT, FROM, WHERE, GROUP BY, HAVING</h3>
+          <p class="muted">SELECT · FROM · WHERE · GROUP · BY · HAVING</p>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 2. MODULE GOAL -->
+        <!-- ===================================================== -->
+        <section>
+          <h3>Module goal</h3>
+          <ul>
+            <li>Read data correctly</li>
+            <li>Understand query meaning</li>
+            <li>Separate rows from groups</li>
+            <li>Avoid logical mistakes</li>
+          </ul>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 3. DOMAIN -->
+        <!-- ===================================================== -->
+        <section>
+          <h3>Domain table: bicycle_orders</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Single table only</li>
+                <li>Each row is one order</li>
+                <li>bike_type creates groups</li>
+                <li>quantity supports aggregation</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">bicycle_orders(
+  order_id   INTEGER PRIMARY KEY,
+  bike_type  TEXT,
+  quantity   INTEGER
+);</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 4. SAMPLE DATA TABLE -->
+        <!-- ===================================================== -->
+        <section>
+          <h3>Sample data</h3>
+          <table class="big">
+            <thead>
+              <tr>
+                <th>order_id</th>
+                <th>bike_type</th>
+                <th>quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Road</td>
+                <td>2</td>
+              </tr>
+              <tr>
+                <td>2</td>
+                <td>Road</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>Road</td>
+                <td>3</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>Mountain</td>
+                <td>4</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>Mountain</td>
+                <td>2</td>
+              </tr>
+              <tr>
+                <td>6</td>
+                <td>Hybrid</td>
+                <td>6</td>
+              </tr>
+              <tr>
+                <td>7</td>
+                <td>Hybrid</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>BMX</td>
+                <td>5</td>
+              </tr>
+              <tr>
+                <td>9</td>
+                <td>BMX</td>
+                <td>2</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 5. MINI HIGHLIGHT -->
+        <!-- ===================================================== -->
+        <section>
+          <h2>Rows come first</h2>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 6. QUERY PIPELINE DIAGRAM -->
+        <!-- ===================================================== -->
+        <section>
+          <h3>Query pipeline (concept)</h3>
+          <svg viewBox="0 0 1000 300" style="width:100%; height:auto;">
+
+            <!-- FROM -->
+            <rect x="50" y="100" width="180" height="80" rx="12" fill="rgba(255,255,255,0.08)"
+              stroke="rgba(255,255,255,0.6)" stroke-width="3" />
+            <text x="140" y="150" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="600">FROM</text>
+
+            <!-- WHERE -->
+            <rect x="280" y="100" width="180" height="80" rx="12" fill="rgba(255,255,255,0.08)"
+              stroke="rgba(255,255,255,0.6)" stroke-width="3" />
+            <text x="370" y="150" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="600">WHERE</text>
+
+            <!-- GROUP BY -->
+            <rect x="510" y="100" width="180" height="80" rx="12" fill="rgba(255,255,255,0.08)"
+              stroke="rgba(255,255,255,0.6)" stroke-width="3" />
+            <text x="600" y="150" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="600">GROUP BY</text>
+
+            <!-- HAVING -->
+            <rect x="740" y="100" width="180" height="80" rx="12" fill="rgba(255,255,255,0.08)"
+              stroke="rgba(255,255,255,0.6)" stroke-width="3" />
+            <text x="830" y="150" text-anchor="middle" fill="#ffffff" font-size="22" font-weight="600">HAVING</text>
+
+          </svg>
+        </section>
+
+
+        <!-- ===================================================== -->
+        <!-- 7. CLAUSE ROLES -->
+        <!-- ===================================================== -->
+        <section>
+          <h3>Clause roles</h3>
+          <table class="big">
+            <thead>
+              <tr>
+                <th>Clause</th>
+                <th>Role</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>FROM</td>
+                <td>Select table</td>
+              </tr>
+              <tr>
+                <td>WHERE</td>
+                <td>Filter rows</td>
+              </tr>
+              <tr>
+                <td>GROUP BY</td>
+                <td>Create groups</td>
+              </tr>
+              <tr>
+                <td>HAVING</td>
+                <td>Filter groups</td>
+              </tr>
+              <tr>
+                <td>SELECT</td>
+                <td>Display result</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 8. SELECT + FROM -->
+        <!-- ===================================================== -->
+        <section>
+          <h3>SELECT and FROM</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>FROM chooses scope</li>
+                <li>SELECT chooses columns</li>
+                <li>No filtering yet</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT order_id, bike_type, quantity
+FROM bicycle_orders;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 9. SELECT STAR -->
+        <!-- ===================================================== -->
+        <section>
+          <h3>SELECT *</h3>
+          <pre><code class="language-sql">SELECT *
+FROM bicycle_orders;</code></pre>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 10. MINI HIGHLIGHT -->
+        <!-- ===================================================== -->
+        <section>
+          <h2>Select intentionally</h2>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 11. WHERE INTRO -->
+        <!-- ===================================================== -->
+        <section>
+          <h3>WHERE clause</h3>
+          <ul>
+            <li>Filters rows</li>
+            <li>Before grouping</li>
+            <li>No aggregates allowed</li>
+          </ul>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 12. WHERE EXAMPLE -->
+        <!-- ===================================================== -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <h4>Concept</h4>
+              <ul>
+                <li>Keep only large orders</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT *
+FROM bicycle_orders
+WHERE quantity &gt; 3;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 13. WHERE TEXT -->
+        <!-- ===================================================== -->
+        <section>
+          <pre><code class="language-sql">SELECT *
+FROM bicycle_orders
+WHERE bike_type = 'Road';</code></pre>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 14. WHERE AND -->
+        <!-- ===================================================== -->
+        <section>
+          <pre><code class="language-sql">SELECT *
+FROM bicycle_orders
+WHERE bike_type = 'BMX'
+  AND quantity &gt;= 2;</code></pre>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 15. MINI HIGHLIGHT -->
+        <!-- ===================================================== -->
+        <section>
+          <h2>WHERE filters rows</h2>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 16. GROUP BY INTRO -->
+        <!-- ===================================================== -->
+        <section>
+          <h3>GROUP BY concept</h3>
+          <ul>
+            <li>Rows collapse into groups</li>
+            <li>One row per group</li>
+            <li>Requires aggregates</li>
+          </ul>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 17. ROWS BEFORE GROUPING -->
+        <!-- ===================================================== -->
+        <section>
+          <h3>Rows before grouping</h3>
+          <table class="big">
+            <thead>
+              <tr>
+                <th>bike_type</th>
+                <th>quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Road</td>
+                <td>2</td>
+              </tr>
+              <tr>
+                <td>Road</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>Road</td>
+                <td>3</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 18. GROUP FORMATION -->
+        <!-- ===================================================== -->
+        <section>
+          <h3>Groups formed</h3>
+          <table class="big">
+            <thead>
+              <tr>
+                <th>bike_type</th>
+                <th>values</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Road</td>
+                <td>2, 1, 3</td>
+              </tr>
+              <tr>
+                <td>Mountain</td>
+                <td>4, 2</td>
+              </tr>
+              <tr>
+                <td>Hybrid</td>
+                <td>6, 1</td>
+              </tr>
+              <tr>
+                <td>BMX</td>
+                <td>5, 2</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 19. GROUP BY COUNT -->
+        <!-- ===================================================== -->
+        <section>
+          <pre><code class="language-sql">SELECT bike_type, COUNT(*) AS total_orders
+FROM bicycle_orders
+GROUP BY bike_type;</code></pre>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 20. GROUP BY SUM -->
+        <!-- ===================================================== -->
+        <section>
+          <pre><code class="language-sql">SELECT bike_type, SUM(quantity) AS total_quantity
+FROM bicycle_orders
+GROUP BY bike_type;</code></pre>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 21. GROUP RESULT TABLE -->
+        <!-- ===================================================== -->
+        <section>
+          <table class="big">
+            <thead>
+              <tr>
+                <th>bike_type</th>
+                <th>total_quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Road</td>
+                <td>6</td>
+              </tr>
+              <tr>
+                <td>Mountain</td>
+                <td>6</td>
+              </tr>
+              <tr>
+                <td>Hybrid</td>
+                <td>7</td>
+              </tr>
+              <tr>
+                <td>BMX</td>
+                <td>7</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 22. MINI HIGHLIGHT -->
+        <!-- ===================================================== -->
+        <section>
+          <h2>Groups summarize rows</h2>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 23. HAVING INTRO -->
+        <!-- ===================================================== -->
+        <section>
+          <h3>HAVING concept</h3>
+          <ul>
+            <li>Filters groups</li>
+            <li>Uses aggregates</li>
+            <li>After GROUP BY</li>
+          </ul>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 24. HAVING EXAMPLE -->
+        <!-- ===================================================== -->
+        <section>
+          <pre><code class="language-sql">SELECT bike_type, SUM(quantity) AS total_quantity
+FROM bicycle_orders
+GROUP BY bike_type
+HAVING SUM(quantity) &gt; 6;</code></pre>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 25. HAVING RESULT TABLE -->
+        <!-- ===================================================== -->
+        <section>
+          <table class="big">
+            <thead>
+              <tr>
+                <th>bike_type</th>
+                <th>total_quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Hybrid</td>
+                <td>7</td>
+              </tr>
+              <tr>
+                <td>BMX</td>
+                <td>7</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 26. MINI HIGHLIGHT -->
+        <!-- ===================================================== -->
+        <section>
+          <h2>HAVING filters groups</h2>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 27. WHERE VS HAVING -->
+        <!-- ===================================================== -->
+        <section>
+          <table class="big">
+            <thead>
+              <tr>
+                <th>WHERE</th>
+                <th>HAVING</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Row filter</td>
+                <td>Group filter</td>
+              </tr>
+              <tr>
+                <td>No aggregates</td>
+                <td>Uses aggregates</td>
+              </tr>
+              <tr>
+                <td>Before grouping</td>
+                <td>After grouping</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 28. FULL QUERY -->
+        <!-- ===================================================== -->
+        <section>
+          <pre><code class="language-sql">SELECT bike_type, SUM(quantity) AS total_quantity
+FROM bicycle_orders
+WHERE quantity &gt;= 2
+GROUP BY bike_type
+HAVING SUM(quantity) &gt; 5;</code></pre>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 29. QUERY WALKTHROUGH -->
+        <!-- ===================================================== -->
+        <section>
+          <ol>
+            <li>Start with bicycle_orders</li>
+            <li>Keep rows with quantity ≥ 2</li>
+            <li>Group by bike_type</li>
+            <li>Keep groups with total &gt; 5</li>
+            <li>Display result</li>
+          </ol>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 30. MINI HIGHLIGHT -->
+        <!-- ===================================================== -->
+        <section>
+          <h2>Think in stages</h2>
+        </section>
+
+        <!-- ===================================================== -->
+        <!-- 31–50 RECAP & REINFORCEMENT -->
+        <!-- ===================================================== -->
+
+        <section>
+          <h3>Common mistake: WHERE with SUM</h3>
+        </section>
+        <section>
+          <h3>Fix: use HAVING</h3>
+        </section>
+        <section>
+          <h3>Common mistake: missing GROUP BY</h3>
+        </section>
+        <section>
+          <h3>Fix: group non aggregates</h3>
+        </section>
+        <section>
+          <h3>Practice reading queries</h3>
+        </section>
+        <section>
+          <h3>Practice predicting output</h3>
+        </section>
+        <section>
+          <h3>Practice drawing tables</h3>
+        </section>
+        <section>
+          <h3>Rows → Groups → Filter</h3>
+        </section>
+        <section>
+          <h3>SQL is declarative</h3>
+        </section>
+        <section>
+          <h3>You describe results</h3>
+        </section>
+        <section>
+          <h3>The DBMS decides how</h3>
+        </section>
+        <section>
+          <h3>Clarity beats cleverness</h3>
+        </section>
+        <section>
+          <h3>Readable queries last</h3>
+        </section>
+        <section>
+          <h3>Module 3 complete</h3>
+        </section>
+
+      </section>
+
     </div>
   </div>
 
