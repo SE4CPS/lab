@@ -21,7 +21,6 @@
   <!-- Add Font Awesome for icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-
   <style>
     body {
       margin: 0;
@@ -565,10 +564,12 @@
               </tr>
 
               <tr style="color:#ccc;">
-                <td style="padding:6px; border:1px solid #666;">4 (Feb 2, 4, 6)</td>
-                <td style="padding:6px; border:1px solid #666;">Relational Database Interfaces</td>
+                <td style="padding:6px; border:1px solid #666;">4 (<a href="./#/c9">Feb 2</a>, <a href="./#/c10">Feb
+                    4</a>, <a href="./#/c11">Feb 6</a>)</td>
+                <td style="padding:6px; border:1px solid #666;"><a href="./#/module-4">Relational Database
+                    Interfaces</a></td>
                 <td style="padding:6px; border:1px solid #666;"></td>
-                <td style="padding:6px; border:1px solid #666;">PostgreSQL</td>
+                <td style="padding:6px; border:1px solid #666;"><a href="./#/postgresql">PostgreSQL</a></td>
                 <td style="padding:6px; border:1px solid #666;"></td>
               </tr>
 
@@ -4577,10 +4578,10 @@ CREATE TABLE RentalTransaction (
               <div class="left">
                 <h3>Why Minimum Relationships?</h3>
                 <ul class="tight">
-                  <li>Performance: fewer joins</li>
+                  <li>Performance: less joins</li>
                   <li>Simplicity: easier to maintain</li>
                   <li>Clarity: easier to explain and test</li>
-                  <li>Consistency: fewer places for mismatch</li>
+                  <li>Consistency: less places for mismatch</li>
                 </ul>
               </div>
               <div class="right">
@@ -6232,7 +6233,7 @@ bikeId | brand      | type     | price
             </div>
           </section>
 
-          <section>
+          <section id="c7">
             <h5>Relational Algebra Operators</h5>
 
             <div class="tiers"
@@ -6584,206 +6585,1289 @@ Inv.bikeId | Inv.brand | Inv.price</code></pre>
             </table>
           </section>
 
-          <section>
+          <!-- ========================================================= -->
+          <!-- QUERY OPTIMIZATION – COMPLETE SLIDE SET (split template) -->
+          <!-- ========================================================= -->
+
+          <section id="c8">
             <h5>Query Optimization</h5>
           </section>
 
           <section>
+            <h5>Optimization Principles</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Reduce rows early</li>
+                  <li>Reduce columns early</li>
+                  <li>Delay large joins</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+σ  → less rows
+π  → less columns
+⨝  → less comparisons
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Execution Flow</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Logical order of operations</li>
+                  <li>Goal is small intermediates</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Relations
+   ↓
+Selection
+   ↓
+Projection
+   ↓
+Join
+   ↓
+Result
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
             <h5>Pushing Selection Down</h5>
-            <p><strong>Before Optimization:</strong></p>
-            <pre>π(brand) (σ(price < 500) (Bicycles × Stores))</pre>
-            <p><strong>After Optimization:</strong></p>
-            <pre>σ(price < 500) (π(brand) (Bicycles × Stores))</pre>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Apply filters before joins</li>
+                  <li>Joins touch less tuples</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Before:
+π brand (σ price < 500 (Bicycles ⨝ Stores))
+
+After:
+π brand ((σ price < 500 (Bicycles)) ⨝ Stores)
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Pushing Selection Down</h5>
+            <div class="split">
+              <div class="left">
+                <h6>Slow (filter late)</h6>
+                <pre><code>
+Step 1: Bicycles ⨝ Stores
+  → large intermediate result
+
+Step 2: σ price < 500
+  → many rows discarded late
+
+π brand
+      </code></pre>
+              </div>
+
+              <div class="right">
+                <h6>Fast (filter early)</h6>
+                <pre><code>
+Step 1: σ price < 500 (Bicycles)
+  → small input
+
+Step 2: filtered Bicycles ⨝ Stores
+  → fewer comparisons
+
+π brand
+      </code></pre>
+              </div>
+            </div>
           </section>
 
           <section>
             <h5>Reducing Cartesian Product</h5>
-            <p><strong>Before Optimization:</strong></p>
-            <pre>σ(Bicycles.storeId = Stores.storeId) (Bicycles × Stores)</pre>
-            <p><strong>After Optimization:</strong></p>
-            <pre>Bicycles ⨝ Stores</pre>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Cartesian product creates all pairs</li>
+                  <li>Join keeps only matching tuples</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Before:
+σ Bicycles.storeId = Stores.storeId
+(Bicycles × Stores)
+
+After:
+Bicycles ⨝ Stores
+      </code></pre>
+              </div>
+            </div>
           </section>
 
           <section>
             <h5>Combining Projections</h5>
-            <p><strong>Before Optimization:</strong></p>
-            <pre>π(brand) (π(bikeId, brand) (Bicycles))</pre>
-            <p><strong>After Optimization:</strong></p>
-            <pre>π(brand) (Bicycles)</pre>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Nested projections collapse</li>
+                  <li>Remove unused columns once</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Before:
+π brand (π bikeId, brand (Bicycles))
+
+After:
+π brand (Bicycles)
+      </code></pre>
+              </div>
+            </div>
           </section>
 
           <section>
             <h5>Eliminating Unnecessary Joins</h5>
-            <p><strong>Before Optimization:</strong></p>
-            <pre>π(brand) (Bicycles ⨝ Stores ⨝ Suppliers)</pre>
-            <p><strong>After Optimization:</strong></p>
-            <pre>π(brand) (Bicycles ⨝ Stores)</pre>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>No attributes used from table</li>
+                  <li>No predicates applied</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Before:
+π brand (Bicycles ⨝ Stores ⨝ Suppliers)
+
+After:
+π brand (Bicycles ⨝ Stores)
+      </code></pre>
+              </div>
+            </div>
           </section>
 
           <section>
             <h5>Reordering Joins</h5>
-            <p><strong>Before Optimization:</strong></p>
-            <pre>(Bicycles ⨝ Stores) ⨝ Suppliers</pre>
-            <p><strong>After Optimization:</strong></p>
-            <pre>(Stores ⨝ Suppliers) ⨝ Bicycles</pre>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Associative</li>
+                  <li>Commutative</li>
+                  <li>Cost changes, result does not</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+(Bicycles ⨝ Stores) ⨝ Suppliers
+
+Bicycles ⨝ (Stores ⨝ Suppliers)
+      </code></pre>
+              </div>
+            </div>
           </section>
 
           <section>
-            <h5>Breaking Complex Queries</h5>
-            <p><strong>Before Optimization:</strong></p>
-            <pre>σ(price < 500) (π(brand, price) (Bicycles ⨝ Stores))</pre>
-            <p><strong>After Optimization:</strong></p>
-            <pre>σ(price < 500) (Bicycles) ⨝ π(brand) (Stores)</pre>
+            <h5>Join Reordering – Example Sizes</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Orders (O): 1,000,000</li>
+                  <li>Customers (C): 100,000</li>
+                  <li>Regions (R): 10</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Query:
+σ R.name = 'West' (O ⨝ C ⨝ R)
+      </code></pre>
+              </div>
+            </div>
           </section>
 
           <section>
-            <h5>Avoiding Calculated Fields in Joins</h5>
-            <p><strong>Before Optimization:</strong></p>
-            <pre>Bicycles ⨝ σ(DiscountedPrice = price * 0.9) (Stores)</pre>
-            <p><strong>After Optimization:</strong></p>
-            <pre>Precompute DiscountedPrice column and then join</pre>
+            <h5>Join Reordering – Bad Order</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Large intermediate result</li>
+                  <li>Filtering happens late</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+(O ⨝ C) ⨝ R
+
+O ⨝ C → ~1,000,000 rows
+      </code></pre>
+              </div>
+            </div>
           </section>
 
           <section>
-            <h5>Find all roses over $10 from local suppliers</h5>
-            <code>σ Price > 10 ∧ Name = 'Rose' ∧ Location = 'Local' (Flowers ⨝ Suppliers)</code>
+            <h5>Join Reordering – Better Order</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Filter small relation first</li>
+                  <li>Join reduced inputs</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+O ⨝ (C ⨝ (σ R='West'(R)))
+
+R: 10 → 1
+C: 100,000 → 10,000
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Selection and Projection Pushdown</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>less rows</li>
+                  <li>less columns</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Before:
+σ price < 500 (π brand, price (Bicycles ⨝ Stores))
+
+After:
+(π brand, price (σ price < 500 (Bicycles)))
+⨝ Stores
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Example Query</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Flowers over $10</li>
+                  <li>Only roses</li>
+                  <li>Local suppliers</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+σ Price > 10 ∧ Name='Rose' ∧ Location='Local'
+(Flowers ⨝ Suppliers)
+      </code></pre>
+              </div>
+            </div>
           </section>
 
           <section>
             <h5>Without Optimization</h5>
-            <code>Flowers ⨝ Suppliers → σ Filters</code>
-            <p>Comparisons: <strong>1,000 × 500 = 500K</strong></p>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Join first</li>
+                  <li>Filter later</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Flowers ⨝ Suppliers
+→ apply filters
+
+1,000 × 500 = 500K
+      </code></pre>
+              </div>
+            </div>
           </section>
 
           <section>
             <h5>With Optimization</h5>
-            <code>(σ Location = 'Local' (Suppliers)) ⨝ (σ Name = 'Rose' ∧ Price > 10 (Flowers))</code>
-            <p>Comparisons: <strong>100 × 50 = 5K</strong></p>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Filter first</li>
+                  <li>Join reduced sets</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+(σ Local (Suppliers))
+⨝
+(σ Rose ∧ Price > 10 (Flowers))
+
+100 × 50 = 5K
+      </code></pre>
+              </div>
+            </div>
           </section>
 
           <section>
-            <h5>Pushing Selection Down (first)</h5>
-            <p>Filtering first reduces data size, making both the <span class="highlight">join and select</span> the
-              result faster</p>
+            <h5>Large Join Graph</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Flowers: 1,000,000</li>
+                  <li>Suppliers: 200,000</li>
+                  <li>Supply: 5,000,000</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+(σ Rose ∧ Red (Flowers))
+⨝ Supply
+⨝ (σ Local (Suppliers))
+      </code></pre>
+              </div>
+            </div>
           </section>
 
           <section>
-            <h5>Nested Relations - Relational Algebra</h5>
-            <pre>
+            <h5>Nested Relational Algebra</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Deeply nested joins</li>
+                  <li>Multiple selections</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
 π Name (
-    σ Price > 10 (
-        Flowers ⨝ (
-            σ Location = 'Local' (
-                Suppliers ⨝ (
-                    σ Revenue > 1000 (
-                        Companies
-                    )
-                )
-            )
-        )
-    )
+  σ Price > 10 (
+    Flowers ⨝
+    (σ Local (Suppliers ⨝
+      σ Revenue > 1000 (Companies)))
+  )
 )
-    </pre>
+      </code></pre>
+              </div>
+            </div>
           </section>
 
           <section>
-            <h5>Nested Relations - Relational Algebra (with comments)</h5>
-            <pre>
-π Name (                               -- (6) Project only the "Name" attribute
-    σ Price > 10 (                     -- (5) Select flowers priced over $10
-        Flowers ⨝ (                   -- (4) Join Flowers with filtered Suppliers
-            σ Location = 'Local' (     -- (3) Select only local suppliers
-                Suppliers ⨝ (         -- (2) Join Suppliers with filtered Companies
-                    σ Revenue > 1000 ( -- (1) Select companies with revenue > $1000
-                        Companies      -- Input relation: Companies
-                    )                  -- Output relation: High-revenue companies
-                )                      -- Output relation: Local suppliers from revenue companies
-            )                          -- Output relation: Flowers with local suppliers
-        )                              -- Output relation: Flowers priced over $10
-    )                                  -- Output relation: Names of flowers
+            <h5>Optimized Nested Form</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Selections pushed down</li>
+                  <li>Smaller joins</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+π Name (
+  (σ Price > 10 (Flowers))
+  ⨝
+  (σ Local (Suppliers ⨝
+     σ Revenue > 1000 (Companies)))
 )
-    </pre>
+      </code></pre>
+              </div>
+            </div>
           </section>
 
           <section>
-            <h5>Before vs After Query Optimization</h5>
-            <pre>
-Before                                 |   After
--------------------------------------- | --------------------------------------
-π Name (                               |   π Name (
-    σ Price > 10 (                     |       (σ Price > 10 (Flowers)) ⨝ (
-        Flowers ⨝ (                   |           (σ Location = 'Local' (Suppliers)) ⨝ (
-            σ Location = 'Local' (     |               σ Revenue > 1000 (Companies)
-                Suppliers ⨝ (         |           )
-                    σ Revenue > 1000 ( |       )
-                        Companies      |   )
-                    )                  |
-                )                      |
-            )                          |
-        )                              |
-    )                                  |
-)                                      |
-    </pre>
-          </section>
-
-          <section>
-            <h5>Relational Algebra Use Case</h5>
-            <p><a href="https://dbis-uibk.github.io/relax/calc/local/uibk/local/5" target="_blank">Interactive
-                Relational Algebra Calculator</a></p>
-          </section>
-
-          <section>
-            <h5>Relational Algebra and SQL</h5>
-            <table>
-              <thead>
-                <tr>
-                  <th>Aspect</th>
-                  <th>Relational Algebra</th>
-                  <th>SQL</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Definition</td>
-                  <td>Theoretical foundation for database queries</td>
-                  <td>Practical language for interacting with relational databases</td>
-                </tr>
-                <tr>
-                  <td>Operators/Syntax</td>
-                  <td>Uses mathematical operators: σ π ∪ ∩ − × ⋈ ÷ ρ</td>
-                  <td>Uses English-like commands: SELECT INSERT DELETE JOIN</td>
-                </tr>
-                <tr>
-                  <td>Purpose</td>
-                  <td>Conceptual understanding of query mechanisms</td>
-                  <td>Execution of queries in real databases</td>
-                </tr>
-                <tr>
-                  <td>Usage</td>
-                  <td>Primarily in academic and theoretical contexts</td>
-                  <td>Widely used in industry for database management</td>
-                </tr>
-              </tbody>
-            </table>
+            <h5>Relational Algebra vs SQL</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Logical rules</li>
+                  <li>Query equivalence</li>
+                </ul>
+              </div>
+              <div class="right">
+                <ul>
+                  <li>Executable language</li>
+                  <li>Cost based optimizer</li>
+                </ul>
+              </div>
+            </div>
           </section>
 
           <section>
             <h5>Practice Questions</h5>
             <ol>
-              <li>What does the selection (σ) operator do in relational algebra?</li>
-              <li>Which operator is used to retrieve specific columns from a relation?</li>
-              <li>What is the symbol for the union operator in relational algebra?</li>
-              <li>How does the Cartesian product (×) operation combine relations?</li>
-              <li>Which operator is used to eliminate duplicate rows when combining relations?</li>
-              <li>What is the purpose of the projection (π) operator?</li>
-              <li>How is a join (⨝) different from a Cartesian product?</li>
-              <li>Which operator finds records that exist in one relation but not in another?</li>
-              <li>What does the renaming (ρ) operator do?</li>
+              <li>Which join order produces the smallest intermediate result?</li>
+              <li>Where should selections be applied?</li>
+              <li>Which projections can be pushed down?</li>
+              <li>Why does join order affect performance?</li>
             </ol>
+          </section>
+
+          <section>
+            <h5>SQLite Timing and Setup</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li><strong>.timer on</strong> shows execution time</li>
+                  <li>journal_mode OFF avoids disk logging</li>
+                  <li>synchronous OFF skips fsync</li>
+                  <li>temp_store MEMORY keeps temp data in RAM</li>
+                </ul>
+              </div>
+              <div class="right">
+                <ul>
+                  <li>Used only for benchmarking</li>
+                  <li>Makes slow vs fast visible</li>
+                  <li>Not for production use</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>journal_mode = OFF</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Disables rollback journal</li>
+                  <li>No crash recovery</li>
+                  <li>Fast writes</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Write Operation
+     ↓
+[ No Journal ]
+     ↓
+Data File
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>synchronous = OFF</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Skips fsync</li>
+                  <li>OS buffers writes</li>
+                  <li>Lower latency</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+SQLite
+  ↓ write
+OS Buffer
+  ↓ (later)
+Disk
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>temp_store = MEMORY</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Temporary tables</li>
+                  <li>Intermediate results</li>
+                  <li>No temp disk files</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Query
+  ↓
+Temp Tables
+  ↓
+RAM (Memory)
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>ANALYZE</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Collects table statistics</li>
+                  <li>Estimates row counts</li>
+                  <li>Improves join order</li>
+                </ul>
+              </div>
+              <div class="right">
+                <ul>
+                  <li>Helps cost-based optimizer</li>
+                  <li>No data modification</li>
+                  <li>Run after bulk inserts</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Data Generation (Concept)</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Generate sequences internally</li>
+                  <li>No external files</li>
+                  <li>Large but controlled datasets</li>
+                </ul>
+              </div>
+              <div class="right">
+                <ul>
+                  <li>Skewed values create selectivity</li>
+                  <li>Few matches, many non-matches</li>
+                  <li>Highlights optimization impact</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Data Generation (Concept)</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Internal sequence generation</li>
+                  <li>No external data files</li>
+                  <li>Deterministic and repeatable</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Sequence (1…N)
+      ↓
+Value assignment
+      ↓
+Skew introduced
+      ↓
+Large tables
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Set-Based INSERT (Concept)</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Single SQL statement</li>
+                  <li>Many rows inserted</li>
+                  <li>No application loop</li>
+                  <li>Set based execution</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+seq = [1, 2, 3, ..., 200000]
+      </code></pre>
+                <pre><code>
+INSERT customers
+FOR EACH x IN seq:
+  (x, 'West' or 'Other')
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Data Generation (SQL Structure)</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Recursive query generates numbers</li>
+                  <li>COUNT defines table size</li>
+                  <li>Abort condition stops recursion</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+WITH RECURSIVE
+  seq(x)
+      ↓
+x starts at 1
+      ↓
+x = x + 1
+      ↓
+STOP when x reaches limit
+      ↓
+INSERT generated rows
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Recursive Data Generation</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code>
+-- Define a recursive sequence
+WITH RECURSIVE seq(x) AS (
+  -- Base case: start at 1
+  SELECT 1
+
+  UNION ALL
+
+  -- Recursive step: increment
+  SELECT x + 1
+  FROM seq
+
+  -- Abort condition
+  WHERE x &lt; 200000
+)
+      </code></pre>
+              </div>
+              <div class="right">
+                <pre><code>
+-- Insert generated values
+INSERT INTO customers
+SELECT
+  x,                     -- unique id
+  CASE                   -- controlled skew
+    WHEN x % 100 = 0
+    THEN 'West'
+    ELSE 'Other'
+  END
+FROM seq;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>What is <code>x</code> in <code>seq(x)</code>?</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li><code>x</code> is the column name of the recursive table</li>
+                  <li><code>seq</code> is a temporary result set</li>
+                  <li>Each row in <code>seq</code> has one value: <code>x</code></li>
+                  <li>Think: <code>seq</code> = table, <code>x</code> = column</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+WITH RECURSIVE seq(x) AS (...)
+
+seq
+----
+x
+----
+1
+2
+3
+...
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Wall Clock Time vs CPU Time</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Wall clock = total elapsed time</li>
+                  <li>User = CPU executing query</li>
+                  <li>Sys = OS and kernel work</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Time ─────────────────────────────▶
+
+|──────────── real (wall clock) ────────────|
+
+|──────── user (CPU work) ───────|
+
+| sys |
+
+
+Example:
+real = user + sys + waiting
+      (what the user feels)
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Understanding SQLite Timing Output</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li><strong>real</strong>: wall-clock time</li>
+                  <li><strong>user</strong>: CPU time in SQLite</li>
+                  <li><strong>sys</strong>: OS-level overhead</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Run Time:
+real 0.077
+user 0.075025
+sys  0.000000
+      </code></pre>
+                <ul>
+                  <li>~77 ms total execution</li>
+                  <li>Mostly CPU work</li>
+                  <li>Negligible system cost</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>SQLite Demo</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Same query result</li>
+                  <li>Different execution time</li>
+                </ul>
+              </div>
+              <div class="right">
+                <p>
+                  <a href="https://github.com/SE4CPS/2026-COMP-163/tree/main/DB/SQLite" target="_blank">
+                    Demo on GitHub
+                  </a>
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- QUERY OPTIMIZATION PRACTICE (SQLite + Relational Algebra) -->
+          <!-- 10 slides: slow query → how to reorder → RA form -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Practice 1</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code>
+SELECT COUNT(*)
+FROM orders o
+JOIN customers c ON o.customer_id = c.customer_id
+WHERE c.region = 'West';
+      </code></pre>
+                <ul>
+                  <li>How would you make this faster?</li>
+                  <li>Which table should be filtered first?</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+σ region='West' (Orders ⨝ Customers)
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Practice 2</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code>
+SELECT *
+FROM sales s
+JOIN products p ON s.product_id = p.id
+WHERE p.category = 'Bike';
+      </code></pre>
+                <ul>
+                  <li>Where should selection be applied?</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+σ category='Bike' (Sales ⨝ Products)
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Practice 3</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code>
+SELECT o.id
+FROM orders o
+JOIN customers c ON o.customer_id = c.customer_id
+JOIN regions r ON c.region_id = r.id
+WHERE r.name = 'West';
+      </code></pre>
+                <ul>
+                  <li>Which join should happen first?</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Orders ⨝ (Customers ⨝ σ name='West' (Regions))
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Practice 4</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code>
+SELECT *
+FROM enrollments e
+JOIN students s ON e.student_id = s.id
+WHERE s.major = 'CS';
+      </code></pre>
+                <ul>
+                  <li>How to reduce intermediate size?</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Enrollments ⨝ σ major='CS' (Students)
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Practice 5</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code>
+SELECT *
+FROM supply sp
+JOIN suppliers s ON sp.supplier_id = s.id
+JOIN flowers f ON sp.flower_id = f.id
+WHERE s.location = 'Local';
+      </code></pre>
+                <ul>
+                  <li>Which table is most selective?</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Supply ⨝ (σ location='Local' (Suppliers) ⨝ Flowers)
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Practice 6</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code>
+SELECT *
+FROM logs l
+JOIN users u ON l.user_id = u.id
+WHERE u.active = 1;
+      </code></pre>
+                <ul>
+                  <li>Which relation should be reduced first?</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Logs ⨝ σ active=1 (Users)
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Practice 7</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code>
+SELECT *
+FROM orders o
+JOIN items i ON o.id = i.order_id
+WHERE o.date > '2025-01-01';
+      </code></pre>
+                <ul>
+                  <li>What happens if we filter orders first?</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+σ date>'2025-01-01' (Orders) ⨝ Items
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Practice 8</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code>
+SELECT *
+FROM activity a
+JOIN conditions c ON a.id = c.activity_id
+WHERE c.type = 'once';
+      </code></pre>
+                <ul>
+                  <li>Where is the selective predicate?</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Activity ⨝ σ type='once' (Conditions)
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Practice 9</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code>
+SELECT *
+FROM payments p
+JOIN users u ON p.user_id = u.id
+JOIN countries c ON u.country_id = c.id
+WHERE c.code = 'US';
+      </code></pre>
+                <ul>
+                  <li>Which join should be last?</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Payments ⨝ (Users ⨝ σ code='US' (Countries))
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Practice 10</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code>
+SELECT *
+FROM reviews r
+JOIN products p ON r.product_id = p.id
+WHERE p.rating > 4;
+      </code></pre>
+                <ul>
+                  <li>How does early filtering help?</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Reviews ⨝ σ rating>4 (Products)
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- QUERY OPTIMIZATION PRACTICE – ANSWERS -->
+          <!-- 10 slides: faster SQL + RA Before/After -->
+          <!-- explicit brackets to show evaluation order clearly -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Answer 1</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code>
+SELECT COUNT(*)
+FROM (
+  SELECT customer_id
+  FROM customers
+  WHERE region = 'West'
+) c
+JOIN orders o ON o.customer_id = c.customer_id;
+      </code></pre>
+              </div>
+              <div class="right">
+                <pre><code>
+-- Before
+σ region='West' (Orders ⨝ Customers)
+
+-- After
+Orders ⨝ (π customer_id (σ region='West' (Customers)))
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Answer 2</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code>
+SELECT s.sale_id, s.product_id, s.qty
+FROM (
+  SELECT id
+  FROM products
+  WHERE category = 'Bike'
+) p
+JOIN sales s ON s.product_id = p.id;
+      </code></pre>
+              </div>
+              <div class="right">
+                <pre><code>
+-- Before
+σ category='Bike' (Sales ⨝ Products)
+
+-- After
+Sales ⨝ (π id (σ category='Bike' (Products)))
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Answer 3</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code>
+SELECT o.id
+FROM (
+  SELECT id
+  FROM regions
+  WHERE name = 'West'
+) r
+JOIN customers c ON c.region_id = r.id
+JOIN orders o ON o.customer_id = c.customer_id;
+      </code></pre>
+              </div>
+              <div class="right">
+                <pre><code>
+-- Before
+π o.id (σ name='West' (Orders ⨝ Customers ⨝ Regions))
+
+-- After
+π o.id (
+  Orders ⨝
+  (Customers ⨝ (π id (σ name='West' (Regions))))
+)
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Answer 4</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code>
+SELECT e.student_id, e.course_id
+FROM enrollments e
+JOIN (
+  SELECT id
+  FROM students
+  WHERE major = 'CS'
+) s ON e.student_id = s.id;
+      </code></pre>
+              </div>
+              <div class="right">
+                <pre><code>
+-- Before
+σ major='CS' (Enrollments ⨝ Students)
+
+-- After
+Enrollments ⨝ (π id (σ major='CS' (Students)))
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Answer 5</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code>
+SELECT sp.supplier_id, sp.flower_id
+FROM (
+  SELECT id
+  FROM suppliers
+  WHERE location = 'Local'
+) s
+JOIN supply sp ON sp.supplier_id = s.id
+JOIN flowers f ON sp.flower_id = f.id;
+      </code></pre>
+              </div>
+              <div class="right">
+                <pre><code>
+-- Before
+σ location='Local' (Supply ⨝ Suppliers ⨝ Flowers)
+
+-- After
+((Supply ⨝ (π id (σ location='Local' (Suppliers)))) ⨝ Flowers)
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Answer 6</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code>
+SELECT l.log_id, l.user_id, l.action
+FROM logs l
+JOIN (
+  SELECT id
+  FROM users
+  WHERE active = 1
+) u ON l.user_id = u.id;
+      </code></pre>
+              </div>
+              <div class="right">
+                <pre><code>
+-- Before
+σ active=1 (Logs ⨝ Users)
+
+-- After
+Logs ⨝ (π id (σ active=1 (Users)))
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Answer 7</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code>
+SELECT o.id, i.item_id, i.qty
+FROM (
+  SELECT id
+  FROM orders
+  WHERE date > '2025-01-01'
+) o
+JOIN items i ON o.id = i.order_id;
+      </code></pre>
+              </div>
+              <div class="right">
+                <pre><code>
+-- Before
+σ date>'2025-01-01' (Orders ⨝ Items)
+
+-- After
+((π id (σ date>'2025-01-01' (Orders))) ⨝ Items)
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Answer 8</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code>
+SELECT a.id, a.title, c.type
+FROM activity a
+JOIN (
+  SELECT activity_id, type
+  FROM conditions
+  WHERE type = 'once'
+) c ON a.id = c.activity_id;
+      </code></pre>
+              </div>
+              <div class="right">
+                <pre><code>
+-- Before
+σ type='once' (Activity ⨝ Conditions)
+
+-- After
+Activity ⨝ (π activity_id, type (σ type='once' (Conditions)))
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Answer 9</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code>
+SELECT p.payment_id, p.amount
+FROM (
+  SELECT id
+  FROM countries
+  WHERE code = 'US'
+) c
+JOIN users u ON u.country_id = c.id
+JOIN payments p ON p.user_id = u.id;
+      </code></pre>
+              </div>
+              <div class="right">
+                <pre><code>
+-- Before
+π payment_id, amount (σ code='US' (Payments ⨝ Users ⨝ Countries))
+
+-- After
+π payment_id, amount (
+  Payments ⨝
+  (Users ⨝ (π id (σ code='US' (Countries))))
+)
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Answer 10</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code>
+SELECT r.review_id, r.product_id, r.stars
+FROM reviews r
+JOIN (
+  SELECT id
+  FROM products
+  WHERE rating > 4
+) p ON r.product_id = p.id;
+      </code></pre>
+              </div>
+              <div class="right">
+                <pre><code>
+-- Before
+σ rating>4 (Reviews ⨝ Products)
+
+-- After
+Reviews ⨝ (π id (σ rating>4 (Products)))
+      </code></pre>
+              </div>
+            </div>
           </section>
 
         </section>
 
+        <!-- ===================== MODULE 4 =====================  -->
+
+        <section id="module-4">
+          <section id="c4">
+            <div class="full-visual">
+              <div class="frame" style="display:flex;align-items:center;justify-content:center;flex-direction:column;">
+                <h2 style="margin:0;">Module 4</h2>
+                <h2 style="margin:10px 0 0 0;">Relational Database Interfaces</h2>
+              </div>
+            </div>
+          </section>
+        </section>
 
         <!-- ===================== SQLITE ===================== -->
 
@@ -7452,6 +8536,34 @@ CREATE TABLE UserStrict (
               </div>
             </div>
           </section>
+        </section>
+
+        <!-- ===================== POSTGRESQL ===================== -->
+
+        <section id="postgresql">
+
+          <section>
+            <h5>PostgreSQL Overview</h5>
+
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Open-source relational database system</li>
+                  <li>Supports advanced data types</li>
+                  <li>Supports advanced performance features</li>
+                  <li>ACID compliant with strong consistency guarantees</li>
+                  <li>Extensible with custom functions and data types</li>
+                  <li>Robust community and ecosystem</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <br>
+                <img src="https://www.postgresql.org/media/img/about/press/elephant.png" style="width:150px;">
+              </div>
+            </div>
+          </section>
+
         </section>
 
         <!-- Syllabus -->
