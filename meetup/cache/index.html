@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Caching Patterns in JavaScript: Cache Aside & Cache Through</title>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/9850/9850812.png" type="image/png" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/black.min.css" id="theme" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/monokai.css" />
+  <style>
+    body { margin: 0; font-family: Arial, Helvetica, sans-serif; }
+    pre { background-color: #2d2d2d !important; }
+    .slides { width: 90% !important; }
+    li { font-size: 14pt; line-height: 1.5em; }
+    .highlight, code { background-color: #333; color: #ffcc00; padding: 2px 4px; border-radius: 4px; font-weight: bold; }
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
+    .split ul { font-size: 1.05em; color: #ddd; }
+    .split pre { padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: 16px; line-height: 1.35em; }
+    .small { font-size: 0.9em; color:#bbb; }
+    .diagram { border: 2px solid #666; border-radius: 12px; padding: 14px 16px; background:#161616; }
+    .row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; justify-content:center; }
+    .pill { display:inline-block; padding:8px 12px; border-radius:999px; border:1px solid #777; background:#1f1f1f; font-size:1.0em; color:#ddd; }
+    .arrow { font-size: 1.6em; color:#aaa; padding: 0 6px; }
+    .warn { color:#ffcc00; font-weight:bold; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    th, td { border: 1px solid #666; padding: 8px; }
+    th { background:#444; color:#fff; }
+    td { color:#ddd; }
+    .tag { display:inline-block; border:1px solid #777; padding: 4px 8px; border-radius: 8px; font-size: 0.9em; color:#ddd; margin-right:6px; }
+    .callout { border-left: 6px solid #ffcc00; padding: 10px 14px; background:#1a1a1a; border-radius: 8px; }
+    .two-col { display:grid; grid-template-columns: 1fr 1fr; gap:1.2rem; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- Slide 1 -->
+      <section style="text-align:center">
+        <h3>Cache Patterns in <span class="highlight">JavaScript</span></h3>
+        <p style="margin-top:0.6rem">Cache Aside vs Cache Through</p>
+        <hr style="margin:1rem 30%">
+        <p class="small">Concepts, diagrams, and runnable-style examples</p>
+      </section>
+
+      <!-- Slide 2 -->
+      <section>
+        <h4>Why Caching Exists</h4>
+        <ul>
+          <li>Reduce repeated work (DB calls, API calls, expensive compute)</li>
+          <li>Improve latency (fast reads) and reduce load (fewer origin hits)</li>
+          <li>Absorb traffic spikes</li>
+          <li class="warn">Trade off: correctness becomes a design concern</li>
+        </ul>
+        <div class="callout small">
+          Traditional rule: speed comes from doing less work, not doing the same work faster.
+        </div>
+      </section>
+
+      <!-- Slide 3 -->
+      <section>
+        <h4>Core Vocabulary</h4>
+        <ul>
+          <li><span class="tag">Origin</span> the source of truth (DB, API, file store)</li>
+          <li><span class="tag">Cache</span> fast store (memory, Redis, CDN)</li>
+          <li><span class="tag">Hit</span> cache has the data</li>
+          <li><span class="tag">Miss</span> cache does not have the data</li>
+          <li><span class="tag">TTL</span> time to live (expiry)</li>
+          <li><span class="tag">Invalidate</span> remove or mark stale</li>
+        </ul>
+      </section>
+
+      <!-- Slide 4 -->
+      <section>
+        <h4>The Two Patterns</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Pattern</th>
+              <th>Who loads the cache?</th>
+              <th>Common use</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Cache Aside</strong></td>
+              <td>Application code</td>
+              <td>Most common in app services</td>
+            </tr>
+            <tr>
+              <td><strong>Cache Through</strong></td>
+              <td>Cache layer (acts like a “front”)</td>
+              <td>Read heavy systems, standardized access</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Slide 5 -->
+      <section>
+        <h4>Diagram: Cache Aside (Read Path)</h4>
+        <div class="diagram">
+          <div class="row">
+            <span class="pill">Client</span><span class="arrow">→</span>
+            <span class="pill">App</span><span class="arrow">→</span>
+            <span class="pill">Cache</span>
+          </div>
+          <div class="row" style="margin-top:10px">
+            <span class="pill">Hit: return</span>
+            <span class="pill">Miss: App calls Origin</span>
+          </div>
+          <div class="row" style="margin-top:10px">
+            <span class="pill">Origin</span><span class="arrow">→</span>
+            <span class="pill">App stores in Cache</span><span class="arrow">→</span>
+            <span class="pill">Client</span>
+          </div>
+        </div>
+        <p class="small">Key idea: app decides when to read/write cache.</p>
+      </section>
+
+      <!-- Slide 6 -->
+      <section>
+        <h4>Cache Aside</h4>
+        <pre><code class="language-js">// in-memory cache (demo)
+const cache = new Map();
+
+async function fetchFromOrigin(userId) {
+  // pretend DB/API call
+  return { id: userId, name: "User " + userId, source: "origin" };
+}
+
+async function getUserCacheAside(userId) {
+  const key = `user:${userId}`;
+
+  if (cache.has(key)) {
+    return { ...cache.get(key), source: "cache" };
+  }
+
+  const value = await fetchFromOrigin(userId);
+  cache.set(key, value);
+  return value;
+}
+</code></pre>
+      </section>
+
+      <!-- Slide 7 -->
+      <section>
+        <h4>Cache Aside: Add TTL (JS)</h4>
+        <div class="split">
+          <div>
+            <ul>
+              <li>TTL prevents “forever stale” data</li>
+              <li>Simple approach: store <code>expiresAt</code></li>
+              <li>On read: if expired, treat as miss</li>
+              <li class="warn">TTL is a guess, not correctness</li>
+            </ul>
+          </div>
+          <div>
+            <pre><code class="language-js">const cacheTTL = new Map();
+
+function setWithTTL(key, value, ttlMs) {
+  cacheTTL.set(key, { value, expiresAt: Date.now() + ttlMs });
+}
+
+function getWithTTL(key) {
+  const entry = cacheTTL.get(key);
+  if (!entry) return null;
+  if (Date.now() > entry.expiresAt) {
+    cacheTTL.delete(key);
+    return null;
+  }
+  return entry.value;
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 8 -->
+      <section>
+        <h4>Cache Aside: Read With TTL (JS)</h4>
+        <pre><code class="language-js">async function getUserCacheAsideTTL(userId) {
+  const key = `user:${userId}`;
+  const cached = getWithTTL(key);
+
+  if (cached) return { ...cached, source: "cache" };
+
+  const value = await fetchFromOrigin(userId);
+  setWithTTL(key, value, 30_000); // 30 seconds
+  return { ...value, source: "origin" };
+}
+</code></pre>
+      </section>
+
+      <!-- Slide 9 -->
+      <section>
+        <h4>Cache Aside: Write Path (Two Common Options)</h4>
+        <div class="two-col">
+          <div class="callout">
+            <h5 style="margin:0 0 10px 0">Option A: Write to Origin, then Invalidate Cache</h5>
+            <ul>
+              <li>Update origin first</li>
+              <li>Delete cache key(s)</li>
+              <li>Next read will re-load</li>
+            </ul>
+          </div>
+          <div class="callout">
+            <h5 style="margin:0 0 10px 0">Option B: Write to Origin, then Update Cache</h5>
+            <ul>
+              <li>Update origin first</li>
+              <li>Update cache with new value</li>
+              <li>Useful if reads follow writes</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 10 -->
+      <section>
+        <h4>Cache Aside: Write + Invalidate (JS)</h4>
+        <pre><code class="language-js">async function updateUserName(userId, newName) {
+  // 1) write to origin
+  await writeToOrigin(userId, { name: newName });
+
+  // 2) invalidate cache
+  const key = `user:${userId}`;
+  cacheTTL.delete(key);
+
+  return { id: userId, name: newName, updated: true };
+}
+
+// demo stub
+async function writeToOrigin(userId, patch) {
+  return { ok: true, id: userId, patch };
+}
+</code></pre>
+        <p class="small">Classic and reliable: correctness leans on origin; cache is disposable.</p>
+      </section>
+
+      <!-- Slide 11 -->
+      <section>
+        <h4>Cache Aside: The Stale Read Problem</h4>
+        <ul>
+          <li>Cache may return old data until TTL expires or invalidation happens</li>
+          <li>Common causes:
+            <ul>
+              <li>missing invalidation</li>
+              <li>invalidation too broad or too narrow</li>
+              <li>multiple cache keys representing same entity</li>
+            </ul>
+          </li>
+          <li class="warn">Caching forces you to define what “fresh enough” means.</li>
+        </ul>
+      </section>
+
+      <!-- Slide 12 -->
+      <section>
+        <h4>Cache Aside: Thundering Herd (Many Misses)</h4>
+        <div class="split">
+          <div>
+            <ul>
+              <li>When cache expires, many requests miss at once</li>
+              <li>They all hit origin together (spike)</li>
+              <li>Fix: “single flight” (dedupe in-flight work)</li>
+            </ul>
+          </div>
+          <div class="diagram">
+            <div class="row">
+              <span class="pill">100 clients</span><span class="arrow">→</span>
+              <span class="pill">App</span><span class="arrow">→</span>
+              <span class="pill warn">Origin overload</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 13 -->
+      <section>
+        <h4>Cache Aside: Single Flight (JS)</h4>
+        <pre><code class="language-js">const inflight = new Map();
+
+async function getUserSingleFlight(userId) {
+  const key = `user:${userId}`;
+  const cached = getWithTTL(key);
+  if (cached) return { ...cached, source: "cache" };
+
+  if (inflight.has(key)) return inflight.get(key);
+
+  const p = (async () => {
+    const value = await fetchFromOrigin(userId);
+    setWithTTL(key, value, 30_000);
+    inflight.delete(key);
+    return { ...value, source: "origin" };
+  })().catch(err => { inflight.delete(key); throw err; });
+
+  inflight.set(key, p);
+  return p;
+}
+</code></pre>
+      </section>
+
+      <!-- Slide 14 -->
+      <section>
+        <h4>Cache Aside: Negative Caching</h4>
+        <div class="split">
+          <div>
+            <ul>
+              <li>Cache “not found” briefly</li>
+              <li>Prevents repeated origin hits for missing keys</li>
+              <li>Use a short TTL (avoid hiding newly-created data)</li>
+            </ul>
+          </div>
+          <div>
+            <pre><code class="language-js">const NOT_FOUND = Symbol("NOT_FOUND");
+
+async function getUserWithNegativeCache(userId) {
+  const key = `user:${userId}`;
+  const cached = getWithTTL(key);
+  if (cached === NOT_FOUND) return null;
+  if (cached) return cached;
+
+  const v = await fetchFromOrigin(userId);
+  if (!v) { setWithTTL(key, NOT_FOUND, 5_000); return null; }
+
+  setWithTTL(key, v, 30_000);
+  return v;
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 15 -->
+      <section>
+        <h4>Cache Aside: Good Fit / Poor Fit</h4>
+        <table>
+          <thead>
+            <tr><th>Good Fit</th><th>Poor Fit</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Read heavy endpoints</td>
+              <td>Highly volatile data needing strict freshness</td>
+            </tr>
+            <tr>
+              <td>Simple app ownership of logic</td>
+              <td>Many services need same cached behavior</td>
+            </tr>
+            <tr>
+              <td>Disposable cache acceptable</td>
+              <td>Complex invalidation rules, many derived keys</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- Slide 16 -->
+      <section>
+        <h4>Transition: Cache Through</h4>
+        <ul>
+          <li>Cache acts like a “front” to the origin</li>
+          <li>Application talks to cache; cache loads from origin on miss</li>
+          <li>App becomes simpler for reads</li>
+          <li class="warn">But cache layer becomes a real system component</li>
+        </ul>
+      </section>
+
+      <!-- Slide 17 -->
+      <section>
+        <h4>Diagram: Cache Through (Read Path)</h4>
+        <div class="diagram">
+          <div class="row">
+            <span class="pill">Client</span><span class="arrow">→</span>
+            <span class="pill">App</span><span class="arrow">→</span>
+            <span class="pill warn">Cache-Through Layer</span>
+          </div>
+          <div class="row" style="margin-top:10px">
+            <span class="pill">Hit: returns value</span>
+            <span class="pill">Miss: Cache loads Origin</span>
+          </div>
+          <div class="row" style="margin-top:10px">
+            <span class="pill">Origin</span><span class="arrow">→</span>
+            <span class="pill">Cache stores</span><span class="arrow">→</span>
+            <span class="pill">App</span>
+          </div>
+        </div>
+        <p class="small">Key idea: a shared “read-through” abstraction owns fetch+store.</p>
+      </section>
+
+      <!-- Slide 18 -->
+      <section>
+        <h4>Cache Through: A Small JS Abstraction</h4>
+        <pre><code class="language-js">function createCacheThrough({ ttlMs, loader }) {
+  const store = new Map();
+
+  function getEntry(key) {
+    const e = store.get(key);
+    if (!e) return null;
+    if (Date.now() > e.expiresAt) { store.delete(key); return null; }
+    return e.value;
+  }
+
+  function setEntry(key, value) {
+    store.set(key, { value, expiresAt: Date.now() + ttlMs });
+  }
+
+  return {
+    async get(key) {
+      const cached = getEntry(key);
+      if (cached) return { value: cached, source: "cache" };
+
+      const value = await loader(key);
+      setEntry(key, value);
+      return { value, source: "origin" };
+    },
+    invalidate(key) { store.delete(key); }
+  };
+}
+</code></pre>
+      </section>
+
+      <!-- Slide 19 -->
+      <section>
+        <h4>Cache Through: Use It (JS)</h4>
+        <pre><code class="language-js">async function loadUserByKey(key) {
+  const userId = key.split(":")[1];
+  return fetchFromOrigin(userId);
+}
+
+const userCache = createCacheThrough({
+  ttlMs: 30_000,
+  loader: loadUserByKey
+});
+
+async function getUserCacheThrough(userId) {
+  const key = `user:${userId}`;
+  const { value, source } = await userCache.get(key);
+  return { ...value, source };
+}
+</code></pre>
+        <p class="small">App reads become consistent and short.</p>
+      </section>
+
+      <!-- Slide 20 -->
+      <section>
+        <h4>Cache Through: Write Path Choices</h4>
+        <ul>
+          <li><strong>Write-through</strong>: write goes to cache layer which updates origin and cache</li>
+          <li><strong>Write-around</strong>: write goes to origin, cache is invalidated or left alone</li>
+          <li>Many systems do: write to origin + invalidate (simple)</li>
+        </ul>
+        <div class="callout small">
+          “Cache through” usually refers to read-through. Write-through is an additional choice.
+        </div>
+      </section>
+
+      <!-- Slide 21 -->
+      <section>
+        <h4>Diagram: Write-Through</h4>
+        <div class="diagram">
+          <div class="row">
+            <span class="pill">App</span><span class="arrow">→</span>
+            <span class="pill warn">Cache Layer</span><span class="arrow">→</span>
+            <span class="pill">Origin</span>
+          </div>
+          <div class="row" style="margin-top:10px">
+            <span class="pill">Cache updates stored value</span>
+            <span class="pill">Origin updated</span>
+          </div>
+        </div>
+        <p class="small">Pro: consistent reads after write. Con: cache layer must handle failures carefully.</p>
+      </section>
+
+      <!-- Slide 22 -->
+      <section>
+        <h4>Write-Through Example (JS Demo)</h4>
+        <pre><code class="language-js">function createWriteThrough({ ttlMs, readLoader, writeSaver }) {
+  const base = createCacheThrough({ ttlMs, loader: readLoader });
+
+  return {
+    async get(key) { return base.get(key); },
+    async put(key, value) {
+      // 1) write to origin
+      await writeSaver(key, value);
+      // 2) update cache (fresh)
+      // reuse base internals by invalidating then forcing set via loader style
+      // simplest: store directly by calling get then overriding
+      base.invalidate(key);
+      // store updated value in cache by a tiny loader trick:
+      const patched = { value, source: "write-through" };
+      // not exposing store: in a real impl, provide base.set(key, value)
+      return patched;
+    },
+    invalidate(key) { base.invalidate(key); }
+  };
+}
+</code></pre>
+      </section>
+
+      <!-- Slide 23 -->
+      <section>
+        <h4>Cache Through: Standardization Benefit</h4>
+        <ul>
+          <li>One place to handle TTL, retries, serialization, metrics</li>
+          <li>One place to add single-flight (dedupe) and circuit breakers</li>
+          <li>Multiple call sites behave the same way</li>
+          <li class="warn">Downside: if the cache layer breaks, everyone feels it</li>
+        </ul>
+      </section>
+
+      <!-- Slide 24 -->
+      <section>
+        <h4>Cache Through: Add Single Flight Inside (JS)</h4>
+        <pre><code class="language-js">function createCacheThroughSingleFlight({ ttlMs, loader }) {
+  const store = new Map();
+  const inflight = new Map();
+
+  function getEntry(key) {
+    const e = store.get(key);
+    if (!e) return null;
+    if (Date.now() > e.expiresAt) { store.delete(key); return null; }
+    return e.value;
+  }
+
+  return {
+    async get(key) {
+      const cached = getEntry(key);
+      if (cached) return { value: cached, source: "cache" };
+
+      if (inflight.has(key)) return inflight.get(key);
+
+      const p = (async () => {
+        const v = await loader(key);
+        store.set(key, { value: v, expiresAt: Date.now() + ttlMs });
+        inflight.delete(key);
+        return { value: v, source: "origin" };
+      })().catch(err => { inflight.delete(key); throw err; });
+
+      inflight.set(key, p);
+      return p;
+    },
+    invalidate(key) { store.delete(key); }
+  };
+}
+</code></pre>
+      </section>
+
+      <!-- Slide 25 -->
+      <section>
+        <h4>Aside vs Through: Concept Summary</h4>
+        <div class="two-col">
+          <div class="diagram">
+            <h5 style="margin:0 0 10px 0">Cache Aside</h5>
+            <ul>
+              <li>App checks cache</li>
+              <li>App loads origin on miss</li>
+              <li>App decides invalidation</li>
+            </ul>
+          </div>
+          <div class="diagram">
+            <h5 style="margin:0 0 10px 0">Cache Through</h5>
+            <ul>
+              <li>App calls cache abstraction</li>
+              <li>Cache loads origin on miss</li>
+              <li>Centralized policy + behavior</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 26 -->
+      <section>
+        <h4>What Can Go Wrong? (Both Patterns)</h4>
+        <ul>
+          <li><strong>Stale data</strong> (TTL too long, missed invalidation)</li>
+          <li><strong>Hot keys</strong> (one key dominates traffic)</li>
+          <li><strong>Cache stampede</strong> (many misses at once)</li>
+          <li><strong>Inconsistent keys</strong> (same entity stored under many keys)</li>
+          <li><strong>Serialization drift</strong> (shape changes across versions)</li>
+        </ul>
+      </section>
+
+      <!-- Slide 27 -->
+      <section>
+        <h4>Key Design: Naming & Versioning</h4>
+        <div class="split">
+          <div>
+            <ul>
+              <li>Use prefixes and stable IDs:
+                <ul>
+                  <li class="mono"><code>user:v1:123</code></li>
+                  <li class="mono"><code>orders:v2:customer:55</code></li>
+                </ul>
+              </li>
+              <li>Add a version to support schema changes</li>
+              <li>For lists, include filter params in the key</li>
+            </ul>
+          </div>
+          <div>
+            <pre><code class="language-js">function userKey(userId) {
+  return `user:v1:${userId}`;
+}
+
+function ordersKey(customerId, status) {
+  return `orders:v2:c:${customerId}:s:${status}`;
+}</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 28 -->
+      <section>
+        <h4>Metrics</h4>
+        <ul>
+          <li><span class="highlight">Hit rate</span> = hits / (hits + misses)</li>
+          <li><span class="highlight">Origin QPS</span> should drop when cache works</li>
+          <li><span class="highlight">P95 latency</span> should improve</li>
+          <li>Track: cache size, evictions, TTL expirations</li>
+        </ul>
+        <pre><code class="language-js">const metrics = { hit: 0, miss: 0 };
+
+function record(source) {
+  if (source === "cache") metrics.hit++;
+  else metrics.miss++;
+}
+
+function hitRate() {
+  const total = metrics.hit + metrics.miss;
+  return total ? (metrics.hit / total) : 0;
+}</code></pre>
+      </section>
+
+      <!-- Slide 29 -->
+      <section>
+        <h4>Mini Exercise: Build Both Patterns</h4>
+        <ul>
+          <li>Implement <code>getProductCacheAside(id)</code> with TTL</li>
+          <li>Implement <code>productCacheThrough.get(key)</code> with single-flight</li>
+          <li>Simulate origin delay (e.g., <code>await sleep(200)</code>)</li>
+          <li>Call each function 10 times and print sources</li>
+        </ul>
+        <pre><code class="language-js">const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+async function fetchProductFromOrigin(id) {
+  await sleep(200);
+  return { id, price: 10 + Number(id), ts: Date.now() };
+}</code></pre>
+      </section>
+
+      <!-- Slide 30 -->
+      <section>
+        <h4>Practical Rule of Thumb</h4>
+        <ul>
+          <li><strong>Start with cache aside</strong> (simple, explicit, easy to debug)</li>
+          <li>Move toward <strong>cache through</strong> when many call sites need the same behavior</li>
+          <li>Keep invalidation rules conservative and easy to explain</li>
+          <li class="warn">If you cannot explain staleness policy, the cache will confuse everyone</li>
+        </ul>
+        <div class="callout small">
+          Traditional approach: keep the “source of truth” sacred; treat cache as a helper.
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/highlight.min.js"></script>
+  <script>
+    Reveal.initialize({
+      controls: true,
+      progress: true,
+      center: true,
+      hash: true,
+      plugins: [RevealHighlight]
+    });
+  </script>
+</body>
+</html>
