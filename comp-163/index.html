@@ -8703,8 +8703,8 @@ Rotate secrets
             <div class="split">
               <div class="left">
                 <ul>
-                  <li>Introduction PostgreSQL</li>
                   <li>Relational Database Admin Interfaces</li>
+                  <li>Introduction PostgreSQL</li>
                   <li>Relational Database Developer Interfaces</li>
                   <li>Relational Database User Interfaces</li>
                   <li>Practice Questions</li>
@@ -8720,9 +8720,503 @@ User   → consume data safely
             </div>
           </section>
 
+
+          <!-- ========================================================= -->
+          <!-- ADMIN INTERFACE: 10 SLIDES (drop into your deck) -->
+          <!-- ========================================================= -->
+
           <section>
-            <h5>Questions?</h5>
+            <div class="split">
+
+              <div class="left" style="display:flex; align-items:center; justify-content:center;">
+                <div class="full-visual">
+                  <div class="frame"
+                    style="display:flex; align-items:center; justify-content:center; flex-direction:column;">
+                    <h2 style="margin:0;">Admin Interface</h2>
+                    <h2 style="margin:10px 0 0 0;">Database Ownership Tasks</h2>
+                    <p style="margin:18px 0 0 0; font-size:18pt; text-align:center;">
+                      CLI · GUI · Tools<br>
+                      backups · users · schema · monitoring
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="right">
+                <div class="tier" style="font-size: 17pt; text-align:center;">
+                  <pre><code>
+                 ┌──────────────────────┐
+                 │   Admin Interface    │
+                 │  (CLI · GUI · Tools) │
+                 └──────────┬───────────┘
+                            │
+                            │
+┌──────────────────────┐    │    ┌──────────────────────┐
+│  Application Code    │────┼────│   Data Tools / ETL   │
+│ (Web · Mobile · API) │    │    │  (Import · Export)   │
+└──────────┬───────────┘    │    └──────────┬───────────┘
+           │                │               │
+           │                ▼               │
+           │        ┌────────────────┐      │
+           └───────▶      DBMS       ◀─────┘
+                    │ (SQLite / PG)  │
+                    │  parse · exec  │
+                    │  enforce rules │
+                    └────────────────┘
+                            ▲
+                            │
+                 ┌──────────┴───────────┐
+                 │   Reporting / BI     │
+                 │  (Queries · Views)   │
+                 └──────────────────────┘
+</code></pre>
+                </div>
+              </div>
+
+            </div>
           </section>
+
+          <!-- ========================================================= -->
+          <!-- 2. WHAT IS AN ADMIN INTERFACE -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>What is an Admin Interface?</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>It is the <span class="highlight">control surface</span> for a database system</li>
+                  <li>Used by DBAs, platform engineers, and senior devs</li>
+                  <li>Focus: ownership tasks, safety, repeatability, audit</li>
+                  <li>Includes roles, backups, perf, schema changes</li>
+                </ul>
+                <div class="tier" style="margin-top:16px;">
+                  <p style="margin:0;">
+                    Traditional rule: treat admin actions like production change control.
+                  </p>
+                </div>
+              </div>
+              <div class="right">
+                <div class="tier" style="font-size:16pt; text-align:center;">
+                  <pre><code>
+Admin Interface = "How we control the DB"
+Not:
+- how users browse data
+- how apps call SQL
+Yes:
+- how owners keep it stable
+</code></pre>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 3. ADMIN TASKS TABLE -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Admin Interface Task Map</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>Area</th>
+                  <th>Typical Tasks</th>
+                  <th>Why it matters</th>
+                  <th>Common Tools</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Identity</td>
+                  <td>Users, roles, grants, password rotation</td>
+                  <td>Least privilege</td>
+                  <td>psql, pgAdmin, cloud console</td>
+                </tr>
+                <tr>
+                  <td>Reliability</td>
+                  <td>Backups, restore tests, replication checks</td>
+                  <td>Recovery time</td>
+                  <td>pg_dump, snapshots</td>
+                </tr>
+                <tr>
+                  <td>Schema</td>
+                  <td>Migrations, constraints, indexes, data fixes</td>
+                  <td>Correctness</td>
+                  <td>migration tools, SQL</td>
+                </tr>
+                <tr>
+                  <td>Observability</td>
+                  <td>Slow queries, locks, storage growth, alerts</td>
+                  <td>Predictability</td>
+                  <td>metrics, logs, dashboards</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 4. CLI VS GUI (LEFT RIGHT) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>CLI vs GUI for Admin Work</h5>
+            <div class="split">
+              <div class="left">
+                <h6 style="margin-top:0;">CLI (traditional)</h6>
+                <ul>
+                  <li>Scriptable and repeatable</li>
+                  <li>Easy to review in change logs</li>
+                  <li>Works over slow links</li>
+                  <li>Good for emergency response</li>
+                </ul>
+                <div class="tier">
+                  <pre><code>
+psql
+pg_dump / pg_restore
+SQL scripts
+cron / CI jobs
+</code></pre>
+                </div>
+              </div>
+              <div class="right">
+                <h6 style="margin-top:0;">GUI (operational)</h6>
+                <ul>
+                  <li>Discoverability: browse schema and settings</li>
+                  <li>Good for onboarding and spot checks</li>
+                  <li>Lower barrier for safe read only work</li>
+                  <li>Must be used carefully for write actions</li>
+                </ul>
+                <div class="tier">
+                  <pre><code>
+pgAdmin
+DBeaver
+SQLite Browser
+Cloud consoles
+</code></pre>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 5. PERMISSIONS FLOW DIAGRAM -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Admin Controls Access: Roles and Grants</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Admin defines roles first</li>
+                  <li>Roles get permissions (not individual users)</li>
+                  <li>Apps run with service accounts</li>
+                  <li>Auditing requires predictable role design</li>
+                </ul>
+              </div>
+              <div class="right">
+                <div class="tier" style="font-size:16pt; text-align:center;">
+                  <pre><code>
+┌──────────────┐      grants       ┌──────────────┐
+│    Admin     │──────────────────▶│     Role     │
+│ (owner)      │                   │ (policy)     │
+└──────┬───────┘                   └──────┬───────┘
+       │                                  │
+       │ assigns                           │ used by
+       ▼                                  ▼
+┌──────────────┐                  ┌──────────────┐
+│    User      │                  │    App       │
+│ (human)      │                  │ (service)    │
+└──────┬───────┘                  └──────┬───────┘
+       │                                  │
+       └────────────── SQL ───────────────┘
+                      ▼
+               ┌──────────────┐
+               │     DBMS     │
+               │ checks rules │
+               └──────────────┘
+</code></pre>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 6. BACKUP AND RESTORE PIPELINE (DIAGRAM) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Backups: The Most Important Admin Habit</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Backups are only real if restore is tested</li>
+                  <li>Prefer scheduled, automated backups</li>
+                  <li>Keep copies separated from the primary system</li>
+                  <li>Track: RPO (data loss) and RTO (recovery time)</li>
+                </ul>
+                <div class="tier">
+                  <p style="margin:0;">
+                    Traditional rule: practice restore like a fire drill.
+                  </p>
+                </div>
+              </div>
+              <div class="right">
+                <div class="tier" style="font-size:16pt; text-align:center;">
+                  <pre><code>
+┌──────────────┐     pg_dump      ┌──────────────┐
+│   Primary    │─────────────────▶│   Backup     │
+│   DBMS       │                  │   Store      │
+└──────┬───────┘                  └──────┬───────┘
+       │                                 │
+       │ restore test                    │ retention
+       ▼                                 ▼
+┌──────────────┐   pg_restore    ┌──────────────┐
+│  Staging DB  │◀────────────────│   Policies   │
+│ (verification)                 │ (30d / 90d)  │
+└──────┬───────┘                 └──────────────┘
+       │
+       ▼
+  confidence report
+</code></pre>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 7. SCHEMA CHANGE: SAFE PATH TABLE -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Schema Changes: Safe Admin Workflow</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Schema is a contract between apps and data</li>
+                  <li>Changes should follow a predictable sequence</li>
+                  <li>Prefer migration scripts under version control</li>
+                </ul>
+              </div>
+              <div class="right">
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>Step</th>
+                      <th>Action</th>
+                      <th>Admin goal</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>1</td>
+                      <td>Plan change</td>
+                      <td>Know impact</td>
+                    </tr>
+                    <tr>
+                      <td>2</td>
+                      <td>Run in staging</td>
+                      <td>Catch issues early</td>
+                    </tr>
+                    <tr>
+                      <td>3</td>
+                      <td>Deploy during window</td>
+                      <td>Minimize disruption</td>
+                    </tr>
+                    <tr>
+                      <td>4</td>
+                      <td>Validate with queries</td>
+                      <td>Confirm correctness</td>
+                    </tr>
+                    <tr>
+                      <td>5</td>
+                      <td>Record + audit</td>
+                      <td>Traceability</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 8. MONITORING: WHAT TO WATCH -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Monitoring: What Admins Watch</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Slow queries and query volume</li>
+                  <li>Locks and long transactions</li>
+                  <li>Disk growth and bloat</li>
+                  <li>Connection counts and errors</li>
+                  <li>Replication lag (if used)</li>
+                </ul>
+              </div>
+              <div class="right">
+                <div class="tier" style="font-size:16pt; text-align:center;">
+                  <pre><code>
+Signals → Actions
+
+Slow queries      → optimize SQL / add index
+Locks             → fix transactions
+Disk growth       → retention / cleanup
+Auth failures     → rotate secrets / investigate
+Backup failures   → stop and repair immediately
+</code></pre>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 9. ADMIN INTERFACE IN 3-TIER SYSTEM -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Where Admin Interface Fits in 3 Tier Architecture</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Users should not reach the database directly</li>
+                  <li>Apps should access data through a backend</li>
+                  <li>Admins may access DBMS directly, but with strict controls</li>
+                  <li>Admin access should be logged and limited</li>
+                </ul>
+              </div>
+              <div class="right">
+                <div class="tier" style="font-size:16pt; text-align:center;">
+                  <pre><code>
+┌──────────────────────┐
+│        Users         │
+└──────────┬───────────┘
+           │ HTTPS
+           ▼
+┌──────────────────────┐
+│      Frontend        │
+└──────────┬───────────┘
+           │ REST
+           ▼
+┌──────────────────────┐
+│       Backend        │
+└──────────┬───────────┘
+           │ SQL
+           ▼
+┌──────────────────────┐
+│        DBMS          │
+└──────────┬───────────┘
+           ▲
+           │ privileged (admin)
+┌──────────┴───────────┐
+│   Admin Interface     │
+│ (CLI · GUI · Tools)   │
+└──────────────────────┘
+</code></pre>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 10. QUICK CHECK: IS IT AN ADMIN TASK -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Quick Check: Is this an Admin Task?</h5>
+            <div class="split">
+              <div class="left">
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>Task</th>
+                      <th>Admin?</th>
+                      <th>Why</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Creating a backup</td>
+                      <td class="highlight">Yes</td>
+                      <td>Reliability ownership</td>
+                    </tr>
+                    <tr>
+                      <td>Managing user permissions</td>
+                      <td class="highlight">Yes</td>
+                      <td>Policy and access control</td>
+                    </tr>
+                    <tr>
+                      <td>Writing a new API endpoint</td>
+                      <td>No</td>
+                      <td>Application layer work</td>
+                    </tr>
+                    <tr>
+                      <td>Building a dashboard view</td>
+                      <td>No</td>
+                      <td>User or BI interface work</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="right">
+                <div class="tier" style="font-size:16pt; text-align:center;">
+                  <pre><code>
+Admin work:
+- keeps system stable
+- changes ownership settings
+- restores service when broken
+
+If it changes policy, backups, or schema:
+it is admin.
+</code></pre>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Admin Interface: Neon for PostgreSQL</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Admin UI for hosted PostgreSQL</li>
+                  <li>Useful for quick setup and inspection</li>
+                </ul>
+              </div>
+              <div class="right">
+                <p>
+                  <a href="https://console.neon.tech/app/" target="_blank">Open Neon Console</a>
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Admin Interface: DB Browser for SQLite</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Admin GUI for local SQLite databases</li>
+                  <li>Open <span class="highlight">.db</span> files and inspect tables</li>
+                  <li>Run SQL queries and export results (CSV)</li>
+                  <li>You can see schema and data side by side</li>
+                </ul>
+              </div>
+              <div class="right">
+                <p>
+                  <a href="https://sqlitebrowser.org/dl/" target="_blank">Download DB Browser for SQLite</a>
+                </p>
+                <div class="tier" style="font-size:16pt; text-align:center;">
+                  <pre><code>
+┌──────────────┐     open .db     ┌──────────────────────┐
+│   Student    │ ──────────────▶ │ DB Browser (GUI)     │
+│ (local file) │                  │ tables · schema · SQL│
+└──────────────┘                  └──────────┬───────────┘
+                                             │
+                                             ▼
+                                     ┌──────────────┐
+                                     │ SQLite DB    │
+                                     │ tables · rows│
+                                     └──────────────┘
+</code></pre>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section>Questions?</section>
 
           <section>
             <h5>Task 1: Creating a Database Backup</h5>
@@ -8747,6 +9241,40 @@ User   → consume data safely
           <section>
             <h5>Task 5: Updating Software Dependencies</h5>
             <p>Is this an Admin Task, Developer Task, or User Task?</p>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- PostgresSQL -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>PostgreSQL Queries</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>SQLite is useful for learning and local work</li>
+                  <li>PostgreSQL is used for multi user, production systems</li>
+                  <li>PostgreSQL specific query behavior</li>
+                </ul>
+                <div class="tier" style="margin-top:16px;">
+                  <p style="margin:0;">
+                    Traditional flow: learn SQLite first, then move to PostgreSQL.
+                  </p>
+                </div>
+              </div>
+              <div class="right" style="display:flex; align-items:center; justify-content:center;">
+                <div class="frame" style="text-align:center;">
+                  <p style="font-size:18pt; margin-bottom:12px;">
+                    Jump to PostgreSQL section
+                  </p>
+                  <p>
+                    <a href="/#/7" style="font-size:20pt; font-weight:bold;">
+                      Open PostgreSQL Slides →
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
           </section>
 
           <!-- ========================================================= -->
@@ -8910,6 +9438,10 @@ def manage_flowers():
           <section>
             <h5>Question 3</h5>
             <p>Does the frontend directly modify the database?</p>
+          </section>
+
+          <section>
+            <h5>Questions?</h5>
           </section>
 
           <!-- ========================================================= -->
@@ -10090,6 +10622,309 @@ CREATE TABLE UserStrict (
               </div>
             </div>
           </section>
+
+          <!-- ========================================================= -->
+          <!-- SQLITE vs POSTGRESQL: QUERY COMPARISON (10 SLIDES) -->
+          <!-- Left = SQLite | Right = PostgreSQL -->
+          <!-- ========================================================= -->
+
+          <!-- ========================================================= -->
+          <!-- 1. COVER -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>SQLite vs PostgreSQL: Query Comparison</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>File based embedded database</li>
+                  <li>Simple setup, zero configuration</li>
+                  <li>Good for local apps and learning</li>
+                </ul>
+              </div>
+              <div class="right">
+                <ul>
+                  <li>Client server database system</li>
+                  <li>Multi user, concurrent access</li>
+                  <li>Production grade workloads</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 2. CREATE TABLE -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>CREATE TABLE</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">
+CREATE TABLE users (
+  id INTEGER PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT UNIQUE
+);
+</code></pre>
+                <ul>
+                  <li>INTEGER PRIMARY KEY auto increments</li>
+                  <li>Types are flexible</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(255) UNIQUE
+);
+</code></pre>
+                <ul>
+                  <li>Explicit data types</li>
+                  <li>SERIAL generates sequence</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 3. INSERT -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>INSERT</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">
+INSERT INTO users (name, email)
+VALUES ('Alice', 'alice@example.com');
+</code></pre>
+                <ul>
+                  <li>No RETURNING support (older versions)</li>
+                  <li>Last ID fetched separately</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+INSERT INTO users (name, email)
+VALUES ('Alice', 'alice@example.com')
+RETURNING id;
+</code></pre>
+                <ul>
+                  <li>RETURNING is built in</li>
+                  <li>Common in APIs</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 4. READ (SELECT) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>READ (SELECT)</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">
+SELECT id, name, email
+FROM users
+WHERE name = 'Alice';
+</code></pre>
+                <ul>
+                  <li>Simple query engine</li>
+                  <li>Single writer at a time</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT id, name, email
+FROM users
+WHERE name = 'Alice';
+</code></pre>
+                <ul>
+                  <li>Advanced optimizer</li>
+                  <li>Concurrent reads and writes</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 5. UPDATE -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>UPDATE</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">
+UPDATE users
+SET email = 'new@example.com'
+WHERE id = 1;
+</code></pre>
+                <ul>
+                  <li>No RETURNING clause</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+UPDATE users
+SET email = 'new@example.com'
+WHERE id = 1
+RETURNING *;
+</code></pre>
+                <ul>
+                  <li>Can return updated rows</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 6. DELETE -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>DELETE</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">
+DELETE FROM users
+WHERE id = 1;
+</code></pre>
+                <ul>
+                  <li>Deletes row immediately</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+DELETE FROM users
+WHERE id = 1
+RETURNING id;
+</code></pre>
+                <ul>
+                  <li>Supports auditing patterns</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 7. TRANSACTIONS -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>TRANSACTIONS</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">
+BEGIN;
+UPDATE users SET name = 'Bob';
+COMMIT;
+</code></pre>
+                <ul>
+                  <li>Database level lock on write</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+BEGIN;
+UPDATE users SET name = 'Bob';
+COMMIT;
+</code></pre>
+                <ul>
+                  <li>MVCC allows concurrency</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 8. CONSTRAINTS -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>CONSTRAINTS</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">
+CREATE TABLE orders (
+  id INTEGER PRIMARY KEY,
+  user_id INTEGER,
+  FOREIGN KEY (user_id)
+    REFERENCES users(id)
+);
+</code></pre>
+                <ul>
+                  <li>Foreign keys must be enabled</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  user_id INT REFERENCES users(id)
+);
+</code></pre>
+                <ul>
+                  <li>Constraints always enforced</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 9. DATA TYPES -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>DATA TYPES</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Dynamic typing</li>
+                  <li>TEXT, INTEGER, REAL</li>
+                  <li>Type affinity model</li>
+                </ul>
+                <pre><code class="sql">
+price TEXT
+price INTEGER
+price REAL
+</code></pre>
+              </div>
+              <div class="right">
+                <ul>
+                  <li>Strong typing</li>
+                  <li>Numeric, JSON, UUID, arrays</li>
+                </ul>
+                <pre><code class="sql">
+price NUMERIC(10,2)
+data JSONB
+id UUID
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 10. WHEN TO USE -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>When to Use Which</h5>
+            <div class="split">
+              <div class="left">
+                  <ul>
+                    <li>Local apps</li>
+                    <li>Single user tools</li>
+                    <li>Teaching and prototyping</li>
+                    <li>Low operational overhead</li>
+                  </ul>
+              </div>
+              <div class="right">
+                <ul>
+                  <li>Multi user systems</li>
+                  <li>Concurrent workloads</li>
+                  <li>APIs and web apps</li>
+                  <li>Production systems</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+
 
           <section>
             <h5>Client Server Database</h5>
