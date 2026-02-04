@@ -739,10 +739,6 @@
       </section>
 
       <!-- MODULE 1 -->
-      <!-- ===================================================== -->
-      <!-- MODULE 1 (REFACTORED): DATABASE, SCHEMA, TABLE -->
-      <!-- Keep this entire block and replace your existing #module-1 section -->
-      <!-- ===================================================== -->
       <section id="module-1">
 
         <!-- Title -->
@@ -1692,6 +1688,7 @@ DROP DATABASE IF EXISTS flower_shop;</code></pre>
 
       </section>
 
+      <!-- MODULE 2 -->
       <section id="module-2">
 
         <!-- Title -->
@@ -2626,6 +2623,7 @@ SELECT ... WHERE ...;   -- confirm</code></pre>
 
       </section>
 
+      <!-- MODULE 3 -->
       <section id="module-3">
 
         <!-- ===================================================== -->
@@ -3383,6 +3381,1132 @@ A complete mental model</code></pre>
         </section>
 
       </section>
+
+      <!-- MODULE 4 -->
+      <!-- ========================================================= -->
+      <!-- MODULE 4: ORDER, DISTINCT, AS, ALL, LIMIT, OFFSET (RETAIL) -->
+      <!-- PostgreSQL focus + SQLite comparison tables                -->
+      <!-- ========================================================= -->
+      <section id="module-4">
+
+        <!-- 01 — Diagram (cover) -->
+        <section>
+          <h2>Module 4</h2>
+          <h3>PostgreSQL Query Refinement</h3>
+          <p class="muted">ORDER · DISTINCT · AS · ALL · LIMIT · OFFSET</p>
+          <svg width="100%" height="260" viewBox="0 0 1200 260" role="img" aria-label="Retail pipeline diagram">
+            <rect x="60" y="70" width="260" height="120" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="190" y="125" text-anchor="middle" font-size="28" fill="rgba(255,255,255,0.92)">Retail Data</text>
+            <text x="190" y="160" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">tables + rows</text>
+
+            <rect x="470" y="70" width="260" height="120" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="600" y="125" text-anchor="middle" font-size="28" fill="rgba(255,255,255,0.92)">SELECT</text>
+            <text x="600" y="160" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">refine output</text>
+
+            <rect x="880" y="70" width="260" height="120" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="1010" y="125" text-anchor="middle" font-size="28" fill="rgba(255,255,255,0.92)">Results</text>
+            <text x="1010" y="160" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">sorted / unique /
+              paged</text>
+
+            <line x1="320" y1="130" x2="470" y2="130" stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+            <polygon points="470,130 455,122 455,138" fill="rgba(255,255,255,0.35)" />
+
+            <line x1="730" y1="130" x2="880" y2="130" stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+            <polygon points="880,130 865,122 865,138" fill="rgba(255,255,255,0.35)" />
+          </svg>
+        </section>
+
+        <!-- 02 — Split (goals) -->
+        <section>
+          <h3>Module goal</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Build a retail schema</li>
+                <li>Practice query refinement clauses</li>
+                <li>Compare PostgreSQL to SQLite where it matters</li>
+                <li>Keep output predictable and readable</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- This module adds "shape controls" to SELECT:
+-- DISTINCT, AS, ORDER BY, LIMIT, OFFSET, ALL</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 03 — Diagram (schema overview) -->
+        <section>
+          <h3>Retail schema map</h3>
+          <svg width="100%" height="300" viewBox="0 0 1200 300" role="img" aria-label="Retail schema diagram">
+            <!-- customers -->
+            <rect x="70" y="50" width="300" height="90" rx="14" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="220" y="95" text-anchor="middle" font-size="24" fill="rgba(255,255,255,0.9)">customers</text>
+            <text x="220" y="125" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">customer_id
+              (PK)</text>
+
+            <!-- orders -->
+            <rect x="450" y="50" width="300" height="90" rx="14" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="600" y="95" text-anchor="middle" font-size="24" fill="rgba(255,255,255,0.9)">orders</text>
+            <text x="600" y="125" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">order_id (PK),
+              customer_id (FK)</text>
+
+            <!-- products -->
+            <rect x="70" y="190" width="300" height="90" rx="14" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="220" y="235" text-anchor="middle" font-size="24" fill="rgba(255,255,255,0.9)">products</text>
+            <text x="220" y="265" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">product_id
+              (PK)</text>
+
+            <!-- order_items -->
+            <rect x="450" y="190" width="300" height="90" rx="14" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="600" y="235" text-anchor="middle" font-size="24" fill="rgba(255,255,255,0.9)">order_items</text>
+            <text x="600" y="265" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">(order_id,
+              product_id)</text>
+
+            <!-- arrows (relationships) -->
+            <line x1="370" y1="95" x2="450" y2="95" stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+            <polygon points="450,95 435,87 435,103" fill="rgba(255,255,255,0.35)" />
+
+            <line x1="600" y1="140" x2="600" y2="190" stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+            <polygon points="600,190 592,175 608,175" fill="rgba(255,255,255,0.35)" />
+
+            <line x1="370" y1="235" x2="450" y2="235" stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+            <polygon points="450,235 435,227 435,243" fill="rgba(255,255,255,0.35)" />
+          </svg>
+        </section>
+
+        <!-- 04 — Split (create tables intro) -->
+        <section>
+          <h3>Create the tables first</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Start with a small, clear schema</li>
+                <li>Primary keys: stable identifiers</li>
+                <li>Foreign keys: enforce valid references</li>
+                <li>Then we refine output using Module 4 clauses</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Recommended order:
+-- 1) customers
+-- 2) products
+-- 3) orders (FK -> customers)
+-- 4) order_items (FK -> orders/products)</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 05 — Split (CREATE customers) -->
+        <section>
+          <h3>CREATE TABLE customers</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>One row per customer</li>
+                <li>City becomes useful for DISTINCT + ORDER BY</li>
+                <li>Use <span class="highlight">SERIAL</span> for demo simplicity</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">CREATE TABLE customers (
+  customer_id SERIAL PRIMARY KEY,
+  name        TEXT NOT NULL,
+  city        TEXT NOT NULL
+);</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 06 — Split (CREATE products) -->
+        <section>
+          <h3>CREATE TABLE products</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>One row per product</li>
+                <li>Category supports DISTINCT</li>
+                <li>Price supports ORDER BY</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">CREATE TABLE products (
+  product_id SERIAL PRIMARY KEY,
+  name       TEXT NOT NULL,
+  category   TEXT NOT NULL,
+  price      NUMERIC(10,2) NOT NULL
+);</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 07 — Split (CREATE orders) -->
+        <section>
+          <h3>CREATE TABLE orders</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>One row per order</li>
+                <li>Date supports ORDER BY + LIMIT</li>
+                <li>Total supports ORDER BY</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">CREATE TABLE orders (
+  order_id      SERIAL PRIMARY KEY,
+  customer_id   INTEGER NOT NULL REFERENCES customers(customer_id),
+  order_date    DATE NOT NULL,
+  total_amount  NUMERIC(10,2) NOT NULL
+);</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 08 — Split (CREATE order_items) -->
+        <section>
+          <h3>CREATE TABLE order_items</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Stores quantities per order</li>
+                <li>Composite key prevents duplicates</li>
+                <li>We will query single tables only in this module</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">CREATE TABLE order_items (
+  order_id   INTEGER NOT NULL REFERENCES orders(order_id),
+  product_id INTEGER NOT NULL REFERENCES products(product_id),
+  quantity   INTEGER NOT NULL CHECK (quantity > 0),
+  PRIMARY KEY (order_id, product_id)
+);</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 09 — Split (seed data) -->
+        <section>
+          <h3>Insert small sample data</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Data: 3 to 6 rows per table</li>
+                <li>Enough to see duplicates + sorting</li>
+                <li>Keep values realistic</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">INSERT INTO customers(name, city) VALUES
+('Ava', 'Stockton'),
+('Noah','Sacramento'),
+('Mia', 'Stockton');
+
+INSERT INTO products(name, category, price) VALUES
+('USB-C Cable', 'Accessories', 9.99),
+('Laptop Stand','Accessories', 29.99),
+('Notebook',    'Stationery',  3.49);
+
+INSERT INTO orders(customer_id, order_date, total_amount) VALUES
+(1, DATE '2026-02-01', 39.98),
+(2, DATE '2026-02-02',  3.49),
+(1, DATE '2026-02-03',  9.99);</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 10 — Table (types + IDs: SQLite vs Postgres) -->
+        <section>
+          <h3>Comparison: IDs and types</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Topic</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Auto increment id</td>
+                <td><code>INTEGER PRIMARY KEY AUTOINCREMENT</code></td>
+                <td><code>SERIAL</code> (demo) or <code>GENERATED AS IDENTITY</code></td>
+              </tr>
+              <tr>
+                <td>Money type</td>
+                <td>Often stored as <code>REAL</code> or cents as <code>INTEGER</code></td>
+                <td><code>NUMERIC(10,2)</code> common</td>
+              </tr>
+              <tr>
+                <td>Date type</td>
+                <td>Stored as TEXT/INTEGER/REAL by convention</td>
+                <td><code>DATE</code> is native</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 11 — Diagram (DISTINCT concept) -->
+        <section>
+          <h3>DISTINCT concept</h3>
+          <svg width="100%" height="260" viewBox="0 0 1200 260" role="img" aria-label="Distinct removes duplicates">
+            <rect x="90" y="60" width="420" height="140" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="300" y="105" text-anchor="middle" font-size="24" fill="rgba(255,255,255,0.9)">Input rows</text>
+            <text x="300" y="140" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">Stockton,
+              Sacramento, Stockton</text>
+
+            <rect x="690" y="60" width="420" height="140" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="900" y="105" text-anchor="middle" font-size="24" fill="rgba(255,255,255,0.9)">DISTINCT
+              output</text>
+            <text x="900" y="140" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">Stockton,
+              Sacramento</text>
+
+            <line x1="510" y1="130" x2="690" y2="130" stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+            <polygon points="690,130 675,122 675,138" fill="rgba(255,255,255,0.35)" />
+          </svg>
+        </section>
+
+        <!-- 12 — Split (DISTINCT example) -->
+        <section>
+          <h3>DISTINCT: unique cities</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>One column = unique values in that column</li>
+                <li>Common for dropdown filters</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT DISTINCT city
+FROM customers
+ORDER BY city;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 13 — Split (DISTINCT multi column) -->
+        <section>
+          <h3>DISTINCT: multiple columns</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Uniqueness applies to the full row (tuple)</li>
+                <li>Useful for “unique pairs”</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT DISTINCT city, name
+FROM customers
+ORDER BY city, name;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 14 — Split (DISTINCT without joins) -->
+        <section>
+          <h3>DISTINCT: unique product categories</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Single table example (no relationships needed)</li>
+                <li>Great for filters and admin menus</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT DISTINCT category
+FROM products
+ORDER BY category;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 15 — Table (DISTINCT comparison) -->
+        <section>
+          <h3>Comparison: DISTINCT behavior</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>DISTINCT meaning</td>
+                <td>Removes duplicate result rows</td>
+                <td>Removes duplicate result rows</td>
+              </tr>
+              <tr>
+                <td>Interaction with ORDER BY</td>
+                <td>Works; keep ORDER BY explicit</td>
+                <td>Works; keep ORDER BY explicit</td>
+              </tr>
+              <tr>
+                <td>Good habit</td>
+                <td>Use for unique labels, not as a “fix”</td>
+                <td>Use for unique labels, not as a “fix”</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 16 — Diagram (AS concept) -->
+        <section>
+          <h3>AS concept</h3>
+          <svg width="100%" height="260" viewBox="0 0 1200 260" role="img" aria-label="Alias naming diagram">
+            <rect x="120" y="70" width="420" height="120" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="330" y="120" text-anchor="middle" font-size="22" fill="rgba(255,255,255,0.9)">Expression</text>
+            <text x="330" y="155" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">total_amount *
+              1.08</text>
+
+            <rect x="660" y="70" width="420" height="120" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="870" y="120" text-anchor="middle" font-size="22" fill="rgba(255,255,255,0.9)">Alias</text>
+            <text x="870" y="155" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">AS
+              total_with_tax</text>
+
+            <line x1="540" y1="130" x2="660" y2="130" stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+            <polygon points="660,130 645,122 645,138" fill="rgba(255,255,255,0.35)" />
+          </svg>
+        </section>
+
+        <!-- 17 — Split (AS column alias) -->
+        <section>
+          <h3>AS: rename columns</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Alias improves readability</li>
+                <li>Especially in wide SELECT output</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT
+  order_id,
+  total_amount AS order_total
+FROM orders;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 18 — Split (AS computed columns without joins) -->
+        <section>
+          <h3>AS: computed columns (single table)</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Compute a derived value</li>
+                <li>Example: estimated tax at 8%</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT
+  order_id,
+  total_amount,
+  (total_amount * 0.08) AS est_tax,
+  (total_amount * 1.08) AS total_with_tax
+FROM orders
+ORDER BY order_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 19 — Split (AS in ORDER BY) -->
+        <section>
+          <h3>AS + ORDER BY</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Order by alias for clarity</li>
+                <li>Prefer explicit ORDER BY in reports</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT
+  order_id,
+  total_amount AS total
+FROM orders
+ORDER BY total DESC;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 20 — Table (alias rules comparison) -->
+        <section>
+          <h3>Comparison: aliases</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Topic</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Basic alias</td>
+                <td><code>expr AS alias</code></td>
+                <td><code>expr AS alias</code></td>
+              </tr>
+              <tr>
+                <td>Quoting alias with spaces</td>
+                <td><code>AS "Order Total"</code></td>
+                <td><code>AS "Order Total"</code></td>
+              </tr>
+              <tr>
+                <td>Best practice</td>
+                <td>snake_case aliases</td>
+                <td>snake_case aliases</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 21 — Diagram (ORDER BY concept) -->
+        <section>
+          <h3>ORDER BY concept</h3>
+          <svg width="100%" height="260" viewBox="0 0 1200 260" role="img" aria-label="Ordering output diagram">
+            <rect x="120" y="70" width="420" height="120" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="330" y="120" text-anchor="middle" font-size="22" fill="rgba(255,255,255,0.9)">Unsorted</text>
+            <text x="330" y="155" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">29.99, 3.49,
+              9.99</text>
+
+            <rect x="660" y="70" width="420" height="120" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="870" y="120" text-anchor="middle" font-size="22" fill="rgba(255,255,255,0.9)">ORDER BY price</text>
+            <text x="870" y="155" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">3.49, 9.99,
+              29.99</text>
+
+            <line x1="540" y1="130" x2="660" y2="130" stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+            <polygon points="660,130 645,122 645,138" fill="rgba(255,255,255,0.35)" />
+          </svg>
+        </section>
+
+        <!-- 22 — Split (ORDER BY asc) -->
+        <section>
+          <h3>ORDER BY ascending</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Ascending is default</li>
+                <li>Good for price lists</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT name, price
+FROM products
+ORDER BY price;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 23 — Split (ORDER BY desc) -->
+        <section>
+          <h3>ORDER BY descending</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Use DESC for “top spenders / biggest orders”</li>
+                <li>Common in dashboards</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT order_id, total_amount
+FROM orders
+ORDER BY total_amount DESC;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 24 — Split (ORDER BY multiple columns) -->
+        <section>
+          <h3>ORDER BY multiple columns</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Sort by city first, then by name</li>
+                <li>Produces stable, readable lists</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT city, name
+FROM customers
+ORDER BY city ASC, name ASC;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 25 — Split (ORDER BY best practice with LIMIT) -->
+        <section>
+          <h3>ORDER BY + LIMIT habit</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Top N requires ORDER BY</li>
+                <li>Without ORDER BY, “top” is meaningless</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Top 3 most expensive products
+SELECT name, price
+FROM products
+ORDER BY price DESC
+LIMIT 3;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 26 — Table (NULL ordering comparison) -->
+        <section>
+          <h3>Comparison: ordering NULLs</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Goal</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Put NULLs last</td>
+                <td>Workaround: <code>ORDER BY (col IS NULL), col</code></td>
+                <td>Supports <code>NULLS LAST</code> / <code>NULLS FIRST</code></td>
+              </tr>
+              <tr>
+                <td>Put NULLs first</td>
+                <td>Workaround: <code>ORDER BY (col IS NOT NULL), col</code></td>
+                <td><code>ORDER BY col NULLS FIRST</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 27 — Diagram (LIMIT concept) -->
+        <section>
+          <h3>LIMIT concept</h3>
+          <svg width="100%" height="260" viewBox="0 0 1200 260" role="img"
+            aria-label="Limit takes first rows after ordering">
+            <rect x="110" y="80" width="980" height="100" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="600" y="125" text-anchor="middle" font-size="22" fill="rgba(255,255,255,0.9)">ORDER BY defines the
+              line; LIMIT takes the first N</text>
+            <text x="600" y="160" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">Think: “top 10”,
+              “latest 20”, “first page”</text>
+          </svg>
+        </section>
+
+        <!-- 28 — Split (LIMIT simple) -->
+        <section>
+          <h3>LIMIT: first rows</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Quick sample of a table</li>
+                <li>Use ORDER BY if you care which rows</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT *
+FROM customers
+LIMIT 2;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 29 — Split (LIMIT latest orders) -->
+        <section>
+          <h3>LIMIT: latest orders</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Latest requires date ordering</li>
+                <li>Classic audit query</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT order_id, order_date, total_amount
+FROM orders
+ORDER BY order_date DESC
+LIMIT 10;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 30 — Split (Postgres LIMIT ALL) -->
+        <section>
+          <h3>PostgreSQL: LIMIT ALL</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><code>LIMIT ALL</code> means “no limit”</li>
+                <li>Equivalent to omitting LIMIT</li>
+                <li>Mostly seen in generated SQL</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- PostgreSQL
+SELECT *
+FROM products
+LIMIT ALL;  -- same as no LIMIT</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 31 — Table (LIMIT syntax comparison) -->
+        <section>
+          <h3>Comparison: LIMIT</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Pattern</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Return first N rows</td>
+                <td><code>LIMIT 10</code></td>
+                <td><code>LIMIT 10</code></td>
+              </tr>
+              <tr>
+                <td>No limit keyword</td>
+                <td>Omit LIMIT</td>
+                <td><code>LIMIT ALL</code> or omit LIMIT</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 32 — Diagram (OFFSET concept) -->
+        <section>
+          <h3>OFFSET concept</h3>
+          <svg width="100%" height="260" viewBox="0 0 1200 260" role="img" aria-label="Offset skips rows">
+            <rect x="110" y="80" width="980" height="100" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="600" y="125" text-anchor="middle" font-size="22" fill="rgba(255,255,255,0.9)">OFFSET skips rows;
+              useful for pagination</text>
+            <text x="600" y="160" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">Combine with ORDER
+              BY to keep pages stable</text>
+          </svg>
+        </section>
+
+        <!-- 33 — Split (OFFSET only) -->
+        <section>
+          <h3>OFFSET: skip rows</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Skipping without LIMIT returns “the rest”</li>
+                <li>Always pair with ORDER BY</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT order_id, order_date
+FROM orders
+ORDER BY order_date DESC
+OFFSET 10;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 34 — Split (LIMIT + OFFSET pagination) -->
+        <section>
+          <h3>LIMIT + OFFSET: page 2</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Page size = 10</li>
+                <li>Page 2 = skip 10, take 10</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT order_id, order_date, total_amount
+FROM orders
+ORDER BY order_date DESC
+LIMIT 10 OFFSET 10;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 35 — Split (keyset pagination alternative) -->
+        <section>
+          <h3>Pagination: keyset alternative</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>OFFSET can get slow on large tables</li>
+                <li>Keyset uses “last seen” value</li>
+                <li>Stable for “load more” patterns</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Suppose last page ended at order_date = '2026-02-01'
+SELECT order_id, order_date, total_amount
+FROM orders
+WHERE order_date < DATE '2026-02-01'
+ORDER BY order_date DESC
+LIMIT 10;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 36 — Table (OFFSET comparison) -->
+        <section>
+          <h3>Comparison: OFFSET</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Topic</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Syntax</td>
+                <td><code>LIMIT n OFFSET m</code></td>
+                <td><code>LIMIT n OFFSET m</code></td>
+              </tr>
+              <tr>
+                <td>Performance note</td>
+                <td>Large OFFSET may still scan many rows</td>
+                <td>Large OFFSET may still scan many rows</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 37 — Diagram (ALL concept) -->
+        <section>
+          <h3>ALL concept</h3>
+          <svg width="100%" height="280" viewBox="0 0 1200 280" role="img"
+            aria-label="ALL comparison against set diagram">
+            <rect x="90" y="70" width="460" height="140" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="320" y="115" text-anchor="middle" font-size="22" fill="rgba(255,255,255,0.9)">Compare a
+              value</text>
+            <text x="320" y="150" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">price > ALL
+              (subquery prices)</text>
+
+            <rect x="650" y="70" width="460" height="140" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="880" y="115" text-anchor="middle" font-size="22" fill="rgba(255,255,255,0.9)">Meaning</text>
+            <text x="880" y="150" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">greater than every
+              value in the set</text>
+
+            <line x1="550" y1="140" x2="650" y2="140" stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+            <polygon points="650,140 635,132 635,148" fill="rgba(255,255,255,0.35)" />
+          </svg>
+        </section>
+
+        <!-- 38 — Split (ALL example products) -->
+        <section>
+          <h3>ALL: pricier than all Accessories</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Single table + subquery</li>
+                <li>Reads like “greater than the maximum”</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT name, price
+FROM products
+WHERE price > ALL (
+  SELECT price
+  FROM products
+  WHERE category = 'Accessories'
+)
+ORDER BY price;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 39 — Split (ALL example orders per customer) -->
+        <section>
+          <h3>ALL: orders bigger than all orders of a customer</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Single table + subquery</li>
+                <li>Good for “outlier spend” checks</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT order_id, total_amount
+FROM orders
+WHERE total_amount > ALL (
+  SELECT total_amount
+  FROM orders
+  WHERE customer_id = 1
+)
+ORDER BY total_amount DESC;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 40 — Split (rewrite ALL using MAX) -->
+        <section>
+          <h3>Rewrite ALL using MAX</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Often clearer for teams</li>
+                <li>Same meaning as the ALL example</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT name, price
+FROM products
+WHERE price > (
+  SELECT MAX(price)
+  FROM products
+  WHERE category = 'Accessories'
+)
+ORDER BY price;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 41 — Table (ALL support comparison) -->
+        <section>
+          <h3>Comparison: ALL support</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>ALL</code> with subqueries</td>
+                <td>Not commonly supported</td>
+                <td>Supported</td>
+              </tr>
+              <tr>
+                <td>Portable alternative</td>
+                <td><code>MAX()</code>, <code>MIN()</code>, or a subquery with aggregates</td>
+                <td><code>ALL</code> or <code>MAX()</code>/<code>MIN()</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 42 — Split (ORDER + DISTINCT together) -->
+        <section>
+          <h3>DISTINCT + ORDER BY: clean labels</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Common admin pattern</li>
+                <li>Unique values + sorted for humans</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT DISTINCT category
+FROM products
+ORDER BY category;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 43 — Split (AS + computed + ORDER without joins) -->
+        <section>
+          <h3>AS + computed + ORDER BY (single table)</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Sort by derived metric</li>
+                <li>Example: total with tax</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT
+  order_id,
+  total_amount,
+  (total_amount * 1.08) AS total_with_tax
+FROM orders
+ORDER BY total_with_tax DESC
+LIMIT 10;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 44 — Diagram (query refinement ladder) -->
+        <section>
+          <h3>Refinement ladder</h3>
+          <svg width="100%" height="300" viewBox="0 0 1200 300" role="img" aria-label="Refinement ladder diagram">
+            <rect x="120" y="60" width="960" height="200" rx="18" fill="rgba(255,255,255,0.05)"
+              stroke="rgba(255,255,255,0.22)" stroke-width="2" />
+            <text x="200" y="115" font-size="20" fill="rgba(255,255,255,0.85)">1) Columns</text>
+            <text x="200" y="155" font-size="20" fill="rgba(255,255,255,0.85)">2) Names (AS)</text>
+            <text x="200" y="195" font-size="20" fill="rgba(255,255,255,0.85)">3) Uniqueness (DISTINCT)</text>
+
+            <text x="680" y="115" font-size="20" fill="rgba(255,255,255,0.85)">4) Order (ORDER BY)</text>
+            <text x="680" y="155" font-size="20" fill="rgba(255,255,255,0.85)">5) Size (LIMIT)</text>
+            <text x="680" y="195" font-size="20" fill="rgba(255,255,255,0.85)">6) Pages (OFFSET)</text>
+
+            <text x="600" y="250" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.70)">ALL is a set
+              comparison tool (PostgreSQL feature)</text>
+          </svg>
+        </section>
+
+        <!-- 45 — Split (exercise 1) -->
+        <section>
+          <h3>Practice 1: unique cities</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Return unique customer cities</li>
+                <li>Sort alphabetically</li>
+                <li>One row per city</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT DISTINCT city
+FROM customers
+ORDER BY city;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 46 — Split (exercise 2) -->
+        <section>
+          <h3>Practice 2: top 5 orders</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Show the 5 largest orders</li>
+                <li>Rename total_amount to total</li>
+                <li>Sort descending</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT order_id, total_amount AS total
+FROM orders
+ORDER BY total DESC
+LIMIT 5;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 47 — Diagram (pagination UI) -->
+        <section>
+          <h3>Pagination in a UI</h3>
+          <svg width="100%" height="260" viewBox="0 0 1200 260" role="img" aria-label="Pagination UI diagram">
+            <rect x="120" y="70" width="960" height="120" rx="18" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="240" y="130" text-anchor="middle" font-size="20" fill="rgba(255,255,255,0.85)">Page 1</text>
+            <text x="600" y="130" text-anchor="middle" font-size="20" fill="rgba(255,255,255,0.85)">Page 2</text>
+            <text x="960" y="130" text-anchor="middle" font-size="20" fill="rgba(255,255,255,0.85)">Page 3</text>
+
+            <text x="240" y="165" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.70)">LIMIT 10 OFFSET
+              0</text>
+            <text x="600" y="165" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.70)">LIMIT 10 OFFSET
+              10</text>
+            <text x="960" y="165" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.70)">LIMIT 10 OFFSET
+              20</text>
+          </svg>
+        </section>
+
+        <!-- 48 — Table (clause summary) -->
+        <section>
+          <h3>Clause summary</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Clause</th>
+                <th>Purpose</th>
+                <th>Retail example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>DISTINCT</code></td>
+                <td>Remove duplicates</td>
+                <td>Unique cities / categories</td>
+              </tr>
+              <tr>
+                <td><code>AS</code></td>
+                <td>Rename for clarity</td>
+                <td><code>total_amount AS total</code></td>
+              </tr>
+              <tr>
+                <td><code>ORDER BY</code></td>
+                <td>Sort results</td>
+                <td>Most recent orders first</td>
+              </tr>
+              <tr>
+                <td><code>LIMIT</code></td>
+                <td>Return first N rows</td>
+                <td>Top 10 by value</td>
+              </tr>
+              <tr>
+                <td><code>OFFSET</code></td>
+                <td>Skip rows</td>
+                <td>Pagination</td>
+              </tr>
+              <tr>
+                <td><code>ALL</code></td>
+                <td>Compare to every value in a set</td>
+                <td>Price above all in a category</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 49 — Split (cheat sheet) -->
+        <section>
+          <h3>Summary</h3>
+          <div class="split">
+            <div class="left">
+              <ul class="tight">
+                <li><strong>DISTINCT</strong>: unique rows in output</li>
+                <li><strong>AS</strong>: readable names</li>
+                <li><strong>ORDER BY</strong>: define “top” and “latest”</li>
+                <li><strong>LIMIT</strong>: cap the result size</li>
+                <li><strong>OFFSET</strong>: page through results</li>
+                <li><strong>ALL</strong>: set comparison (PostgreSQL)</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT DISTINCT category AS cat
+FROM products
+ORDER BY cat
+LIMIT 10 OFFSET 0;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 50 — Diagram (checkpoint) -->
+        <section>
+          <svg width="100%" height="260" viewBox="0 0 1200 260" role="img" aria-label="Checkpoint diagram">
+            <rect x="140" y="70" width="920" height="140" rx="18" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="600" y="120" text-anchor="middle" font-size="22" fill="rgba(255,255,255,0.9)">Before you run a
+              query, estimate what it returns.</text>
+            <text x="600" y="160" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">Unique? Sorted? How
+              many rows? Which page?</text>
+          </svg>
+        </section>
+
+      </section>
+
 
     </div>
   </div>
