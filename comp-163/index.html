@@ -490,6 +490,13 @@
       font-size: 0.72rem;
       color: #bdbdbd;
     }
+
+    .card {
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+    }
   </style>
 
 
@@ -9448,25 +9455,252 @@ def manage_flowers():
           <!-- FEB 7 -->
           <!-- ========================================================= -->
           <section id="c11">
-            <h5>Today</h5>
+            <h5>Today: Flower Store</h5>
             <div class="split">
               <div class="left">
                 <ul>
-                  <li>Practice Question</li>
-                  <li>Database Interface and ID</li>
-                  <li>Lab - Github and Python</li>
-                  <li>Team Project Part 1</li>
-                  <li>Homework 2, Lab 2</li>
+                  <li>System overview: Flower store</li>
+                  <li>Interfaces and responsibilities</li>
+                  <li>Local DB (SQLite) vs Remote DB (Postgres)</li>
+                  <li>Team project setup</li>
+                  <li>Role based implementation</li>
                 </ul>
               </div>
               <div class="right">
-                <pre><code>
-Interfaces expose data
-IDs tie everything together
-        </code></pre>
+                <ul>
+                  <li>Admin – schema, seed, system setup</li>
+                  <li>Dev (Backend) – SQL + data access</li>
+                  <li>Dev (FrontEnd) – Flask routes + UI</li>
+                  <li>User – inventory and edits</li>
+                  <li>Customer – communicate requirements</li>
+                </ul>
               </div>
             </div>
           </section>
+
+          <section>
+            <h5>ERD Design – Flower Store</h5>
+
+            <div class="split">
+              <div class="left">
+                <h6>ERD goals</h6>
+                <p>
+                  <strong>We want to keep track of the flower inventory.</strong>
+                </p>
+
+                <ul>
+                  <li>Identify the main entity</li>
+                  <li>Choose a primary key</li>
+                  <li>Select essential attributes</li>
+                </ul>
+
+                <p class="muted">
+                  Start on paper before using any tool.
+                </p>
+              </div>
+
+              <div class="right">
+                <h6>PlantUML template</h6>
+                <pre><code>
+@startuml
+entity FlowerEntity {
+  * id : int
+  --
+  attribute_one : text
+  attribute_two : text
+  attribute_three : number
+}
+@enduml
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Design Decision – Which Constraints?</h5>
+
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>What must be <strong>unique</strong>?</li>
+                  <li>What must be <strong>not null</strong>?</li>
+                  <li>What should have a <strong>default</strong> value?</li>
+                </ul>
+
+                <p class="muted">
+                  Constraints protect the data, not the code.
+                </p>
+              </div>
+
+              <div class="right">
+                <ul>
+                  <li>Can two rows share the same value?</li>
+                  <li>Can this field ever be empty?</li>
+                  <li>What value makes sense if none is provided?</li>
+                </ul>
+
+                <p class="muted">
+                  Decide at the database level first.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Design Decision – Which Database?</h5>
+
+            <div class="split">
+              <div class="left">
+                <h6>SQLite</h6>
+                <ul>
+                  <li>Local database file</li>
+                  <li>No server process</li>
+                  <li>Easy to set up</li>
+                  <li>Good for learning and prototyping</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h6>PostgreSQL</h6>
+                <ul>
+                  <li>Client–server database</li>
+                  <li>Runs as a separate service</li>
+                  <li>Supports concurrent users</li>
+                  <li>Closer to production systems</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Implementation</h5>
+
+            <div class="split">
+              <div class="left">
+                <h6>Starter code</h6>
+                <pre><code>
+# first time only
+git clone https://github.com/SE4CPS/2026-COMP-163.git
+
+# every class / work session
+cd 2026-COMP-163
+git pull
+      </code></pre>
+              </div>
+
+              <div class="right">
+                <h6>Why this matters</h6>
+                <ul>
+                  <li>Everyone starts from the same baseline</li>
+                  <li>Updates arrive incrementally</li>
+                  <li>Interfaces stay consistent</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Team Roles – Flower Store</h5>
+
+            <div class="split">
+              <div class="left">
+                <div class="card">
+                  <h6>Admin</h6>
+                  <ul>
+                    <li>Database schema</li>
+                    <li>Seed data</li>
+                    <li>System setup</li>
+                  </ul>
+                </div>
+
+                <div class="card">
+                  <h6>Dev (Backend)</h6>
+                  <ul>
+                    <li>SQL queries</li>
+                    <li>CRUD functions</li>
+                    <li>Database interface</li>
+                  </ul>
+                </div>
+
+                <div class="card">
+                  <h6>Dev (FrontEnd)</h6>
+                  <ul>
+                    <li>Flask routes</li>
+                    <li>Forms and views</li>
+                    <li>User interactions</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="right">
+                <div class="card">
+                  <h6>User</h6>
+                  <ul>
+                    <li>Add flowers</li>
+                    <li>Edit inventory</li>
+                    <li>Delete entries</li>
+                  </ul>
+                </div>
+
+                <div class="card">
+                  <h6>Customer</h6>
+                  <ul>
+                    <li>View inventory</li>
+                    <li>No edits</li>
+                    <li>Read only access</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Who Handles the Server?</h5>
+
+            <div class="split">
+              <div class="left">
+                <div class="card">
+                  <h6>Admin</h6>
+                  <ul>
+                    <li>Server setup</li>
+                    <li>Environment configuration</li>
+                    <li>Database service running</li>
+                  </ul>
+                </div>
+
+                <div class="card">
+                  <h6>Dev (Backend)</h6>
+                  <ul>
+                    <li>Application server code</li>
+                    <li>Flask app logic</li>
+                    <li>Database connections</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="right">
+                <div class="card">
+                  <h6>Server (Conceptual Role)</h6>
+                  <ul>
+                    <li>Runs continuously</li>
+                    <li>Hosts the application</li>
+                    <li>Exposes endpoints</li>
+                  </ul>
+                </div>
+
+                <div class="card">
+                  <h6>Key idea</h6>
+                  <ul>
+                    <li>No UI</li>
+                    <li>No buttons</li>
+                    <li>Pure infrastructure</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section>Questions?</section>
 
           <!-- ========================================================= -->
           <!-- INTERFACE AND ID -->
@@ -9905,6 +10139,8 @@ SELECT * FROM flowers WHERE LOWER(color) = 'red';
 SELECT * FROM customers WHERE address IS NULL;
     </code></pre>
           </section>
+
+
 
         </section>
 
