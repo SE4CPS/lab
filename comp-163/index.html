@@ -582,8 +582,10 @@
               </tr>
 
               <tr style="color:#ccc;">
-                <td style="padding:6px; border:1px solid #666;">5 (Feb 9, 11, 13)</td>
-                <td style="padding:6px; border:1px solid #666;">Relational Database Advanced SQL</td>
+                <td style="padding:6px; border:1px solid #666;">5 (<a href="./#/c12">Feb 9</a>, <a href="./#/c13">Feb
+                    11</a>, <a href="./#/c14">Feb 13</a>)</td>
+                <td style="padding:6px; border:1px solid #666;"><a href="./#/module-5">Relational Database Advanced
+                    SQL</a></td>
                 <td style="padding:6px; border:1px solid #666;">Lab 3 + Homework 3 (2w), Project Part 1 (4w)</td>
                 <td style="padding:6px; border:1px solid #666;"></td>
                 <td style="padding:6px; border:1px solid #666;"></td>
@@ -2890,9 +2892,9 @@ WHERE id = 1;
               <div class="left">
                 <h5>Common Constraints</h5>
                 <ul>
-                  <li><strong>NOT NULL</strong> — value must exist</li>
-                  <li><strong>UNIQUE</strong> — no duplicates allowed</li>
-                  <li><strong>DEFAULT</strong> — value assigned automatically</li>
+                  <li><strong>NOT NULL</strong> : value must exist</li>
+                  <li><strong>UNIQUE</strong> : no duplicates allowed</li>
+                  <li><strong>DEFAULT</strong> : value assigned automatically</li>
                 </ul>
               </div>
               <div class="right">
@@ -3279,10 +3281,10 @@ CREATE TABLE inventory (
           <section>
             <h5>Suggested Attributes</h5>
             <ul>
-              <li><code>id</code> — unique supplier identifier</li>
-              <li><code>name</code> — supplier name</li>
-              <li><code>email</code> — contact email</li>
-              <li><code>phone</code> — optional contact number</li>
+              <li><code>id</code> : unique supplier identifier</li>
+              <li><code>name</code> : supplier name</li>
+              <li><code>email</code> : contact email</li>
+              <li><code>phone</code> : optional contact number</li>
             </ul>
           </section>
 
@@ -6032,7 +6034,7 @@ INSERT INTO Furniture VALUES
             </div>
 
             <aside class="notes">
-              This slide shows how the same mathematical set concept appears in programming and databases — no
+              This slide shows how the same mathematical set concept appears in programming and databases : no
               duplicates, just different syntax.
             </aside>
           </section>
@@ -10146,6 +10148,2944 @@ SELECT * FROM customers WHERE address IS NULL;
 
         <!-- ===================== MODULE 5 =====================  -->
 
+        <section id="module-5">
+
+          <!-- ========================================================= -->
+          <!-- COVER -->
+          <!-- ========================================================= -->
+          <section>
+            <div class="split">
+
+              <div class="left" style="display:flex; align-items:center; justify-content:center;">
+                <div class="full-visual">
+                  <div class="frame"
+                    style="display:flex; align-items:center; justify-content:center; flex-direction:column;">
+                    <h2 style="margin:0;">Module 5</h2>
+                    <h2 style="margin:10px 0 0 0;">Advanced SQL Queries</h2>
+                    <p style="margin:18px 0 0 0; font-size:18pt; text-align:center;">
+                      aggregates · grouping · ordering · limiting · analysis patterns
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="right">
+                <div class="tier" style="font-size: 17pt; text-align:center;">
+                  <pre><code>
+SELECT
+  columns, aggregates
+FROM
+  table
+WHERE
+  row filters
+GROUP BY
+  groups
+HAVING
+  group filters
+ORDER BY
+  sort
+LIMIT / OFFSET
+  page
+          </code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- TODAY -->
+          <!-- ========================================================= -->
+          <section id="c12">
+            <h5>Today</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Aggregates: <span class="highlight">COUNT MIN MAX AVG SUM</span></li>
+                  <li>Sort and limit: <span class="highlight">ORDER BY LIMIT</span></li>
+                  <li>Group and filter: <span class="highlight">GROUP BY HAVING</span></li>
+                  <li>Patterns: <span class="highlight">top N summaries checks</span></li>
+                  <li>Practice questions: <span class="highlight">intermediate</span></li>
+                </ul>
+              </div>
+              <div class="right">
+                <div class="tier" style="font-size:16pt; text-align:center;">
+                  <pre><code>
+Traditional habit:
+Read the query in order:
+
+FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT
+          </code></pre>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- CONCEPT DIAGRAM: QUERY FLOW -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Concept Diagram: Logical Query Flow</h5>
+
+            <style>
+              .diagram {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                align-items: center;
+                justify-content: center;
+              }
+
+              .box {
+                border: 2px solid #333;
+                border-radius: 10px;
+                padding: 10px 14px;
+                min-width: 130px;
+                text-align: center;
+                font-weight: 600;
+              }
+
+              .arrow {
+                font-size: 26px;
+                line-height: 1;
+                padding: 0 4px;
+              }
+
+              .diagram-note {
+                text-align: center;
+                margin-top: 14px;
+                font-size: 16pt;
+              }
+            </style>
+
+            <div class="diagram">
+              <div class="box">FROM</div>
+              <div class="arrow">→</div>
+              <div class="box">WHERE</div>
+              <div class="arrow">→</div>
+              <div class="box">GROUP BY</div>
+              <div class="arrow">→</div>
+              <div class="box">HAVING</div>
+              <div class="arrow">→</div>
+              <div class="box">SELECT</div>
+              <div class="arrow">→</div>
+              <div class="box">ORDER BY</div>
+              <div class="arrow">→</div>
+              <div class="box">LIMIT / OFFSET</div>
+            </div>
+
+            <div class="diagram-note">
+              Boxes show the usual logical order.
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- FLOWER DOMAIN (SIMPLE SCHEMA REFERENCE) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Flower Store Domain (Tables We Use)</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Familiar data for advanced practice</li>
+                  <li>One table supports many patterns</li>
+                  <li>Later: joins across multiple tables</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+-- For Module 5 practice (single table focus)
+-- flowers(flower_id, name, color, price, stock, category, supplier)
+
+-- Example categories: Rose, Tulip, Lily
+-- Example suppliers: BloomCo, PetalWorks, GardenDirect
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SECTION: ORDER BY -->
+          <!-- ========================================================= -->
+
+          <!-- Conceptual -->
+          <section>
+            <h5>Concept: ORDER BY</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Sort happens after row filtering</li>
+                  <li><span class="highlight">ASC</span> increases, <span class="highlight">DESC</span> decreases</li>
+                  <li>Use multiple columns for ties</li>
+                  <li>Sorting costs time, plan</li>
+                </ul>
+              </div>
+              <div class="right">
+                <div class="tier" style="font-size:16pt; text-align:center;">
+                  <pre><code>
+ORDER BY price DESC, name ASC
+
+First:
+  highest price
+Then:
+  alphabetical name
+          </code></pre>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Concept diagram -->
+          <section>
+            <h5>Concept Diagram: Sorting Stage</h5>
+            <div class="diagram">
+              <div class="box">Rows</div>
+              <div class="arrow">→</div>
+              <div class="box">WHERE filters</div>
+              <div class="arrow">→</div>
+              <div class="box">SELECT output</div>
+              <div class="arrow">→</div>
+              <div class="box">ORDER BY sort</div>
+            </div>
+            <div class="diagram-note">
+              Sort is applied near the end.
+            </div>
+          </section>
+
+          <!-- Example table -->
+          <section>
+            <h5>Example Data: flowers</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>flower_id</th>
+                  <th>name</th>
+                  <th>color</th>
+                  <th>price</th>
+                  <th>stock</th>
+                  <th>category</th>
+                  <th>supplier</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                  <td>Red</td>
+                  <td>12.50</td>
+                  <td>30</td>
+                  <td>Rose</td>
+                  <td>BloomCo</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Tulip</td>
+                  <td>Yellow</td>
+                  <td>6.00</td>
+                  <td>80</td>
+                  <td>Tulip</td>
+                  <td>GardenDirect</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Lily</td>
+                  <td>White</td>
+                  <td>9.25</td>
+                  <td>15</td>
+                  <td>Lily</td>
+                  <td>PetalWorks</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>Orchid</td>
+                  <td>Purple</td>
+                  <td>19.99</td>
+                  <td>6</td>
+                  <td>Orchid</td>
+                  <td>BloomCo</td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td>Daisy</td>
+                  <td>White</td>
+                  <td>3.50</td>
+                  <td>120</td>
+                  <td>Daisy</td>
+                  <td>GardenDirect</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- SQL slide (left right) -->
+          <section>
+            <h5>SQL Example: Sort by price (high to low)</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Goal: most expensive first</li>
+                  <li>Use <span class="highlight">DESC</span> for highest first</li>
+                  <li>Add tie breaker by name</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT flower_id, name, price
+FROM flowers
+ORDER BY price DESC, name ASC;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- Quiz -->
+          <section>
+            <h5>Question: ORDER BY runs at which stage?</h5>
+            <div class="split">
+              <div class="left">
+                <p>In the logical order of a query, ORDER BY is applied:</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>Before FROM</li>
+                  <li>Before WHERE</li>
+                  <li>After SELECT</li>
+                  <li>Before GROUP BY</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SECTION: LIMIT -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Concept: LIMIT</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>LIMIT restricts returned row count</li>
+                  <li>Pair with ORDER BY for top N</li>
+                  <li>Useful for paging and dashboards</li>
+                  <li>Without ORDER BY, results mislead</li>
+                </ul>
+              </div>
+              <div class="right">
+                <div class="tier" style="font-size:16pt; text-align:center;">
+                  <pre><code>
+ORDER BY + LIMIT
+= Top N pattern
+
+LIMIT alone
+= random-looking subset
+          </code></pre>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Concept diagram -->
+          <section>
+            <h5>Concept Diagram: Top N Pattern</h5>
+            <div class="diagram">
+              <div class="box">Rows</div>
+              <div class="arrow">→</div>
+              <div class="box">ORDER BY</div>
+              <div class="arrow">→</div>
+              <div class="box">LIMIT N</div>
+              <div class="arrow">→</div>
+              <div class="box">Top N results</div>
+            </div>
+            <div class="diagram-note">
+              Clean rule: sort then limit.
+            </div>
+          </section>
+
+          <section>
+            <h5>Example Data: flowers</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>flower_id</th>
+                  <th>name</th>
+                  <th>price</th>
+                  <th>stock</th>
+                  <th>category</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                  <td>12.50</td>
+                  <td>30</td>
+                  <td>Rose</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Tulip</td>
+                  <td>6.00</td>
+                  <td>80</td>
+                  <td>Tulip</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Lily</td>
+                  <td>9.25</td>
+                  <td>15</td>
+                  <td>Lily</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>Orchid</td>
+                  <td>19.99</td>
+                  <td>6</td>
+                  <td>Orchid</td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td>Daisy</td>
+                  <td>3.50</td>
+                  <td>120</td>
+                  <td>Daisy</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>SQL Example: Top 3 most expensive flowers</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Top N needs stable sort</li>
+                  <li>Sort by price descending</li>
+                  <li>Limit to three rows</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT name, price
+FROM flowers
+ORDER BY price DESC
+LIMIT 3;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: LIMIT without ORDER BY is risky because...</h5>
+            <div class="split">
+              <div class="left">
+                <p>Pick the best explanation:</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>It changes the schema</li>
+                  <li>Order becomes unpredictable</li>
+                  <li>It forces GROUP BY</li>
+                  <li>It disables indexes</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SECTION: COUNT -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Concept: COUNT</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li><span class="highlight">COUNT(*)</span> counts rows</li>
+                  <li><span class="highlight">COUNT(column)</span> ignores NULLs</li>
+                  <li>Common for dashboard metrics</li>
+                  <li>Often paired with GROUP BY</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+COUNT(*)
+= total rows
+
+COUNT(stock)
+= rows where stock is NOT NULL
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Example Data: flowers</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>flower_id</th>
+                  <th>name</th>
+                  <th>stock</th>
+                  <th>supplier</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                  <td>30</td>
+                  <td>BloomCo</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Tulip</td>
+                  <td>80</td>
+                  <td>GardenDirect</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Lily</td>
+                  <td>15</td>
+                  <td>PetalWorks</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>Orchid</td>
+                  <td>6</td>
+                  <td>BloomCo</td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td>Daisy</td>
+                  <td>120</td>
+                  <td>GardenDirect</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>SQL Example: Count all flowers</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Goal: one number</li>
+                  <li><span class="highlight">COUNT(*)</span> counts every row</li>
+                  <li>Useful for inventory size</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT COUNT(*) AS flower_count
+FROM flowers;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: COUNT(column) differs from COUNT(*) because...</h5>
+            <div class="split">
+              <div class="left">
+                <p>Choose the correct statement:</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>Counts distinct rows only</li>
+                  <li>Ignores NULL values</li>
+                  <li>COUNT(*) ignores NULLs</li>
+                  <li>Counts numeric columns only</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SECTION: MIN -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Concept: MIN</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>MIN returns smallest column value</li>
+                  <li>Works on numbers dates text</li>
+                  <li>Spot low price or stock</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+MIN(price) = cheapest flower
+MIN(stock) = lowest stock level
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Example Data: flowers</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>name</th>
+                  <th>price</th>
+                  <th>stock</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Rose</td>
+                  <td>12.50</td>
+                  <td>30</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>6.00</td>
+                  <td>80</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>9.25</td>
+                  <td>15</td>
+                </tr>
+                <tr>
+                  <td>Orchid</td>
+                  <td>19.99</td>
+                  <td>6</td>
+                </tr>
+                <tr>
+                  <td>Daisy</td>
+                  <td>3.50</td>
+                  <td>120</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>SQL Example: Cheapest flower price</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Goal: smallest price</li>
+                  <li>Return one value</li>
+                  <li>Useful for pricing checks</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT MIN(price) AS cheapest_price
+FROM flowers;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: MIN can be used on which data types?</h5>
+            <div class="split">
+              <div class="left">
+                <p>Pick the best answer:</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>Only integers</li>
+                  <li>Only numeric columns</li>
+                  <li>Numbers dates and text</li>
+                  <li>Only indexed columns</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SECTION: MAX -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Concept: MAX</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>MAX returns largest column value</li>
+                  <li>Common for highest price stock</li>
+                  <li>Use ORDER BY to get row</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+MAX(price) = highest price value
+ORDER BY price DESC LIMIT 1
+= the row with highest price
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Example Data: flowers</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>name</th>
+                  <th>price</th>
+                  <th>stock</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Rose</td>
+                  <td>12.50</td>
+                  <td>30</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>6.00</td>
+                  <td>80</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>9.25</td>
+                  <td>15</td>
+                </tr>
+                <tr>
+                  <td>Orchid</td>
+                  <td>19.99</td>
+                  <td>6</td>
+                </tr>
+                <tr>
+                  <td>Daisy</td>
+                  <td>3.50</td>
+                  <td>120</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>SQL Example: Highest flower price</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Goal: largest price value</li>
+                  <li>Aggregate returns one value</li>
+                  <li>Next: find matching row</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT MAX(price) AS highest_price
+FROM flowers;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: Which returns the row, not just the value?</h5>
+            <div class="split">
+              <div class="left">
+                <p>You want the full flower record with the highest price.</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>MAX(price) only</li>
+                  <li>ORDER BY then LIMIT 1</li>
+                  <li>COUNT(*) only</li>
+                  <li>MIN(price) only</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SECTION: SUM -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Concept: SUM</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>SUM adds values across rows</li>
+                  <li>Total stock and total value</li>
+                  <li>Watch NULLs and numeric types</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+SUM(stock) = total units on hand
+SUM(price * stock) = inventory value estimate
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Example Data: flowers</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>name</th>
+                  <th>price</th>
+                  <th>stock</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Rose</td>
+                  <td>12.50</td>
+                  <td>30</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>6.00</td>
+                  <td>80</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>9.25</td>
+                  <td>15</td>
+                </tr>
+                <tr>
+                  <td>Orchid</td>
+                  <td>19.99</td>
+                  <td>6</td>
+                </tr>
+                <tr>
+                  <td>Daisy</td>
+                  <td>3.50</td>
+                  <td>120</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>SQL Example: Total stock across all flowers</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Goal: total inventory units</li>
+                  <li>Use SUM on stock</li>
+                  <li>Result is one number</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT SUM(stock) AS total_units
+FROM flowers;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: SUM is best for...</h5>
+            <div class="split">
+              <div class="left">
+                <p>Pick the most fitting use case:</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>Alphabetical first name</li>
+                  <li>Adding all stock counts</li>
+                  <li>Removing duplicate rows</li>
+                  <li>Sorting by supplier</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SECTION: AVG -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Concept: AVG</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>AVG computes the mean value</li>
+                  <li>Useful for price baselines</li>
+                  <li>Use GROUP BY for averages</li>
+                  <li>Round for display</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+AVG(price) = typical price
+
+In PostgreSQL:
+ROUND(AVG(price), 2)
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Example Data: flowers</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>name</th>
+                  <th>price</th>
+                  <th>category</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Rose</td>
+                  <td>12.50</td>
+                  <td>Rose</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>6.00</td>
+                  <td>Tulip</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>9.25</td>
+                  <td>Lily</td>
+                </tr>
+                <tr>
+                  <td>Orchid</td>
+                  <td>19.99</td>
+                  <td>Orchid</td>
+                </tr>
+                <tr>
+                  <td>Daisy</td>
+                  <td>3.50</td>
+                  <td>Daisy</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>SQL Example: Average flower price</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Goal: average price</li>
+                  <li>Return one value</li>
+                  <li>Round for readability</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT ROUND(AVG(price), 2) AS avg_price
+FROM flowers;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: AVG(price) returns...</h5>
+            <div class="split">
+              <div class="left">
+                <p>What does AVG compute?</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>Median</li>
+                  <li>Mean</li>
+                  <li>Mode</li>
+                  <li>Minimum</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SECTION: GROUP BY -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Concept: GROUP BY</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>GROUP BY forms row buckets</li>
+                  <li>Aggregates computed per bucket</li>
+                  <li>SELECT must match grouped columns</li>
+                  <li>Foundation for reports and summaries</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+GROUP BY category
+
+Each category becomes one output row:
+- COUNT(*)
+- AVG(price)
+- SUM(stock)
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- Concept diagram -->
+          <section>
+            <h5>Concept Diagram: Grouping Stage</h5>
+            <div class="diagram">
+              <div class="box">Rows</div>
+              <div class="arrow">→</div>
+              <div class="box">GROUP BY keys</div>
+              <div class="arrow">→</div>
+              <div class="box">Buckets</div>
+              <div class="arrow">→</div>
+              <div class="box">Aggregates</div>
+            </div>
+            <div class="diagram-note">
+              Grouping turns many rows into buckets.
+            </div>
+          </section>
+
+          <section>
+            <h5>Example Data: flowers (categories)</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>name</th>
+                  <th>category</th>
+                  <th>price</th>
+                  <th>stock</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Rose</td>
+                  <td>Rose</td>
+                  <td>12.50</td>
+                  <td>30</td>
+                </tr>
+                <tr>
+                  <td>Rose (Mini)</td>
+                  <td>Rose</td>
+                  <td>8.75</td>
+                  <td>25</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>Tulip</td>
+                  <td>6.00</td>
+                  <td>80</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>Lily</td>
+                  <td>9.25</td>
+                  <td>15</td>
+                </tr>
+                <tr>
+                  <td>Orchid</td>
+                  <td>Orchid</td>
+                  <td>19.99</td>
+                  <td>6</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>SQL Example: Summary per category</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>One row per category</li>
+                  <li>Count items, average price, stock</li>
+                  <li>Classic reporting pattern</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  category,
+  COUNT(*) AS items,
+  ROUND(AVG(price), 2) AS avg_price,
+  SUM(stock) AS total_stock
+FROM flowers
+GROUP BY category
+ORDER BY items DESC;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: GROUP BY creates...</h5>
+            <div class="split">
+              <div class="left">
+                <p>When you GROUP BY category, each result row represents:</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>A single original row</li>
+                  <li>One bucket per category</li>
+                  <li>All rows combined</li>
+                  <li>Only NULL categories</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SECTION: HAVING -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Concept: HAVING</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>WHERE filters rows before grouping</li>
+                  <li>HAVING filters groups after grouping</li>
+                  <li>HAVING often uses aggregates</li>
+                  <li>Keep only meaningful buckets</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+WHERE: individual rows
+HAVING: grouped results
+
+If you need COUNT(*) in the filter:
+use HAVING
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- Concept diagram -->
+          <section>
+            <h5>Concept Diagram: WHERE vs HAVING</h5>
+            <div class="diagram">
+              <div class="box">Rows</div>
+              <div class="arrow">→</div>
+              <div class="box">WHERE row filter</div>
+              <div class="arrow">→</div>
+              <div class="box">GROUP BY</div>
+              <div class="arrow">→</div>
+              <div class="box">HAVING group filter</div>
+            </div>
+            <div class="diagram-note">
+              First filter rows, then groups.
+            </div>
+          </section>
+
+          <section>
+            <h5>Example Data: flowers (more rows)</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>name</th>
+                  <th>category</th>
+                  <th>price</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Rose</td>
+                  <td>Rose</td>
+                  <td>12.50</td>
+                </tr>
+                <tr>
+                  <td>Rose (Mini)</td>
+                  <td>Rose</td>
+                  <td>8.75</td>
+                </tr>
+                <tr>
+                  <td>Rose (Garden)</td>
+                  <td>Rose</td>
+                  <td>10.00</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>Tulip</td>
+                  <td>6.00</td>
+                </tr>
+                <tr>
+                  <td>Orchid</td>
+                  <td>Orchid</td>
+                  <td>19.99</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>SQL Example: Only categories with 2+ items</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Group by category</li>
+                  <li>Keep categories with enough items</li>
+                  <li>Use HAVING with COUNT(*)</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  category,
+  COUNT(*) AS items
+FROM flowers
+GROUP BY category
+HAVING COUNT(*) >= 2
+ORDER BY items DESC;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: WHERE vs HAVING</h5>
+            <div class="split">
+              <div class="left">
+                <p>You want categories where COUNT(*) is at least 2. Which clause?</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>WHERE</li>
+                  <li>HAVING</li>
+                  <li>ORDER BY</li>
+                  <li>LIMIT</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SECTION: DISTINCT + COUNT DISTINCT -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Concept: DISTINCT and COUNT(DISTINCT ...)</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>DISTINCT removes duplicate output rows</li>
+                  <li>COUNT DISTINCT counts unique values</li>
+                  <li>Useful for checks and coverage</li>
+                  <li>Traditional habit: verify uniqueness first</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+DISTINCT applies to SELECT output
+
+COUNT(DISTINCT x)
+= number of unique values of x
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Example Data: flowers (suppliers)</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>name</th>
+                  <th>supplier</th>
+                  <th>category</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Rose</td>
+                  <td>BloomCo</td>
+                  <td>Rose</td>
+                </tr>
+                <tr>
+                  <td>Orchid</td>
+                  <td>BloomCo</td>
+                  <td>Orchid</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>GardenDirect</td>
+                  <td>Tulip</td>
+                </tr>
+                <tr>
+                  <td>Daisy</td>
+                  <td>GardenDirect</td>
+                  <td>Daisy</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>PetalWorks</td>
+                  <td>Lily</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>SQL Example: Count unique suppliers</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Question: how many suppliers?</li>
+                  <li>Use COUNT DISTINCT supplier</li>
+                  <li>Result is one number</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT COUNT(DISTINCT supplier) AS supplier_count
+FROM flowers;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: COUNT(DISTINCT supplier) returns...</h5>
+            <div class="split">
+              <div class="left">
+                <p>What is being counted?</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>Total rows in flowers</li>
+                  <li>Total suppliers with duplicates</li>
+                  <li>Number of unique suppliers</li>
+                  <li>Suppliers with NULL names</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SECTION: MULTI COLUMN ORDER + TOP N PER GROUP (INTRO) -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Concept: Multi Column ORDER BY (Tie Breakers)</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Real data contains ties</li>
+                  <li>Second column stabilizes ordering</li>
+                  <li>Traditional habit: define consistent ordering</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+ORDER BY category ASC, price DESC
+
+First group by category (visually),
+then show expensive items at top
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Example Data: flowers (ties)</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>name</th>
+                  <th>category</th>
+                  <th>price</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Rose</td>
+                  <td>Rose</td>
+                  <td>12.50</td>
+                </tr>
+                <tr>
+                  <td>Rose (Garden)</td>
+                  <td>Rose</td>
+                  <td>12.50</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>Tulip</td>
+                  <td>6.00</td>
+                </tr>
+                <tr>
+                  <td>Tulip (Premium)</td>
+                  <td>Tulip</td>
+                  <td>6.00</td>
+                </tr>
+                <tr>
+                  <td>Orchid</td>
+                  <td>Orchid</td>
+                  <td>19.99</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>SQL Example: Sort with a tie breaker</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Same price appears multiple times</li>
+                  <li>Sort by price then name</li>
+                  <li>Output becomes stable</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT name, category, price
+FROM flowers
+ORDER BY price DESC, name ASC;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: Why add a tie breaker?</h5>
+            <div class="split">
+              <div class="left">
+                <p>Choose the best reason:</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>Prevents NULL values</li>
+                  <li>Makes result order stable</li>
+                  <li>Guarantees no duplicates</li>
+                  <li>Forces GROUP BY</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SECTION: WHERE + AGGREGATES (ROW FILTER FIRST) -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Concept: WHERE before GROUP BY</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>WHERE removes rows before grouping</li>
+                  <li>Focus subset: in stock only</li>
+                  <li>Aggregates run on remaining rows</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Example goal:
+Average price of items that are in stock
+
+WHERE stock > 0
+then AVG(price)
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Example Data: flowers (some out of stock)</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>name</th>
+                  <th>price</th>
+                  <th>stock</th>
+                  <th>category</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Rose</td>
+                  <td>12.50</td>
+                  <td>30</td>
+                  <td>Rose</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>6.00</td>
+                  <td>0</td>
+                  <td>Tulip</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>9.25</td>
+                  <td>15</td>
+                  <td>Lily</td>
+                </tr>
+                <tr>
+                  <td>Orchid</td>
+                  <td>19.99</td>
+                  <td>0</td>
+                  <td>Orchid</td>
+                </tr>
+                <tr>
+                  <td>Daisy</td>
+                  <td>3.50</td>
+                  <td>120</td>
+                  <td>Daisy</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>SQL Example: Average price for in-stock flowers</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Filter rows: stock &gt; 0</li>
+                  <li>Then compute AVG(price)</li>
+                  <li>Round for readability</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT ROUND(AVG(price), 2) AS avg_in_stock_price
+FROM flowers
+WHERE stock > 0;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: WHERE affects aggregates by...</h5>
+            <div class="split">
+              <div class="left">
+                <p>WHERE changes the aggregate results because it:</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>Sorts rows first</li>
+                  <li>Removes rows before aggregate</li>
+                  <li>Filters groups after grouping</li>
+                  <li>Changes column names</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SECTION: GROUP BY + HAVING (QUALITY CHECK PATTERN) -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Concept: Quality Check with GROUP BY + HAVING</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Many queries are sanity checks</li>
+                  <li>Find groups violating expectations</li>
+                  <li>Example: weak supplier inventory</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Pattern:
+GROUP BY supplier
+HAVING SUM(stock) < threshold
+
+Find weak suppliers
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Example Data: flowers (supplier totals)</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>name</th>
+                  <th>supplier</th>
+                  <th>stock</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Rose</td>
+                  <td>BloomCo</td>
+                  <td>30</td>
+                </tr>
+                <tr>
+                  <td>Orchid</td>
+                  <td>BloomCo</td>
+                  <td>6</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>GardenDirect</td>
+                  <td>80</td>
+                </tr>
+                <tr>
+                  <td>Daisy</td>
+                  <td>GardenDirect</td>
+                  <td>120</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>PetalWorks</td>
+                  <td>15</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>SQL Example: Suppliers with low total stock</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Group by supplier</li>
+                  <li>Compute SUM(stock)</li>
+                  <li>Keep only low totals</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  supplier,
+  SUM(stock) AS total_stock
+FROM flowers
+GROUP BY supplier
+HAVING SUM(stock) < 25
+ORDER BY total_stock ASC;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: HAVING is applied...</h5>
+            <div class="split">
+              <div class="left">
+                <p>When does HAVING filter happen?</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>Before FROM</li>
+                  <li>Before WHERE</li>
+                  <li>After GROUP BY</li>
+                  <li>Before ORDER BY</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SECTION: ORDER + LIMIT with GROUP BY (TOP GROUPS) -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Concept: Top Groups (GROUP BY + ORDER BY + LIMIT)</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Rank groups, not just rows</li>
+                  <li>Compute metric, then sort</li>
+                  <li>Limit shows top few groups</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Example:
+Top 2 categories by total stock
+
+GROUP BY category
+ORDER BY SUM(stock) DESC
+LIMIT 2
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Example Data: flowers (category stock)</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>category</th>
+                  <th>name</th>
+                  <th>stock</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Rose</td>
+                  <td>Rose</td>
+                  <td>30</td>
+                </tr>
+                <tr>
+                  <td>Rose</td>
+                  <td>Rose (Mini)</td>
+                  <td>25</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>Tulip</td>
+                  <td>80</td>
+                </tr>
+                <tr>
+                  <td>Daisy</td>
+                  <td>Daisy</td>
+                  <td>120</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>Lily</td>
+                  <td>15</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>SQL Example: Top 2 categories by total stock</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Compute group totals</li>
+                  <li>Sort totals descending</li>
+                  <li>Limit to top two</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  category,
+  SUM(stock) AS total_stock
+FROM flowers
+GROUP BY category
+ORDER BY total_stock DESC
+LIMIT 2;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: Which pattern gives "Top N categories"?</h5>
+            <div class="split">
+              <div class="left">
+                <p>Pick the most correct query pattern:</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>GROUP BY plus HAVING</li>
+                  <li>ORDER BY plus LIMIT</li>
+                  <li>GROUP BY then ORDER BY then LIMIT</li>
+                  <li>WHERE plus DISTINCT only</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SECTION: NULL HANDLING (COALESCE) -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Concept: NULLs and COALESCE</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>NULL means missing or unknown</li>
+                  <li>Some aggregates ignore NULL values</li>
+                  <li>COALESCE replaces NULL with default</li>
+                  <li>Traditional habit: state missing rules</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+COALESCE(stock, 0)
+
+If stock is NULL:
+treat it as 0 for reporting
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Example Data: flowers (NULL stock)</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>name</th>
+                  <th>stock</th>
+                  <th>supplier</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Rose</td>
+                  <td>30</td>
+                  <td>BloomCo</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>80</td>
+                  <td>GardenDirect</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>15</td>
+                  <td>PetalWorks</td>
+                </tr>
+                <tr>
+                  <td>Orchid</td>
+                  <td>NULL</td>
+                  <td>BloomCo</td>
+                </tr>
+                <tr>
+                  <td>Daisy</td>
+                  <td>120</td>
+                  <td>GardenDirect</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>SQL Example: Total stock treating NULL as 0</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Some rows have missing stock</li>
+                  <li>COALESCE converts NULL to zero</li>
+                  <li>SUM becomes consistent</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT SUM(COALESCE(stock, 0)) AS total_units
+FROM flowers;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: COALESCE(stock, 0) means...</h5>
+            <div class="split">
+              <div class="left">
+                <p>Choose the correct interpretation:</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>Convert 0 into NULL</li>
+                  <li>Convert NULL into 0</li>
+                  <li>Sort stock ascending</li>
+                  <li>Remove duplicate stock values</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SECTION: CASE (CONDITIONAL AGGREGATION INTRO) -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Concept: CASE for Buckets</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>CASE creates categories inside queries</li>
+                  <li>Useful for cheap versus premium</li>
+                  <li>Often used with GROUP BY</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+CASE
+  WHEN price >= 10 THEN 'Premium'
+  ELSE 'Standard'
+END
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Example Data: flowers (price buckets)</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>name</th>
+                  <th>price</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Rose</td>
+                  <td>12.50</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>6.00</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>9.25</td>
+                </tr>
+                <tr>
+                  <td>Orchid</td>
+                  <td>19.99</td>
+                </tr>
+                <tr>
+                  <td>Daisy</td>
+                  <td>3.50</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>SQL Example: Count flowers by price tier</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Create tier label with CASE</li>
+                  <li>Group by tier label</li>
+                  <li>Count items per tier</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  CASE
+    WHEN price >= 10 THEN 'Premium'
+    ELSE 'Standard'
+  END AS tier,
+  COUNT(*) AS items
+FROM flowers
+GROUP BY tier
+ORDER BY items DESC;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: CASE is mainly used to...</h5>
+            <div class="split">
+              <div class="left">
+                <p>Pick the best description:</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>Join two tables</li>
+                  <li>Create conditional result values</li>
+                  <li>Rename a table</li>
+                  <li>Drop a column</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SECTION: OFFSET (PAGING) -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Concept: LIMIT + OFFSET (Paging)</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>OFFSET skips rows after sorting</li>
+                  <li>Used for pagination by pages</li>
+                  <li>Always pair with ORDER BY</li>
+                  <li>Big data prefers keyset paging</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Page size = 5
+
+Page 1: LIMIT 5 OFFSET 0
+Page 2: LIMIT 5 OFFSET 5
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Example Data: flowers (sorted view)</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>name</th>
+                  <th>price</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Orchid</td>
+                  <td>19.99</td>
+                </tr>
+                <tr>
+                  <td>Rose</td>
+                  <td>12.50</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>9.25</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>6.00</td>
+                </tr>
+                <tr>
+                  <td>Daisy</td>
+                  <td>3.50</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>SQL Example: Page 2 (2 items per page)</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Assume page size equals two</li>
+                  <li>Page one uses OFFSET zero</li>
+                  <li>Page two uses OFFSET two</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT name, price
+FROM flowers
+ORDER BY price DESC
+LIMIT 2 OFFSET 2;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: OFFSET is mainly used for...</h5>
+            <div class="split">
+              <div class="left">
+                <p>Choose the correct use:</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>Adding rows to table</li>
+                  <li>Skipping rows for pagination</li>
+                  <li>Grouping rows into categories</li>
+                  <li>Enforcing primary keys</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SECTION: UUID DATA TYPE (POSTGRESQL) -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Concept: UUID Data Type</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>UUID means universally unique identifier</li>
+                  <li>128 bit identifier value</li>
+                  <li>Designed for global uniqueness</li>
+                  <li>Safe across systems and services</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Example UUID:
+550e8400-e29b-41d4-a716-446655440000
+
+Same format everywhere
+No central coordination needed
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SECTION: WHY USE UUID -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Why Use UUID Instead of SERIAL</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>No collision across databases</li>
+                  <li>Good for distributed systems</li>
+                  <li>IDs created outside database</li>
+                  <li>Harder to guess identifiers</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+SERIAL:
+  local, incremental
+  predictable
+
+UUID:
+  global, random
+  safer for APIs
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SECTION: UUID IN POSTGRESQL -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>UUID Support in PostgreSQL</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>UUID is native data type</li>
+                  <li>Stored efficiently internally</li>
+                  <li>Readable text representation</li>
+                  <li>Works with indexes and keys</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+-- UUID column type
+id UUID
+
+-- Valid in PRIMARY KEY
+PRIMARY KEY (id)
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SECTION: GENERATING RANDOM UUID -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Generating Random UUID Values</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Use built in extensions</li>
+                  <li>Random values generated automatically</li>
+                  <li>No application side logic needed</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+-- Enable extension once
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+-- Generate random UUID
+SELECT gen_random_uuid();
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SECTION: UUID COLUMN WITH DEFAULT -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Create Table With UUID Default</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>UUID generated on insert</li>
+                  <li>No value passed explicitly</li>
+                  <li>Good for primary keys</li>
+                  <li>Common modern schema practice</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+CREATE TABLE orders (
+  order_id UUID
+    DEFAULT gen_random_uuid(),
+  customer_name TEXT NOT NULL,
+  created_at TIMESTAMP NOT NULL
+    DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (order_id)
+);
+
+-- Insert without UUID
+INSERT INTO orders (customer_name)
+VALUES ('Alice');
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- PRACTICE BLOCK (INTERMEDIATE QUESTIONS: LEFT Q, RIGHT OPTIONS) -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Practice: Read this query</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">
+SELECT category, COUNT(*) AS items
+FROM flowers
+GROUP BY category
+HAVING COUNT(*) >= 3
+ORDER BY items DESC
+LIMIT 5;
+        </code></pre>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>Top five expensive flowers</li>
+                  <li>Up to five qualifying categories</li>
+                  <li>Three flowers per category</li>
+                  <li>All flowers by category</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Practice: Pick the correct clause</h5>
+            <div class="split">
+              <div class="left">
+                <p>You want to filter rows where <span class="highlight">stock &gt; 0</span> before computing
+                  SUM(stock).</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>ORDER BY</li>
+                  <li>LIMIT</li>
+                  <li>WHERE</li>
+                  <li>HAVING</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Practice: Identify the output</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">
+SELECT COUNT(DISTINCT category)
+FROM flowers;
+        </code></pre>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>Total number of rows</li>
+                  <li>Total unique category count</li>
+                  <li>Average category name length</li>
+                  <li>Maximum category price</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Practice: Spot the mistake</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">
+SELECT category, price, COUNT(*)
+FROM flowers
+GROUP BY category;
+        </code></pre>
+                <p class="muted">What is wrong?</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>COUNT cannot use GROUP BY</li>
+                  <li>price must be aggregated</li>
+                  <li>category must be aggregated</li>
+                  <li>GROUP BY only integers</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Practice: Choose the best query for "cheapest in stock"</h5>
+            <div class="split">
+              <div class="left">
+                <p>Goal: return the row for the cheapest flower with stock &gt; 0</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>MIN price with WHERE</li>
+                  <li>WHERE then ORDER BY then LIMIT</li>
+                  <li>ORDER BY stock then LIMIT</li>
+                  <li>COUNT with price check</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- MORE ADVANCED PATTERNS (TO REACH 50+ SLIDES) -->
+          <!-- ========================================================= -->
+
+          <!-- 1: Multiple aggregates at once -->
+          <section>
+            <h5>Concept: Multiple Aggregates in One Query</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Compute several metrics together</li>
+                  <li>Useful for status snapshots</li>
+                  <li>Traditional habit: keep core metrics</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+SELECT
+  COUNT(*),
+  MIN(price),
+  MAX(price),
+  ROUND(AVG(price),2)
+FROM flowers;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Example Data: flowers</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>name</th>
+                  <th>price</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Rose</td>
+                  <td>12.50</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>6.00</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>9.25</td>
+                </tr>
+                <tr>
+                  <td>Orchid</td>
+                  <td>19.99</td>
+                </tr>
+                <tr>
+                  <td>Daisy</td>
+                  <td>3.50</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>SQL Example: Inventory price summary</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>One row output</li>
+                  <li>Many metrics at once</li>
+                  <li>Good for dashboard tiles</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  COUNT(*) AS items,
+  MIN(price) AS min_price,
+  MAX(price) AS max_price,
+  ROUND(AVG(price), 2) AS avg_price
+FROM flowers;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: What does this query return?</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">
+SELECT COUNT(*), MIN(price), MAX(price)
+FROM flowers;
+        </code></pre>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>Multiple rows per flower</li>
+                  <li>One row with aggregates</li>
+                  <li>One row per category</li>
+                  <li>Only cheapest flower row</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2: HAVING with AVG -->
+          <section>
+            <h5>Concept: Filter groups by AVG</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>HAVING can filter by AVG</li>
+                  <li>Find expensive categories quickly</li>
+                  <li>Keep only important groups</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Find categories with avg price >= 10
+
+GROUP BY category
+HAVING AVG(price) >= 10
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Example Data: flowers (category averages)</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>name</th>
+                  <th>category</th>
+                  <th>price</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Rose</td>
+                  <td>Rose</td>
+                  <td>12.50</td>
+                </tr>
+                <tr>
+                  <td>Rose (Mini)</td>
+                  <td>Rose</td>
+                  <td>8.75</td>
+                </tr>
+                <tr>
+                  <td>Orchid</td>
+                  <td>Orchid</td>
+                  <td>19.99</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>Tulip</td>
+                  <td>6.00</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>Lily</td>
+                  <td>9.25</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>SQL Example: Categories with high average price</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Group by category</li>
+                  <li>Compute AVG(price)</li>
+                  <li>Keep groups with avg ≥ 10</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  category,
+  ROUND(AVG(price), 2) AS avg_price
+FROM flowers
+GROUP BY category
+HAVING AVG(price) >= 10
+ORDER BY avg_price DESC;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: HAVING AVG(price) &gt; 10 filters...</h5>
+            <div class="split">
+              <div class="left">
+                <p>Which level is filtered?</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>Rows</li>
+                  <li>Columns</li>
+                  <li>Groups</li>
+                  <li>Tables</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3: GROUP BY two columns -->
+          <section>
+            <h5>Concept: GROUP BY Multiple Columns</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Groups can use multiple attributes</li>
+                  <li>This creates finer buckets</li>
+                  <li>Typical: category plus supplier</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+GROUP BY category, supplier
+
+One output row per (category, supplier) pair
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Example Data: flowers (category + supplier)</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>name</th>
+                  <th>category</th>
+                  <th>supplier</th>
+                  <th>stock</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Rose</td>
+                  <td>Rose</td>
+                  <td>BloomCo</td>
+                  <td>30</td>
+                </tr>
+                <tr>
+                  <td>Rose (Mini)</td>
+                  <td>Rose</td>
+                  <td>GardenDirect</td>
+                  <td>25</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>Tulip</td>
+                  <td>GardenDirect</td>
+                  <td>80</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>Lily</td>
+                  <td>PetalWorks</td>
+                  <td>15</td>
+                </tr>
+                <tr>
+                  <td>Orchid</td>
+                  <td>Orchid</td>
+                  <td>BloomCo</td>
+                  <td>6</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>SQL Example: Stock totals per category and supplier</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Two keys define each group</li>
+                  <li>SUM stock per pair</li>
+                  <li>Sort for readability</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  category,
+  supplier,
+  SUM(stock) AS total_stock
+FROM flowers
+GROUP BY category, supplier
+ORDER BY category ASC, total_stock DESC;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: GROUP BY category, supplier creates groups by...</h5>
+            <div class="split">
+              <div class="left">
+                <p>Each result row represents:</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>Only category</li>
+                  <li>Only supplier</li>
+                  <li>Combination of both values</li>
+                  <li>All rows combined</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4: HAVING with SUM -->
+          <section>
+            <h5>Concept: HAVING with SUM (Group Threshold)</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Keep groups above or below totals</li>
+                  <li>Useful for low stock categories</li>
+                  <li>Classic threshold reporting</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Find categories where total stock < 40
+
+GROUP BY category
+HAVING SUM(stock) < 40
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Example Data: flowers (category totals)</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>category</th>
+                  <th>name</th>
+                  <th>stock</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Rose</td>
+                  <td>Rose</td>
+                  <td>30</td>
+                </tr>
+                <tr>
+                  <td>Rose</td>
+                  <td>Rose (Mini)</td>
+                  <td>25</td>
+                </tr>
+                <tr>
+                  <td>Orchid</td>
+                  <td>Orchid</td>
+                  <td>6</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>Lily</td>
+                  <td>15</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>Tulip</td>
+                  <td>80</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>SQL Example: Categories with low total stock</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Group by category</li>
+                  <li>Compute totals per category</li>
+                  <li>Keep totals below forty</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  category,
+  SUM(stock) AS total_stock
+FROM flowers
+GROUP BY category
+HAVING SUM(stock) < 40
+ORDER BY total_stock ASC;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: Which clause keeps only low-total groups?</h5>
+            <div class="split">
+              <div class="left">
+                <p>You already grouped and computed SUM(stock). Now you filter by that sum using:</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>WHERE</li>
+                  <li>HAVING</li>
+                  <li>FROM</li>
+                  <li>SELECT</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- 5: ORDER BY aggregate expression -->
+          <section>
+            <h5>Concept: ORDER BY Aggregate Expression</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Order grouped results by aggregates</li>
+                  <li>Example: highest average categories</li>
+                  <li>Use alias or expression</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+ORDER BY AVG(price) DESC
+
+Sort groups by their computed average
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Example Data: flowers (group results idea)</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>category</th>
+                  <th>prices</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Rose</td>
+                  <td>12.50, 8.75, 10.00</td>
+                </tr>
+                <tr>
+                  <td>Orchid</td>
+                  <td>19.99</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>6.00</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>9.25</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>SQL Example: Categories ordered by average price</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Aggregate per category</li>
+                  <li>Order by AVG(price) descending</li>
+                  <li>Top categories appear first</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  category,
+  ROUND(AVG(price), 2) AS avg_price
+FROM flowers
+GROUP BY category
+ORDER BY AVG(price) DESC;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: ORDER BY AVG(price) sorts...</h5>
+            <div class="split">
+              <div class="left">
+                <p>This ordering is based on:</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>Raw rows before grouping</li>
+                  <li>Group results after grouping</li>
+                  <li>Only NULL rows</li>
+                  <li>Primary keys only</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- QUICK REVIEW QUESTIONS (MORE) -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Review: Which clause creates groups?</h5>
+            <div class="split">
+              <div class="left">
+                <p>Pick the clause that defines the buckets:</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>ORDER BY</li>
+                  <li>GROUP BY</li>
+                  <li>LIMIT</li>
+                  <li>DISTINCT</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Review: Which clause filters groups?</h5>
+            <div class="split">
+              <div class="left">
+                <p>Pick the clause that filters aggregated results:</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>WHERE</li>
+                  <li>HAVING</li>
+                  <li>FROM</li>
+                  <li>OFFSET</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Review: Which query returns "top 1 most expensive"?</h5>
+            <div class="split">
+              <div class="left">
+                <p>Select the correct query:</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>MAX(price) only</li>
+                  <li>ORDER BY then LIMIT 1</li>
+                  <li>MIN(price) only</li>
+                  <li>COUNT(*) only</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Review: What does COUNT(*) return?</h5>
+            <div class="split">
+              <div class="left">
+                <p>COUNT(*) produces:</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>A full table</li>
+                  <li>A single row count</li>
+                  <li>A sorted category list</li>
+                  <li>A distinct supplier set</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Review: HAVING is needed when filtering on...</h5>
+            <div class="split">
+              <div class="left">
+                <p>Choose the best answer:</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>Primary keys</li>
+                  <li>Aggregate results like COUNT</li>
+                  <li>Column names</li>
+                  <li>Table names</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- CASE STUDY (POSTGRES BOOK DOMAIN) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Case Study: Book Inventory (PostgreSQL) : Practice Advanced Queries</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>One table only for practice</li>
+                  <li>Use aggregates and grouping</li>
+                  <li>Use ordering and limiting</li>
+                  <li>Traditional habit: start small first</li>
+                </ul>
+
+                <div class="tier" style="margin-top:14px;">
+                  <p style="margin:0;">Practice prompts (write the SQL):</p>
+                  <ul style="margin:10px 0 0 20px;">
+                    <li>Top five most expensive books</li>
+                    <li>Average price per genre</li>
+                    <li>Genres with three or more</li>
+                    <li>Total value per publisher</li>
+                    <li>Cheapest book per publisher</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="right">
+                <pre><code class="sql">
+-- PostgreSQL: one table for advanced query practice
+CREATE TABLE book_inventory (
+  book_id SERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  author TEXT NOT NULL,
+  genre TEXT NOT NULL,
+  publisher TEXT NOT NULL,
+  price NUMERIC(10,2) NOT NULL,
+  stock INT NOT NULL,
+  published_year INT NOT NULL
+);
+
+-- Seed data idea (students can add more rows)
+-- genre: 'Databases', 'Software Engineering', 'AI', 'Security'
+-- publisher: 'Prentice Hall', 'OReilly', 'Pearson', 'MIT Press'
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+        </section>
+
         <!-- ===================== MODULE 6 =====================  -->
 
         <!-- ===================== MODULE 7 =====================  -->
@@ -10897,7 +13837,7 @@ CREATE TABLE UserStrict (
           </section>
 
           <!-- ========================================================= -->
-          <!-- 18. PostgreSQL — Official Links and Resources -->
+          <!-- 18. PostgreSQL : Official Links and Resources -->
           <!-- ========================================================= -->
           <section>
             <h5>PostgreSQL Links & Resources</h5>
@@ -13100,12 +16040,12 @@ DROP TABLE Flowers;
         <a href="mailto:q_haad@u.pacific.edu" class="footer-link">q_haad@u.pacific.edu</a> |
         <a href="./#/course-syllabus">Syllabus</a> |
         <a href="https://pacific.zoom.us/my/berhe" class="footer-link" target="_blank">Join Zoom</a> |
-        <!-- <a href="https://github.com/SE4CPS/2026-COMP-163" class="footer-link" target="_blank">GitHub Repository</a> | -->
         <a href="https://docs.google.com/document/d/1l3y3GKZYv2LRjdzHWMYrX2vNiZYTBISHz7ebnxm4a0s/edit?usp=sharing"
           class="footer-link" target="_blank">SQL Docs</a> |
         <a href="https://onecompiler.com/" class="footer-link" target="_blank">SQL OneCompiler</a> |
         <a href="https://sujoyu.github.io/plantuml-previewer/" class="footer-link" target="_blank">PlantUML ERD
-          Editor</a>
+          Editor</a> |
+        <a href="https://github.com/SE4CPS/2026-COMP-163" class="footer-link" target="_blank">GitHub Repository</a>
       </p>
     </div>
 
