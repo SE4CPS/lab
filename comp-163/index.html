@@ -256,13 +256,7 @@
 
     /* Typography & alignment */
     .highlight {
-      background: rgba(255, 234, 120, 0.25);
-      /* padding: 1px; */
-      border-radius: .25rem;
-      /* outline: 1px solid rgba(240, 200, 50, .25); */
       color: #bf4a12;
-      font-weight: normal;
-      margin: 1px;
     }
 
     .muted {
@@ -369,10 +363,6 @@
       50% {
         box-shadow: 0 0 0 8px rgba(255, 200, 0, 0.15);
       }
-    }
-
-    .highlight {
-      animation: pulseHighlight 6s ease-in-out infinite;
     }
 
     @keyframes slideInUp {
@@ -12190,7 +12180,7 @@ LIMIT 2 OFFSET 2;
           </section>
 
           <!-- ========================================================= -->
-          <!-- SECTION: UUID DATA TYPE (POSTGRESQL) -->
+          <!-- SECTION: UUID DATA TYPE  -->
           <!-- ========================================================= -->
 
           <section>
@@ -13040,7 +13030,7 @@ ORDER BY AVG(price) DESC;
           <!-- CASE STUDY (POSTGRES BOOK DOMAIN) -->
           <!-- ========================================================= -->
           <section>
-            <h5>Case Study: Book Inventory (PostgreSQL) : Practice Advanced Queries</h5>
+            <h5>Case Study: Book Inventory : Practice Advanced Queries</h5>
             <div class="split">
               <div class="left">
                 <ul>
@@ -13080,6 +13070,3947 @@ CREATE TABLE book_inventory (
 -- genre: 'Databases', 'Software Engineering', 'AI', 'Security'
 -- publisher: 'Prentice Hall', 'OReilly', 'Pearson', 'MIT Press'
         </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- TODAY: JOINS (START AT c13) -->
+          <!-- ========================================================= -->
+          <section id="c13">
+            <h5>Today</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>We will use <span class="highlight">PostgreSQL</span> syntax in all samples</li>
+                  <li>Core idea: <span class="highlight">JOIN</span> combines rows from multiple tables</li>
+                  <li>Why: Answer questions without duplicating data</li>
+                  <li>From ERD to SQL: <span class="highlight">relationship → FK → JOIN</span></li>
+                  <li>Types: <span class="highlight">INNER LEFT RIGHT FULL CROSS SELF</span></li>
+                  <li>Rule: <span class="highlight">ON vs WHERE</span> matters for outer joins</li>
+                </ul>
+              </div>
+              <div class="right">
+                <img src="https://miro.medium.com/v2/1*GigXPhr4Ue2zbrgIIoB8Lw.png" alt="JOIN types diagram"
+                  style="max-width:100%; border:1px solid #ccc; border-radius:8px;">
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- PRACTICAL MOTIVATION EARLY -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Practical Motivation (Early)</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Business questions span tables, not one table</li>
+                  <li>Examples you will actually run in <span class="highlight">PostgreSQL</span>:</li>
+                  <li><span class="highlight">Books with publisher name</span></li>
+                  <li><span class="highlight">Books with author list (STRING_AGG)</span></li>
+                  <li><span class="highlight">Publishers with zero books (quality)</span></li>
+                  <li>Store facts once, query them many times</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+-- Typical questions :
+-- 1) Show each book with publisher name
+-- 2) Show each book with author names
+-- 3) Find missing relationships (orphans)
+
+-- That is why JOIN exists.
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- DIAGRAM: NORMALIZATION -> NEED JOIN -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Diagram: Normalization Creates the Need for Joins</h5>
+
+            <style>
+              .diagram {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                align-items: center;
+                justify-content: center;
+              }
+
+              .box {
+                border: 2px solid #333;
+                border-radius: 10px;
+                padding: 10px 14px;
+                min-width: 160px;
+                text-align: center;
+                font-weight: 600;
+              }
+
+              .arrow {
+                font-size: 28px;
+                line-height: 1;
+                padding: 0 6px;
+              }
+
+              .diagram-note {
+                text-align: center;
+                margin-top: 14px;
+                font-size: 16pt;
+              }
+
+              .small {
+                font-weight: 500;
+                font-size: 14pt;
+              }
+            </style>
+
+            <div class="diagram">
+              <div class="box">One table<br><span class="small">duplicated names</span></div>
+              <div class="arrow">→</div>
+              <div class="box">Normalized tables<br><span class="small">facts stored once</span></div>
+              <div class="arrow">→</div>
+              <div class="box">Need JOIN<br><span class="small">to answer questions</span></div>
+            </div>
+
+            <div class="diagram-note">
+              Good design reduces duplication. JOIN restores meaning for queries.
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- ERD RELATIONSHIPS (CONCEPT) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>From ERD Relationship to SQL Join</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>ERD shows relationships between entities</li>
+                  <li>SQL tables store those relationships using keys</li>
+                  <li><span class="highlight">One to Many</span>: put FK on the many side</li>
+                  <li><span class="highlight">Many to Many</span>: create a bridge table</li>
+                  <li>Traditional habit: let the ERD guide the join path</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+ERD relationship
+    ↓ (implement)
+PK/FK columns
+    ↓ (query)
+JOIN ON keys
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- DIAGRAM: 1-to-MANY ERD -> TABLES -> JOIN -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Diagram: One to Many (Publisher → Books)</h5>
+
+            <style>
+              .erdrow {
+                display: flex;
+                gap: 16px;
+                justify-content: center;
+                flex-wrap: wrap;
+              }
+
+              .entity {
+                border: 2px solid #333;
+                border-radius: 10px;
+                padding: 10px 14px;
+                min-width: 220px;
+                text-align: left;
+                font-size: 14pt;
+              }
+
+              .entity h6 {
+                margin: 0 0 6px 0;
+                font-size: 16pt;
+              }
+
+              .rel {
+                font-size: 22pt;
+                align-self: center;
+                padding: 0 6px;
+              }
+
+              .kbd {
+                display: inline-block;
+                padding: 2px 8px;
+                border: 1px solid #333;
+                border-radius: 8px;
+                font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+                font-size: 13pt;
+              }
+            </style>
+
+            <div class="erdrow">
+              <div class="entity">
+                <h6>ERD</h6>
+                Publisher <span class="rel">1 —— ∞</span> Book
+                <div style="margin-top:10px;">
+                  <span class="kbd">Publisher publishes many Books</span>
+                </div>
+              </div>
+
+              <div class="entity">
+                <h6>Tables</h6>
+                publishers(<b>publisher_id</b>, name)<br />
+                books(<b>book_id</b>, title, <b>publisher_id</b> FK)
+                <div style="margin-top:10px;">
+                  <span class="kbd">FK is on the many side</span>
+                </div>
+              </div>
+
+              <div class="entity">
+                <h6>Join</h6>
+                <span class="kbd">books.publisher_id = publishers.publisher_id</span>
+                <div style="margin-top:10px;">
+                  <span class="kbd">PostgreSQL</span>:
+                  <div style="margin-top:6px;" class="kbd">JOIN publishers p ON b.publisher_id = p.publisher_id</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- DIAGRAM: MANY-to-MANY ERD -> BRIDGE -> JOINS -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Diagram: Many to Many (Books ↔ Authors)</h5>
+
+            <style>
+              .m2m {
+                display: flex;
+                justify-content: center;
+                gap: 12px;
+                flex-wrap: wrap;
+                align-items: stretch;
+              }
+
+              .cardish {
+                border: 2px solid #333;
+                border-radius: 10px;
+                padding: 10px 14px;
+                min-width: 240px;
+                font-size: 14pt;
+                text-align: left;
+              }
+
+              .centered {
+                text-align: center;
+              }
+
+              .mono {
+                font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+              }
+            </style>
+
+            <div class="m2m">
+              <div class="cardish">
+                <div class="centered" style="font-size:16pt; font-weight:700;">ERD</div>
+                Book <span style="font-size:22pt;">∞ —— ∞</span> Author
+                <div style="margin-top:10px;">
+                  Many to many needs a bridge.
+                </div>
+              </div>
+
+              <div class="cardish">
+                <div class="centered" style="font-size:16pt; font-weight:700;">Bridge Table</div>
+                book_authors(<b>book_id</b> FK, <b>author_id</b> FK)
+                <div style="margin-top:10px;">
+                  Primary key: (book_id, author_id)
+                </div>
+              </div>
+
+              <div class="cardish">
+                <div class="centered" style="font-size:16pt; font-weight:700;">Join Path</div>
+                <div class="mono">
+                  books → book_authors → authors
+                </div>
+                <div style="margin-top:10px;" class="mono">
+                  ba.book_id = b.book_id<br />
+                  a.author_id = ba.author_id
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- WHY JOINS EXIST -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Why Joins Exist</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Relational design keeps data normalized</li>
+                  <li>Joins answer questions across tables</li>
+                  <li>Example: books and authors live in different tables</li>
+                  <li>Traditional habit: avoid duplicated facts</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+-- PostgreSQL example question:
+-- Show each book with its author name
+
+-- Need:
+-- books + authors + relationship (book_authors)
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- DOMAIN SCHEMA  -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Book Domain Tables</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>authors(author_id,..).</li>
+                  <li>publishers(publisher_id,...)</li>
+                  <li>books(book_id, publisher_id, ...)</li>
+                  <li>book_authors(book_id, author_id) many to many</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">CREATE TABLE authors (
+  author_id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  country TEXT
+);
+CREATE TABLE publishers (
+  publisher_id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL
+);
+CREATE TABLE books (
+  book_id SERIAL PRIMARY KEY,
+  title TEXT NOT NULL,
+  publisher_id INT REFERENCES publishers(publisher_id),
+  published_year INT NOT NULL,
+  price NUMERIC(10,2) NOT NULL
+);
+CREATE TABLE book_authors (
+  book_id INT REFERENCES books(book_id),
+  author_id INT REFERENCES authors(author_id),
+  PRIMARY KEY (book_id, author_id)
+);</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- CONCEPT DIAGRAM: JOIN AS MATCH -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Concept Diagram: Join as Matching Keys</h5>
+
+            <style>
+              .diagram2 {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                align-items: center;
+                justify-content: center;
+              }
+
+              .box2 {
+                border: 2px solid #333;
+                border-radius: 10px;
+                padding: 10px 14px;
+                min-width: 150px;
+                text-align: center;
+                font-weight: 600;
+              }
+
+              .arrow2 {
+                font-size: 26px;
+                line-height: 1;
+                padding: 0 4px;
+              }
+
+              .diagram-note2 {
+                text-align: center;
+                margin-top: 14px;
+                font-size: 16pt;
+              }
+            </style>
+
+            <div class="diagram2">
+              <div class="box2">Table A rows</div>
+              <div class="arrow2">+</div>
+              <div class="box2">Table B rows</div>
+              <div class="arrow2">→</div>
+              <div class="box2">Match ON keys</div>
+              <div class="arrow2">→</div>
+              <div class="box2">Combined rows</div>
+            </div>
+
+            <div class="diagram-note2">
+              A join is a controlled match, not a random mix.
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SAMPLE DATA TABLES (display only) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Example Data: authors</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>author_id</th>
+                  <th>name</th>
+                  <th>country</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td>Ada Lovelace</td>
+                  <td>UK</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Alan Turing</td>
+                  <td>UK</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Grace Hopper</td>
+                  <td>USA</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>Edsger Dijkstra</td>
+                  <td>Netherlands</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>Example Data: books</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>book_id</th>
+                  <th>title</th>
+                  <th>publisher_id</th>
+                  <th>published_year</th>
+                  <th>price</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>10</td>
+                  <td>Foundations of Computing</td>
+                  <td>100</td>
+                  <td>2020</td>
+                  <td>59.00</td>
+                </tr>
+                <tr>
+                  <td>11</td>
+                  <td>Practical SQL Systems</td>
+                  <td>101</td>
+                  <td>2019</td>
+                  <td>49.50</td>
+                </tr>
+                <tr>
+                  <td>12</td>
+                  <td>Algorithms the Classic Way</td>
+                  <td>100</td>
+                  <td>2018</td>
+                  <td>72.25</td>
+                </tr>
+                <tr>
+                  <td>13</td>
+                  <td>Systems Thinking</td>
+                  <td>NULL</td>
+                  <td>2021</td>
+                  <td>39.99</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>Example Data: publishers</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>publisher_id</th>
+                  <th>name</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>100</td>
+                  <td>Classic Press</td>
+                </tr>
+                <tr>
+                  <td>101</td>
+                  <td>Data House</td>
+                </tr>
+                <tr>
+                  <td>102</td>
+                  <td>Future Books</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section>
+            <h5>Example Data: book_authors (Bridge)</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <thead>
+                <tr>
+                  <th>book_id</th>
+                  <th>author_id</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>10</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>10</td>
+                  <td>2</td>
+                </tr>
+                <tr>
+                  <td>11</td>
+                  <td>3</td>
+                </tr>
+                <tr>
+                  <td>12</td>
+                  <td>4</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- CONCEPT: INNER JOIN -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Concept: INNER JOIN</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Keep only rows that match on both sides</li>
+                  <li>Unmatched rows are dropped</li>
+                  <li>Most common join in reporting</li>
+                  <li>Traditional habit: start with INNER to validate keys</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+INNER JOIN = intersection
+
+A ∩ B
+Only matching keys from both tables
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Books with publisher name (INNER JOIN)</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Match books.publisher_id to publishers.publisher_id</li>
+                  <li>Books with publisher_id NULL will not appear</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  b.book_id,
+  b.title,
+  p.name AS publisher
+FROM books b
+INNER JOIN publishers p
+  ON b.publisher_id = p.publisher_id
+ORDER BY b.book_id;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: INNER JOIN removes rows when...</h5>
+            <div class="split">
+              <div class="left">
+                <p>Pick the best statement:</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>The left table has NULLs</li>
+                  <li>No matching key exists on the other side</li>
+                  <li>There are duplicate columns</li>
+                  <li>ORDER BY is missing</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- CONCEPT: LEFT JOIN -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Concept: LEFT JOIN</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Keep all rows from the left table</li>
+                  <li>Match rows from the right table when possible</li>
+                  <li>Unmatched right side becomes NULL</li>
+                  <li>Traditional habit: use LEFT JOIN for coverage checks</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+LEFT JOIN = keep left
+
+All A
+Plus matching B
+Else NULL for B
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Keep all books, even without publisher</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Shows "Systems Thinking" even publisher_id is NULL</li>
+                  <li>Publisher fields become NULL when missing</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  b.book_id,
+  b.title,
+  p.name AS publisher
+FROM books b
+LEFT JOIN publishers p
+  ON b.publisher_id = p.publisher_id
+ORDER BY b.book_id;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- OUTER JOIN PITFALL: WHERE vs ON (WITH RESULTS) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>LEFT JOIN: WHERE vs ON (Why Results Change)</h5>
+
+            <div class="split">
+
+              <!-- ================= LEFT: WHERE ================= -->
+              <div class="left">
+                <h6>Filter in WHERE (❌ risky)</h6>
+
+                <pre><code class="sql">
+SELECT
+  b.book_id,
+  b.title,
+  p.name AS publisher
+FROM books b
+LEFT JOIN publishers p
+  ON b.publisher_id = p.publisher_id
+WHERE p.name = 'Classic Press'
+ORDER BY b.book_id;
+      </code></pre>
+
+                <p class="muted">
+                  WHERE runs <b>after</b> the join.
+                  Rows where p.name is NULL are removed.
+                </p>
+
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>book_id</th>
+                      <th>title</th>
+                      <th>publisher</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>10</td>
+                      <td>Foundations of Computing</td>
+                      <td>Classic Press</td>
+                    </tr>
+                    <tr>
+                      <td>12</td>
+                      <td>Algorithms the Classic Way</td>
+                      <td>Classic Press</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p class="muted">
+                  ⚠ Books without a publisher are <b>gone</b>.<br />
+                  LEFT JOIN behaves like INNER JOIN.
+                </p>
+              </div>
+
+              <!-- ================= RIGHT: ON ================= -->
+              <div class="right">
+                <h6>Filter in ON (✅ correct)</h6>
+
+                <pre><code class="sql">
+SELECT
+  b.book_id,
+  b.title,
+  p.name AS publisher
+FROM books b
+LEFT JOIN publishers p
+  ON b.publisher_id = p.publisher_id
+ AND p.name = 'Classic Press'
+ORDER BY b.book_id;
+      </code></pre>
+
+                <p class="muted">
+                  Filter is applied <b>during</b> the join.
+                  Left rows are preserved.
+                </p>
+
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>book_id</th>
+                      <th>title</th>
+                      <th>publisher</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>10</td>
+                      <td>Foundations of Computing</td>
+                      <td>Classic Press</td>
+                    </tr>
+                    <tr>
+                      <td>11</td>
+                      <td>Practical SQL Systems</td>
+                      <td>NULL</td>
+                    </tr>
+                    <tr>
+                      <td>12</td>
+                      <td>Algorithms the Classic Way</td>
+                      <td>Classic Press</td>
+                    </tr>
+                    <tr>
+                      <td>13</td>
+                      <td>Systems Thinking</td>
+                      <td>NULL</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p class="muted">
+                  ✔ All books remain.<br />
+                  ✔ Publisher attached only when it matches.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- OUTER JOIN PITFALL: WHERE vs ON -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Rule: WHERE vs ON in LEFT JOIN </h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Filters in WHERE run after the join</li>
+                  <li>LEFT JOIN, WHERE on right table can erase NULL</li>
+                  <li>Put right side filters in ON for outer joins</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+LEFT JOIN then WHERE (right_col = ...)
+can behave like INNER JOIN
+
+Safer:
+LEFT JOIN ... ON ... AND (right_col = ...)
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Filter publisher name safely</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Keep all books, attach publisher when "Classic Press"</li>
+                  <li>Filter belongs in ON</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  b.book_id,
+  b.title,
+  p.name AS publisher
+FROM books b
+LEFT JOIN publishers p
+  ON b.publisher_id = p.publisher_id
+ AND p.name = 'Classic Press'
+ORDER BY b.book_id;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: In a LEFT JOIN, putting a right table filter in WHERE...</h5>
+            <div class="split">
+              <div class="left">
+                <p>What can happen?</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>It keeps all left rows always</li>
+                  <li>It may remove unmatched left rows</li>
+                  <li>It changes primary keys</li>
+                  <li>It forces GROUP BY</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- CONCEPT: RIGHT JOIN -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Concept: RIGHT JOIN</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Mirror of LEFT JOIN</li>
+                  <li>Keep all rows from the right table</li>
+                  <li>Less common because LEFT JOIN works</li>
+                  <li>Traditional habit: prefer LEFT JOIN for readability</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+RIGHT JOIN = keep right
+
+Usually rewrite as LEFT JOIN
+by swapping sides
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Rewrite RIGHT JOIN as LEFT JOIN</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Same result, clearer reading</li>
+                  <li>Place the preserved table on the left</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+-- RIGHT JOIN form
+SELECT p.name, b.title
+FROM books b
+RIGHT JOIN publishers p
+  ON b.publisher_id = p.publisher_id;
+
+-- Preferred LEFT JOIN form
+SELECT p.name, b.title
+FROM publishers p
+LEFT JOIN books b
+  ON b.publisher_id = p.publisher_id;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- CONCEPT: FULL OUTER JOIN -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Concept: FULL OUTER JOIN</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Keep all rows from both sides</li>
+                  <li>Match when possible</li>
+                  <li>Unmatched fields become NULL on the missing side</li>
+                  <li>Useful for reconciliation reports</li>
+                  <li>Note: supported in PostgreSQL</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+FULL OUTER JOIN = union of keys
+
+All A and all B
+Match when possible
+Else NULLs
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Reconcile books and publishers (FULL OUTER JOIN)</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Books w/o publishers and publishers w/o books</li>
+                  <li>Common for data quality audits</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  b.title,
+  p.name AS publisher
+FROM books b
+FULL OUTER JOIN publishers p
+  ON b.publisher_id = p.publisher_id
+ORDER BY p.name, b.title;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- FULL OUTER JOIN: TWO INPUT TABLES + RESULT TABLE -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>FULL OUTER JOIN: Inputs and Result (Reconciliation)</h5>
+
+            <style>
+              .triple {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1.2fr;
+                gap: 14px;
+                align-items: start;
+              }
+
+              .panel {
+                border: 2px solid #333;
+                border-radius: 10px;
+                padding: 10px 12px;
+              }
+
+              .panel h6 {
+                margin: 0 0 8px 0;
+                font-size: 16pt;
+              }
+
+              .panel .muted {
+                font-size: 13pt;
+                margin: 6px 0 0 0;
+              }
+
+              .mini {
+                font-size: 12pt;
+              }
+
+              .sqlbox {
+                margin-top: 10px;
+              }
+            </style>
+
+            <div class="triple">
+
+              <!-- INPUT: books -->
+              <div class="panel">
+                <h6>Table A: books</h6>
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>book_id</th>
+                      <th>title</th>
+                      <th>publisher_id</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>10</td>
+                      <td>Foundations of Computing</td>
+                      <td>100</td>
+                    </tr>
+                    <tr>
+                      <td>11</td>
+                      <td>Practical SQL Systems</td>
+                      <td>101</td>
+                    </tr>
+                    <tr>
+                      <td>12</td>
+                      <td>Algorithms the Classic Way</td>
+                      <td>100</td>
+                    </tr>
+                    <tr>
+                      <td>13</td>
+                      <td>Systems Thinking</td>
+                      <td>NULL</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p class="muted">Book 13 has no publisher_id.</p>
+              </div>
+
+              <!-- INPUT: publishers -->
+              <div class="panel">
+                <h6>Table B: publishers</h6>
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>publisher_id</th>
+                      <th>name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>100</td>
+                      <td>Classic Press</td>
+                    </tr>
+                    <tr>
+                      <td>101</td>
+                      <td>Data House</td>
+                    </tr>
+                    <tr>
+                      <td>102</td>
+                      <td>Future Books</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p class="muted">Publisher 102 has no books.</p>
+              </div>
+
+              <!-- RESULT -->
+              <div class="panel">
+                <h6>Result: FULL OUTER JOIN</h6>
+
+                <div class="sqlbox">
+                  <pre><code class="sql">
+SELECT
+  b.title,
+  p.name AS publisher
+FROM books b
+FULL OUTER JOIN publishers p
+  ON b.publisher_id = p.publisher_id
+ORDER BY p.name, b.title;
+        </code></pre>
+                </div>
+
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>title</th>
+                      <th>publisher</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- p.name is NULL rows first because ORDER BY p.name -->
+                    <tr>
+                      <td>Systems Thinking</td>
+                      <td>NULL</td>
+                    </tr>
+
+                    <tr>
+                      <td>Algorithms the Classic Way</td>
+                      <td>Classic Press</td>
+                    </tr>
+                    <tr>
+                      <td>Foundations of Computing</td>
+                      <td>Classic Press</td>
+                    </tr>
+
+                    <tr>
+                      <td>Practical SQL Systems</td>
+                      <td>Data House</td>
+                    </tr>
+
+                    <tr>
+                      <td>NULL</td>
+                      <td>Future Books</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p class="muted mini">
+                  Both “missing sides” appear:
+                  book without publisher → publisher is NULL,
+                  publisher without books → title is NULL.
+                </p>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- CONCEPT: CROSS JOIN -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Concept: CROSS JOIN</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Every row from A paired with every row from B</li>
+                  <li>Creates a Cartesian product</li>
+                  <li>Can explode row counts fast</li>
+                  <li>Useful for generating combinations</li>
+                  <li>Risk if run by accident</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+CROSS JOIN = all combinations
+
+Rows = |A| × |B|
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- CROSS JOIN: TWO INPUT TABLES + RESULT TABLE -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>CROSS JOIN: Inputs and Result (Cartesian Product)</h5>
+
+            <style>
+              .triple {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1.3fr;
+                gap: 14px;
+                align-items: start;
+              }
+
+              .panel {
+                border: 2px solid #333;
+                border-radius: 10px;
+                padding: 10px 12px;
+              }
+
+              .panel h6 {
+                margin: 0 0 8px 0;
+                font-size: 16pt;
+              }
+
+              .panel .muted {
+                font-size: 13pt;
+                margin: 6px 0 0 0;
+              }
+
+              .mini {
+                font-size: 12pt;
+              }
+
+              .sqlbox {
+                margin-top: 10px;
+              }
+            </style>
+
+            <div class="triple">
+
+              <!-- INPUT: authors (small subset to fit slide) -->
+              <div class="panel">
+                <h6>Table A: authors (subset)</h6>
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>author_id</th>
+                      <th>name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>1</td>
+                      <td>Ada Lovelace</td>
+                    </tr>
+                    <tr>
+                      <td>2</td>
+                      <td>Alan Turing</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p class="muted mini">2 rows</p>
+              </div>
+
+              <!-- INPUT: publishers (small subset to fit slide) -->
+              <div class="panel">
+                <h6>Table B: publishers (subset)</h6>
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>publisher_id</th>
+                      <th>name</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>100</td>
+                      <td>Classic Press</td>
+                    </tr>
+                    <tr>
+                      <td>101</td>
+                      <td>Data House</td>
+                    </tr>
+                    <tr>
+                      <td>102</td>
+                      <td>Future Books</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p class="muted mini">3 rows</p>
+              </div>
+
+              <!-- RESULT -->
+              <div class="panel">
+                <h6>Result: CROSS JOIN</h6>
+
+                <div class="sqlbox">
+                  <pre><code class="sql">
+SELECT
+  a.name AS author,
+  p.name AS publisher
+FROM authors a
+CROSS JOIN publishers p
+ORDER BY a.name, p.name;
+        </code></pre>
+                </div>
+
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>author</th>
+                      <th>publisher</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Ada Lovelace</td>
+                      <td>Classic Press</td>
+                    </tr>
+                    <tr>
+                      <td>Ada Lovelace</td>
+                      <td>Data House</td>
+                    </tr>
+                    <tr>
+                      <td>Ada Lovelace</td>
+                      <td>Future Books</td>
+                    </tr>
+
+                    <tr>
+                      <td>Alan Turing</td>
+                      <td>Classic Press</td>
+                    </tr>
+                    <tr>
+                      <td>Alan Turing</td>
+                      <td>Data House</td>
+                    </tr>
+                    <tr>
+                      <td>Alan Turing</td>
+                      <td>Future Books</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p class="muted mini">
+                  Cartesian product: rows = |A| × |B| = 2 × 3 = 6.
+                </p>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>All author and publisher combinations (CROSS JOIN)</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>This is usually not what you want for business queries</li>
+                  <li>Good for synthetic test data or matrix reports</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  a.name AS author,
+  p.name AS publisher
+FROM authors a
+CROSS JOIN publishers p
+ORDER BY a.name, p.name;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- CONCEPT: JOIN WITH BRIDGE TABLE -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Concept: Many to Many via Bridge Table</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>A book can have many authors</li>
+                  <li>An author can write many books</li>
+                  <li>Bridge table book_authors connects them</li>
+                  <li>Join through the bridge, not by guessing</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+authors ← book_authors → books
+
+Two joins:
+authors to bridge
+bridge to books
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Books with author names (bridge join)</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Join books to book_authors</li>
+                  <li>Join book_authors to authors</li>
+                  <li>Produces one row per (book, author)</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  b.title,
+  a.name AS author
+FROM books b
+JOIN book_authors ba
+  ON ba.book_id = b.book_id
+JOIN authors a
+  ON a.author_id = ba.author_id
+ORDER BY b.title, a.name;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Pattern: Aggregate After Join </h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Many to many joins can duplicate book rows</li>
+                  <li>Then you group to summarize</li>
+                  <li>Example: count authors per book</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  b.title,
+  COUNT(*) AS author_count
+FROM books b
+JOIN book_authors ba
+  ON ba.book_id = b.book_id
+GROUP BY b.title
+ORDER BY author_count DESC, b.title;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- AGGREGATE AFTER JOIN: INPUT TABLES + JOINED ROWS + GROUPED RESULT -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Pattern: Aggregate After Join (Many to Many)</h5>
+
+            <style>
+              .triple {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1.4fr;
+                gap: 14px;
+                align-items: start;
+              }
+
+              .panel {
+                border: 2px solid #333;
+                border-radius: 10px;
+                padding: 10px 12px;
+              }
+
+              .panel h6 {
+                margin: 0 0 8px 0;
+                font-size: 16pt;
+              }
+
+              .muted {
+                font-size: 13pt;
+                margin: 8px 0 0 0;
+              }
+
+              .mini {
+                font-size: 12pt;
+              }
+            </style>
+
+            <div class="triple">
+
+              <!-- INPUT: books (subset) -->
+              <div class="panel">
+                <h6>Table: books (subset)</h6>
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>book_id</th>
+                      <th>title</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>10</td>
+                      <td>Foundations of Computing</td>
+                    </tr>
+                    <tr>
+                      <td>11</td>
+                      <td>Practical SQL Systems</td>
+                    </tr>
+                    <tr>
+                      <td>12</td>
+                      <td>Algorithms the Classic Way</td>
+                    </tr>
+                    <tr>
+                      <td>13</td>
+                      <td>Systems Thinking</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p class="muted mini">One row per book</p>
+              </div>
+
+              <!-- INPUT: book_authors (bridge) -->
+              <div class="panel">
+                <h6>Table: book_authors (bridge)</h6>
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>book_id</th>
+                      <th>author_id</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>10</td>
+                      <td>1</td>
+                    </tr>
+                    <tr>
+                      <td>10</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>11</td>
+                      <td>3</td>
+                    </tr>
+                    <tr>
+                      <td>12</td>
+                      <td>4</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p class="muted mini">Many rows per book possible</p>
+              </div>
+
+              <!-- JOINED ROWS + GROUPED RESULT -->
+              <div class="panel">
+                <h6>Join duplicates, then GROUP BY summarizes</h6>
+
+                <pre><code class="sql">
+SELECT
+  b.title,
+  COUNT(*) AS author_count
+FROM books b
+JOIN book_authors ba
+  ON ba.book_id = b.book_id
+GROUP BY b.title
+ORDER BY author_count DESC, b.title;
+      </code></pre>
+
+                <p class="muted"><b>Joined rows</b> (one per book-author match)</p>
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>title</th>
+                      <th>author_id</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Foundations of Computing</td>
+                      <td>1</td>
+                    </tr>
+                    <tr>
+                      <td>Foundations of Computing</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>Practical SQL Systems</td>
+                      <td>3</td>
+                    </tr>
+                    <tr>
+                      <td>Algorithms the Classic Way</td>
+                      <td>4</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p class="muted"><b>Grouped result</b> (one row per book)</p>
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>title</th>
+                      <th>author_count</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Foundations of Computing</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>Algorithms the Classic Way</td>
+                      <td>1</td>
+                    </tr>
+                    <tr>
+                      <td>Practical SQL Systems</td>
+                      <td>1</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: Why can joins change counts?</h5>
+            <div class="split">
+              <div class="left">
+                <p>After joining books to book_authors, book rows may appear multiple times because:</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>JOIN always removes duplicates</li>
+                  <li>A book can match multiple bridge rows</li>
+                  <li>GROUP BY runs first</li>
+                  <li>ORDER BY creates extra rows</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Pattern: Find Books Without Authors (LEFT JOIN) </h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Data quality check</li>
+                  <li>Left join to bridge and filter unmatched</li>
+                  <li>Traditional habit: check for missing relationships</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  b.book_id,
+  b.title
+FROM books b
+LEFT JOIN book_authors ba
+  ON ba.book_id = b.book_id
+WHERE ba.book_id IS NULL
+ORDER BY b.book_id;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- LEFT JOIN ANTI PATTERN: FIND BOOKS WITHOUT AUTHORS -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Pattern: Find Books Without Authors (LEFT JOIN)</h5>
+
+            <style>
+              .triple {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1.4fr;
+                gap: 14px;
+                align-items: start;
+              }
+
+              .panel {
+                border: 2px solid #333;
+                border-radius: 10px;
+                padding: 10px 12px;
+              }
+
+              .panel h6 {
+                margin: 0 0 8px 0;
+                font-size: 16pt;
+              }
+
+              .muted {
+                font-size: 13pt;
+                margin: 8px 0 0 0;
+              }
+
+              .mini {
+                font-size: 12pt;
+              }
+            </style>
+
+            <div class="triple">
+
+              <!-- INPUT: books -->
+              <div class="panel">
+                <h6>Table: books</h6>
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>book_id</th>
+                      <th>title</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>10</td>
+                      <td>Foundations of Computing</td>
+                    </tr>
+                    <tr>
+                      <td>11</td>
+                      <td>Practical SQL Systems</td>
+                    </tr>
+                    <tr>
+                      <td>12</td>
+                      <td>Algorithms the Classic Way</td>
+                    </tr>
+                    <tr>
+                      <td>13</td>
+                      <td>Systems Thinking</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p class="muted mini">All books (starting point)</p>
+              </div>
+
+              <!-- INPUT: book_authors -->
+              <div class="panel">
+                <h6>Table: book_authors</h6>
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>book_id</th>
+                      <th>author_id</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>10</td>
+                      <td>1</td>
+                    </tr>
+                    <tr>
+                      <td>10</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>11</td>
+                      <td>3</td>
+                    </tr>
+                    <tr>
+                      <td>12</td>
+                      <td>4</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p class="muted mini">Bridge rows (missing book_id = 13)</p>
+              </div>
+
+              <!-- RESULT -->
+              <div class="panel">
+                <h6>LEFT JOIN + IS NULL (Anti Join)</h6>
+
+                <pre><code class="sql">
+SELECT
+  b.book_id,
+  b.title
+FROM books b
+LEFT JOIN book_authors ba
+  ON ba.book_id = b.book_id
+WHERE ba.book_id IS NULL
+ORDER BY b.book_id;
+      </code></pre>
+
+                <p class="muted"><b>After LEFT JOIN</b> (unmatched become NULL)</p>
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>book_id</th>
+                      <th>title</th>
+                      <th>ba.book_id</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>10</td>
+                      <td>Foundations of Computing</td>
+                      <td>10</td>
+                    </tr>
+                    <tr>
+                      <td>10</td>
+                      <td>Foundations of Computing</td>
+                      <td>10</td>
+                    </tr>
+                    <tr>
+                      <td>11</td>
+                      <td>Practical SQL Systems</td>
+                      <td>11</td>
+                    </tr>
+                    <tr>
+                      <td>12</td>
+                      <td>Algorithms the Classic Way</td>
+                      <td>12</td>
+                    </tr>
+                    <tr>
+                      <td>13</td>
+                      <td>Systems Thinking</td>
+                      <td>NULL</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p class="muted"><b>Filtered result</b> (books with no authors)</p>
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>book_id</th>
+                      <th>title</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>13</td>
+                      <td>Systems Thinking</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p class="muted mini">
+                  Traditional habit: LEFT JOIN + <code>IS NULL</code> reveals missing relationships.
+                </p>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Concept: Anti Join (Find Missing Matches)</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Anti join returns rows with no match</li>
+                  <li>Common as LEFT JOIN then IS NULL</li>
+                  <li>Also possible with NOT EXISTS</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Anti join goal:
+Keep A rows where no B match exists
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- CONCEPT: ANTI JOIN (WITH TABLES + RESULT) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Concept: Anti Join (Find Missing Matches)</h5>
+
+            <style>
+              .triple {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1.4fr;
+                gap: 14px;
+                align-items: start;
+              }
+
+              .panel {
+                border: 2px solid #333;
+                border-radius: 10px;
+                padding: 10px 12px;
+              }
+
+              .panel h6 {
+                margin: 0 0 8px 0;
+                font-size: 16pt;
+              }
+
+              .muted {
+                font-size: 13pt;
+                margin: 8px 0 0 0;
+              }
+
+              .mini {
+                font-size: 12pt;
+              }
+
+              .mono {
+                font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+              }
+            </style>
+
+            <div class="triple">
+
+              <!-- A: left table -->
+              <div class="panel">
+                <h6>Table A (books)</h6>
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>book_id</th>
+                      <th>title</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>10</td>
+                      <td>Foundations of Computing</td>
+                    </tr>
+                    <tr>
+                      <td>11</td>
+                      <td>Practical SQL Systems</td>
+                    </tr>
+                    <tr>
+                      <td>12</td>
+                      <td>Algorithms the Classic Way</td>
+                    </tr>
+                    <tr>
+                      <td>13</td>
+                      <td>Systems Thinking</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p class="muted mini">We want books that have <b>no match</b> in Table B.</p>
+              </div>
+
+              <!-- B: right table -->
+              <div class="panel">
+                <h6>Table B (book_authors)</h6>
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>book_id</th>
+                      <th>author_id</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>10</td>
+                      <td>1</td>
+                    </tr>
+                    <tr>
+                      <td>10</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>11</td>
+                      <td>3</td>
+                    </tr>
+                    <tr>
+                      <td>12</td>
+                      <td>4</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p class="muted mini">Missing match: <span class="mono">book_id = 13</span></p>
+              </div>
+
+              <!-- RESULT: goal + two common SQL patterns -->
+              <div class="panel">
+                <h6>Anti Join Result</h6>
+
+                <p class="muted" style="margin-top:0;">
+                  <b>Goal:</b> keep A rows where <b>no</b> B match exists.
+                </p>
+
+                <pre><code class="sql">
+-- Pattern 1 (common): LEFT JOIN then IS NULL
+SELECT b.book_id, b.title
+FROM books b
+LEFT JOIN book_authors ba
+  ON ba.book_id = b.book_id
+WHERE ba.book_id IS NULL
+ORDER BY b.book_id;
+
+-- Pattern 2 (also common): NOT EXISTS
+SELECT b.book_id, b.title
+FROM books b
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM book_authors ba
+  WHERE ba.book_id = b.book_id
+)
+ORDER BY b.book_id;
+      </code></pre>
+
+                <p class="muted"><b>Result table</b></p>
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>book_id</th>
+                      <th>title</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>13</td>
+                      <td>Systems Thinking</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p class="muted mini">
+                  Traditional habit: use anti joins for data quality (missing links, orphan checks).
+                </p>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Books Without Authors (NOT EXISTS)</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Often clearer for complex keys</li>
+                  <li>Good habit: use EXISTS for yes or no questions</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  b.book_id,
+  b.title
+FROM books b
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM book_authors ba
+  WHERE ba.book_id = b.book_id
+)
+ORDER BY b.book_id;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- BOOKS WITHOUT AUTHORS (NOT EXISTS) (WITH TABLES + RESULT) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Books Without Authors (NOT EXISTS)</h5>
+
+            <style>
+              .triple {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1.4fr;
+                gap: 14px;
+                align-items: start;
+              }
+
+              .panel {
+                border: 2px solid #333;
+                border-radius: 10px;
+                padding: 10px 12px;
+              }
+
+              .panel h6 {
+                margin: 0 0 8px 0;
+                font-size: 16pt;
+              }
+
+              .muted {
+                font-size: 13pt;
+                margin: 8px 0 0 0;
+              }
+
+              .mini {
+                font-size: 12pt;
+              }
+
+              .mono {
+                font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+              }
+            </style>
+
+            <div class="triple">
+
+              <!-- LEFT: books table -->
+              <div class="panel">
+                <h6>Table: books</h6>
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>book_id</th>
+                      <th>title</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>10</td>
+                      <td>Foundations of Computing</td>
+                    </tr>
+                    <tr>
+                      <td>11</td>
+                      <td>Practical SQL Systems</td>
+                    </tr>
+                    <tr>
+                      <td>12</td>
+                      <td>Algorithms the Classic Way</td>
+                    </tr>
+                    <tr>
+                      <td>13</td>
+                      <td>Systems Thinking</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <ul class="muted" style="margin-top:10px;">
+                  <li>Often clearer for complex keys</li>
+                  <li>Good habit: use EXISTS for yes or no questions</li>
+                </ul>
+              </div>
+
+              <!-- MIDDLE: book_authors table -->
+              <div class="panel">
+                <h6>Table: book_authors</h6>
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>book_id</th>
+                      <th>author_id</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>10</td>
+                      <td>1</td>
+                    </tr>
+                    <tr>
+                      <td>10</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>11</td>
+                      <td>3</td>
+                    </tr>
+                    <tr>
+                      <td>12</td>
+                      <td>4</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p class="muted mini">
+                  Missing: <span class="mono">book_id = 13</span> has no rows here.
+                </p>
+              </div>
+
+              <!-- RIGHT: query + result -->
+              <div class="panel">
+                <h6>Query + Result</h6>
+
+                <pre><code class="sql">
+SELECT
+  b.book_id,
+  b.title
+FROM books b
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM book_authors ba
+  WHERE ba.book_id = b.book_id
+)
+ORDER BY b.book_id;
+      </code></pre>
+
+                <p class="muted"><b>Result table</b></p>
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>book_id</th>
+                      <th>title</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>13</td>
+                      <td>Systems Thinking</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p class="muted mini">
+                  Traditional habit: use <span class="mono">NOT EXISTS</span> when you only need a yes/no match, not
+                  joined columns.
+                </p>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Concept: Semi Join (EXISTS)</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Return left rows that have at least one match</li>
+                  <li>Does not duplicate left rows</li>
+                  <li>Useful when only need books, not author columns</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Semi join:
+Keep A rows where a match exists in B
+
+Use EXISTS
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- CONCEPT: SEMI JOIN (EXISTS) (WITH TABLES + RESULT) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Concept: Semi Join (EXISTS)</h5>
+
+            <style>
+              .triple {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1.4fr;
+                gap: 14px;
+                align-items: start;
+              }
+
+              .panel {
+                border: 2px solid #333;
+                border-radius: 10px;
+                padding: 10px 12px;
+              }
+
+              .panel h6 {
+                margin: 0 0 8px 0;
+                font-size: 16pt;
+              }
+
+              .muted {
+                font-size: 13pt;
+                margin: 8px 0 0 0;
+              }
+
+              .mini {
+                font-size: 12pt;
+              }
+
+              .mono {
+                font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+              }
+            </style>
+
+            <div class="triple">
+
+              <!-- A: left table -->
+              <div class="panel">
+                <h6>Table A (books)</h6>
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>book_id</th>
+                      <th>title</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>10</td>
+                      <td>Foundations of Computing</td>
+                    </tr>
+                    <tr>
+                      <td>11</td>
+                      <td>Practical SQL Systems</td>
+                    </tr>
+                    <tr>
+                      <td>12</td>
+                      <td>Algorithms the Classic Way</td>
+                    </tr>
+                    <tr>
+                      <td>13</td>
+                      <td>Systems Thinking</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <ul class="muted" style="margin-top:10px;">
+                  <li>Return left rows that have at least one match</li>
+                  <li>Does not duplicate left rows</li>
+                  <li>Useful when you only need books, not author columns</li>
+                </ul>
+              </div>
+
+              <!-- B: right table -->
+              <div class="panel">
+                <h6>Table B (book_authors)</h6>
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>book_id</th>
+                      <th>author_id</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>10</td>
+                      <td>1</td>
+                    </tr>
+                    <tr>
+                      <td>10</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>11</td>
+                      <td>3</td>
+                    </tr>
+                    <tr>
+                      <td>12</td>
+                      <td>4</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p class="muted mini">
+                  Exists match for: <span class="mono">10, 11, 12</span><br />
+                  No match for: <span class="mono">13</span>
+                </p>
+              </div>
+
+              <!-- RESULT: goal + query + result -->
+              <div class="panel">
+                <h6>Semi Join Result</h6>
+
+                <p class="muted" style="margin-top:0;">
+                  <b>Goal:</b> keep A rows where a B match <b>exists</b>.
+                </p>
+
+                <pre><code class="sql">
+SELECT
+  b.book_id,
+  b.title
+FROM books b
+WHERE EXISTS (
+  SELECT 1
+  FROM book_authors ba
+  WHERE ba.book_id = b.book_id
+)
+ORDER BY b.book_id;
+      </code></pre>
+
+                <p class="muted"><b>Result table</b></p>
+                <table border="1" style="width:100%; border-collapse:collapse;">
+                  <thead>
+                    <tr>
+                      <th>book_id</th>
+                      <th>title</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>10</td>
+                      <td>Foundations of Computing</td>
+                    </tr>
+                    <tr>
+                      <td>11</td>
+                      <td>Practical SQL Systems</td>
+                    </tr>
+                    <tr>
+                      <td>12</td>
+                      <td>Algorithms the Classic Way</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p class="muted mini">
+                  Traditional habit: use <span class="mono">EXISTS</span> to avoid duplicates when the right side is
+                  “many”.
+                </p>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Books that have at least one author (EXISTS)</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Returns each qualifying book once</li>
+                  <li>No need for GROUP BY</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  b.book_id,
+  b.title
+FROM books b
+WHERE EXISTS (
+  SELECT 1
+  FROM book_authors ba
+  WHERE ba.book_id = b.book_id
+)
+ORDER BY b.book_id;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- CONCEPT: SELF JOIN -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Concept: SELF JOIN</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Join a table to itself</li>
+                  <li>Used for hierarchies and comparisons</li>
+                  <li>Requires table aliases</li>
+                  <li>Traditional habit: name aliases clearly</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+authors a1 JOIN authors a2
+
+Same table, different roles
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Self Join Example Table: editions </h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>editions(edition_id, ..., previous_edition_id)</li>
+                  <li>previous_edition_id references editions.edition_id</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+CREATE TABLE editions (
+  edition_id INT PRIMARY KEY,
+  book_id INT REFERENCES books(book_id),
+  edition_number INT NOT NULL,
+  previous_edition_id INT REFERENCES editions(edition_id)
+);
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SELF JOIN: EDITIONS (SIMPLE SLIDE) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Self Join Example: editions</h5>
+
+            <div class="split">
+
+              <!-- LEFT: idea + tiny data -->
+              <div class="left">
+                <ul>
+                  <li>Table references itself</li>
+                  <li><code>previous_edition_id → edition_id</code></li>
+                  <li>Shows version chains</li>
+                </ul>
+
+                <table border="1" style="width:100%; border-collapse:collapse; font-size:12pt;">
+                  <thead>
+                    <tr>
+                      <th>edition_id</th>
+                      <th>edition_number</th>
+                      <th>previous_edition_id</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>1</td>
+                      <td>1</td>
+                      <td>NULL</td>
+                    </tr>
+                    <tr>
+                      <td>2</td>
+                      <td>2</td>
+                      <td>1</td>
+                    </tr>
+                    <tr>
+                      <td>3</td>
+                      <td>3</td>
+                      <td>2</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- RIGHT: query + result -->
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  e.edition_number,
+  prev.edition_number AS prev
+FROM editions e
+LEFT JOIN editions prev
+  ON e.previous_edition_id = prev.edition_id;
+      </code></pre>
+
+                <table border="1" style="width:100%; border-collapse:collapse; font-size:12pt;">
+                  <thead>
+                    <tr>
+                      <th>edition</th>
+                      <th>prev</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>1</td>
+                      <td>NULL</td>
+                    </tr>
+                    <tr>
+                      <td>2</td>
+                      <td>1</td>
+                    </tr>
+                    <tr>
+                      <td>3</td>
+                      <td>2</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Show each edition with its previous edition</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Left join so first edition still appears</li>
+                  <li>Self join on previous_edition_id</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  e.edition_id,
+  e.edition_number,
+  prev.edition_number AS previous_edition_number
+FROM editions e
+LEFT JOIN editions prev
+  ON e.previous_edition_id = prev.edition_id
+ORDER BY e.edition_id;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- CONCEPT: NON EQUI JOIN -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Concept: Non Equi Join</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Join condition uses &lt; &gt; BETWEEN</li>
+                  <li>Common for ranges and bucketing</li>
+                  <li>Example: price bands table</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+JOIN ... ON b.price BETWEEN band.min AND band.max
+
+Not just equality
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- NON EQUI JOIN (SIMPLE SLIDE) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Concept: Non Equi Join</h5>
+
+            <div class="split">
+
+              <!-- LEFT: idea + small table -->
+              <div class="left">
+                <ul>
+                  <li>Join uses <code>&lt; &gt; BETWEEN</code></li>
+                  <li>Common for ranges and buckets</li>
+                  <li>Example: price bands</li>
+                </ul>
+
+                <table border="1" style="width:100%; border-collapse:collapse; font-size:12pt;">
+                  <thead>
+                    <tr>
+                      <th>band</th>
+                      <th>min</th>
+                      <th>max</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Budget</td>
+                      <td>0</td>
+                      <td>39.99</td>
+                    </tr>
+                    <tr>
+                      <td>Standard</td>
+                      <td>40</td>
+                      <td>69.99</td>
+                    </tr>
+                    <tr>
+                      <td>Premium</td>
+                      <td>70</td>
+                      <td>999</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- RIGHT: query + result -->
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  b.title,
+  pb.band
+FROM books b
+JOIN price_bands pb
+  ON b.price BETWEEN pb.min AND pb.max;
+      </code></pre>
+
+                <table border="1" style="width:100%; border-collapse:collapse; font-size:12pt;">
+                  <thead>
+                    <tr>
+                      <th>title</th>
+                      <th>band</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Foundations of Computing</td>
+                      <td>Standard</td>
+                    </tr>
+                    <tr>
+                      <td>Algorithms the Classic Way</td>
+                      <td>Premium</td>
+                    </tr>
+                    <tr>
+                      <td>Systems Thinking</td>
+                      <td>Budget</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Example Table: price_bands </h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>price_bands(band, min_price, max_price)</li>
+                  <li>Used to label books as Budget, Standard, Premium</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+CREATE TABLE price_bands (
+  band TEXT PRIMARY KEY,
+  min_price NUMERIC(10,2) NOT NULL,
+  max_price NUMERIC(10,2) NOT NULL
+);
+
+-- Example rows:
+-- ('Budget', 0.00, 39.99)
+-- ('Standard', 40.00, 69.99)
+-- ('Premium', 70.00, 9999.99)
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Assign each book a price band</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Join on a range condition</li>
+                  <li>Useful for reports and dashboards</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  b.title,
+  b.price,
+  pb.band
+FROM books b
+JOIN price_bands pb
+  ON b.price BETWEEN pb.min_price AND pb.max_price
+ORDER BY b.price DESC;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- CONCEPT: JOINING 3 TABLES -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Concept: Joining 3 Tables Cleanly</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Join step by step</li>
+                  <li>Each ON should match a real relationship</li>
+                  <li>Traditional habit: one relationship per ON line</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+books → publishers
+books → book_authors → authors
+
+Keep each link explicit
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Book, publisher, and author (multi join)</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Produces one row per (book, author)</li>
+                  <li>Publisher repeats per book</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  b.title,
+  p.name AS publisher,
+  a.name AS author
+FROM books b
+LEFT JOIN publishers p
+  ON b.publisher_id = p.publisher_id
+JOIN book_authors ba
+  ON ba.book_id = b.book_id
+JOIN authors a
+  ON a.author_id = ba.author_id
+ORDER BY b.title, a.name;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- CONCEPT: DISTINCT -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Concept: DISTINCT After Join</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Joins often create repeated values</li>
+                  <li>DISTINCT removes duplicate output rows</li>
+                  <li>Understand why duplicates happen first</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+If you want unique books only:
+
+SELECT DISTINCT b.book_id, b.title
+...
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- DISTINCT AFTER JOIN (SIMPLE SLIDE) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Concept: DISTINCT After Join</h5>
+
+            <div class="split">
+
+              <!-- LEFT: idea + duplicated rows -->
+              <div class="left">
+                <ul>
+                  <li>Joins can duplicate rows</li>
+                  <li>Common in many to many joins</li>
+                  <li>DISTINCT removes repeated output rows</li>
+                </ul>
+
+                <table border="1" style="width:100%; border-collapse:collapse; font-size:12pt;">
+                  <thead>
+                    <tr>
+                      <th>book_id</th>
+                      <th>title</th>
+                      <th>author</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>10</td>
+                      <td>Foundations of Computing</td>
+                      <td>Ada</td>
+                    </tr>
+                    <tr>
+                      <td>10</td>
+                      <td>Foundations of Computing</td>
+                      <td>Turing</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p style="font-size:12pt; margin-top:6px;">
+                  Same book appears multiple times.
+                </p>
+              </div>
+
+              <!-- RIGHT: query + result -->
+              <div class="right">
+                <pre><code class="sql">
+SELECT DISTINCT
+  b.book_id,
+  b.title
+FROM books b
+JOIN book_authors ba
+  ON ba.book_id = b.book_id;
+      </code></pre>
+
+                <table border="1" style="width:100%; border-collapse:collapse; font-size:12pt;">
+                  <thead>
+                    <tr>
+                      <th>book_id</th>
+                      <th>title</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>10</td>
+                      <td>Foundations of Computing</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p style="font-size:12pt; margin-top:6px;">
+                  One row per book.
+                </p>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Unique books that have at least one author</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Join returns many rows per book</li>
+                  <li>DISTINCT keeps each book once</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT DISTINCT
+  b.book_id,
+  b.title
+FROM books b
+JOIN book_authors ba
+  ON ba.book_id = b.book_id
+ORDER BY b.book_id;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- CONCEPT: USING and NATURAL -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Concept: USING and NATURAL JOIN</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li><span class="highlight">USING(column)</span> for equality on same column</li>
+                  <li><span class="highlight">NATURAL JOIN</span> matches columns automatically</li>
+                  <li>Avoid NATURAL JOIN in production</li>
+                  <li>Reason: schema changes can silently change results</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Prefer explicit ON
+
+USING is acceptable if column names are stable
+Avoid NATURAL JOIN
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- USING vs NATURAL JOIN (SIMPLE SLIDE) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Concept: USING and NATURAL JOIN</h5>
+
+            <div class="split">
+
+              <!-- LEFT: idea -->
+              <div class="left">
+                <ul>
+                  <li><b>USING(column)</b> = on same column name</li>
+                  <li><b>NATURAL JOIN</b> matches same named columns</li>
+                  <li>USING is readable when schemas are stable</li>
+                  <li>Avoid NATURAL JOIN</li>
+                </ul>
+
+                <table border="1" style="width:100%; border-collapse:collapse; font-size:12pt;">
+                  <thead>
+                    <tr>
+                      <th>books</th>
+                      <th>publishers</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>publisher_id</td>
+                      <td>publisher_id</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- RIGHT: code comparison -->
+              <div class="right">
+                <pre><code class="sql">
+-- Explicit (best)
+JOIN publishers p
+  ON b.publisher_id = p.publisher_id
+
+-- Shorthand
+JOIN publishers p
+USING (publisher_id)
+
+-- Avoid
+NATURAL JOIN publishers
+      </code></pre>
+
+                <p style="font-size:12pt; margin-top:6px;">
+                  Traditional habit: prefer explicit <code>ON</code>.
+                </p>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>USING with publishers</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Works when both tables share same column name</li>
+                  <li>Still clearer than NATURAL JOIN</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+-- If both tables have publisher_id
+SELECT
+  b.title,
+  p.name AS publisher
+FROM books b
+JOIN publishers p
+USING (publisher_id);
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- CONCEPT: COALESCE -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Handling NULLs in Joined Output (COALESCE) </h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Outer joins can produce NULLs on missing side</li>
+                  <li>COALESCE replaces NULL with a label</li>
+                  <li>Make missing values visible in reports</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  b.title,
+  COALESCE(p.name, 'Unknown Publisher') AS publisher
+FROM books b
+LEFT JOIN publishers p
+  ON b.publisher_id = p.publisher_id;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- COALESCE WITH LEFT JOIN (SIMPLE SLIDE) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Handling NULLs in Joined Output (COALESCE)</h5>
+
+            <div class="split">
+
+              <!-- LEFT: idea + example output -->
+              <div class="left">
+                <ul>
+                  <li>Outer joins can produce NULLs</li>
+                  <li><code>COALESCE</code> replaces NULL with a label</li>
+                  <li>Makes missing data visible</li>
+                </ul>
+
+                <table border="1" style="width:100%; border-collapse:collapse; font-size:12pt;">
+                  <thead>
+                    <tr>
+                      <th>title</th>
+                      <th>publisher</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Foundations of Computing</td>
+                      <td>Classic Press</td>
+                    </tr>
+                    <tr>
+                      <td>Systems Thinking</td>
+                      <td>NULL</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p style="font-size:12pt; margin-top:6px;">
+                  NULL hides missing information.
+                </p>
+              </div>
+
+              <!-- RIGHT: query + fixed output -->
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  b.title,
+  COALESCE(p.name, 'Unknown') AS publisher
+FROM books b
+LEFT JOIN publishers p
+  ON b.publisher_id = p.publisher_id;
+      </code></pre>
+
+                <table border="1" style="width:100%; border-collapse:collapse; font-size:12pt;">
+                  <thead>
+                    <tr>
+                      <th>title</th>
+                      <th>publisher</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Foundations of Computing</td>
+                      <td>Classic Press</td>
+                    </tr>
+                    <tr>
+                      <td>Systems Thinking</td>
+                      <td>Unknown</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p style="font-size:12pt; margin-top:6px;">
+                  Clear and explicit in reports.
+                </p>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- CONCEPT: FILTER BEFORE JOIN -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Pattern: Filter Before Join (Reduce Rows) </h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Smaller input can improve performance</li>
+                  <li>Filter books by year, then join</li>
+                  <li>Traditional habit: remove rows early when safe</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT b.title, p.name
+FROM (
+  SELECT * FROM books
+  WHERE published_year >= 2020
+) b
+LEFT JOIN publishers p
+  ON b.publisher_id = p.publisher_id;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- CONCEPT: JOIN THEN FILTER -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Pattern: Join Then Filter </h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Sometimes you must join to filter</li>
+                  <li>Example: publishers named "Data House"</li>
+                  <li>Inner join is fine here</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT b.title, p.name
+FROM books b
+JOIN publishers p
+  ON b.publisher_id = p.publisher_id
+WHERE p.name = 'Data House';
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- CONCEPT: QUALIFY COLUMNS -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Rule: Qualify Column Names</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Joined tables often share column names like id, name</li>
+                  <li>Always use aliases: b.title, a.name, p.name</li>
+                  <li>Traditional habit: never rely on guessing</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT name
+FROM books b
+JOIN publishers p ON ...
+-- Ambiguous: which name?
+
+SELECT p.name
+-- Clear
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- CONCEPT: JOIN ORDER -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Traditional Habit: Read Joins Left to Right</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Start from the main table in FROM</li>
+                  <li>Add joins one by one</li>
+                  <li>Keep ON conditions near the join they describe</li>
+                  <li>Use consistent alias letters</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+FROM books b
+LEFT JOIN publishers p ON ...
+JOIN book_authors ba ON ...
+JOIN authors a ON ...
+
+One step at a time
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- PITFALL: COUNT AFTER JOIN -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Pitfall: COUNT(*) After a Many to Many Join </h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>COUNT(*) counts joined rows, not original entities</li>
+                  <li>To count books, use COUNT(DISTINCT b.book_id)</li>
+                  <li>Traditional habit: define what you are counting</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  COUNT(*) AS joined_rows,
+  COUNT(DISTINCT b.book_id) AS unique_books
+FROM books b
+JOIN book_authors ba
+  ON ba.book_id = b.book_id;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- PRACTICE: READ QUERY -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Practice: Read This Join Query </h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">
+SELECT
+  p.name AS publisher,
+  COUNT(*) AS book_rows
+FROM publishers p
+LEFT JOIN books b
+  ON b.publisher_id = p.publisher_id
+GROUP BY p.name
+ORDER BY book_rows DESC;
+      </code></pre>
+                <p class="muted">What is being counted?</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>Authors per publisher</li>
+                  <li>Books per publisher including publishers with zero books</li>
+                  <li>Publishers per author</li>
+                  <li>Only publishers that have books</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- STRING_AGG -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Pattern: One Row per Book with Author List </h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Many to many produces multiple rows per book</li>
+                  <li>String aggregation makes a readable list</li>
+                  <li>PostgreSQL: STRING_AGG</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  b.title,
+  STRING_AGG(a.name, ', ' ORDER BY a.name) AS authors
+FROM books b
+JOIN book_authors ba ON ba.book_id = b.book_id
+JOIN authors a ON a.author_id = ba.author_id
+GROUP BY b.title
+ORDER BY b.title;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- STRING_AGG: ONE ROW PER BOOK (SIMPLE SLIDE) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>One Row per Book with Author List</h5>
+
+            <div class="split">
+
+              <!-- LEFT: problem -->
+              <div class="left">
+                <ul>
+                  <li>Many to many → multiple rows per book</li>
+                  <li>Hard to read in reports</li>
+                  <li>PostgreSQL: <code>STRING_AGG</code></li>
+                </ul>
+
+                <table border="1" style="width:100%; border-collapse:collapse; font-size:12pt;">
+                  <thead>
+                    <tr>
+                      <th>title</th>
+                      <th>author</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Foundations of Computing</td>
+                      <td>Ada</td>
+                    </tr>
+                    <tr>
+                      <td>Foundations of Computing</td>
+                      <td>Turing</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p style="font-size:12pt; margin-top:6px;">
+                  Same book, many rows.
+                </p>
+              </div>
+
+              <!-- RIGHT: solution -->
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  b.title,
+  STRING_AGG(a.name, ', ' ORDER BY a.name) AS authors
+FROM books b
+JOIN book_authors ba ON ba.book_id = b.book_id
+JOIN authors a ON a.author_id = ba.author_id
+GROUP BY b.title
+ORDER BY b.title;
+      </code></pre>
+
+                <table border="1" style="width:100%; border-collapse:collapse; font-size:12pt;">
+                  <thead>
+                    <tr>
+                      <th>title</th>
+                      <th>authors</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Foundations of Computing</td>
+                      <td>Ada, Turing</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p style="font-size:12pt; margin-top:6px;">
+                  One row, readable list.
+                </p>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- TOP N -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Pattern: Top N Authors by Book Count </h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Join through bridge</li>
+                  <li>Group by author</li>
+                  <li>Order and limit for ranking</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  a.name,
+  COUNT(*) AS books_written
+FROM authors a
+JOIN book_authors ba
+  ON ba.author_id = a.author_id
+GROUP BY a.name
+ORDER BY books_written DESC, a.name
+LIMIT 5;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- TOP N AUTHORS BY BOOK COUNT (SIMPLE SLIDE) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Top N Authors by Book Count</h5>
+
+            <div class="split">
+
+              <!-- LEFT: idea + small input -->
+              <div class="left">
+                <ul>
+                  <li>Join through bridge table</li>
+                  <li>Group by author</li>
+                  <li>Order + LIMIT for ranking</li>
+                </ul>
+
+                <table border="1" style="width:100%; border-collapse:collapse; font-size:12pt;">
+                  <thead>
+                    <tr>
+                      <th>author</th>
+                      <th>book_id</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Ada</td>
+                      <td>10</td>
+                    </tr>
+                    <tr>
+                      <td>Ada</td>
+                      <td>12</td>
+                    </tr>
+                    <tr>
+                      <td>Turing</td>
+                      <td>10</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p style="font-size:12pt; margin-top:6px;">
+                  Bridge creates one row per (author, book).
+                </p>
+              </div>
+
+              <!-- RIGHT: query + result -->
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  a.name,
+  COUNT(*) AS books_written
+FROM authors a
+JOIN book_authors ba
+  ON ba.author_id = a.author_id
+GROUP BY a.name
+ORDER BY books_written DESC, a.name
+LIMIT 5;
+      </code></pre>
+
+                <table border="1" style="width:100%; border-collapse:collapse; font-size:12pt;">
+                  <thead>
+                    <tr>
+                      <th>author</th>
+                      <th>books_written</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Ada</td>
+                      <td>2</td>
+                    </tr>
+                    <tr>
+                      <td>Turing</td>
+                      <td>1</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p style="font-size:12pt; margin-top:6px;">
+                  Ranked summary.
+                </p>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- RECENT BOOKS -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Pattern: Recent Books with Authors </h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Filter books by year</li>
+                  <li>Then join to show authors</li>
+                  <li>Traditional habit: keep the time filter clear</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  b.title,
+  b.published_year,
+  a.name AS author
+FROM books b
+JOIN book_authors ba ON ba.book_id = b.book_id
+JOIN authors a ON a.author_id = ba.author_id
+WHERE b.published_year >= 2020
+ORDER BY b.published_year DESC, b.title, a.name;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- RECENT BOOKS WITH AUTHORS (SIMPLE SLIDE) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Recent Books with Authors</h5>
+
+            <div class="split">
+
+              <!-- LEFT: idea + filter -->
+              <div class="left">
+                <ul>
+                  <li>Filter books by year</li>
+                  <li>Then join to authors</li>
+                  <li>Keep the time filter clear</li>
+                </ul>
+
+                <table border="1" style="width:100%; border-collapse:collapse; font-size:12pt;">
+                  <thead>
+                    <tr>
+                      <th>title</th>
+                      <th>year</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Systems Thinking</td>
+                      <td>2021</td>
+                    </tr>
+                    <tr>
+                      <td>Foundations of Computing</td>
+                      <td>2020</td>
+                    </tr>
+                    <tr>
+                      <td>Algorithms the Classic Way</td>
+                      <td>2018</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p style="font-size:12pt; margin-top:6px;">
+                  Only years ≥ 2020 qualify.
+                </p>
+              </div>
+
+              <!-- RIGHT: query + result -->
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  b.title,
+  b.published_year,
+  a.name AS author
+FROM books b
+JOIN book_authors ba ON ba.book_id = b.book_id
+JOIN authors a ON a.author_id = ba.author_id
+WHERE b.published_year >= 2020
+ORDER BY b.published_year DESC, b.title, a.name;
+      </code></pre>
+
+                <table border="1" style="width:100%; border-collapse:collapse; font-size:12pt;">
+                  <thead>
+                    <tr>
+                      <th>title</th>
+                      <th>year</th>
+                      <th>author</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Systems Thinking</td>
+                      <td>2021</td>
+                      <td>Grace</td>
+                    </tr>
+                    <tr>
+                      <td>Foundations of Computing</td>
+                      <td>2020</td>
+                      <td>Ada</td>
+                    </tr>
+                    <tr>
+                      <td>Foundations of Computing</td>
+                      <td>2020</td>
+                      <td>Turing</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p style="font-size:12pt; margin-top:6px;">
+                  Filter first, then join.
+                </p>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- QUALITY CHECK -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Quality Check: Publishers With Zero Books </h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Start from publishers</li>
+                  <li>Left join to books</li>
+                  <li>Keep groups where count is zero</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  p.name,
+  COUNT(b.book_id) AS book_count
+FROM publishers p
+LEFT JOIN books b
+  ON b.publisher_id = p.publisher_id
+GROUP BY p.name
+HAVING COUNT(b.book_id) = 0
+ORDER BY p.name;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- PUBLISHERS WITH ZERO BOOKS (SIMPLE SLIDE) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Publishers With Zero Books</h5>
+
+            <div class="split">
+
+              <!-- LEFT: idea + tiny data -->
+              <div class="left">
+                <ul>
+                  <li>Start from publishers</li>
+                  <li>LEFT JOIN to books</li>
+                  <li>Keep count = 0</li>
+                </ul>
+
+                <table border="1" style="width:100%; border-collapse:collapse; font-size:12pt;">
+                  <thead>
+                    <tr>
+                      <th>publisher</th>
+                      <th>book_id</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Classic Press</td>
+                      <td>10</td>
+                    </tr>
+                    <tr>
+                      <td>Data House</td>
+                      <td>11</td>
+                    </tr>
+                    <tr>
+                      <td>Future Books</td>
+                      <td>NULL</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p style="font-size:12pt; margin-top:6px;">
+                  NULL means no matching book.
+                </p>
+              </div>
+
+              <!-- RIGHT: query + result -->
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  p.name,
+  COUNT(b.book_id) AS book_count
+FROM publishers p
+LEFT JOIN books b
+  ON b.publisher_id = p.publisher_id
+GROUP BY p.name
+HAVING COUNT(b.book_id) = 0
+ORDER BY p.name;
+      </code></pre>
+
+                <table border="1" style="width:100%; border-collapse:collapse; font-size:12pt;">
+                  <thead>
+                    <tr>
+                      <th>publisher</th>
+                      <th>book_count</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Future Books</td>
+                      <td>0</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <p style="font-size:12pt; margin-top:6px;">
+                  Data quality check.
+                </p>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: Why COUNT(b.book_id) not COUNT(*) here?</h5>
+            <div class="split">
+              <div class="left">
+                <p>In a LEFT JOIN from publishers to books, COUNT(*) would:</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>Count only real books</li>
+                  <li>Count one row even when no book exists</li>
+                  <li>Return NULL always</li>
+                  <li>Require DISTINCT automatically</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- WRONG ON -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Rule: Wrong ON Condition Creates Wrong Data</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>If ON is missing or incorrect, results may multiply</li>
+                  <li>This can look like valid data but it is not</li>
+                  <li>Traditional habit: sanity check row counts</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+-- Bad: missing ON creates cross join
+SELECT b.title, p.name
+FROM books b
+JOIN publishers p;
+
+-- Good: correct ON
+SELECT b.title, p.name
+FROM books b
+JOIN publishers p
+  ON b.publisher_id = p.publisher_id;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- EXPLAIN / INDEX -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Traditional Habit: Think About Join Performance </h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Joins are faster when keys are indexed</li>
+                  <li>Primary keys are indexed by default in most systems</li>
+                  <li>Foreign keys often need indexes for join speed</li>
+                  <li>Use EXPLAIN to learn the plan</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+-- Example: index the FK for faster joins
+CREATE INDEX idx_books_publisher_id
+ON books(publisher_id);
+
+EXPLAIN
+SELECT b.title, p.name
+FROM books b
+JOIN publishers p
+  ON b.publisher_id = p.publisher_id;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- PRACTICE: PICK JOIN -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Practice: Pick the Join Type</h5>
+            <div class="split">
+              <div class="left">
+                <p>Goal: list all books, show publisher name when it exists.</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>INNER JOIN</li>
+                  <li>LEFT JOIN</li>
+                  <li>CROSS JOIN</li>
+                  <li>NATURAL JOIN</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- PRACTICE: SPOT MISTAKE -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Practice: Spot the Mistake</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">
+SELECT b.title, p.name
+FROM books b
+LEFT JOIN publishers p
+  ON b.publisher_id = p.publisher_id
+WHERE p.name = 'Classic Press';
+      </code></pre>
+                <p class="muted">What is the risk?</p>
+              </div>
+              <div class="right">
+                <ul class="alpha-list">
+                  <li>It becomes a CROSS JOIN</li>
+                  <li>It may remove books with no publisher</li>
+                  <li>It prevents indexes from working</li>
+                  <li>It forces FULL OUTER JOIN</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- PRACTICE: BRIDGE JOIN -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Practice: Write the Bridge Join </h5>
+            <div class="split">
+              <div class="left">
+                <p>Goal: show author names and the titles they wrote.</p>
+                <p class="muted">You must use book_authors.</p>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  a.name,
+  b.title
+FROM authors a
+JOIN book_authors ba
+  ON ba.author_id = a.author_id
+JOIN books b
+  ON b.book_id = ba.book_id
+ORDER BY a.name, b.title;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- ORPHANS -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Pattern: Find Orphaned Foreign Keys </h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Orphan means FK value has no matching PK</li>
+                  <li>Left join from child to parent</li>
+                  <li>Filter where parent PK is NULL</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+-- Orphaned books.publisher_id
+SELECT
+  b.book_id,
+  b.title,
+  b.publisher_id
+FROM books b
+LEFT JOIN publishers p
+  ON b.publisher_id = p.publisher_id
+WHERE b.publisher_id IS NOT NULL
+  AND p.publisher_id IS NULL
+ORDER BY b.book_id;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- TOP PER GROUP -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Pattern: Cheapest Book per Publisher </h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Compute min price per publisher</li>
+                  <li>Join back to get the row</li>
+                  <li>Classic reporting technique</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  p.name AS publisher,
+  b.title,
+  b.price
+FROM publishers p
+JOIN (
+  SELECT publisher_id, MIN(price) AS min_price
+  FROM books
+  WHERE publisher_id IS NOT NULL
+  GROUP BY publisher_id
+) m
+  ON m.publisher_id = p.publisher_id
+JOIN books b
+  ON b.publisher_id = m.publisher_id
+ AND b.price = m.min_price
+ORDER BY p.name, b.title;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- NULL RULE -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Rule: NULL Does Not Equal NULL</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Equality comparisons with NULL are unknown</li>
+                  <li>Outer joins missing matches via NULL output</li>
+                  <li>Traditional habit: do not join on nullable text keys</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+NULL = NULL is not true
+
+Prefer PK and FK joins
+Avoid joining by names
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- REVIEW -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Quick Review: Join Types and Use Cases</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li><span class="highlight">INNER</span>: matching rows only</li>
+                  <li><span class="highlight">LEFT</span>: keep all left rows</li>
+                  <li><span class="highlight">RIGHT</span>: keep all right rows</li>
+                  <li><span class="highlight">FULL</span>: keep all rows from both</li>
+                  <li><span class="highlight">CROSS</span>: all combinations</li>
+                  <li><span class="highlight">SELF</span>: table joins itself</li>
+                </ul>
+              </div>
+              <div class="right">
+                <div class="tier" style="font-size:16pt; text-align:center;">
+                  <pre><code>
+Traditional habit:
+Write joins so a reader can verify keys
+without guessing
+        </code></pre>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- FINAL PRACTICE -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Practice Prompts</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>List all books with publisher name, Unknown if NULL</li>
+                  <li>List authors who wrote at least two books</li>
+                  <li>Find publishers with zero books</li>
+                  <li>Show each book with a comma separated author list</li>
+                  <li>Find books that have no authors linked</li>
+                </ul>
+                <p class="muted">Traditional habit: start with the join keys, then refine.</p>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+-- Template
+SELECT ...
+FROM ...
+JOIN ... ON ...
+LEFT JOIN ... ON ...
+WHERE ...
+GROUP BY ...
+HAVING ...
+ORDER BY ...
+LIMIT ...;
+      </code></pre>
               </div>
             </div>
           </section>
