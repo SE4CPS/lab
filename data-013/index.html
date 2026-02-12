@@ -488,8 +488,8 @@
               <td
                 style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
                 <a href="./#/module-5"
-                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">FETCH, TOP,
-                  RETURNING, CURRENT, READ, WRITE</a>
+                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">JOIN, INNER,
+                  LEFT, RIGHT, FULL, OUTER</a>
               </td>
               <td
                 style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
@@ -509,8 +509,8 @@
               <td
                 style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
                 <a href="./#/module-6"
-                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">JOIN, INNER,
-                  LEFT, RIGHT, FULL, OUTER</a>
+                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">FETCH, TOP,
+                  RETURNING, CURRENT, READ, WRITE</a>
               </td>
               <td
                 style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
@@ -4507,6 +4507,948 @@ LIMIT 10 OFFSET 0;</code></pre>
 
       </section>
 
+      <!-- MODULE 5 -->
+      <!-- ========================================================= -->
+      <!-- MODULE 5: JOINS (BICYCLE RENTAL)                           -->
+      <!-- JOIN · INNER · LEFT · RIGHT · FULL · OUTER                 -->
+      <!-- PostgreSQL focus + SQLite comparison tables                -->
+      <!-- ========================================================= -->
+      <section id="module-5">
+
+        <!-- 01 — Diagram (cover) -->
+        <section>
+          <h2>Module 5</h2>
+          <h3>PostgreSQL Joins</h3>
+          <p class="muted">JOIN · INNER · LEFT · RIGHT · FULL · OUTER</p>
+
+          <svg width="100%" height="260" viewBox="0 0 1200 260" role="img"
+            aria-label="Bicycle rental join pipeline diagram">
+            <rect x="60" y="70" width="300" height="120" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="210" y="125" text-anchor="middle" font-size="28" fill="rgba(255,255,255,0.92)">Bike Rental
+              Data</text>
+            <text x="210" y="160" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">tables + keys</text>
+
+            <rect x="450" y="70" width="300" height="120" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="600" y="125" text-anchor="middle" font-size="28" fill="rgba(255,255,255,0.92)">JOIN</text>
+            <text x="600" y="160" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">match rows by
+              keys</text>
+
+            <rect x="840" y="70" width="300" height="120" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="990" y="125" text-anchor="middle" font-size="28" fill="rgba(255,255,255,0.92)">Results</text>
+            <text x="990" y="160" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">combined
+              columns</text>
+
+            <line x1="360" y1="130" x2="450" y2="130" stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+            <polygon points="450,130 435,122 435,138" fill="rgba(255,255,255,0.35)" />
+
+            <line x1="750" y1="130" x2="840" y2="130" stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+            <polygon points="840,130 825,122 825,138" fill="rgba(255,255,255,0.35)" />
+          </svg>
+        </section>
+
+        <!-- 02 — Split (goals) -->
+        <section>
+          <h3>Module goal</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Build a small bicycle rental schema</li>
+                <li>Use keys to combine data across tables</li>
+                <li>Practice INNER, LEFT, RIGHT, FULL OUTER joins</li>
+                <li>Learn common mistakes: missing or wrong ON</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- The habit:
+-- FROM + JOIN ... ON ...
+-- Choose join type based on "who must appear"
+-- Always verify row counts</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 03 — Diagram (schema overview) -->
+        <section>
+          <h3>Bicycle rental schema map</h3>
+          <svg width="100%" height="320" viewBox="0 0 1200 320" role="img" aria-label="Bicycle rental schema diagram">
+            <!-- riders -->
+            <rect x="70" y="50" width="330" height="95" rx="14" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="235" y="92" text-anchor="middle" font-size="24" fill="rgba(255,255,255,0.9)">riders</text>
+            <text x="235" y="125" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">rider_id (PK)</text>
+
+            <!-- bikes -->
+            <rect x="70" y="200" width="330" height="95" rx="14" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="235" y="242" text-anchor="middle" font-size="24" fill="rgba(255,255,255,0.9)">bikes</text>
+            <text x="235" y="275" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">bike_id (PK)</text>
+
+            <!-- rentals -->
+            <rect x="470" y="120" width="390" height="95" rx="14" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="665" y="162" text-anchor="middle" font-size="24" fill="rgba(255,255,255,0.9)">rentals</text>
+            <text x="665" y="195" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">rental_id (PK),
+              rider_id (FK), bike_id (FK)</text>
+
+            <!-- stations -->
+            <rect x="930" y="50" width="220" height="95" rx="14" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="1040" y="92" text-anchor="middle" font-size="24" fill="rgba(255,255,255,0.9)">stations</text>
+            <text x="1040" y="125" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">station_id
+              (PK)</text>
+
+            <!-- returns (optional relationship) -->
+            <rect x="930" y="200" width="220" height="95" rx="14" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="1040" y="242" text-anchor="middle" font-size="24" fill="rgba(255,255,255,0.9)">returns</text>
+            <text x="1040" y="275" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">rental_id
+              (PK/FK)</text>
+
+            <!-- arrows -->
+            <line x1="400" y1="98" x2="470" y2="155" stroke="rgba(255,255,255,0.35)" stroke-width="1" />
+            <line x1="400" y1="248" x2="470" y2="180" stroke="rgba(255,255,255,0.35)" stroke-width="1" />
+            <line x1="860" y1="155" x2="930" y2="98" stroke="rgba(255,255,255,0.35)" stroke-width="1" />
+            <line x1="860" y1="180" x2="930" y2="248" stroke="rgba(255,255,255,0.35)" stroke-width="1" />
+          </svg>
+        </section>
+
+        <!-- 04 — Split (create tables intro) -->
+        <section>
+          <h3>Create the tables first</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Keep keys explicit and stable</li>
+                <li>Foreign keys express relationships</li>
+                <li>Joins depend on matching keys</li>
+                <li>Start small; add complexity later</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Recommended order:
+-- 1) riders
+-- 2) bikes
+-- 3) stations
+-- 4) rentals (FK -> riders/bikes/stations)
+-- 5) returns (optional FK -> rentals)</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 05 — Split (CREATE riders) -->
+        <section>
+          <h3>CREATE TABLE riders</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>One row per rider</li>
+                <li>City supports grouping later</li>
+                <li>Email is realistic for uniqueness</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">CREATE TABLE riders (
+  rider_id  SERIAL PRIMARY KEY,
+  name      TEXT NOT NULL,
+  city      TEXT NOT NULL,
+  email     TEXT UNIQUE
+);</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 06 — Split (CREATE bikes) -->
+        <section>
+          <h3>CREATE TABLE bikes</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>One row per bike</li>
+                <li>Status helps show “unrented bikes”</li>
+                <li>Type supports reporting</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">CREATE TABLE bikes (
+  bike_id   SERIAL PRIMARY KEY,
+  bike_type TEXT NOT NULL,     -- road, city, e-bike
+  status    TEXT NOT NULL      -- available, maintenance
+);</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 07 — Split (CREATE stations) -->
+        <section>
+          <h3>CREATE TABLE stations</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Pickup and dropoff locations</li>
+                <li>Neighborhood supports filters</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">CREATE TABLE stations (
+  station_id   SERIAL PRIMARY KEY,
+  name         TEXT NOT NULL,
+  neighborhood TEXT NOT NULL
+);</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 08 — Split (CREATE rentals) -->
+        <section>
+          <h3>CREATE TABLE rentals</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Fact table: each rental event</li>
+                <li>Contains multiple foreign keys</li>
+                <li>Return time can be NULL (still riding)</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size: 7pt;">CREATE TABLE rentals (
+  rental_id           SERIAL PRIMARY KEY,
+  rider_id            INTEGER NOT NULL REFERENCES riders(rider_id),
+  bike_id             INTEGER NOT NULL REFERENCES bikes(bike_id),
+  pickup_station_id   INTEGER NOT NULL REFERENCES stations(station_id),
+  pickup_ts           TIMESTAMP NOT NULL,
+  dropoff_station_id  INTEGER REFERENCES stations(station_id),
+  dropoff_ts          TIMESTAMP
+);</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 09 — Split (seed data) -->
+        <section>
+          <h3>Sample data</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Include “missing” relationships on purpose</li>
+                <li>At least one rider with no rentals</li>
+                <li>At least one bike never rented</li>
+                <li>At least one active rental (no dropoff yet)</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size: 7pt;">INSERT INTO riders(name, city, email) VALUES
+('Ava',  'Stockton',    'ava@example.com'),
+('Noah', 'Sacramento',  'noah@example.com'),
+('Mia',  'Stockton',    'mia@example.com'),
+('Liam', 'Lodi',        'liam@example.com');  -- no rentals
+
+INSERT INTO bikes(bike_type, status) VALUES
+('city', 'available'),
+('road', 'available'),
+('e-bike','maintenance'),
+('city', 'available');  -- never rented
+
+INSERT INTO stations(name, neighborhood) VALUES
+('Downtown Dock', 'Downtown'),
+('Campus Rack',   'University'),
+('River Trail',   'Waterfront');
+
+INSERT INTO rentals(rider_id, bike_id, pickup_station_id, pickup_ts, dropoff_station_id, dropoff_ts) VALUES
+(1, 1, 1, TIMESTAMP '2026-02-10 09:00', 2, TIMESTAMP '2026-02-10 09:25'),
+(2, 2, 2, TIMESTAMP '2026-02-10 10:00', 1, TIMESTAMP '2026-02-10 10:18'),
+(1, 2, 1, TIMESTAMP '2026-02-11 08:10', NULL, NULL); -- active ride</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 10 — Diagram (what a join does) -->
+        <section>
+          <h3>Join concept</h3>
+          <svg width="100%" height="280" viewBox="0 0 1200 280" role="img"
+            aria-label="Join combines columns from two tables">
+            <rect x="90" y="70" width="420" height="140" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="300" y="108" text-anchor="middle" font-size="22" fill="rgba(255,255,255,0.9)">rentals</text>
+            <text x="300" y="145" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">rental_id, rider_id,
+              bike_id</text>
+
+            <rect x="690" y="70" width="420" height="140" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="900" y="108" text-anchor="middle" font-size="22" fill="rgba(255,255,255,0.9)">riders</text>
+            <text x="900" y="145" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">rider_id, name,
+              city</text>
+
+            <line x1="510" y1="140" x2="690" y2="140" stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+            <polygon points="690,140 675,132 675,148" fill="rgba(255,255,255,0.35)" />
+
+            <text x="600" y="245" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.72)">
+              Match rentals.rider_id = riders.rider_id to add rider columns
+            </text>
+          </svg>
+        </section>
+
+        <!-- 11 — Split (base join syntax) -->
+        <section>
+          <h3>JOIN syntax (base pattern)</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><code>JOIN</code> without a keyword means <strong>INNER JOIN</strong></li>
+                <li>Always include <code>ON</code> with the key match</li>
+                <li>Use table aliases for readability</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT
+  r.rental_id,
+  rd.name AS rider_name,
+  r.pickup_ts
+FROM rentals r
+JOIN riders rd
+  ON r.rider_id = rd.rider_id
+ORDER BY r.rental_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 12 — Table (join type meaning) -->
+        <section>
+          <h3>Join types: what stays in the output</h3>
+          <table class="table" style="font-size: 12pt;">
+            <thead>
+              <tr>
+                <th>Join type</th>
+                <th>Keep rows from left table?</th>
+                <th>Keep rows from right table?</th>
+                <th>Typical question</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>INNER JOIN</code></td>
+                <td>Only matched</td>
+                <td>Only matched</td>
+                <td>“Show rentals with rider info”</td>
+              </tr>
+              <tr>
+                <td><code>LEFT JOIN</code></td>
+                <td>All left rows</td>
+                <td>Matched when possible</td>
+                <td>“Show all riders, even with no rentals”</td>
+              </tr>
+              <tr>
+                <td><code>RIGHT JOIN</code></td>
+                <td>Matched when possible</td>
+                <td>All right rows</td>
+                <td>“Show all bikes, even never rented” (if bikes is right)</td>
+              </tr>
+              <tr>
+                <td><code>FULL OUTER JOIN</code></td>
+                <td>All left rows</td>
+                <td>All right rows</td>
+                <td>“Show everything; highlight gaps”</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 13 — Diagram (INNER join Venn) -->
+        <section>
+          <h3>INNER JOIN concept</h3>
+          <svg width="100%" height="260" viewBox="0 0 1200 260" role="img"
+            aria-label="Inner join keeps only the overlap">
+            <circle cx="520" cy="130" r="85" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.25)"
+              stroke-width="2" />
+            <circle cx="680" cy="130" r="85" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.25)"
+              stroke-width="2" />
+            <ellipse cx="600" cy="130" rx="40" ry="85" fill="rgba(255,255,255,0.14)" />
+            <text x="520" y="135" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">rentals</text>
+            <text x="680" y="135" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">riders</text>
+            <text x="600" y="230" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.72)">Only rows that match
+              on the ON condition</text>
+          </svg>
+        </section>
+
+        <!-- 14 — Split (INNER join example) -->
+        <section>
+          <h3>INNER JOIN: rentals with rider names</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Most common join</li>
+                <li>Only matched rows appear</li>
+                <li>Good default for “fact + dimension”</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT
+  r.rental_id,
+  rd.name AS rider,
+  rd.city,
+  r.pickup_ts,
+  r.dropoff_ts
+FROM rentals r
+INNER JOIN riders rd
+  ON r.rider_id = rd.rider_id
+ORDER BY r.pickup_ts;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 15 — Split (multi-join example) -->
+        <section>
+          <h3>Multiple joins: rider + bike + pickup station</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Join is composable</li>
+                <li>Each join adds columns</li>
+                <li>Keep ON conditions close to the join</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT
+  r.rental_id,
+  rd.name     AS rider,
+  b.bike_type AS bike,
+  s.name      AS pickup_station,
+  r.pickup_ts
+FROM rentals r
+JOIN riders   rd ON r.rider_id = rd.rider_id
+JOIN bikes    b  ON r.bike_id  = b.bike_id
+JOIN stations s  ON r.pickup_station_id = s.station_id
+ORDER BY r.rental_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 16 — Split (active rentals: NULL dropoff) -->
+        <section>
+          <h3>INNER JOIN + NULLs: active rentals (no dropoff yet)</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>NULL means “unknown / not recorded”</li>
+                <li>Filter active rentals with <code>IS NULL</code></li>
+                <li>Join still works normally</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT
+  r.rental_id,
+  rd.name AS rider,
+  b.bike_type,
+  r.pickup_ts
+FROM rentals r
+JOIN riders rd ON r.rider_id = rd.rider_id
+JOIN bikes  b  ON r.bike_id  = b.bike_id
+WHERE r.dropoff_ts IS NULL
+ORDER BY r.pickup_ts;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 17 — Diagram (LEFT join Venn) -->
+        <section>
+          <h3>LEFT JOIN concept</h3>
+          <svg width="100%" height="260" viewBox="0 0 1200 260" role="img" aria-label="Left join keeps all left rows">
+            <circle cx="520" cy="130" r="85" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.25)"
+              stroke-width="2" />
+            <circle cx="680" cy="130" r="85" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.25)"
+              stroke-width="2" />
+            <ellipse cx="600" cy="130" rx="40" ry="85" fill="rgba(255,255,255,0.14)" />
+            <text x="520" y="135" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">riders (left)</text>
+            <text x="680" y="135" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">rentals
+              (right)</text>
+            <text x="600" y="230" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.72)">All riders appear;
+              rental columns may be NULL</text>
+          </svg>
+        </section>
+
+        <!-- 18 — Split (LEFT join example) -->
+        <section>
+          <h3>LEFT JOIN: all riders, include rentals if any</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Use when the left table “must” appear</li>
+                <li>Good for audits and completeness checks</li>
+                <li>NULLs on the right mean “no match”</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT
+  rd.rider_id,
+  rd.name,
+  r.rental_id,
+  r.pickup_ts
+FROM riders rd
+LEFT JOIN rentals r
+  ON r.rider_id = rd.rider_id
+ORDER BY rd.rider_id, r.pickup_ts;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 19 — Split (LEFT join filter: riders with zero rentals) -->
+        <section>
+          <h3>Quality check: riders with zero rentals</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Start from riders</li>
+                <li>LEFT JOIN rentals</li>
+                <li>Keep rows where the right side is NULL</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT
+  rd.rider_id,
+  rd.name,
+  rd.city
+FROM riders rd
+LEFT JOIN rentals r
+  ON r.rider_id = rd.rider_id
+WHERE r.rental_id IS NULL
+ORDER BY rd.rider_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 20 — Diagram (RIGHT join Venn) -->
+        <section>
+          <h3>RIGHT JOIN concept</h3>
+          <svg width="100%" height="260" viewBox="0 0 1200 260" role="img" aria-label="Right join keeps all right rows">
+            <circle cx="520" cy="130" r="85" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.25)"
+              stroke-width="2" />
+            <circle cx="680" cy="130" r="85" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.25)"
+              stroke-width="2" />
+            <ellipse cx="600" cy="130" rx="40" ry="85" fill="rgba(255,255,255,0.14)" />
+            <text x="520" y="135" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">rentals</text>
+            <text x="680" y="135" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">bikes (right)</text>
+            <text x="600" y="230" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.72)">All bikes appear;
+              rental columns may be NULL</text>
+          </svg>
+        </section>
+
+        <!-- 21 — Split (RIGHT join example) -->
+        <section>
+          <h3>RIGHT JOIN: show all bikes, rentals if any</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Less common than LEFT JOIN</li>
+                <li>Same idea: choose which side must appear</li>
+                <li>Can be rewritten as LEFT JOIN by swapping tables</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT
+  b.bike_id,
+  b.bike_type,
+  r.rental_id,
+  r.pickup_ts
+FROM rentals r
+RIGHT JOIN bikes b
+  ON r.bike_id = b.bike_id
+ORDER BY b.bike_id, r.pickup_ts;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 22 — Split (rewrite RIGHT as LEFT) -->
+        <section>
+          <h3>Rewrite RIGHT JOIN as LEFT JOIN (team habit)</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Many teams standardize on LEFT JOIN</li>
+                <li>Same results, often easier to read</li>
+                <li>Keep “must appear” table on the left</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT
+  b.bike_id,
+  b.bike_type,
+  r.rental_id,
+  r.pickup_ts
+FROM bikes b
+LEFT JOIN rentals r
+  ON r.bike_id = b.bike_id
+ORDER BY b.bike_id, r.pickup_ts;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 23 — Diagram (FULL OUTER join concept) -->
+        <section>
+          <h3>FULL OUTER JOIN concept</h3>
+          <svg width="100%" height="260" viewBox="0 0 1200 260" role="img"
+            aria-label="Full outer join keeps everything">
+            <circle cx="520" cy="130" r="85" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.25)"
+              stroke-width="2" />
+            <circle cx="680" cy="130" r="85" fill="rgba(255,255,255,0.14)" stroke="rgba(255,255,255,0.25)"
+              stroke-width="2" />
+            <ellipse cx="600" cy="130" rx="40" ry="85" fill="rgba(255,255,255,0.14)" />
+            <text x="520" y="135" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">riders</text>
+            <text x="680" y="135" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">rentals</text>
+            <text x="600" y="230" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.72)">All rows from both
+              sides; NULLs mark missing matches</text>
+          </svg>
+        </section>
+
+        <!-- 24 — Split (FULL OUTER join example) -->
+        <section>
+          <h3>FULL OUTER JOIN: show everything, highlight gaps</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Audit tool: find missing links on either side</li>
+                <li>PostgreSQL supports FULL OUTER JOIN</li>
+                <li>NULLs indicate unmatched rows</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT
+  rd.rider_id,
+  rd.name,
+  r.rental_id,
+  r.pickup_ts
+FROM riders rd
+FULL OUTER JOIN rentals r
+  ON r.rider_id = rd.rider_id
+ORDER BY rd.rider_id NULLS LAST, r.rental_id NULLS LAST;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 25 — Split (OUTER keyword note) -->
+        <section>
+          <h3>OUTER keyword</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><code>OUTER</code> is optional syntax</li>
+                <li><code>LEFT OUTER JOIN</code> = <code>LEFT JOIN</code></li>
+                <li><code>FULL OUTER JOIN</code> is common for clarity</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Equivalent pairs:
+-- LEFT JOIN         == LEFT OUTER JOIN
+-- RIGHT JOIN        == RIGHT OUTER JOIN
+-- FULL OUTER JOIN   == FULL JOIN (commonly written with OUTER)</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 26 — Table (SQLite vs Postgres join support) -->
+        <section>
+          <h3>Comparison: join support</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>INNER JOIN</td>
+                <td>Supported</td>
+                <td>Supported</td>
+              </tr>
+              <tr>
+                <td>LEFT JOIN</td>
+                <td>Supported</td>
+                <td>Supported</td>
+              </tr>
+              <tr>
+                <td>RIGHT JOIN</td>
+                <td>Not supported in many SQLite versions</td>
+                <td>Supported</td>
+              </tr>
+              <tr>
+                <td>FULL OUTER JOIN</td>
+                <td>Not supported directly</td>
+                <td>Supported</td>
+              </tr>
+              <tr>
+                <td>Portable workaround</td>
+                <td>Use LEFT JOIN + UNION (carefully)</td>
+                <td>Use RIGHT/FULL directly</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 27 — Split (FULL OUTER workaround idea) -->
+        <section>
+          <h3>SQLite workaround idea: emulate FULL OUTER JOIN</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Use two LEFT JOIN queries</li>
+                <li>Combine with <code>UNION</code></li>
+                <li>Be careful to avoid duplicates</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Conceptual pattern (portable-ish):
+-- 1) left side keeps all riders
+-- 2) second query keeps rentals with no rider match
+
+SELECT rd.rider_id, rd.name, r.rental_id
+FROM riders rd
+LEFT JOIN rentals r ON r.rider_id = rd.rider_id
+
+UNION
+
+SELECT rd.rider_id, rd.name, r.rental_id
+FROM rentals r
+LEFT JOIN riders rd ON r.rider_id = rd.rider_id
+WHERE rd.rider_id IS NULL;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 28 — Split (common mistake: missing ON) -->
+        <section>
+          <h3>Common mistake: missing or wrong ON</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>If the join condition is missing or incorrect, rows multiply</li>
+                <li>This is how dashboards get “too many rows”</li>
+                <li>Good habit: sanity check counts</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Bad idea (cross join effect):
+-- SELECT ... FROM rentals r JOIN riders rd;
+
+-- Good:
+SELECT COUNT(*) FROM rentals;
+SELECT COUNT(*) FROM rentals r JOIN riders rd
+  ON r.rider_id = rd.rider_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 29 — Split (join count sanity checks) -->
+        <section>
+          <h3>Sanity checks: row counts</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Start from the fact table count (rentals)</li>
+                <li>INNER JOIN should not exceed fact count (usually)</li>
+                <li>LEFT JOIN may increase if one-to-many relationships exist</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Fact table baseline:
+SELECT COUNT(*) AS rental_rows FROM rentals;
+
+-- Expected: same as rentals (many-to-one)
+SELECT COUNT(*) AS joined_rows
+FROM rentals r
+JOIN riders rd ON r.rider_id = rd.rider_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 30 — Split (exercise 1) -->
+        <section>
+          <h3>Practice 1: rentals with rider + bike</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Show rental id, rider name, bike type</li>
+                <li>Sort by pickup time</li>
+                <li>Use table aliases</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT
+  r.rental_id,
+  rd.name AS rider,
+  b.bike_type,
+  r.pickup_ts
+FROM rentals r
+JOIN riders rd ON r.rider_id = rd.rider_id
+JOIN bikes  b  ON r.bike_id  = b.bike_id
+ORDER BY r.pickup_ts;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 31 — Split (exercise 2) -->
+        <section>
+          <h3>Practice 2: riders who never rented</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Start from riders</li>
+                <li>LEFT JOIN rentals</li>
+                <li>Filter where rental is NULL</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT rd.rider_id, rd.name
+FROM riders rd
+LEFT JOIN rentals r ON r.rider_id = rd.rider_id
+WHERE r.rental_id IS NULL
+ORDER BY rd.rider_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 32 — Split (exercise 3) -->
+        <section>
+          <h3>Practice 3: bikes never rented</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Start from bikes</li>
+                <li>LEFT JOIN rentals</li>
+                <li>Keep bikes with no rental match</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT b.bike_id, b.bike_type, b.status
+FROM bikes b
+LEFT JOIN rentals r ON r.bike_id = b.bike_id
+WHERE r.rental_id IS NULL
+ORDER BY b.bike_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 33 — Split (exercise 4) -->
+        <section>
+          <h3>Practice 4: pickup and dropoff station names</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Join stations twice</li>
+                <li>Dropoff can be NULL for active rentals</li>
+                <li>Use two different aliases</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT
+  r.rental_id,
+  sp.name AS pickup_station,
+  sd.name AS dropoff_station,
+  r.pickup_ts,
+  r.dropoff_ts
+FROM rentals r
+JOIN stations sp ON r.pickup_station_id = sp.station_id
+LEFT JOIN stations sd ON r.dropoff_station_id = sd.station_id
+ORDER BY r.rental_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 34 — Diagram (join choice ladder) -->
+        <section>
+          <h3>Join choice ladder</h3>
+          <svg width="100%" height="300" viewBox="0 0 1200 300" role="img" aria-label="Join choice ladder diagram">
+            <rect x="120" y="60" width="960" height="200" rx="18" fill="rgba(255,255,255,0.05)"
+              stroke="rgba(255,255,255,0.22)" stroke-width="2" />
+            <text x="200" y="115" font-size="20" fill="rgba(255,255,255,0.85)">1) Identify the keys (PK / FK)</text>
+            <text x="200" y="155" font-size="20" fill="rgba(255,255,255,0.85)">2) Decide who must appear (left vs
+              right)</text>
+            <text x="200" y="195" font-size="20" fill="rgba(255,255,255,0.85)">3) Pick join type (INNER / LEFT / RIGHT /
+              FULL)</text>
+            <text x="600" y="250" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.70)">
+              Traditional SQL habit: write the ON match immediately after the JOIN
+            </text>
+          </svg>
+        </section>
+
+        <!-- 35 — Table (join cheat sheet) -->
+        <section>
+          <h3>Cheat sheet</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Need</th>
+                <th>Join to use</th>
+                <th>Bicycle example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Only matched rows</td>
+                <td><code>INNER JOIN</code></td>
+                <td>Rentals + riders</td>
+              </tr>
+              <tr>
+                <td>All riders, rentals if any</td>
+                <td><code>LEFT JOIN</code></td>
+                <td>Riders with optional rentals</td>
+              </tr>
+              <tr>
+                <td>All bikes, rentals if any</td>
+                <td><code>RIGHT JOIN</code> (or swap + LEFT)</td>
+                <td>Bikes with optional rentals</td>
+              </tr>
+              <tr>
+                <td>Everything from both sides</td>
+                <td><code>FULL OUTER JOIN</code></td>
+                <td>Audit missing links</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 36 — Split (summary) -->
+        <section>
+          <h3>Summary</h3>
+          <div class="split">
+            <div class="left">
+              <ul class="tight">
+                <li><strong>JOIN</strong> defaults to <strong>INNER JOIN</strong></li>
+                <li><strong>INNER</strong>: only matches</li>
+                <li><strong>LEFT</strong>: keep all left rows (right may be NULL)</li>
+                <li><strong>RIGHT</strong>: keep all right rows (left may be NULL)</li>
+                <li><strong>FULL OUTER</strong>: keep all rows from both tables</li>
+                <li>Wrong or missing <code>ON</code> can multiply rows</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- A clean, common pattern:
+SELECT rd.name, b.bike_type, r.pickup_ts
+FROM rentals r
+JOIN riders rd ON r.rider_id = rd.rider_id
+JOIN bikes  b  ON r.bike_id  = b.bike_id
+ORDER BY r.pickup_ts;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 37 — Diagram (checkpoint) -->
+        <section>
+          <svg width="100%" height="260" viewBox="0 0 1200 260" role="img" aria-label="Checkpoint diagram">
+            <rect x="140" y="70" width="920" height="140" rx="18" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="600" y="120" text-anchor="middle" font-size="22" fill="rgba(255,255,255,0.9)">
+              Before running a join, say who must appear.
+            </text>
+            <text x="600" y="160" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">
+              Inner? Left? Right? Full? Then write the ON key match.
+            </text>
+          </svg>
+        </section>
+
+      </section>
 
     </div>
   </div>
