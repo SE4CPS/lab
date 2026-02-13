@@ -17023,28 +17023,490 @@ LIMIT ...;
             <div class="split">
               <div class="left">
                 <ul>
-                  <li>Domain: <span class="highlight">Hiking registration system</span>
+                  <li>Practice: <span class="highlight">Hiking registration system</span>
                   </li>
                   <li>Review: <span class="highlight">Homework 1 and Lab 1 results</span></li>
-                  <li>Review: <span class="highlight">Homework 3 and Lab 3</span> (published)</li>
-                  <li>Review: <span class="highlight">Project Part 1</span> (published)</li>
+                  <li>Prepare: <span class="highlight">Homework 3 and Lab 3</span> (published)</li>
+                  <li>Prepare: <span class="highlight">Project Part 1</span> (published this afternoon)</li>
                 </ul>
               </div>
               <div class="right">
-                <div class="tier" style="font-size:16pt; text-align:center;">
-                  <pre><code>
-Structure of today:
-
-1. Model the data
-2. Join the tables
-3. Group correctly
-4. Aggregate carefully
-5. Review student work
-                  </code></pre>
-                </div>
+                <img src="https://californiathroughmylens.com/wp-content/uploads/2014/07/Lakes-Basin-Loop-1.jpg"
+                  alt="Lakes Basin Loop" style="width:100%; border-radius:8px;">
               </div>
             </div>
           </section>
+
+          <section>
+            <h5>Create Table: trail</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Primary key: <span class="highlight">trail_id</span></li>
+                  <li>Trail attributes</li>
+                  <li>capacity used later in HAVING</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+CREATE TABLE trail (
+    trail_id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    difficulty TEXT NOT NULL,
+    capacity INT NOT NULL
+);
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Create Table: reservation</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Primary key: <span class="highlight">reservation_id</span></li>
+                  <li>Foreign key: <span class="highlight">trail_id</span></li>
+                  <li>One trail → many reservations</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+CREATE TABLE reservation (
+    reservation_id SERIAL PRIMARY KEY,
+    hiker_name TEXT NOT NULL,
+    hike_date DATE NOT NULL,
+    trail_id INT REFERENCES trail(trail_id)
+);
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Relationship</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Foreign key enforces integrity</li>
+                  <li>JOIN connects both tables</li>
+                  <li>Foundation of relational systems</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+trail (1) -------- (many) reservation
+
+r.trail_id = t.trail_id
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Practice 1 – Basic JOIN</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Show reservation_id</li>
+                  <li>Show hiker_name</li>
+                  <li>Show hike_date</li>
+                  <li>Show trail_name</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Write an INNER JOIN
+between reservation and trail.
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Practice 2 – JOIN with Filter</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Only difficulty = 'Hard'</li>
+                  <li>Filter after JOIN</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Add a WHERE clause.
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Practice 3 – LEFT JOIN</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Show all trails</li>
+                  <li>Even without reservations</li>
+                  <li>Expect NULL values</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Which JOIN keeps
+all rows from trail?
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Practice 4 – GROUP BY</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Count reservations per trail</li>
+                  <li>Return trail_name</li>
+                  <li>Return total_reservations</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Use COUNT()
+Use GROUP BY
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Practice 5 – HAVING</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Find overbooked trails</li>
+                  <li>Definition: COUNT > capacity</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Use GROUP BY
+Use HAVING
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Practice 6 – COUNT Only</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>How many total reservations exist?</li>
+                  <li>No JOIN needed</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Use COUNT(*)
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Practice 7 – LIMIT</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Show first 3 reservations</li>
+                  <li>Ordered by hike_date</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Use ORDER BY
+Use LIMIT
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Practice 8 – OFFSET</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Skip first 3 reservations</li>
+                  <li>Show next 3</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Use LIMIT
+Use OFFSET
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Answer 1 – Basic JOIN</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Classic INNER JOIN</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+SELECT
+    r.reservation_id,
+    r.hiker_name,
+    r.hike_date,
+    t.name AS trail_name
+FROM reservation r
+JOIN trail t
+    ON r.trail_id = t.trail_id;
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Answer 2 – JOIN with Filter</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Filter after JOIN</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+SELECT
+    r.hiker_name,
+    r.hike_date,
+    t.name AS trail_name
+FROM reservation r
+JOIN trail t
+    ON r.trail_id = t.trail_id
+WHERE t.difficulty = 'Hard';
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Answer 3 – LEFT JOIN</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>All trails, even without reservations</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+SELECT
+    t.trail_id,
+    t.name AS trail_name,
+    r.reservation_id,
+    r.hiker_name,
+    r.hike_date
+FROM trail t
+LEFT JOIN reservation r
+    ON r.trail_id = t.trail_id
+ORDER BY t.trail_id, r.hike_date;
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Answer 4 – GROUP BY</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Aggregation per trail</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+SELECT
+    t.trail_id,
+    t.name AS trail_name,
+    COUNT(r.reservation_id) AS total_reservations
+FROM trail t
+LEFT JOIN reservation r
+    ON r.trail_id = t.trail_id
+GROUP BY t.trail_id, t.name
+ORDER BY total_reservations DESC, t.trail_id;
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Answer 5 – HAVING</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Filter after aggregation</li>
+                  <li>Find overbooked trails</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+SELECT
+    t.trail_id,
+    t.name AS trail_name,
+    t.capacity,
+    COUNT(r.reservation_id) AS total_reservations
+FROM trail t
+LEFT JOIN reservation r
+    ON r.trail_id = t.trail_id
+GROUP BY t.trail_id, t.name, t.capacity
+HAVING COUNT(r.reservation_id) > t.capacity
+ORDER BY total_reservations DESC, t.trail_id;
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Answer 6 – COUNT Only</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Total rows in reservation</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+SELECT COUNT(*) AS total_reservations
+FROM reservation;
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Answer 7 – LIMIT</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>First page of results</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+SELECT
+    reservation_id,
+    hiker_name,
+    hike_date,
+    trail_id
+FROM reservation
+ORDER BY hike_date, reservation_id
+LIMIT 3;
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Answer 8 – LIMIT + OFFSET</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Second page of results</li>
+                  <li>Skip 3, take 3</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+SELECT
+    reservation_id,
+    hiker_name,
+    hike_date,
+    trail_id
+FROM reservation
+ORDER BY hike_date, reservation_id
+LIMIT 3 OFFSET 3;
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Extra Practice – Aggregates</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>MIN capacity</li>
+                  <li>MAX capacity</li>
+                  <li>AVG capacity</li>
+                  <li>Count trails per difficulty</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+Write 2 queries:
+
+1) MIN/MAX/AVG on trail.capacity
+2) GROUP BY trail.difficulty with COUNT(*)
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Extra Answers – Aggregates</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Aggregate functions are built in</li>
+                  <li>Use GROUP BY for categories</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+-- 1) capacity stats
+SELECT
+    MIN(capacity) AS min_capacity,
+    MAX(capacity) AS max_capacity,
+    AVG(capacity) AS avg_capacity
+FROM trail;
+
+-- 2) trails per difficulty
+SELECT
+    difficulty,
+    COUNT(*) AS trails_count
+FROM trail
+GROUP BY difficulty
+ORDER BY trails_count DESC;
+</code></pre>
+              </div>
+            </div>
+          </section>
+
 
           <!-- ========================================================= -->
           <!-- HOMEWORK 1 SECTION -->
@@ -17746,7 +18208,7 @@ WHERE student_id = 1;
               <div class="left">
                 <strong>1. Team Formation</strong>
                 <ul>
-                  <li>Teams of 2 or 3</li>
+                  <li>Teams of 3 (Frontend, Backend, Database)</li>
                   <li>Choose unique team folder</li>
                   <li>Work only inside your directory</li>
                   <li>One shared PDF submission</li>
