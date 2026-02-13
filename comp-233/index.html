@@ -9787,8 +9787,536 @@ repo/
   </code></pre>
                     </section>
 
-                </section>
+                    <!-- ========================================================= -->
+                    <!-- C14: Display Resolution as an Architectural Decision -->
+                    <!-- Only this section has id="c14" -->
+                    <!-- ========================================================= -->
 
+                    <!-- ========================================================= -->
+                    <!-- 1) COVER (LEFT / RIGHT) -->
+                    <!-- ========================================================= -->
+                    <section id="c14">
+                        <div class="split">
+                            <div class="left">
+                                <h4>Module 5</h4>
+                                <h3>Architectural Decisions: Display Resolution</h3>
+                                <ul class="alpha-list">
+                                    <li>Display hardware shapes what you can show</li>
+                                    <li>Resolution affects layout, density, and readability</li>
+                                    <li>Visualization choices depend on pixels and size</li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <div class="tier">
+                                    <pre><code>
+Same data
+Different screens
+Different decisions
+          </code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ========================================================= -->
+                    <!-- 2) TODAY / AGENDA (LEFT / RIGHT) -->
+                    <!-- ========================================================= -->
+                    <section>
+                        <div class="split">
+                            <div class="left">
+                                <h4>Today</h4>
+                                <ul class="alpha-list">
+                                    <li>Phone vs embedded vs desktop constraints</li>
+                                    <li>Browser as a display runtime</li>
+                                    <li>Flexbox layout as a response strategy</li>
+                                    <li>Visualization tradeoffs (tables vs charts)</li>
+                                    <li>Practical rules: density, typography, interaction</li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <table>
+                                    <tr>
+                                        <th>Decision</th>
+                                        <th>Why it matters</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Target resolution</td>
+                                        <td>controls information density</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Input method</td>
+                                        <td>mouse vs touch vs none</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Rendering runtime</td>
+                                        <td>browser vs native UI</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ========================================================= -->
+                    <!-- 3) CONCEPT: HARDWARE → UI → DATA STORY (DIAGRAM) -->
+                    <!-- ========================================================= -->
+                    <section>
+                        <h4>Concept: Hardware Constraints Shape the Data Story</h4>
+                        <svg viewBox="0 0 980 280" style="width:100%;max-width:980px;">
+                            <rect x="70" y="70" width="240" height="120" rx="18" fill="none" stroke="#ccc"
+                                stroke-width="3" />
+                            <rect x="370" y="70" width="240" height="120" rx="18" fill="none" stroke="#ccc"
+                                stroke-width="3" />
+                            <rect x="670" y="70" width="240" height="120" rx="18" fill="none" stroke="#ccc"
+                                stroke-width="3" />
+
+                            <text x="190" y="120" text-anchor="middle" fill="#ddd" font-size="16">Display
+                                Hardware</text>
+                            <text x="490" y="120" text-anchor="middle" fill="#ddd" font-size="16">UI Layout</text>
+                            <text x="790" y="120" text-anchor="middle" fill="#ddd" font-size="16">Visualization</text>
+
+                            <text x="190" y="150" text-anchor="middle" fill="#aaa" font-size="12">size · pixels ·
+                                input</text>
+                            <text x="490" y="150" text-anchor="middle" fill="#aaa" font-size="12">grid · flex ·
+                                breakpoints</text>
+                            <text x="790" y="150" text-anchor="middle" fill="#aaa" font-size="12">table · chart ·
+                                summary</text>
+
+                            <line x1="310" y1="130" x2="370" y2="130" stroke="#ccc" stroke-width="3" />
+                            <line x1="610" y1="130" x2="670" y2="130" stroke="#ccc" stroke-width="3" />
+
+                            <text x="490" y="235" text-anchor="middle" fill="#aaa" font-size="12">
+                                Same dataset, different screen: architecture forces different presentation choices
+                            </text>
+                        </svg>
+                    </section>
+
+                    <!-- ========================================================= -->
+                    <!-- 4) KEY TERMS (LEFT / RIGHT) -->
+                    <!-- ========================================================= -->
+                    <section>
+                        <div class="split">
+                            <div class="left">
+                                <h4>Key Terms</h4>
+                                <ul class="alpha-list">
+                                    <li><strong>Resolution</strong>: pixels available (e.g., 1920×1080)</li>
+                                    <li><strong>Pixel density</strong>: how packed pixels are (PPI)</li>
+                                    <li><strong>Viewport</strong>: usable area in browser or app</li>
+                                    <li><strong>Density</strong>: how much data you show at once</li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <div class="tier">
+                                    <pre><code>
+More pixels ≠ better UI
+
+More pixels = more options
+But you still must choose:
+- font size
+- spacing
+- what to hide
+- what to summarize
+          </code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ========================================================= -->
+                    <!-- 5) THREE TARGETS (TABLE) -->
+                    <!-- ========================================================= -->
+                    <section>
+                        <h4>Three Display Targets (Architecture Reality)</h4>
+                        <table>
+                            <tr>
+                                <th>Target</th>
+                                <th>Typical constraint</th>
+                                <th>UI consequence</th>
+                                <th>Visualization bias</th>
+                            </tr>
+                            <tr>
+                                <td>Phone</td>
+                                <td>small viewport + touch</td>
+                                <td>stacked layout, bigger tap zones</td>
+                                <td>summaries, short tables, small multiples</td>
+                            </tr>
+                            <tr>
+                                <td>Embedded</td>
+                                <td>fixed screen + limited compute</td>
+                                <td>few screens, minimal interaction</td>
+                                <td>single KPI, status, trend sparkline</td>
+                            </tr>
+                            <tr>
+                                <td>Desktop</td>
+                                <td>large viewport + mouse/keyboard</td>
+                                <td>multi panel dashboards</td>
+                                <td>wide tables, comparisons, drill downs</td>
+                            </tr>
+                        </table>
+                    </section>
+
+                    <!-- ========================================================= -->
+                    <!-- 6) PHONE: WHAT CHANGES (LEFT / RIGHT) -->
+                    <!-- ========================================================= -->
+                    <section>
+                        <div class="split">
+                            <div class="left">
+                                <h4>Phone (Small Viewport)</h4>
+                                <ul class="alpha-list">
+                                    <li>Show fewer columns</li>
+                                    <li>Prefer cards over wide tables</li>
+                                    <li>Summarize first, drill down second</li>
+                                    <li>Touch friendly spacing is non negotiable</li>
+                                </ul>
+                                <table>
+                                    <tr>
+                                        <th>Good</th>
+                                        <th>Risk</th>
+                                    </tr>
+                                    <tr>
+                                        <td>top metrics + list</td>
+                                        <td>hidden context</td>
+                                    </tr>
+                                    <tr>
+                                        <td>filters as chips</td>
+                                        <td>filter overload</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="right">
+                                <pre><code>
+Phone pattern:
+1) KPI summary row
+2) short list (top N)
+3) tap → details view
+        </code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ========================================================= -->
+                    <!-- 7) EMBEDDED: WHAT CHANGES (LEFT / RIGHT) -->
+                    <!-- ========================================================= -->
+                    <section>
+                        <div class="split">
+                            <div class="left">
+                                <h4>Embedded (Fixed Screen)</h4>
+                                <ul class="alpha-list">
+                                    <li>Fixed resolution means fixed layout</li>
+                                    <li>Compute limits restrict fancy charts</li>
+                                    <li>Use stable fonts and high contrast</li>
+                                    <li>Prefer simple visuals: status and trend</li>
+                                </ul>
+                                <table>
+                                    <tr>
+                                        <th>Good</th>
+                                        <th>Risk</th>
+                                    </tr>
+                                    <tr>
+                                        <td>one screen status</td>
+                                        <td>no exploration</td>
+                                    </tr>
+                                    <tr>
+                                        <td>large readable text</td>
+                                        <td>low data density</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="right">
+                                <pre><code>
+Embedded pattern:
+- ONE KPI
+- ONE status color
+- ONE small trend (sparkline)
+- ONE timestamp ("last updated")
+        </code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ========================================================= -->
+                    <!-- 8) DESKTOP: WHAT CHANGES (LEFT / RIGHT) -->
+                    <!-- ========================================================= -->
+                    <section>
+                        <div class="split">
+                            <div class="left">
+                                <h4>Desktop (Wide View)</h4>
+                                <ul class="alpha-list">
+                                    <li>More columns become usable</li>
+                                    <li>Side by side comparisons are natural</li>
+                                    <li>Filters can remain visible</li>
+                                    <li>Keyboard helps data entry and search</li>
+                                </ul>
+                                <table>
+                                    <tr>
+                                        <th>Good</th>
+                                        <th>Risk</th>
+                                    </tr>
+                                    <tr>
+                                        <td>dense tables</td>
+                                        <td>visual clutter</td>
+                                    </tr>
+                                    <tr>
+                                        <td>multi panel view</td>
+                                        <td>too many widgets</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <div class="right">
+                                <pre><code>
+Desktop pattern:
+Left: filters
+Center: table
+Right: chart summary
+Bottom: details / logs
+        </code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ========================================================= -->
+                    <!-- 9) BROWSER AS A RUNTIME (LEFT / RIGHT) -->
+                    <!-- ========================================================= -->
+                    <section>
+                        <div class="split">
+                            <div class="left">
+                                <h4>Browser as a Display Runtime</h4>
+                                <ul class="alpha-list">
+                                    <li>Same URL can serve multiple screen classes</li>
+                                    <li>Viewport changes during use (resize)</li>
+                                    <li>Device pixel ratio affects rendering</li>
+                                    <li>Responsive layout is an architectural choice</li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <table>
+                                    <tr>
+                                        <th>Browser reality</th>
+                                        <th>Design response</th>
+                                    </tr>
+                                    <tr>
+                                        <td>unknown viewport</td>
+                                        <td>breakpoints</td>
+                                    </tr>
+                                    <tr>
+                                        <td>variable input</td>
+                                        <td>keyboard + touch safe UI</td>
+                                    </tr>
+                                    <tr>
+                                        <td>network variability</td>
+                                        <td>loading states + caching</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ========================================================= -->
+                    <!-- 10) FLEXBOX: WHY IT FITS THIS PROBLEM (LEFT / RIGHT) -->
+                    <!-- ========================================================= -->
+                    <section>
+                        <div class="split">
+                            <div class="left">
+                                <h4>Flexbox (Responsive Layout Tool)</h4>
+                                <ul class="alpha-list">
+                                    <li>Natural for rows that wrap into columns</li>
+                                    <li>Good for cards, KPIs, toolbars</li>
+                                    <li>Supports reflow without rewriting HTML</li>
+                                    <li>Pairs well with breakpoints</li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <pre><code class="language-css">
+/* Example idea: cards reflow */
+.dashboard {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.card {
+  flex: 1 1 320px; /* grows, shrinks, min width */
+}
+        </code></pre>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ========================================================= -->
+                    <!-- 11) DATA VIZ TRADEOFF: TABLE VS CHART (LEFT / RIGHT) -->
+                    <!-- ========================================================= -->
+                    <section>
+                        <div class="split">
+                            <div class="left">
+                                <h4>Visualization Choice Depends on Resolution</h4>
+                                <ul class="alpha-list">
+                                    <li><strong>Tables</strong>: precise values, many rows</li>
+                                    <li><strong>Charts</strong>: trends, comparisons, shape</li>
+                                    <li>Small screens push you toward summaries</li>
+                                    <li>Large screens allow both at once</li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <table>
+                                    <tr>
+                                        <th>Screen</th>
+                                        <th>Prefer first</th>
+                                        <th>Then add</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Phone</td>
+                                        <td>chart summary / KPIs</td>
+                                        <td>short table (top N)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Embedded</td>
+                                        <td>KPI + status</td>
+                                        <td>sparkline</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Desktop</td>
+                                        <td>table + filters</td>
+                                        <td>chart panel</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ========================================================= -->
+                    <!-- 12) INFORMATION DENSITY RULES (TABLE) -->
+                    <!-- ========================================================= -->
+                    <section>
+                        <h4>Density Rules (Practical)</h4>
+                        <table>
+                            <tr>
+                                <th>Rule</th>
+                                <th>Why</th>
+                                <th>Example</th>
+                            </tr>
+                            <tr>
+                                <td>Do not squeeze text</td>
+                                <td>readability collapses first</td>
+                                <td>reduce columns instead</td>
+                            </tr>
+                            <tr>
+                                <td>Summarize before detail</td>
+                                <td>small screens need a story</td>
+                                <td>KPI row → drill down</td>
+                            </tr>
+                            <tr>
+                                <td>Use progressive disclosure</td>
+                                <td>prevents clutter</td>
+                                <td>details panel / modal</td>
+                            </tr>
+                            <tr>
+                                <td>Make interaction match input</td>
+                                <td>touch needs bigger targets</td>
+                                <td>buttons not tiny links</td>
+                            </tr>
+                        </table>
+                    </section>
+
+                    <!-- ========================================================= -->
+                    <!-- 13) EXAMPLE: SAME DATA, 3 LAYOUTS (DIAGRAM) -->
+                    <!-- ========================================================= -->
+                    <section>
+                        <h4>Same Dataset, Three Layout Architectures</h4>
+                        <svg viewBox="0 0 1100 320" style="width:100%;max-width:1100px;">
+                            <rect x="60" y="70" width="300" height="180" rx="18" fill="none" stroke="#ccc"
+                                stroke-width="3" />
+                            <rect x="400" y="70" width="300" height="180" rx="18" fill="none" stroke="#ccc"
+                                stroke-width="3" />
+                            <rect x="740" y="70" width="300" height="180" rx="18" fill="none" stroke="#ccc"
+                                stroke-width="3" />
+
+                            <text x="210" y="105" text-anchor="middle" fill="#ddd" font-size="14">Phone</text>
+                            <text x="550" y="105" text-anchor="middle" fill="#ddd" font-size="14">Embedded</text>
+                            <text x="890" y="105" text-anchor="middle" fill="#ddd" font-size="14">Desktop</text>
+
+                            <text x="210" y="140" text-anchor="middle" fill="#aaa" font-size="12">KPI + cards</text>
+                            <text x="550" y="140" text-anchor="middle" fill="#aaa" font-size="12">KPI + status</text>
+                            <text x="890" y="140" text-anchor="middle" fill="#aaa" font-size="12">filters + table +
+                                chart</text>
+
+                            <text x="210" y="175" text-anchor="middle" fill="#aaa" font-size="12">tap for details</text>
+                            <text x="550" y="175" text-anchor="middle" fill="#aaa" font-size="12">minimal
+                                navigation</text>
+                            <text x="890" y="175" text-anchor="middle" fill="#aaa" font-size="12">drill down
+                                panel</text>
+
+                            <text x="550" y="275" text-anchor="middle" fill="#aaa" font-size="12">
+                                Architecture decision: what is always visible vs hidden behind navigation
+                            </text>
+                        </svg>
+                    </section>
+
+                    <!-- ========================================================= -->
+                    <!-- 14) ARCHITECTURE QUESTIONS (LEFT / RIGHT) -->
+                    <!-- ========================================================= -->
+                    <section>
+                        <div class="split">
+                            <div class="left">
+                                <h4>Architecture Questions to Ask</h4>
+                                <ul class="alpha-list">
+                                    <li>What is the smallest supported viewport?</li>
+                                    <li>What must be visible without scrolling?</li>
+                                    <li>What interaction is expected (touch, mouse, none)?</li>
+                                    <li>What is the largest safe table width?</li>
+                                    <li>What is the fallback when charts do not fit?</li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <table>
+                                    <tr>
+                                        <th>Decision</th>
+                                        <th>Locks you in</th>
+                                    </tr>
+                                    <tr>
+                                        <td>Fixed layout</td>
+                                        <td>embedded only assumptions</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Responsive layout</td>
+                                        <td>more testing across devices</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Chart heavy UI</td>
+                                        <td>rendering cost and legibility risk</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ========================================================= -->
+                    <!-- 15) TAKEAWAY (LEFT / RIGHT) -->
+                    <!-- ========================================================= -->
+                    <section>
+                        <div class="split">
+                            <div class="left">
+                                <h4>Takeaway</h4>
+                                <ul class="alpha-list">
+                                    <li>Display resolution is a hardware constraint</li>
+                                    <li>Hardware constraints drive UI architecture</li>
+                                    <li>UI architecture shapes data visualization</li>
+                                    <li>Flexbox helps reflow the same content</li>
+                                </ul>
+                                <p class="muted">Treat display as architecture, not styling.</p>
+                            </div>
+                            <div class="right">
+                                <div class="tier">
+                                    <pre><code>
+Hardware → Layout → Visualization
+
+If you ignore hardware,
+your dashboard will fail in production.
+          </code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+
+                </section>
 
                 <section id="module-6">
 
@@ -17537,6 +18065,8 @@ Responding to change
                 |
                 <a href="https://lunar-rocket-616180.postman.co/workspace/4cc97ac5-bae3-45aa-822e-e85f41aed68e/team-quickstart"
                     class="footer-link" target="_blank">Postman Workspace</a>
+                |
+                <a href="https://iot-light-sensor.onrender.com/" class="footer-link" target="_blank">Live Demo</a>
             </p>
         </div>
 
