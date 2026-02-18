@@ -576,7 +576,7 @@
                     11</a>, <a href="./#/c14">Feb 13</a>)</td>
                 <td style="padding:6px; border:1px solid #666;"><a href="./#/module-5">Relational Database Advanced
                     SQL</a></td>
-                <td style="padding:6px; border:1px solid #666;">Lab 3 + Homework 3 (2w), Project Part 1 (4w)</td>
+                <td style="padding:6px; border:1px solid #666;">Lab 3 + Homework 3 (2w)</td>
                 <td style="padding:6px; border:1px solid #666;"></td>
                 <td style="padding:6px; border:1px solid #666;"></td>
               </tr>
@@ -586,7 +586,7 @@
                     20</a>)</td>
                 <td style="padding:6px; border:1px solid #666;"><a href="./#/module-6">Relational Database
                     Normalization</a></td>
-                <td style="padding:6px; border:1px solid #666;"></td>
+                <td style="padding:6px; border:1px solid #666;">Project Part 1 (4w)</td>
                 <td style="padding:6px; border:1px solid #666;"></td>
                 <td style="padding:6px; border:1px solid #666;">Holiday on Monday (Feb 16)</td>
               </tr>
@@ -22341,6 +22341,274 @@ FROM pg_stat_statements
 ORDER BY total_exec_time DESC
 LIMIT 5;
         </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- UUID -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>UUID in PostgreSQL</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li><span class="highlight">UUID</span> = Universally Unique Identifier</li>
+                  <li>128-bit globally unique value</li>
+                  <li>Safe for distributed systems</li>
+                  <li>No central sequence required</li>
+                  <li>Common in APIs and microservices</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+CREATE TABLE users (
+  id UUID PRIMARY KEY,
+  name TEXT
+);
+
+-- example value
+'550e8400-e29b-41d4-a716-446655440000'
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Generating UUID</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Requires extension</li>
+                  <li>Most common: <span class="highlight">pgcrypto</span></li>
+                  <li>UUID generated inside database</li>
+                  <li>Removes dependency on application logic</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+CREATE TABLE orders (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  total NUMERIC(10,2)
+);
+
+INSERT INTO orders (total)
+VALUES (99.99)
+RETURNING id;
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>UUID vs SERIAL</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">
+id SERIAL PRIMARY KEY
+-- 1,2,3,4
+      </code></pre>
+                <ul>
+                  <li>Sequential</li>
+                  <li>Predictable</li>
+                  <li>Centralized sequence</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+id UUID PRIMARY KEY
+-- random pattern
+      </code></pre>
+                <ul>
+                  <li>Non predictable</li>
+                  <li>Safe for replication</li>
+                  <li>Good for public APIs</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- ARRAY -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>ARRAY Type</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>PostgreSQL supports <span class="highlight">native arrays</span></li>
+                  <li>Single column can store multiple values</li>
+                  <li>Useful for tags, labels, categories</li>
+                  <li>First class type, not string parsing</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+CREATE TABLE products (
+  id SERIAL PRIMARY KEY,
+  tags TEXT[]
+);
+
+INSERT INTO products (tags)
+VALUES ('{wood,dining,premium}');
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Querying ARRAY</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">
+SELECT *
+FROM products
+WHERE 'wood' = ANY(tags);
+      </code></pre>
+                <ul>
+                  <li>Membership test</li>
+                  <li>Supports <span class="highlight">ANY</span> and <span class="highlight">ALL</span></li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+-- overlap operator
+SELECT *
+FROM products
+WHERE tags && '{wood,oak}';
+      </code></pre>
+                <ul>
+                  <li><code>&&</code> checks overlap</li>
+                  <li>Can be indexed with GIN</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>ARRAY Consideration</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Convenient</li>
+                  <li>Reduces join tables</li>
+                  <li>Good for read heavy tags</li>
+                </ul>
+              </div>
+              <div class="right">
+                <ul>
+                  <li>Not always fully normalized</li>
+                  <li>Complex updates possible</li>
+                  <li>Consider relational design tradeoff</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- JSON / JSONB -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>JSON vs JSONB</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">
+data JSON
+      </code></pre>
+                <ul>
+                  <li>Stored as text</li>
+                  <li>Preserves formatting</li>
+                  <li>Slower querying</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+data JSONB
+      </code></pre>
+                <ul>
+                  <li>Binary storage</li>
+                  <li>Indexed</li>
+                  <li>Preferred in production</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Creating JSONB Column</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Schema flexible storage</li>
+                  <li>Useful for semi structured data</li>
+                  <li>Common in modern APIs</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+CREATE TABLE events (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  payload JSONB
+);
+
+INSERT INTO events (payload)
+VALUES (
+  '{"type":"click","device":"mobile"}'
+);
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Querying JSONB</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">
+SELECT *
+FROM events
+WHERE payload->>'device' = 'mobile';
+      </code></pre>
+                <ul>
+                  <li><code>->></code> extracts text</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="sql">
+SELECT *
+FROM events
+WHERE payload @> 
+  '{"type":"click"}';
+      </code></pre>
+                <ul>
+                  <li><span class="highlight">@></span> containment operator</li>
+                  <li>Supports GIN indexing</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>When to Use JSONB</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Variable attributes</li>
+                  <li>Event logging</li>
+                  <li>Metadata storage</li>
+                </ul>
+              </div>
+              <div class="right">
+                <ul>
+                  <li>Not replacement for core relational schema</li>
+                  <li>Combine with strong typing</li>
+                  <li>Balance flexibility and structure</li>
+                </ul>
               </div>
             </div>
           </section>
