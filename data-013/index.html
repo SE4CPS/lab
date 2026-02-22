@@ -509,8 +509,8 @@
               <td
                 style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
                 <a href="./#/module-6"
-                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">FETCH, TOP,
-                  RETURNING, CURRENT, READ, WRITE</a>
+                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">EXISTS, IN,
+                  ANY, BETWEEN, LIKE, ESCAPE</a>
               </td>
               <td
                 style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
@@ -554,8 +554,8 @@
               <td
                 style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
                 <a href="./#/module-8"
-                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">EXISTS, IN,
-                  ANY, BETWEEN, LIKE, ESCAPE</a>
+                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">FETCH, TOP,
+                  RETURNING, CURRENT, READ, WRITE</a>
               </td>
               <td
                 style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
@@ -5449,6 +5449,1149 @@ ORDER BY r.pickup_ts;</code></pre>
         </section>
 
       </section>
+
+
+
+
+
+
+      <!-- MODULE 6 -->
+      <!-- ========================================================= -->
+      <!-- MODULE 6: SUBQUERY & PATTERN FILTERING                    -->
+      <!-- EXISTS · IN · ANY · BETWEEN · LIKE · ESCAPE               -->
+      <!-- PostgreSQL focus + SQLite comparison tables                -->
+      <!-- FULL (35+ slides) + SETUP INCLUDED                         -->
+      <!-- ========================================================= -->
+
+      <section id="module-6">
+
+        <!-- 01 — Cover -->
+        <section>
+          <h2>Module 6</h2>
+          <h3>Filtering with Subqueries & Patterns</h3>
+          <p class="muted">EXISTS · IN · ANY · BETWEEN · LIKE · ESCAPE</p>
+
+          <svg width="100%" height="260" viewBox="0 0 1200 260" role="img" aria-label="Filtering pipeline diagram">
+            <rect x="60" y="70" width="300" height="120" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="210" y="125" text-anchor="middle" font-size="28" fill="rgba(255,255,255,0.92)">Bike Rental</text>
+            <text x="210" y="160" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">tables + keys</text>
+
+            <rect x="450" y="70" width="300" height="120" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="600" y="125" text-anchor="middle" font-size="28" fill="rgba(255,255,255,0.92)">FILTER</text>
+            <text x="600" y="160" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">subquery /
+              pattern</text>
+
+            <rect x="840" y="70" width="300" height="120" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="990" y="125" text-anchor="middle" font-size="28" fill="rgba(255,255,255,0.92)">Results</text>
+            <text x="990" y="160" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">kept rows
+              only</text>
+
+            <line x1="360" y1="130" x2="450" y2="130" stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+            <polygon points="450,130 435,122 435,138" fill="rgba(255,255,255,0.35)" />
+            <line x1="750" y1="130" x2="840" y2="130" stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+            <polygon points="840,130 825,122 825,138" fill="rgba(255,255,255,0.35)" />
+          </svg>
+        </section>
+
+        <!-- 02 — Split (goals) -->
+        <section>
+          <h3>Module goal</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Run a small schema and seed data</li>
+                <li>Filter with <code>IN</code>, <code>EXISTS</code>, <code>ANY</code></li>
+                <li>Filter ranges using <code>BETWEEN</code></li>
+                <li>Filter text using <code>LIKE</code> and <code>ESCAPE</code></li>
+                <li>Practice “before vs after” query improvements</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Habit:
+-- 1) Start with a base SELECT
+-- 2) Add one WHERE filter
+-- 3) Validate row counts (COUNT(*))</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 03 — Setup Intro -->
+        <section>
+          <h3>Setup: Create tables + insert data</h3>
+          <p class="muted">Run these once so every example works.</p>
+        </section>
+
+        <!-- 04 — CREATE riders -->
+        <section>
+          <h3>CREATE TABLE riders</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>One row per rider</li>
+                <li>City supports filters</li>
+                <li>Email supports LIKE practice</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">CREATE TABLE riders (
+  rider_id  SERIAL PRIMARY KEY,
+  name      TEXT NOT NULL,
+  city      TEXT NOT NULL,
+  email     TEXT
+);</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 05 — CREATE bikes -->
+        <section>
+          <h3>CREATE TABLE bikes</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>One row per bike</li>
+                <li>Status enables extra filters</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">CREATE TABLE bikes (
+  bike_id   SERIAL PRIMARY KEY,
+  bike_type TEXT NOT NULL,
+  status    TEXT NOT NULL
+);</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 06 — CREATE rentals -->
+        <section>
+          <h3>CREATE TABLE rentals</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Fact table (events)</li>
+                <li>dropoff_ts can be NULL (active ride)</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">CREATE TABLE rentals (
+  rental_id  SERIAL PRIMARY KEY,
+  rider_id   INTEGER REFERENCES riders(rider_id),
+  bike_id    INTEGER REFERENCES bikes(bike_id),
+  pickup_ts  TIMESTAMP NOT NULL,
+  dropoff_ts TIMESTAMP
+);</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 07 — INSERT all -->
+        <section>
+          <h3>INSERT sample data (riders, bikes, rentals)</h3>
+          <pre><code class="language-sql">INSERT INTO riders(name, city, email) VALUES
+('Ava',  'Stockton',   'ava@example.com'),
+('Noah', 'Sacramento', 'noah@example.com'),
+('Mia',  'Stockton',   'mia@test.com'),
+('Liam', 'Lodi',       'liam@sample.org'); -- intentionally different domain
+
+INSERT INTO bikes(bike_type, status) VALUES
+('city',  'available'),
+('road',  'available'),
+('e-bike','maintenance'),
+('city',  'available'); -- will show “never rented” later
+
+INSERT INTO rentals(rider_id, bike_id, pickup_ts, dropoff_ts) VALUES
+(1, 1, TIMESTAMP '2026-02-10 09:00', TIMESTAMP '2026-02-10 09:25'),
+(2, 2, TIMESTAMP '2026-02-11 10:00', TIMESTAMP '2026-02-11 10:18'),
+(1, 2, TIMESTAMP '2026-02-12 08:10', NULL); -- active ride</code></pre>
+        </section>
+
+        <!-- 08 — Split (baseline select) -->
+        <section>
+          <h3>Baseline query (start here)</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Establish a baseline</li>
+                <li>Know expected row count</li>
+                <li>Then add filters</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT rider_id, name, city, email
+FROM riders
+ORDER BY rider_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- IN -->
+        <!-- ========================================================= -->
+
+        <!-- 09 — Split (IN concept) -->
+        <section>
+          <h3>IN concept</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><code>IN</code> checks membership in a list (or subquery result)</li>
+                <li>Often replaces long <code>OR</code> chains</li>
+                <li>Good for “allowed set” rules</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Pattern:
+WHERE value IN (v1, v2, v3)</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 10 — Split (IN list example) -->
+        <section>
+          <h3>IN example: filter riders by city</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Small fixed list</li>
+                <li>Readable</li>
+                <li>Easy to extend</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT name, city
+FROM riders
+WHERE city IN ('Stockton', 'Lodi')
+ORDER BY name;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 11 — Before/After OR -> IN -->
+        <section>
+          <h3>Before/After: OR chain → IN</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><strong>Before</strong>: noisy OR chain</li>
+                <li><strong>After</strong>: clean IN list</li>
+                <li>Team habit: prefer IN for enums</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Before:
+SELECT name, city
+FROM riders
+WHERE city = 'Stockton'
+   OR city = 'Lodi'
+   OR city = 'Sacramento';
+
+-- After:
+SELECT name, city
+FROM riders
+WHERE city IN ('Stockton','Lodi','Sacramento');</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 12 — Split (IN with subquery) -->
+        <section>
+          <h3>IN with subquery: riders who have rentals</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Subquery returns a set of rider_ids</li>
+                <li>Outer query keeps members</li>
+                <li>This is membership logic</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT name
+FROM riders
+WHERE rider_id IN (
+  SELECT rider_id
+  FROM rentals
+)
+ORDER BY name;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 13 — Table (IN notes) -->
+        <section>
+          <h3>IN notes</h3>
+          <table class="table" style="font-size: 12pt;">
+            <thead>
+              <tr>
+                <th>Situation</th>
+                <th>Use</th>
+                <th>Why</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Short fixed list</td>
+                <td><code>IN</code></td>
+                <td>Clean and readable</td>
+              </tr>
+              <tr>
+                <td>Existence question</td>
+                <td><code>EXISTS</code></td>
+                <td>More explicit meaning</td>
+              </tr>
+              <tr>
+                <td>NULL involved</td>
+                <td>Be careful</td>
+                <td>Three-valued logic</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- EXISTS -->
+        <!-- ========================================================= -->
+
+        <!-- 14 — Diagram (EXISTS) -->
+        <section>
+          <h3>EXISTS concept</h3>
+          <svg width="100%" height="260" viewBox="0 0 1200 260" role="img"
+            aria-label="EXISTS checks for at least one match">
+            <rect x="120" y="70" width="420" height="120" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="330" y="120" text-anchor="middle" font-size="22" fill="rgba(255,255,255,0.9)">Outer row</text>
+            <text x="330" y="155" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">one rider at a
+              time</text>
+
+            <rect x="660" y="70" width="420" height="120" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="870" y="120" text-anchor="middle" font-size="22" fill="rgba(255,255,255,0.9)">Subquery</text>
+            <text x="870" y="155" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.75)">any match?</text>
+
+            <line x1="540" y1="130" x2="660" y2="130" stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+            <polygon points="660,130 645,122 645,138" fill="rgba(255,255,255,0.35)" />
+            <text x="600" y="230" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.72)">
+              TRUE if subquery returns ≥ 1 row
+            </text>
+          </svg>
+        </section>
+
+        <!-- 15 — Split (EXISTS example) -->
+        <section>
+          <h3>EXISTS example: riders with at least one rental</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Correlated subquery (uses r.rider_id)</li>
+                <li>Short-circuits after first match</li>
+                <li>Best match for “does it exist?” questions</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT r.name
+FROM riders r
+WHERE EXISTS (
+  SELECT 1
+  FROM rentals rt
+  WHERE rt.rider_id = r.rider_id
+)
+ORDER BY r.name;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 16 — Before/After IN -> EXISTS -->
+        <section>
+          <h3>Before/After: IN subquery → EXISTS</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><strong>Before</strong>: membership phrasing</li>
+                <li><strong>After</strong>: existence phrasing</li>
+                <li>Habit: use EXISTS when the meaning is existence</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Before:
+SELECT name
+FROM riders
+WHERE rider_id IN (SELECT rider_id FROM rentals);
+
+-- After:
+SELECT r.name
+FROM riders r
+WHERE EXISTS (
+  SELECT 1 FROM rentals rt
+  WHERE rt.rider_id = r.rider_id
+);</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 17 — Split (NOT EXISTS) -->
+        <section>
+          <h3>NOT EXISTS: riders with zero rentals</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Audit pattern</li>
+                <li>Find missing relationships</li>
+                <li>Common in data quality checks</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT r.rider_id, r.name
+FROM riders r
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM rentals rt
+  WHERE rt.rider_id = r.rider_id
+)
+ORDER BY r.rider_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 18 — Table (EXISTS tips) -->
+        <section>
+          <h3>EXISTS tips</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Tip</th>
+                <th>Why</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Use <code>SELECT 1</code></td>
+                <td>You only need existence</td>
+              </tr>
+              <tr>
+                <td>Keep correlation in WHERE</td>
+                <td>Readable logic</td>
+              </tr>
+              <tr>
+                <td>Pair with NOT EXISTS</td>
+                <td>Find missing links</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- ANY -->
+        <!-- ========================================================= -->
+
+        <!-- 19 — Split (ANY concept) -->
+        <section>
+          <h3>ANY concept</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Compare a value to <em>any</em> value from a set</li>
+                <li>More flexible than IN (supports &lt;, &gt;, =)</li>
+                <li>PostgreSQL-focused tool</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Pattern:
+value OP ANY (subquery)</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 20 — Split (ANY equality) -->
+        <section>
+          <h3>ANY equality: similar to IN</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>= ANY works like membership</li>
+                <li>Teach set-thinking</li>
+                <li>Prefer IN for readability when possible</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT r.name
+FROM riders r
+WHERE r.rider_id = ANY (
+  SELECT rider_id
+  FROM rentals
+);</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 21 — Split (ANY with comparisons) -->
+        <section>
+          <h3>ANY with comparisons: threshold logic</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Example: “greater than any rider_id seen in rentals”</li>
+                <li>Shows flexibility beyond IN</li>
+                <li>Know what the set represents</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT r.rider_id, r.name
+FROM riders r
+WHERE r.rider_id &gt; ANY (
+  SELECT rt.rider_id
+  FROM rentals rt
+)
+ORDER BY r.rider_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 22 — Table (IN vs ANY) -->
+        <section>
+          <h3>IN vs ANY</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Need</th>
+                <th>Use</th>
+                <th>Reason</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Equality membership</td>
+                <td><code>IN</code></td>
+                <td>Most readable</td>
+              </tr>
+              <tr>
+                <td>Flexible comparisons</td>
+                <td><code>ANY</code></td>
+                <td>Supports &lt;, &gt;, =</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- BETWEEN -->
+        <!-- ========================================================= -->
+
+        <!-- 23 — Split (BETWEEN concept) -->
+        <section>
+          <h3>BETWEEN concept</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Inclusive range: low and high are included</li>
+                <li>Good for dates and numeric ranges</li>
+                <li>Cleaner than >= AND <=< /li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Pattern:
+WHERE value BETWEEN low AND high</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 24 — Diagram (range) -->
+        <section>
+          <h3>BETWEEN as a range (inclusive)</h3>
+          <svg width="100%" height="220" viewBox="0 0 1200 220" role="img" aria-label="Between range diagram">
+            <line x1="200" y1="120" x2="1000" y2="120" stroke="rgba(255,255,255,0.55)" stroke-width="6" />
+            <circle cx="360" cy="120" r="10" fill="rgba(255,255,255,0.85)" />
+            <circle cx="840" cy="120" r="10" fill="rgba(255,255,255,0.85)" />
+            <rect x="360" y="110" width="480" height="20" fill="rgba(255,255,255,0.16)" />
+            <text x="360" y="90" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.8)">low (included)</text>
+            <text x="840" y="90" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.8)">high (included)</text>
+            <text x="600" y="170" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.72)">BETWEEN keeps values
+              on the shaded segment</text>
+          </svg>
+        </section>
+
+        <!-- 25 — Split (BETWEEN timestamps) -->
+        <section>
+          <h3>BETWEEN example: rentals in a date window</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Use explicit timestamps for clarity</li>
+                <li>Common for daily/weekly reports</li>
+                <li>Sort to verify results</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT rental_id, pickup_ts
+FROM rentals
+WHERE pickup_ts BETWEEN
+  TIMESTAMP '2026-02-10 00:00'
+  AND
+  TIMESTAMP '2026-02-11 23:59'
+ORDER BY pickup_ts;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 26 — Before/After >= <= -> BETWEEN -->
+        <section>
+          <h3>Before/After: &gt;= and &lt;= → BETWEEN</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><strong>Before</strong>: verbose comparisons</li>
+                <li><strong>After</strong>: compact BETWEEN</li>
+                <li>Same meaning (inclusive)</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Before:
+SELECT rental_id
+FROM rentals
+WHERE pickup_ts &gt;= TIMESTAMP '2026-02-10 00:00'
+  AND pickup_ts &lt;= TIMESTAMP '2026-02-11 23:59';
+
+-- After:
+SELECT rental_id
+FROM rentals
+WHERE pickup_ts BETWEEN
+  TIMESTAMP '2026-02-10 00:00'
+  AND
+  TIMESTAMP '2026-02-11 23:59';</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 27 — Split (BETWEEN numeric) -->
+        <section>
+          <h3>BETWEEN numeric example: bike_id range</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Simple numeric range filter</li>
+                <li>Useful for demos and sanity checks</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT bike_id, bike_type, status
+FROM bikes
+WHERE bike_id BETWEEN 1 AND 3
+ORDER BY bike_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- LIKE -->
+        <!-- ========================================================= -->
+
+        <!-- 28 — Table (wildcards) -->
+        <section>
+          <h3>LIKE wildcards</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Symbol</th>
+                <th>Meaning</th>
+                <th>Example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>%</code></td>
+                <td>0 or more characters</td>
+                <td><code>'S%'</code></td>
+              </tr>
+              <tr>
+                <td><code>_</code></td>
+                <td>Exactly one character</td>
+                <td><code>'____'</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 29 — Split (LIKE concept) -->
+        <section>
+          <h3>LIKE concept</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Pattern matching for text</li>
+                <li>Use prefix/suffix/contains patterns</li>
+                <li>Leading % can be slower (no prefix anchor)</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Common patterns:
+'prefix%'
+'%contains%'
+'%suffix'
+'____'  -- exact length</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 30 — Split (LIKE prefix) -->
+        <section>
+          <h3>LIKE example: city starts with 'S'</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Prefix pattern: <code>'S%'</code></li>
+                <li>Good for “starts with” filters</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT name, city
+FROM riders
+WHERE city LIKE 'S%'
+ORDER BY city, name;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 31 — Split (LIKE contains) -->
+        <section>
+          <h3>LIKE example: email contains 'example'</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Contains pattern: <code>'%example%'</code></li>
+                <li>Useful for quick searches</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT rider_id, name, email
+FROM riders
+WHERE email LIKE '%example%'
+ORDER BY rider_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 32 — Split (Postgres ILIKE) -->
+        <section>
+          <h3>PostgreSQL note: ILIKE (case-insensitive)</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><code>ILIKE</code> is PostgreSQL-only</li>
+                <li>Case-insensitive pattern matching</li>
+                <li>Useful for user-entered searches</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT name, city
+FROM riders
+WHERE city ILIKE 's%';</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- ESCAPE -->
+        <!-- ========================================================= -->
+
+        <!-- 33 — Split (ESCAPE concept) -->
+        <section>
+          <h3>ESCAPE concept</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><code>%</code> and <code>_</code> are wildcards in LIKE</li>
+                <li>ESCAPE defines a special character to “escape” wildcards</li>
+                <li>Then <code>\%</code> means literal percent sign</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Pattern:
+LIKE '%\%%' ESCAPE '\'</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 34 — Split (ESCAPE example) -->
+        <section>
+          <h3>ESCAPE example: match a literal percent sign</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Needed when data contains wildcard characters</li>
+                <li>Without ESCAPE, % means “anything”</li>
+                <li>With ESCAPE, you control literal matching</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT *
+FROM riders
+WHERE email LIKE '%\%%' ESCAPE '\';</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 35 — Before/After broken LIKE -> ESCAPE -->
+        <section>
+          <h3>Before/After: broken pattern → ESCAPE</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><strong>Before</strong>: intends literal %, but matches too broadly</li>
+                <li><strong>After</strong>: ESCAPE makes % literal</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Before (not literal):
+SELECT * FROM riders
+WHERE email LIKE '%%%';  -- just means "anything"
+
+-- After (literal % somewhere):
+SELECT * FROM riders
+WHERE email LIKE '%\%%' ESCAPE '\';</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- Combined filters + quality checks -->
+        <!-- ========================================================= -->
+
+        <!-- 36 — Split (IN + LIKE) -->
+        <section>
+          <h3>Combine filters: IN + LIKE</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Combine conditions with AND</li>
+                <li>Keep each filter readable</li>
+                <li>Use parentheses for complex logic</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT name, city, email
+FROM riders
+WHERE city IN ('Stockton', 'Sacramento')
+  AND email LIKE '%@example.com'
+ORDER BY name;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 37 — Split (EXISTS + BETWEEN) -->
+        <section>
+          <h3>Combine filters: EXISTS + BETWEEN</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Find riders active in a time window</li>
+                <li>Existence + range is common in reporting</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT r.name
+FROM riders r
+WHERE EXISTS (
+  SELECT 1
+  FROM rentals rt
+  WHERE rt.rider_id = r.rider_id
+    AND rt.pickup_ts BETWEEN
+        TIMESTAMP '2026-02-10 00:00'
+        AND
+        TIMESTAMP '2026-02-12 23:59'
+)
+ORDER BY r.name;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 38 — Split (NULL pitfall) -->
+        <section>
+          <h3>Common pitfall: NULL comparisons</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>NULL means “unknown / missing”</li>
+                <li><code>= NULL</code> is not correct</li>
+                <li>Use <code>IS NULL</code> / <code>IS NOT NULL</code></li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Active rentals (no dropoff yet):
+SELECT rental_id, rider_id, pickup_ts
+FROM rentals
+WHERE dropoff_ts IS NULL;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 39 — Split (row count checks) -->
+        <section>
+          <h3>Sanity checks: row counts</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Use COUNT(*) before and after filters</li>
+                <li>Filtering should reduce rows</li>
+                <li>Helps catch logic mistakes early</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT COUNT(*) AS rider_rows
+FROM riders;
+
+SELECT COUNT(*) AS filtered_rows
+FROM riders
+WHERE city IN ('Stockton','Lodi');</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- Engine comparison -->
+        <!-- ========================================================= -->
+
+        <!-- 40 — Table (SQLite vs Postgres) -->
+        <section>
+          <h3>Comparison: feature support</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>IN</td>
+                <td>Supported</td>
+                <td>Supported</td>
+              </tr>
+              <tr>
+                <td>EXISTS</td>
+                <td>Supported</td>
+                <td>Supported</td>
+              </tr>
+              <tr>
+                <td>ANY</td>
+                <td>Limited / uncommon</td>
+                <td>Supported</td>
+              </tr>
+              <tr>
+                <td>BETWEEN</td>
+                <td>Supported</td>
+                <td>Supported</td>
+              </tr>
+              <tr>
+                <td>LIKE</td>
+                <td>Supported</td>
+                <td>Supported</td>
+              </tr>
+              <tr>
+                <td>ESCAPE</td>
+                <td>Varies by build / usage</td>
+                <td>Supported</td>
+              </tr>
+              <tr>
+                <td>ILIKE</td>
+                <td>No</td>
+                <td>Supported</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 41 — Split (portable habits) -->
+        <section>
+          <h3>Portable habits (works almost everywhere)</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Core portable: IN, EXISTS, BETWEEN, LIKE</li>
+                <li>PostgreSQL extras: ANY, ILIKE</li>
+                <li>Keep timestamps explicit for portability</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Portable core:
+-- IN / EXISTS / BETWEEN / LIKE</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- Practice -->
+        <!-- ========================================================= -->
+
+        <!-- 42 — Split (Practice 1) -->
+        <section>
+          <h3>Practice 1: riders who never rented</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Use NOT EXISTS</li>
+                <li>Return rider_id + name</li>
+                <li>Sort by rider_id</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT r.rider_id, r.name
+FROM riders r
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM rentals rt
+  WHERE rt.rider_id = r.rider_id
+)
+ORDER BY r.rider_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 43 — Split (Practice 2) -->
+        <section>
+          <h3>Practice 2: bikes never rented (IN + NOT IN alternative)</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Find bikes missing from rentals</li>
+                <li>Demonstrates “set difference” thinking</li>
+                <li>Note: NOT IN can be tricky with NULLs; consider NOT EXISTS in real systems</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Simple approach (works here because rentals.bike_id is not NULL in our inserts):
+SELECT b.bike_id, b.bike_type, b.status
+FROM bikes b
+WHERE b.bike_id NOT IN (
+  SELECT rt.bike_id
+  FROM rentals rt
+)
+ORDER BY b.bike_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 44 — Split (Practice 3) -->
+        <section>
+          <h3>Practice 3: riders with an active rental</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>EXISTS with extra condition</li>
+                <li>Active rental = dropoff_ts IS NULL</li>
+                <li>Return only rider names</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT r.name
+FROM riders r
+WHERE EXISTS (
+  SELECT 1
+  FROM rentals rt
+  WHERE rt.rider_id = r.rider_id
+    AND rt.dropoff_ts IS NULL
+)
+ORDER BY r.name;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- Cheat sheet + checkpoint -->
+        <!-- ========================================================= -->
+
+        <!-- 45 — Table (cheat sheet) -->
+        <section>
+          <h3>Cheat sheet</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Need</th>
+                <th>Use</th>
+                <th>Bicycle example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Membership in a set</td>
+                <td><code>IN</code></td>
+                <td>Riders in certain cities</td>
+              </tr>
+              <tr>
+                <td>Does a related row exist?</td>
+                <td><code>EXISTS</code></td>
+                <td>Riders with rentals</td>
+              </tr>
+              <tr>
+                <td>Flexible set comparison</td>
+                <td><code>ANY</code></td>
+                <td>Threshold comparisons</td>
+              </tr>
+              <tr>
+                <td>Range filter</td>
+                <td><code>BETWEEN</code></td>
+                <td>Rentals in a date window</td>
+              </tr>
+              <tr>
+                <td>Pattern match</td>
+                <td><code>LIKE</code></td>
+                <td>Emails containing “example”</td>
+              </tr>
+              <tr>
+                <td>Literal wildcard</td>
+                <td><code>ESCAPE</code></td>
+                <td>Find literal % in text</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 46 — Split (summary) -->
+        <section>
+          <h3>Summary</h3>
+          <div class="split">
+            <div class="left">
+              <ul class="tight">
+                <li><strong>IN</strong> = membership in a list/set</li>
+                <li><strong>EXISTS</strong> = presence of ≥ 1 related row</li>
+                <li><strong>ANY</strong> = compare to any value in a set</li>
+                <li><strong>BETWEEN</strong> = inclusive range</li>
+                <li><strong>LIKE</strong> = pattern matching</li>
+                <li><strong>ESCAPE</strong> = treat % and _ as literal</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Clean, common pattern:
+SELECT r.name
+FROM riders r
+WHERE EXISTS (
+  SELECT 1
+  FROM rentals rt
+  WHERE rt.rider_id = r.rider_id
+)
+ORDER BY r.name;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 47 — Diagram (checkpoint) -->
+        <section>
+          <svg width="100%" height="260" viewBox="0 0 1200 260" role="img" aria-label="Checkpoint diagram">
+            <rect x="140" y="70" width="920" height="140" rx="18" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="600" y="120" text-anchor="middle" font-size="22" fill="rgba(255,255,255,0.9)">
+              Say the question first: membership, existence, range, or pattern?
+            </text>
+            <text x="600" y="160" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">
+              Then choose IN / EXISTS / ANY / BETWEEN / LIKE / ESCAPE.
+            </text>
+          </svg>
+        </section>
+
+      </section>
+
 
     </div>
   </div>
