@@ -1,0 +1,599 @@
+<section id="module-7">
+
+  <!-- Module 7 (Module 6 layout): split left/right, full tables, diagram sections only -->
+
+  <!-- CODE READABILITY (override Reveal/theme defaults) -->
+  <style>
+    /* Strong overrides to beat deck theme */
+    #module-7 pre,
+    #module-7 pre code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+      font-size: 18px !important;
+      line-height: 1.35 !important;
+      letter-spacing: 0 !important;
+      text-transform: none !important;
+      white-space: pre !important;
+      tab-size: 2 !important;
+    }
+    #module-7 pre {
+      background: #f6f8fa !important;
+      color: #111827 !important;
+      padding: 16px 18px !important;
+      border-radius: 12px !important;
+      overflow-x: auto !important;
+      border: 1px solid rgba(17,24,39,0.18) !important;
+      box-shadow: 0 10px 22px rgba(0,0,0,0.10) !important;
+      margin: 10px 0 !important;
+    }
+    #module-7 pre code {
+      background: transparent !important;
+      color: inherit !important;
+      padding: 0 !important;
+    }
+    /* If the deck applies filters/transforms to code blocks */
+    #module-7 pre,
+    #module-7 code {
+      filter: none !important;
+      transform: none !important;
+      opacity: 1 !important;
+    }
+    /* Keep split layout readable */
+    #module-7 .split .left, #module-7 .split .right { min-width: 0; }
+    #module-7 .small, #module-7 .micro, #module-7 .muted { display: none !important; } /* remove meta text helpers */
+  </style>
+
+  <!-- Title (split) -->
+  <section id="c17">
+    <div class="split">
+      <div class="left">
+        <h4>Module 7</h4>
+        <h3>Testing, Verification, Validation (Industry 4.0)</h3>
+        <ul class="alpha-list">
+          <li>TVV definitions</li>
+          <li>Test levels + V‑Model</li>
+          <li>TDD + AAA</li>
+          <li>Unit / Component / Integration / System / Acceptance</li>
+          <li>API testing for IoT ingestion</li>
+        </ul>
+      </div>
+      <div class="right">
+        <h5>IoT Light Sensor Thread</h5>
+        <pre><code class="language-plaintext">
++-------------+   HTTPS/REST   +--------------+    SQL    +-------------+
+|  Sensor     |  ----------->  |  Backend API |  ----->  |  Database   |
+| (ESP32/PI)  |                | (Node/Py)    |          | (Postgres)  |
++-------------+                +--------------+          +-------------+
+       |                               |
+       | MQTT (optional)               | WebSocket/REST
+       v                               v
++-------------+                 +-------------+
+| Edge Gateway|                 | Dashboard   |
++-------------+                 +-------------+
+        </code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- TVV (split + full table) -->
+  <section>
+    <div class="split">
+      <div class="left">
+        <h5>Testing vs Verification vs Validation</h5>
+        <ul>
+          <li><strong>Verification</strong>: artifact correctness (req/design/code)</li>
+          <li><strong>Validation</strong>: user/business fit</li>
+          <li><strong>Testing</strong>: defect discovery by execution</li>
+        </ul>
+      </div>
+      <div class="right">
+        <h5>Comparison</h5>
+        <table>
+          <thead>
+            <tr>
+              <th>Aspect</th>
+              <th>Verification</th>
+              <th>Validation</th>
+              <th>Testing</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Primary focus</strong></td>
+              <td>Specs + artifacts</td>
+              <td>Outcomes</td>
+              <td>Runtime behavior</td>
+            </tr>
+            <tr>
+              <td><strong>Methods</strong></td>
+              <td>Reviews, static analysis</td>
+              <td>UAT, field trials</td>
+              <td>Unit→System, regression</td>
+            </tr>
+            <tr>
+              <td><strong>IoT Light Sensor</strong></td>
+              <td>API/DB contract review</td>
+              <td>Facilities confirms value</td>
+              <td>Send payload; verify DB + UI</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Verification (split) -->
+  <section>
+    <div class="split">
+      <div class="left">
+        <h5>Verification</h5>
+        <ul class="alpha-list">
+          <li>Requirements review</li>
+          <li>Design review</li>
+          <li>Code review</li>
+          <li>Static analysis</li>
+        </ul>
+      </div>
+      <div class="right">
+        <h5>IoT Light Sensor: verification targets</h5>
+        <ul>
+          <li>Payload schema + enums</li>
+          <li>API contract (codes/errors/auth)</li>
+          <li>DB constraints + indexes</li>
+          <li>Replay/spoof assumptions</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Validation (split) -->
+  <section>
+    <div class="split">
+      <div class="left">
+        <h5>Validation</h5>
+        <ul class="alpha-list">
+          <li>Acceptance testing</li>
+          <li>Usability + trust checks</li>
+          <li>Field trials</li>
+        </ul>
+      </div>
+      <div class="right">
+        <h5>IoT Light Sensor: validation questions</h5>
+        <ul>
+          <li>Dashboard supports a decision (energy, safety)</li>
+          <li>Alerts actionable (low false positives)</li>
+          <li>Works under building constraints (Wi‑Fi, drift)</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Test levels + V-model (split) -->
+  <section>
+    <div class="split">
+      <div class="left">
+        <h5>Test Levels</h5>
+        <ul class="alpha-list">
+          <li><strong>Unit</strong>: function/module</li>
+          <li><strong>Component</strong>: service boundary</li>
+          <li><strong>Integration</strong>: service + DB/cache/queue</li>
+          <li><strong>System</strong>: end-to-end stack</li>
+          <li><strong>Acceptance</strong>: user scenarios</li>
+        </ul>
+      </div>
+      <div class="right">
+        <h5>V‑Model alignment</h5>
+        <pre><code class="language-plaintext">
+Requirements   <------------------------->  Acceptance Tests
+System Design  <------------------------->  System Tests
+Component Des. <------------------------->  Integration Tests
+Implementation <------------------------->  Unit Tests
+        </code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Diagram section -->
+  <section data-background="white">
+    <img class="img-fit" src="https://miro.medium.com/v2/resize:fit:676/1*1_y1njK_-OW_Sqv1cKlDcg.png" alt="V-Model Diagram">
+  </section>
+
+  <!-- Payload contract (split) -->
+  <section>
+    <div class="split">
+      <div class="left">
+        <h5>Sensor Payload (contract)</h5>
+        <pre><code class="language-json">
+{
+  "device_id": "ls-0081",
+  "room_id": "CTC-114",
+  "lux": 312,
+  "light_state": "ON",
+  "timestamp": "2026-02-23T08:15:30Z",
+  "fw_version": "1.2.0",
+  "nonce": "c4b8f0c3-2a0d-4d25-9f1c-acde1b7b7b8a"
+}
+        </code></pre>
+      </div>
+      <div class="right">
+        <h5>Contract rules</h5>
+        <pre><code class="language-plaintext">
+Required: device_id, room_id, lux, light_state, timestamp, nonce
+Ranges:   lux 0..20000
+Enums:    light_state ON|OFF|AUTO
+Time:     timestamp within +/- 2 minutes (configurable)
+Replay:   nonce must be unique (reject duplicates)
+        </code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- TDD + AAA (split + full table) -->
+  <section>
+    <div class="split">
+      <div class="left">
+        <h5>TDD + AAA</h5>
+        <pre><code class="language-plaintext">
+TDD loop:
+1) Write failing test
+2) Implement minimum to pass
+3) Refactor (keep tests green)
+
+AAA:
+- Arrange
+- Act
+- Assert
+        </code></pre>
+      </div>
+      <div class="right">
+        <h5>AAA patterns by test level</h5>
+        <table>
+          <thead>
+            <tr>
+              <th>Level</th>
+              <th>Arrange</th>
+              <th>Act</th>
+              <th>Assert</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Unit</strong></td>
+              <td>payload object</td>
+              <td>validate(payload)</td>
+              <td>ok=true / err code</td>
+            </tr>
+            <tr>
+              <td><strong>Component</strong></td>
+              <td>HTTP req + mocked DB</td>
+              <td>handler(req,res)</td>
+              <td>201/400 + JSON body</td>
+            </tr>
+            <tr>
+              <td><strong>Integration</strong></td>
+              <td>real DB + migrations</td>
+              <td>POST endpoint</td>
+              <td>row inserted + query works</td>
+            </tr>
+            <tr>
+              <td><strong>System</strong></td>
+              <td>deployed stack</td>
+              <td>sensor→API→DB→UI</td>
+              <td>UI metrics updated</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Unit testing examples (split) -->
+  <section>
+    <div class="split">
+      <div class="left">
+        <h5>Unit (AAA): validation function</h5>
+        <pre><code lang="JavaScript">
+// validatePayload.js
+export function validatePayload(p) {
+  if (!p.device_id) return { ok:false, err:"missing_device_id" };
+  if (!p.room_id) return { ok:false, err:"missing_room_id" };
+  if (!Number.isInteger(p.lux) || p.lux < 0 || p.lux > 20000) return { ok:false, err:"bad_lux" };
+  if (!["ON","OFF","AUTO"].includes(p.light_state)) return { ok:false, err:"bad_state" };
+  return { ok:true };
+}
+        </code></pre>
+      </div>
+      <div class="right">
+        <h5>Unit (AAA): multiple test cases</h5>
+        <pre><code lang="JavaScript">
+// validatePayload.test.js
+import { validatePayload } from "./validatePayload.js";
+
+test("AAA: valid payload passes", () => {
+  const p = { device_id:"ls-0081", room_id:"CTC-114", lux:312, light_state:"ON" }; // Arrange
+  const res = validatePayload(p);                                                // Act
+  expect(res.ok).toBe(true);                                                     // Assert
+});
+
+test("AAA: missing room_id fails", () => {
+  const p = { device_id:"ls-0081", lux:312, light_state:"ON" };
+  const res = validatePayload(p);
+  expect(res).toEqual({ ok:false, err:"missing_room_id" });
+});
+
+test("AAA: lux out of range fails", () => {
+  const p = { device_id:"ls-0081", room_id:"CTC-114", lux:999999, light_state:"ON" };
+  const res = validatePayload(p);
+  expect(res.err).toBe("bad_lux");
+});
+
+test("AAA: invalid state fails", () => {
+  const p = { device_id:"ls-0081", room_id:"CTC-114", lux:10, light_state:"DIM" };
+  const res = validatePayload(p);
+  expect(res.err).toBe("bad_state");
+});
+        </code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Unit: replay helper + tests (split) -->
+  <section>
+    <div class="split">
+      <div class="left">
+        <h5>Unit (AAA): replay/nonce helper</h5>
+        <pre><code lang="JavaScript">
+// dedupe.js (demo; production uses Redis/DB)
+export function makeNonceCache() {
+  const seen = new Set();
+  return { has:(n)=>seen.has(n), add:(n)=>seen.add(n) };
+}
+        </code></pre>
+      </div>
+      <div class="right">
+        <h5>Unit (AAA): replay tests</h5>
+        <pre><code lang="JavaScript">
+import { makeNonceCache } from "./dedupe.js";
+
+test("AAA: first nonce accepted", () => {
+  const cache = makeNonceCache();     // Arrange
+  const existed = cache.has("n-1");   // Act
+  cache.add("n-1");
+  expect(existed).toBe(false);        // Assert
+  expect(cache.has("n-1")).toBe(true);
+});
+
+test("AAA: second time is replay", () => {
+  const cache = makeNonceCache();
+  cache.add("n-2");
+  expect(cache.has("n-2")).toBe(true);
+});
+        </code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Component tests (split) -->
+  <section>
+    <div class="split">
+      <div class="left">
+        <h5>Component (AAA): API handler</h5>
+        <pre><code lang="JavaScript">
+// handler.js (sketch)
+export async function postLight(req, res, deps) {
+  const v = deps.validate(req.body);
+  if (!v.ok) return res.status(400).json({ saved:false, error:v.err });
+  const id = await deps.db.insertLight(req.body);
+  return res.status(201).json({ saved:true, id, room_id:req.body.room_id });
+}
+        </code></pre>
+      </div>
+      <div class="right">
+        <h5>Component (AAA): success + failure</h5>
+        <pre><code lang="JavaScript">
+import { postLight } from "./handler.js";
+
+function makeRes() {
+  return { code:null, body:null,
+    status(c){ this.code=c; return this; },
+    json(b){ this.body=b; return this; }
+  };
+}
+
+test("AAA: valid request returns 201", async () => {
+  const req = { body:{ device_id:"ls-1", room_id:"CTC-114", lux:10, light_state:"ON" } }; // Arrange
+  const res = makeRes();
+  const deps = { validate:()=>({ok:true}), db:{ insertLight: async()=>1001 } };
+  await postLight(req, res, deps);                                                       // Act
+  expect(res.code).toBe(201);                                                            // Assert
+  expect(res.body).toEqual({ saved:true, id:1001, room_id:"CTC-114" });
+});
+
+test("AAA: invalid request returns 400", async () => {
+  const req = { body:{ room_id:"CTC-114", lux:-1, light_state:"ON" } };
+  const res = makeRes();
+  const deps = { validate:()=>({ok:false, err:"bad_lux"}), db:{ insertLight: async()=>999 } };
+  await postLight(req, res, deps);
+  expect(res.code).toBe(400);
+  expect(res.body).toEqual({ saved:false, error:"bad_lux" });
+});
+        </code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Integration (split) -->
+  <section>
+    <div class="split">
+      <div class="left">
+        <h5>Integration: schema + constraints</h5>
+        <pre><code class="language-sql">
+CREATE TABLE light_readings (
+  id BIGSERIAL PRIMARY KEY,
+  device_id TEXT NOT NULL,
+  room_id TEXT NOT NULL,
+  lux INTEGER NOT NULL CHECK (lux >= 0 AND lux <= 20000),
+  light_state TEXT NOT NULL CHECK (light_state IN ('ON','OFF','AUTO')),
+  ts TIMESTAMPTZ NOT NULL,
+  nonce TEXT NOT NULL UNIQUE
+);
+CREATE INDEX idx_light_room_ts ON light_readings(room_id, ts DESC);
+        </code></pre>
+      </div>
+      <div class="right">
+        <h5>Integration: DB assertions</h5>
+        <pre><code class="language-sql">
+-- Latest per room (index-friendly)
+SELECT room_id, lux, light_state, ts
+FROM light_readings
+WHERE room_id='CTC-114'
+ORDER BY ts DESC
+LIMIT 1;
+
+-- Replay must not insert a second row
+SELECT COUNT(*) FROM light_readings WHERE nonce='c4b8f0c3-...';
+        </code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- System (split) -->
+  <section>
+    <div class="split">
+      <div class="left">
+        <h5>System: end-to-end checks</h5>
+        <pre><code class="language-plaintext">
+Arrange: staging stack + room inventory + schedule
+Act:    simulate readings across rooms
+Assert: UI latest tiles + alerts + freshness SLA
+        </code></pre>
+      </div>
+      <div class="right">
+        <h5>System: after-hours rule query</h5>
+        <pre><code class="language-sql">
+SELECT room_id
+FROM light_readings
+WHERE light_state='ON'
+  AND ts > NOW() - INTERVAL '5 minutes'
+  AND EXTRACT(HOUR FROM ts AT TIME ZONE 'America/Los_Angeles') >= 22
+GROUP BY room_id;
+        </code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Acceptance (full table section only) -->
+  <section>
+    <h5>Acceptance (UAT): scenarios</h5>
+    <table>
+      <thead>
+        <tr>
+          <th>Scenario</th>
+          <th>Given</th>
+          <th>When</th>
+          <th>Then</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>After-hours waste</strong></td>
+          <td>Schedule loaded</td>
+          <td>Light ON after 10pm</td>
+          <td>Alert + ticket created</td>
+        </tr>
+        <tr>
+          <td><strong>Sensor offline</strong></td>
+          <td>Expected 1/min</td>
+          <td>No data for 15 min</td>
+          <td>Offline alert + last-seen</td>
+        </tr>
+        <tr>
+          <td><strong>Time drift</strong></td>
+          <td>Skew threshold 2 min</td>
+          <td>Future timestamp</td>
+          <td>Reject + clear error</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Regression (split) -->
+  <section>
+    <div class="split">
+      <div class="left">
+        <h5>Regression: golden payload set</h5>
+        <pre><code class="language-plaintext">
+1) Normal:  lux=312,  state=ON,  nonce unique
+2) Dark:    lux=0,    state=OFF, nonce unique
+3) Spike:   lux=20000,state=ON,  nonce unique
+4) Drift:   ts=+10min (reject)
+5) Replay:  same nonce twice (reject + no extra insert)
+6) Rate:    burst traffic (429/backpressure)
+        </code></pre>
+      </div>
+      <div class="right">
+        <h5>API response contracts (examples)</h5>
+        <pre><code class="language-json">
+// 201
+{ "saved": true, "id": 1001, "room_id": "CTC-114" }
+
+// 400
+{ "saved": false, "error": "bad_lux" }
+
+// 409
+{ "saved": false, "error": "replay_detected", "details": { "nonce": "..." } }
+        </code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- API testing (split) -->
+  <section>
+    <div class="split">
+      <div class="left">
+        <h5>API Testing: endpoints</h5>
+        <pre><code class="language-plaintext">
+POST /api/v1/telemetry/light
+GET  /api/v1/rooms/{room_id}/light/latest
+GET  /api/v1/rooms/{room_id}/light?from=...&to=...
+GET  /api/v1/alerts?type=after_hours
+        </code></pre>
+      </div>
+      <div class="right">
+        <h5>API test cases (examples)</h5>
+        <pre><code class="language-plaintext">
+- missing token -> 401
+- wrong scope -> 403
+- payload too large -> 413
+- duplicate nonce -> 409
+- burst -> 429
+- p95 latency target (example) < 250ms
+        </code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dashboard testing (split) -->
+  <section>
+    <div class="split">
+      <div class="left">
+        <h5>Client (Dashboard): assertions</h5>
+        <pre><code class="language-plaintext">
+- latest tile updates < 5s after POST
+- room filter persists across refresh
+- after-hours banner appears
+- offline banner after missing-data window
+        </code></pre>
+      </div>
+      <div class="right">
+        <h5>UI scenario (Gherkin)</h5>
+        <pre><code class="language-plaintext">
+Scenario: After-hours alert banner
+  Given room "CTC-114" schedule ends at 10pm
+  When an ON reading arrives at 10:05pm
+  Then show alert banner for "CTC-114"
+        </code></pre>
+      </div>
+    </div>
+  </section>
+
+</section>
