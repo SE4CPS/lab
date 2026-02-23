@@ -592,10 +592,12 @@
               </tr>
 
               <tr style="color:#ccc;">
-                <td style="padding:6px; border:1px solid #666;">7 (Feb 23, 25, 27)</td>
-                <td style="padding:6px; border:1px solid #666;">Relational Database Table Indexing</td>
+                <td style="padding:6px; border:1px solid #666;">7 (<a href="./#/c17">Feb 23</a>, <a href="./#/c18">Feb
+                    25</a>, <a href="./#/c19">Feb 27</a>)</td>
+                <td style="padding:6px; border:1px solid #666;"><a href="./#/module-7">Relational Database Table
+                    Indexing</a></td>
                 <td style="padding:6px; border:1px solid #666;"></td>
-                <td style="padding:6px; border:1px solid #666;">MariaDB</td>
+                <td style="padding:6px; border:1px solid #666;"><a href="./#/mariadb">MariaDB</a></td>
                 <td style="padding:6px; border:1px solid #666;"></td>
               </tr>
 
@@ -21962,12 +21964,1066 @@ SET water_level =
               </div>
             </div>
           </section>
+        </section>
 
+        <!-- ===================== MODULE 7 =====================  -->
+
+        <section id="module-7">
+
+          <style>
+            .split {
+              display: flex;
+              justify-content: space-between;
+              gap: 18px;
+              align-items: flex-start;
+            }
+
+            .half {
+              width: 49%;
+            }
+
+            .tbl {
+              width: 100%;
+              border-collapse: collapse;
+              font-size: 0.82rem;
+            }
+
+            .tbl th,
+            .tbl td {
+              border: 1px solid #666;
+              padding: 6px 8px;
+              vertical-align: top;
+            }
+
+            .tight li {
+              margin: 6px 0;
+            }
+
+            .box {
+              border: 1px solid #666;
+              padding: 10px;
+              border-radius: 8px;
+            }
+
+            .ph {
+              border: 2px dashed #888;
+              padding: 18px;
+              text-align: center;
+              border-radius: 10px;
+            }
+
+            .tiny {
+              font-size: 0.78em;
+            }
+
+            .muted {
+              opacity: 0.82;
+            }
+
+            .highlight {
+              font-weight: 700;
+            }
+
+            pre {
+              font-size: 0.85em;
+            }
+
+            code {
+              font-size: 0.95em;
+            }
+          </style>
+
+
+          <section id="c17">
+            <h5>Database Indexing: Why It Matters</h5>
+            <div class="split">
+              <div class="half">
+                <ul class="tight">
+                  <li>Queries must stay fast as row counts grow</li>
+                  <li>Scanning entire tables increases latency</li>
+                  <li>Large datasets require structured search paths</li>
+                  <li>Indexes keep performance predictable at scale</li>
+                </ul>
+              </div>
+              <div class="half">
+                <ul class="tight">
+                  <li>Target</li>
+                  <li><span class="highlight">Reduce search space</span></li>
+                  <li><span class="highlight">Avoid linear scans</span></li>
+                  <li>Keep latency stable as n grows</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Use Case: Social Media Posts</h5>
+            <div class="split">
+              <div class="half">
+                <ul class="tight">
+                  <li>Single table is enough to study scan vs index behavior</li>
+                  <li>Assume many posts (millions+)</li>
+                  <li>MariaDB + InnoDB (B-Tree indexes)</li>
+                  <li>Profile feeds and time-based retrieval</li>
+                </ul>
+              </div>
+              <div class="half">
+                <pre><code>CREATE TABLE posts (<br>
+  post_id BIGINT PRIMARY KEY AUTO_INCREMENT,<br>
+  user_id BIGINT NOT NULL,<br>
+  created_at DATETIME NOT NULL,<br>
+  content TEXT,<br>
+  likes_count INT DEFAULT 0<br>
+) ENGINE=InnoDB;</code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Example Workload (One Table, Many Queries)</h5>
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Query</th>
+                  <th>Intent</th>
+                  <th>What the engine must do</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>WHERE user_id = 5001</code></td>
+                  <td>Profile feed</td>
+                  <td>Find all rows for one user</td>
+                </tr>
+                <tr>
+                  <td><code>WHERE created_at &gt;= '2026-01-01'</code></td>
+                  <td>Recent posts</td>
+                  <td>Locate start point then read in order</td>
+                </tr>
+                <tr>
+                  <td><code>WHERE user_id = 5001 ORDER BY created_at DESC LIMIT 20</code></td>
+                  <td>Latest 20 posts</td>
+                  <td>Find user range, read newest first, stop early</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+
+          <section>
+            <h5>Full Table Scan: Typical Filter Query</h5>
+            <div class="split">
+              <div class="half">
+                <ul class="tight">
+                  <li>If no index supports the predicate</li>
+                  <li>Engine inspects rows until end of table</li>
+                  <li>Work grows with n</li>
+                  <li>Latency rises as data grows</li>
+                </ul>
+              </div>
+              <div class="half">
+                <pre><code>SELECT *<br>
+FROM posts<br>
+WHERE user_id = 5001;</code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Why Full Table Scans Do Not Scale</h5>
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>n (rows)</th>
+                  <th>Worst-case checks</th>
+                  <th>Impact</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>10,000</td>
+                  <td>10,000</td>
+                  <td>Often acceptable</td>
+                </tr>
+                <tr>
+                  <td>1,000,000</td>
+                  <td>1,000,000</td>
+                  <td>Noticeable latency, higher I/O</td>
+                </tr>
+                <tr>
+                  <td>50,000,000</td>
+                  <td>50,000,000</td>
+                  <td>Can dominate latency and reduce throughput</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+
+          <section>
+            <h5>Complexity: Scan vs Index</h5>
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Plan</th>
+                  <th>Time Complexity</th>
+                  <th>Work Growth</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Full table scan</td>
+                  <td><strong>O(n)</strong></td>
+                  <td>Linear</td>
+                </tr>
+                <tr>
+                  <td>B-Tree lookup</td>
+                  <td><strong>O(log n)</strong></td>
+                  <td>Very slow growth</td>
+                </tr>
+                <tr>
+                  <td>B-Tree range scan</td>
+                  <td><strong>O(log n + k)</strong></td>
+                  <td>Depends on output size</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+
+          <section>
+            <h5>B-Tree Index (InnoDB)</h5>
+            <div class="split">
+              <div class="half">
+                <ul class="tight">
+                  <li>Balanced tree optimized for disk pages</li>
+                  <li>Keys kept sorted</li>
+                  <li>Small height even for huge n</li>
+                  <li>Lookup navigates from root to leaf</li>
+                </ul>
+                <div class="box" style="margin-top:10px;">
+                  <pre><code>Root (few pages)<br>
+  ↓<br>
+Internal nodes (few pages)<br>
+  ↓<br>
+Leaf pages (many pages)</code></pre>
+                </div>
+              </div>
+              <div class="half">
+                <div class="ph"><img src="https://miro.medium.com/v2/1*Ti_rvB6a3SEZeTgyoEyBDQ.png"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- Binary Tree vs B-Tree -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Binary Tree vs B-Tree</h5>
+
+            <div class="split">
+
+              <!-- LEFT: BINARY TREE -->
+              <div class="left">
+                <h6>Binary Tree</h6>
+
+                <pre>
+        50
+       /  \
+     30    70
+    / \    / \
+  20  40  60  80
+</pre>
+
+                <ul>
+                  <li>Max 2 children per node</li>
+                  <li>Used in memory structures</li>
+                  <li>Can become unbalanced</li>
+                  <li>Height grows quickly</li>
+                  <li>Good for CPU operations</li>
+                </ul>
+              </div>
+
+              <!-- RIGHT: B-TREE -->
+              <div class="right">
+                <h6>B-Tree</h6>
+
+                <pre>
+        [30 | 60]
+       /    |     \
+ [10 20] [40 50] [70 80 90]
+</pre>
+
+                <ul>
+                  <li>Many children per node</li>
+                  <li>Optimized for disk storage</li>
+                  <li>Always balanced</li>
+                  <li>Shallow height</li>
+                  <li>Used in database indexes</li>
+                </ul>
+              </div>
+
+            </div>
+
+          </section>
+
+          <section>
+            <h5>B-Tree Shape</h5>
+
+            <div class="split">
+
+              <!-- LEFT -->
+              <div class="half">
+                <ul class="tight">
+                  <li>Many keys per node (high fanout)</li>
+                  <li>Height remains small</li>
+                  <li>Short height means few page reads</li>
+                  <li>Supports ordered traversal</li>
+                </ul>
+
+                <div class="box" style="margin-top:10px;">
+                  <pre><code>[ 5000 | 9000 ]
+     /        |         \
+[1000|3000] [6000|7000] [10000|15000]
+   /   \          |            /     \
+ ...   ...       ...          ...     ...
+</code></pre>
+                </div>
+              </div>
+
+              <!-- RIGHT -->
+              <div class="half">
+
+                <div class="box">
+                  <h6>Index Example</h6>
+
+                  <pre><code class="sql">
+CREATE INDEX idx_price
+ON flowers(price);
+</code></pre>
+
+                  <ul class="tight">
+                    <li>B-Tree is default index type</li>
+                    <li>Speeds up WHERE price = ...</li>
+                    <li>Speeds up ORDER BY price</li>
+                    <li>Used in SQLite, MariaDB, PostgreSQL</li>
+                  </ul>
+
+                </div>
+
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Index Fanout and Height</h5>
+
+            <div class="split">
+
+              <!-- LEFT -->
+              <div class="half">
+                <ul class="tight">
+                  <li>Each node stores many keys per page</li>
+                  <li>High fanout → short tree height</li>
+                  <li>Short height → fewer page reads</li>
+                  <li>Main reason B-Trees scale on disk</li>
+                </ul>
+
+                <div class="box" style="margin-top:10px;">
+                  <pre><code>
+High fanout example:
+
+Level 1:          [ 5000 | 9000 ]
+                 /        |        \
+Level 2:   [1000|3000] [6000|7000] [10000|15000]
+             /   \           |            /    \
+Level 3:    ...   ...       ...          ...    ...
+
+More keys per node  →  Fewer levels
+Fewer levels        →  Fewer page reads
+</code></pre>
+                </div>
+              </div>
+
+              <!-- RIGHT -->
+              <div class="half">
+                <div class="box">
+                  <h6>Why It Matters</h6>
+
+                  <ul class="tight">
+                    <li>Disk I/O is slower than memory</li>
+                    <li>Each level = one page read</li>
+                    <li>High fanout keeps tree shallow</li>
+                    <li>Shallow tree improves lookup speed</li>
+                  </ul>
+
+                  <pre><code>
+Height 3 tree:
+Root → Internal → Leaf
+= 3 page reads
+
+Height 6 tree:
+= 6 page reads
+</code></pre>
+
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Create Index for User Lookups</h5>
+
+            <div class="split">
+
+              <!-- LEFT -->
+              <div class="half">
+                <ul class="tight">
+                  <li>Builds a B-Tree on <code>user_id</code></li>
+                  <li>Speeds up user-based lookups</li>
+                  <li>Improves search from O(n) → O(log n)</li>
+                  <li>Confirm usage with <code>EXPLAIN</code></li>
+                </ul>
+
+                <div class="box" style="margin-top:10px;">
+                  <pre><code class="sql">
+CREATE INDEX idx_posts_user
+ON posts(user_id);
+</code></pre>
+                </div>
+              </div>
+
+              <!-- RIGHT -->
+              <div class="half">
+
+                <div class="box">
+                  <h6>Example Query</h6>
+
+                  <pre><code class="sql">
+SELECT *
+FROM posts
+WHERE user_id = 42;
+</code></pre>
+
+                  <ul class="tight">
+                    <li>Without index → full table scan</li>
+                    <li>With index → direct B-Tree lookup</li>
+                    <li>Index stores sorted keys</li>
+                    <li>Leaf nodes point to matching rows</li>
+                  </ul>
+                </div>
+
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Index for Time Ranges</h5>
+
+            <div class="split">
+
+              <!-- LEFT -->
+              <div class="half">
+                <ul class="tight">
+                  <li>Jump to first key in range (O(log n))</li>
+                  <li>Scan forward in sorted order</li>
+                  <li>Stop when range condition fails</li>
+                  <li>Efficient for recent-post queries</li>
+                </ul>
+
+                <div class="box" style="margin-top:10px;">
+                  <pre><code class="sql">
+CREATE INDEX idx_posts_created
+ON posts(created_at);
+</code></pre>
+                </div>
+              </div>
+
+              <!-- RIGHT -->
+              <div class="half">
+
+                <div class="box">
+                  <h6>Example Range Query</h6>
+
+                  <pre><code class="sql">
+SELECT *
+FROM posts
+WHERE created_at >= '2026-01-01'
+  AND created_at <  '2026-02-01'
+ORDER BY created_at;
+</code></pre>
+
+                  <ul class="tight">
+                    <li>B-Tree jumps to 2026-01-01</li>
+                    <li>Reads forward sequentially</li>
+                    <li>Stops after 2026-01-31</li>
+                    <li>No full table scan</li>
+                  </ul>
+
+                </div>
+
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Composite Index for Filter and Order</h5>
+
+            <div class="split">
+
+              <!-- LEFT -->
+              <div class="half">
+                <ul class="tight">
+                  <li>Filter by <code>user_id</code> and order by <code>created_at</code></li>
+                  <li>Reduces sorting work</li>
+                  <li>Works best with <code>LIMIT</code></li>
+                  <li>Matches common feed patterns</li>
+                </ul>
+
+                <div class="box" style="margin-top:10px;">
+                  <pre><code class="sql">
+CREATE INDEX idx_user_created
+ON posts(user_id, created_at);
+</code></pre>
+                </div>
+              </div>
+
+              <!-- RIGHT -->
+              <div class="half">
+
+                <div class="box">
+                  <h6>Example Query</h6>
+
+                  <pre><code class="sql">
+SELECT *
+FROM posts
+WHERE user_id = 42
+ORDER BY created_at DESC
+LIMIT 10;
+</code></pre>
+
+                  <ul class="tight">
+                    <li>Index first filters by <code>user_id</code></li>
+                    <li>Rows already ordered by <code>created_at</code></li>
+                    <li>No extra sort step needed</li>
+                    <li>Efficient for user feeds</li>
+                  </ul>
+
+                </div>
+
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Using LIMIT with Index</h5>
+            <div class="split">
+              <div class="half">
+                <ul class="tight">
+                  <li>Feeds often request “top 20” posts</li>
+                  <li>With a suitable index, engine can stop early</li>
+                  <li>Less scanning, faster response</li>
+                  <li>Works well with composite indexes</li>
+                </ul>
+              </div>
+              <div class="half">
+                <pre><code>SELECT post_id, created_at
+FROM posts
+WHERE user_id = 5001
+ORDER BY created_at DESC
+LIMIT 20;</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Predicate Types and Index Use</h5>
+            <div class="split">
+              <div class="half">
+                <table class="tbl">
+                  <thead>
+                    <tr>
+                      <th>Predicate</th>
+                      <th>Index Friendly?</th>
+                      <th>Reason</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><code>=</code></td>
+                      <td>Yes</td>
+                      <td>Exact match</td>
+                    </tr>
+                    <tr>
+                      <td><code>BETWEEN</code></td>
+                      <td>Yes</td>
+                      <td>Range scan</td>
+                    </tr>
+                    <tr>
+                      <td><code>LIKE 'abc%'</code></td>
+                      <td>Often</td>
+                      <td>Prefix search</td>
+                    </tr>
+                    <tr>
+                      <td><code>LIKE '%abc'</code></td>
+                      <td>No</td>
+                      <td>Leading wildcard breaks ordering</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="half">
+                <pre><code>Good: user_id = 5001
+Good: created_at BETWEEN a AND b
+Bad:  content LIKE '%hello%'</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Indexing TEXT Content</h5>
+            <div class="split">
+              <div class="half box">
+                <strong>Constraint</strong>
+                <ul class="tight">
+                  <li><code>content</code> is TEXT (large)</li>
+                  <li>B-Tree is not ideal for substring search</li>
+                  <li>Can create large indexes and slow writes</li>
+                </ul>
+              </div>
+              <div class="half box">
+                <strong>Typical Approach</strong>
+                <ul class="tight">
+                  <li>Keep B-Tree indexes for filters/sorts</li>
+                  <li>Use full-text search (separate topic)</li>
+                  <li>Or an external search engine</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>SHOW INDEX (MariaDB Introspection)</h5>
+            <div class="split">
+              <div class="half">
+                <ul class="tight">
+                  <li>Verify which indexes exist</li>
+                  <li>See key columns and sequence</li>
+                  <li>Check uniqueness and cardinality</li>
+                  <li>Review for redundancy</li>
+                </ul>
+              </div>
+              <div class="half">
+                <pre><code>SHOW INDEX FROM posts;</code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>ANALYZE TABLE (Statistics Refresh)</h5>
+            <div class="split">
+              <div class="half box">
+                <strong>Why</strong>
+                <ul class="tight">
+                  <li>Optimizer relies on statistics</li>
+                  <li>Bad stats can lead to poor plan selection</li>
+                  <li>Refresh after large data changes</li>
+                </ul>
+              </div>
+              <div class="half box">
+                <strong>Command</strong>
+                <pre><code>ANALYZE TABLE posts;</code></pre>
+                <p class="tiny muted">Improves cardinality estimates used by the optimizer.</p>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Indexing Is a Process</h5>
+            <div class="split">
+              <div class="half">
+                <ul class="tight">
+                  <li>At table creation time, query often incomplete</li>
+                  <li>Data volumes and user behavior change over time</li>
+                  <li>Indexes should be refined using evidence</li>
+                  <li>Continuous improvement keeps performance stable</li>
+                </ul>
+              </div>
+              <div class="half">
+                <ul class="tight">
+                  <li>Workflow</li>
+                  <li><span class="highlight">Observe queries</span></li>
+                  <li><span class="highlight">Analyze plans</span></li>
+                  <li><span class="highlight">Adjust indexes</span></li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Uncertainty at Design Time</h5>
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>At Design Time</th>
+                  <th>After Deployment</th>
+                  <th>Consequence</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Assumed common filters</td>
+                  <td>Different filters dominate</td>
+                  <td>Need new indexes</td>
+                </tr>
+                <tr>
+                  <td>Estimated row counts</td>
+                  <td>Data grows faster than expected</td>
+                  <td>Scans become too slow</td>
+                </tr>
+                <tr>
+                  <td>Simple queries expected</td>
+                  <td>Composite patterns appear</td>
+                  <td>Need composite indexes</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+
+          <section>
+            <h5>Measure and Verify (MariaDB)</h5>
+            <div class="split">
+              <div class="half">
+                <ul class="tight">
+                  <li>Use <code>EXPLAIN</code> to see plan choices</li>
+                  <li>Confirm index usage and estimated rows</li>
+                  <li>Re-check after schema/index changes</li>
+                  <li>Refresh stats if estimates drift</li>
+                </ul>
+              </div>
+              <div class="half">
+                <pre><code>EXPLAIN
+SELECT *
+FROM posts
+WHERE user_id = 5001;</code></pre>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Risks of Indexing</h5>
+            <div class="split">
+              <div class="half">
+                <ul class="tight">
+                  <li>Indexes consume disk space</li>
+                  <li>More memory pressure for caching</li>
+                  <li>More objects to maintain and monitor</li>
+                  <li>Too many indexes can complicate tuning</li>
+                </ul>
+              </div>
+              <div class="half">
+                <ul class="tight">
+                  <li>Trade-off</li>
+                  <li><span class="highlight">Over-indexing slows writes</span></li>
+                  <li><span class="highlight">Under-indexing slows reads</span></li>
+                  <li>Choose based on measured workload</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Heavy Write Tables: Trade-Off</h5>
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Write Pattern</th>
+                  <th>What indexes add</th>
+                  <th>Risk</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Frequent INSERT</td>
+                  <td>Each index must be updated</td>
+                  <td>Throughput drops</td>
+                </tr>
+                <tr>
+                  <td>UPDATE of indexed column</td>
+                  <td>Reposition key in B-Tree</td>
+                  <td>Higher write cost</td>
+                </tr>
+                <tr>
+                  <td>Bulk ingestion</td>
+                  <td>Many index page writes</td>
+                  <td>Long ingest times</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+
+          <section>
+            <h5>Maintenance Cost (Complexity View)</h5>
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Operation</th>
+                  <th>Cost with 0 extra indexes</th>
+                  <th>Cost with k indexes</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>INSERT</td>
+                  <td>Lower overhead</td>
+                  <td>O(k · log n)</td>
+                </tr>
+                <tr>
+                  <td>UPDATE indexed column</td>
+                  <td>Lower overhead</td>
+                  <td>O(k · log n)</td>
+                </tr>
+                <tr>
+                  <td>DELETE</td>
+                  <td>Lower overhead</td>
+                  <td>O(k · log n)</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+
+          <section>
+            <h5>Balanced Strategy</h5>
+            <div class="split">
+              <div class="half">
+                <ul class="tight">
+                  <li>Start with minimal indexes tied to primary use cases</li>
+                  <li>Add composite indexes only for repeated patterns</li>
+                  <li>Avoid indexing low-selectivity columns alone</li>
+                  <li>Remove unused indexes over time</li>
+                </ul>
+              </div>
+              <div class="half">
+                <ul class="tight">
+                  <li>Operational practice</li>
+                  <li><span class="highlight">Measure</span> latency and plans</li>
+                  <li><span class="highlight">Adjust</span> indexes</li>
+                  <li><span class="highlight">Re-measure</span> after changes</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+<!-- SLIDE 1: Populate 500k Rows in MariaDB -->
+<!-- ========================================================= -->
+
+<section>
+  <h5>MariaDB Demo – Populate 500,000 Rows</h5>
+
+  <div class="split">
+
+    <!-- LEFT -->
+    <div class="half">
+
+      <h6>1️⃣ Create Table</h6>
+
+<pre><code class="sql">
+CREATE TABLE posts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  created_at DATETIME,
+  content VARCHAR(100)
+);
+</code></pre>
+
+      <h6>2️⃣ Insert 500,000 Rows</h6>
+
+<pre><code class="sql">
+WITH RECURSIVE seq AS (
+  SELECT 1 AS n
+  UNION ALL
+  SELECT n + 1 FROM seq WHERE n < 500000
+)
+INSERT INTO posts (user_id, created_at, content)
+SELECT
+  FLOOR(RAND()*10000),
+  NOW() - INTERVAL FLOOR(RAND()*365) DAY,
+  CONCAT('Post ', n)
+FROM seq;
+</code></pre>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="half">
+      <ul class="tight">
+        <li>Generates 500k synthetic posts</li>
+        <li>Random user_id (0–9999)</li>
+        <li>Random date within last year</li>
+        <li>Simulates production-like dataset</li>
+        <li>Enough rows to observe index impact</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+
+
+<!-- ========================================================= -->
+<!-- SLIDE 2: Query With and Without Index -->
+<!-- ========================================================= -->
+
+<!-- ========================================================= -->
+<!-- SLIDE: Populate 500,000 Rows (MariaDB-compatible) -->
+<!-- ========================================================= -->
+
+<section>
+  <h5>MariaDB Demo – Populate 500,000 Rows (Compatible)</h5>
+
+  <div class="split">
+
+    <div class="half">
+      <h6>1️⃣ Create Table</h6>
+<pre><code class="sql">
+DROP TABLE IF EXISTS posts;
+
+CREATE TABLE posts (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  created_at DATETIME NOT NULL,
+  content VARCHAR(100) NOT NULL
+);
+</code></pre>
+
+      <h6>2️⃣ Insert 500,000 Rows (Numbers via CROSS JOIN)</h6>
+<pre><code class="sql">
+INSERT INTO posts (user_id, created_at, content)
+SELECT
+  FLOOR(RAND() * 10000) AS user_id,
+  NOW() - INTERVAL FLOOR(RAND() * 365) DAY AS created_at,
+  CONCAT('Post ', n) AS content
+FROM (
+  SELECT
+    (a.d + 10*b.d + 100*c.d + 1000*d.d + 10000*e.d) + 1 AS n
+  FROM (SELECT 0 d UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+        UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) a
+  CROSS JOIN (SELECT 0 d UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) b
+  CROSS JOIN (SELECT 0 d UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) c
+  CROSS JOIN (SELECT 0 d UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) d
+  CROSS JOIN (SELECT 0 d UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4) e
+) nums
+WHERE n <= 500000;
+</code></pre>
+    </div>
+
+    <div class="half">
+      <ul class="tight">
+        <li>Generates integers 1..500000</li>
+        <li>No CTE required</li>
+        <li>Works on older MariaDB</li>
+        <li>Random user_id and timestamps</li>
+      </ul>
+
+      <div class="box" style="margin-top:10px;">
+<pre><code class="sql">
+SELECT COUNT(*) FROM posts;
+</code></pre>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ========================================================= -->
+<!-- SLIDE 2: Query With and Without Index -->
+<!-- ========================================================= -->
+
+<section>
+  <h5>Query Performance – With vs Without Index</h5>
+
+  <div class="split">
+
+    <!-- LEFT -->
+    <div class="half">
+
+      <h6>Without Index</h6>
+
+<pre><code class="sql">
+EXPLAIN ANALYZE
+SELECT *
+FROM posts
+WHERE user_id = 500
+ORDER BY created_at DESC
+LIMIT 20;
+</code></pre>
+
+      <ul class="tight">
+        <li>Full table scan</li>
+        <li>Filesort required</li>
+        <li>O(n)</li>
+      </ul>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="half">
+
+      <h6>Add Composite Index</h6>
+
+<pre><code class="sql">
+CREATE INDEX idx_user_created
+ON posts(user_id, created_at DESC);
+</code></pre>
+
+      <h6>With Index</h6>
+
+<pre><code class="sql">
+EXPLAIN ANALYZE
+SELECT *
+FROM posts
+WHERE user_id = 500
+ORDER BY created_at DESC
+LIMIT 20;
+</code></pre>
+
+      <ul class="tight">
+        <li>Index range scan</li>
+        <li>No filesort</li>
+        <li>Stops after 20 rows</li>
+        <li>O(log n)</li>
+      </ul>
+
+    </div>
+
+  </div>
+</section>
 
         </section>
 
-
-        <!-- ===================== MODULE 7 =====================  -->
 
         <!-- ===================== MODULE 8 =====================  -->
 
@@ -22627,7 +23683,8 @@ CREATE TABLE UserStrict (
                 <ul>
                   <li><a href="https://sqlite.org" target="_blank">https://sqlite.org</a></li>
                   <li><a href="https://www.sqlite.org/download.html"
-                      target="_blank">https://www.sqlite.org/download.html</a></li>
+                      target="_blank">https://www.sqlite.org/download.html</a>
+                  </li>
                   <li><a href="https://sqlitebrowser.org" target="_blank">https://sqlitebrowser.org</a></li>
                   <li><a href="https://github.com/sqlite/sqlite" target="_blank">https://github.com/sqlite/sqlite</a>
                   </li>
@@ -24168,6 +25225,803 @@ WHERE payload @>
               </div>
             </div>
           </section>
+
+        </section>
+
+        <!-- ===================== MariaDB ===================== -->
+
+        <section id="mariadb">
+
+          <!-- ========================================================= -->
+          <!-- 16. MariaDB: Name, Origin, and History -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>MariaDB</h5>
+            <div class="split">
+              <div class="left">
+                <h6>Chronological Timeline</h6>
+                <ul>
+                  <li><strong>1995</strong> – MySQL released by MySQL AB</li>
+                  <li><strong>2008</strong> – Sun Microsystems acquires MySQL</li>
+                  <li><strong>2010</strong> – Oracle acquires Sun</li>
+                  <li><strong>2010</strong> – MariaDB fork created</li>
+                  <li><strong>Today</strong> – Major open source MySQL-compatible DB</li>
+                </ul>
+              </div>
+              <div class="right">
+                <h6>People</h6>
+                <ul>
+                  <li>Created by <strong>Michael "Monty" Widenius</strong></li>
+                  <li>Named after his daughter <strong>Maria</strong></li>
+                  <li>Forked from MySQL after Oracle acquisition</li>
+                  <li>Focused on remaining fully open source</li>
+                  <li>Drop-in replacement for MySQL</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 17. MariaDB Market Share and Adoption -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>MariaDB Market Share</h5>
+            <div class="split">
+              <div class="left">
+                <h6>Relational Database Usage (Approx.)</h6>
+                <ul>
+                  <li><strong>MySQL</strong>: ~35–40%</li>
+                  <li><strong>PostgreSQL</strong>: ~15–20%</li>
+                  <li><strong>MariaDB</strong>: ~10–15%</li>
+                  <li><strong>SQL Server</strong>: ~15%</li>
+                  <li><strong>SQLite</strong>: Widely embedded</li>
+                </ul>
+              </div>
+              <div class="right">
+                <h6>Positioning</h6>
+                <ul>
+                  <li>Strong presence in Linux distributions</li>
+                  <li>Common in traditional LAMP stacks</li>
+                  <li>Backwards compatible with MySQL</li>
+                  <li>Used in web hosting and enterprise systems</li>
+                  <li>Emphasis on performance and storage engines</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 18. MariaDB Official Links and Resources -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>MariaDB Links & Resources</h5>
+            <div class="split">
+              <div class="left">
+                <h6>Official & Community</h6>
+                <ul>
+                  <li>
+                    Official Website:
+                    <a href="https://mariadb.org/" target="_blank">
+                      https://mariadb.org/
+                    </a>
+                  </li>
+                  <li>
+                    Documentation:
+                    <a href="https://mariadb.com/kb/en/" target="_blank">
+                      https://mariadb.com/kb/en/
+                    </a>
+                  </li>
+                  <li>
+                    GitHub:
+                    <a href="https://github.com/MariaDB/server" target="_blank">
+                      https://github.com/MariaDB/server
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div class="right">
+                <h6>Ecosystem & Tools</h6>
+                <ul>
+                  <li>phpMyAdmin</li>
+                  <li>HeidiSQL</li>
+                  <li>MariaDB ColumnStore</li>
+                  <li>Galera Cluster</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 19. MariaDB License -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>MariaDB License</h5>
+            <div class="split">
+              <div class="left">
+                <h6>License Model</h6>
+                <ul>
+                  <li>GPL v2 (server)</li>
+                  <li>Fully open source</li>
+                  <li>Commercial support available</li>
+                  <li>Modification allowed</li>
+                  <li>Redistribution allowed</li>
+                  <li>No warranty provided</li>
+                </ul>
+              </div>
+              <div class="right">
+                <h6>GPL v2 Excerpt</h6>
+                <pre><code class="text">
+This program is free software; you can redistribute it
+and/or modify it under the terms of the GNU General Public
+License as published by the Free Software Foundation;
+either version 2 of the License.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY.
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Why MariaDB?</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Open source continuation of MySQL</li>
+                  <li>Strong ACID compliance (InnoDB default)</li>
+                  <li>Multi-user concurrency</li>
+                  <li>Multiple storage engines</li>
+                  <li>High compatibility with MySQL</li>
+                  <li>Good for traditional web architectures</li>
+                </ul>
+              </div>
+              <div class="right" style="text-align:center;">
+                <br>
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ2ls5NQLIV1N31Vum_cJB4AHk3mfHI0rbW5Q&s"
+                  alt="MariaDB logo" style="max-height:240px;">
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SQLite vs MariaDB: Query Comparison -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>SQLite vs MariaDB: Query Comparison</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Embedded database</li>
+                  <li>Single writer</li>
+                  <li>File-based storage</li>
+                </ul>
+              </div>
+              <div class="right">
+                <ul>
+                  <li>Client-server architecture</li>
+                  <li>Multiple concurrent users</li>
+                  <li>Network accessible</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SQLite vs PostgreSQL vs MariaDB -->
+          <!-- BASIC CONSTRAINTS + BASIC DATATYPES + SIMPLE SYNTAX -->
+          <!-- Only core differences | Clean and Simple -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>PRIMARY KEY</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>Feature</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>MariaDB</th>
+              </tr>
+              <tr>
+                <td>AutoPrimary</td>
+                <td>ROWID</td>
+                <td>SERIAL</td>
+                <td>AUTO_INCREMENT</td>
+              </tr>
+              <tr>
+                <td>Keyword</td>
+                <td>AUTOINCREMENT</td>
+                <td>GENERATED</td>
+                <td>AUTO_INCREMENT</td>
+              </tr>
+            </table>
+          </section>
+
+          <section>
+            <h5>UNIQUE</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>Feature</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>MariaDB</th>
+              </tr>
+              <tr>
+                <td>UniqueConstraint</td>
+                <td>YES</td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+              <tr>
+                <td>MultipleNULL</td>
+                <td>YES</td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+            </table>
+          </section>
+
+          <section>
+            <h5>NOT NULL</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>Feature</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>MariaDB</th>
+              </tr>
+              <tr>
+                <td>NotNull</td>
+                <td>YES</td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+              <tr>
+                <td>StrictTyping</td>
+                <td><span class="highlight">NO</span></td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+            </table>
+          </section>
+
+          <section>
+            <h5>DEFAULT</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>Feature</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>MariaDB</th>
+              </tr>
+              <tr>
+                <td>DefaultValue</td>
+                <td>YES</td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+              <tr>
+                <td>NowFunction</td>
+                <td>datetime</td>
+                <td>NOW</td>
+                <td>NOW</td>
+              </tr>
+            </table>
+          </section>
+
+          <section>
+            <h5>CHECK</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>Feature</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>MariaDB</th>
+              </tr>
+              <tr>
+                <td>CheckConstraint</td>
+                <td>YES</td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+              <tr>
+                <td>Deferrable</td>
+                <td><span class="highlight">NO</span></td>
+                <td>YES</td>
+                <td><span class="highlight">NO</span></td>
+              </tr>
+            </table>
+          </section>
+
+          <section>
+            <h5>FOREIGN KEY</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>Feature</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>MariaDB</th>
+              </tr>
+              <tr>
+                <td>ForeignKey</td>
+                <td>PRAGMA</td>
+                <td>ON</td>
+                <td>INNODB</td>
+              </tr>
+              <tr>
+                <td>Cascade</td>
+                <td>YES</td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+            </table>
+          </section>
+
+          <section>
+            <h5>INTEGER</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>TypeRule</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>MariaDB</th>
+              </tr>
+              <tr>
+                <td>Typing</td>
+                <td>AFFINITY</td>
+                <td>STRICT</td>
+                <td>STRICT</td>
+              </tr>
+            </table>
+          </section>
+
+          <section>
+            <h5>BOOLEAN</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>TypeRule</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>MariaDB</th>
+              </tr>
+              <tr>
+                <td>BooleanType</td>
+                <td>INTEGER</td>
+                <td>BOOLEAN</td>
+                <td>TINYINT</td>
+              </tr>
+            </table>
+          </section>
+
+          <section>
+            <h5>DATE / TIME</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>TypeRule</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>MariaDB</th>
+              </tr>
+              <tr>
+                <td>DateStorage</td>
+                <td>TEXT</td>
+                <td>DATE</td>
+                <td>DATE</td>
+              </tr>
+              <tr>
+                <td>TimestampTZ</td>
+                <td><span class="highlight">NO</span></td>
+                <td>YES</td>
+                <td><span class="highlight">NO</span></td>
+              </tr>
+            </table>
+          </section>
+
+          <section>
+            <h5>JSON / ARRAY</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>Type</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>MariaDB</th>
+              </tr>
+              <tr>
+                <td>JSON</td>
+                <td>TEXT</td>
+                <td>JSONB</td>
+                <td>JSON</td>
+              </tr>
+              <tr>
+                <td>ARRAY</td>
+                <td><span class="highlight">NO</span></td>
+                <td>YES</td>
+                <td><span class="highlight">NO</span></td>
+              </tr>
+            </table>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- FOREIGN KEY SYNTAX COMPARISON -->
+          <!-- SQLite vs PostgreSQL vs MariaDB -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>FOREIGN KEY Syntax Comparison</h5>
+
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>Database</th>
+                <th>Example Syntax</th>
+                <th>Notes</th>
+              </tr>
+
+              <tr>
+                <td>SQLite</td>
+                <td>
+                  <pre><code class="sql">
+CREATE TABLE orders (
+  id INTEGER PRIMARY KEY,
+  user_id INTEGER,
+  FOREIGN KEY (user_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE
+);
+</code></pre>
+                </td>
+                <td>
+                  PRAGMA foreign_keys = ON required
+                </td>
+              </tr>
+
+              <tr>
+                <td>PostgreSQL</td>
+                <td>
+                  <pre><code class="sql">
+CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  user_id INT
+    REFERENCES users(id)
+    ON DELETE CASCADE
+);
+</code></pre>
+                </td>
+                <td>
+                  Enforced by default<br>
+                  Supports DEFERRABLE
+                </td>
+              </tr>
+
+              <tr>
+                <td>MariaDB</td>
+                <td>
+                  <pre><code class="sql">
+CREATE TABLE orders (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  CONSTRAINT fk_user
+    FOREIGN KEY (user_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE
+) ENGINE=InnoDB;
+</code></pre>
+                </td>
+                <td>
+                  Requires InnoDB engine
+                </td>
+              </tr>
+
+            </table>
+          </section>
+
+
+          <!-- ========================================================= -->
+          <!-- STORAGE ENGINE COMPARISON -->
+          <!-- SQLite vs PostgreSQL vs MariaDB -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Storage Engine Concept</h5>
+
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>Database</th>
+                <th>Engine Model</th>
+                <th>Default Engine</th>
+                <th>Multiple Engines</th>
+              </tr>
+
+              <tr>
+                <td>SQLite</td>
+                <td>Embedded</td>
+                <td>Single</td>
+                <td><span class="highlight">NO</span></td>
+              </tr>
+
+              <tr>
+                <td>PostgreSQL</td>
+                <td>Integrated</td>
+                <td>Native</td>
+                <td><span class="highlight">NO</span></td>
+              </tr>
+
+              <tr>
+                <td>MariaDB</td>
+                <td>Pluggable</td>
+                <td>InnoDB</td>
+                <td>YES</td>
+              </tr>
+
+            </table>
+
+            <br>
+
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>Concept</th>
+                <th>Meaning</th>
+              </tr>
+
+              <tr>
+                <td>Engine</td>
+                <td>Storage + Locking + Transaction implementation</td>
+              </tr>
+
+              <tr>
+                <td>InnoDB</td>
+                <td>Row-level locking + ACID</td>
+              </tr>
+
+              <tr>
+                <td>MyISAM</td>
+                <td>Table-level locking + No transactions</td>
+              </tr>
+
+            </table>
+
+          </section>
+
+          <section>
+            <h5>When to Use Which</h5>
+
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>Use Case</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>MariaDB</th>
+              </tr>
+
+              <tr>
+                <td>Prototyping</td>
+                <td>GOOD</td>
+                <td>GOOD</td>
+                <td>GOOD</td>
+              </tr>
+
+              <tr>
+                <td>SingleUser</td>
+                <td>GOOD</td>
+                <td>OK</td>
+                <td>OK</td>
+              </tr>
+
+              <tr>
+                <td>EmbeddedApp</td>
+                <td>GOOD</td>
+                <td><span class="highlight">NO</span></td>
+                <td><span class="highlight">NO</span></td>
+              </tr>
+
+              <tr>
+                <td>WebApp</td>
+                <td>OK</td>
+                <td>GOOD</td>
+                <td>GOOD</td>
+              </tr>
+
+              <tr>
+                <td>MultiUser</td>
+                <td>OK</td>
+                <td>GOOD</td>
+                <td>GOOD</td>
+              </tr>
+
+              <tr>
+                <td>LAMPStack</td>
+                <td><span class="highlight">NO</span></td>
+                <td>OK</td>
+                <td>GOOD</td>
+              </tr>
+
+              <tr>
+                <td>Production</td>
+                <td>OK</td>
+                <td>GOOD</td>
+                <td>GOOD</td>
+              </tr>
+
+            </table>
+
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SQL ANSI/ISO STANDARD COMPLIANCE -->
+          <!-- Based on Core Standard Features -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>SQL Standard Alignment Comparison</h5>
+
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>Property</th>
+                <th>SQLite</th>
+                <th>MariaDB</th>
+                <th>PostgreSQL</th>
+              </tr>
+
+              <tr>
+                <td>Large ANSI / ISO</td>
+                <td>LOW</td>
+                <td>MEDIUM</td>
+                <td>HIGH</td>
+              </tr>
+
+              <tr>
+                <td>FullOuterJoin</td>
+                <td><span class="highlight">NO</span></td>
+                <td><span class="highlight">NO</span></td>
+                <td>YES</td>
+              </tr>
+
+              <tr>
+                <td>Deferrable</td>
+                <td><span class="highlight">NO</span></td>
+                <td><span class="highlight">NO</span></td>
+                <td>YES</td>
+              </tr>
+
+              <tr>
+                <td>CheckEnforced</td>
+                <td>BASIC</td>
+                <td>GOOD</td>
+                <td>FULL</td>
+              </tr>
+
+              <tr>
+                <td>FilterClause</td>
+                <td><span class="highlight">NO</span></td>
+                <td><span class="highlight">NO</span></td>
+                <td>YES</td>
+              </tr>
+
+              <tr>
+                <td>StrongTyping</td>
+                <td><span class="highlight">NO</span></td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+
+            </table>
+
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- FILTER Clause – Basic Example (Flowers) -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>FILTER Clause Example (Flowers)</h5>
+
+            <div class="split">
+
+              <!-- LEFT SIDE: TABLE -->
+              <div class="left">
+                <pre><code class="sql">
+CREATE TABLE flowers (
+  id INT,
+  name TEXT,
+  color TEXT,
+  price NUMERIC
+);
+
+INSERT INTO flowers VALUES
+(1, 'Rose',  'Red',   5),
+(2, 'Lily',  'White', 7),
+(3, 'Tulip', 'Red',   4),
+(4, 'Daisy', 'White', 3);
+</code></pre>
+              </div>
+
+              <!-- RIGHT SIDE: FILTER QUERY -->
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  COUNT(*) AS total_flowers,
+  COUNT(*) FILTER (WHERE color = 'Red') AS red_flowers,
+  AVG(price) FILTER (WHERE color = 'White') AS avg_white_price
+FROM flowers;
+</code></pre>
+
+                <ul>
+                  <li>Counts all flowers</li>
+                  <li>Counts only red flowers</li>
+                  <li>Averages only white flowers</li>
+                  <li>No GROUP BY needed</li>
+                </ul>
+
+                <p><strong>Note:</strong> FILTER supported in PostgreSQL</p>
+              </div>
+
+            </div>
+
+          </section>
+
+          <section>
+            <h5>SQL Standard Compliance</h5>
+
+            <div style="margin-top:40px; text-align:center; font-size:14pt;">
+
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+
+                <div style="width:140px; text-align:left;">
+                  Less<br>Standard
+                </div>
+
+                <div style="flex:1; position:relative; height:120px;">
+
+                  <div style="
+          position:absolute;
+          top:60px;
+          left:0;
+          right:0;
+          height:4px;
+          background:#999;
+        "></div>
+
+                  <!-- SQLite -->
+                  <div style="
+          position:absolute;
+          top:20px;
+          left:10%;
+          text-align:center;
+        ">
+                    <div style="font-weight:bold;">SQLite</div>
+                  </div>
+
+                  <!-- MariaDB -->
+                  <div style="
+          position:absolute;
+          top:20px;
+          left:45%;
+          text-align:center;
+        ">
+                    <div style="font-weight:bold;">MariaDB</div>
+                  </div>
+
+                  <!-- PostgreSQL -->
+                  <div style="
+          position:absolute;
+          top:20px;
+          left:80%;
+          text-align:center;
+        ">
+                    <div style="font-weight:bold;">PostgreSQL</div>
+                  </div>
+
+                </div>
+
+                <div style="width:140px; text-align:right;">
+                  More<br>Standard
+                </div>
+
+              </div>
+
+            </div>
+          </section>
+
 
         </section>
 

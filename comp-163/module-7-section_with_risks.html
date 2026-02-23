@@ -1,0 +1,363 @@
+<section id="module-7">
+
+  <section>
+    <h5>Database Indexing: Why It Matters</h5>
+    <div class="split">
+      <div class="half">
+        <ul class="tight">
+          <li>Queries must stay fast as row counts grow</li>
+          <li>Scanning entire tables increases latency</li>
+          <li>Large datasets require structured search paths</li>
+          <li>Efficient lookups are critical for user-facing systems</li>
+        </ul>
+      </div>
+      <div class="half">
+        <ul class="tight">
+          <li>Goal</li>
+          <li><span class="highlight">Reduce search space</span></li>
+          <li><span class="highlight">Avoid linear scans</span></li>
+          <li>Keep performance stable at scale</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+
+  <section>
+    <h5>Example Workload (Posts Table)</h5>
+    <table class="tbl">
+      <thead>
+        <tr><th>Query</th><th>Intent</th><th>What the engine must do</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>WHERE user_id = 5001</code></td>
+          <td>Profile feed</td>
+          <td>Find all rows for one user</td>
+        </tr>
+        <tr>
+          <td><code>WHERE created_at &gt;= '2026-01-01'</code></td>
+          <td>Recent posts</td>
+          <td>Locate start point then read in order</td>
+        </tr>
+        <tr>
+          <td><code>WHERE user_id = 5001 ORDER BY created_at DESC LIMIT 20</code></td>
+          <td>Latest 20 posts</td>
+          <td>Find user range, read newest first, stop early</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+
+
+ <!-- 0 -->   <style> .split { display: flex; justify-content: space-between; gap: 18px; align-items: flex-start; } .left, .right { width: 49%; } .box { border: 1px solid #666; padding: 10px; border-radius: 8px; } .tbl { width: 100%; border-collapse: collapse; font-size: 0.82rem; } .tbl th, .tbl td { border: 1px solid #666; padding: 6px 8px; vertical-align: top; } .small { font-size: 0.92em; } .tiny { font-size: 0.78em; } .muted { opacity: 0.82; } .tight li { margin: 6px 0; } .ph { border: 2px dashed #888; padding: 18px; text-align: center; border-radius: 10px; } .tiers { display: grid; gap: 14px; align-items: center; } .tier { border: 1px solid #666; border-radius: 10px; padding: 14px 10px; text-align: center; font-weight: 600; } pre { font-size: 0.85em; } code { font-size: 0.95em; } </style> <!-- ===================== MODULE 7 ===================== --> <!-- 1 --> <section> <h5>Module 7: Database Indexing (MariaDB / InnoDB)</h5> <div class="split"> <div class="half"> <ul class="tight"> <li>Why indexes exist</li> <li>B-Tree scans vs full table scans</li> <li>Complexity: O(n) vs O(log n)</li> <li>Designing the right indexes</li> </ul> </div> <div class="half"> <div class="ph">Use Case: Social Media Posts<br><span class="tiny muted">Single-table examples, many posts</span></div> </div> </div> </section> <!-- 2 --> <section> <h5>Domain Table: posts</h5> <div class="split"> <div class="half"> <ul class="tight"> <li>One table is enough to study indexing behavior</li> <li>Assume millions of rows (high scale)</li> <li>InnoDB engine (MariaDB default for most setups)</li> </ul> </div> <div class="half">
+<pre><code>CREATE TABLE posts ( post_id BIGINT PRIMARY KEY AUTO_INCREMENT, user_id BIGINT NOT NULL, created_at DATETIME NOT NULL, content TEXT, likes_count INT DEFAULT 0
+) ENGINE=InnoDB;</code></pre> </div> </div> </section> <!-- 3 --> <section> <h5>Workload Assumption</h5> <div class="split"> <div class="half"> <table class="tbl"> <thead><tr><th>Scale</th><th>Meaning</th></tr></thead> <tbody> <tr><td>n = 50,000,000</td><td>Total rows in <code>posts</code></td></tr> <tr><td>Heavy reads</td><td>Feed pages, profiles, timelines</td></tr> <tr><td>Continuous writes</td><td>New posts arriving all day</td></tr> </tbody> </table> </div> <div class="half"> <div class="tiers" style="grid-template-columns: repeat(3, 1fr);"> <div class="tier">Write</div> <div class="tier">Read</div> <div class="tier">Optimize</div> </div> <p class="tiny muted" style="margin-top: 0.8rem;">Indexing improves reads, but adds write overhead.</p> </div> </div> </section> <!-- 4 -->  <!-- 5 --> <section> <h5>Query Plans</h5> <div class="split"> <div class="left box"> <strong>Plan A</strong> <ul class="tight"> <li>Plan: Full table scan</li> <li>Reads every row</li> <li>Cost grows linearly</li> </ul> </div> <div class="right box"> <strong>Plan B</strong> <ul class="tight"> <li>Plan: B-Tree index scan</li> <li>Jump to matching keys</li> <li>Cost grows logarithmically</li> </ul> </div> </div> </section> <!-- 6 --> <section> <h5>Full Table Scan – </h5> <div class="split"> <div class="half"> <ul class="tight"> <li>Database reads row by row</li> <li>Evaluates predicate for each row</li> <li>Stops only at end of table</li> </ul> </div> <div class="half">
+<pre><code>Row1 -> check user_id == 5001?
+Row2 -> check user_id == 5001?
+Row3 -> check user_id == 5001?
+...
+RowN -> check user_id == 5001?</code></pre> </div> </div> </section> <!-- 7 --> <section> <h5>Full Table Scan – Complexity</h5> <div class="split"> <div class="half"> <table class="tbl"> <thead><tr><th>Metric</th><th>Value</th></tr></thead> <tbody> <tr><td>Worst-case comparisons</td><td>n</td></tr> <tr><td>Time complexity</td><td><strong>O(n)</strong></td></tr> <tr><td>n = 50,000,000</td><td>Up to 50,000,000 checks</td></tr> </tbody> </table> </div> <div class="half"> <div class="tiers" style="grid-template-columns: repeat(4, 1fr);"> <div class="tier">Read</div> <div class="tier">Check</div> <div class="tier">Repeat</div> <div class="tier">End</div> </div> </div> </div> </section> <!-- 8 --> <section> <h5>What is a B-Tree Index (InnoDB)?</h5> <div class="split"> <div class="half"> <ul class="tight"> <li>Balanced search tree optimized for disk pages</li> <li>Keys remain sorted</li> <li>Height remains small as table grows</li> <li>Search uses log steps (not linear)</li> </ul> </div> <div class="half">
+        <div class="ph">IMG</div>
+      </div>
+    </div> </div> </section> <!-- 9 --> <section> <h5>B-Tree Shape</h5> <div class="split"> <div class="half">
+<pre><code> [ 5000 | 9000 ] / | \ [1000|3000] [6000|7000] [10000|15000] / \ | / \ ... ... ... ... ...
+</code></pre> <p class="tiny muted">Balanced height: many keys per node → low height.</p> </div> <div class="half">
+        <div class="ph">IMG</div>
+      </div>
+    </div> </div> </section> <!-- 10 --> <section> <h5>B-Tree Search Path </h5> <div class="split"> <div class="half"> <strong>Search for user_id = 5001</strong> <ul class="tight"> <li>Compare at root</li> <li>Choose child references</li> <li>Repeat until leaf</li> </ul> </div> <div class="half">
+        <div class="ph">IMG</div>
+      </div>
+    </div> </div> </section> <!-- 11 --> <section> <h5>B-Tree Complexity (Key Point)</h5> <div class="split"> <div class="half"> <table class="tbl"> <thead><tr><th>Operation</th><th>Typical Complexity</th></tr></thead> <tbody> <tr><td>Search (point lookup)</td><td><strong>O(log n)</strong></td></tr> <tr><td>Insert</td><td>O(log n) (may split)</td></tr> <tr><td>Delete</td><td>O(log n) (may merge)</td></tr> </tbody> </table> </div> <div class="half">
+        <div class="ph">IMG</div>
+      </div>
+    </div> </div> </section> <!-- 12 --> <section> <h5>50M Rows: Full Scan vs B-Tree Steps</h5> <div class="split"> <div class="left box"> <strong>Full Scan</strong> <ul class="tight"> <li>Checks ≈ 50,000,000</li> <li>Time: O(n)</li> <li>Heavy I/O + CPU</li> </ul> </div> <div class="right box"> <strong>B-Tree</strong> <ul class="tight"> <li>Steps ≈ log₂(50,000,000) ≈ 26</li> <li>Time: O(log n)</li> <li>Small I/O footprint</li> </ul> </div> </div> <!-- 14 --> <section> <h5>Plan A/Plan B Plan – EXPLAIN </h5> <div class="split"> <div class="left box"> <strong>Plan A</strong>
+<pre><code>EXPLAIN SELECT * FROM posts
+WHERE user_id = 5001; type: ALL
+key: NULL
+rows: 50000000</code></pre> </div> <div class="right box"> <strong>Plan B</strong>
+<pre><code>EXPLAIN SELECT * FROM posts
+WHERE user_id = 5001; type: ref (or range)
+key: idx_posts_user
+rows: small</code></pre> </div> </div> </section>
+
+
+  <section>
+    <h5>Full Table Scan vs B-Tree Scan (Summary)</h5>
+    <table class="tbl">
+      <thead>
+        <tr><th>Aspect</th><th>Full Table Scan</th><th>B-Tree Scan</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Work growth</td><td>Linear with n</td><td>Logarithmic with n</td></tr>
+        <tr><td>Complexity</td><td><strong>O(n)</strong></td><td><strong>O(log n)</strong></td></tr>
+        <tr><td>50,000,000 rows</td><td>Up to 50,000,000 checks</td><td>~26 navigation steps + matches</td></tr>
+        <tr><td>Typical symptom</td><td>Latency increases as data grows</td><td>Stable latency at scale</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+
+
+
+
+  <section>
+    <h5>Create an Index for User Lookups (MariaDB)</h5>
+    <div class="split">
+      <div class="half">
+        <ul class="tight">
+          <li>Build a B-Tree over <code>user_id</code></li>
+          <li>Accelerates queries that filter by user</li>
+          <li>Reduces work from O(n) to O(log n)</li>
+          <li>Best when many posts exist</li>
+        </ul>
+      </div>
+      <div class="half">
+<pre><code>CREATE INDEX idx_posts_user
+ON posts(user_id);</code></pre>
+      </div>
+    </div>
+  </section>
+
+
+ <!-- 15 -->  <!-- 16 -->  <!-- 17 -->  <!-- 18 -->  <!-- 19 --> <section> <h5>Point Lookup vs Range Scan</h5> <div class="split"> <div class="left box"> <strong>Point Lookup</strong> <ul class="tight"> <li><code>WHERE post_id = ...</code></li> <li>Locate one key</li> <li>Cost: O(log n)</li> </ul> </div> <div class="right box"> <strong>Range Scan</strong> <ul class="tight"> <li><code>WHERE created_at BETWEEN ...</code></li> <li>Locate start then walk leaf pages</li> <li>Cost: O(log n + k)</li> </ul> </div> </div> </section> <!-- 20 --> <section> <h5>Index on created_at (Timeline Queries)</h5> <div class="split"> <div class="half"> <ul class="tight"> <li>Social feeds frequently filter by time</li> <li>Index enables range scan</li> <li>Efficient for “recent posts” pages</li> </ul> </div> <div class="half">
+<pre><code>CREATE INDEX idx_posts_created
+ON posts(created_at);</code></pre> </div> </div> </section> <!-- 21 --> <section> <h5>Range Query Example</h5> <div class="split"> <div class="half"> <strong>Query</strong> <ul class="tight"> <li>Retrieve posts after a date</li> <li>Uses <code>idx_posts_created</code></li> </ul> </div> <div class="half">
+<pre><code>SELECT post_id, user_id, created_at
+FROM posts
+WHERE created_at >= '2026-01-01'
+ORDER BY created_at ASC;</code></pre> </div> </div> </section> <!-- 22 --> <section> <h5>Range Scan – Leaf Walk Diagram</h5> <div class="split"> <div class="half"> <ul class="tight"> <li>Jump to first leaf >= start</li> <li>Then sequentially read leaf pages</li> <li>Stops when end condition fails</li> </ul> </div> <div class="half">
+<pre><code>Find start leaf: O(log n)
+Leaf page #101 -> #102 -> #103 -> ...
+Collect k matches
+Total: O(log n + k)</code></pre> </div> </div> </section> <!-- 23 --> <section> <h5>Composite Index for Profile Timeline</h5> <div class="split"> <div class="half"> <ul class="tight"> <li>Common: posts by user, ordered by time</li> <li>Composite index supports filter + sort</li> <li>Can avoid expensive sorting step</li> </ul> </div> <div class="half">
+<pre><code>CREATE INDEX idx_user_created
+ON posts(user_id, created_at);</code></pre> </div> </div> </section> <!-- 24 --> <section> <h5>Plan A/Plan B: ORDER BY Cost</h5> <div class="split"> <div class="left box"> <strong>Plan A</strong> <ul class="tight"> <li>Filter by user_id</li> <li>Then sort by created_at</li> <li>Sorting cost increases with result size</li> </ul>
+<pre><code>WHERE user_id = 5001
+ORDER BY created_at</code></pre> </div> <div class="right box"> <strong>Plan B (idx_user_created)</strong> <ul class="tight"> <li>Index returns rows already ordered</li> <li>May avoid filesort</li> <li>Less CPU + memory</li> </ul>
+<pre><code>INDEX(user_id, created_at)
+scan in order</code></pre> </div> </div> </section> <!-- 25 --> <section> <h5>Left-Most Prefix Rule (Composite Index)</h5> <div class="split"> <div class="half"> <table class="tbl"> <thead><tr><th>Index</th><th>Usable For</th></tr></thead> <tbody> <tr><td>(user_id, created_at)</td><td>user_id ✓</td></tr> <tr><td>(user_id, created_at)</td><td>user_id + created_at ✓</td></tr> <tr><td>(user_id, created_at)</td><td>created_at alone ✗</td></tr> </tbody> </table> </div> <div class="half">
+<pre><code>WHERE user_id = 5001 -- uses index
+WHERE user_id = 5001 AND created_at >= ... -- uses index
+WHERE created_at >= ... -- does NOT use this index</code></pre> </div> </div> </section> <!-- 26 --> <section> <h5>Covering Index (Avoid Row Fetch)</h5> <div class="split"> <div class="half"> <ul class="tight"> <li>If query needs only indexed columns</li> <li>Engine can answer from index leaf pages</li> <li>Fewer random I/O operations</li> </ul> </div> <div class="half">
+<pre><code>CREATE INDEX idx_cover
+ON posts(user_id, created_at, likes_count);</code></pre> </div> </div> </section> <!-- 27 --> <section> <h5>Covering Index</h5> <div class="split"> <div class="left box"> <strong>Plan A</strong> <ul class="tight"> <li>Use idx_user_created to find PKs</li> <li>Then fetch each row from clustered PK</li> <li>Many random reads</li> </ul> </div> <div class="right box"> <strong>Plan B (Covering)</strong> <ul class="tight"> <li>Return columns directly from index</li> <li>No extra row lookups</li> <li>Less I/O, faster</li> </ul> </div> </div> </section> <!-- 28 --> <section> <h5>Index Selectivity (Why It Matters)</h5> <div class="split"> <div class="half"> <ul class="tight"> <li>High cardinality → index is powerful</li> <li>Low cardinality → many duplicates</li> <li>Optimizer may skip weak indexes</li> </ul> </div> <div class="half"> <table class="tbl"> <thead><tr><th>Column</th><th>Typical Selectivity</th><th>Index?</th></tr></thead> <tbody> <tr><td>post_id</td><td>Very high (unique)</td><td>Yes (PK)</td></tr> <tr><td>user_id</td><td>High (many users)</td><td>Yes</td></tr> <tr><td>likes_count</td><td>Often low-ish</td><td>Usually no alone</td></tr> </tbody> </table> </div> </div> </section> <!-- 29 --> <section> <h5>Why Indexing Costs Writes</h5> <div class="split"> <div class="left box"> <strong>INSERT</strong> <ul class="tight"> <li>Find leaf position</li> <li>Insert key</li> <li>May split page</li> <li>Cost: O(log n)</li> </ul> </div> <div class="right box"> <strong>UPDATE (indexed column)</strong> <ul class="tight"> <li>Delete old key</li> <li>Insert new key</li> <li>May rebalance</li> <li>Cost: O(log n)</li> </ul> </div> </div> </section> <!-- 30 --> <section> <h5>Index Fanout & Height ()</h5> <div class="split"> <div class="half"> <ul class="tight"> <li>Nodes store many keys per page</li> <li>High fanout → short height</li> <li>Short height → few page reads</li> </ul> </div> <div class="half">
+        <div class="ph">IMG</div>
+      </div>
+    </div> </div> </section> <!-- 31 --> <section> <h5>Predicate Types & Index Use</h5> <div class="split"> <div class="half"> <table class="tbl"> <thead><tr><th>Predicate</th><th>Index Friendly?</th><th>Reason</th></tr></thead> <tbody> <tr><td><code>=</code></td><td>Yes</td><td>Exact match</td></tr> <tr><td><code>BETWEEN</code></td><td>Yes</td><td>Range scan</td></tr> <tr><td><code>LIKE 'abc%'</code></td><td>Often</td><td>Prefix search</td></tr> <tr><td><code>LIKE '%abc'</code></td><td>No</td><td>Leading wildcard breaks ordering</td></tr> </tbody> </table> </div> <div class="half">
+<pre><code>Good: user_id = 5001
+Good: created_at BETWEEN a AND b
+Bad: content LIKE '%hello%'</code></pre> </div> </div> </section> <!-- 32 --> <section> <h5>Indexing TEXT Content? (Practical Note)</h5> <div class="split"> <div class="left box"> <strong>Problem</strong> <ul class="tight"> <li><code>content</code> is TEXT (large)</li> <li>B-Tree is not ideal for substring search</li> <li>Would cause large index and slow writes</li> </ul> </div> <div class="right box"> <strong>Typical Approach</strong> <ul class="tight"> <li>Keep B-Tree indexes for filters/sorts</li> <li>Use full-text search (separate topic)</li> <li>Or external search engine</li> </ul> </div> </div> </section> <!-- 33 --> <section> <h5>SHOW INDEX (MariaDB Introspection)</h5> <div class="split"> <div class="half"> <ul class="tight"> <li>Verify which indexes exist</li> <li>See key columns and sequence</li> <li>Check uniqueness and cardinality</li> </ul> </div> <div class="half">
+<pre><code>SHOW INDEX FROM posts;</code></pre> </div> </div> </section> <!-- 34 --> <section> <h5>ANALYZE TABLE (Statistics Refresh)</h5> <div class="split"> <div class="left box"> <strong>Why</strong> <ul class="tight"> <li>Optimizer relies on statistics</li> <li>Bad stats → poor plan choice</li> <li>Refresh after large data changes</li> </ul> </div> <div class="right box"> <strong>Command</strong>
+<pre><code>ANALYZE TABLE posts;</code></pre> <p class="tiny muted">Improves cardinality estimates used by optimizer.</p> </div> </div> </section> <!-- 35 --> <section> <h5>Using LIMIT with Index</h5> <div class="split"> <div class="half"> <ul class="tight"> <li>Feeds often request “top 20” posts</li> <li>Plan B, engine can stop early</li> <li>Less scanning, faster response</li> </ul> </div> <div class="half">
+<pre><code>SELECT post_id, created_at<br>
+FROM posts<br>
+WHERE user_id = 5001<br>
+ORDER BY created_at DESC<br>
+LIMIT 20;</code></pre> </div> </div> </section> <!-- 36 --> <section> <h5>Plan A/Plan B: LIMIT 20</h5> <div class="split"> <div class="left box"> <strong>Plan A</strong> <ul class="tight"> <li>Scan many rows to find matches</li> <li>Sort results</li> <li>Only then take 20</li> </ul> </div> <div class="right box"> <strong>Plan B (idx_user_created)</strong> <ul class="tight"> <li>Read newest matching keys directly</li> <li>Stop after 20</li> <li>Greatly reduced work</li> </ul> </div> </div> </section> <!-- 37 --> <section> <h5>Index Condition Pushdown </h5> <div class="split"> <div class="half"> <ul class="tight"> <li>Use index to filter early</li> <li>Reduce row fetches from clustered data</li> <li>Best when extra filters are also in index</li> </ul> </div> <div class="half">
+<pre><code>Index filters -> fewer row lookups
+More columns in index -> more filtering early</code></pre> </div> </div> </section> <!-- 38 --> <section> <h5>Choosing Indexes: A Simple Checklist</h5> <div class="split"> <div class="left box"> <strong>Reads</strong> <ul class="tight"> <li>Index frequent WHERE columns</li> <li>Index frequent ORDER BY columns</li> <li>Use composite indexes for combined patterns</li> </ul> </div> <div class="right box"> <strong>Writes</strong> <ul class="tight"> <li>Each index slows INSERT/UPDATE/DELETE</li> <li>Index only what you need</li> <li>Measure using EXPLAIN + timing</li> </ul> </div> </div> </section> <!-- 39 --> <section> <h5>Bad Index Example (Low Selectivity)</h5> <div class="split"> <div class="half"> <strong>Example</strong> <ul class="tight"> <li>Many posts have <code>likes_count = 0</code></li> <li>Index would point to huge portion of table</li> <li>Optimizer may prefer full scan</li> </ul> </div> <div class="half">
+<pre><code>CREATE INDEX idx_likes
+ON posts(likes_count); -- Often not helpful alone:
+SELECT * FROM posts
+WHERE likes_count = 0;</code></pre> </div> </div> </section> <!-- 40 --> <section> <h5>Filter + Sort Patterns (Table)</h5> <table class="tbl"> <thead> <tr><th>Query Pattern</th><th>Good Index</th><th>Why</th></tr> </thead> <tbody> <tr> <td><code>WHERE user_id = ?</code></td> <td><code>(user_id)</code></td> <td>Fast profile fetch</td> </tr> <tr> <td><code>WHERE created_at &gt; ?</code></td> <td><code>(created_at)</code></td> <td>Fast time ranges</td> </tr> <tr> <td><code>WHERE user_id = ? ORDER BY created_at</code></td> <td><code>(user_id, created_at)</code></td> <td>Filter + sorted output</td> </tr> </tbody> </table> </section> <!-- 41 --> <section> <h5>Index Design: Plan A/Plan B (Concrete)</h5> <div class="split"> <div class="left box"> <strong>Plan A</strong>
+<pre><code>SELECT post_id, created_at
+FROM posts
+WHERE user_id = 5001
+ORDER BY created_at DESC;</code></pre> <ul class="tight"> <li>Possible full scan on user_id</li> <li>Sort step likely</li> </ul> </div> <div class="right box"> <strong>Plan B</strong>
+<pre><code>CREATE INDEX idx_user_created
+ON posts(user_id, created_at); -- same query, faster plan</code></pre> <ul class="tight"> <li>Index range scan</li> <li>May avoid filesort</li> </ul> </div> </div> </section> <!-- 42 --> <section> <h5>Index Scan vs Table Scan </h5> <div class="split"> <div class="left box"> <strong>Full Scan</strong>
+<pre><code>Table pages:
+P1 -> P2 -> P3 -> ... -> PN</code></pre> <p class="tiny muted">Reads everything (O(n)).</p> </div> <div class="right box"> <strong>B-Tree Scan</strong>
+<pre><code>Index pages:
+Root -> Internal -> Leaf (target)
+Then: fetch only needed rows</code></pre> <p class="tiny muted">Reads few pages (O(log n)).</p> </div> </div> </section> <!-- 43 --> <section> <h5>Index Pages vs Data Pages </h5> <div class="split"> <div class="half"> <ul class="tight"> <li>Index pages are smaller “map-like” structures</li> <li>Data pages contain full rows (bigger)</li> <li>Indexes reduce data-page reads</li> </ul> </div> <div class="half">
+        <div class="ph">IMG</div>
+      </div>
+    </div> </div> </section> <!-- 44 --> <section> <h5>When the Optimizer Might Ignore an Index</h5> <div class="split"> <div class="left box"> <strong>Typical Reasons</strong> <ul class="tight"> <li>Low selectivity (too many matches)</li> <li>Small table (scan is cheap)</li> <li>Old stats (bad estimates)</li> <li>Query returns large fraction of rows</li> </ul> </div> <div class="right box"> <strong>Fixes</strong> <ul class="tight"> <li>Use better index (composite/covering)</li> <li>Refresh statistics</li> <li>Rewrite query for sargability</li> <li>Measure again</li> </ul> </div> </div> </section> <!-- 45 --> <section> <h5>Sargable Predicates</h5> <div class="split"> <div class="left box"> <strong>Plan A (not sargable)</strong>
+<pre><code>SELECT *
+FROM posts
+WHERE DATE(created_at) = '2026-02-01';</code></pre> <p class="tiny muted">Function on column blocks index range scan.</p> </div> <div class="right box"> <strong>Plan B (sargable)</strong>
+<pre><code>SELECT *
+FROM posts
+WHERE created_at >= '2026-02-01' AND created_at < '2026-02-02';</code></pre> <p class="tiny muted">Enables index range scan on created_at.</p> </div> </div> </section> <!-- 46 --> <section> <h5>Cost Model Summary (Table)</h5> <table class="tbl"> <thead> <tr><th>Plan</th><th>Big-O</th><th>Dominant Cost</th><th>Typical Symptom</th></tr> </thead> <tbody> <tr><td>Full table scan</td><td>O(n)</td><td>Many data pages</td><td>Slow as table grows</td></tr> <tr><td>B-Tree point lookup</td><td>O(log n)</td><td>Few index pages</td><td>Fast at scale</td></tr> <tr><td>B-Tree range scan</td><td>O(log n + k)</td><td>Leaf walk + output size</td><td>Depends on k</td></tr> </tbody> </table> </section> <!-- 47 --> 
+
+
+  <section>
+    <h5>Index Choices (Concrete)</h5>
+    <table class="tbl">
+      <thead>
+        <tr><th>Index</th><th>Helps these queries</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>(post_id)</code> (PRIMARY KEY)</td>
+          <td><code>WHERE post_id = ?</code></td>
+          <td>Fast point lookup; defines physical row order in InnoDB</td>
+        </tr>
+        <tr>
+          <td><code>(user_id)</code></td>
+          <td><code>WHERE user_id = ?</code></td>
+          <td>Fast profile lookups</td>
+        </tr>
+        <tr>
+          <td><code>(created_at)</code></td>
+          <td><code>WHERE created_at &gt;= ?</code></td>
+          <td>Efficient range scans for time-based queries</td>
+        </tr>
+        <tr>
+          <td><code>(user_id, created_at)</code></td>
+          <td><code>WHERE user_id=? ORDER BY created_at ...</code></td>
+          <td>Filter + ordered retrieval; good with LIMIT</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+
+<section> <h5>Practical Index Set for posts (Recommended)</h5> <div class="split"> <div class="half"> <ul class="tight"> <li>Keep PK on <code>post_id</code></li> <li>Index on <code>user_id</code> for profile queries</li> <li>Composite (user_id, created_at) for timeline</li> <li>Index on created_at for global “recent posts”</li> </ul> </div> <div class="half">
+<pre><code>-- already exists:
+PRIMARY KEY (post_id) CREATE INDEX idx_posts_user ON posts(user_id); CREATE INDEX idx_user_created ON posts(user_id, created_at); CREATE INDEX idx_posts_created ON posts(created_at);</code></pre> </div> </div> </section> <!-- 48 --> <section> <h5>Validation Workflow (Plan A/Plan B Table)</h5> <div class="split"> <div class="left box"> <strong>Plan A</strong> <ul class="tight"> <li>Run EXPLAIN</li> <li>Note <code>type</code>, <code>key</code>, <code>rows</code></li> <li>Measure query latency</li> </ul> </div> <div class="right box"> <strong>Plan B</strong> <ul class="tight"> <li>Add index</li> <li>ANALYZE TABLE</li> <li>Run EXPLAIN again</li> <li>Measure improved latency</li> </ul> </div> </div> </section> <!-- 49 --> <section> <h5>Key Takeaways (Diagram Only)</h5> <div class="tiers" style="grid-template-columns: repeat(4, 1fr); gap: 16px;"> <div class="tier">Scale</div> <div class="tier">Index</div> <div class="tier">Plan</div> <div class="tier">Speed</div> </div> <p class="tiny muted" style="margin-top:0.8rem;"> Indexes exist to keep performance stable as row counts increase. </p> </section> <!-- 50 --> <section> <h5>Module 7 Summary (Plan A/Plan B Final)</h5> <div class="split"> <div class="left box"> <strong>Plan A</strong> <ul class="tight"> <li>Full scan: O(n)</li> <li>Sort cost for ORDER BY</li> <li>Latency grows with table size</li> </ul> </div> <div class="right box"> <strong>Plan B</strong> <ul class="tight"> <li>B-Tree scan: O(log n)</li> <li>Composite index avoids filesort</li> <li>Stable performance at scale</li> </ul> </div> </div> </section> 
+
+  <section>
+    <h5>Indexing Is a Design Process</h5>
+    <div class="split">
+      <div class="half">
+        <ul class="tight">
+          <li>Initial table design rarely has perfect knowledge of workload</li>
+          <li>Real query patterns emerge over time</li>
+          <li>Indexes must evolve with observed usage</li>
+          <li>Design → Measure → Adjust → Repeat</li>
+        </ul>
+      </div>
+      <div class="half">
+        <ul class="tight">
+          <li>Step 1: Create minimal indexes</li>
+          <li>Step 2: Collect query statistics</li>
+          <li>Step 3: Analyze execution plans</li>
+          <li>Step 4: Refine index strategy</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h5>Uncertain Workloads at Table Creation</h5>
+    <table class="tbl">
+      <thead>
+        <tr><th>Design Time</th><th>Reality After Deployment</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Assumed common query patterns</td>
+          <td>Different filters dominate</td>
+        </tr>
+        <tr>
+          <td>Expected moderate scale</td>
+          <td>Data volume grows rapidly</td>
+        </tr>
+        <tr>
+          <td>Index for predicted use</td>
+          <td>Need new composite indexes</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h5>Risks of Over-Indexing</h5>
+    <div class="split">
+      <div class="half">
+        <ul class="tight">
+          <li>Each index consumes disk space</li>
+          <li>Memory pressure increases</li>
+          <li>Optimizer has more choices (can choose poorly)</li>
+          <li>Maintenance complexity increases</li>
+        </ul>
+      </div>
+      <div class="half">
+        <ul class="tight">
+          <li>Slower INSERT operations</li>
+          <li>Slower UPDATE on indexed columns</li>
+          <li>Slower DELETE operations</li>
+          <li>Higher write amplification</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h5>Heavy Write Tables: Index Trade-Off</h5>
+    <table class="tbl">
+      <thead>
+        <tr><th>Scenario</th><th>Effect of Many Indexes</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>High-frequency INSERT (social posts)</td>
+          <td>Each insert updates every index</td>
+        </tr>
+        <tr>
+          <td>Frequent UPDATE of indexed column</td>
+          <td>Delete + reinsert inside B-Tree</td>
+        </tr>
+        <tr>
+          <td>Bulk data ingestion</td>
+          <td>Significant performance degradation</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h5>Index Maintenance Cost (Complexity View)</h5>
+    <table class="tbl">
+      <thead>
+        <tr><th>Operation</th><th>Without Index</th><th>With k Indexes</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>INSERT</td>
+          <td>O(1) append-like behavior</td>
+          <td>O(k · log n)</td>
+        </tr>
+        <tr>
+          <td>UPDATE indexed column</td>
+          <td>O(1)</td>
+          <td>O(k · log n)</td>
+        </tr>
+        <tr>
+          <td>DELETE</td>
+          <td>O(1)</td>
+          <td>O(k · log n)</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h5>Balanced Strategy</h5>
+    <div class="split">
+      <div class="half">
+        <ul class="tight">
+          <li>Index only frequent filter columns</li>
+          <li>Avoid indexing low-selectivity columns</li>
+          <li>Prefer composite indexes for common combined filters</li>
+          <li>Periodically review unused indexes</li>
+        </ul>
+      </div>
+      <div class="half">
+        <ul class="tight">
+          <li>Measure with EXPLAIN</li>
+          <li>Track slow query logs</li>
+          <li>Re-evaluate after workload shifts</li>
+          <li>Indexing is continuous optimization</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+
+</section>
+</section>
