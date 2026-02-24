@@ -5450,11 +5450,6 @@ ORDER BY r.pickup_ts;</code></pre>
 
       </section>
 
-
-
-
-
-
       <!-- MODULE 6 -->
       <!-- ========================================================= -->
       <!-- MODULE 6: SUBQUERY & PATTERN FILTERING                    -->
@@ -5462,7 +5457,6 @@ ORDER BY r.pickup_ts;</code></pre>
       <!-- PostgreSQL focus + SQLite comparison tables                -->
       <!-- FULL (35+ slides) + SETUP INCLUDED                         -->
       <!-- ========================================================= -->
-
       <section id="module-6">
 
         <!-- 01 — Cover -->
@@ -6586,6 +6580,1068 @@ ORDER BY r.name;</code></pre>
             </text>
             <text x="600" y="160" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">
               Then choose IN / EXISTS / ANY / BETWEEN / LIKE / ESCAPE.
+            </text>
+          </svg>
+        </section>
+
+      </section>
+
+      <!-- MODULE 7 -->
+      <!-- ========================================================= -->
+      <!-- MODULE 7: JOINS + SET OPERATORS                           -->
+      <!-- CROSS · ON · USING · UNION · INTERSECT · EXCEPT           -->
+      <!-- PostgreSQL focus + SQLite comparison tables                -->
+      <!-- FULL (35+ slides) + SETUP INCLUDED                         -->
+      <!-- ========================================================= -->
+
+      <section id="module-7">
+
+        <!-- 01 — Cover -->
+        <section>
+          <h2>Module 7</h2>
+          <h3>Joins & Set Operators</h3>
+          <p class="muted">CROSS · ON · USING · UNION · INTERSECT · EXCEPT</p>
+
+          <svg width="100%" height="260" viewBox="0 0 1200 260" role="img" aria-label="Join and set pipeline diagram">
+            <rect x="60" y="70" width="320" height="120" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="220" y="125" text-anchor="middle" font-size="26" fill="rgba(255,255,255,0.92)">Tables</text>
+            <text x="220" y="160" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">riders · bikes ·
+              rentals</text>
+
+            <rect x="440" y="70" width="320" height="120" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="600" y="125" text-anchor="middle" font-size="26" fill="rgba(255,255,255,0.92)">JOIN</text>
+            <text x="600" y="160" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">match rows
+              (ON/USING)</text>
+
+            <rect x="820" y="70" width="320" height="120" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="980" y="125" text-anchor="middle" font-size="26" fill="rgba(255,255,255,0.92)">SET</text>
+            <text x="980" y="160" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">combine
+              results</text>
+
+            <line x1="380" y1="130" x2="440" y2="130" stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+            <polygon points="440,130 425,122 425,138" fill="rgba(255,255,255,0.35)" />
+            <line x1="760" y1="130" x2="820" y2="130" stroke="rgba(255,255,255,0.35)" stroke-width="4" />
+            <polygon points="820,130 805,122 805,138" fill="rgba(255,255,255,0.35)" />
+          </svg>
+        </section>
+
+        <!-- 02 — Split (goals) -->
+        <section>
+          <h3>Module goal</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Run a small schema and seed data (same domain)</li>
+                <li>Join tables using <code>ON</code> and <code>USING</code></li>
+                <li>Understand <code>CROSS JOIN</code> (Cartesian product)</li>
+                <li>Combine result sets with <code>UNION</code>, <code>INTERSECT</code>, <code>EXCEPT</code></li>
+                <li>Practice “before vs after” query improvements</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Habit (like careful footsteps on wet ground):
+-- 1) Start with a small SELECT
+-- 2) Add one JOIN condition
+-- 3) Validate row counts (COUNT(*))
+-- 4) Only then add SET operators</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 03 — Setup Intro -->
+        <section>
+          <h3>Setup: Create tables + insert data</h3>
+          <p class="muted">Run these once so every example works.</p>
+        </section>
+
+        <!-- 04 — CREATE riders -->
+        <section>
+          <h3>CREATE TABLE riders</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>One row per rider</li>
+                <li>City supports filters</li>
+                <li>Email supports unique lists</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">CREATE TABLE riders (
+  rider_id  SERIAL PRIMARY KEY,
+  name      TEXT NOT NULL,
+  city      TEXT NOT NULL,
+  email     TEXT
+);</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 05 — CREATE bikes -->
+        <section>
+          <h3>CREATE TABLE bikes</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>One row per bike</li>
+                <li>Status enables filters</li>
+                <li>bike_type supports grouping</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">CREATE TABLE bikes (
+  bike_id   SERIAL PRIMARY KEY,
+  bike_type TEXT NOT NULL,
+  status    TEXT NOT NULL
+);</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 06 — CREATE rentals -->
+        <section>
+          <h3>CREATE TABLE rentals</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Fact table (events)</li>
+                <li>Links riders ↔ bikes</li>
+                <li>dropoff_ts can be NULL (active ride)</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">CREATE TABLE rentals (
+  rental_id  SERIAL PRIMARY KEY,
+  rider_id   INTEGER REFERENCES riders(rider_id),
+  bike_id    INTEGER REFERENCES bikes(bike_id),
+  pickup_ts  TIMESTAMP NOT NULL,
+  dropoff_ts TIMESTAMP
+);</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 07 — INSERT sample data -->
+        <section>
+          <h3>INSERT sample data (riders, bikes, rentals)</h3>
+          <pre><code class="language-sql">INSERT INTO riders(name, city, email) VALUES
+('Ava',  'Stockton',   'ava@example.com'),
+('Noah', 'Sacramento', 'noah@example.com'),
+('Mia',  'Stockton',   'mia@test.com'),
+('Liam', 'Lodi',       'liam@sample.org');
+
+INSERT INTO bikes(bike_type, status) VALUES
+('city',   'available'),
+('road',   'available'),
+('e-bike', 'maintenance'),
+('city',   'available');
+
+INSERT INTO rentals(rider_id, bike_id, pickup_ts, dropoff_ts) VALUES
+(1, 1, TIMESTAMP '2026-02-10 09:00', TIMESTAMP '2026-02-10 09:25'),
+(2, 2, TIMESTAMP '2026-02-11 10:00', TIMESTAMP '2026-02-11 10:18'),
+(1, 2, TIMESTAMP '2026-02-12 08:10', NULL);</code></pre>
+        </section>
+
+        <!-- 08 — Split (baseline select) -->
+        <section>
+          <h3>Baseline query (start here)</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Establish a baseline</li>
+                <li>Know expected row counts</li>
+                <li>Then add joins/sets</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT rider_id, name, city, email
+FROM riders
+ORDER BY rider_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- CROSS JOIN -->
+        <!-- ========================================================= -->
+
+        <!-- 09 — Split (CROSS concept) -->
+        <section>
+          <h3>CROSS JOIN concept</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><code>CROSS JOIN</code> = every row with every row (Cartesian product)</li>
+                <li>Powerful, but easy to explode row counts</li>
+                <li>Use intentionally (small sets only)</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Pattern:
+FROM A
+CROSS JOIN B</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 10 — Split (CROSS example) -->
+        <section>
+          <h3>CROSS JOIN example: all rider × bike pairs</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Think: every possible pairing</li>
+                <li>Like taking many steps in all directions—quickly gets large</li>
+                <li>Count results to stay safe</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT r.name, b.bike_type
+FROM riders r
+CROSS JOIN bikes b
+ORDER BY r.name, b.bike_type;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 11 — Split (CROSS count) -->
+        <section>
+          <h3>Sanity check: expected row count</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Row count should be: riders × bikes</li>
+                <li>Good “wet ground” habit before adding filters</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT
+  (SELECT COUNT(*) FROM riders) AS rider_rows,
+  (SELECT COUNT(*) FROM bikes)  AS bike_rows,
+  (SELECT COUNT(*) FROM riders) * (SELECT COUNT(*) FROM bikes) AS expected_pairs;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- JOIN ... ON -->
+        <!-- ========================================================= -->
+
+        <!-- 12 — Split (ON concept) -->
+        <section>
+          <h3>JOIN ... ON concept</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><code>ON</code> defines the matching rule between two tables</li>
+                <li>Most common join style</li>
+                <li>Works even when column names differ</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Pattern:
+FROM A
+JOIN B
+  ON A.key = B.key</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 13 — Split (ON example: rentals + riders) -->
+        <section>
+          <h3>ON example: attach rider names to rentals</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Rentals is a fact table</li>
+                <li>Join adds human-readable fields</li>
+                <li>Classic reporting step</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT rt.rental_id, r.name, rt.pickup_ts, rt.dropoff_ts
+FROM rentals rt
+JOIN riders r
+  ON rt.rider_id = r.rider_id
+ORDER BY rt.rental_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 14 — Split (ON example: rentals + bikes) -->
+        <section>
+          <h3>ON example: attach bike info to rentals</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Join rentals → bikes</li>
+                <li>Now each rental has bike_type and status</li>
+                <li>Step-by-step: add one join at a time</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT rt.rental_id, b.bike_type, b.status, rt.pickup_ts
+FROM rentals rt
+JOIN bikes b
+  ON rt.bike_id = b.bike_id
+ORDER BY rt.rental_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 15 — Split (two joins) -->
+        <section>
+          <h3>Two joins: rentals + riders + bikes</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Common “fact + two dimensions” pattern</li>
+                <li>Each join adds meaning without changing the fact grain</li>
+                <li>Verify row counts stay stable</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT rt.rental_id, r.name, b.bike_type, rt.pickup_ts, rt.dropoff_ts
+FROM rentals rt
+JOIN riders r
+  ON rt.rider_id = r.rider_id
+JOIN bikes b
+  ON rt.bike_id = b.bike_id
+ORDER BY rt.rental_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 16 — Before/After: CROSS + filter → JOIN ON -->
+        <section>
+          <h3>Before/After: CROSS + WHERE → JOIN ... ON</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><strong>Before</strong>: cross product then filter</li>
+                <li><strong>After</strong>: explicit join rule</li>
+                <li>Habit: prefer <code>JOIN ... ON</code> for clarity</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Before:
+SELECT rt.rental_id, r.name
+FROM rentals rt
+CROSS JOIN riders r
+WHERE rt.rider_id = r.rider_id;
+
+-- After:
+SELECT rt.rental_id, r.name
+FROM rentals rt
+JOIN riders r
+  ON rt.rider_id = r.rider_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- JOIN ... USING -->
+        <!-- ========================================================= -->
+
+        <!-- 17 — Split (USING concept) -->
+        <section>
+          <h3>JOIN ... USING concept</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><code>USING (col)</code> is shorthand when both tables share the same column name</li>
+                <li>Returns that column once (clean output)</li>
+                <li>Good for “natural key” style schemas</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Pattern:
+FROM A
+JOIN B USING (shared_key)</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 18 — Setup: a second table with shared key name -->
+        <section>
+          <h3>Setup for USING: a rider preferences table</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Same key name: <code>rider_id</code></li>
+                <li>Makes <code>USING</code> natural</li>
+                <li>Small table, easy to reason about</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">CREATE TABLE rider_prefs (
+  rider_id   INTEGER PRIMARY KEY REFERENCES riders(rider_id),
+  prefers    TEXT NOT NULL
+);
+
+INSERT INTO rider_prefs(rider_id, prefers) VALUES
+(1, 'e-bike'),
+(2, 'road');</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 19 — Split (USING example) -->
+        <section>
+          <h3>USING example: riders joined to their preferences</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><code>USING (rider_id)</code> avoids repeating <code>r.rider_id = p.rider_id</code></li>
+                <li>Cleaner output: one <code>rider_id</code></li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT rider_id, name, prefers
+FROM riders
+JOIN rider_prefs USING (rider_id)
+ORDER BY rider_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 20 — Before/After: ON → USING -->
+        <section>
+          <h3>Before/After: ON → USING</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><strong>Before</strong>: explicit equality</li>
+                <li><strong>After</strong>: compact USING</li>
+                <li>Use only when column names truly match</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Before:
+SELECT r.rider_id, r.name, p.prefers
+FROM riders r
+JOIN rider_prefs p
+  ON r.rider_id = p.rider_id;
+
+-- After:
+SELECT rider_id, name, prefers
+FROM riders
+JOIN rider_prefs USING (rider_id);</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 21 — Table (ON vs USING) -->
+        <section>
+          <h3>ON vs USING</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Need</th>
+                <th>Use</th>
+                <th>Reason</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Different column names</td>
+                <td><code>ON</code></td>
+                <td>Most flexible</td>
+              </tr>
+              <tr>
+                <td>Same column name(s)</td>
+                <td><code>USING</code></td>
+                <td>Shorter + cleaner output</td>
+              </tr>
+              <tr>
+                <td>All combinations</td>
+                <td><code>CROSS JOIN</code></td>
+                <td>Intentional Cartesian product</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- SET OPERATORS -->
+        <!-- ========================================================= -->
+
+        <!-- 22 — Split (Set operator concept) -->
+        <section>
+          <h3>Set operators concept</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Set operators combine <em>result sets</em> (not tables)</li>
+                <li>Both queries must return the same number of columns</li>
+                <li>Compatible data types (e.g., text with text)</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Shape rule:
+SELECT col1, col2
+...
+UNION / INTERSECT / EXCEPT
+SELECT col1, col2
+...</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 23 — Split (UNION concept) -->
+        <section>
+          <h3>UNION concept</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><code>UNION</code> combines and removes duplicates</li>
+                <li><code>UNION ALL</code> keeps duplicates</li>
+                <li>Think: “collect all distinct footprints”</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Pattern:
+queryA
+UNION
+queryB</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 24 — Split (UNION example) -->
+        <section>
+          <h3>UNION example: cities seen in riders or bikes status labels</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Two different sources, one combined list</li>
+                <li>Both queries return 1 TEXT column</li>
+                <li>UNION removes duplicates</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT city AS label
+FROM riders
+UNION
+SELECT status AS label
+FROM bikes
+ORDER BY label;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 25 — Split (UNION ALL example) -->
+        <section>
+          <h3>UNION ALL example: keep duplicates for counting</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Use ALL when duplicates are meaningful</li>
+                <li>Then aggregate</li>
+                <li>Scientific habit: measure first, then interpret</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT label, COUNT(*) AS occurrences
+FROM (
+  SELECT city AS label FROM riders
+  UNION ALL
+  SELECT status AS label FROM bikes
+) x
+GROUP BY label
+ORDER BY occurrences DESC, label;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 26 — Split (INTERSECT concept) -->
+        <section>
+          <h3>INTERSECT concept</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><code>INTERSECT</code> returns only rows present in both results</li>
+                <li>Great for “common to both” questions</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Pattern:
+queryA
+INTERSECT
+queryB</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 27 — Split (INTERSECT example) -->
+        <section>
+          <h3>INTERSECT example: riders who appear in rentals</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Same idea as “has rental”, expressed as a set intersection</li>
+                <li>Returns rider_id values common to both</li>
+                <li>Then join to names if needed</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT rider_id
+FROM riders
+INTERSECT
+SELECT rider_id
+FROM rentals
+ORDER BY rider_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 28 — Split (INTERSECT + join to names) -->
+        <section>
+          <h3>INTERSECT + JOIN: show rider names</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Set step first (IDs)</li>
+                <li>Then join for readable fields</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT r.rider_id, r.name
+FROM riders r
+JOIN (
+  SELECT rider_id FROM riders
+  INTERSECT
+  SELECT rider_id FROM rentals
+) x USING (rider_id)
+ORDER BY r.rider_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 29 — Split (EXCEPT concept) -->
+        <section>
+          <h3>EXCEPT concept</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li><code>EXCEPT</code> returns rows in the first result not in the second</li>
+                <li>Set difference (“A minus B”)</li>
+                <li>Like steps that go somewhere no one else went</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Pattern:
+queryA
+EXCEPT
+queryB</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 30 — Split (EXCEPT example: riders with no rentals) -->
+        <section>
+          <h3>EXCEPT example: riders who never rented</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Return riders missing from rentals</li>
+                <li>Often used for audits</li>
+                <li>Clear set thinking</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT rider_id
+FROM riders
+EXCEPT
+SELECT rider_id
+FROM rentals
+ORDER BY rider_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 31 — Split (EXCEPT + names) -->
+        <section>
+          <h3>EXCEPT + JOIN: show rider names</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>EXCEPT returns IDs</li>
+                <li>Join converts IDs to names</li>
+                <li>Best practice for reporting outputs</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT r.rider_id, r.name
+FROM riders r
+JOIN (
+  SELECT rider_id FROM riders
+  EXCEPT
+  SELECT rider_id FROM rentals
+) x USING (rider_id)
+ORDER BY r.rider_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 32 — Table (UNION vs INTERSECT vs EXCEPT) -->
+        <section>
+          <h3>Set operator cheat table</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Operator</th>
+                <th>Keeps</th>
+                <th>Typical question</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>UNION</code></td>
+                <td>All distinct rows from both</td>
+                <td>“Show everything from A or B”</td>
+              </tr>
+              <tr>
+                <td><code>INTERSECT</code></td>
+                <td>Only rows in both</td>
+                <td>“What’s common to A and B?”</td>
+              </tr>
+              <tr>
+                <td><code>EXCEPT</code></td>
+                <td>Rows in A but not B</td>
+                <td>“What’s in A missing from B?”</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 33 — Split (Ordering note) -->
+        <section>
+          <h3>Important: ORDER BY goes at the end</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>With set operators, apply <code>ORDER BY</code> after the final query</li>
+                <li>If you need ordering inside, use subqueries</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Correct:
+SELECT city AS label FROM riders
+UNION
+SELECT status AS label FROM bikes
+ORDER BY label;
+</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- Combined patterns -->
+        <!-- ========================================================= -->
+
+        <!-- 34 — Split (JOIN + EXCEPT) -->
+        <section>
+          <h3>Combine: JOIN + EXCEPT (bikes never rented)</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Find bikes missing from rentals</li>
+                <li>EXCEPT gives bike_id set difference</li>
+                <li>JOIN adds bike details</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT b.bike_id, b.bike_type, b.status
+FROM bikes b
+JOIN (
+  SELECT bike_id FROM bikes
+  EXCEPT
+  SELECT bike_id FROM rentals
+) x USING (bike_id)
+ORDER BY b.bike_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 35 — Split (JOIN + INTERSECT) -->
+        <section>
+          <h3>Combine: JOIN + INTERSECT (bikes that were rented)</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>INTERSECT gives bike_id values seen in both tables</li>
+                <li>JOIN makes it readable</li>
+                <li>Controlled steps: set first, then decorate</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT b.bike_id, b.bike_type
+FROM bikes b
+JOIN (
+  SELECT bike_id FROM bikes
+  INTERSECT
+  SELECT bike_id FROM rentals
+) x USING (bike_id)
+ORDER BY b.bike_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 36 — Split (JOIN + UNION ALL) -->
+        <section>
+          <h3>Combine: UNION ALL + JOIN (rider names from two sources)</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Two rider sets: Stockton riders and riders who rented</li>
+                <li>UNION ALL keeps duplicates (useful to see overlap)</li>
+                <li>Then join to names once</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT r.rider_id, r.name, x.source
+FROM riders r
+JOIN (
+  SELECT rider_id, 'city:Stockton' AS source
+  FROM riders
+  WHERE city = 'Stockton'
+  UNION ALL
+  SELECT rider_id, 'has:rental' AS source
+  FROM rentals
+) x USING (rider_id)
+ORDER BY r.rider_id, x.source;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- Engine comparison -->
+        <!-- ========================================================= -->
+
+        <!-- 37 — Table (SQLite vs Postgres) -->
+        <section>
+          <h3>Comparison: feature support</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Feature</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>CROSS JOIN</td>
+                <td>Supported</td>
+                <td>Supported</td>
+              </tr>
+              <tr>
+                <td>JOIN ... ON</td>
+                <td>Supported</td>
+                <td>Supported</td>
+              </tr>
+              <tr>
+                <td>JOIN ... USING</td>
+                <td>Supported</td>
+                <td>Supported</td>
+              </tr>
+              <tr>
+                <td>UNION / UNION ALL</td>
+                <td>Supported</td>
+                <td>Supported</td>
+              </tr>
+              <tr>
+                <td>INTERSECT</td>
+                <td>Supported</td>
+                <td>Supported</td>
+              </tr>
+              <tr>
+                <td>EXCEPT</td>
+                <td>Supported</td>
+                <td>Supported</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 38 — Split (portable habits) -->
+        <section>
+          <h3>Portable habits (works almost everywhere)</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Core joins: <code>JOIN ... ON</code>, <code>JOIN ... USING</code>, <code>CROSS JOIN</code></li>
+                <li>Core sets: <code>UNION</code>, <code>INTERSECT</code>, <code>EXCEPT</code></li>
+                <li>Always validate row counts after each step</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Portable core:
+-- JOIN ... ON / USING
+-- UNION / INTERSECT / EXCEPT
+-- + COUNT(*) checks</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- Practice -->
+        <!-- ========================================================= -->
+
+        <!-- 39 — Split (Practice 1) -->
+        <section>
+          <h3>Practice 1: rentals report (3 tables)</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Show rental_id, rider name, bike type</li>
+                <li>Use two JOINs with ON</li>
+                <li>Sort by rental_id</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT rt.rental_id, r.name, b.bike_type, rt.pickup_ts
+FROM rentals rt
+JOIN riders r
+  ON rt.rider_id = r.rider_id
+JOIN bikes b
+  ON rt.bike_id = b.bike_id
+ORDER BY rt.rental_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 40 — Split (Practice 2) -->
+        <section>
+          <h3>Practice 2: riders with no rentals (EXCEPT)</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Return rider_id + name</li>
+                <li>Use EXCEPT to find missing IDs</li>
+                <li>Then join for names</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT r.rider_id, r.name
+FROM riders r
+JOIN (
+  SELECT rider_id FROM riders
+  EXCEPT
+  SELECT rider_id FROM rentals
+) x USING (rider_id)
+ORDER BY r.rider_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 41 — Split (Practice 3) -->
+        <section>
+          <h3>Practice 3: overlap list (INTERSECT)</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Find riders who are in Stockton <em>and</em> have rentals</li>
+                <li>INTERSECT the two rider_id sets</li>
+                <li>Join to names</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">SELECT r.rider_id, r.name
+FROM riders r
+JOIN (
+  SELECT rider_id FROM riders WHERE city = 'Stockton'
+  INTERSECT
+  SELECT rider_id FROM rentals
+) x USING (rider_id)
+ORDER BY r.rider_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- ========================================================= -->
+        <!-- Cheat sheet + checkpoint -->
+        <!-- ========================================================= -->
+
+        <!-- 42 — Table (cheat sheet) -->
+        <section>
+          <h3>Cheat sheet</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Need</th>
+                <th>Use</th>
+                <th>Bike example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>All combinations</td>
+                <td><code>CROSS JOIN</code></td>
+                <td>All rider × bike pairs</td>
+              </tr>
+              <tr>
+                <td>Match rows by rule</td>
+                <td><code>JOIN ... ON</code></td>
+                <td>Rentals ↔ Riders (rider_id)</td>
+              </tr>
+              <tr>
+                <td>Match on shared column</td>
+                <td><code>JOIN ... USING</code></td>
+                <td>Riders ↔ Prefs (rider_id)</td>
+              </tr>
+              <tr>
+                <td>Combine distinct rows</td>
+                <td><code>UNION</code></td>
+                <td>Labels from two sources</td>
+              </tr>
+              <tr>
+                <td>Common rows</td>
+                <td><code>INTERSECT</code></td>
+                <td>Riders who appear in rentals</td>
+              </tr>
+              <tr>
+                <td>Missing rows</td>
+                <td><code>EXCEPT</code></td>
+                <td>Riders who never rented</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <!-- 43 — Split (summary) -->
+        <section>
+          <h3>Summary</h3>
+          <div class="split">
+            <div class="left">
+              <ul class="tight">
+                <li><strong>CROSS JOIN</strong> = all pairings (use carefully)</li>
+                <li><strong>ON</strong> = explicit match rule</li>
+                <li><strong>USING</strong> = shorthand for shared key name</li>
+                <li><strong>UNION</strong> = combine distinct rows (ALL keeps duplicates)</li>
+                <li><strong>INTERSECT</strong> = overlap</li>
+                <li><strong>EXCEPT</strong> = difference</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql">-- Clean, common pattern:
+SELECT rt.rental_id, r.name, b.bike_type
+FROM rentals rt
+JOIN riders r ON rt.rider_id = r.rider_id
+JOIN bikes  b ON rt.bike_id  = b.bike_id
+ORDER BY rt.rental_id;</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 44 — Diagram (checkpoint) -->
+        <section>
+          <svg width="100%" height="260" viewBox="0 0 1200 260" role="img" aria-label="Checkpoint diagram">
+            <text x="600" y="160" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">
+              Choose ON/USING/CROSS or UNION/INTERSECT/EXCEPT and verify counts after each step.
             </text>
           </svg>
         </section>
