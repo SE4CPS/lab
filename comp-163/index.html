@@ -23159,6 +23159,874 @@ LIMIT 20;
             </div>
           </section>
 
+          <!-- SLIDE 1 -->
+          <section id="c18">
+            <h5>Today</h5>
+            <div class="split">
+              <div class="left">
+                <ul class="tight">
+                  <li>Indexing in MariaDB</li>
+                  <li>Indexing in SQLite</li>
+                  <li>Indexing in PostgreSQL</li>
+                  <li>Compare systems</li>
+                  <li>Todo App: task table</li>
+                  <li>Insert 10,000 rows</li>
+                  <li>Performance before/after indexing</li>
+                  <li>Two-column index + sorting</li>
+                </ul>
+              </div>
+              <div class="right">
+                <img src="./img/btree.png" alt="Indexing diagram" style="max-width:100%;height:auto;" />
+              </div>
+            </div>
+          </section>
+
+          <!-- SLIDE 2 -->
+          <section>
+            <h5>What Is an Index?</h5>
+            <div class="split">
+              <div class="left">
+                <div class="diagram">
+                  <div class="box">Table (rows)</div>
+                  <div class="arrow">→</div>
+                  <div class="box">B-Tree (sorted keys)</div>
+                  <div class="arrow">→</div>
+                  <div class="box">Faster queries</div>
+                </div>
+                <div class="diagram-note">
+                  Index = a sorted structure that reduces search steps.
+                </div>
+              </div>
+              <div class="right">
+                <img src="./img/btree+index.png" alt="Indexing diagram" style="max-width:100%;height:auto;" />
+              </div>
+            </div>
+          </section>
+
+          <!-- SLIDE 3 -->
+          <section>
+            <h5>Scan vs Index</h5>
+            <div class="split">
+              <div class="left">
+                <div class="box">
+                  <strong>No Index (Scan)</strong>
+                  <ul class="tight">
+                    <li>Database checks rows one-by-one</li>
+                    <li>Work grows with table size</li>
+                    <li>Time complexity: <strong>O(n)</strong></li>
+                  </ul>
+                </div>
+                <div class="box" style="margin-top:10px;">
+                  <strong>With Index</strong>
+                  <ul class="tight">
+                    <li>Database navigates the tree</li>
+                    <li>Jumps close to the target</li>
+                    <li>Time complexity: <strong>O(log n)</strong></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="right">
+                <img src="./img/full_table_scan.jpg" alt="Indexing diagram" style="max-width:100%;height:auto;" />
+              </div>
+            </div>
+          </section>
+
+          <!-- SLIDE 4 -->
+          <section>
+            <h5>MariaDB Indexing (InnoDB)</h5>
+            <div class="split">
+              <div class="left">
+                <ul class="tight">
+                  <li>Primary key = clustered index</li>
+                  <li>Secondary indexes = B-Tree</li>
+                  <li>Composite indexes supported (multiple columns)</li>
+                  <li>Good introspection: <code>SHOW INDEX</code>, <code>EXPLAIN</code></li>
+                </ul>
+                <pre><code class="sql">SHOW INDEX FROM tasks;
+EXPLAIN SELECT * FROM tasks WHERE status='done';</code></pre>
+              </div>
+              <div class="right">
+                <img
+                  src="https://ducmanhphan.github.io/img/Database/MySQL/index/clustered-index/comparison-cluster-index-secondary-index.png"
+                  alt="Clustered vs Secondary Index" style="max-width:100%;height:auto;" />
+              </div>
+            </div>
+          </section>
+
+          <!-- SLIDE 1 -->
+          <section>
+            <h5>B-Tree vs Clustered Index: Similarities</h5>
+
+            <div class="split">
+
+              <div class="left">
+                <ul class="tight">
+                  <li>Both use a <strong>B-Tree structure</strong></li>
+                  <li>Both keep keys <strong>sorted</strong></li>
+                  <li>Both reduce search from O(n) → O(log n)</li>
+                  <li>Both improve read performance</li>
+                </ul>
+
+                <pre><code class="sql">
+-- Todo example
+CREATE INDEX idx_status
+ON tasks(status);
+      </code></pre>
+
+                <p>
+                  Whether clustered or not, the internal structure is still a B-Tree.
+                </p>
+              </div>
+
+              <div class="right">
+                <div class="box">
+                  <ul class="tight">
+                    <li>B-Tree = the structure (how it works)</li>
+                    <li>Clustered = how the data is stored</li>
+                  </ul>
+                </div>
+
+                <div class="ph" style="margin-top:12px;">
+                  <img
+                    src="https://ducmanhphan.github.io/img/Database/MySQL/index/clustered-index/comparison-cluster-index-secondary-index.png"
+                    alt="Clustered vs Secondary Index" style="max-width:100%;height:auto;" />
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 2 -->
+          <section>
+            <h5>B-Tree vs Clustered Index: Differences</h5>
+
+            <div class="split">
+
+              <div class="left">
+                <table class="tbl">
+                  <thead>
+                    <tr>
+                      <th>Aspect</th>
+                      <th>B-Tree Index</th>
+                      <th>Clustered Index</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>What is sorted?</td>
+                      <td>Only the index</td>
+                      <td>The actual table rows</td>
+                    </tr>
+                    <tr>
+                      <td>How many allowed?</td>
+                      <td>Many</td>
+                      <td>Only one</td>
+                    </tr>
+                    <tr>
+                      <td>Example</td>
+                      <td><code>idx_status</code></td>
+                      <td><code>PRIMARY KEY (id)</code></td>
+                    </tr>
+                    <tr>
+                      <td>Data storage</td>
+                      <td>Separate from table</td>
+                      <td>Data stored in that order</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="right">
+                <div class="box">
+                  <strong>Concrete Todo Example</strong>
+                  <ul class="tight">
+                    <li>If PK = id → rows stored in id order</li>
+                    <li>If you create index on status → only the index is sorted</li>
+                    <li>Data rows stay in primary key order</li>
+                  </ul>
+                </div>
+
+                <div class="ph" style="margin-top:12px;">
+                  <img
+                    src="https://ducmanhphan.github.io/img/Database/MySQL/index/clustered-index/comparison-cluster-index-secondary-index.png"
+                    alt="Clustered vs Secondary Index" style="max-width:100%;height:auto;" />
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Clustered / Primary-Key Index Support (MariaDB vs SQLite vs PostgreSQL)</h5>
+
+            <div class="split">
+
+              <div class="left">
+
+                <table class="tbl">
+                  <thead>
+                    <tr>
+                      <th>Database</th>
+                      <th>Is PRIMARY KEY auto-indexed?</th>
+                      <th>Are rows stored in PK order (clustered)?</th>
+                      <th>Beginner takeaway</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>MariaDB (InnoDB)</strong></td>
+                      <td><strong>Yes</strong> (auto B-Tree)</td>
+                      <td><strong>Yes</strong> (clustered by PK)</td>
+                      <td>Table data “lives” in the PK B-Tree</td>
+                    </tr>
+                    <tr>
+                      <td><strong>SQLite</strong></td>
+                      <td><strong>Yes</strong> (practically, via rowid / PK)</td>
+                      <td><strong>Often yes</strong> (rowid order is the storage order)</td>
+                      <td>Rowid acts like the built-in key ordering</td>
+                    </tr>
+                    <tr>
+                      <td><strong>PostgreSQL</strong></td>
+                      <td><strong>Yes</strong> (auto B-Tree)</td>
+                      <td><strong>No</strong> (heap table, not clustered by default)</td>
+                      <td>PK index exists, but rows are stored separately</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div class="box" style="margin-top:12px;">
+                  <strong>Key idea</strong>
+                  <ul class="tight">
+                    <li><strong>Auto-indexed PK</strong> means: DB creates an index for the PK.</li>
+                    <li><strong>Clustered</strong> means: the table rows are physically stored in the index order.</li>
+                  </ul>
+                </div>
+
+              </div>
+
+              <div class="right">
+
+                <div class="box">
+                  <strong>Todo Example (Same Schema)</strong>
+                  <pre><code class="sql">CREATE TABLE tasks (
+  id INT PRIMARY KEY,
+  title VARCHAR(100),
+  status VARCHAR(20),
+  created_at DATETIME
+);</code></pre>
+                  <ul class="tight">
+                    <li>InnoDB: rows stored by <code>id</code></li>
+                    <li>SQLite: rows stored by rowid/PK</li>
+                    <li>Postgres: rows stored in heap, PK index separate</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Why Clustered Storage Matters</h5>
+
+            <div class="split">
+
+              <div class="left">
+
+                <ul class="tight">
+                  <li>Rows are stored in PRIMARY KEY order</li>
+                  <li>Range queries become faster</li>
+                  <li>Sequential reads are efficient</li>
+                  <li>Less random disk access</li>
+                </ul>
+
+                <div class="box" style="margin-top:12px;">
+                  <strong>Todo Example</strong>
+                  <pre><code class="sql">
+SELECT *
+FROM tasks
+WHERE id BETWEEN 100 AND 200;
+        </code></pre>
+
+                  <ul class="tight">
+                    <li>InnoDB reads rows sequentially</li>
+                    <li>Rows are physically next to each other</li>
+                  </ul>
+                </div>
+
+              </div>
+
+              <div class="right">
+
+                <div class="box">
+                  <strong>Compare to Non-Clustered (Postgres)</strong>
+                  <ul class="tight">
+                    <li>Index finds matching IDs</li>
+                    <li>Then fetches rows from heap</li>
+                    <li>May require more random reads</li>
+                  </ul>
+                </div>
+
+                <div class="ph" style="margin-top:12px;">
+                  <img
+                    src="https://ducmanhphan.github.io/img/Database/MySQL/index/clustered-index/comparison-cluster-index-secondary-index.png"
+                    alt="Clustered vs Secondary Index" style="max-width:100%;height:auto;" />
+                </div>
+
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Questions?</h5>
+          </section>
+
+          <!-- SLIDE 5 -->
+          <section>
+            <h5>SQLite Indexing</h5>
+            <div class="split">
+              <div class="left">
+                <ul class="tight">
+                  <li>Embedded DB (single file)</li>
+                  <li>B-Tree for tables and indexes</li>
+                  <li>Rowid tables by default</li>
+                  <li>Great for local apps, prototypes, small services</li>
+                </ul>
+                <pre><code class="sql">EXPLAIN QUERY PLAN
+SELECT * FROM tasks WHERE status='done';</code></pre>
+              </div>
+              <div class="right">
+              </div>
+            </div>
+          </section>
+
+          <!-- SLIDE 6 -->
+          <section>
+            <h5>PostgreSQL Indexing</h5>
+            <div class="split">
+              <div class="left">
+                <ul class="tight">
+                  <li>Default index: B-Tree</li>
+                  <li>Also supports: Hash, GIN, GiST, BRIN</li>
+                  <li>Strong planner (cost-based)</li>
+                  <li>Use: <code>EXPLAIN (ANALYZE, BUFFERS)</code></li>
+                </ul>
+                <pre><code class="sql">EXPLAIN (ANALYZE, BUFFERS)
+SELECT * FROM tasks WHERE status='done';</code></pre>
+              </div>
+              <div class="right">
+              </div>
+            </div>
+          </section>
+
+          <!-- SLIDE 7 -->
+          <section>
+            <h5>Comparison: MariaDB vs SQLite vs PostgreSQL</h5>
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th>Feature</th>
+                  <th>MariaDB</th>
+                  <th>SQLite</th>
+                  <th>PostgreSQL</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Default index</td>
+                  <td>B-Tree</td>
+                  <td>B-Tree</td>
+                  <td>B-Tree</td>
+                </tr>
+                <tr>
+                  <td>Runs as</td>
+                  <td>Server</td>
+                  <td>Embedded</td>
+                  <td>Server</td>
+                </tr>
+                <tr>
+                  <td>Clustered PK</td>
+                  <td>Yes (InnoDB)</td>
+                  <td>Rowid behavior</td>
+                  <td>No (heap table)</td>
+                </tr>
+                <tr>
+                  <td>Advanced index types</td>
+                  <td>Limited</td>
+                  <td>Minimal</td>
+                  <td>Many</td>
+                </tr>
+              </tbody>
+            </table>
+
+          </section>
+
+          <!-- SLIDE 8 -->
+          <section>
+            <h5>Todo App: Task Table</h5>
+            <div class="split">
+              <div class="left">
+                <ul class="tight">
+                  <li>We will query by <code>status</code> and sort by <code>created_at</code></li>
+                  <li>That workload is perfect to show index impact</li>
+                </ul>
+                <pre><code class="sql">-- Logical schema
+id, title, status, priority, created_at</code></pre>
+              </div>
+              <div class="right">
+                <img src="https://media.geeksforgeeks.org/wp-content/uploads/20230606125727/gfg.png"
+                  alt="Todo app diagram" style="max-width:100%;height:auto;" />
+              </div>
+            </div>
+          </section>
+
+          <!-- SLIDE 9 -->
+          <section>
+            <h5>Create Table: MariaDB</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">DROP TABLE IF EXISTS tasks;
+
+CREATE TABLE tasks (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  status VARCHAR(20) NOT NULL,
+  priority INT NOT NULL,
+  created_at DATETIME NOT NULL
+) ENGINE=InnoDB;</code></pre>
+              </div>
+              <div class="right">
+              </div>
+            </div>
+          </section>
+
+          <!-- SLIDE 10 -->
+          <section>
+            <h5>Create Table: SQLite + PostgreSQL</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">-- SQLite
+CREATE TABLE tasks (
+  id INTEGER PRIMARY KEY,
+  title TEXT NOT NULL,
+  status TEXT NOT NULL,
+  priority INTEGER NOT NULL,
+  created_at TEXT NOT NULL
+);
+
+-- PostgreSQL
+CREATE TABLE tasks (
+  id SERIAL PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  status VARCHAR(20) NOT NULL,
+  priority INT NOT NULL,
+  created_at TIMESTAMP NOT NULL
+);</code></pre>
+              </div>
+              <div class="right">
+              </div>
+            </div>
+          </section>
+
+          <!-- SLIDE 11 -->
+          <section>
+            <h5>Insert 10,000 Rows (MariaDB Demo)</h5>
+            <pre><code class="sql">INSERT INTO tasks (title, status, priority, created_at)
+SELECT
+  CONCAT('Task ', n),
+  ELT(FLOOR(1 + RAND()*3),'open','in_progress','done'),
+  FLOOR(RAND()*5),
+  NOW() - INTERVAL FLOOR(RAND()*30) DAY
+FROM (
+  SELECT (a.d + 10*b.d + 100*c.d + 1000*d.d) + 1 AS n
+  FROM (SELECT 0 d UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+        UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) a
+  CROSS JOIN (SELECT 0 d UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) b
+  CROSS JOIN (SELECT 0 d UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) c
+  CROSS JOIN (SELECT 0 d UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) d
+) nums
+WHERE n <= 10000;
+
+SELECT COUNT(*) FROM tasks;</code></pre>
+          </section>
+
+          <!-- SLIDE: Insert 10,000 Rows (SQLite) -->
+          <section>
+            <h5>Insert 10,000 Rows (SQLite)</h5>
+
+            <div class="split">
+
+              <div class="left">
+                <pre><code class="sql">
+WITH RECURSIVE seq(n) AS (
+  SELECT 1
+  UNION ALL
+  SELECT n + 1 FROM seq WHERE n < 10000
+)
+INSERT INTO tasks (title, status, priority, created_at)
+SELECT
+  'Task ' || n,
+  CASE (ABS(RANDOM()) % 3)
+       WHEN 0 THEN 'open'
+       WHEN 1 THEN 'in_progress'
+       ELSE 'done'
+  END,
+  ABS(RANDOM()) % 5,
+  DATETIME('now', '-' || (ABS(RANDOM()) % 30) || ' days')
+FROM seq;
+
+SELECT COUNT(*) FROM tasks;
+      </code></pre>
+              </div>
+
+              <div class="right">
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE: Insert 10,000 Rows (PostgreSQL) -->
+          <section>
+            <h5>Insert 10,000 Rows (PostgreSQL)</h5>
+
+            <div class="split">
+
+              <div class="left">
+                <pre><code class="sql">
+INSERT INTO tasks (title, status, priority, created_at)
+SELECT
+  'Task ' || n,
+  (ARRAY['open','in_progress','done'])[floor(random()*3)+1],
+  floor(random()*5),
+  NOW() - (floor(random()*30) || ' days')::interval
+FROM generate_series(1,10000) AS n;
+
+SELECT COUNT(*) FROM tasks;
+      </code></pre>
+              </div>
+
+              <div class="right">
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 12 -->
+          <section>
+            <h5>Workload Query #1: Filter by status (Before Index) — All 3 Databases</h5>
+
+            <div class="split">
+
+              <div class="left">
+                <div class="box">
+                  <strong>Same Query (Logical)</strong>
+                  <pre><code class="sql">SELECT *
+FROM tasks
+WHERE status = 'done';</code></pre>
+                </div>
+
+                <ul class="tight" style="margin-top:10px;">
+                  <li>Before indexing, the DB often scans many rows to find <code>status='done'</code></li>
+                  <li>We use each DB’s “plan/explain” tool to confirm what it does</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <table class="tbl">
+                  <thead>
+                    <tr>
+                      <th>DB</th>
+                      <th>Plan / Analyzer Command</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>MariaDB</strong></td>
+                      <td>
+                        <pre><code class="sql">EXPLAIN
+SELECT *
+FROM tasks
+WHERE status = 'done';</code></pre>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>PostgreSQL</strong></td>
+                      <td>
+                        <pre><code class="sql">EXPLAIN ANALYZE
+SELECT *
+FROM tasks
+WHERE status = 'done';</code></pre>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>SQLite</strong></td>
+                      <td>
+                        <pre><code class="sql">EXPLAIN QUERY PLAN
+SELECT *
+FROM tasks
+WHERE status = 'done';</code></pre>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 13 -->
+          <section>
+            <h5>Add Single-Column Index (status)</h5>
+
+            <div class="split">
+
+              <div class="left">
+                <div class="box">
+                  <strong>MariaDB</strong>
+                  <pre><code class="sql">CREATE INDEX idx_tasks_status
+ON tasks(status);</code></pre>
+                </div>
+
+                <div class="box" style="margin-top:12px;">
+                  <strong>PostgreSQL</strong>
+                  <pre><code class="sql">CREATE INDEX idx_tasks_status
+ON tasks(status);</code></pre>
+                </div>
+
+                <div class="box" style="margin-top:12px;">
+                  <strong>SQLite</strong>
+                  <pre><code class="sql">CREATE INDEX idx_tasks_status
+ON tasks(status);</code></pre>
+                </div>
+              </div>
+
+              <div class="right">
+                <ul class="tight">
+                  <li>Same SQL syntax across all three systems</li>
+                  <li>Creates a B-Tree index by default</li>
+                  <li>Speeds up: <code>WHERE status = 'done'</code></li>
+                  <li>Keys are stored sorted by <code>status</code></li>
+                  <li>Reduces scan from O(n) → O(log n)</li>
+                </ul>
+
+                <div class="box" style="margin-top:12px;">
+                  <strong>Important</strong>
+                  <ul class="tight">
+                    <li>Does not change table row order</li>
+                    <li>Only affects lookup speed</li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 14 -->
+          <section>
+            <h5>Workload Query #1: After Index — Analyze (All 3 Databases)</h5>
+
+            <div class="split">
+
+              <div class="left">
+                <div class="box">
+                  <strong>MariaDB</strong>
+                  <pre><code class="sql">EXPLAIN
+SELECT *
+FROM tasks
+WHERE status = 'done';</code></pre>
+                </div>
+
+                <div class="box" style="margin-top:12px;">
+                  <strong>PostgreSQL</strong>
+                  <pre><code class="sql">EXPLAIN ANALYZE
+SELECT *
+FROM tasks
+WHERE status = 'done';</code></pre>
+                </div>
+
+                <div class="box" style="margin-top:12px;">
+                  <strong>SQLite</strong>
+                  <pre><code class="sql">EXPLAIN QUERY PLAN
+SELECT *
+FROM tasks
+WHERE status = 'done';</code></pre>
+                </div>
+              </div>
+
+              <div class="right">
+                <ul class="tight">
+                  <li>After creating <code>idx_tasks_status</code></li>
+                  <li>Planner should show index usage</li>
+                  <li>MariaDB: type = ref / key used</li>
+                  <li>Postgres: Index Scan</li>
+                  <li>SQLite: SEARCH TABLE using index</li>
+                  <li>Full table scan should disappear</li>
+                </ul>
+
+                <div class="box" style="margin-top:12px;">
+                  <strong>Conceptually</strong>
+                  <ul class="tight">
+                    <li>Root → Internal → Leaf</li>
+                    <li>Direct lookup replaces scanning</li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 15 -->
+          <section>
+            <h5>Workload Query #2: Sort by created_at (Before Composite Index)</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">EXPLAIN ANALYZE
+SELECT *
+FROM tasks
+WHERE status = 'done'
+ORDER BY created_at DESC
+LIMIT 20;</code></pre>
+                <ul class="tight">
+                  <li>If only <code>idx_tasks_status</code> exists, DB may still need to sort</li>
+                  <li>Sorting can be expensive (extra work + memory + temp files)</li>
+                </ul>
+              </div>
+              <div class="right">
+              </div>
+            </div>
+          </section>
+
+          <!-- SLIDE 16 -->
+          <section>
+            <h5>Why Two-Column Index Helps Sorting</h5>
+            <div class="split">
+              <div class="left">
+                <div class="box">
+                  <strong>Composite Index:</strong> <code>(status, created_at)</code>
+                  <ul class="tight">
+                    <li>Index is sorted first by <code>status</code></li>
+                    <li>Within each status, it is sorted by <code>created_at</code></li>
+                    <li>So the DB can read rows already in the right order</li>
+                  </ul>
+                </div>
+
+                <pre><code class="sql">-- Think: ordered groups
+(status='done', newest → oldest)
+(status='open', newest → oldest)
+(status='in_progress', newest → oldest)</code></pre>
+              </div>
+              <div class="right">
+              </div>
+            </div>
+          </section>
+
+          <!-- SLIDE 17 -->
+          <section>
+            <h5>Two-Index Keys: Concrete Mini Example</h5>
+            <div class="split">
+              <div class="left">
+                <table class="tbl">
+                  <thead>
+                    <tr>
+                      <th>status</th>
+                      <th>created_at</th>
+                      <th>title</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>done</td>
+                      <td>2026-02-25 10:05</td>
+                      <td>Task A</td>
+                    </tr>
+                    <tr>
+                      <td>open</td>
+                      <td>2026-02-25 09:00</td>
+                      <td>Task B</td>
+                    </tr>
+                    <tr>
+                      <td>done</td>
+                      <td>2026-02-25 08:10</td>
+                      <td>Task C</td>
+                    </tr>
+                    <tr>
+                      <td>done</td>
+                      <td>2026-02-24 20:00</td>
+                      <td>Task D</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div class="box" style="margin-top:10px;">
+                  <strong>With index (status, created_at DESC):</strong>
+                  <ul class="tight">
+                    <li>All <code>done</code> rows are next to each other</li>
+                    <li>Already ordered newest → oldest</li>
+                    <li><code>LIMIT 20</code> can stop early (fast)</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="right">
+              </div>
+            </div>
+          </section>
+
+          <!-- SLIDE 18 -->
+          <section>
+            <h5>Create Composite Index for Filter + Sort</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">-- MariaDB
+CREATE INDEX idx_status_created
+ON tasks(status, created_at DESC);
+
+-- SQLite (DESC allowed in index; planner may still optimize)
+CREATE INDEX idx_status_created
+ON tasks(status, created_at);
+
+-- PostgreSQL
+CREATE INDEX idx_status_created
+ON tasks(status, created_at DESC);</code></pre>
+
+                <ul class="tight">
+                  <li>This index matches: <code>WHERE status=? ORDER BY created_at DESC</code></li>
+                  <li>Reduces or removes the sort step</li>
+                </ul>
+              </div>
+              <div class="right">
+              </div>
+            </div>
+          </section>
+
+          <!-- SLIDE 19 -->
+          <section>
+            <h5>Query After Composite Index (Expected Improvement)</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">EXPLAIN ANALYZE
+SELECT *
+FROM tasks
+WHERE status = 'done'
+ORDER BY created_at DESC
+LIMIT 20;</code></pre>
+
+                <ul class="tight">
+                  <li>Planner can do an index range scan</li>
+                  <li>No big sort needed</li>
+                  <li>Reads only the first 20 matching rows</li>
+                </ul>
+              </div>
+              <div class="right">
+              </div>
+            </div>
+          </section>
+
+          <!-- SLIDE 20 -->
+          <section>
+            <h5>Questions?</h5>
+
+          </section>
         </section>
 
 
