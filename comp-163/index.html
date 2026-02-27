@@ -604,7 +604,7 @@
               <tr style="color:#ccc;">
                 <td style="padding:6px; border:1px solid #666;">8 (Mar 2, 4, 6)</td>
                 <td style="padding:6px; border:1px solid #666;">Midterm Preparation</td>
-                <td style="padding:6px; border:1px solid #666;">Midterm (Mar 6)</td>
+                <td style="padding:6px; border:1px solid #666;"><a href="./#/midterm">Midterm (Mar 6)</a></td>
                 <td style="padding:6px; border:1px solid #666;"></td>
                 <td style="padding:6px; border:1px solid #666;"></td>
               </tr>
@@ -24025,10 +24025,506 @@ LIMIT 20;</code></pre>
           <!-- SLIDE 20 -->
           <section>
             <h5>Questions?</h5>
-
           </section>
-        </section>
 
+          <!-- SLIDE 1 -->
+          <section id="c19">
+            <h5>Today</h5>
+            <div class="split">
+              <div class="left">
+                <ul class="tight">
+                  <li>Indexing in MariaDB</li>
+                  <li>Review Homework 2</li>
+                  <li>Review Lab 2</li>
+                  <li>Midterm (next Friday)</li>
+                </ul>
+              </div>
+              <div class="right">
+                <img src="./img/btree.png" alt="Indexing diagram" style="max-width:100%;height:auto;" />
+              </div>
+            </div>
+          </section>
+
+          <!-- SLIDE 2 -->
+          <section>
+            <h5>What Is an Index?</h5>
+            <div class="split">
+              <div class="left">
+                <div class="diagram">
+                  <div class="box">Table (rows)</div>
+                  <div class="arrow">→</div>
+                  <div class="box">B-Tree (sorted keys)</div>
+                  <div class="arrow">→</div>
+                  <div class="box">Faster queries</div>
+                </div>
+                <div class="diagram-note">
+                  Index = a sorted structure that reduces search steps.
+                </div>
+              </div>
+              <div class="right">
+                <img src="./img/btree+index.png" alt="Indexing diagram" style="max-width:100%;height:auto;" />
+              </div>
+            </div>
+          </section>
+
+          <!-- SLIDE 4 -->
+          <section>
+            <h5>MariaDB Indexing (InnoDB)</h5>
+            <div class="split">
+              <div class="left">
+                <ul class="tight">
+                  <li>Primary key = clustered index</li>
+                  <li>Secondary indexes = B-Tree</li>
+                  <li>Composite indexes supported (multiple columns)</li>
+                  <li>Good introspection: <code>SHOW INDEX</code>, <code>EXPLAIN</code></li>
+                </ul>
+                <pre><code class="sql">SHOW INDEX FROM tasks;
+EXPLAIN SELECT * FROM tasks WHERE status='done';</code></pre>
+              </div>
+              <div class="right">
+                <img
+                  src="https://ducmanhphan.github.io/img/Database/MySQL/index/clustered-index/comparison-cluster-index-secondary-index.png"
+                  alt="Clustered vs Secondary Index" style="max-width:100%;height:auto;" />
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Why Clustered Storage Matters</h5>
+
+            <div class="split">
+
+              <div class="left">
+
+                <ul class="tight">
+                  <li>Rows are stored in PRIMARY KEY order</li>
+                  <li>Range queries become faster</li>
+                  <li>Sequential reads are efficient</li>
+                  <li>Less random disk access</li>
+                </ul>
+
+                <div class="box" style="margin-top:12px;">
+                  <strong>Todo Example</strong>
+                  <pre><code class="sql">
+SELECT *
+FROM tasks
+WHERE id BETWEEN 100 AND 200;
+        </code></pre>
+
+                  <ul class="tight">
+                    <li>InnoDB reads rows sequentially</li>
+                    <li>Rows are physically next to each other</li>
+                  </ul>
+                </div>
+
+              </div>
+
+              <div class="right">
+
+                <div class="box">
+                  <strong>Compare to Non-Clustered (Postgres)</strong>
+                  <ul class="tight">
+                    <li>Index finds matching IDs</li>
+                    <li>Then fetches rows from heap</li>
+                    <li>May require more random reads</li>
+                  </ul>
+                </div>
+
+                <div class="ph" style="margin-top:12px;">
+                  <img
+                    src="https://ducmanhphan.github.io/img/Database/MySQL/index/clustered-index/comparison-cluster-index-secondary-index.png"
+                    alt="Clustered vs Secondary Index" style="max-width:100%;height:auto;" />
+                </div>
+
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Questions?</h5>
+          </section>
+
+          <!-- SLIDE 8 -->
+          <section>
+            <h5>Todo App: Task Table</h5>
+            <div class="split">
+              <div class="left">
+                <ul class="tight">
+                  <li>We will query by <code>status</code> and sort by <code>created_at</code></li>
+                  <li>That workload is perfect to show index impact</li>
+                </ul>
+                <pre><code class="sql">-- Logical schema
+id, title, status, priority, created_at</code></pre>
+              </div>
+              <div class="right">
+                <img src="https://media.geeksforgeeks.org/wp-content/uploads/20230606125727/gfg.png"
+                  alt="Todo app diagram" style="max-width:100%;height:auto;" />
+              </div>
+            </div>
+          </section>
+
+          <!-- SLIDE 9 -->
+          <section>
+            <h5>Create Table: MariaDB</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">DROP TABLE IF EXISTS tasks;
+
+CREATE TABLE tasks (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  status VARCHAR(20) NOT NULL,
+  priority INT NOT NULL,
+  created_at DATETIME NOT NULL
+) ENGINE=InnoDB;</code></pre>
+              </div>
+              <div class="right">
+              </div>
+            </div>
+          </section>
+
+          <!-- SLIDE 11 -->
+          <section>
+            <h5>Insert 10,000 Rows (MariaDB Demo)</h5>
+            <pre><code class="sql">INSERT INTO tasks (title, status, priority, created_at)
+SELECT
+  CONCAT('Task ', n),
+  ELT(FLOOR(1 + RAND()*3),'open','in_progress','done'),
+  FLOOR(RAND()*5),
+  NOW() - INTERVAL FLOOR(RAND()*30) DAY
+FROM (
+  SELECT (a.d + 10*b.d + 100*c.d + 1000*d.d) + 1 AS n
+  FROM (SELECT 0 d UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+        UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) a
+  CROSS JOIN (SELECT 0 d UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) b
+  CROSS JOIN (SELECT 0 d UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) c
+  CROSS JOIN (SELECT 0 d UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+              UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) d
+) nums
+WHERE n <= 10000;
+
+SELECT COUNT(*) FROM tasks;</code></pre>
+          </section>
+
+          <!-- SLIDE 12 -->
+          <section>
+            <h5>Workload Query #1: Filter by status (Before Index) — All 3 Databases</h5>
+
+            <div class="split">
+
+              <div class="left">
+                <div class="box">
+                  <strong>Same Query (Logical)</strong>
+                  <pre><code class="sql">SELECT *
+FROM tasks
+WHERE status = 'done';</code></pre>
+                </div>
+
+                <ul class="tight" style="margin-top:10px;">
+                  <li>Before indexing, the DB often scans many rows to find <code>status='done'</code></li>
+                  <li>We use each DB’s “plan/explain” tool to confirm what it does</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <table class="tbl">
+                  <thead>
+                    <tr>
+                      <th>DB</th>
+                      <th>Plan / Analyzer Command</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>MariaDB</strong></td>
+                      <td>
+                        <pre><code class="sql">EXPLAIN
+SELECT *
+FROM tasks
+WHERE status = 'done';</code></pre>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>PostgreSQL</strong></td>
+                      <td>
+                        <pre><code class="sql">EXPLAIN ANALYZE
+SELECT *
+FROM tasks
+WHERE status = 'done';</code></pre>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><strong>SQLite</strong></td>
+                      <td>
+                        <pre><code class="sql">EXPLAIN QUERY PLAN
+SELECT *
+FROM tasks
+WHERE status = 'done';</code></pre>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 13 -->
+          <section>
+            <h5>Add Single-Column Index (status)</h5>
+
+            <div class="split">
+
+              <div class="left">
+                <div class="box">
+                  <strong>MariaDB</strong>
+                  <pre><code class="sql">CREATE INDEX idx_tasks_status
+ON tasks(status);</code></pre>
+                </div>
+
+                <div class="box" style="margin-top:12px;">
+                  <strong>PostgreSQL</strong>
+                  <pre><code class="sql">CREATE INDEX idx_tasks_status
+ON tasks(status);</code></pre>
+                </div>
+
+                <div class="box" style="margin-top:12px;">
+                  <strong>SQLite</strong>
+                  <pre><code class="sql">CREATE INDEX idx_tasks_status
+ON tasks(status);</code></pre>
+                </div>
+              </div>
+
+              <div class="right">
+                <ul class="tight">
+                  <li>Same SQL syntax across all three systems</li>
+                  <li>Creates a B-Tree index by default</li>
+                  <li>Speeds up: <code>WHERE status = 'done'</code></li>
+                  <li>Keys are stored sorted by <code>status</code></li>
+                  <li>Reduces scan from O(n) → O(log n)</li>
+                </ul>
+
+                <div class="box" style="margin-top:12px;">
+                  <strong>Important</strong>
+                  <ul class="tight">
+                    <li>Does not change table row order</li>
+                    <li>Only affects lookup speed</li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 14 -->
+          <section>
+            <h5>Workload Query #1: After Index — Analyze (All 3 Databases)</h5>
+
+            <div class="split">
+
+              <div class="left">
+                <div class="box">
+                  <strong>MariaDB</strong>
+                  <pre><code class="sql">EXPLAIN
+SELECT *
+FROM tasks
+WHERE status = 'done';</code></pre>
+                </div>
+
+                <div class="box" style="margin-top:12px;">
+                  <strong>PostgreSQL</strong>
+                  <pre><code class="sql">EXPLAIN ANALYZE
+SELECT *
+FROM tasks
+WHERE status = 'done';</code></pre>
+                </div>
+
+                <div class="box" style="margin-top:12px;">
+                  <strong>SQLite</strong>
+                  <pre><code class="sql">EXPLAIN QUERY PLAN
+SELECT *
+FROM tasks
+WHERE status = 'done';</code></pre>
+                </div>
+              </div>
+
+              <div class="right">
+                <ul class="tight">
+                  <li>After creating <code>idx_tasks_status</code></li>
+                  <li>Planner should show index usage</li>
+                  <li>MariaDB: type = ref / key used</li>
+                  <li>Postgres: Index Scan</li>
+                  <li>SQLite: SEARCH TABLE using index</li>
+                  <li>Full table scan should disappear</li>
+                </ul>
+
+                <div class="box" style="margin-top:12px;">
+                  <strong>Conceptually</strong>
+                  <ul class="tight">
+                    <li>Root → Internal → Leaf</li>
+                    <li>Direct lookup replaces scanning</li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 15 -->
+          <section>
+            <h5>Workload Query #2: Sort by created_at (Before Composite Index)</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">EXPLAIN ANALYZE
+SELECT *
+FROM tasks
+WHERE status = 'done'
+ORDER BY created_at DESC
+LIMIT 20;</code></pre>
+                <ul class="tight">
+                  <li>If only <code>idx_tasks_status</code> exists, DB may still need to sort</li>
+                  <li>Sorting can be expensive (extra work + memory + temp files)</li>
+                </ul>
+              </div>
+              <div class="right">
+              </div>
+            </div>
+          </section>
+
+          <!-- SLIDE 16 -->
+          <section>
+            <h5>Why Two-Column Index Helps Sorting</h5>
+            <div class="split">
+              <div class="left">
+                <div class="box">
+                  <strong>Composite Index:</strong> <code>(status, created_at)</code>
+                  <ul class="tight">
+                    <li>Index is sorted first by <code>status</code></li>
+                    <li>Within each status, it is sorted by <code>created_at</code></li>
+                    <li>So the DB can read rows already in the right order</li>
+                  </ul>
+                </div>
+
+                <pre><code class="sql">-- Think: ordered groups
+(status='done', newest → oldest)
+(status='open', newest → oldest)
+(status='in_progress', newest → oldest)</code></pre>
+              </div>
+              <div class="right">
+              </div>
+            </div>
+          </section>
+
+          <!-- SLIDE 17 -->
+          <section>
+            <h5>Two-Index Keys: Concrete Mini Example</h5>
+            <div class="split">
+              <div class="left">
+                <table class="tbl">
+                  <thead>
+                    <tr>
+                      <th>status</th>
+                      <th>created_at</th>
+                      <th>title</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>done</td>
+                      <td>2026-02-25 10:05</td>
+                      <td>Task A</td>
+                    </tr>
+                    <tr>
+                      <td>open</td>
+                      <td>2026-02-25 09:00</td>
+                      <td>Task B</td>
+                    </tr>
+                    <tr>
+                      <td>done</td>
+                      <td>2026-02-25 08:10</td>
+                      <td>Task C</td>
+                    </tr>
+                    <tr>
+                      <td>done</td>
+                      <td>2026-02-24 20:00</td>
+                      <td>Task D</td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div class="box" style="margin-top:10px;">
+                  <strong>With index (status, created_at DESC):</strong>
+                  <ul class="tight">
+                    <li>All <code>done</code> rows are next to each other</li>
+                    <li>Already ordered newest → oldest</li>
+                    <li><code>LIMIT 20</code> can stop early (fast)</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="right">
+              </div>
+            </div>
+          </section>
+
+          <!-- SLIDE 18 -->
+          <section>
+            <h5>Create Composite Index for Filter + Sort</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">-- MariaDB
+CREATE INDEX idx_status_created
+ON tasks(status, created_at DESC);
+
+-- SQLite (DESC allowed in index; planner may still optimize)
+CREATE INDEX idx_status_created
+ON tasks(status, created_at);
+
+-- PostgreSQL
+CREATE INDEX idx_status_created
+ON tasks(status, created_at DESC);</code></pre>
+
+                <ul class="tight">
+                  <li>This index matches: <code>WHERE status=? ORDER BY created_at DESC</code></li>
+                  <li>Reduces or removes the sort step</li>
+                </ul>
+              </div>
+              <div class="right">
+              </div>
+            </div>
+          </section>
+
+          <!-- SLIDE 19 -->
+          <section>
+            <h5>Query After Composite Index (Expected Improvement)</h5>
+            <div class="split">
+              <div class="left">
+                <pre><code class="sql">EXPLAIN ANALYZE
+SELECT *
+FROM tasks
+WHERE status = 'done'
+ORDER BY created_at DESC
+LIMIT 20;</code></pre>
+
+                <ul class="tight">
+                  <li>Planner can do an index range scan</li>
+                  <li>No big sort needed</li>
+                  <li>Reads only the first 20 matching rows</li>
+                </ul>
+              </div>
+              <div class="right">
+              </div>
+            </div>
+          </section>
+
+          <!-- SLIDE 20 -->
+          <section>
+            <h5>Questions?</h5>
+          </section>
+
+        </section>
 
         <!-- ===================== MODULE 8 =====================  -->
 
@@ -27310,291 +27806,265 @@ FROM flowers;
             </div>
           </section>
 
-          <!-- ========================= -->
-          <!-- Q1 -->
-          <!-- ========================= -->
           <section>
-            <h5>Question 1</h5>
             <div class="split">
               <div class="left">
-                <p>
-                  Database table schema attributes, data types, and constraints are important for ensuring the
-                  integrity
-                  of the
-                  data in the table.
-                </p>
-                <p>
-                  Read pages 248 and 249 in SQL The Complete Reference (3rd Edition) and explain what
-                  <strong>data integrity</strong> is in one paragraph.
-                </p>
+                <h3>Question 1</h3>
+                <p>What is data integrity and why is it important in a database?</p>
               </div>
               <div class="right">
-                <div style="border:1px solid #ccc; border-radius:10px; padding:14px;">
-                  <p style="margin:0 0 10px 0;"><strong>What to include</strong></p>
-                  <ul style="margin:0;">
-                    <li>Definition in your own words</li>
-                    <li>What can go wrong without integrity</li>
-                    <li>Why the database should enforce rules</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </section>
+                <p>
+                  Data integrity ensures data remains accurate and consistent by using
+                  constraints that prevent errors, duplicates, and invalid entries.
+                </p>
 
-          <!-- ========================= -->
-          <!-- Q2 -->
-          <!-- ========================= -->
-          <section>
-            <h5>Question 2</h5>
-            <div class="split">
-              <div class="left">
-                <p>
-                  Pages 248 and 249 outline seven use cases highlighting the importance of data integrity.
-                </p>
-                <p>
-                  For each use case, provide a one or two sentence example related to a <strong>Bike Database
-                    Application</strong>.
-                </p>
-                <ul>
-                  <li>Required data</li>
-                  <li>Validity</li>
-                  <li>Entity integrity</li>
-                  <li>Referential integrity</li>
-                  <li>Consistency</li>
-                  <li>Nonduplication</li>
-                  <li>Business rule enforcement</li>
-                </ul>
-              </div>
-              <div class="right">
-                <div style="border:1px solid #ccc; border-radius:10px; padding:14px;">
-                  <p style="margin:0 0 10px 0;"><strong>Example pattern</strong></p>
-                  <ul style="margin:0;">
-                    <li>Name the rule</li>
-                    <li>State the bike scenario</li>
-                    <li>State the consequence if violated</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- ========================= -->
-          <!-- Q3 -->
-          <!-- ========================= -->
-          <section>
-            <h5>Question 3</h5>
-            <div class="split">
-              <div class="left">
-                <p>
-                  Explain the following SQL constraints and their purpose in ensuring data integrity and reliability
-                  within a database:
-                </p>
-                <ul>
-                  <li>PRIMARY KEY</li>
-                  <li>FOREIGN KEY</li>
-                  <li>UNIQUE</li>
-                  <li>NOT NULL</li>
-                  <li>CHECK</li>
-                  <li>DEFAULT</li>
-                </ul>
-              </div>
-              <div class="right">
-                <div style="border:1px solid #ccc; border-radius:10px; padding:14px;">
-                  <p style="margin:0 0 10px 0;"><strong>For each constraint</strong></p>
-                  <ul style="margin:0;">
-                    <li>What it enforces</li>
-                    <li>What it prevents</li>
-                    <li>Bike application example</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- ========================= -->
-          <!-- Q4 -->
-          <!-- ========================= -->
-          <section>
-            <h5>Question 4</h5>
-            <div class="split">
-              <div class="left">
-                <p>
-                  Write the SQL statements to create <strong>two SQLite tables</strong> for a Bicycle Database
-                  Application that
-                  together demonstrate:
-                </p>
-                <ul>
-                  <li>PRIMARY KEY</li>
-                  <li>FOREIGN KEY</li>
-                  <li>UNIQUE</li>
-                  <li>NOT NULL</li>
-                  <li>DEFAULT</li>
-                </ul>
-                <p>
-                  Ensure the tables represent a real world scenario (example: bicycles and stores) and show how
-                  these
-                  constraints
-                  enforce data integrity.
-                </p>
-              </div>
-              <div class="right">
-                <pre><code class="sql">
--- your tables should show:
--- 1) a primary key per table
--- 2) a foreign key from one table to the other
--- 3) a unique rule (example: serial number)
--- 4) not null on required fields
--- 5) default value for a missing field
-        </code></pre>
-              </div>
-            </div>
-          </section>
-
-          <!-- ========================= -->
-          <!-- Q5 -->
-          <!-- ========================= -->
-          <section>
-            <h5>Question 5</h5>
-            <div class="split">
-              <div class="left">
-                <p>
-                  In the following SQL statement, the brand attribute is defined with a NOT NULL constraint and a
-                  default value.
-                </p>
-                <pre><code class="sql">
+                <pre><code class="language-sql">
 CREATE TABLE Bicycles (
-  bikeId INTEGER PRIMARY KEY,
+  bikeID INTEGER PRIMARY KEY,
+  model TEXT NOT NULL,
+  price REAL NOT NULL CHECK(price > 0)
+);
+</code></pre>
+
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Question 2</h3>
+                <p>Provide examples of key data integrity use cases in a Bike system.</p>
+              </div>
+              <div class="right">
+                <ul class="tight">
+                  <li>Required: bikeID and model must exist.</li>
+                  <li>Validity: price cannot be negative.</li>
+                  <li>Entity: bikeID must be unique.</li>
+                  <li>Referential: storeID must exist in Stores.</li>
+                  <li>Relationships: Inventory must match recorded bikes.</li>
+                  <li>Business Rule: Cannot sell if stock = 0.</li>
+                  <li>Consistency: Sale updates inventory and sales record.</li>
+                </ul>
+
+                <pre><code class="language-sql">
+CREATE TABLE Stores (
+  storeID INTEGER PRIMARY KEY
+);
+
+CREATE TABLE Bicycles (
+  bikeID INTEGER PRIMARY KEY,
+  model TEXT NOT NULL,
+  stock INTEGER CHECK(stock >= 0),
+  storeID INTEGER,
+  FOREIGN KEY(storeID) REFERENCES Stores(storeID)
+);
+</code></pre>
+
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Question 3</h3>
+                <p>Explain key SQL constraints.</p>
+              </div>
+              <div class="right">
+                <ul class="tight">
+                  <li>PRIMARY KEY: Unique and NOT NULL.</li>
+                  <li>FOREIGN KEY: References another table.</li>
+                  <li>UNIQUE: Prevents duplicates.</li>
+                  <li>NOT NULL: Prevents empty values.</li>
+                  <li>CHECK: Restricts allowed values.</li>
+                  <li>DEFAULT: Assigns automatic value.</li>
+                </ul>
+
+                <pre><code class="language-sql">
+CREATE TABLE Bicycles (
+  bikeID INTEGER PRIMARY KEY,
+  serialNumber TEXT UNIQUE,
+  model TEXT NOT NULL,
+  bikeType TEXT DEFAULT 'road',
+  price REAL CHECK(price > 0)
+);
+</code></pre>
+
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Question 4</h3>
+                <p>Write SQLite tables demonstrating constraints.</p>
+              </div>
+              <div class="right">
+                <pre><code class="language-sql">
+CREATE TABLE Stores (
+  storeID INTEGER PRIMARY KEY,
+  storeName TEXT NOT NULL UNIQUE,
+  city TEXT NOT NULL DEFAULT 'Stockton'
+);
+
+CREATE TABLE Bicycles (
+  bikeID INTEGER PRIMARY KEY AUTOINCREMENT,
+  serialNumber TEXT NOT NULL UNIQUE,
+  model TEXT NOT NULL,
+  bikeType TEXT NOT NULL DEFAULT 'road',
+  storeID INTEGER NOT NULL,
+  FOREIGN KEY(storeID) REFERENCES Stores(storeID)
+);
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Question 5</h3>
+                <p>What does NOT NULL DEFAULT 'Unknown' mean?</p>
+              </div>
+              <div class="right">
+                <p>
+                  The column cannot be NULL. If no value is given,
+                  it automatically becomes "Unknown."
+                </p>
+
+                <pre><code class="language-sql">
+CREATE TABLE Bicycles (
+  bikeID INTEGER PRIMARY KEY,
   brand TEXT NOT NULL DEFAULT 'Unknown',
   price REAL NOT NULL
 );
-        </code></pre>
-                <p>
-                  What does <code>NOT NULL DEFAULT 'Unknown'</code> mean for the brand attribute?
-                  Why might it be useful in a Bicycle Application?
-                </p>
-              </div>
-              <div class="right">
-                <div style="border:1px solid #ccc; border-radius:10px; padding:14px;">
-                  <p style="margin:0 0 10px 0;"><strong>Hint</strong></p>
-                  <ul style="margin:0;">
-                    <li>NOT NULL blocks missing brand values</li>
-                    <li>DEFAULT fills a value when none is provided</li>
-                    <li>Explain how this helps reporting and UI display</li>
-                  </ul>
-                </div>
+</code></pre>
+
               </div>
             </div>
           </section>
 
-          <!-- ========================= -->
-          <!-- Q6 -->
-          <!-- ========================= -->
           <section>
-            <h5>Question 6</h5>
             <div class="split">
               <div class="left">
-                <p>What is the difference between the following constraints in SQL?</p>
-                <ul>
-                  <li>PRIMARY KEY</li>
-                  <li>UNIQUE</li>
-                  <li>NOT NULL</li>
+                <h3>Question 6</h3>
+                <p>Difference between PRIMARY KEY, UNIQUE, and NOT NULL?</p>
+              </div>
+              <div class="right">
+                <ul class="tight">
+                  <li>NOT NULL: Cannot be empty.</li>
+                  <li>UNIQUE: No duplicates.</li>
+                  <li>PRIMARY KEY: UNIQUE + NOT NULL.</li>
                 </ul>
-              </div>
-              <div class="right">
-                <table border="1" style="width:100%; border-collapse:collapse; text-align:center;">
-                  <tr>
-                    <th>Constraint</th>
-                    <th>Uniqueness</th>
-                    <th>Allows NULL</th>
-                    <th>Main purpose</th>
-                  </tr>
-                  <tr>
-                    <td>PRIMARY KEY</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td>UNIQUE</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td>NOT NULL</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                  </tr>
-                </table>
-              </div>
-            </div>
-          </section>
 
-          <!-- ========================= -->
-          <!-- Q7 -->
-          <!-- ========================= -->
-          <section>
-            <h5>Question 7</h5>
-            <div class="split">
-              <div class="left">
-                <p>Please explain one risk of adding too many constraints when creating the table schema.</p>
-              </div>
-              <div class="right">
-              </div>
-            </div>
-          </section>
-
-          <!-- ========================= -->
-          <!-- Q8 -->
-          <!-- ========================= -->
-          <section>
-            <h5>Question 8</h5>
-            <div class="split">
-              <div class="left">
-                <p>Please explain why each SQL database table must have a primary key.</p>
-              </div>
-              <div class="right">
-              </div>
-            </div>
-          </section>
-
-          <!-- ========================= -->
-          <!-- Q9 -->
-          <!-- ========================= -->
-          <section>
-            <h5>Question 9</h5>
-            <div class="split">
-              <div class="left">
-                <p>Please explain why auto increment is very useful for managing primary keys.</p>
-              </div>
-              <div class="right">
-                <pre><code class="sql">
--- SQLite example
+                <pre><code class="language-sql">
 CREATE TABLE Bicycles (
-  bikeId INTEGER PRIMARY KEY,
-  brand  TEXT NOT NULL,
-  price  REAL NOT NULL
+  bikeID INTEGER PRIMARY KEY,
+  serialNumber TEXT UNIQUE,
+  model TEXT NOT NULL
+);
+</code></pre>
+
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Question 7</h3>
+                <p>Risk of too many constraints?</p>
+              </div>
+              <div class="right">
+                <p>
+                  Excessive constraints can make valid inserts fail and reduce flexibility.
+                </p>
+
+                <pre><code class="language-sql">
+-- Overly strict example
+CREATE TABLE Bicycles (
+  bikeID INTEGER PRIMARY KEY,
+  model TEXT NOT NULL UNIQUE,
+  price REAL NOT NULL CHECK(price > 5000),
+  stock INTEGER CHECK(stock = 1)
+);
+</code></pre>
+
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Question 8</h3>
+                <p>Why must each table have a PRIMARY KEY?</p>
+              </div>
+              <div class="right">
+                <p>
+                  It uniquely identifies each row so records can be reliably updated or referenced.
+                </p>
+
+                <pre><code class="language-sql">
+CREATE TABLE Bicycles (
+  bikeID INTEGER PRIMARY KEY,
+  model TEXT,
+  bikeType TEXT
+);
+</code></pre>
+
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Question 9</h3>
+                <p>Why is AUTOINCREMENT useful?</p>
+              </div>
+              <div class="right">
+                <p>
+                  It automatically generates the next unique ID for each new record.
+                </p>
+
+                <pre><code class="language-sql">
+CREATE TABLE Bicycles (
+  bikeID INTEGER PRIMARY KEY AUTOINCREMENT,
+  model TEXT NOT NULL
+);
+</code></pre>
+
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Question 10</h3>
+                <p>Compare PRIMARY KEY and FOREIGN KEY.</p>
+              </div>
+              <div class="right">
+                <p>
+                  PRIMARY KEY uniquely identifies rows in its table.
+                  FOREIGN KEY links rows to another table.
+                </p>
+
+                <pre><code class="language-sql">
+CREATE TABLE Stores (
+  storeID INTEGER PRIMARY KEY
 );
 
--- bikeId is generated automatically
-INSERT INTO Bicycles (brand, price)
-VALUES ('Trek', 999.99);
-        </code></pre>
-              </div>
-            </div>
-          </section>
+CREATE TABLE Bicycles (
+  bikeID INTEGER PRIMARY KEY,
+  storeID INTEGER,
+  FOREIGN KEY(storeID) REFERENCES Stores(storeID)
+);
+</code></pre>
 
-          <!-- ========================= -->
-          <!-- Q10 -->
-          <!-- ========================= -->
-          <section>
-            <h5>Question 10</h5>
-            <div class="split">
-              <div class="left">
-                <p>Please explain the similarities and differences between a primary key and a foreign key.</p>
-              </div>
-              <div class="right">
               </div>
             </div>
           </section>
@@ -27641,399 +28111,262 @@ VALUES ('Trek', 999.99);
           </section>
 
           <section>
-            <h5>Lab 2 Overview</h5>
             <div class="split">
               <div class="left">
-                <ul>
-                  <li>Create a SQLite database file and confirm it exists</li>
-                  <li>Create tables attributes, constraints, and foreign keys</li>
-                  <li>Alter a table to add a column with a default value</li>
-                  <li>Enable foreign key enforcement and validate failures</li>
-                  <li>Insert valid data and confirm with SELECT</li>
-                  <li>Drop a table and verify changes</li>
-                  <li>Run useful dot commands and capture screenshots</li>
+                <h3>Question 1</h3>
+                <ul class="tight">
+                  <li>Open SQLite and create a database named <code>FlowerShop.db</code> using:
+                    <code>.open FlowerShop.db</code>
+                  </li>
+                  <li>Verify the database creation using: <code>.databases</code></li>
+                  <li>Upload one screenshot showing steps (1) and (2)</li>
                 </ul>
               </div>
               <div class="right">
-                <div style="border:1px solid #ccc; border-radius:10px; padding:14px;">
-                  <p style="margin:0 0 10px 0;"><strong>Submission Rule</strong></p>
-                  <ul style="margin:0;">
-                    <li>Each question requires a screenshot</li>
-                    <li>Screenshot must show command and output</li>
-                    <li>Keep your terminal readable and uncluttered</li>
-                  </ul>
-                </div>
+                <img src="./img/lab2-1.png" alt="Screenshot of SQLite commands for creating and verifying database"
+                  style="max-width:100%; border:1px solid #ccc; border-radius:10px;">
               </div>
             </div>
           </section>
 
           <section>
-            <h5>Recommended Workflow</h5>
             <div class="split">
               <div class="left">
-                <ol>
-                  <li>Start SQLite3</li>
-                  <li>Create and open database file</li>
-                  <li>Create tables</li>
-                  <li>Turn foreign keys on</li>
-                  <li>Test invalid insert (capture error)</li>
-                  <li>Insert valid rows</li>
-                  <li>Verify with SELECT</li>
-                  <li>Drop table and verify</li>
-                </ol>
-              </div>
-              <div class="right">
-                <pre><code>
-Tip:
-Use one clean terminal session.
-After each question, pause and take the screenshot.
-        </code></pre>
-              </div>
-            </div>
-          </section>
-
-          <!-- ========================= -->
-          <!-- Q1 -->
-          <!-- ========================= -->
-          <section>
-            <h5>Question 1 (10 pts)</h5>
-            <div class="split">
-              <div class="left">
-                <ol>
-                  <li>Open SQLite and create a database named <strong>FlowerShop.db</strong>:</li>
-                </ol>
-                <pre><code>
-.open FlowerShop.db
-        </code></pre>
-
-                <ol start="2">
-                  <li>Verify the database creation:</li>
-                </ol>
-                <pre><code>
-.databases
-        </code></pre>
-
-              </div>
-              <div class="right">
-                <div style="border:1px solid #ccc; border-radius:10px; padding:14px;">
-                  <p style="margin:0 0 10px 0;"><strong>What you should see</strong></p>
-                  <ul style="margin:0;">
-                    <li>Main database path ends with <code>FlowerShop.db</code></li>
-                    <li>SQLite lists <code>main</code> and usually <code>temp</code></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- ========================= -->
-          <!-- Q2 -->
-          <!-- ========================= -->
-          <section>
-            <h5>Question 2 (10 pts)</h5>
-            <div class="split">
-              <div class="left">
-                <p>Create the following tables with attributes and constraints:</p>
-
-                <pre><code class="sql">
-CREATE TABLE Flowers (
-  FlowerID INTEGER PRIMARY KEY,
-  Name     TEXT NOT NULL UNIQUE,
-  Price    REAL NOT NULL CHECK (Price > 0)
-);
-
-CREATE TABLE Orders (
-  OrderID      INTEGER PRIMARY KEY,
-  CustomerName TEXT NOT NULL,
-  OrderDate    TEXT NOT NULL CHECK (OrderDate GLOB '????-??-??')
-);
-
-CREATE TABLE OrderDetails (
-  DetailID INTEGER PRIMARY KEY,
-  OrderID  INTEGER NOT NULL,
-  FlowerID INTEGER NOT NULL,
-  Quantity INTEGER NOT NULL CHECK (Quantity > 0),
-  FOREIGN KEY (OrderID)  REFERENCES Orders(OrderID),
-  FOREIGN KEY (FlowerID) REFERENCES Flowers(FlowerID)
-);
-        </code></pre>
-                <pre><code>
-.schema
-        </code></pre>
-              </div>
-
-              <div class="right">
-                <div style="border:1px solid #ccc; border-radius:10px; padding:14px;">
-                  <p style="margin:0 0 10px 0;"><strong>Notes</strong></p>
-                  <ul style="margin:0;">
-                    <li><code>CHECK (OrderDate GLOB '????-??-??')</code> enforces a simple YYYY-MM-DD shape</li>
-                    <li>Foreign keys exist even before enforcement is turned on</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- ========================= -->
-          <!-- Q3 -->
-          <!-- ========================= -->
-          <section>
-            <h5>Question 3 (10 pts)</h5>
-            <div class="split">
-              <div class="left">
-                <ol>
-                  <li>Look up foreign keys:</li>
-                </ol>
-                <pre><code class="sql">
-PRAGMA foreign_key_list('OrderDetails');
-        </code></pre>
-
-                <p>
-                  If you want to check other tables:
-                </p>
-                <pre><code class="sql">
-PRAGMA foreign_key_list('Flowers');
-PRAGMA foreign_key_list('Orders');
-        </code></pre>
-              </div>
-
-              <div class="right">
-                <div style="border:1px solid #ccc; border-radius:10px; padding:14px;">
-                  <p style="margin:0 0 10px 0;"><strong>What you should see</strong></p>
-                  <ul style="margin:0;">
-                    <li>Two rows in the output for <code>OrderDetails</code></li>
-                    <li>One referencing <code>Orders</code>, one referencing <code>Flowers</code></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- ========================= -->
-          <!-- Q4 -->
-          <!-- ========================= -->
-          <section>
-            <h5>Question 4 (10 pts)</h5>
-            <div class="split">
-              <div class="left">
-                <ol>
-                  <li>Alter the Flowers table to add a Stock column with a default value of 50:</li>
-                </ol>
-                <pre><code class="sql">
-ALTER TABLE Flowers
-ADD COLUMN Stock INTEGER NOT NULL DEFAULT 50;
-        </code></pre>
-
-                <ol start="2">
-                  <li>Verify the alteration:</li>
-                </ol>
-                <pre><code>
-.schema
-        </code></pre>
-
-              </div>
-
-              <div class="right">
-                <div style="border:1px solid #ccc; border-radius:10px; padding:14px;">
-                  <p style="margin:0 0 10px 0;"><strong>Why DEFAULT matters</strong></p>
-                  <ul style="margin:0;">
-                    <li>Existing rows need a value for the new column</li>
-                    <li>Default prevents NULL stock values</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- ========================= -->
-          <!-- Q5 -->
-          <!-- ========================= -->
-          <section>
-            <h5>Question 5 (10 pts)</h5>
-            <div class="split">
-              <div class="left">
-                <ol>
-                  <li>Enforce foreign key constraints:</li>
-                </ol>
-                <pre><code class="sql">
-PRAGMA foreign_keys = ON;
-        </code></pre>
-
-                <ol start="2">
-                  <li>Verify enforcement (should return 1):</li>
-                </ol>
-                <pre><code class="sql">
-PRAGMA foreign_keys;
-        </code></pre>
-              </div>
-
-              <div class="right">
-                <pre><code>
-If PRAGMA foreign_keys returns 0:
-- you are in a different connection
-- re-run PRAGMA foreign_keys = ON;
-        </code></pre>
-              </div>
-            </div>
-          </section>
-
-          <!-- ========================= -->
-          <!-- Q6 -->
-          <!-- ========================= -->
-          <section>
-            <h5>Question 6 (10 pts)</h5>
-            <div class="split">
-              <div class="left">
-                <ol>
-                  <li>Insert a record into OrderDetails that violates a foreign key:</li>
-                </ol>
-                <pre><code class="sql">
--- OrderID 999 does not exist in Orders
--- FlowerID 999 does not exist in Flowers
-INSERT INTO OrderDetails (OrderID, FlowerID, Quantity)
-VALUES (999, 999, 1);
-        </code></pre>
-
-                <ol start="2">
-                  <li>Upload one screenshot showing the INSERT and the error message</li>
-                </ol>
-              </div>
-
-              <div class="right">
-                <div style="border:1px solid #ccc; border-radius:10px; padding:14px;">
-                  <p style="margin:0 0 10px 0;"><strong>Expected result</strong></p>
-                  <ul style="margin:0;">
-                    <li>An error like: <code>FOREIGN KEY constraint failed</code></li>
-                    <li>This confirms foreign key enforcement is active</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- ========================= -->
-          <!-- Q7 -->
-          <!-- ========================= -->
-          <section>
-            <h5>Question 7 (10 pts)</h5>
-            <div class="split">
-              <div class="left">
-                <ol>
-                  <li>Insert a Flower, an Order, and an OrderDetails record that works:</li>
-                </ol>
-                <pre><code class="sql">
-INSERT INTO Flowers (Name, Price)
-VALUES ('Rose', 2.50);
-
-INSERT INTO Orders (CustomerName, OrderDate)
-VALUES ('Alice Johnson', '2026-02-01');
-
-INSERT INTO OrderDetails (OrderID, FlowerID, Quantity)
-VALUES (1, 1, 3);
-        </code></pre>
-
-                <ol start="2">
-                  <li>Verify the record:</li>
-                </ol>
-                <pre><code class="sql">
-SELECT * FROM OrderDetails;
-        </code></pre>
-              </div>
-
-              <div class="right">
-                <div style="border:1px solid #ccc; border-radius:10px; padding:14px;">
-                  <p style="margin:0 0 10px 0;"><strong>Note on IDs</strong></p>
-                  <ul style="margin:0;">
-                    <li>If your IDs are not 1, update the INSERT values accordingly</li>
-                    <li>You can check with: <code>SELECT * FROM Flowers;</code> and
-                      <code>SELECT * FROM Orders;</code>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- ========================= -->
-          <!-- Q8 -->
-          <!-- ========================= -->
-          <section>
-            <h5>Question 8 (10 pts)</h5>
-            <div class="split">
-              <div class="left">
-                <ol>
-                  <li>Drop the Flowers table:</li>
-                </ol>
-                <pre><code class="sql">
-DROP TABLE Flowers;
-        </code></pre>
-
-                <ol start="2">
-                  <li>Verify the drop:</li>
-                </ol>
-                <pre><code>
-.tables
-        </code></pre>
-              </div>
-
-              <div class="right">
-                <div style="border:1px solid #ccc; border-radius:10px; padding:14px;">
-                  <p style="margin:0 0 10px 0;"><strong>Reminder</strong></p>
-                  <ul style="margin:0;">
-                    <li>If foreign keys are enforced, dropping referenced tables can fail</li>
-                    <li>If it fails, capture the error as your evidence</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <!-- ========================= -->
-          <!-- Q9 -->
-          <!-- ========================= -->
-          <section>
-            <h5>Question 9 (10 pts)</h5>
-            <div class="split">
-              <div class="left">
-                <p>
-                  Will dropping the table only delete the table, or will it also delete the data permanently?
-                </p>
-              </div>
-              <div class="right">
-              </div>
-            </div>
-          </section>
-
-          <!-- ========================= -->
-          <!-- Q10 -->
-          <!-- ========================= -->
-          <section>
-            <h5>Question 10 (10 pts)</h5>
-            <div class="split">
-              <div class="left">
-                <p>
-                  Pick two dot commands from section 3 in SQLite CLI documentation that you think are useful.
-                  Run both commands in the SQLite3 command line and upload a screenshot showing the result.
-                </p>
-
-                <p><strong>Example choice (you may pick different ones):</strong></p>
-                <ul>
-                  <li><code>.tables</code> = list tables</li>
-                  <li><code>.schema</code> = show SQL used to create tables</li>
+                <h3>Question 2</h3>
+                <ul class="tight">
+                  <li>Create tables with attributes and constraints:
+                    <ul class="tight">
+                      <li><strong>Flowers</strong>: FlowerID (INTEGER, PK), Name (TEXT, NOT NULL, UNIQUE), Price (REAL,
+                        NOT NULL, &gt; 0)</li>
+                      <li><strong>Orders</strong>: OrderID (INTEGER, PK), CustomerName (TEXT, NOT NULL), OrderDate
+                        (TEXT, NOT NULL, YYYY-MM-DD)</li>
+                      <li><strong>OrderDetails</strong>: DetailID (INTEGER, PK), OrderID (INTEGER, FK→Orders.OrderID,
+                        NOT NULL), FlowerID (INTEGER, FK→Flowers.FlowerID, NOT NULL), Quantity (INTEGER, NOT NULL, &gt;
+                        0)</li>
+                    </ul>
+                  </li>
+                  <li>Verify table creation using: <code>.schema</code></li>
+                  <li>Upload one screenshot showing <code>.schema</code></li>
                 </ul>
               </div>
-
               <div class="right">
-                <pre><code>
-.tables
-.schema
-        </code></pre>
+                <img src="./img/lab2-2.png" alt="Screenshot of SQLite commands for creating and verifying database"
+                  style="max-width:100%; border:1px solid #ccc; border-radius:10px;">
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Question 3</h3>
+                <ul class="tight">
+                  <li>Lookup all foreign keys using: <code>PRAGMA foreign_key_list(&lt;table_name&gt;);</code></li>
+                  <li>Upload one screenshot showing the command and output</li>
+                </ul>
+              </div>
+              <div class="right">
+                <img src="./img/lab2-3.png" alt="Screenshot of SQLite commands for creating and verifying database"
+                  style="max-width:100%; border:1px solid #ccc; border-radius:10px;">
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Question 4</h3>
+                <ul class="tight">
+                  <li>Alter the Flowers table to add <code>Stock</code> with default value 50</li>
+                  <li>Verify using: <code>.schema</code></li>
+                  <li>Upload one screenshot showing <code>.schema</code> after the alter</li>
+                </ul>
+              </div>
+              <div class="right">
+                <img src="./img/lab2-4.png" alt="Screenshot of SQLite commands for creating and verifying database"
+                  style="max-width:100%; border:1px solid #ccc; border-radius:10px;">
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Question 5</h3>
+                <ul class="tight">
+                  <li>Enforce foreign keys using: <code>PRAGMA foreign_keys = ON;</code></li>
+                  <li>Verify it shows 1 using: <code>PRAGMA foreign_keys;</code></li>
+                  <li>Upload one screenshot showing the verification output</li>
+                </ul>
+              </div>
+              <div class="right">
+                <img src="./img/lab2-5.png" alt="Screenshot of SQLite commands for creating and verifying database"
+                  style="max-width:100%; border:1px solid #ccc; border-radius:10px;">
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Question 6</h3>
+                <ul class="tight">
+                  <li>Insert a record into OrderDetails that violates a foreign key</li>
+                  <li>Upload one screenshot showing the INSERT statement and the error message</li>
+                </ul>
+              </div>
+              <div class="right">
+                <img src="./img/lab2-6.png" alt="Screenshot of SQLite commands for creating and verifying database"
+                  style="max-width:100%; border:1px solid #ccc; border-radius:10px;">
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Question 7</h3>
+                <ul class="tight">
+                  <li>Insert one valid Flower, one valid Order, and one valid OrderDetails record</li>
+                  <li>Verify using: <code>SELECT * FROM OrderDetails;</code></li>
+                  <li>Upload one screenshot showing the SELECT output</li>
+                </ul>
+              </div>
+              <div class="right">
+                <img src="./img/lab2-7.png" alt="Screenshot of SQLite commands for creating and verifying database"
+                  style="max-width:100%; border:1px solid #ccc; border-radius:10px;">
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Question 8</h3>
+                <ul class="tight">
+                  <li>Drop the Flowers table using: <code>DROP TABLE Flowers;</code></li>
+                  <li>Verify using: <code>.tables</code></li>
+                  <li>Upload one screenshot showing the DROP and .tables verification</li>
+                </ul>
+              </div>
+              <div class="right">
+                <img src="./img/lab2-8.png" alt="Screenshot of SQLite commands for creating and verifying database"
+                  style="max-width:100%; border:1px solid #ccc; border-radius:10px;">
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Question 9</h3>
+                <p>Will dropping the table only delete the table, or will it also delete the data permanently?</p>
+              </div>
+              <div class="right">
+                <div class="img-placeholder">Table and Data (Rows)</div>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h3>Question 10</h3>
+                <ul class="tight">
+                  <li>Pick two dot-commands from SQLite CLI documentation (Section 3)</li>
+                  <li>Run both commands in the SQLite3 command line</li>
+                  <li>Upload a screenshot showing the results of running both commands</li>
+                </ul>
+              </div>
+              <div class="right">
+                <img src="./img/lab2-10-1.png" alt="Screenshot of SQLite commands for creating and verifying database"
+                  style="max-width:100%; border:1px solid #ccc; border-radius:10px;">
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <img src="./img/lab2-10-2.png" alt="Screenshot of SQLite commands for creating and verifying database"
+                  style="max-width:100%; border:1px solid #ccc; border-radius:10px;">
+              </div>
+              <div class="right">
+                <img src="./img/lab2-10-3.png" alt="Screenshot of SQLite commands for creating and verifying database"
+                  style="max-width:100%; border:1px solid #ccc; border-radius:10px;">
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <img src="./img/lab2-10-4.png" alt="Screenshot of SQLite commands for creating and verifying database"
+                  style="max-width:100%; border:1px solid #ccc; border-radius:10px;">
+              </div>
+              <div class="right">
+                <img src="./img/lab2-10-5.png" alt="Screenshot of SQLite commands for creating and verifying database"
+                  style="max-width:100%; border:1px solid #ccc; border-radius:10px;">
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <img src="./img/lab2-10-6.png" alt="Screenshot of SQLite commands for creating and verifying database"
+                  style="max-width:100%; border:1px solid #ccc; border-radius:10px;">
+              </div>
+              <div class="right">
+                <img src="./img/lab2-10-7.png" alt="Screenshot of SQLite commands for creating and verifying database"
+                  style="max-width:100%; border:1px solid #ccc; border-radius:10px;">
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <img src="./img/lab2-10-8.png" alt="Screenshot of SQLite commands for creating and verifying database"
+                  style="max-width:100%; border:1px solid #ccc; border-radius:10px;">
+              </div>
+              <div class="right">
+                <img src="./img/lab2-10-9.png" alt="Screenshot of SQLite commands for creating and verifying database"
+                  style="max-width:100%; border:1px solid #ccc; border-radius:10px;">
               </div>
             </div>
           </section>
 
         </section>
 
+        <section id="midterm">
+
+          <section>
+            <div class="split">
+              <div class="left">
+                <h5>Midterm Exam – Friday, March 6</h5>
+                <p><strong>Time:</strong> 8:00 - 9:00 AM</p>
+
+                <h3>Format</h3>
+                <ul>
+                  <li>20 questions on paper</li>
+                  <li>18 multiple-choice, 2 written response</li>
+                  <li>Allowed: 2 pencils & 1 page of notes</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Scope</h3>
+                <ul>
+                  <li>Modules 1–7 (2–3 questions per module)</li>
+                  <li>Homework/Lab 1–3</li>
+                  <li><a href="./docs/Midterm-Sample.docx" target="_blank">Sample Midterm</a></li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+        </section>
 
       </div>
     </div>
