@@ -26762,6 +26762,136 @@ WHERE payload @>
             </div>
           </section>
 
+          <section>
+            <h5>MariaDB – ERROR 2002 (Socket Not Found)</h5>
+            <div class="split">
+
+              <div class="left">
+                <h6>Error</h6>
+                <pre><code>mysql.user table already exists!
+Run mariadb-upgrade, not mariadb-install-db
+
+ERROR 2002 (HY000):
+Can't connect to local server
+through socket '/tmp/mysql.sock' (2)
+
+FATAL ERROR: Upgrade failed</code></pre>
+              </div>
+
+              <div class="right">
+                <h6>Fix (Step-by-Step Path)</h6>
+                <ol>
+                  <li><strong>Start the server</strong>
+                    <pre><code>brew services start mariadb</code></pre>
+                  </li>
+
+                  <li><strong>Verify it is running</strong>
+                    <pre><code>mysqladmin ping</code></pre>
+                  </li>
+
+                  <li><strong>Fix socket path (if needed)</strong>
+                    <pre><code>ls /opt/homebrew/var/mysql/*.sock
+sudo ln -sf /opt/homebrew/var/mysql/mysql.sock /tmp/mysql.sock</code></pre>
+                  </li>
+
+                  <li><strong>Run upgrade</strong>
+                    <pre><code>mariadb-upgrade -uroot</code></pre>
+                  </li>
+                </ol>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Python – Ensure pip Matches the Active Interpreter</h5>
+            <div class="split">
+
+              <div class="left">
+                <h6>Problem</h6>
+                <pre><code>$ python --version
+Python 3.11.x
+
+$ pip --version
+pip 23.x from ... (python 3.9)
+
+# Result:
+# Package installs to different Python
+# ModuleNotFoundError</code></pre>
+              </div>
+
+              <div class="right">
+                <h6>Fix (System Interpreter)</h6>
+                <ol>
+                  <li><strong>Check Python location</strong>
+                    <pre><code>which python
+python --version</code></pre>
+                  </li>
+
+                  <li><strong>Use pip via python</strong>
+                    <pre><code>python -m pip install package_name</code></pre>
+                  </li>
+
+                  <li><strong>If multiple Python versions</strong>
+                    <pre><code>python3 -m pip install package_name
+# or explicitly:
+python3.11 -m pip install package_name</code></pre>
+                  </li>
+
+                  <li><strong>Verify pip binding</strong>
+                    <pre><code>python -m pip --version</code></pre>
+                  </li>
+                </ol>
+
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>MariaDB – Start Service on Windows (OS Installation)</h5>
+            <div class="split">
+
+              <div class="left">
+                <h6>Problem</h6>
+                <pre><code>MariaDB installed via Windows installer
+
+mysql -u root -p
+
+ERROR 2003 (HY000):
+Can't connect to MySQL server
+on 'localhost'</code></pre>
+              </div>
+
+              <div class="right">
+                <h6>Fix (Start Windows Service)</h6>
+                <ol>
+                  <li><strong>Check if service exists</strong>
+                    <pre><code>sc query MariaDB</code></pre>
+                  </li>
+
+                  <li><strong>Start from Command Prompt (Admin)</strong>
+                    <pre><code>net start MariaDB</code></pre>
+                  </li>
+
+                  <li><strong>Or start from Services GUI</strong>
+                    <pre><code>Win + R
+services.msc
+→ Find "MariaDB"
+→ Right-click → Start</code></pre>
+                  </li>
+
+                  <li><strong>Verify server is running</strong>
+                    <pre><code>mysql -u root -p
+mysqladmin ping</code></pre>
+                  </li>
+                </ol>
+
+              </div>
+
+            </div>
+          </section>
+
           <!-- ========================================================= -->
           <!-- 17. MariaDB Market Share and Adoption -->
           <!-- ========================================================= -->
@@ -28360,7 +28490,8 @@ CREATE TABLE Bicycles (
                 <ul>
                   <li>Modules 1–7 (2–3 questions per module)</li>
                   <li>Homework/Lab 1–3</li>
-                  <li><a href="./docs/Midterm-Sample.docx" target="_blank">Sample Midterm</a></li>
+                  <li><a href="./docs/Midterm-Sample.docx" target="_blank">Sample Midterm 1</a></li>
+                  <li><a href="./docs/midterm-prepare-2.pdf" target="_blank">Sample Midterm 2</a></li>
                 </ul>
               </div>
             </div>
