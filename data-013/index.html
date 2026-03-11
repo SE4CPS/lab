@@ -529,7 +529,7 @@
                 7 (Feb 23, 25, 27)</td>
               <td
                 style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
-                <a href="./#/module-7"
+                <a href="./#/module-7" 5555
                   style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">CROSS, ON,
                   USING, UNION, INTERSECT, EXCEPT</a>
               </td>
@@ -554,8 +554,8 @@
               <td
                 style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
                 <a href="./#/module-8"
-                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">FETCH, TOP,
-                  RETURNING, CURRENT, READ, WRITE</a>
+                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">NULL, IS, NOT,
+                  DEFAULT, CASE, WHEN</a>
               </td>
               <td
                 style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
@@ -593,8 +593,8 @@
               <td
                 style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
                 <a href="./#/module-9"
-                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">NULL, IS, NOT,
-                  DEFAULT, CASE, WHEN</a>
+                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">FETCH, TOP,
+                  RETURNING, CURRENT, READ, WRITE</a>
               </td>
               <td
                 style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
@@ -3605,7 +3605,7 @@ A complete mental model</code></pre>
             <div class="right">
               <pre><code class="language-sql">INSERT INTO customers(name, city) VALUES
 ('Ava', 'Stockton'),
-('Noah','Sacramento'),
+('Tom','Sacramento'),
 ('Mia', 'Stockton');
 
 INSERT INTO products(name, category, price) VALUES
@@ -4741,7 +4741,7 @@ LIMIT 10 OFFSET 0;</code></pre>
             <div class="right">
               <pre><code class="language-sql" style="font-size: 7pt;">INSERT INTO riders(name, city, email) VALUES
 ('Ava',  'Stockton',    'ava@example.com'),
-('Noah', 'Sacramento',  'noah@example.com'),
+('Tom', 'Sacramento',  'tom@example.com'),
 ('Mia',  'Stockton',    'mia@example.com'),
 ('Liam', 'Lodi',        'liam@example.com');  -- no rentals
 
@@ -5587,7 +5587,7 @@ ORDER BY r.pickup_ts;</code></pre>
           <h3>INSERT sample data (riders, bikes, rentals)</h3>
           <pre><code class="language-sql">INSERT INTO riders(name, city, email) VALUES
 ('Ava',  'Stockton',   'ava@example.com'),
-('Noah', 'Sacramento', 'noah@example.com'),
+('Tom', 'Sacramento', 'tom@example.com'),
 ('Mia',  'Stockton',   'mia@test.com'),
 ('Liam', 'Lodi',       'liam@sample.org'); -- intentionally different domain
 
@@ -6728,7 +6728,7 @@ ORDER BY r.name;</code></pre>
           <h3>INSERT sample data (riders, bikes, rentals)</h3>
           <pre><code class="language-sql">INSERT INTO riders(name, city, email) VALUES
 ('Ava',  'Stockton',   'ava@example.com'),
-('Noah', 'Sacramento', 'noah@example.com'),
+('Tom', 'Sacramento', 'tom@example.com'),
 ('Mia',  'Stockton',   'mia@test.com'),
 ('Liam', 'Lodi',       'liam@sample.org');
 
@@ -7648,6 +7648,544 @@ ORDER BY rt.rental_id;</code></pre>
 
       </section>
 
+      <section id="module-8">
+
+        <!-- 01 COVER -->
+        <section>
+          <h2>Module 8</h2>
+          <h3>NULL · IS · NOT · DEFAULT · CASE · WHEN</h3>
+          <p class="muted">Handling missing values in a flower dataset</p>
+        </section>
+
+        <!-- 02 GOALS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Understand NULL values</li>
+                <li>Filter with IS NULL</li>
+                <li>Reverse logic with NOT</li>
+                <li>Use DEFAULT values</li>
+                <li>Create classifications with CASE</li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <pre><code class="language-sql">
+-- Query habit
+
+-- 1 inspect table
+-- 2 detect NULL
+-- 3 filter safely
+-- 4 classify data
+</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 03 DOMAIN TABLE -->
+        <section>
+          <h3>Flower dataset</h3>
+
+          <table class="table">
+            <tr>
+              <th>Column</th>
+              <th>Description</th>
+            </tr>
+            <tr>
+              <td>flower_id</td>
+              <td>unique flower record</td>
+            </tr>
+            <tr>
+              <td>flower_name</td>
+              <td>type of flower</td>
+            </tr>
+            <tr>
+              <td>color</td>
+              <td>flower color</td>
+            </tr>
+            <tr>
+              <td>price</td>
+              <td>price per flower</td>
+            </tr>
+            <tr>
+              <td>bloom_season</td>
+              <td>season flower blooms</td>
+            </tr>
+          </table>
+        </section>
+
+        <!-- 04 CREATE TABLE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Create a simple flower table</li>
+                <li>Some bloom seasons will be unknown</li>
+                <li>Use MariaDB-friendly column types</li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <pre><code class="language-sql">
+CREATE TABLE flowers (
+  flower_id INT PRIMARY KEY,
+  flower_name VARCHAR(50),
+  color VARCHAR(30),
+  price DECIMAL(5,2),
+  bloom_season VARCHAR(30)
+);
+</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 05 INSERT DATA -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Insert example flowers</li>
+                <li>Some bloom seasons unknown</li>
+                <li>NULL valid in MariaDB</li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <pre><code class="language-sql">
+INSERT INTO flowers
+  (flower_id, flower_name, color, price, bloom_season)
+VALUES
+  (1, 'Rose',      'Red',    4.50, 'Spring'),
+  (2, 'Tulip',     'Yellow', 3.20, 'Spring'),
+  (3, 'Orchid',    'Purple', 7.80, NULL),
+  (4, 'Lily',      'White',  5.00, 'Summer'),
+  (5, 'Sunflower', 'Yellow', 2.80, NULL);
+</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 06 DATA PREVIEW -->
+        <section>
+          <table class="table">
+            <tr>
+              <th>flower_id</th>
+              <th>flower</th>
+              <th>color</th>
+              <th>price</th>
+              <th>bloom_season</th>
+            </tr>
+            <tr>
+              <td>1</td>
+              <td>Rose</td>
+              <td>Red</td>
+              <td>4.50</td>
+              <td>Spring</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Orchid</td>
+              <td>Purple</td>
+              <td>7.80</td>
+              <td>NULL</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>Sunflower</td>
+              <td>Yellow</td>
+              <td>2.80</td>
+              <td>NULL</td>
+            </tr>
+          </table>
+        </section>
+
+        <!-- 07 NULL CONCEPT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>NULL means unknown value</li>
+                <li>Different from zero</li>
+                <li>Different from empty text</li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <pre><code class="language-sql">
+SELECT *
+FROM flowers
+WHERE bloom_season IS NULL;
+</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 08 RESULT -->
+        <section>
+          <table class="table">
+            <tr>
+              <th>flower</th>
+              <th>bloom_season</th>
+            </tr>
+            <tr>
+              <td>Orchid</td>
+              <td>NULL</td>
+            </tr>
+            <tr>
+              <td>Sunflower</td>
+              <td>NULL</td>
+            </tr>
+          </table>
+        </section>
+
+        <!-- 09 COMMON MISTAKE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>NULL cannot be compared using =</li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <pre><code class="language-sql">
+-- incorrect
+
+WHERE bloom_season = NULL
+</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 10 CORRECT COMPARISON -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Use IS NULL instead</li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <pre><code class="language-sql">
+WHERE bloom_season IS NULL
+</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 11 IS NOT NULL -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Find flowers with known seasons</li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <pre><code class="language-sql">
+SELECT *
+FROM flowers
+WHERE bloom_season IS NOT NULL;
+</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 12 RESULT -->
+        <section>
+          <table class="table">
+            <tr>
+              <th>flower</th>
+              <th>season</th>
+            </tr>
+            <tr>
+              <td>Rose</td>
+              <td>Spring</td>
+            </tr>
+            <tr>
+              <td>Lily</td>
+              <td>Summer</td>
+            </tr>
+          </table>
+        </section>
+
+        <!-- 13 NOT OPERATOR -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>NOT reverses conditions</li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <pre><code class="language-sql">
+SELECT *
+FROM flowers
+WHERE NOT color = 'Yellow';
+</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 14 RESULT -->
+        <section>
+          <table class="table">
+            <tr>
+              <th>flower</th>
+              <th>color</th>
+            </tr>
+            <tr>
+              <td>Rose</td>
+              <td>Red</td>
+            </tr>
+            <tr>
+              <td>Orchid</td>
+              <td>Purple</td>
+            </tr>
+          </table>
+        </section>
+
+        <!-- 15 DEFAULT CONCEPT -->
+        <section>
+          <svg width="100%" height="200">
+            <text x="600" y="110" text-anchor="middle" fill="white">
+              INSERT → DEFAULT VALUE
+            </text>
+          </svg>
+        </section>
+
+        <!-- 16 DEFAULT EXAMPLE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Assign automatic values</li>
+                <li>MariaDB column default value</li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <pre><code class="language-sql">
+CREATE TABLE flowers_default (
+  flower_id INT PRIMARY KEY,
+  flower_name VARCHAR(50),
+  color VARCHAR(30),
+  price DECIMAL(5,2),
+  bloom_season VARCHAR(30) DEFAULT 'Unknown'
+);
+</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 17 CASE DIAGRAM -->
+        <section>
+          <svg width="100%" height="260" viewBox="0 0 1200 260">
+
+            <rect x="450" y="20" width="300" height="60" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.5)"
+              stroke-width="2" />
+
+            <text x="600" y="55" text-anchor="middle" fill="white">
+              CASE
+            </text>
+
+            <text x="600" y="110" text-anchor="middle" fill="white">
+              WHEN condition
+            </text>
+
+            <line x1="600" y1="120" x2="420" y2="180" stroke="white" />
+            <text x="420" y="200" text-anchor="middle" fill="white">
+              THEN result
+            </text>
+
+            <line x1="600" y1="120" x2="780" y2="180" stroke="white" />
+            <text x="780" y="200" text-anchor="middle" fill="white">
+              ELSE result
+            </text>
+
+            <line x1="420" y1="210" x2="600" y2="240" stroke="white" />
+            <line x1="780" y1="210" x2="600" y2="240" stroke="white" />
+
+            <text x="600" y="255" text-anchor="middle" fill="white" font-size="18">
+              END
+            </text>
+          </svg>
+        </section>
+
+        <!-- 18 CASE SYNTAX -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>CASE creates conditional output</li>
+                <li>Supported in MariaDB</li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <pre><code class="language-sql">
+CASE
+  WHEN condition THEN value
+  ELSE value
+END
+</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 19 CLASSIFY SEASON -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Label flowers with known season</li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <pre><code class="language-sql">
+SELECT
+  flower_name,
+  CASE
+    WHEN bloom_season IS NULL THEN 'Unknown Season'
+    ELSE 'Season Known'
+  END AS season_status
+FROM flowers;
+</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 20 RESULT -->
+        <section>
+          <table class="table">
+            <tr>
+              <th>flower</th>
+              <th>status</th>
+            </tr>
+            <tr>
+              <td>Rose</td>
+              <td>Season Known</td>
+            </tr>
+            <tr>
+              <td>Orchid</td>
+              <td>Unknown Season</td>
+            </tr>
+          </table>
+        </section>
+
+        <!-- 21 MULTIPLE CASE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Multiple conditions possible</li>
+                <li>MariaDB evaluates top to bottom</li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <pre><code class="language-sql">
+SELECT
+  flower_name,
+  CASE
+    WHEN price > 6 THEN 'Premium'
+    WHEN price > 3 THEN 'Standard'
+    ELSE 'Budget'
+  END AS price_category
+FROM flowers;
+</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 22 RESULT -->
+        <section>
+          <table class="table">
+            <tr>
+              <th>flower</th>
+              <th>price_category</th>
+            </tr>
+            <tr>
+              <td>Orchid</td>
+              <td>Premium</td>
+            </tr>
+            <tr>
+              <td>Rose</td>
+              <td>Standard</td>
+            </tr>
+            <tr>
+              <td>Sunflower</td>
+              <td>Budget</td>
+            </tr>
+          </table>
+        </section>
+
+        <!-- 23 CHEAT TABLE -->
+        <section>
+          <table class="table">
+            <tr>
+              <th>Concept</th>
+              <th>Purpose</th>
+            </tr>
+            <tr>
+              <td>NULL</td>
+              <td>missing value</td>
+            </tr>
+            <tr>
+              <td>IS NULL</td>
+              <td>find missing</td>
+            </tr>
+            <tr>
+              <td>NOT</td>
+              <td>reverse logic</td>
+            </tr>
+            <tr>
+              <td>DEFAULT</td>
+              <td>automatic value</td>
+            </tr>
+            <tr>
+              <td>CASE</td>
+              <td>conditional logic</td>
+            </tr>
+          </table>
+        </section>
+
+        <!-- 24 PRACTICE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Find flowers with unknown season</li>
+                <li>Find non-yellow flowers</li>
+                <li>Classify price category</li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <pre><code class="language-sql">
+SELECT *
+FROM flowers
+WHERE bloom_season IS NULL;
+</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <!-- 25 FINAL DIAGRAM -->
+        <section>
+          <svg width="100%" height="200">
+            <text x="600" y="120" text-anchor="middle" fill="white" font-size="22">
+              NULL → IS → NOT → DEFAULT → CASE
+            </text>
+          </svg>
+        </section>
+
+      </section>
 
     </div>
   </div>
