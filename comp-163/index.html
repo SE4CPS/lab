@@ -603,8 +603,8 @@
 
               <tr style="color:#ccc;">
                 <td style="padding:6px; border:1px solid #666;">8 (Mar 2, 4, 6)</td>
-                <td style="padding:6px; border:1px solid #666;">Midterm Preparation</td>
-                <td style="padding:6px; border:1px solid #666;"><a href="./#/midterm">Midterm (Mar 6)</a></td>
+                <td style="padding:6px; border:1px solid #666;"><a href="./#/module-8">Midterm Preparation</a></td>
+                <td style="padding:6px; border:1px solid #666;">Midterm (Mar 6)</td>
                 <td style="padding:6px; border:1px solid #666;"></td>
                 <td style="padding:6px; border:1px solid #666;"></td>
               </tr>
@@ -618,10 +618,12 @@
               </tr>
 
               <tr style="color:#ccc;">
-                <td style="padding:6px; border:1px solid #666;">10 (Mar 16, 18, 20)</td>
-                <td style="padding:6px; border:1px solid #666;">Relational Database Transactions</td>
+                <td style="padding:6px; border:1px solid #666;">10 (<a href="./#/c20">Mar 16</a>, <a href="./#/c21">Mar
+                    18</a>, <a href="./#/c22">Mar 20</a>)</td>
+                <td style="padding:6px; border:1px solid #666;"><a href="./#/module-10">Relational Database
+                    Transactions</a></td>
                 <td style="padding:6px; border:1px solid #666;">Lab 4 + Homework 4 (2w), Project Part 2 (4w)</td>
-                <td style="padding:6px; border:1px solid #666;">OracleSQL</td>
+                <td style="padding:6px; border:1px solid #666;"><a href="./#/oracle">OracleSQL</a></td>
                 <td style="padding:6px; border:1px solid #666;"></td>
               </tr>
 
@@ -24528,9 +24530,1759 @@ LIMIT 20;</code></pre>
 
         <!-- ===================== MODULE 8 =====================  -->
 
+        <section id="module-8">
+          <div class="split">
+            <div class="left">
+              <h5>Midterm Exam – Friday, March 6</h5>
+              <p><strong>Time:</strong> 8:00 - 9:00 AM</p>
+
+              <h3>Format</h3>
+              <ul>
+                <li>20 questions on paper</li>
+                <li>18 multiple-choice, 2 written response</li>
+                <li>Allowed: 2 pencils & 1 page of notes</li>
+              </ul>
+            </div>
+
+            <div class="right">
+              <h3>Scope</h3>
+              <ul>
+                <li>Modules 1–7 (2–3 questions per module)</li>
+                <li>Homework/Lab 1–3</li>
+                <li><a href="./docs/Midterm-Sample.docx" target="_blank">Sample Midterm 1</a></li>
+                <li><a href="./docs/midterm-prepare-2.pdf" target="_blank">Sample Midterm 2</a></li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
         <!-- ===================== MODULE 9 =====================  -->
 
+        <section id="module-9">
+          <h5>Module 9 - Spring Break</h5>
+        </section>
+
         <!-- ===================== MODULE 10 =====================  -->
+
+        <section id="module-10">
+
+          <style>
+            .split {
+              display: flex;
+              gap: 18px;
+              align-items: stretch;
+            }
+
+            .half {
+              width: 49%;
+              display: flex;
+              flex-direction: column;
+            }
+
+            .box {
+              border: 1px solid #666;
+              border-radius: 8px;
+              padding: 12px;
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+              justify-content: flex-start;
+            }
+
+            .tbl {
+              width: 100%;
+              border-collapse: collapse;
+              font-size: 0.82rem;
+            }
+
+            .tbl th,
+            .tbl td {
+              border: 1px solid #666;
+              padding: 6px 8px;
+              vertical-align: top;
+            }
+
+            .tight li {
+              margin: 6px 0;
+            }
+
+            .diagram {
+              border: 2px dashed #888;
+              border-radius: 8px;
+              padding: 12px;
+              margin-top: 8px;
+              font-family: monospace;
+              font-size: 0.85rem;
+            }
+
+            pre {
+              margin: 0
+            }
+
+            code {
+              font-size: 0.95em;
+            }
+          </style>
+
+          <section>
+            <h5>Today Agenda</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Database Transaction</li>
+                    <li>OracleSQL</li>
+                    <li>Midterm Review</li>
+                    <li>Homework/Lab 3 Review</li>
+                    <li>Project Part 1</li>
+                    <li>Homework/Lab 4</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <img
+                  src="https://storage.googleapis.com/algodailyrandomassets/curriculum/databases/Transactions%20in%20SQL/intro.png"
+                  alt="Transactions diagram" style="max-width:100%;height:auto;" />
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Database Transactions</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Transactions as logical units of work</li>
+                    <li>ACID guarantees</li>
+                    <li>BEGIN / COMMIT / ROLLBACK</li>
+                    <li>Flower shop order examples</li>
+                    <li>Concurrency anomalies</li>
+                    <li>Isolation levels</li>
+                    <li>Locks and deadlocks</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+
+                  <pre><code>Transaction structure
+
+BEGIN
+
+SQL step 1
+SQL step 2
+SQL step 3
+
+COMMIT</code></pre>
+
+                  <div class="diagram">
+                    <pre><code>
+Flower Shop App
+      │
+      ▼
+BEGIN
+  │
+  ├── create order
+  ├── reduce flower stock
+  └── record payment
+      │
+      ▼
+COMMIT
+</code></pre>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <!-- ========================================================= -->
+          <!-- DEFINITION SLIDES -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>What is a transaction?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>A transaction is one unit of work.</li>
+                    <li>It groups related SQL statements.</li>
+                    <li>It protects multi-step changes.</li>
+                    <li>It keeps data reliable.</li>
+                  </ul>
+
+                  <pre><code>BEGIN;
+
+SQL step 1
+SQL step 2
+SQL step 3
+
+COMMIT;</code></pre>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <!-- add image here -->
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>What does ACID mean?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>ACID defines transaction guarantees.</li>
+                    <li>Each letter names one property.</li>
+                    <li>These properties protect correctness.</li>
+                    <li>They improve reliability.</li>
+                  </ul>
+
+                  <table class="tbl">
+                    <thead>
+                      <tr>
+                        <th>Letter</th>
+                        <th>Meaning</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr>
+                        <td>A</td>
+                        <td>Atomicity</td>
+                      </tr>
+
+                      <tr>
+                        <td>C</td>
+                        <td>Consistency</td>
+                      </tr>
+
+                      <tr>
+                        <td>I</td>
+                        <td>Isolation</td>
+                      </tr>
+
+                      <tr>
+                        <td>D</td>
+                        <td>Durability</td>
+                      </tr>
+                    </tbody>
+
+                  </table>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <!-- add image here -->
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>What is Atomicity?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Atomicity means indivisible work.</li>
+                    <li>All steps succeed together.</li>
+                    <li>Partial updates are not allowed.</li>
+                    <li>Failure triggers rollback.</li>
+                  </ul>
+
+                  <pre><code>BEGIN;
+
+update flowers
+create order
+record payment
+
+COMMIT or ROLLBACK</code></pre>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <!-- add image here -->
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>What is Consistency?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Consistency keeps rules valid.</li>
+                    <li>Valid states stay valid.</li>
+                    <li>Constraints must still hold.</li>
+                    <li>Broken updates are rejected.</li>
+                  </ul>
+
+                  <pre><code>Examples of rules
+
+flower_stock >= 0
+price > 0
+order_total = sum(order_items)</code></pre>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <!-- add image here -->
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>What is Isolation?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Isolation separates transactions.</li>
+                    <li>Concurrent work stays controlled.</li>
+                    <li>Shared data needs protection.</li>
+                    <li>It reduces anomalies.</li>
+                  </ul>
+
+                  <ul class="tight">
+                    <li>Lost updates</li>
+                    <li>Dirty reads</li>
+                    <li>Phantom reads</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <!-- add image here -->
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>What is Durability?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Durability preserves commits.</li>
+                    <li>Committed data survives crashes.</li>
+                    <li>Recovery restores saved work.</li>
+                    <li>Logs support persistence.</li>
+                  </ul>
+
+                  <pre><code>BEGIN
+update stock
+insert order
+COMMIT</code></pre>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <!-- add image here -->
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>What does COMMIT do?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>COMMIT finalizes a transaction.</li>
+                    <li>Changes become permanent.</li>
+                    <li>Other users can see results.</li>
+                    <li>Committed work persists.</li>
+                  </ul>
+
+                  <pre><code>BEGIN;
+
+UPDATE flowers
+SET stock = stock - 2;
+
+COMMIT;</code></pre>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <!-- add image here -->
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>What does ROLLBACK do?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>ROLLBACK cancels a transaction.</li>
+                    <li>Uncommitted changes disappear.</li>
+                    <li>The old state returns.</li>
+                    <li>Errors often trigger it.</li>
+                  </ul>
+
+                  <pre><code>BEGIN;
+
+UPDATE flowers
+SET stock = stock - 10;
+
+ROLLBACK;</code></pre>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <!-- add image here -->
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <!-- ========================================================= -->
+          <!-- ORIGINAL SLIDES -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Why Transactions Matter</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+
+                  <ul class="tight">
+                    <li>Flower queries often select multiple tables</li>
+                    <li>Order, reduce stock, and update payment</li>
+                    <li>Partial query can leave the db inconsistent</li>
+                  </ul>
+
+                  <div class="diagram">
+                    <pre><code>
+Without Transaction
+
+create order       ✔
+reduce stock       ✔
+record payment     ✖
+
+Result:
+order exists
+inventory changed
+payment missing
+</code></pre>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+
+                  <ul class="tight">
+                    <li>Transaction ensures all steps succeed together</li>
+                    <li>If one step fails, previous steps are undone</li>
+                    <li>Database returns to a valid state</li>
+                  </ul>
+
+                  <div class="diagram">
+                    <pre><code>
+With Transaction
+
+BEGIN
+  create order     ✔
+  reduce stock     ✔
+  record payment   ✖
+ROLLBACK
+
+State restored
+</code></pre>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Atomicity Example: Bouquet Purchase</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+
+                  <pre><code>BEGIN;
+
+INSERT INTO orders(customer_name,total_amount,status)
+VALUES ('Ava',45.00,'paid');
+
+UPDATE flowers
+SET stock = stock - 3
+WHERE flower_id = 101;
+
+INSERT INTO payments(order_id,amount)
+VALUES (LAST_INSERT_ID(),45.00);
+
+COMMIT;</code></pre>
+
+                  <div class="diagram">
+                    <pre><code>
+Order saved      ✔
+Stock reduced    ✔
+Payment saved    ✔
+
+Final state valid
+</code></pre>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+
+                  <pre><code>BEGIN;
+
+INSERT INTO orders(customer_name,total_amount,status)
+VALUES ('Ava',45.00,'paid');
+
+UPDATE flowers
+SET stock = stock - 3
+WHERE flower_id = 101;
+
+-- payment insert fails
+
+ROLLBACK;</code></pre>
+
+                  <div class="diagram">
+                    <pre><code>
+Order inserted   ✔
+Stock reduced    ✔
+Payment failed   ✖
+
+ROLLBACK removes
+partial changes
+</code></pre>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+
+          </section>
+
+
+          <section>
+            <h5>Consistency Example</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+
+                  <div class="diagram">
+                    <pre><code>
+Rule:
+flower_stock >= 0
+
+Before sale: 20
+Sell:        5
+After sale: 15 ✔
+</code></pre>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+
+                  <div class="diagram">
+                    <pre><code>
+Before sale: 4
+Customer buys: 10
+
+Result: -6 ✖
+
+Database rejects
+transaction
+</code></pre>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+
+          </section>
+
+
+          <section>
+            <h5>Isolation Example</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+
+                  <div class="diagram">
+                    <pre><code>
+Customer A
+reads rose stock = 12
+wants to buy 10
+</code></pre>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+
+                  <div class="diagram">
+                    <pre><code>
+Customer B
+also reads stock = 12
+wants to buy 10
+
+Without isolation
+overselling occurs
+</code></pre>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+
+          </section>
+
+
+          <section>
+            <h5>Durability Example</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+
+                  <div class="diagram">
+                    <pre><code>
+Transaction
+
+BEGIN
+create order
+update stock
+record payment
+COMMIT
+</code></pre>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+
+                  <div class="diagram">
+                    <pre><code>
+After COMMIT
+
+server crash
+restart system
+
+confirmed flower order
+still exists
+</code></pre>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+
+          </section>
+
+
+          <section>
+            <h5>Lost Update Example</h5>
+
+            <div class="diagram">
+              <pre><code>
+Initial rose stock = 20
+
+Transaction A reads 20
+Transaction B reads 20
+
+A sells 5 → writes 15
+B sells 4 → writes 16
+
+Final stock = 16
+Expected = 11
+</code></pre>
+            </div>
+
+          </section>
+
+
+          <section>
+            <h5>Dirty Read</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+
+                  <pre><code>Transaction A
+
+BEGIN;
+
+UPDATE flowers
+SET stock = stock - 10
+WHERE flower_id = 300;</code></pre>
+
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+
+                  <pre><code>Transaction B
+
+SELECT stock
+FROM flowers
+WHERE flower_id = 300;</code></pre>
+
+                  <div class="diagram">
+                    <pre><code>
+B reads value
+not yet committed
+
+If A rolls back
+B read invalid data
+</code></pre>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+
+          </section>
+
+
+          <section>
+            <h5>Deadlock Example</h5>
+
+            <div class="diagram">
+              <pre><code>
+Transaction A
+locks flower row
+needs order row
+
+Transaction B
+locks order row
+needs flower row
+
+Circular wait
+= DEADLOCK
+</code></pre>
+            </div>
+
+          </section>
+
+
+          <section>
+            <h5>Savepoint Example</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+
+                  <pre><code>BEGIN;
+
+INSERT INTO orders(customer_name,total_amount,status)
+VALUES ('Lina',60,'pending');
+
+SAVEPOINT order_created;
+
+INSERT INTO order_items(order_id,flower_id,qty)
+VALUES (25,101,4);
+
+ROLLBACK TO order_created;
+
+COMMIT;</code></pre>
+
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+
+                  <div class="diagram">
+                    <pre><code>
+BEGIN
+  │
+create order
+  │
+SAVEPOINT
+  │
+insert flower items
+  │
+error
+  │
+ROLLBACK TO SAVEPOINT
+</code></pre>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+
+          </section>
+
+
+          <!-- ========================================================= -->
+          <!-- EXPANDED EXAMPLE SLIDES -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>How should inventory update safely?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Inventory changes during a sale.</li>
+                    <li>The update must be accurate.</li>
+                    <li>The row should be protected.</li>
+                    <li>The change belongs in a transaction.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code>BEGIN;
+
+UPDATE flowers
+SET stock = stock - 3
+WHERE flower_id = 101;
+
+COMMIT;</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>How can multiple orders run together?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Many customers buy flowers.</li>
+                    <li>Each order needs its own transaction.</li>
+                    <li>Rows may overlap.</li>
+                    <li>The database coordinates access.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+Order A → BEGIN ... COMMIT
+Order B → BEGIN ... COMMIT
+Order C → BEGIN ... COMMIT
+
+Each order is separate
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>What should happen if payment fails?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>The order may insert first.</li>
+                    <li>Stock may also change.</li>
+                    <li>Payment can fail later.</li>
+                    <li>The system must undo work.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code>BEGIN;
+
+INSERT INTO orders VALUES ('Mia',32);
+UPDATE flowers SET stock = stock - 2
+WHERE flower_id = 205;
+
+-- payment fails
+
+ROLLBACK;</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Why are concurrent updates dangerous?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Two sessions update one row.</li>
+                    <li>Both may read old data.</li>
+                    <li>One write can overwrite another.</li>
+                    <li>This causes a lost update.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+Stock = 20
+
+A reads 20
+B reads 20
+
+A writes 15
+B writes 16
+
+A's change is lost
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>What does locking behavior do?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>One transaction updates a row.</li>
+                    <li>A second one wants the same row.</li>
+                    <li>The second may wait.</li>
+                    <li>Locking prevents conflict.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+T1 locks flower row
+T2 tries same row
+T2 waits
+
+T1 commits
+T2 continues
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>How does serializable execution work?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Serializable is the strongest level.</li>
+                    <li>Transactions behave one by one.</li>
+                    <li>Anomalies are minimized.</li>
+                    <li>Concurrency may slow down.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+T1 runs first
+T1 commits
+
+T2 runs next
+T2 commits
+
+As if one-at-a-time
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>What happens in Read Committed?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Only committed data is visible.</li>
+                    <li>Dirty reads are prevented.</li>
+                    <li>Values may still change later.</li>
+                    <li>Repeated reads can differ.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+T1 reads stock = 20
+
+T2 commits stock = 18
+
+T1 reads again = 18
+
+Dirty read avoided
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>What happens in Repeatable Read?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Repeated row reads stay stable.</li>
+                    <li>The same row looks consistent.</li>
+                    <li>This reduces changing values.</li>
+                    <li>Phantoms may still matter.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+T1 reads stock = 20
+
+T2 updates stock = 18
+T2 commits
+
+T1 reads same row = 20
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>What are phantom rows?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>A query counts matching rows.</li>
+                    <li>Another transaction inserts one.</li>
+                    <li>The same query runs again.</li>
+                    <li>A new row appears.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+T1:
+SELECT COUNT(*) WHERE status='open'
+→ 12
+
+T2 inserts open order
+T2 commits
+
+T1 repeats query
+→ 13
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Why should inventory be rechecked?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Stock can change during checkout.</li>
+                    <li>Earlier reads may be stale.</li>
+                    <li>The transaction should verify stock.</li>
+                    <li>This avoids overselling.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code>BEGIN;
+
+SELECT stock
+FROM flowers
+WHERE flower_id = 101
+FOR UPDATE;
+
+-- verify stock again
+COMMIT;</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>How should a cancelled order be handled?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>A customer may cancel later.</li>
+                    <li>The order status must change.</li>
+                    <li>Stock may need restoration.</li>
+                    <li>These steps should stay together.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code>BEGIN;
+
+UPDATE orders
+SET status = 'cancelled'
+WHERE order_id = 77;
+
+UPDATE flowers
+SET stock = stock + 2
+WHERE flower_id = 101;
+
+COMMIT;</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>When should a transaction retry?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Deadlocks can abort transactions.</li>
+                    <li>Temporary conflicts can happen.</li>
+                    <li>The application may retry safely.</li>
+                    <li>Retries should restart fully.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+Try transaction
+deadlock occurs
+rollback happens
+start again
+commit succeeds
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>How should bulk updates be done?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Many flower rows may change.</li>
+                    <li>All related updates matter.</li>
+                    <li>Bulk work should stay controlled.</li>
+                    <li>Transactions group those updates.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code>BEGIN;
+
+UPDATE flowers
+SET price = price * 1.10
+WHERE category = 'rose';
+
+UPDATE flowers
+SET price = price * 1.05
+WHERE category = 'tulip';
+
+COMMIT;</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>How does order processing use transactions?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Order processing has many steps.</li>
+                    <li>Customer and item rows are linked.</li>
+                    <li>Inventory must match the order.</li>
+                    <li>Payment completes the workflow.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+create order
+insert order items
+reduce stock
+record payment
+commit order
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Why is inventory check part of the transaction?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Checking stock alone is not enough.</li>
+                    <li>Other buyers may act quickly.</li>
+                    <li>The check must be protected.</li>
+                    <li>Then the update can follow.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code>BEGIN;
+
+SELECT stock
+FROM flowers
+WHERE flower_id = 205
+FOR UPDATE;
+
+UPDATE flowers
+SET stock = stock - 2
+WHERE flower_id = 205;
+
+COMMIT;</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>How is payment confirmation stored safely?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Payment success affects order state.</li>
+                    <li>The payment row must be saved.</li>
+                    <li>The order should become paid.</li>
+                    <li>Both changes belong together.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code>BEGIN;
+
+INSERT INTO payments(order_id,amount,status)
+VALUES (88,45.00,'confirmed');
+
+UPDATE orders
+SET status = 'paid'
+WHERE order_id = 88;
+
+COMMIT;</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>How does order fulfillment update data?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>A paid order may be packed.</li>
+                    <li>Fulfillment changes order state.</li>
+                    <li>Related timestamps may change.</li>
+                    <li>These updates should stay together.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code>BEGIN;
+
+UPDATE orders
+SET status = 'fulfilled'
+WHERE order_id = 88;
+
+UPDATE shipments
+SET packed_at = NOW()
+WHERE order_id = 88;
+
+COMMIT;</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>How does recovery process protect data?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>The system may crash mid-work.</li>
+                    <li>Some transactions are committed.</li>
+                    <li>Some are not committed.</li>
+                    <li>Recovery separates the two.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+Committed work → keep
+Uncommitted work → undo
+
+Restart system
+recover database
+return to safe state
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>What is log replay during recovery?</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Databases write change logs.</li>
+                    <li>Logs record committed actions.</li>
+                    <li>Recovery replays safe changes.</li>
+                    <li>This supports durability.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+Log entry 1 → replay
+Log entry 2 → replay
+Log entry 3 → replay
+
+Committed state restored
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+
+          <section>
+            <h5>Summary</h5>
+
+            <table class="tbl">
+
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Concept</th>
+                  <th>Flower Domain Meaning</th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                <tr>
+                  <td>1</td>
+                  <td>Transaction</td>
+                  <td>One complete flower purchase workflow</td>
+                </tr>
+
+                <tr>
+                  <td>2</td>
+                  <td>Atomicity</td>
+                  <td>Order, stock, and payment succeed together</td>
+                </tr>
+
+                <tr>
+                  <td>3</td>
+                  <td>Consistency</td>
+                  <td>Flower stock rules remain valid</td>
+                </tr>
+
+                <tr>
+                  <td>4</td>
+                  <td>Isolation</td>
+                  <td>Multiple customers do not corrupt stock</td>
+                </tr>
+
+                <tr>
+                  <td>5</td>
+                  <td>Durability</td>
+                  <td>Committed flower orders survive crashes</td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </section>
+
+          <section>
+            <h5>Questions?</h5>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 1. Create Table (Oracle) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Flowers Database – Create Table (Oracle)</h5>
+            <div class="split">
+              <div class="left">
+                <h6>Goal</h6>
+                <ul>
+                  <li>Create a simple flowers table</li>
+                  <li>Store id, name, color, and price</li>
+                  <li>Use NUMBER and VARCHAR2 types</li>
+                  <li>Oracle uses strict typing rules</li>
+                </ul>
+              </div>
+              <div class="right">
+                <h6>SQL</h6>
+                <pre><code class="sql">
+CREATE TABLE flowers (
+  id NUMBER PRIMARY KEY,
+  name VARCHAR2(50) NOT NULL,
+  color VARCHAR2(30) NOT NULL,
+  price NUMBER(6,2) NOT NULL
+);
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 2. Insert Data (Oracle) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Flowers Database – Insert Data (Oracle)</h5>
+            <div class="split">
+              <div class="left">
+                <h6>Purpose</h6>
+                <ul>
+                  <li>Add sample flower rows</li>
+                  <li>Oracle inserts one row at a time</li>
+                  <li>Each statement ends with semicolon</li>
+                  <li>COMMIT saves inserted rows</li>
+                </ul>
+              </div>
+              <div class="right">
+                <h6>SQL</h6>
+                <pre><code class="sql">
+BEGIN;
+
+INSERT INTO flowers VALUES (1,'Rose','Red',5);
+INSERT INTO flowers VALUES (2,'Lily','White',7);
+INSERT INTO flowers VALUES (3,'Tulip','Yellow',4);
+INSERT INTO flowers VALUES (4,'Daisy','White',3.5);
+
+COMMIT;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 3. Select Data -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Flowers Database – Select Data</h5>
+            <div class="split">
+              <div class="left">
+                <h6>Query Idea</h6>
+                <ul>
+                  <li>Read all flower rows</li>
+                  <li>Verify inserted records</li>
+                  <li>Sort flowers by price</li>
+                  <li>Common step during testing</li>
+                </ul>
+              </div>
+              <div class="right">
+                <h6>SQL</h6>
+                <pre><code class="sql">
+SELECT id, name, color, price
+FROM flowers
+ORDER BY price DESC;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 4. Transaction Example (Oracle) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Flowers Database – Transaction Example</h5>
+            <div class="split">
+              <div class="left">
+                <h6>Transaction</h6>
+                <ul>
+                  <li>Oracle begins transactions automatically</li>
+                  <li>Update flower prices safely</li>
+                  <li>Use SAVEPOINT for recovery</li>
+                  <li>Review changes before commit</li>
+                </ul>
+              </div>
+              <div class="right">
+                <h6>SQL</h6>
+                <pre><code class="sql">
+SAVEPOINT before_update;
+
+BEGIN;
+
+UPDATE flowers
+SET price = price + 1
+WHERE color = 'White';
+
+SELECT * FROM flowers;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 5. Commit or Rollback -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Flowers Database – Commit or Rollback</h5>
+            <div class="split">
+              <div class="left">
+                <h6>Review</h6>
+                <ul>
+                  <li>COMMIT saves transaction changes</li>
+                  <li>ROLLBACK cancels recent changes</li>
+                  <li>ROLLBACK TO returns to savepoint</li>
+                  <li>Common safety step in databases</li>
+                </ul>
+              </div>
+              <div class="right">
+                <h6>SQL</h6>
+                <pre><code class="sql">
+-- Save changes permanently
+COMMIT;
+
+-- Undo entire transaction
+ROLLBACK;
+
+-- Undo only last step
+ROLLBACK TO before_update;
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+        </section>
 
         <!-- ===================== MODULE 11 =====================  -->
 
@@ -27656,6 +29408,800 @@ FROM flowers;
 
         </section>
 
+        <!-- ===================== OracleSQL ===================== -->
+
+        <!-- ===================== Oracle Database ===================== -->
+
+        <section id="oracle">
+
+          <!-- ========================================================= -->
+          <!-- 16. Oracle Database: Name, Origin, and History -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Oracle Database</h5>
+            <div class="split">
+              <div class="left">
+                <h6>Chronological Timeline</h6>
+                <ul>
+                  <li><strong>1977</strong> – Software Development Laboratories founded</li>
+                  <li><strong>1979</strong> – Oracle Version 2 released commercially</li>
+                  <li><strong>1982</strong> – Company to Oracle Systems Corporation</li>
+                  <li><strong>1990s</strong> – Oracle grows in enterprise computing</li>
+                  <li><strong>Today</strong> – Major enterprise relational database</li>
+                </ul>
+              </div>
+              <div class="right">
+                <ul>
+                  <li>One of the earliest commercial RDBMS products</li>
+                  <li>Built for reliability and enterprise scale</li>
+                  <li>Common in banking, ERP, and government</li>
+                  <li>Known for strong vendor-backed support</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 17. Oracle Market Share and Adoption -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Oracle Market Position</h5>
+            <div class="split">
+              <div class="left">
+                <h6>Relational Database Positioning</h6>
+                <ul>
+                  <li>Strong enterprise market presence</li>
+                  <li>Common in large transactional systems</li>
+                  <li>Frequent in ERP and finance systems</li>
+                  <li>Known for availability and tooling</li>
+                  <li>Often used in long-lived legacy stacks</li>
+                </ul>
+              </div>
+              <div class="right">
+                <h6>Positioning</h6>
+                <ul>
+                  <li>Commercial enterprise database platform</li>
+                  <li>Advanced recovery and concurrency features</li>
+                  <li>Strong security and admin ecosystem</li>
+                  <li>Popular with large institutions</li>
+                  <li>Traditional choice for centralized systems</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 18. Oracle Official Links and Resources -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Oracle Links & Resources</h5>
+            <div class="split">
+              <div class="left">
+                <h6>Official Resources</h6>
+                <ul>
+                  <li>
+                    Database:
+                    <a href="https://www.oracle.com/database/" target="_blank">
+                      oracle.com/database/
+                    </a>
+                  </li>
+                  <li>
+                    Documentation:
+                    <a href="https://docs.oracle.com/en/database/" target="_blank">
+                      docs.oracle.com/en/database/
+                    </a>
+                  </li>
+                  <li>
+                    SQL Developer:
+                    <a href="https://www.oracle.com/database/sqldeveloper/" target="_blank">
+                      oracle.com/database/sqldeveloper/
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div class="right">
+                <h6>Ecosystem & Tools</h6>
+                <ul>
+                  <li>SQL*Plus command-line client</li>
+                  <li>Oracle SQL Developer IDE</li>
+                  <li>Oracle Enterprise Manager</li>
+                  <li>Oracle APEX development platform</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- 19. Oracle License -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Oracle License</h5>
+            <div class="split">
+              <div class="left">
+                <h6>License Model</h6>
+                <ul>
+                  <li>Commercial proprietary database license</li>
+                  <li>Paid enterprise editions are available</li>
+                  <li>Oracle XE is free for learning</li>
+                  <li>Modification and redistribution are restricted</li>
+                  <li>Vendor support depends on edition</li>
+                  <li>Terms vary by product and use</li>
+                </ul>
+              </div>
+              <div class="right">
+                <h6>License Summary</h6>
+                <pre><code class="text">
+Oracle Database is typically distributed
+under commercial proprietary terms.
+
+Oracle Database Express Edition (XE)
+is available for free use under Oracle's
+separate license terms, but it is not
+open source software.
+        </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Why Oracle Database?</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Strong transactional consistency support</li>
+                  <li>Designed for multi-user enterprise workloads</li>
+                  <li>Mature backup and recovery tooling</li>
+                  <li>Advanced indexing and security options</li>
+                  <li>Long history in critical systems</li>
+                  <li>Fits traditional enterprise architectures</li>
+                </ul>
+              </div>
+              <div class="right" style="text-align:center;">
+                <br>
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/50/Oracle_logo.svg" alt="Oracle logo"
+                  style="max-height:180px;">
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SQLite vs Oracle: Query Comparison -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>SQLite vs Oracle: Query Comparison</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Embedded database engine</li>
+                  <li>Single-file local storage</li>
+                  <li>Lightweight and simple deployment</li>
+                </ul>
+              </div>
+              <div class="right">
+                <ul>
+                  <li>Server-based database architecture</li>
+                  <li>Built for large multi-user workloads</li>
+                  <li>Advanced concurrency and recovery</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SQLite vs PostgreSQL vs Oracle -->
+          <!-- BASIC CONSTRAINTS + BASIC DATATYPES + SIMPLE SYNTAX -->
+          <!-- Only core differences | Clean and Simple -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>PRIMARY KEY</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>Feature</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>Oracle</th>
+              </tr>
+              <tr>
+                <td>AutoPrimary</td>
+                <td>ROWID</td>
+                <td>SERIAL</td>
+                <td>IDENTITY / SEQUENCE</td>
+              </tr>
+              <tr>
+                <td>Keyword</td>
+                <td>AUTOINCREMENT</td>
+                <td>GENERATED</td>
+                <td>GENERATED AS IDENTITY</td>
+              </tr>
+            </table>
+          </section>
+
+          <section>
+            <h5>UNIQUE</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>Feature</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>Oracle</th>
+              </tr>
+              <tr>
+                <td>UniqueConstraint</td>
+                <td>YES</td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+              <tr>
+                <td>MultipleNULL</td>
+                <td>YES</td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+            </table>
+          </section>
+
+          <section>
+            <h5>NOT NULL</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>Feature</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>Oracle</th>
+              </tr>
+              <tr>
+                <td>NotNull</td>
+                <td>YES</td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+              <tr>
+                <td>StrictTyping</td>
+                <td><span class="highlight">NO</span></td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+            </table>
+          </section>
+
+          <section>
+            <h5>DEFAULT</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>Feature</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>Oracle</th>
+              </tr>
+              <tr>
+                <td>DefaultValue</td>
+                <td>YES</td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+              <tr>
+                <td>NowFunction</td>
+                <td>datetime</td>
+                <td>NOW</td>
+                <td>SYSTIMESTAMP</td>
+              </tr>
+            </table>
+          </section>
+
+          <section>
+            <h5>CHECK</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>Feature</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>Oracle</th>
+              </tr>
+              <tr>
+                <td>CheckConstraint</td>
+                <td>YES</td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+              <tr>
+                <td>Deferrable</td>
+                <td><span class="highlight">NO</span></td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+            </table>
+          </section>
+
+          <section>
+            <h5>FOREIGN KEY</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>Feature</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>Oracle</th>
+              </tr>
+              <tr>
+                <td>ForeignKey</td>
+                <td>PRAGMA</td>
+                <td>ON</td>
+                <td>ON</td>
+              </tr>
+              <tr>
+                <td>Cascade</td>
+                <td>YES</td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+            </table>
+          </section>
+
+          <section>
+            <h5>INTEGER</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>TypeRule</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>Oracle</th>
+              </tr>
+              <tr>
+                <td>Typing</td>
+                <td>AFFINITY</td>
+                <td>STRICT</td>
+                <td>STRICT</td>
+              </tr>
+            </table>
+          </section>
+
+          <section>
+            <h5>BOOLEAN</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>TypeRule</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>Oracle</th>
+              </tr>
+              <tr>
+                <td>BooleanType</td>
+                <td>INTEGER</td>
+                <td>BOOLEAN</td>
+                <td><span class="highlight">NO NATIVE BOOLEAN</span></td>
+              </tr>
+            </table>
+          </section>
+
+          <section>
+            <h5>DATE / TIME</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>TypeRule</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>Oracle</th>
+              </tr>
+              <tr>
+                <td>DateStorage</td>
+                <td>TEXT</td>
+                <td>DATE</td>
+                <td>DATE / TIMESTAMP</td>
+              </tr>
+              <tr>
+                <td>TimestampTZ</td>
+                <td><span class="highlight">NO</span></td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+            </table>
+          </section>
+
+          <section>
+            <h5>JSON / ARRAY</h5>
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>Type</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>Oracle</th>
+              </tr>
+              <tr>
+                <td>JSON</td>
+                <td>TEXT</td>
+                <td>JSONB</td>
+                <td>JSON</td>
+              </tr>
+              <tr>
+                <td>ARRAY</td>
+                <td><span class="highlight">NO</span></td>
+                <td>YES</td>
+                <td>COLLECTION TYPES</td>
+              </tr>
+            </table>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- FOREIGN KEY SYNTAX COMPARISON -->
+          <!-- SQLite vs PostgreSQL vs Oracle -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>FOREIGN KEY Syntax Comparison</h5>
+
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>Database</th>
+                <th>Example Syntax</th>
+                <th>Notes</th>
+              </tr>
+
+              <tr>
+                <td>SQLite</td>
+                <td>
+                  <pre><code class="sql">
+CREATE TABLE orders (
+  id INTEGER PRIMARY KEY,
+  user_id INTEGER,
+  FOREIGN KEY (user_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE
+);
+</code></pre>
+                </td>
+                <td>
+                  PRAGMA foreign_keys = ON required
+                </td>
+              </tr>
+
+              <tr>
+                <td>PostgreSQL</td>
+                <td>
+                  <pre><code class="sql">
+CREATE TABLE orders (
+  id SERIAL PRIMARY KEY,
+  user_id INT
+    REFERENCES users(id)
+    ON DELETE CASCADE
+);
+</code></pre>
+                </td>
+                <td>
+                  Enforced by default<br>
+                  Supports DEFERRABLE
+                </td>
+              </tr>
+
+              <tr>
+                <td>Oracle</td>
+                <td>
+                  <pre><code class="sql">
+CREATE TABLE orders (
+  id NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+  user_id NUMBER,
+  CONSTRAINT fk_user
+    FOREIGN KEY (user_id)
+    REFERENCES users(id)
+    ON DELETE CASCADE
+);
+</code></pre>
+                </td>
+                <td>
+                  Strong enterprise constraint support
+                </td>
+              </tr>
+
+            </table>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- STORAGE MODEL COMPARISON -->
+          <!-- SQLite vs PostgreSQL vs Oracle -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Storage Engine Concept</h5>
+
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>Database</th>
+                <th>Engine Model</th>
+                <th>Default Engine</th>
+                <th>Multiple Engines</th>
+              </tr>
+
+              <tr>
+                <td>SQLite</td>
+                <td>Embedded</td>
+                <td>Single</td>
+                <td><span class="highlight">NO</span></td>
+              </tr>
+
+              <tr>
+                <td>PostgreSQL</td>
+                <td>Integrated</td>
+                <td>Native</td>
+                <td><span class="highlight">NO</span></td>
+              </tr>
+
+              <tr>
+                <td>Oracle</td>
+                <td>Integrated</td>
+                <td>Native</td>
+                <td><span class="highlight">NO</span></td>
+              </tr>
+
+            </table>
+
+            <br>
+
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>Concept</th>
+                <th>Meaning</th>
+              </tr>
+
+              <tr>
+                <td>Engine</td>
+                <td>Storage + locking + transactions</td>
+              </tr>
+
+              <tr>
+                <td>Integrated Engine</td>
+                <td>Core system manages storage internally</td>
+              </tr>
+
+              <tr>
+                <td>Enterprise Focus</td>
+                <td>Recovery, security, and large workloads</td>
+              </tr>
+
+            </table>
+
+          </section>
+
+          <section>
+            <h5>When to Use Which</h5>
+
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>Use Case</th>
+                <th>SQLite</th>
+                <th>PostgreSQL</th>
+                <th>Oracle</th>
+              </tr>
+
+              <tr>
+                <td>Prototyping</td>
+                <td>GOOD</td>
+                <td>GOOD</td>
+                <td>OK</td>
+              </tr>
+
+              <tr>
+                <td>SingleUser</td>
+                <td>GOOD</td>
+                <td>OK</td>
+                <td>OK</td>
+              </tr>
+
+              <tr>
+                <td>EmbeddedApp</td>
+                <td>GOOD</td>
+                <td><span class="highlight">NO</span></td>
+                <td><span class="highlight">NO</span></td>
+              </tr>
+
+              <tr>
+                <td>WebApp</td>
+                <td>OK</td>
+                <td>GOOD</td>
+                <td>GOOD</td>
+              </tr>
+
+              <tr>
+                <td>MultiUser</td>
+                <td>OK</td>
+                <td>GOOD</td>
+                <td>GOOD</td>
+              </tr>
+
+              <tr>
+                <td>EnterpriseERP</td>
+                <td><span class="highlight">NO</span></td>
+                <td>GOOD</td>
+                <td>GOOD</td>
+              </tr>
+
+              <tr>
+                <td>Production</td>
+                <td>OK</td>
+                <td>GOOD</td>
+                <td>GOOD</td>
+              </tr>
+
+            </table>
+
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SQL ANSI/ISO STANDARD COMPLIANCE -->
+          <!-- Based on Core Standard Features -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>SQL Standard Alignment Comparison</h5>
+
+            <table border="1" style="width:100%; border-collapse:collapse;">
+              <tr>
+                <th>Property</th>
+                <th>SQLite</th>
+                <th>Oracle</th>
+                <th>PostgreSQL</th>
+              </tr>
+
+              <tr>
+                <td>Large ANSI / ISO</td>
+                <td>LOW</td>
+                <td>HIGH</td>
+                <td>HIGH</td>
+              </tr>
+
+              <tr>
+                <td>FullOuterJoin</td>
+                <td><span class="highlight">NO</span></td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+
+              <tr>
+                <td>Deferrable</td>
+                <td><span class="highlight">NO</span></td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+
+              <tr>
+                <td>CheckEnforced</td>
+                <td>BASIC</td>
+                <td>GOOD</td>
+                <td>FULL</td>
+              </tr>
+
+              <tr>
+                <td>FilterClause</td>
+                <td><span class="highlight">NO</span></td>
+                <td><span class="highlight">NO</span></td>
+                <td>YES</td>
+              </tr>
+
+              <tr>
+                <td>StrongTyping</td>
+                <td><span class="highlight">NO</span></td>
+                <td>YES</td>
+                <td>YES</td>
+              </tr>
+
+            </table>
+
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- Oracle Style Conditional Aggregation -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Conditional Aggregation Example (Flowers)</h5>
+
+            <div class="split">
+
+              <div class="left">
+                <pre><code class="sql">
+CREATE TABLE flowers (
+  id NUMBER,
+  name VARCHAR2(50),
+  color VARCHAR2(20),
+  price NUMBER
+);
+
+INSERT ALL
+  INTO flowers VALUES (1, 'Rose',  'Red',   5)
+  INTO flowers VALUES (2, 'Lily',  'White', 7)
+  INTO flowers VALUES (3, 'Tulip', 'Red',   4)
+  INTO flowers VALUES (4, 'Daisy', 'White', 3)
+SELECT * FROM dual;
+</code></pre>
+              </div>
+
+              <div class="right">
+                <pre><code class="sql">
+SELECT
+  COUNT(*) AS total_flowers,
+  SUM(CASE WHEN color = 'Red' THEN 1 ELSE 0 END) AS red,
+  AVG(CASE WHEN color = 'White' THEN price END) AS price
+FROM flowers;
+</code></pre>
+
+                <ul>
+                  <li>Counts all flowers</li>
+                  <li>Counts only red flowers</li>
+                  <li>Averages only white flowers</li>
+                  <li>Uses CASE instead of FILTER</li>
+                </ul>
+
+                <p><strong>Note:</strong> Traditional Oracle style</p>
+              </div>
+
+            </div>
+
+          </section>
+
+          <section>
+            <h5>SQL Standard Compliance</h5>
+
+            <div style="margin-top:40px; text-align:center; font-size:14pt;">
+
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+
+                <div style="width:140px; text-align:left;">
+                  Less<br>Standard
+                </div>
+
+                <div style="flex:1; position:relative; height:120px;">
+
+                  <div style="
+            position:absolute;
+            top:60px;
+            left:0;
+            right:0;
+            height:4px;
+            background:#999;
+          "></div>
+
+                  <!-- SQLite -->
+                  <div style="
+            position:absolute;
+            top:20px;
+            left:10%;
+            text-align:center;
+          ">
+                    <div style="font-weight:bold;">SQLite</div>
+                  </div>
+
+                  <!-- Oracle -->
+                  <div style="
+            position:absolute;
+            top:20px;
+            left:55%;
+            text-align:center;
+          ">
+                    <div style="font-weight:bold;">Oracle</div>
+                  </div>
+
+                  <!-- PostgreSQL -->
+                  <div style="
+            position:absolute;
+            top:20px;
+            left:82%;
+            text-align:center;
+          ">
+                    <div style="font-weight:bold;">PostgreSQL</div>
+                  </div>
+
+                </div>
+
+                <div style="width:140px; text-align:right;">
+                  More<br>Standard
+                </div>
+
+              </div>
+
+            </div>
+          </section>
+
+        </section>
+
         <!-- Syllabus -->
 
         <section id="course-syllabus">
@@ -28463,36 +31009,6 @@ CREATE TABLE Bicycles (
               <div class="right">
                 <img src="./img/lab2-10-9.png" alt="Screenshot of SQLite commands for creating and verifying database"
                   style="max-width:100%; border:1px solid #ccc; border-radius:10px;">
-              </div>
-            </div>
-          </section>
-
-        </section>
-
-        <section id="midterm">
-
-          <section>
-            <div class="split">
-              <div class="left">
-                <h5>Midterm Exam – Friday, March 6</h5>
-                <p><strong>Time:</strong> 8:00 - 9:00 AM</p>
-
-                <h3>Format</h3>
-                <ul>
-                  <li>20 questions on paper</li>
-                  <li>18 multiple-choice, 2 written response</li>
-                  <li>Allowed: 2 pencils & 1 page of notes</li>
-                </ul>
-              </div>
-
-              <div class="right">
-                <h3>Scope</h3>
-                <ul>
-                  <li>Modules 1–7 (2–3 questions per module)</li>
-                  <li>Homework/Lab 1–3</li>
-                  <li><a href="./docs/Midterm-Sample.docx" target="_blank">Sample Midterm 1</a></li>
-                  <li><a href="./docs/midterm-prepare-2.pdf" target="_blank">Sample Midterm 2</a></li>
-                </ul>
               </div>
             </div>
           </section>
