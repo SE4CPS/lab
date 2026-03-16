@@ -16259,6 +16259,41 @@ Automation + TVV + Agentic Systems
 
                     <section>
                         <div class="split">
+
+                            <div class="left">
+
+                                <h5>Sustainability in IoT Systems</h5>
+
+                                <p>Design systems that minimize environmental impact.</p>
+
+                                <ul class="alpha-list">
+                                    <li><strong>Battery Life:</strong> reduce power consumption</li>
+                                    <li><strong>Network Use:</strong> transmit only necessary data</li>
+                                    <li><strong>Hardware Lifetime:</strong> avoid unnecessary computation</li>
+                                    <li><strong>Data Efficiency:</strong> compress and batch messages</li>
+                                    <li><strong>Maintenance:</strong> fewer battery replacements</li>
+                                </ul>
+
+                                <p>
+                                    Goal: build IoT systems that are efficient, reliable, and environmentally
+                                    responsible.
+                                </p>
+
+                            </div>
+
+
+                            <div class="right">
+
+                                <img src="https://themanufacturer-cdn-1.s3.eu-west-2.amazonaws.com/wp-content/uploads/2025/01/08115439/e-waste-1024x700.jpg"
+                                    alt="Sustainable IoT design">
+
+                            </div>
+
+                        </div>
+                    </section>
+
+                    <section>
+                        <div class="split">
                             <div class="left">
                                 <h5>Constrained Resources in IoT Applications</h5>
                                 <ul class="alpha-list">
@@ -16969,6 +17004,70 @@ setInterval(readLight,5000);
 
                         </div>
 
+                    </section>
+
+                    <section>
+                        <div class="split">
+
+                            <div class="left">
+
+                                <h5>Naive Sensor Loop</h5>
+
+                                <p>Reads and sends data 1/second.</p>
+
+                                <ul class="alpha-list">
+                                    <li>Continuous polling</li>
+                                    <li>Frequent transmissions</li>
+                                    <li>Higher battery usage</li>
+                                </ul>
+
+                                <pre><code class="language-cpp" style="font-size:0.82em; line-height:1.35;">
+void loop() {
+  float lux = lightMeter.readLightLevel(); // 1/s
+  Serial.println(lux); // Send data every second
+  delay(1000); // Wake CPU again after 1s
+}
+</code></pre>
+
+                                <p style="font-size:0.85em;">
+                                    ⚠ Device wakes <strong>60 times per minute</strong> even if light is stable.
+                                </p>
+
+                            </div>
+
+
+                            <div class="right">
+
+                                <h5>Resource-Friendly Version</h5>
+
+                                <p>Send data on change.</p>
+
+                                <ul class="alpha-list">
+                                    <li>Fewer transmissions</li>
+                                    <li>Longer sleep intervals</li>
+                                    <li>Lower CPU and radio usage</li>
+                                </ul>
+
+                                <pre><code class="language-cpp" style="font-size:0.82em; line-height:1.35;">
+float lastLux = -1;
+void loop() {
+  float lux = lightMeter.readLightLevel();
+  if (abs(lux - lastLux) > 10) { // delta >10
+    Serial.println(lux);
+    lastLux = lux;
+  }
+  delay(5000); // Wake only every 5 seconds
+}
+</code></pre>
+
+                                <p style="font-size:0.85em;">
+                                    ✓ Device wakes <strong>12 times per minute</strong><br>
+                                    ✓ Transmits only when light changes
+                                </p>
+
+                            </div>
+
+                        </div>
                     </section>
 
                     <section>
