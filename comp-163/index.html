@@ -622,7 +622,8 @@
                     18</a>, <a href="./#/c22">Mar 20</a>)</td>
                 <td style="padding:6px; border:1px solid #666;"><a href="./#/module-10">Relational Database
                     Transactions</a></td>
-                <td style="padding:6px; border:1px solid #666;">Lab 4 + Homework 4 (2w), Project Part 2 (4w)</td>
+                <td style="padding:6px; border:1px solid #666;"><a href="./#/lab-4">Lab 4</a> + <a
+                    href="./#/homework-4">Homework 4</a> (2w), Project Part 2 (4w)</td>
                 <td style="padding:6px; border:1px solid #666;"><a href="./#/oracle">OracleSQL</a></td>
                 <td style="padding:6px; border:1px solid #666;"></td>
               </tr>
@@ -31015,6 +31016,366 @@ CREATE TABLE Bicycles (
 
         </section>
 
+        <section id="lab-4">
+
+          <section>
+            <div class="full-visual">
+              <div class="frame" style="display:flex;align-items:center;justify-content:center;flex-direction:column;">
+                <h2 style="margin:0;">Lab 4</h2>
+                <h2 style="margin:10px 0 0 0;">MariaDB Performance & Normalization</h2>
+                <p class="muted" style="margin:18px 0 0 0; font-size:0.95em;">
+                  Due: March 30
+                </p>
+              </div>
+            </div>
+          </section>
+
+
+          <!-- SLIDE 1 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 1</h3>
+                <ul class="tight">
+                  <li>Write an <code>INSERT INTO</code> SQL statement to generate <strong>10,000 flowers</strong> in the
+                    <code>Flower</code> table.
+                  </li>
+                  <li>After inserting the records, run a query to verify the total number of rows.</li>
+                  <li>Upload a screenshot showing the <code>SELECT COUNT(*)</code> query and console output.</li>
+                  <li>MariaDB Reference:
+                    <a href="https://mariadb.com/kb/en/insert/" target="_blank">INSERT Statement</a>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Question 2</h3>
+                <ul class="tight">
+                  <li>Measure the execution time of the following query in MariaDB.</li>
+                  <li>Search for the flower named <strong>Rose</strong>.</li>
+                  <li>Upload a screenshot showing the execution duration.</li>
+                  <li>MariaDB Reference:
+                    <a href="https://mariadb.com/kb/en/show-profile/" target="_blank">Query Profiling</a>
+                  </li>
+                </ul>
+
+                <pre><code>
+SET @start_time = NOW();
+
+SELECT * 
+FROM Flower 
+WHERE Name = 'Rose';
+
+SELECT TIMEDIFF(NOW(), @start_time) 
+AS execution_time;
+</code></pre>
+
+              </div>
+
+            </div>
+          </section>
+
+
+          <!-- SLIDE 2 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 3</h3>
+                <ul class="tight">
+                  <li>Create an <strong>index</strong> on the <code>Name</code> column to improve search performance.
+                  </li>
+                  <li>Run the query and verify that the index was created.</li>
+                  <li>Upload a screenshot showing the verification result.</li>
+                  <li>MariaDB Reference:
+                    <a href="https://mariadb.com/kb/en/create-index/" target="_blank">CREATE INDEX</a>
+                  </li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Question 4</h3>
+                <ul class="tight">
+                  <li>Run the same search query again <strong>after creating the index</strong>.</li>
+                  <li>Measure the execution duration.</li>
+                  <li>Upload a screenshot showing the query time.</li>
+                </ul>
+
+                <pre><code>
+SET @start_time = NOW();
+
+SELECT * 
+FROM Flower 
+WHERE Name = 'Rose';
+
+SELECT TIMEDIFF(NOW(), @start_time) 
+AS execution_time;
+</code></pre>
+
+              </div>
+
+            </div>
+          </section>
+
+
+          <!-- SLIDE 3 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 5</h3>
+
+                <p><strong>Flower Data:</strong></p>
+
+                <pre><code>
+Rose, Red, 9.99, 11.99, 50, 30,
+Flora Supply Co. in San Francisco,
+123-456-7890, 321-654-0987
+
+Lily, White, 7.49, 30,
+Greenhouse Growers in Stockton,
+987-654-3210
+
+Tulip, Yellow, 5.99, 6.49, 40, 25,
+Flora Supply Co. in San Jose,
+123-456-7890, 321-654-0987
+</code></pre>
+
+                <ul class="tight">
+                  <li>Explain why this dataset is <strong>not normalized</strong>.</li>
+                  <li>List <strong>three different reasons</strong>.</li>
+                </ul>
+
+              </div>
+
+              <div class="right">
+                <h3>Question 6</h3>
+
+                <p><strong>Flower Data:</strong></p>
+
+                <pre><code>
+Rose, Red, 9.99, 11.99, 50, 30,
+Flora Supply Co. in San Francisco,
+123-456-7890, 321-654-0987
+</code></pre>
+
+                <ul class="tight">
+                  <li>Transform the data to <strong>First Normal Form (1NF)</strong>.</li>
+                  <li>Add a working attribute.</li>
+                </ul>
+
+              </div>
+
+            </div>
+          </section>
+
+
+          <!-- SLIDE 4 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 7</h3>
+                <ul class="tight">
+                  <li>Transform the data from <strong>1NF → 2NF</strong>.</li>
+                  <li>Create working tables and attributes.</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Question 8</h3>
+                <ul class="tight">
+                  <li>Transform the data from <strong>2NF → 3NF</strong>.</li>
+                  <li>Create working tables and attributes.</li>
+                </ul>
+              </div>
+
+            </div>
+          </section>
+
+
+          <!-- SLIDE 5 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 9</h3>
+                <ul class="tight">
+                  <li>Assume the database schema is now in <strong>Third Normal Form (3NF)</strong>.</li>
+                  <li>Write a SQL query that retrieves <strong>all flowers and their supplier contact details</strong>.
+                  </li>
+                </ul>
+              </div>
+
+              <div class="right">
+
+                <pre><code>
+SELECT 
+  f.Name,
+  s.SupplierName,
+  s.Phone
+FROM Flower f
+JOIN Supplier s
+ON f.SupplierID = s.SupplierID;
+</code></pre>
+
+              </div>
+
+            </div>
+          </section>
+
+        </section>
+
+        <section id="homework-4">
+
+          <section>
+            <div class="full-visual">
+              <div class="frame" style="display:flex;align-items:center;justify-content:center;flex-direction:column;">
+                <h2 style="margin:0;">Homework 4</h2>
+                <h2 style="margin:10px 0 0 0;">Database Normalization & Indexing Concepts</h2>
+                <p class="muted" style="margin:18px 0 0 0; font-size:0.95em;">
+                  Due: March 30
+                </p>
+              </div>
+            </div>
+          </section>
+
+
+          <!-- SLIDE 1 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 1</h3>
+                <ul class="tight">
+                  <li>This assignment reviews the concepts of <strong>database normalization</strong> and <strong>table
+                      indexing</strong>.</li>
+                  <li>Normalization structures data to reduce redundancy and maintain consistency.</li>
+                  <li>Indexing improves search performance and query efficiency.</li>
+                  <li>Answer each question with a <strong>short paragraph</strong>.</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Question 2</h3>
+                <ul class="tight">
+                  <li>Read pages <strong>1–3</strong> of the paper:</li>
+                  <li><em>A Simple Guide to Five Normal Forms in Relational Database Theory</em></li>
+                  <li>Why does the paper recommend <strong>database normalization</strong>?</li>
+                  <li>Please list <strong>two main reasons</strong>.</li>
+                </ul>
+              </div>
+
+            </div>
+          </section>
+
+
+          <!-- SLIDE 2 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 3</h3>
+                <ul class="tight">
+                  <li>What are the properties of <strong>First Normal Form (1NF)</strong>?</li>
+                  <li>Explain the properties in your own words.</li>
+                  <li>Use the <strong>example provided in the paper</strong>.</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Question 4</h3>
+                <ul class="tight">
+                  <li>What are the properties of <strong>Second Normal Form (2NF)</strong>?</li>
+                  <li>Explain how <strong>partial dependency</strong> is removed.</li>
+                  <li>Use the <strong>example described in the paper</strong>.</li>
+                </ul>
+              </div>
+
+            </div>
+          </section>
+
+
+          <!-- SLIDE 3 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 5</h3>
+                <ul class="tight">
+                  <li>What are the properties of <strong>Third Normal Form (3NF)</strong>?</li>
+                  <li>Explain how <strong>transitive dependencies</strong> are removed.</li>
+                  <li>Use the <strong>example provided in the paper</strong>.</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Question 6</h3>
+                <ul class="tight">
+                  <li>Read pages <strong>335–338</strong> in the book:</li>
+                  <li><em>SQL: The Complete Reference (3rd Edition)</em></li>
+                  <li>Explain the meaning of the following terms:</li>
+                  <li><strong>Full Table Scan</strong></li>
+                  <li><strong>Index Tree Scan</strong></li>
+                </ul>
+              </div>
+
+            </div>
+          </section>
+
+
+          <!-- SLIDE 4 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 7</h3>
+                <ul class="tight">
+                  <li>Look at <strong>Figure 13-6</strong> in Chapter 13.</li>
+                  <li>How does the database differ <strong>before</strong> and <strong>after</strong> indexing the
+                    attribute <code>DESCRIPTION</code> in the table <code>PRODUCTS</code>?</li>
+                  <li>Explain the structural difference.</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Question 8</h3>
+                <ul class="tight">
+                  <li>What is <strong>one advantage</strong> of database indexing?</li>
+                  <li>What is <strong>one disadvantage</strong> of database indexing?</li>
+                  <li>Explain briefly.</li>
+                </ul>
+              </div>
+
+            </div>
+          </section>
+
+
+          <!-- SLIDE 5 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 9</h3>
+                <ul class="tight">
+                  <li>When is <strong>database indexing NOT recommended</strong>?</li>
+                  <li>Explain why indexing may negatively affect performance in some cases.</li>
+                  <li>Provide one example scenario.</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <div class="img-placeholder">
+                  Short Paragraph Response
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+        </section>
+
         <section id="midterm-review">
 
           <section>
@@ -31591,7 +31952,7 @@ location
                     <li>The design should use structured tables.</li>
                   </ul>
 
-<pre><code>
+                  <pre><code>
 Problems
 ---------------------------------------------------------
 - titles column stores multiple values
