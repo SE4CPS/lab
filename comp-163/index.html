@@ -5259,7 +5259,7 @@ Product  ||--o{ CustomerProductSales : sold_in
               <div class="right">
                 <pre><code class="sql">INSERT INTO Customer (name, email, phone) VALUES
 ('Ava Kim', 'ava.kim@example.com', '209-555-0101'),
-('Noah Patel', 'noah.patel@example.com', '209-555-0112');</code></pre>
+('Tom Patel', 'tom.patel@example.com', '209-555-0112');</code></pre>
               </div>
             </div>
           </section>
@@ -26280,6 +26280,1074 @@ ROLLBACK;
 ROLLBACK TO before_update;
         </code></pre>
               </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- GLOBAL CODE FONT SIZE -->
+          <!-- ========================================================= -->
+          <style>
+            pre code {
+              font-size: 1.08rem;
+              line-height: 1.45;
+            }
+          </style>
+
+          <!-- ========================================================= -->
+          <!-- c21 AGENDA -->
+          <!-- ========================================================= -->
+          <section id="c21">
+            <h5>Today Agenda (Extended)</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Oracle Transactions Deep Dive</li>
+                    <li>ACID (Visual + SQL)</li>
+                    <li>COMMIT vs ROLLBACK</li>
+                    <li>Savepoints</li>
+                    <li>Multi-domain Examples</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+Flow of Today
+
+ACID → Guarantees
+   ↓
+Transactions → Control
+   ↓
+COMMIT / ROLLBACK
+   ↓
+Real Examples
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- ORACLE TRANSACTION ESSENCE -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Oracle Transaction – Essence</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Transaction = unit of work</li>
+                    <li>Starts automatically</li>
+                    <li>Ends with COMMIT / ROLLBACK</li>
+                    <li>SAVEPOINT allows partial undo</li>
+                    <li>Invisible until committed</li>
+                  </ul>
+
+                  <div class="diagram">
+                    <pre><code>
+Start → Changes → Decision
+
+        ┌──────────┐
+        │ COMMIT   │ → save ✔
+        └──────────┘
+              OR
+        ┌──────────┐
+        │ ROLLBACK │ → undo ✖
+        └──────────┘
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code class="sql">
+UPDATE accounts
+SET balance = balance - 100
+WHERE id = 1;
+
+SAVEPOINT s1;
+
+UPDATE accounts
+SET balance = balance + 100
+WHERE id = 2;
+
+ROLLBACK TO s1;
+
+COMMIT;
+</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- ACID -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>ACID – Diagram + Code</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+Atomicity → all or nothing
+
+Consistency → valid state
+
+Isolation → no conflicts
+
+Durability → survives crash
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code class="sql">
+-- Atomicity
+INSERT INTO orders VALUES (1);
+INSERT INTO payments VALUES (1);
+ROLLBACK;
+
+-- Consistency
+UPDATE products
+SET stock = stock - 5
+WHERE stock >= 5;
+
+-- Isolation
+SELECT * FROM orders
+FOR UPDATE;
+
+-- Durability
+COMMIT;
+</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- COMMIT -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>COMMIT – Flow + Code</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+E-commerce
+order → payment → commit ✔
+
+Banking
+debit → credit → commit ✔
+
+Inventory
+reduce stock → commit ✔
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code class="sql">
+-- E-commerce
+INSERT INTO orders VALUES (10);
+INSERT INTO payments VALUES (10);
+COMMIT;
+
+-- Banking
+UPDATE accounts SET balance = balance - 200 WHERE id=1;
+UPDATE accounts SET balance = balance + 200 WHERE id=2;
+COMMIT;
+
+-- Inventory
+UPDATE products SET stock = stock - 1 WHERE id=5;
+COMMIT;
+</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- ROLLBACK -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>ROLLBACK – Flow + Code</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+E-commerce
+payment fails → rollback ✖
+
+Banking
+credit fails → rollback ✖
+
+Inventory
+error → rollback ✖
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code class="sql">
+-- E-commerce failure
+INSERT INTO orders VALUES (11);
+ROLLBACK;
+
+-- Banking failure
+UPDATE accounts SET balance = balance - 200 WHERE id=1;
+ROLLBACK;
+
+-- Inventory failure
+UPDATE products SET stock = stock - 100 WHERE id=5;
+ROLLBACK;
+</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SAVEPOINT -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Savepoint – Partial Recovery</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+BEGIN
+  │
+step 1 ✔
+  │
+SAVEPOINT A
+  │
+step 2 ✔
+  │
+step 3 ✖
+  │
+ROLLBACK TO A
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code class="sql">
+BEGIN;
+
+INSERT INTO orders VALUES (20);
+
+SAVEPOINT s1;
+
+INSERT INTO order_items VALUES (20,101);
+
+ROLLBACK TO s1;
+
+COMMIT;
+</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- FULL FLOWER STOCK SYSTEM – SETUP -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Flower Shop – Database Setup</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>We model a flower shop system</li>
+                    <li>Track flowers and stock</li>
+                    <li>Store customer orders</li>
+                    <li>Record payments</li>
+                    <li>Used for transaction demos</li>
+                  </ul>
+
+                  <div class="diagram">
+                    <pre><code>
+Entities
+
+Flowers → inventory
+Orders  → purchases
+Payments → money
+
+All linked in transactions
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code class="sql">
+CREATE TABLE flowers (
+  id NUMBER PRIMARY KEY,
+  name VARCHAR2(50),
+  stock NUMBER,
+  price NUMBER(6,2)
+);
+
+CREATE TABLE orders (
+  id NUMBER PRIMARY KEY,
+  customer VARCHAR2(50),
+  total NUMBER(6,2),
+  status VARCHAR2(20)
+);
+
+CREATE TABLE payments (
+  id NUMBER PRIMARY KEY,
+  order_id NUMBER,
+  amount NUMBER(6,2)
+);
+</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- INSERT SAMPLE DATA -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Flower Shop – Sample Data</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Insert initial inventory</li>
+                    <li>Different flower types</li>
+                    <li>Stock levels vary</li>
+                    <li>Used in later transactions</li>
+                  </ul>
+
+                  <div class="diagram">
+                    <pre><code>
+Initial Stock
+
+Rose   → 20
+Lily   → 15
+Tulip  → 25
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code class="sql">
+INSERT INTO flowers VALUES (1,'Rose',20,5);
+INSERT INTO flowers VALUES (2,'Lily',15,7);
+INSERT INTO flowers VALUES (3,'Tulip',25,4);
+
+COMMIT;
+</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SUCCESSFUL TRANSACTION -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Transaction – Successful Order</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+Customer buys 3 Roses
+
+Step 1: create order ✔
+Step 2: reduce stock ✔
+Step 3: record payment ✔
+
+→ COMMIT
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code class="sql">
+BEGIN;
+
+INSERT INTO orders
+VALUES (100,'Ava',15,'paid');
+
+UPDATE flowers
+SET stock = stock - 3
+WHERE id = 1;
+
+INSERT INTO payments
+VALUES (1,100,15);
+
+COMMIT;
+</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- FAILED TRANSACTION -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Transaction – Failure (Rollback)</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+Customer buys 10 Lilies
+
+Order created ✔
+Stock updated ✔
+Payment fails ✖
+
+→ ROLLBACK
+Everything undone
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code class="sql">
+BEGIN;
+
+INSERT INTO orders
+VALUES (101,'Liam',70,'pending');
+
+UPDATE flowers
+SET stock = stock - 10
+WHERE id = 2;
+
+-- payment fails here
+
+ROLLBACK;
+</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SAVEPOINT EXAMPLE -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Transaction – Savepoint Example</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+Order process
+
+Create order ✔
+SAVEPOINT
+Add items ✔
+Error occurs ✖
+
+Rollback to savepoint
+(order remains)
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code class="sql">
+BEGIN;
+
+INSERT INTO orders
+VALUES (102,'Mia',40,'pending');
+
+SAVEPOINT after_order;
+
+UPDATE flowers
+SET stock = stock - 5
+WHERE id = 3;
+
+-- error
+
+ROLLBACK TO after_order;
+
+COMMIT;
+</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- CONCURRENCY PROBLEM -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Transaction – Lost Update Problem</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+Initial stock = 20
+
+T1 reads 20
+T2 reads 20
+
+T1 writes 15
+T2 writes 16
+
+Final = 16 ✖
+Expected = 11
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code class="sql">
+-- Transaction 1
+UPDATE flowers
+SET stock = stock - 5
+WHERE id = 1;
+
+-- Transaction 2
+UPDATE flowers
+SET stock = stock - 4
+WHERE id = 1;
+</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SAFE TRANSACTION WITH LOCK -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Transaction – Safe Update (Locking)</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+Lock row first
+
+T1 locks row
+T2 waits
+
+T1 commits
+T2 continues safely
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code class="sql">
+BEGIN;
+
+SELECT stock
+FROM flowers
+WHERE id = 1
+FOR UPDATE;
+
+UPDATE flowers
+SET stock = stock - 3
+WHERE id = 1;
+
+COMMIT;
+</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Questions?</h5>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SLIDE 1 -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Q1 – E-commerce Transaction</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <h6>Use Case</h6>
+                  <ul class="tight">
+                    <li>Customer places an online order</li>
+                    <li>Create order record</li>
+                    <li>Reduce product stock</li>
+                    <li>Record payment</li>
+                  </ul>
+
+                  <div class="diagram">
+                    <pre><code>
+Steps
+
+1. Create order
+2. Update stock
+3. Insert payment
+
+Question:
+Where should the
+transaction START
+and END?
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code class="sql">
+INSERT INTO orders
+VALUES (201,'Tom',50,'paid');
+
+UPDATE products
+SET stock = stock - 2
+WHERE id = 10;
+
+INSERT INTO payments
+VALUES (1,201,50);
+</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SLIDE 2 (UPDATED) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Q2 – Student Enrollment</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <h6>Use Case</h6>
+                  <ul class="tight">
+                    <li>Student enrolls in a course</li>
+                    <li>Add record to enrollments</li>
+                    <li>Reduce available seats</li>
+                    <li>Both must stay consistent</li>
+                  </ul>
+
+                  <div class="diagram">
+                    <pre><code>
+Steps
+
+1. Insert enrollment
+2. Reduce seat count
+
+Question:
+Where should the
+transaction START
+and END?
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code class="sql">
+INSERT INTO enrollments
+VALUES (5001, 'COMP-163');
+
+UPDATE courses
+SET seats = seats - 1
+WHERE course_id = 'COMP-163';
+</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SLIDE 3 -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Q3 – Hospital System</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <h6>Use Case</h6>
+                  <ul class="tight">
+                    <li>Patient is admitted</li>
+                    <li>Create patient record</li>
+                    <li>Assign hospital bed</li>
+                    <li>Update bed availability</li>
+                  </ul>
+
+                  <div class="diagram">
+                    <pre><code>
+Steps
+
+1. Insert patient
+2. Assign bed
+3. Update bed status
+
+Question:
+Where should the
+transaction START
+and END?
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code class="sql">
+INSERT INTO patients
+VALUES (301,'Emma');
+
+UPDATE beds
+SET status = 'occupied'
+WHERE id = 12;
+
+UPDATE rooms
+SET available = 'N'
+WHERE id = 5;
+</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- PROGRAMMATIC TRANSACTION CONTROL (EQUAL HEIGHT) -->
+          <!-- ========================================================= -->
+          <section>
+            <h5>Transactions in Code – Try / Catch Control</h5>
+
+            <style>
+              .split.equal {
+                display: flex;
+                gap: 18px;
+                align-items: stretch;
+              }
+
+              .split.equal .half {
+                width: 49%;
+                display: flex;
+              }
+
+              .split.equal .box {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+              }
+            </style>
+
+            <div class="split equal">
+
+              <div class="half">
+                <div class="box">
+                  <div>
+                    <h6>Key Idea</h6>
+                    <ul class="tight">
+                      <li>Transactions controlled in application code</li>
+                      <li>Success → COMMIT</li>
+                      <li>Error → ROLLBACK</li>
+                      <li>Prevents partial updates</li>
+                      <li>Ensures data consistency</li>
+                    </ul>
+                  </div>
+
+                  <div class="diagram">
+                    <pre><code>
+START TRANSACTION
+        │
+      try
+        │
+   all steps OK?
+     /      \
+   yes       no
+   │          │
+COMMIT     ROLLBACK
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="half">
+                <pre><code class="python">
+try:
+    cursor.execute("""
+        INSERT INTO enrollments
+        VALUES (5002, 'CS101')
+    """)
+
+    cursor.execute("""
+        UPDATE courses
+        SET seats = seats - 1
+        WHERE course_id = 'CS101'
+    """)
+
+    conn.commit()
+
+except Exception as e:
+    conn.rollback()
+    print("Error:", e)
+
+finally:
+    cursor.close()
+    conn.close()
+</code></pre>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Questions?</h5>
+          </section>
+
+          <section>
+            <h5>Q1 – Tables in a Transaction</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <h6>Question</h6>
+                  <ul class="tight">
+                    <li>How many tables involved in transaction?</li>
+                    <li>Why is one table often not enough?</li>
+                    <li>Think of order or student systems</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <h6>Answer</h6>
+                  <ul class="tight">
+                    <li>Most transactions involve <b>2–3+ tables</b></li>
+                    <li>Example (student system):</li>
+                    <li>students → store identity</li>
+                    <li>courses → manage capacity</li>
+                    <li>enrollments → link both</li>
+                    <li>Reason: real operations span related entities</li>
+                    <li>All tables must stay consistent together</li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Q2 – Types of Queries</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <h6>Question</h6>
+                  <ul class="tight">
+                    <li>Types of SQL queries used in transactions?</li>
+                    <li>Are transactions only for writing data?</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <h6>Answer</h6>
+                  <ul class="tight">
+                    <li>Transactions include both <b>read and write</b></li>
+                    <li>Read operations:</li>
+                    <li>SELECT → check data (e.g., available seats)</li>
+                    <li>Write operations:</li>
+                    <li>INSERT → add records</li>
+                    <li>UPDATE → modify values</li>
+                    <li>DELETE → remove records</li>
+                    <li>Typical flow: read → validate → write</li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Q3 – Atomicity vs 1NF</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <h6>Question</h6>
+                  <ul class="tight">
+                    <li>What is atomicity in transactions?</li>
+                    <li>What is atomic in 1NF?</li>
+                    <li>How are they different?</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <h6>Answer</h6>
+                  <ul class="tight">
+                    <li><b>Transaction Atomicity</b>:</li>
+                    <li>All operations succeed or all fail</li>
+                    <li>No partial updates allowed</li>
+                    <li><b>1NF Atomic</b>:</li>
+                    <li>Each column stores a single value</li>
+                    <li>No repeating groups or arrays</li>
+                    <li><b>Difference</b>:</li>
+                    <li>Transaction → execution behavior</li>
+                    <li>1NF → data structure rule</li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Q4 – Transaction Boundaries</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <h6>Question</h6>
+                  <ul class="tight">
+                    <li>When should a transaction start?</li>
+                    <li>When should it end?</li>
+                    <li>What happens if one step fails?</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <h6>Answer</h6>
+                  <ul class="tight">
+                    <li>Start before the first dependent operation</li>
+                    <li>Group all related SQL steps together</li>
+                    <li>End conditions:</li>
+                    <li>COMMIT → all steps succeed</li>
+                    <li>ROLLBACK → any step fails</li>
+                    <li>Failure restores previous consistent state</li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Q5 – Why Transactions Matter</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <h6>Question</h6>
+                  <ul class="tight">
+                    <li>What happens without transactions?</li>
+                    <li>What if one query fails?</li>
+                    <li>Why is this dangerous?</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <h6>Answer</h6>
+                  <ul class="tight">
+                    <li>Partial updates may occur</li>
+                    <li>Example:</li>
+                    <li>Order created ✔</li>
+                    <li>Stock reduced ✔</li>
+                    <li>Payment failed ✖</li>
+                    <li>Database becomes inconsistent</li>
+                    <li>Transactions ensure all-or-nothing execution</li>
+                  </ul>
+                </div>
+              </div>
+
             </div>
           </section>
 
