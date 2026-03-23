@@ -630,7 +630,8 @@
 
               <tr style="color:#ccc;">
                 <td style="padding:6px; border:1px solid #666;">11 (Mar 23, 25, 27)</td>
-                <td style="padding:6px; border:1px solid #666;">Relational Database Security</td>
+                <td style="padding:6px; border:1px solid #666;"><a href="./#/module-11">Relational Database Security</a>
+                </td>
                 <td style="padding:6px; border:1px solid #666;"></td>
                 <td style="padding:6px; border:1px solid #666;"></td>
                 <td style="padding:6px; border:1px solid #666;"></td>
@@ -27913,6 +27914,2280 @@ One insert fails
         </section>
 
         <!-- ===================== MODULE 11 =====================  -->
+
+        <section id="module-11">
+
+          <!-- ========================================================= -->
+          <!-- AGENDA -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h2>Module 11 – Database Security</h2>
+
+            <div class="split">
+              <div class="left">
+                <ul class="tight">
+                  <li>SQL Injection</li>
+                  <li>Encryption</li>
+                  <li>Access Control</li>
+                  <li>Distributed DB Security</li>
+                  <li>Best Practices</li>
+                </ul>
+              </div>
+              <div class="right">
+                <img
+                  src="https://media.geeksforgeeks.org/wp-content/uploads/20260109123026488953/challenges_of_database_security_in_dbms.webp"
+                  alt="Database Security Challenges" style="width: 100%; height: auto;">
+              </div>
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- WHY DATABASE SECURITY MATTERS -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Why Database Security Matters</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Databases store critical real-world data</li>
+                    <li>Unauthorized access leads to major damage</li>
+                    <li>Data breaches affect ind. and organizations</li>
+                    <li>Loss of trust impacts business operations</li>
+                    <li>Security failures are often irreversible</li>
+                  </ul>
+
+                  <div class="diagram">
+                    <pre><code>
+User Data
+   │
+   ▼
+Database
+   │
+   ▼
+Leak → Misuse → Damage
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Password exposure → account takeover</li>
+                    <li>SSN exposure → identity theft</li>
+                    <li>Clinical data → privacy violation</li>
+                  </ul>
+
+                  <pre><code>
+Examples
+
+password = 'rose123'
+ssn = '123-45-6789'
+diagnosis = 'diabetes'
+</code></pre>
+
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- LEGAL + PRIVACY REQUIREMENTS -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Legal Requirements and Privacy</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Laws require protection of personal data</li>
+                    <li>Organizations must enforce security controls</li>
+                    <li>Failure leads to penalties and liability</li>
+                    <li>Compliance is mandatory, not optional</li>
+                  </ul>
+
+                  <div class="diagram">
+                    <pre><code>
+Regulation
+   │
+   ▼
+Security Controls
+   │
+   ▼
+Compliance / Violation
+</code></pre>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+
+                  <table class="tbl">
+                    <tr>
+                      <th>Data Type</th>
+                      <th>Risk</th>
+                    </tr>
+                    <tr>
+                      <td>Password</td>
+                      <td>Account compromise</td>
+                    </tr>
+                    <tr>
+                      <td>SSN</td>
+                      <td>Identity theft</td>
+                    </tr>
+                    <tr>
+                      <td>Clinical Data</td>
+                      <td>Privacy violation</td>
+                    </tr>
+                  </table>
+
+                  <div class="diagram">
+                    <pre><code>
+Sensitive Data
+
+Password
+SSN
+Medical Records
+
+→ Must be protected
+</code></pre>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- DATA SECURITY: IN MOTION VS AT REST -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Data Security – In Motion vs At Rest</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <h6>Data in Motion</h6>
+
+                  <ul class="tight">
+                    <li>Data traveling across networks</li>
+                    <li>Client → Server → Database</li>
+                    <li>Vulnerable to interception (e.g., sniffing)</li>
+                    <li>Protected using encryption protocols</li>
+                  </ul>
+
+                  <pre><code>
+Example:
+User submits password
+over HTTPS
+</code></pre>
+
+                  <div class="diagram">
+                    <pre><code>
+Client
+  │
+  ▼
+Encrypted Channel (TLS)
+  │
+  ▼
+Server
+</code></pre>
+                  </div>
+
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <h6>Data at Rest</h6>
+
+                  <ul class="tight">
+                    <li>Data stored in database or disk</li>
+                    <li>Includes backups and logs</li>
+                    <li>Risk: unauthorized access or theft</li>
+                    <li>Protected using encryption + access control</li>
+                  </ul>
+
+                  <pre><code>
+Example:
+Stored password (hashed)
+Stored SSN (encrypted)
+</code></pre>
+
+                  <div class="diagram">
+                    <pre><code>
+Database Storage
+     │
+     ▼
+Encrypted Data
+     │
+     ▼
+Disk / Backup
+</code></pre>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ========================================================= -->
+          <!-- SQL INJECTION -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>SQL Injection – Definition</h5>
+          </section>
+
+          <section>
+            <h5>SQL Injection – Definition</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Injection of malicious SQL</li>
+                    <li>Targets query construction</li>
+                    <li>Alters intended logic</li>
+                    <li>Breaks data security</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+User Input
+   │
+   ▼
+SQL Query
+   │
+   ▼
+Injected Logic
+   │
+   ▼
+Database
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>SQL Injection – Flower Example</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <pre><code>
+SELECT * FROM flowers
+WHERE name = 'Rose';
+</code></pre>
+
+                  <ul class="tight">
+                    <li>Simple query</li>
+                    <li>Expected one result</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+flowers table
+
+Rose
+Tulip
+Lily
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <br>
+            <a href="https://www.w3schools.com/sql/sql_injection.asp" target="_blank">
+              SQL Injection Tutorial (W3Schools)
+            </a>
+          </section>
+
+          <section>
+            <h5>SQL Injection – Vulnerable Code</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <pre><code>
+query =
+"SELECT * FROM flowers
+ WHERE name = '" + input + "'";
+</code></pre>
+
+                  <ul class="tight">
+                    <li>Dynamic string concatenation</li>
+                    <li>No input validation</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+Input joins SQL
+
+Query + Input
+   │
+   ▼
+Unsafe Query
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>SQL Injection – Malicious Input</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <pre><code>
+' OR '1'='1
+</code></pre>
+
+                  <ul class="tight">
+                    <li>Always true condition</li>
+                    <li>Bypasses filtering</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+Condition
+
+TRUE OR TRUE
+   │
+   ▼
+All rows returned
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>SQL Injection – Executed Query</h5>
+
+            <div class="box">
+              <pre><code>
+SELECT * FROM flowers
+WHERE name = '' OR '1'='1';
+</code></pre>
+
+              <div class="diagram">
+                <pre><code>
+Filter removed
+
+→ full table scan
+→ all flowers returned
+</code></pre>
+              </div>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>SQL Injection – Impact</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Data exposure</li>
+                    <li>Unauthorized access</li>
+                    <li>Bypass authentication</li>
+                    <li>Modify or delete data</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+Attack Results
+
+Read → Modify → Delete
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>SQL Injection – Login Example</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <pre><code>
+SELECT * FROM users
+WHERE username = input
+AND password = input;
+</code></pre>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code>
+input:
+' OR '1'='1
+</code></pre>
+
+                  <div class="diagram">
+                    <pre><code>
+Login bypassed
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>SQL Injection – Before vs After</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <h6>Before</h6>
+                  <pre><code>
+"... WHERE name = '" + input + "'"
+</code></pre>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <h6>After</h6>
+                  <pre><code>
+WHERE name = ?
+</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>SQL Injection – Prepared Statement</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+
+                  <pre><code>
+-- prepare statement with placeholder
+stmt = conn.prepare(
+  "SELECT * 
+   FROM flowers 
+   WHERE name = ?"
+);
+
+-- bind input as data (not SQL)
+stmt.execute(input);
+</code></pre>
+
+                  <ul class="tight">
+                    <li><code>?</code> is a parameter placeholder</li>
+                    <li>Input is bound separately from SQL</li>
+                    <li>Database treats input as data only</li>
+                  </ul>
+
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+
+                  <div class="diagram">
+                    <pre><code>
+SQL Template
+   │
+   ▼
+Bind Parameter
+   │
+   ▼
+Execution Engine
+   │
+   ▼
+Safe Query (no injection)
+</code></pre>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>SQL Injection – Parameter Binding</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Separates code and data</li>
+                    <li>No SQL interpretation</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+Query + Data
+
+→ NOT merged
+→ Safe
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>SQL Injection – Input Validation</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <h6>Before</h6>
+                  <pre><code>
+input = user_input
+</code></pre>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <h6>After</h6>
+                  <pre><code>
+if input.isalpha():
+    allow()
+</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>SQL Injection – Allow List</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Allow known safe inputs</li>
+                    <li>Reject others</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code>
+allowed = ['Rose','Lily']
+
+if input in allowed:
+    run_query()
+</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>SQL Injection – Escaping (Not Preferred)</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Escapes special characters</li>
+                    <li>Less secure than prepared statements</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code>
+input.replace("'", "''")
+</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>SQL Injection – Read Attack</h5>
+
+            <div class="box">
+              <pre><code>
+SELECT * FROM flowers
+UNION SELECT * FROM users;
+</code></pre>
+
+              <div class="diagram">
+                <pre><code>
+flowers data + users data
+</code></pre>
+              </div>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>SQL Injection – Delete Attack</h5>
+
+            <div class="box">
+              <pre><code>
+'; DELETE FROM flowers; --
+</code></pre>
+
+              <div class="diagram">
+                <pre><code>
+flowers table wiped
+</code></pre>
+              </div>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>SQL Injection – Update Attack</h5>
+
+            <div class="box">
+              <pre><code>
+'; UPDATE flowers SET price=0; --
+</code></pre>
+
+              <div class="diagram">
+                <pre><code>
+all prices modified
+</code></pre>
+              </div>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>SQL Injection – Protection</h5>
+            <div class="diagram">
+              <pre><code>
+1. Prepared Statements
+2. Input Validation
+3. Least Privilege
+4. Monitoring
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>SQL Injection – Secure Architecture</h5>
+
+            <div class="diagram">
+              <pre><code>
+User
+ │
+ ▼
+Application (validation)
+ │
+ ▼
+Prepared SQL
+ │
+ ▼
+Database
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>SQL Injection – Flower System Secure Flow</h5>
+
+            <div class="diagram">
+              <pre><code>
+Search Flower
+
+Input → Validate → Bind → Query → Result
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>SQL Injection – Summary</h5>
+
+            <div class="box">
+              <ul class="tight">
+                <li>Never concatenate SQL + input</li>
+                <li>Always use prepared statements</li>
+                <li>Validate all user inputs</li>
+                <li>Apply layered security</li>
+              </ul>
+            </div>
+          </section>
+
+          <section>Question</section>
+
+          <!-- ========================================================= -->
+          <!-- ENCRYPTION (POSTGRESQL) -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Encryption – Definition</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Encryption transforms data in unreadable form</li>
+                    <li>Protects sensitive information</li>
+                    <li>Requires a key to decrypt</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+Plaintext
+   │
+Encrypt(key)
+   │
+   ▼
+Ciphertext
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Encryption – Why Needed</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Protect passwords</li>
+                    <li>Protect SSN</li>
+                    <li>Protect clinical data</li>
+                    <li>Protect payment data</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code>
+password = 'rose123'
+ssn = '123-45-6789'
+</code></pre>
+
+                  <div class="diagram">
+                    <pre><code>
+Sensitive Data
+→ Must be encrypted
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>PostgreSQL Encryption Extension</h5>
+
+            <div class="box">
+              <pre><code>
+CREATE EXTENSION pgcrypto;
+</code></pre>
+
+              <ul class="tight">
+                <li>pgcrypto enables encryption functions</li>
+                <li>Supports hashing and encryption</li>
+              </ul>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Encryption – Before vs After</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <h6>Before</h6>
+                  <pre><code>
+INSERT INTO payments(card)
+VALUES ('4111-2222');
+</code></pre>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <h6>After</h6>
+                  <pre><code>
+INSERT INTO payments(card)
+VALUES (
+pgp_sym_encrypt('4111-2222','key')
+);
+</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>pgp_sym_encrypt</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Encrypts using symmetric key</li>
+                    <li>Fast and efficient</li>
+                  </ul>
+
+                  <pre><code>
+pgp_sym_encrypt(data, key)
+</code></pre>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+Data + Key
+   │
+   ▼
+Encrypted Output
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>pgp_sym_decrypt</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Decrypts encrypted column</li>
+                    <li>Requires same key</li>
+                  </ul>
+
+                  <pre><code>
+pgp_sym_decrypt(column,'key')
+</code></pre>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+Encrypted Data
+   │
+Decrypt(key)
+   │
+   ▼
+Original Data
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Flower Payment Example</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <pre><code>
+INSERT INTO payments(card)
+VALUES (
+pgp_sym_encrypt('4111-2222','key')
+);
+</code></pre>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+Order → Encrypt → Store
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Reading Encrypted Data</h5>
+
+            <div class="box">
+              <pre><code>
+SELECT pgp_sym_decrypt(card,'key')
+FROM payments;
+</code></pre>
+
+              <div class="diagram">
+                <pre><code>
+Encrypted → Decrypt → Output
+</code></pre>
+              </div>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Hashing vs Encryption</h5>
+
+            <table class="tbl">
+              <tr>
+                <th>Feature</th>
+                <th>Hash</th>
+                <th>Encrypt</th>
+              </tr>
+              <tr>
+                <td>Reverse</td>
+                <td>No</td>
+                <td>Yes</td>
+              </tr>
+              <tr>
+                <td>Use</td>
+                <td>Password</td>
+                <td>Data</td>
+              </tr>
+            </table>
+
+          </section>
+
+          <section>
+            <h5>Password Hashing</h5>
+
+            <div class="box">
+              <pre><code>
+SELECT crypt('rose123', gen_salt('bf'));
+</code></pre>
+
+              <div class="diagram">
+                <pre><code>
+Password → Hash → Store
+</code></pre>
+              </div>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Hash Verification</h5>
+
+            <div class="box">
+              <pre><code>
+SELECT crypt('rose123', stored_hash) = stored_hash;
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Symmetric Encryption</h5>
+
+            <div class="diagram">
+              <pre><code>
+Same Key
+Encrypt → Decrypt
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Asymmetric Encryption</h5>
+
+            <div class="diagram">
+              <pre><code>
+Public Key → Encrypt
+Private Key → Decrypt
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Encryption in Motion</h5>
+
+            <div class="diagram">
+              <pre><code>
+Client
+ │
+TLS/SSL
+ │
+Server
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Encryption at Rest</h5>
+
+            <div class="diagram">
+              <pre><code>
+Database
+ │
+Encrypted Columns
+ │
+Disk
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Encryption Limitation</h5>
+
+            <div class="box">
+              <ul class="tight">
+                <li>Slower queries</li>
+                <li>No indexing on encrypted columns</li>
+                <li>Harder filtering</li>
+              </ul>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Query Limitation Example</h5>
+
+            <div class="box">
+              <pre><code>
+SELECT * FROM payments
+WHERE card = '4111';
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Best Practice</h5>
+
+            <div class="diagram">
+              <pre><code>
+Encrypt Sensitive Data
++
+Hash Passwords
++
+Secure Keys
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Secure Flow</h5>
+
+            <div class="diagram">
+              <pre><code>
+Input → Encrypt → Store
+Query → Decrypt → Output
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Encryption Summary</h5>
+
+            <div class="box">
+              <ul class="tight">
+                <li>Use pgcrypto in PostgreSQL</li>
+                <li>Encrypt sensitive data</li>
+                <li>Hash passwords</li>
+                <li>Manage keys securely</li>
+              </ul>
+            </div>
+          </section>
+
+          <section>Question</section>
+
+          <!-- ========================================================= -->
+          <!-- ACCESS CONTROL (POSTGRESQL) -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Access Control – Definition</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Controls who can access data</li>
+                    <li>Defines permissions</li>
+                    <li>Prevents unauthorized operations</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+User
+ │
+ ▼
+Role
+ │
+ ▼
+Permission
+ │
+ ▼
+Database Access
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Access Control – Why Needed</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Protect sensitive data</li>
+                    <li>Limit user actions</li>
+                    <li>Prevent misuse</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+No Control → Full Access
+With Control → Restricted Access
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>PostgreSQL Roles</h5>
+
+            <div class="box">
+              <pre><code>
+CREATE ROLE user1;
+</code></pre>
+
+              <ul class="tight">
+                <li>Roles represent users or groups</li>
+                <li>Can own permissions</li>
+              </ul>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Role with Login</h5>
+
+            <div class="box">
+              <pre><code>
+CREATE ROLE alice LOGIN PASSWORD 'pass';
+</code></pre>
+
+              <ul class="tight">
+                <li>LOGIN allows connection</li>
+                <li>Password secures access</li>
+              </ul>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Common Roles</h5>
+
+            <div class="diagram">
+              <pre><code>
+Admin → Full access
+Manager → Read + Write
+User → Read only
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Before vs After (No Control)</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <h6>Before</h6>
+                  <pre><code>
+SELECT * FROM flowers;
+UPDATE flowers SET price=0;
+</code></pre>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <h6>After</h6>
+                  <div class="diagram">
+                    <pre><code>
+Access restricted
+based on role
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>GRANT SELECT</h5>
+
+            <div class="box">
+              <pre><code>
+GRANT SELECT ON flowers TO user1;
+</code></pre>
+
+              <ul class="tight">
+                <li>Allows read access</li>
+              </ul>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>GRANT INSERT</h5>
+
+            <div class="box">
+              <pre><code>
+GRANT INSERT ON flowers TO user1;
+</code></pre>
+
+              <ul class="tight">
+                <li>Allows adding data</li>
+              </ul>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>GRANT UPDATE</h5>
+
+            <div class="box">
+              <pre><code>
+GRANT UPDATE ON flowers TO user1;
+</code></pre>
+
+              <ul class="tight">
+                <li>Allows modifying data</li>
+              </ul>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>GRANT DELETE</h5>
+
+            <div class="box">
+              <pre><code>
+GRANT DELETE ON flowers TO user1;
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>GRANT ALL</h5>
+
+            <div class="box">
+              <pre><code>
+GRANT ALL ON flowers TO admin;
+</code></pre>
+
+              <ul class="tight">
+                <li>Full control</li>
+              </ul>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>REVOKE Permissions</h5>
+
+            <div class="box">
+              <pre><code>
+REVOKE SELECT ON flowers FROM user1;
+</code></pre>
+
+              <ul class="tight">
+                <li>Removes access</li>
+              </ul>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Column-Level Access</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <h6>Before</h6>
+                  <pre><code>
+SELECT * FROM flowers;
+</code></pre>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <h6>After</h6>
+                  <pre><code>
+GRANT SELECT(name,price)
+ON flowers TO user1;
+</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Table Ownership</h5>
+
+            <div class="box">
+              <pre><code>
+ALTER TABLE flowers OWNER TO admin;
+</code></pre>
+
+              <ul class="tight">
+                <li>Owner controls permissions</li>
+              </ul>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Role Hierarchy</h5>
+
+            <div class="box">
+              <pre><code>
+GRANT manager TO alice;
+</code></pre>
+
+              <div class="diagram">
+                <pre><code>
+Admin
+ │
+ ▼
+Manager
+ │
+ ▼
+User
+</code></pre>
+              </div>
+
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Read vs Write Access</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <h6>Read</h6>
+                  <pre><code>
+GRANT SELECT ON flowers TO user1;
+</code></pre>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <h6>Write</h6>
+                  <pre><code>
+GRANT INSERT, UPDATE ON flowers TO user1;
+</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Flower Example</h5>
+
+            <div class="diagram">
+              <pre><code>
+User → Read flowers
+Manager → Update prices
+Admin → Full control
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Least Privilege Principle</h5>
+
+            <div class="diagram">
+              <pre><code>
+Give only required access
+
+User → minimal rights
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Access Check Flow</h5>
+
+            <div class="diagram">
+              <pre><code>
+User Request
+   │
+Check Role
+   │
+Allow / Deny
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Access Control Summary</h5>
+
+            <div class="box">
+              <ul class="tight">
+                <li>Use roles to manage users</li>
+                <li>Grant only needed permissions</li>
+                <li>Revoke unused access</li>
+                <li>Follow least privilege</li>
+              </ul>
+            </div>
+          </section>
+
+          <section>Question</section>
+
+          <!-- ========================================================= -->
+          <!-- DISTRIBUTED DATABASE (SECURITY FOCUS) -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Distributed Database – Definition</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Multiple databases working together</li>
+                    <li>Data stored across nodes</li>
+                    <li>Supports scalability and isolation</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+Client
+ │
+ ▼
+DB1   DB2   DB3
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Security Goal – Data Separation</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Separate public and private data</li>
+                    <li>Reduce exposure risk</li>
+                    <li>Limit access per system</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+Public Data → Public DB
+Private Data → Secure DB
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Flower System Data Types</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Flower name</li>
+                    <li>Price</li>
+                    <li>Category</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Customer SSN</li>
+                    <li>Payment data</li>
+                    <li>Order history</li>
+                  </ul>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Public vs Private Split</h5>
+
+            <div class="diagram">
+              <pre><code>
+Public DB
+  flowers(name, price)
+
+Private DB
+  users(ssn, password)
+  payments(card)
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Before vs After Architecture</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <h6>Before</h6>
+                  <div class="diagram">
+                    <pre><code>
+Single DB
+(all data mixed)
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <h6>After</h6>
+                  <div class="diagram">
+                    <pre><code>
+Public DB   Private DB
+(separated systems)
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Public Database Example</h5>
+
+            <div class="box">
+              <pre><code>
+SELECT name, price
+FROM flowers;
+</code></pre>
+
+              <ul class="tight">
+                <li>No sensitive data</li>
+              </ul>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Private Database Example</h5>
+
+            <div class="box">
+              <pre><code>
+SELECT ssn, password
+FROM users;
+</code></pre>
+
+              <ul class="tight">
+                <li>Highly restricted</li>
+              </ul>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Access Separation</h5>
+
+            <div class="diagram">
+              <pre><code>
+Frontend → Public DB
+
+Backend → Private DB
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Network Isolation</h5>
+
+            <div class="diagram">
+              <pre><code>
+Internet
+   │
+Public DB (open)
+   │
+Firewall
+   │
+Private DB (restricted)
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Data Flow</h5>
+
+            <div class="diagram">
+              <pre><code>
+User Request
+   │
+Public Data Query
+   │
+Sensitive Data → Backend Only
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Replication for Public Data</h5>
+
+            <div class="diagram">
+              <pre><code>
+Public DB
+   │
+Replicas
+   │
+High availability
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Private Data Protection</h5>
+
+            <div class="diagram">
+              <pre><code>
+Private DB
+   │
+Encrypted Storage
+   │
+Restricted Access
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Sharding by Sensitivity</h5>
+
+            <div class="diagram">
+              <pre><code>
+Shard 1 → Public Data
+Shard 2 → Private Data
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Risk Reduction</h5>
+
+            <div class="diagram">
+              <pre><code>
+Attack on Public DB
+→ No access to private data
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Failure Isolation</h5>
+
+            <div class="diagram">
+              <pre><code>
+Public DB failure
+→ Private DB unaffected
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Consistency Challenge</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <h6>Public DB</h6>
+                  <div>Flower price updated</div>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <h6>Private DB</h6>
+                  <div>Old value remains</div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Tradeoff</h5>
+
+            <div class="diagram">
+              <pre><code>
+Security ↑
+Complexity ↑
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Secure Architecture</h5>
+
+            <div class="diagram">
+              <pre><code>
+User
+ │
+ ▼
+Frontend
+ │
+ ▼
+Public DB
+
+Backend
+ │
+ ▼
+Private DB
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Distributed Security Summary</h5>
+
+            <div class="box">
+              <ul class="tight">
+                <li>Separate public and private data</li>
+                <li>Use multiple databases</li>
+                <li>Isolate sensitive information</li>
+                <li>Reduce attack surface</li>
+              </ul>
+            </div>
+          </section>
+
+          <section>Question</section>
+
+          <!-- ========================================================= -->
+          <!-- BEST PRACTICES (DATABASE SECURITY) -->
+          <!-- ========================================================= -->
+
+          <section>
+            <h5>Best Practices – Overview</h5>
+
+            <div class="diagram">
+              <pre><code>
+Prevent → Detect → Respond
+
+SQL Injection
+Encryption
+Access Control
+Monitoring
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Defense in Depth</h5>
+
+            <div class="diagram">
+              <pre><code>
+Layer 1 → Input Validation
+Layer 2 → Access Control
+Layer 3 → Encryption
+Layer 4 → Monitoring
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Logging – Definition</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Records system activity</li>
+                    <li>Tracks queries and access</li>
+                    <li>Used for debugging and security</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+User Action
+   │
+   ▼
+Log Entry
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>PostgreSQL Logging</h5>
+
+            <div class="box">
+              <pre><code>
+log_statement = 'all'
+log_connections = on
+log_disconnections = on
+</code></pre>
+
+              <ul class="tight">
+                <li>Logs all SQL statements</li>
+              </ul>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Log Example</h5>
+
+            <div class="box">
+              <pre><code>
+SELECT * FROM flowers;
+DELETE FROM flowers;
+</code></pre>
+
+              <div class="diagram">
+                <pre><code>
+Timestamp
+User
+Query
+</code></pre>
+              </div>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Audit – Definition</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Review of logs</li>
+                    <li>Detect suspicious activity</li>
+                    <li>Ensure compliance</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+Logs → Audit → Alerts
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Audit Example</h5>
+
+            <div class="box">
+              <pre><code>
+User: alice
+Action: DELETE
+Table: flowers
+Time: 10:00
+</code></pre>
+
+              <div class="diagram">
+                <pre><code>
+Suspicious?
+→ Investigate
+</code></pre>
+              </div>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Monitoring</h5>
+
+            <div class="diagram">
+              <pre><code>
+System Activity
+   │
+   ▼
+Real-Time Monitoring
+   │
+   ▼
+Alert
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Alert Example</h5>
+
+            <div class="box">
+              <pre><code>
+Too many failed logins
+Unexpected DELETE query
+</code></pre>
+
+              <div class="diagram">
+                <pre><code>
+Trigger Alert
+</code></pre>
+              </div>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>SQL Injection Detection</h5>
+
+            <div class="diagram">
+              <pre><code>
+Input contains:
+' OR '1'='1
+
+→ Flag as attack
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Access Control Best Practice</h5>
+
+            <div class="box">
+              <ul class="tight">
+                <li>Use roles</li>
+                <li>Grant minimal permissions</li>
+                <li>Revoke unused access</li>
+              </ul>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Encryption Best Practice</h5>
+
+            <div class="box">
+              <ul class="tight">
+                <li>Encrypt sensitive data</li>
+                <li>Hash passwords</li>
+                <li>Protect encryption keys</li>
+              </ul>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Key Management</h5>
+
+            <div class="diagram">
+              <pre><code>
+Key
+ │
+Secure Storage
+ │
+Limited Access
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Backup Strategy</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Regular backups</li>
+                    <li>Store securely</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <div class="diagram">
+                    <pre><code>
+Database
+   │
+   ▼
+Backup
+   │
+   ▼
+Recovery
+</code></pre>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Secure Configuration</h5>
+
+            <div class="box">
+              <ul class="tight">
+                <li>Disable unused features</li>
+                <li>Use strong passwords</li>
+                <li>Restrict network access</li>
+              </ul>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Network Security</h5>
+
+            <div class="diagram">
+              <pre><code>
+Internet
+ │
+Firewall
+ │
+Database
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Regular Updates</h5>
+
+            <div class="box">
+              <ul class="tight">
+                <li>Patch vulnerabilities</li>
+                <li>Update PostgreSQL</li>
+                <li>Fix security bugs</li>
+              </ul>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Separation of Duties</h5>
+
+            <div class="diagram">
+              <pre><code>
+Admin → Manage DB
+User → Query Data
+Auditor → Review Logs
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Incident Response</h5>
+
+            <div class="diagram">
+              <pre><code>
+Detect → Contain → Fix → Recover
+</code></pre>
+            </div>
+
+          </section>
+
+          <section>
+            <h5>Best Practices Summary</h5>
+
+            <div class="box">
+              <ul class="tight">
+                <li>Log all activity</li>
+                <li>Audit regularly</li>
+                <li>Monitor continuously</li>
+                <li>Apply layered security</li>
+              </ul>
+            </div>
+
+          </section>
+
+        </section>
 
         <!-- ===================== MODULE 12 =====================  -->
 
