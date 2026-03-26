@@ -30164,7 +30164,94 @@ Detect → Contain → Fix → Recover
                 <li>Apply layered security</li>
               </ul>
             </div>
+          </section>
 
+          <!-- ========================================================= -->
+          <!-- ACCESS CONTROL (POSTGRESQL) -->
+          <!-- ========================================================= -->
+
+          <section id="c25">
+            <h5>Database and Access Control</h5>
+            <div class="split">
+              <div class="half">
+                <div class="box">
+                  <ul class="tight">
+                    <li>Access Control API Keys</li>
+                    <li>...</li>
+                    <li>...</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="half">
+                <img src="rbac.png">
+              </div>
+            </div>
+          </section>
+
+          <section id="c26">
+            <h5>Securing API Keys</h5>
+            <div class="split">
+              <div class="left">
+                <ul class="tight">
+                  <li>Step 1: Store keys in a <span class="highlight">.env</span> file (Local only).</li>
+                  <li>Step 2: Add .env to your .gitignore file.</li>
+                  <li>Result: API key stays local; code stays public.</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code>
+.DS_Store
+# Keep secrets out of source control
+.env</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section id="c28">
+            <h5>The .env File Structure</h5>
+            <div class="split">
+              <div class="left">
+                <ul class="tight">
+                  <li>Format: KEY=VALUE</li>
+                  <li>No spaces around the "=" sign</li>
+                  <li>No quotes needed for strings</li>
+                  <li>One variable per line</li>
+                </ul>
+              </div>
+              <div class="right">
+                <p>.env</p>
+                <pre><code># Database Connection String
+DATABASE_URL=postgresql://neondb_...
+
+# Other API Secrets
+API_KEY=your_secret_key_here
+DEBUG=True</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section id="c27">
+            <h5>Updating Code for Security</h5>
+            <div class="split">
+              <div class="left">
+                <p>Before: Hardcoded Credentials</p>
+                <pre><code>import psycopg2
+import os
+
+DATABASE_URL = (
+    "postgresql://neondb_owner:npg_M5sVheSzQLv4@..."
+)</code></pre>
+              </div>
+              <div class="right">
+                <p>After: Environment Variables</p>
+                <pre><code>import psycopg2
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+DATABASE_URL = os.getenv("DATABASE_URL")</code></pre>
+              </div>
+            </div>
           </section>
 
         </section>
