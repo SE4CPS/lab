@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Responsive Web Design Demo</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 16px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.6;
+      color: #222;
+      background: #f4f4f4;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 10px;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .site-header {
+      background: #1f2937;
+      color: white;
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      padding: 0.5rem 0.75rem;
+      border-radius: 6px;
+    }
+
+    .nav-links a:hover {
+      background: rgba(255,255,255,0.12);
+    }
+
+    .hero {
+      padding: 3rem 0;
+      background: white;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+
+    .hero p {
+      font-size: 1.05rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .hero-card {
+      background: #eaf1ff;
+      border: 2px solid #c7d7ff;
+      padding: 1.5rem;
+      border-radius: 14px;
+    }
+
+    .section {
+      padding: 3rem 0;
+    }
+
+    .section h2 {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .section-intro {
+      max-width: 700px;
+      margin-bottom: 1.5rem;
+    }
+
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .card {
+      flex: 1 1 250px;
+      background: white;
+      padding: 1.25rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+
+    .card h3 {
+      margin-top: 0;
+    }
+
+    .grid-demo {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .grid-box {
+      background: white;
+      border-radius: 12px;
+      padding: 1.25rem;
+      min-height: 120px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 1rem;
+    }
+
+    .sidebar,
+    .content {
+      background: white;
+      padding: 1.25rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    }
+
+    .feature-list {
+      padding-left: 1.2rem;
+      margin: 0;
+    }
+
+    .gallery img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+
+    .code-block {
+      background: #111827;
+      color: #f9fafb;
+      padding: 1rem;
+      border-radius: 10px;
+      overflow-x: auto;
+      font-family: Consolas, monospace;
+      font-size: 0.95rem;
+    }
+
+    .footer {
+      background: #111827;
+      color: white;
+      padding: 2rem 0;
+      margin-top: 2rem;
+    }
+
+    .footer p {
+      margin: 0;
+      text-align: center;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .site-header {
+        padding: 0.8rem 0;
+      }
+
+      .section {
+        padding: 2rem 0;
+      }
+
+      .hero {
+        padding: 2rem 0;
+      }
+
+      .nav {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nav-links {
+        width: 100%;
+        flex-direction: column;
+      }
+
+      .nav-links a {
+        background: rgba(255,255,255,0.08);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container nav">
+      <div class="logo">Responsive CSS Demo</div>
+      <nav class="nav-links">
+        <a href="#cards">Flexbox Cards</a>
+        <a href="#grid">Grid</a>
+        <a href="#layout">Two Columns</a>
+        <a href="#images">Images</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <h1>Responsive Web Design in One HTML Page</h1>
+        <p>
+          This page applies the main examples: viewport setup, flexible containers,
+          responsive typography, Flexbox cards, CSS Grid, collapsing two-column layout,
+          and responsive images.
+        </p>
+        <div class="btn-row">
+          <a href="#cards" class="btn btn-primary">See Examples</a>
+          <a href="#code" class="btn btn-secondary">View CSS Pattern</a>
+        </div>
+      </div>
+      <div class="hero-card">
+        <h3>What this page demonstrates</h3>
+        <ul class="feature-list">
+          <li>Fluid width container with max-width</li>
+          <li>Mobile-first behavior through media queries</li>
+          <li>Flexbox items that wrap</li>
+          <li>Grid columns that adapt automatically</li>
+          <li>Sidebar layout that stacks on smaller screens</li>
+          <li>Images that scale without overflowing</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="cards">
+    <div class="container">
+      <h2>1. Flexbox Card Layout</h2>
+      <p class="section-intro">
+        These cards use <strong>display: flex</strong>, <strong>flex-wrap</strong>, and
+        <strong>flex: 1 1 250px</strong>. That means they take steady steps across the row,
+        then stack when the ground gets narrow.
+      </p>
+
+      <div class="cards">
+        <article class="card">
+          <h3>Flexible Width</h3>
+          <p>
+            Each card can grow and shrink while respecting a minimum practical width.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>Wrapping</h3>
+          <p>
+            When there is not enough horizontal space, cards move to the next line instead
+            of becoming too cramped.
+          </p>
+        </article>
+
+        <article class="card">
+          <h3>Clean Structure</h3>
+          <p>
+            This older, dependable pattern is useful for features, pricing boxes, and content summaries.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="grid">
+    <div class="container">
+      <h2>2. CSS Grid Example</h2>
+      <p class="section-intro">
+        This section uses <strong>repeat(auto-fit, minmax(220px, 1fr))</strong>. The columns
+        adjust by themselves, which is often a sound way to make progress without hard-coding every size.
+      </p>
+
+      <div class="grid-demo">
+        <div class="grid-box">
+          <h3>Grid Item 1</h3>
+          <p>Auto-fit keeps the layout balanced.</p>
+        </div>
+        <div class="grid-box">
+          <h3>Grid Item 2</h3>
+          <p>Minmax protects readability on small screens.</p>
+        </div>
+        <div class="grid-box">
+          <h3>Grid Item 3</h3>
+          <p>Items rearrange as the available width changes.</p>
+        </div>
+        <div class="grid-box">
+          <h3>Grid Item 4</h3>
+          <p>Useful for galleries, cards, and dashboards.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="layout">
+    <div class="container">
+      <h2>3. Responsive Two-Column Layout</h2>
+      <p class="section-intro">
+        On larger screens, the sidebar sits to the left and the content to the right.
+        On smaller screens, the layout changes direction and stacks into one column.
+      </p>
+
+      <div class="layout">
+        <aside class="sidebar">
+          <h3>Sidebar</h3>
+          <ul class="feature-list">
+            <li>Navigation</li>
+            <li>Quick links</li>
+            <li>Announcements</li>
+            <li>Categories</li>
+          </ul>
+        </aside>
+
+        <main class="content">
+          <h3>Main Content Area</h3>
+          <p>
+            This area has more space on wide screens. Below 900px, the layout becomes a
+            single column. That is often the safer path, like changing direction when the
+            ground becomes wet and narrow.
+          </p>
+          <p>
+            In practical work, this pattern fits blogs, admin panels, class pages, and documentation sites.
+          </p>
+        </main>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="images">
+    <div class="container">
+      <h2>4. Responsive Images</h2>
+      <p class="section-intro">
+        Images below use <strong>max-width: 100%</strong> and <strong>height: auto</strong>.
+        They stay inside their container rather than spilling out.
+      </p>
+
+      <div class="grid-demo gallery">
+        <div class="grid-box">
+          <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80" alt="Landscape example" />
+        </div>
+        <div class="grid-box">
+          <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80" alt="Workspace example" />
+        </div>
+        <div class="grid-box">
+          <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80" alt="Students using laptops" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="code">
+    <div class="container">
+      <h2>5. Core CSS Pattern Used Here</h2>
+      <div class="code-block">
+.container {<br>
+&nbsp;&nbsp;width: 90%;<br>
+&nbsp;&nbsp;max-width: 1100px;<br>
+&nbsp;&nbsp;margin: 0 auto;<br>
+}<br><br>
+
+.cards {<br>
+&nbsp;&nbsp;display: flex;<br>
+&nbsp;&nbsp;flex-wrap: wrap;<br>
+&nbsp;&nbsp;gap: 1rem;<br>
+}<br><br>
+
+.card {<br>
+&nbsp;&nbsp;flex: 1 1 250px;<br>
+}<br><br>
+
+.grid-demo {<br>
+&nbsp;&nbsp;display: grid;<br>
+&nbsp;&nbsp;grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));<br>
+&nbsp;&nbsp;gap: 1rem;<br>
+}<br><br>
+
+.layout {<br>
+&nbsp;&nbsp;display: grid;<br>
+&nbsp;&nbsp;grid-template-columns: 260px 1fr;<br>
+}<br><br>
+
+@media (max-width: 900px) {<br>
+&nbsp;&nbsp;.layout {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;grid-template-columns: 1fr;<br>
+&nbsp;&nbsp;}<br>
+}<br>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p>
+        Responsive design works best when the layout adjusts in measured steps
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>

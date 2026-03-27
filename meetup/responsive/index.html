@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Responsive Web Design and CSS</title>
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/1055/1055687.png" type="image/png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/black.min.css"
+        id="theme" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/monokai.css" />
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        pre {
+            background-color: #2d2d2d !important;
+        }
+
+        .slides {
+            width: 92% !important;
+        }
+
+        li {
+            font-size: 14pt;
+            line-height: 1.5em;
+        }
+
+        .highlight,
+        code {
+            background-color: #333;
+            color: #ffcc00;
+            padding: 2px 4px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .split ul {
+            font-size: 1.02em;
+            color: #ddd;
+        }
+
+        .split pre {
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 15px;
+            line-height: 1.35em;
+        }
+
+        .small {
+            font-size: 0.9em;
+            color: #bbb;
+        }
+
+        .diagram {
+            border: 2px solid #666;
+            border-radius: 12px;
+            padding: 14px 16px;
+            background: #161616;
+        }
+
+        .row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pill {
+            display: inline-block;
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid #777;
+            background: #1f1f1f;
+            font-size: 1em;
+            color: #ddd;
+        }
+
+        .arrow {
+            font-size: 1.5em;
+            color: #aaa;
+            padding: 0 6px;
+        }
+
+        .warn {
+            color: #ffcc00;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        th,
+        td {
+            border: 1px solid #666;
+            padding: 8px;
+        }
+
+        th {
+            background: #444;
+            color: #fff;
+        }
+
+        td {
+            color: #ddd;
+        }
+
+        .tag {
+            display: inline-block;
+            border: 1px solid #777;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            color: #ddd;
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+
+        .callout {
+            border-left: 6px solid #ffcc00;
+            padding: 10px 14px;
+            background: #1a1a1a;
+            border-radius: 8px;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.2rem;
+        }
+
+        .mono {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+
+        .center-box {
+            text-align: center;
+            padding: 18px;
+            border: 2px solid #666;
+            border-radius: 12px;
+            background: #141414;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            margin-top: 1.5rem;
+        }
+
+        .compare-box {
+            /* background: white; */
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+        }
+
+        .compare-box h3 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+        }
+
+        .compare-box ul {
+            padding-left: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .left-box {
+            border-top: 6px solid #2563eb;
+        }
+
+        .right-box {
+            border-top: 6px solid #059669;
+        }
+
+        .mini-note {
+            /* background: #f3f4f6; */
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        @media (max-width: 800px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- Slide 1 -->
+            <section style="text-align:center">
+                <h3>Responsive Web Design and <span class="highlight">CSS</span></h3>
+                <p style="margin-top:0.6rem">Building pages that adapt to different screens</p>
+                <hr style="margin:1rem 30%">
+                <p class="small">Simple ideas, clear layouts, and practical code examples</p>
+            </section>
+
+            <!-- Slide 2 -->
+            <section>
+                <h4>Agenda</h4>
+                <ul>
+                    <li>What responsive design means</li>
+                    <li>Viewport and flexible units</li>
+                    <li>Fluid layouts with Flexbox and Grid</li>
+                    <li>Media queries and breakpoints</li>
+                    <li>Responsive images and typography</li>
+                    <li>Practical page patterns and mistakes to avoid</li>
+                </ul>
+            </section>
+
+            <!-- Slide 3 -->
+            <section>
+                <h4>What Is Responsive Web Design?</h4>
+                <div class="split">
+                    <div>
+                        <ul>
+                            <li>A website changes its layout based on screen size</li>
+                            <li>It should work on phones, tablets, laptops, and large screens</li>
+                            <li>Content should stay readable and easy to use</li>
+                            <li class="warn">The goal is not to shrink everything, but to reorganize it well</li>
+                        </ul>
+                    </div>
+                    <div class="diagram">
+                        <div class="row">
+                            <span class="pill">Phone</span>
+                            <span class="arrow">→</span>
+                            <span class="pill">Tablet</span>
+                            <span class="arrow">→</span>
+                            <span class="pill">Laptop</span>
+                            <span class="arrow">→</span>
+                            <span class="pill">Desktop</span>
+                        </div>
+                        <p class="small" style="margin-top:14px; text-align:center;">
+                            Same website, different arrangement.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section" id="responsive-vs-adaptive">
+                <div class="container">
+                    <div class="comparison-grid">
+                        <div class="compare-box left-box">
+                            <h3>Responsive Design</h3>
+                            <p>
+                                Responsive design uses one flexible layout that stretches and rearranges itself smoothly
+                                as the screen gets bigger or smaller.
+                            </p>
+                            <ul>
+                                <li>Uses flexible grids and flexible images</li>
+                                <li>Often uses <code>%, fr, rem, vw</code></li>
+                                <li>Uses media queries to adjust layout</li>
+                                <li>Changes continuously across screen sizes</li>
+                                <li>Usually one design that flows naturally</li>
+                            </ul>
+                        </div>
+
+                        <div class="compare-box right-box">
+                            <h3>Adaptive Design</h3>
+                            <p>
+                                Adaptive design uses several fixed layouts. The site chooses the layout that best
+                                matches
+                                the current screen size.
+                            </p>
+                            <ul>
+                                <li>Uses specific layouts for specific widths</li>
+                                <li>Often designed for selected device ranges</li>
+                                <li>Changes at set screen points</li>
+                                <li>Can feel more step-by-step than fluid</li>
+                                <li>More like separate prepared versions</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 4 -->
+            <section>
+                <h4>Why Responsive Design Matters</h4>
+                <ul>
+                    <li>People use many kinds of devices</li>
+                    <li>Small screens need simpler spacing and stacking</li>
+                    <li>Good responsive design improves readability and usability</li>
+                    <li>Search engines and users both prefer mobile-friendly pages</li>
+                </ul>
+            </section>
+
+            <!-- Slide 5 -->
+            <section>
+                <h4>Fixed Layout vs Fluid Layout</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Layout Type</th>
+                            <th>Description</th>
+                            <th>Common Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Fixed</strong></td>
+                            <td>Uses exact widths like 960px</td>
+                            <td>Can overflow on small screens</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fluid</strong></td>
+                            <td>Uses percentages and flexible sizing</td>
+                            <td>Adapts better across devices</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Responsive</strong></td>
+                            <td>Fluid layout plus media queries</td>
+                            <td>Best control for different screens</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Slide 6 -->
+            <section>
+                <h4>The Viewport Meta Tag</h4>
+                <div class="split">
+                    <div>
+                        <ul>
+                            <li>Mobile browsers need this tag for proper scaling</li>
+                            <li>Without it, pages often appear zoomed out</li>
+                            <li>It tells the browser to match the page width to the device width</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <pre><code class="language-html">&lt;meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+/&gt;</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 7 -->
+            <section>
+                <h4>Responsive Design Starts with CSS Units</h4>
+                <div class="split">
+                    <div>
+                        <ul>
+                            <li><code>px</code> = fixed unit</li>
+                            <li><code>%</code> = relative to parent</li>
+                            <li><code>em</code> = relative to parent font size</li>
+                            <li><code>rem</code> = relative to root font size</li>
+                            <li><code>vw</code> and <code>vh</code> = relative to viewport</li>
+                        </ul>
+                    </div>
+                    <div class="diagram">
+                        <div class="row">
+                            <span class="pill">px</span>
+                            <span class="pill">%</span>
+                            <span class="pill">rem</span>
+                            <span class="pill">vw</span>
+                        </div>
+                        <p class="small" style="margin-top:14px; text-align:center;">
+                            Flexible units help the layout stretch or shrink naturally.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 8 -->
+            <section>
+                <h4>Simple Flexible Container</h4>
+                <pre><code class="language-css">.container {
+  width: 90%;
+  max-width: 1100px;
+  margin: 0 auto;
+}</code></pre>
+                <p class="small">This lets the page grow on large screens and stay comfortable on smaller ones.</p>
+            </section>
+
+            <!-- Slide 9 -->
+            <section>
+                <h4>Using Max-Width for Readability</h4>
+                <div class="split">
+                    <div>
+                        <ul>
+                            <li>Very wide text lines are hard to read</li>
+                            <li><code>max-width</code> keeps content from stretching too far</li>
+                            <li>This is an old and reliable design habit</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <pre><code class="language-css">main {
+  width: 92%;
+  max-width: 900px;
+  margin: 0 auto;
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 10 -->
+            <section>
+                <h4>Responsive Layout with Flexbox</h4>
+                <div class="split">
+                    <div>
+                        <ul>
+                            <li>Flexbox is good for rows, menus, cards, and alignment</li>
+                            <li>Items can wrap when space becomes small</li>
+                            <li>Useful for one-dimensional layouts</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <pre><code class="language-css">.row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.card {
+  flex: 1 1 250px;
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 11 -->
+            <section>
+                <h4>Flexbox Diagram</h4>
+                <div class="diagram">
+                    <div class="row">
+                        <span class="pill">Card 1</span>
+                        <span class="pill">Card 2</span>
+                        <span class="pill">Card 3</span>
+                    </div>
+                    <div class="row" style="margin-top:14px;">
+                        <span class="pill warn">Small screen:</span>
+                        <span class="pill">Card 1</span>
+                        <span class="arrow">↓</span>
+                        <span class="pill">Card 2</span>
+                        <span class="arrow">↓</span>
+                        <span class="pill">Card 3</span>
+                    </div>
+                </div>
+                <p class="small">On narrow screens, flex items can stack instead of squeezing too tightly.</p>
+            </section>
+
+            <!-- Slide 12 -->
+            <section>
+                <h4>Responsive Layout with CSS Grid</h4>
+                <div class="split">
+                    <div>
+                        <ul>
+                            <li>Grid is useful for rows and columns together</li>
+                            <li>It gives better control for page structure</li>
+                            <li>Useful for galleries, dashboards, and full page layouts</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <pre><code class="language-css">.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 13 -->
+            <section>
+                <h4>Grid Diagram</h4>
+                <div class="diagram">
+                    <div class="row">
+                        <span class="pill">Column 1</span>
+                        <span class="pill">Column 2</span>
+                        <span class="pill">Column 3</span>
+                    </div>
+                    <div class="row" style="margin-top:14px;">
+                        <span class="pill warn">Phone view:</span>
+                        <span class="pill">Column 1</span>
+                        <span class="pill">Column 2</span>
+                        <span class="pill">Column 3</span>
+                    </div>
+                </div>
+                <p class="small">Grid columns can change from 3 columns to 2 or 1 depending on space.</p>
+            </section>
+
+            <!-- Slide 14 -->
+            <section>
+                <h4>Auto-Fit Grid Pattern</h4>
+                <pre><code class="language-css">.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}</code></pre>
+                <p class="small">This is a strong practical pattern because columns adjust automatically.</p>
+            </section>
+
+            <!-- Slide 15 -->
+            <section>
+                <h4>What Is a Media Query?</h4>
+                <div class="split">
+                    <div>
+                        <ul>
+                            <li>A media query applies CSS only under certain conditions</li>
+                            <li>Most often, it checks screen width</li>
+                            <li>This lets the layout change at chosen breakpoints</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <pre><code class="language-css">@media (max-width: 768px) {
+  body {
+    font-size: 14px;
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 16 -->
+            <section>
+                <h4>Common Breakpoints</h4>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Device Range</th>
+                            <th>Typical Width</th>
+                            <th>Common Use</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Phone</td>
+                            <td>up to 600px</td>
+                            <td>Single column, stacked content</td>
+                        </tr>
+                        <tr>
+                            <td>Tablet</td>
+                            <td>601px - 900px</td>
+                            <td>Two-column possibilities</td>
+                        </tr>
+                        <tr>
+                            <td>Laptop/Desktop</td>
+                            <td>901px and above</td>
+                            <td>Wider multi-column layouts</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Slide 17 -->
+            <section>
+                <h4>Example: Change Grid at a Breakpoint</h4>
+                <pre><code class="language-css">.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}</code></pre>
+            </section>
+
+            <!-- Slide 18 -->
+            <section>
+                <h4>Mobile-First Design</h4>
+                <div class="split">
+                    <div>
+                        <ul>
+                            <li>Start with the smallest screen first</li>
+                            <li>Then add styles for larger screens</li>
+                            <li>This keeps the design focused and simpler</li>
+                            <li class="warn">It is often easier to grow a layout than to shrink a large one</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <pre><code class="language-css">.menu {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .menu {
+    display: flex;
+    gap: 1rem;
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 19 -->
+            <section>
+                <h4>Responsive Navigation Pattern</h4>
+                <div class="diagram">
+                    <div class="row">
+                        <span class="pill">Desktop</span>
+                        <span class="arrow">→</span>
+                        <span class="pill">Logo | Home | About | Contact</span>
+                    </div>
+                    <div class="row" style="margin-top:14px;">
+                        <span class="pill">Mobile</span>
+                        <span class="arrow">→</span>
+                        <span class="pill">Logo | ☰ Menu</span>
+                    </div>
+                </div>
+                <p class="small">Menus often need fewer visible items on small screens.</p>
+            </section>
+
+            <!-- Slide 20 -->
+            <section>
+                <h4>Responsive Images</h4>
+                <div class="split">
+                    <div>
+                        <ul>
+                            <li>Images should not overflow their container</li>
+                            <li>Use <code>max-width: 100%</code></li>
+                            <li>Keep aspect ratio by setting <code>height: auto</code></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <pre><code class="language-css">img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 21 -->
+            <section>
+                <h4>Responsive Typography</h4>
+                <div class="split">
+                    <div>
+                        <ul>
+                            <li>Text must remain readable across devices</li>
+                            <li>Use relative units like <code>rem</code></li>
+                            <li>Headings can scale with viewport width carefully</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <pre><code class="language-css">html {
+  font-size: 16px;
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+}
+
+p {
+  font-size: 1rem;
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 22 -->
+            <section>
+                <h4>Spacing Also Needs to Be Responsive</h4>
+                <ul>
+                    <li>Large padding may waste space on phones</li>
+                    <li>Tight spacing may look crowded on bigger screens</li>
+                    <li>Adjust margins and padding when needed</li>
+                </ul>
+                <pre><code class="language-css">section {
+  padding: 3rem;
+}
+
+@media (max-width: 600px) {
+  section {
+    padding: 1rem;
+  }
+}</code></pre>
+            </section>
+
+            <!-- Slide 23 -->
+            <section>
+                <h4>Responsive Card Layout Example</h4>
+                <div class="split">
+                    <div>
+                        <pre><code class="language-html">&lt;div class="cards"&gt;
+  &lt;div class="card"&gt;A&lt;/div&gt;
+  &lt;div class="card"&gt;B&lt;/div&gt;
+  &lt;div class="card"&gt;C&lt;/div&gt;
+&lt;/div&gt;</code></pre>
+                    </div>
+                    <div>
+                        <pre><code class="language-css">.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.card {
+  flex: 1 1 250px;
+  padding: 1rem;
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 24 -->
+            <section>
+                <h4>Responsive Two-Column Page Example</h4>
+                <div class="split">
+                    <div>
+                        <pre><code class="language-html">&lt;main class="layout"&gt;
+  &lt;aside&gt;Sidebar&lt;/aside&gt;
+  &lt;section&gt;Content&lt;/section&gt;
+&lt;/main&gt;</code></pre>
+                    </div>
+                    <div>
+                        <pre><code class="language-css">.layout {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 700px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}</code></pre>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 25 -->
+            <section>
+                <h4>Diagram: Content Reflow</h4>
+                <div class="diagram">
+                    <div class="row">
+                        <span class="pill">Sidebar</span>
+                        <span class="pill">Main Content</span>
+                    </div>
+                    <div class="row" style="margin-top:16px;">
+                        <span class="pill warn">Small screen:</span>
+                        <span class="pill">Sidebar</span>
+                        <span class="arrow">↓</span>
+                        <span class="pill">Main Content</span>
+                    </div>
+                </div>
+                <p class="small">A responsive page changes direction instead of forcing everything into one narrow row.
+                </p>
+            </section>
+
+            <!-- Slide 26 -->
+            <section>
+                <h4>Common Responsive Design Mistakes</h4>
+                <ul>
+                    <li>Using too many fixed pixel widths</li>
+                    <li>Forgetting the viewport meta tag</li>
+                    <li>Making text too small on mobile</li>
+                    <li>Keeping large multi-column layouts on tiny screens</li>
+                    <li>Using images that overflow their container</li>
+                </ul>
+            </section>
+
+            <!-- Slide 27 -->
+            <section>
+                <h4>Testing Responsive Design</h4>
+                <div class="split">
+                    <div>
+                        <ul>
+                            <li>Use browser developer tools</li>
+                            <li>Resize the screen slowly and watch layout changes</li>
+                            <li>Check menus, forms, images, and tables</li>
+                            <li>Test on real devices when possible</li>
+                        </ul>
+                    </div>
+                    <div class="diagram">
+                        <div class="row">
+                            <span class="pill">Resize</span>
+                            <span class="arrow">→</span>
+                            <span class="pill">Observe</span>
+                            <span class="arrow">→</span>
+                            <span class="pill">Fix</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 28 -->
+            <section>
+                <h4>Practical Rule Set</h4>
+                <div class="two-col">
+                    <div class="callout">
+                        <h5 style="margin:0 0 10px 0">Use These Often</h5>
+                        <ul>
+                            <li><code>max-width</code></li>
+                            <li><code>width: 100%</code></li>
+                            <li><code>flex-wrap</code></li>
+                            <li><code>grid-template-columns</code></li>
+                            <li><code>@media</code></li>
+                        </ul>
+                    </div>
+                    <div class="callout">
+                        <h5 style="margin:0 0 10px 0">Keep in Mind</h5>
+                        <ul>
+                            <li>Readable text</li>
+                            <li>Comfortable spacing</li>
+                            <li>No horizontal scrolling</li>
+                            <li>Clear navigation</li>
+                            <li>Simple structure</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Slide 29 -->
+            <section>
+                <h4>Mini Example: Simple Responsive Page</h4>
+                <pre><code class="language-html">&lt;style&gt;
+  .wrapper {
+    width: 90%;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+
+  .content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  @media (max-width: 700px) {
+    .content {
+      grid-template-columns: 1fr;
+    }
+  }
+&lt;/style&gt;</code></pre>
+            </section>
+
+            <!-- Slide 30 -->
+            <section>
+                <h4>Final Summary</h4>
+                <ul>
+                    <li><strong>1.</strong> Responsive design means adapting, not just shrinking</li>
+                    <li><strong>2.</strong> Use flexible units, containers, and layouts</li>
+                    <li><strong>3.</strong> Flexbox and Grid are the main modern tools</li>
+                    <li><strong>4.</strong> Media queries help at important screen widths</li>
+                    <li><strong>5.</strong> Keep pages readable, simple, and steady across devices</li>
+                </ul>
+                <div class="callout small">
+                    Responsive design works best when the layout adjusts in measured steps
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/highlight.min.js"></script>
+    <script>
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            center: true,
+            hash: true,
+            plugins: [RevealHighlight]
+        });
+    </script>
+</body>
+
+</html>
