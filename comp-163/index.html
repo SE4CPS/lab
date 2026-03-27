@@ -623,7 +623,7 @@
                 <td style="padding:6px; border:1px solid #666;"><a href="./#/module-10">Relational Database
                     Transactions</a></td>
                 <td style="padding:6px; border:1px solid #666;"><a href="./#/lab-4">Lab 4</a> + <a
-                    href="./#/homework-4">Homework 4</a> (2w), Project Part 2 (4w)</td>
+                    href="./#/homework-4">Homework 4</a> (2w)</td>
                 <td style="padding:6px; border:1px solid #666;"><a href="./#/oracle">OracleSQL</a></td>
                 <td style="padding:6px; border:1px solid #666;"></td>
               </tr>
@@ -633,7 +633,7 @@
                     25</a>, <a href="./#/c25">Mar 27</a>)</td>
                 <td style="padding:6px; border:1px solid #666;"><a href="./#/module-11">Relational Database Security</a>
                 </td>
-                <td style="padding:6px; border:1px solid #666;"></td>
+                <td style="padding:6px; border:1px solid #666;"><a href="./#/project2">Project Part 2 (4w)</a></td>
                 <td style="padding:6px; border:1px solid #666;"></td>
                 <td style="padding:6px; border:1px solid #666;"></td>
               </tr>
@@ -30177,8 +30177,8 @@ Detect → Contain → Fix → Recover
                 <div class="box">
                   <ul class="tight">
                     <li>Access Control API Keys</li>
-                    <li>...</li>
-                    <li>...</li>
+                    <li>To-Do Application</li>
+                    <li>Project Part 2</li>
                   </ul>
                 </div>
               </div>
@@ -36008,6 +36008,217 @@ Product  1 --- n Order
                 </div>
               </div>
 
+            </div>
+          </section>
+
+        </section>
+
+        <section id="project2">
+
+          <section>
+            <h4>Project Part 2: Performance and Optimization</h4>
+
+            <div class="box">
+              <ul class="tight">
+                <li>Work with larger datasets</li>
+                <li>Measure query performance</li>
+                <li>Understand causes of slow queries</li>
+                <li>Apply optimization techniques</li>
+              </ul>
+            </div>
+          </section>
+
+          <section>
+            <h5>Project Objectives</h5>
+
+            <div class="box">
+              <ul class="tight">
+                <li>Create a slow PostgreSQL query (&gt;10 seconds)</li>
+                <li>Optimize the query to run in &lt;1 second</li>
+                <li>Compare performance and explain improvements</li>
+              </ul>
+            </div>
+          </section>
+
+          <section>
+            <h5>Schema Design</h5>
+
+            <div class="split">
+
+              <div class="half">
+                <div class="box">
+                  <pre><code>teamX_customers
+------------------------
+id SERIAL PRIMARY KEY
+name VARCHAR(100)
+email VARCHAR(100)</code></pre>
+                </div>
+              </div>
+
+              <div class="half">
+                <div class="box">
+                  <pre><code>teamX_orders
+------------------------
+id SERIAL PRIMARY KEY
+customer_id INT (FK)
+flower_id INT (FK)
+order_date DATE</code></pre>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <section>
+            <h5>Dataset Constraints</h5>
+
+            <div class="box">
+              <ul class="tight">
+                <li>Maximum 500 customers</li>
+                <li>Maximum 10,000 orders</li>
+                <li>Data must not exceed limits</li>
+                <li>Use realistic relationships between tables</li>
+              </ul>
+            </div>
+          </section>
+
+          <section>
+            <h5>Slow Query Design</h5>
+
+            <div class="box">
+              <ul class="tight">
+                <li>Join customers, orders, and flowers</li>
+                <li>Use LIKE '%...%' patterns</li>
+                <li>Apply functions on columns (LOWER, UPPER)</li>
+                <li>Include ORDER BY</li>
+                <li>Avoid index usage</li>
+                <li>No projection and no selection</li>
+              </ul>
+            </div>
+          </section>
+
+          <section>
+            <h5>Slow Query Requirements</h5>
+
+            <div class="box">
+              <ul class="tight">
+                <li>Execution time &gt; 10 seconds</li>
+                <li>End-to-end time &gt; 15 seconds</li>
+                <li>Measured using PostgreSQL timing</li>
+              </ul>
+
+              <pre><code>\timing on
+-- run query
+\timing off</code></pre>
+            </div>
+          </section>
+
+          <section>
+            <h5>Optimization Strategy</h5>
+
+            <div class="box">
+              <ul class="tight">
+                <li>Add indexes on join attributes</li>
+                <li>Use index-friendly filters</li>
+                <li>Remove unnecessary sorting</li>
+                <li>Avoid functions on indexed columns</li>
+                <li>Reduce computation cost</li>
+              </ul>
+            </div>
+          </section>
+
+          <section>
+            <h5>Index Design</h5>
+
+            <div class="box">
+              <pre><code>CREATE INDEX idx_orders_customer_id
+ON teamX_orders(customer_id);
+
+CREATE INDEX idx_orders_flower_id
+ON teamX_orders(flower_id);
+
+CREATE INDEX idx_flowers_name
+ON teamX_flowers(name);</code></pre>
+            </div>
+          </section>
+
+          <section>
+            <h5>Fast Query Requirements</h5>
+
+            <div class="box">
+              <ul class="tight">
+                <li>Execution time &lt; 1 second</li>
+                <li>End-to-end time &lt; 1 second</li>
+                <li>Use projection and selection</li>
+                <li>Use LIMIT and OFFSET</li>
+              </ul>
+            </div>
+          </section>
+
+          <section>
+            <h5>Functional Equivalence</h5>
+
+            <div class="box">
+              <ul class="tight">
+                <li>Slow and fast queries must return the same data</li>
+                <li>Same rows and columns</li>
+                <li>Same filtering conditions</li>
+                <li>Pagination allowed (subset of same result)</li>
+              </ul>
+            </div>
+          </section>
+
+          <section>
+            <h5>System Integration</h5>
+
+            <div class="box">
+              <ul class="tight">
+                <li>Add "Slow Query" button</li>
+                <li>Add "Fast Query" button</li>
+                <li>Display SQL query text</li>
+                <li>Display execution time only</li>
+                <li>No result display required</li>
+              </ul>
+            </div>
+          </section>
+
+          <section>
+            <h5>Deliverables</h5>
+
+            <div class="box">
+              <ul class="tight">
+                <li>Flask backend</li>
+                <li>HTML frontend</li>
+                <li>SQL scripts</li>
+                <li>Screenshots (slow vs fast query)</li>
+              </ul>
+            </div>
+          </section>
+
+          <section>
+            <h5>Report (teamX.pdf)</h5>
+
+            <div class="box">
+              <ul class="tight">
+                <li>Team members and GitHub link</li>
+                <li>Schema and indexes</li>
+                <li>Performance comparison</li>
+                <li>What worked well</li>
+                <li>What to improve</li>
+              </ul>
+            </div>
+          </section>
+
+          <section>
+            <h5>Presentation</h5>
+
+            <div class="box">
+              <ul class="tight">
+                <li>Part 1 system overview</li>
+                <li>Part 1 reflection</li>
+                <li>Part 2 demo (slow vs fast)</li>
+                <li>Part 2 reflection</li>
+              </ul>
             </div>
           </section>
 
