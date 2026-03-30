@@ -639,8 +639,10 @@
               </tr>
 
               <tr style="color:#ccc;">
-                <td style="padding:6px; border:1px solid #666;">12 (Mar 30, Apr 1, 3)</td>
-                <td style="padding:6px; border:1px solid #666;">Relational Database and Data Distribution</td>
+                <td style="padding:6px; border:1px solid #666;">12 (<a href="./#/c26">Mar 30</a>, <a href="./#/c27">Apr
+                    1</a>, <a href="./#/c28">Apr 3</a>)</td>
+                <td style="padding:6px; border:1px solid #666;"><a href="./#/module-12">Relational Database and Data
+                    Distribution</a></td>
                 <td style="padding:6px; border:1px solid #666;">Lab 5 + Homework 5 (2w)</td>
                 <td style="padding:6px; border:1px solid #666;"></td>
                 <td style="padding:6px; border:1px solid #666;"></td>
@@ -30257,6 +30259,821 @@ DATABASE_URL = os.getenv("DATABASE_URL")</code></pre>
         </section>
 
         <!-- ===================== MODULE 12 =====================  -->
+
+        <section id="module-12">
+          <section>
+            <h5>Understanding Distributed Databases</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Stores data across multiple nodes</li>
+                  <li>Improves availability and fault tolerance</li>
+                  <li>Reduces latency by placing data near users</li>
+                  <li>Supports scale-out growth</li>
+                  <li>Enables parallel query processing</li>
+                </ol>
+              </div>
+              <div class="right">
+                <img src="https://media.geeksforgeeks.org/wp-content/uploads/20200501155836/Capturedistributeddb.png"
+                  style="max-width: 100%;">
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Horizontal vs Vertical Partitioning</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li><strong>Horizontal:</strong> split by rows</li>
+                  <li><strong>Vertical:</strong> split by columns</li>
+                  <li>Horizontal helps scale traffic</li>
+                  <li>Vertical helps isolate attributes</li>
+                  <li>Trade-off: more joins or routing logic</li>
+                </ol>
+              </div>
+              <div class="right">
+                <img src="https://miro.medium.com/v2/resize:fit:800/1*fSQex1AygqpyDQpWooK38A.png"
+                  style="max-width: 100%;">
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Data Replication</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li><strong>Primary-Secondary:</strong> simple, read-heavy</li>
+                  <li><strong>Multi-Primary:</strong> more write availability</li>
+                  <li><strong>Peer-to-Peer:</strong> scalable, complex</li>
+                  <li><strong>Synchronous:</strong> strong consistency</li>
+                  <li><strong>Asynchronous:</strong> lower latency, stale-read risk</li>
+                </ol>
+              </div>
+              <div class="right">
+                <p><strong>Key trade-off:</strong></p>
+                <p>performance vs consistency</p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>CAP Theorem</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li><strong>Consistency:</strong> latest write is returned</li>
+                  <li><strong>Availability:</strong> every request gets a response</li>
+                  <li><strong>Partition Tolerance:</strong> survives network failure</li>
+                  <li>In practice, two can be prioritized during partition</li>
+                </ol>
+              </div>
+              <div class="right">
+                <img src="https://hazelcast.com/wp-content/uploads/2021/12/cap-theorem-diagram.png"
+                  style="max-width: 100%;">
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Why Single-Node MySQL is AC</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Strong local consistency</li>
+                  <li>High local availability</li>
+                  <li>No network partition problem inside one node</li>
+                  <li>Partition tolerance is not the design target</li>
+                </ol>
+              </div>
+              <div class="right">
+                <img src="https://miro.medium.com/v2/resize:fit:1400/1*TctOtMw9y5fVVA195I5jGg.png"
+                  style="max-width: 100%;">
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Consistency Models</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li><strong>Strong:</strong> latest write always visible</li>
+                  <li><strong>Eventual:</strong> replicas converge over time</li>
+                  <li><strong>Causal:</strong> related operations stay ordered</li>
+                  <li><strong>Read-Your-Writes:</strong> users see own updates</li>
+                  <li><strong>Monotonic Reads:</strong> no backward reads</li>
+                </ol>
+              </div>
+              <div class="right">
+                <p><strong>Examples:</strong></p>
+                <p>banking, feeds, messaging, dashboards</p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Replication Across PostgreSQL Nodes</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Same record written to all nodes</li>
+                  <li>Improves redundancy</li>
+                  <li>Simple idea of replication</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="python">
+def replicate(flower_id, flower_data):
+    for conn in conns:
+        conn.cursor().execute(
+            "INSERT INTO flowers...
+        )
+        conn.commit()
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Horizontal Partitioning Across Nodes</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Data routed by ID</li>
+                  <li>Each row goes to one node</li>
+                  <li>Common sharding pattern</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="python">
+def insert_shard(flower_id, flower_data):
+    conn = conns[flower_id % len(conns)]
+    conn.cursor().execute(
+        "INSERT INTO flowers...
+        (flower_id, flower_data)
+    )
+    conn.commit()
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Semantic Horizontal Partitioning</h5>
+            <div class="split">
+              <div class="left">
+                <ul>
+                  <li>Routes by meaning, not just ID</li>
+                  <li>Example: Rose, Tulip, Daisy</li>
+                  <li>Useful for domain-based distribution</li>
+                </ul>
+              </div>
+              <div class="right">
+                <pre><code class="python">
+def insert_by_type(flower_type, flower_data):
+    conn = partitions[flower_type]
+    conn.cursor().execute(
+        "INSERT INTO flowers...
+        (flower_type, flower_data)
+    )
+    conn.commit()
+      </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Modern Distributed Database Frameworks</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>TiDB</li>
+                  <li>FoundationDB</li>
+                  <li>Cassandra</li>
+                  <li>MongoDB / DynamoDB</li>
+                </ol>
+              </div>
+              <div class="right">
+                <p>They differ in:</p>
+                <ul>
+                  <li>consistency</li>
+                  <li>scalability</li>
+                  <li>transaction support</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Limitations of Distributed Databases</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Higher setup complexity</li>
+                  <li>More coordination latency</li>
+                  <li>Consistency trade-offs</li>
+                  <li>Joins may be harder</li>
+                  <li>Debugging is more difficult</li>
+                </ol>
+              </div>
+              <div class="right">
+                <p><strong>Compared to traditional SQL:</strong></p>
+                <p>simpler locally, but less scalable</p>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Simulating Distribution with PostgreSQL and SQLite</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>One local node, one remote node</li>
+                  <li>Python controls routing</li>
+                  <li>Good teaching model for distributed behavior</li>
+                </ol>
+              </div>
+              <div class="right">
+                <img src="https://miro.medium.com/v2/resize:fit:612/1*6ILtVYu17h6mVhKqY9XB3A.jpeg"
+                  style="max-width: 100%;">
+              </div>
+            </div>
+          </section>
+
+          <section data-background="white">
+            <h5>Data Replication Logic in Python</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Writes copied to both databases</li>
+                  <li>Supports availability</li>
+                  <li>Introduces sync logic</li>
+                </ol>
+              </div>
+              <div class="right">
+                <img
+                  src="https://estuary.dev/static/f14d7d2881ff871f10cedc5d7ddd2b96/1efd5/01_Database_Replication_What_Is_Database_Replication_a3fc891adc.png"
+                  style="max-width: 100%;">
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Hash-Based and Semantic Partitioning</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Hash-based uses modulo or key hashing</li>
+                  <li>Semantic uses type/category rules</li>
+                  <li>Both distribute rows across nodes</li>
+                </ol>
+              </div>
+              <div class="right">
+                <img src="https://miro.medium.com/v2/resize:fit:1400/1*1FCBTWUliqTM-VYNcd_YHA.png"
+                  style="max-width: 100%;">
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Tracking with UUIDs Across Nodes</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Each record gets a global unique ID</li>
+                  <li>Helps track records across systems</li>
+                  <li>Useful for sync and reconciliation</li>
+                </ol>
+              </div>
+              <div class="right">
+                <img src="https://phauer.com/blog/2016/0815-uuids-hibernate-mysql/uuids-advantages-eo.svg"
+                  style="max-width: 100%;">
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Fallback Reads and Resilient Lookups</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Try PostgreSQL first</li>
+                  <li>Fallback to SQLite if needed</li>
+                  <li>Demonstrates read availability</li>
+                </ol>
+              </div>
+              <div class="right">
+                <img src="https://miro.medium.com/v2/resize:fit:1400/1*0FH0AOrWxR0sfUTpGP_8FA.png"
+                  style="max-width: 100%;">
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Manual Syncing Between Nodes</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>SQLite buffers offline writes</li>
+                  <li>Sync later to PostgreSQL</li>
+                  <li>Shows eventual consistency idea</li>
+                </ol>
+              </div>
+              <div class="right">
+                <img src="https://miro.medium.com/v2/resize:fit:1400/1*0FH0AOrWxR0sfUTpGP_8FA.png"
+                  style="max-width: 100%;">
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Aggregating and Querying Distributed Data</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Collect data from multiple nodes</li>
+                  <li>Merge results into one response</li>
+                  <li>Useful for analytics and reports</li>
+                </ol>
+              </div>
+              <div class="right">
+                <img src="https://cdn.boldbi.com/wp/pages/dashboards/healthcare/hospital-management-banner-v1.webp"
+                  style="max-width: 100%;">
+              </div>
+            </div>
+          </section>
+
+          <section>Questions</section>
+
+          <section>
+            <h5>Horizontal Partitioning Routing</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Rows are split across nodes</li>
+                  <li>Each node stores the same columns</li>
+                  <li>Routing usually uses ID or range</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
++------------------+
+| Request: id=145  |
++------------------+
+         |
+         v
++------------------+
+| Range / Hash Key |
++------------------+
+         |
+         v
++------------------+
+| Route to db2     |
+| rows 101 - 200   |
++------------------+
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Vertical Partitioning Routing</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Columns are split across nodes</li>
+                  <li>One query may touch multiple nodes</li>
+                  <li>Join or merge step is often required</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
++----------------------+
+| Request: flower info |
++----------------------+
+         |
+         v
++----------------------+
+| id,type   -> db1     |
+| color,cost -> db2    |
++----------------------+
+         |
+         v
++----------------------+
+| Merge final result   |
++----------------------+
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Hash-Based Routing</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Uses a hash of the key</li>
+                  <li>Good for even distribution</li>
+                  <li>Common in sharded systems</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
++------------------+
+| Request: id=7    |
++------------------+
+         |
+         v
++------------------+
+| 7 % 3 = 1        |
++------------------+
+         |
+         v
++------------------+
+| Route to db2     |
++------------------+
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Range-Based Routing</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Uses ordered key intervals</li>
+                  <li>Good for time or ID ranges</li>
+                  <li>Can create hotspots</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
++------------------+
+| Request: id=230  |
++------------------+
+         v
++------------------+
+| Check ranges     |
+| 1-100   -> db1   |
+| 101-200 -> db2   |
+| 201-300 -> db3   |
++------------------+
+         v
++------------------+
+| Route to db3     |
++------------------+
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Semantic Routing</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Routes by meaning or category</li>
+                  <li>Useful for domain-specific design</li>
+                  <li>Works well in your flower example</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
++----------------------+
+| Request: type=Rose   |
++----------------------+
+           v
++----------------------+
+| Semantic rule lookup |
++----------------------+
+           v
++----------------------+
+| Rose  -> db1         |
+| Tulip -> db2         |
+| Daisy -> db3         |
++----------------------+
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Multi-Primary Routing</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Multiple nodes accept writes</li>
+                  <li>Higher availability</li>
+                  <li>Needs conflict resolution</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
++------------------+
+| Write request    |
++------------------+
+      /      \
+     v        v
++--------+ +--------+
+| db1    | | db2    |
+| write  | | write  |
++--------+ +--------+
+      \      /
+       v    v
++------------------+
+| Conflict check   |
++------------------+
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Fallback Read Routing</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Try preferred node first</li>
+                  <li>Fallback on failure</li>
+                  <li>Supports higher read availability</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
++------------------+
+| Read request     |
++------------------+
+         v
++------------------+
+| Try PostgreSQL   |
++------------------+
+   | success | fail
+   v         v
+ result   +------------------+
+          | Fallback SQLite  |
+          +------------------+
+                 v
+               result
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Aggregation Routing</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Query multiple nodes</li>
+                  <li>Collect partial results</li>
+                  <li>Merge into one response</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
++------------------+
+| COUNT flowers    |
++------------------+
+      /   |   \
+     v    v    v
++------+ +------+ +------+
+| db1  | | db2  | | db3  |
++------+ +------+ +------+
+      \   |   /
+       v  v  v
++------------------+
+| Merge totals     |
++------------------+
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Use Case: Choose the Architecture</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Health care system</li>
+                  <li>Social media feed</li>
+                  <li>IoT sensor platform</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+Health    -> CP / strong consistency
+Social    -> AP / eventual consistency
+IoT       -> hash or time-range partition
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>Question</section>
+
+          <!-- 10 -->
+          <section>
+            <h5>Best Practice Summary</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Use UUID for global uniqueness</li>
+                  <li>Design good partition keys</li>
+                  <li>Minimize cross-node operations</li>
+                  <li>Plan for failures and retries</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+Design → Scale → Optimize
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 1 -->
+          <section>
+            <h5>Primary Key Strategy</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Use globally unique identifiers</li>
+                  <li>Avoid auto-increment IDs</li>
+                  <li>Ensure uniqueness across nodes</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+id = UUID()
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2 -->
+          <section>
+            <h5>UUID vs Auto-Increment</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Auto-increment causes conflicts</li>
+                  <li>UUID avoids coordination</li>
+                  <li>Better for distributed writes</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+-- bad
+id SERIAL
+
+-- good
+id UUID PRIMARY KEY
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3 -->
+          <section>
+            <h5>UUID Generation</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Generate at application layer</li>
+                  <li>No DB round-trip needed</li>
+                  <li>Supports offline writes</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+INSERT INTO flowers(id,type)
+VALUES (gen_random_uuid(),'Rose');
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4 -->
+          <section>
+            <h5>UUID Trade-offs</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Larger storage size</li>
+                  <li>Random distribution</li>
+                  <li>Index fragmentation possible</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+UUID ≈ 16 bytes
+INT  ≈ 4 bytes
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 5 -->
+          <section>
+            <h5>Time-Ordered UUID (UUIDv7)</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Maintains ordering</li>
+                  <li>Improves index locality</li>
+                  <li>Better for write-heavy systems</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+UUIDv7 → time-based
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 6 -->
+          <section>
+            <h5>Partition Key Design</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Choose high-cardinality keys</li>
+                  <li>Avoid hotspots</li>
+                  <li>Balance data evenly</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+shard_key = hash(user_id)
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 7 -->
+          <section>
+            <h5>Co-locate Related Data</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Store related rows together</li>
+                  <li>Reduce cross-node joins</li>
+                  <li>Improve performance</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+user_id → same shard
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 8 -->
+          <section>
+            <h5>Avoid Distributed Joins</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Joins across nodes are expensive</li>
+                  <li>Prefer denormalization</li>
+                  <li>Use precomputed data</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+JOIN → high latency
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <!-- 9 -->
+          <section>
+            <h5>Idempotent Writes</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Handle retries safely</li>
+                  <li>Use unique IDs (UUID)</li>
+                  <li>Avoid duplicate inserts</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+INSERT ... ON CONFLICT DO NOTHING;
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+        </section>
+
+        </section>
 
         <!-- ===================== MODULE 13 =====================  -->
 
