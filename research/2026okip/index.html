@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CAIF 2026 – RAG-Based Semantic Retrieval</title>
+  <title>OkIP CAIF 2026 – RAG-Based Semantic Retrieval</title>
 
   <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/9850/9850812.png" type="image/png">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
@@ -11,28 +12,75 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/monokai.css">
 
   <style>
-    :root{
-      --accent:#f5a623;
-      --soft:#cfcfcf;
-      --panel:rgba(255,255,255,0.06);
-      --panel2:rgba(255,255,255,0.03);
-      --border:rgba(255,255,255,0.18);
-      --green:#77d38a;
-      --red:#ff7f7f;
-      --blue:#7fb6ff;
+    :root {
+      --accent: #f5a623;
+      --soft: #cfcfcf;
+      --panel: rgba(255, 255, 255, 0.06);
+      --panel2: rgba(255, 255, 255, 0.03);
+      --border: rgba(255, 255, 255, 0.18);
+      --green: #77d38a;
+      --red: #ff7f7f;
+      --blue: #7fb6ff;
     }
-    .reveal { font-size: 30px; }
-    .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5 { text-transform:none; }
-    .reveal h1 { font-size: 1.72em; }
-    .reveal h2 { font-size: 1.22em; color: var(--accent); }
-    .reveal h3 { font-size: 0.98em; color: var(--accent); }
-    .reveal p, .reveal li { font-size: 0.78em; line-height: 1.34; }
-    .reveal small { font-size: 0.58em; }
-    .reveal table { font-size: 0.5em; }
-    .reveal th { color: var(--accent); }
-    .reveal section img { border-radius: 12px; }
-    .reveal pre { width: 100%; box-shadow:none; margin:0; font-size:0.42em; }
-    .reveal code { max-height: 520px !important; }
+
+    .reveal {
+      font-size: 30px;
+    }
+
+    .reveal h1,
+    .reveal h2,
+    .reveal h3,
+    .reveal h4,
+    .reveal h5 {
+      text-transform: none;
+    }
+
+    .reveal h1 {
+      font-size: 1.72em;
+    }
+
+    .reveal h2 {
+      font-size: 1.22em;
+      color: var(--accent);
+    }
+
+    .reveal h3 {
+      font-size: 0.98em;
+      color: var(--accent);
+    }
+
+    .reveal p,
+    .reveal li {
+      font-size: 0.78em;
+      line-height: 1.34;
+    }
+
+    .reveal small {
+      font-size: 0.58em;
+    }
+
+    .reveal table {
+      font-size: 0.5em;
+    }
+
+    .reveal th {
+      color: var(--accent);
+    }
+
+    .reveal section img {
+      border-radius: 12px;
+    }
+
+    .reveal pre {
+      width: 100%;
+      box-shadow: none;
+      margin: 0;
+      font-size: 0.42em;
+    }
+
+    .reveal code {
+      max-height: 520px !important;
+    }
 
     .pacific-logo {
       position: absolute;
@@ -45,6 +93,7 @@
       border-radius: 50%;
       padding: 6px;
     }
+
     .conference-badge {
       position: absolute;
       top: 20px;
@@ -53,11 +102,12 @@
       font-size: 15px;
       color: #ddd;
       border: 1px solid var(--border);
-      background: rgba(0,0,0,0.35);
+      background: rgba(0, 0, 0, 0.35);
       border-radius: 999px;
       padding: 10px 16px;
       backdrop-filter: blur(3px);
     }
+
     .footer-note {
       position: absolute;
       bottom: 18px;
@@ -66,47 +116,54 @@
       font-size: 14px;
       color: #b9b9b9;
     }
+
     .grid-2 {
-      display:grid;
+      display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 24px;
       align-items: start;
     }
+
     .grid-3 {
-      display:grid;
+      display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 18px;
     }
+
     .card {
       background: var(--panel);
       border: 1px solid var(--border);
       border-radius: 18px;
       padding: 18px 20px;
       text-align: left;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.16);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.16);
     }
+
     .metric-card {
-      background: linear-gradient(180deg, rgba(245,166,35,0.15), rgba(255,255,255,0.05));
-      border: 1px solid rgba(245,166,35,0.35);
+      background: linear-gradient(180deg, rgba(245, 166, 35, 0.15), rgba(255, 255, 255, 0.05));
+      border: 1px solid rgba(245, 166, 35, 0.35);
       border-radius: 18px;
       padding: 18px 20px;
-      text-align:left;
+      text-align: left;
     }
+
     .soft-card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03));
       border: 1px solid var(--border);
       border-radius: 18px;
       padding: 16px 18px;
-      text-align:left;
+      text-align: left;
     }
+
     .flow {
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       gap: 14px;
       margin-top: 26px;
       flex-wrap: wrap;
     }
+
     .flow-box {
       min-width: 180px;
       max-width: 220px;
@@ -115,16 +172,30 @@
       border: 1px solid var(--border);
       border-radius: 18px;
       background: var(--panel);
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      align-items:center;
-      text-align:center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
     }
-    .arrow { font-size: 1.2em; color: var(--accent); }
-    .muted { color: var(--soft); }
-    .accent { color: var(--accent); }
-    .tiny { font-size: 0.5em; }
+
+    .arrow {
+      font-size: 1.2em;
+      color: var(--accent);
+    }
+
+    .muted {
+      color: var(--soft);
+    }
+
+    .accent {
+      color: var(--accent);
+    }
+
+    .tiny {
+      font-size: 0.5em;
+    }
+
     .quote {
       font-style: italic;
       color: #e5e5e5;
@@ -132,16 +203,18 @@
       padding-left: 18px;
       text-align: left;
     }
+
     .pill {
-      display:inline-block;
+      display: inline-block;
       padding: 8px 14px;
       border-radius: 999px;
-      border: 1px solid rgba(245,166,35,0.35);
+      border: 1px solid rgba(245, 166, 35, 0.35);
       color: #ffe1ad;
-      background: rgba(245,166,35,0.12);
+      background: rgba(245, 166, 35, 0.12);
       margin: 6px 6px 0 0;
       font-size: 0.58em;
     }
+
     .big-number {
       font-size: 2.35em;
       font-weight: 700;
@@ -149,58 +222,81 @@
       line-height: 1;
       margin-bottom: 8px;
     }
+
     .diagram {
       border: 1px solid var(--border);
-      background: rgba(255,255,255,0.04);
+      background: rgba(255, 255, 255, 0.04);
       border-radius: 20px;
       padding: 18px;
-      text-align:left;
+      text-align: left;
     }
+
     .diagram-row {
-      display:flex;
+      display: flex;
       gap: 10px;
-      align-items:center;
+      align-items: center;
       margin: 10px 0;
-      flex-wrap:wrap;
+      flex-wrap: wrap;
     }
+
     .node {
       padding: 10px 14px;
       border-radius: 12px;
       border: 1px solid var(--border);
-      background: rgba(255,255,255,0.06);
+      background: rgba(255, 255, 255, 0.06);
       font-size: 0.55em;
     }
+
     .tag {
-      display:inline-block;
+      display: inline-block;
       padding: 5px 10px;
       border-radius: 10px;
-      background: rgba(255,255,255,0.08);
+      background: rgba(255, 255, 255, 0.08);
       margin: 4px 6px 0 0;
       font-size: 0.52em;
     }
-    .baseline { border-left: 4px solid var(--red); }
-    .improved { border-left: 4px solid var(--green); }
+
+    .baseline {
+      border-left: 4px solid var(--red);
+    }
+
+    .improved {
+      border-left: 4px solid var(--green);
+    }
+
     .code-pane {
       background: #0d1117;
-      border: 1px solid rgba(255,255,255,0.14);
+      border: 1px solid rgba(255, 255, 255, 0.14);
       border-radius: 16px;
       overflow: hidden;
     }
+
     .code-title {
       padding: 10px 14px;
-      background: rgba(255,255,255,0.06);
-      border-bottom: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255, 255, 255, 0.06);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
       font-size: 0.58em;
-      text-align:left;
-      color:#d8d8d8;
+      text-align: left;
+      color: #d8d8d8;
     }
-    .check { color: var(--green); }
-    .warn { color: #ffd27d; }
-    .blue { color: var(--blue); }
+
+    .check {
+      color: var(--green);
+    }
+
+    .warn {
+      color: #ffd27d;
+    }
+
+    .blue {
+      color: var(--blue);
+    }
   </style>
 </head>
+
 <body>
-  <img class="pacific-logo" src="https://upload.wikimedia.org/wikipedia/en/b/bb/University_of_the_Pacific_seal.svg" alt="University of the Pacific Seal">
+  <img class="pacific-logo" src="https://upload.wikimedia.org/wikipedia/en/b/bb/University_of_the_Pacific_seal.svg"
+    alt="University of the Pacific Seal">
   <div class="conference-badge">CAIF · April 1, 2026</div>
   <div class="footer-note">University of the Pacific · RAG-Based Semantic Retrieval</div>
 
@@ -208,193 +304,239 @@
     <div class="slides">
 
       <section>
-        <h1>RAG-Based Semantic Retrieval</h1>
-        <p class="muted">2026 OkIP International Conference on Artificial Intelligence Frontiers (CAIF)</p>
-        <div class="card" style="max-width:820px; margin:24px auto 0 auto; text-align:center;">
-          <p><strong>Mohammed Fahad</strong><br><strong>Dr. Solomon Berhe</strong></p>
-          <p class="muted">University of the Pacific</p>
-          <p style="font-size:0.68em; margin-top:14px;">
-            Oklahoma International Publishing (OkIP) is pleased to host the 2026 OkIP International Conference on Artificial Intelligence Frontiers (CAIF).
-          </p>
-        </div>
-      </section>
 
-      <section>
-        <h2>Agenda</h2>
-        <div class="grid-2">
-          <div class="card">
-            <ol style="font-size:0.78em; line-height:1.45;">
-              <li>Problem: fragmented update intelligence</li>
-              <li>RAG baseline and its limits</li>
-              <li>Realtime multi-source architecture</li>
-              <li>Routing and retrieval improvements</li>
-            </ol>
+        <section>
+          <h1>RAG-Based Semantic Retrieval</h1>
+          <p class="muted">2026 OkIP International Conference on Artificial Intelligence Frontiers (CAIF)</p>
+          <div class="card" style="max-width:820px; margin:24px auto 0 auto; text-align:center;">
+            <p><strong>Mohammed Fahad</strong><br><strong>Dr. Solomon Berhe</strong></p>
+            <p class="muted">University of the Pacific</p>
+            <p style="font-size:0.68em; margin-top:14px;">
+              This presentation covers a project that integrates Retrieval-Augmented Generation (RAG) with realtime
+              APIs to improve the precision and relevance of software update and security vulnerability information.
+            </p>
           </div>
-          <div class="card">
-            <ol start="5" style="font-size:0.78em; line-height:1.45;">
-              <li>Code-level contributions</li>
-              <li>30% less manual inspection</li>
-              <li>36% better correct-answer detection</li>
-              <li>Lessons learned and future work</li>
-            </ol>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <section>
-        <h2>Problem: Understanding Software Updates and Security Risks</h2>
-        <div class="grid-2">
-          <div class="card">
-            <ul>
-              <li>Release notes are large and difficult to analyze.</li>
-              <li>Security vulnerabilities are spread across CVE and advisory feeds.</li>
-              <li>User-reported issues appear in Reddit and GitHub discussions.</li>
-              <li>Manual review is slow and often inconsistent.</li>
-            </ul>
+        <section>
+          <h2>Agenda</h2>
+          <div class="grid-2">
+            <div class="card">
+              <ol style="font-size:0.78em; line-height:1.45;">
+                <li>Problem: fragmented update data</li>
+                <li>RAG baseline and its limits</li>
+                <li>Realtime multi-source architecture</li>
+                <li>Routing and retrieval improvements</li>
+              </ol>
+            </div>
+            <div class="card">
+              <ol start="5" style="font-size:0.78em; line-height:1.45;">
+                <li>Code-level contributions</li>
+                <li>30% less manual inspection</li>
+                <li>36% better correct-answer detection</li>
+                <li>Lessons learned and future work</li>
+              </ol>
+            </div>
           </div>
-          <div class="card">
-            <div class="quote">Because of this fragmentation, it becomes difficult to quickly determine whether an update is safe to install, whether one or more versions have known vulnerabilities, and what issues users are already reporting.</div>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <section>
-        <h2>Baseline System</h2>
-        <div class="flow">
-          <div class="flow-box">
-            Imported Documents<br><small>CSV export from MongoDB lake</small>
-          </div>
-          <div class="arrow">→</div>
-          <div class="flow-box">
-            Similarity Search<br><small>RAG over non-realtime content</small>
-          </div>
-          <div class="arrow">→</div>
-          <div class="flow-box">
-            Keyword Queries<br><small>e.g., “Microsoft”</small>
-          </div>
-          <div class="arrow">→</div>
-          <div class="flow-box">
-            Manual Review<br><small>inspect all returned updates</small>
-          </div>
-        </div>
-        <p class="muted" style="margin-top:20px;">This baseline established a working prototype, but precision was limited when update wording changed across sources.</p>
-      </section>
+        <section>
+          <h2>Problem: Understanding Software Updates and Risks</h2>
 
-      <section>
-        <h2>Baseline Limitations</h2>
-        <div class="grid-2">
-          <div class="soft-card baseline">
-            <h3 style="color:var(--red);">Before</h3>
-            <ul>
-              <li>RAG used imported documents only, not realtime data.</li>
-              <li>Keyword retrieval over-focused on vendor names.</li>
-              <li>Many incorrect answers were returned for broad queries.</li>
-              <li>All candidate updates still had to be reviewed manually.</li>
-            </ul>
-          </div>
-          <div class="soft-card improved">
-            <h3 class="check">Need</h3>
-            <ul>
-              <li>Current security feeds and release feeds.</li>
-              <li>Contextual sentence-level query understanding.</li>
-              <li>Better routing to the right source before retrieval.</li>
-              <li>Filtering to reduce human inspection effort.</li>
-            </ul>
-          </div>
-        </div>
-      </section>
+          <div class="grid-2">
 
-      <section>
-        <h2>Improved Solution</h2>
-        <div class="flow">
-          <div class="flow-box">Realtime APIs<br><small>CISA · NVD · GitHub</small></div>
-          <div class="arrow">→</div>
-          <div class="flow-box">Routing Layer<br><small>vendor + intent + time</small></div>
-          <div class="arrow">→</div>
-          <div class="flow-box">RAG Context<br><small>FAISS + sentence embeddings</small></div>
-          <div class="arrow">→</div>
-          <div class="flow-box">LLM Fusion<br><small>grounded final answer</small></div>
-        </div>
-        <div style="margin-top:18px;">
-          <span class="pill">More sources</span>
-          <span class="pill">Higher precision</span>
-          <span class="pill">Less noise</span>
-          <span class="pill">Lower manual effort</span>
-        </div>
-      </section>
+            <!-- LEFT -->
+            <div>
+              <ul>
+                <li>Current Linux versions?</li>
+                <li>Known vulnerabilities?</li>
+                <li>Active issues?</li>
+                <li>Dependency status?</li>
+              </ul>
 
-      <section>
-        <h2>Architecture</h2>
-        <div class="diagram">
-          <div class="diagram-row">
-            <div class="node">User Query</div>
+              <p style="margin-top:20px; color:#ff6b6b; font-weight:600;">
+                Manual lookup, comparison, and summarization across sources takes significant time.
+              </p>
+            </div>
+
+            <!-- RIGHT -->
+            <div class="card">
+              <div style="display:flex; flex-direction:column; gap:12px; align-items:center;">
+
+                <div
+                  style="padding:10px 14px; border:1px solid #ccc; border-radius:10px; width:220px; text-align:center;">
+                  <strong>Release Note DB</strong><br>
+                  <small>GitHub · DistroLinux</small>
+                </div>
+
+                <div style="font-size:18px;">↓</div>
+
+                <div
+                  style="padding:10px 14px; border:1px solid #ccc; border-radius:10px; width:220px; text-align:center;">
+                  <strong>Community DB</strong><br>
+                  <small>Reddit · StackOverflow</small>
+                </div>
+
+                <div style="font-size:18px;">↓</div>
+
+                <div
+                  style="padding:10px 14px; border:1px solid #ccc; border-radius:10px; width:220px; text-align:center;">
+                  <strong>Vendor CVE DB</strong><br>
+                  <small>NVD · NIST</small>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <section>
+          <h2>Baseline RAG System</h2>
+          <div class="flow">
+            <div class="flow-box">
+              Import Docs<br><small>CSV export from lake</small>
+            </div>
             <div class="arrow">→</div>
-            <div class="node">Time Parsing</div>
+            <div class="flow-box">
+              Similarity Search<br><small>RAG non-realtime content</small>
+            </div>
             <div class="arrow">→</div>
-            <div class="node">Vendor Extraction</div>
+            <div class="flow-box">
+              Keyword Queries<br><small>"Current Linux versions?"</small>
+            </div>
             <div class="arrow">→</div>
-            <div class="node">Source Routing</div>
+            <div class="flow-box">
+              Manual Review<br><small>Inspect all returned updates</small>
+            </div>
           </div>
-          <div class="diagram-row">
-            <div class="node blue">OS API</div>
-            <div class="node blue">Reddit API</div>
-            <div class="node blue">CISA KEV</div>
-            <div class="node blue">GitHub Releases</div>
-            <div class="node blue">GitHub Atom</div>
-          </div>
-          <div class="diagram-row">
-            <div class="node">Filter by vendor + date</div>
-            <div class="arrow">→</div>
-            <div class="node">FAISS Retrieval</div>
-            <div class="arrow">→</div>
-            <div class="node">Live + RAG Merge</div>
-            <div class="arrow">→</div>
-            <div class="node">Grounded Answer</div>
-          </div>
-        </div>
-      </section>
+          <p class="muted" style="margin-top:20px;">This baseline established a working prototype, but accuracy was
+            limited.</p>
+        </section>
 
-      <section>
-        <h2>Query Improvement Example</h2>
-        <div class="grid-2">
-          <div class="card">
-            <h3>Keyword-oriented query</h3>
-            <p><strong>“Give me an update about Microsoft”</strong></p>
-            <ul>
-              <li>Too broad</li>
-              <li>High noise across unrelated results</li>
-              <li>Weak alignment to actual patch timing</li>
-            </ul>
+        <section>
+          <h2>Baseline Limitations</h2>
+          <div class="grid-2">
+            <div class="soft-card baseline">
+              <h3 style="color:var(--red);">Before</h3>
+              <ul>
+                <li>RAG used imported docs only</li>
+                <li>Keyword retrieval over-focused vendors</li>
+                <li>Many incorrect answers were returned for broad queries</li>
+                <li>All candidate updates still had to be reviewed manually</li>
+              </ul>
+            </div>
+            <div class="soft-card improved">
+              <h3 class="check">Need</h3>
+              <ul>
+                <li>Current security feeds and release feeds</li>
+                <li>Contextual sentence-level query understanding</li>
+                <li>Better routing to the right source before retrieval</li>
+                <li>Filtering to reduce human inspection effort</li>
+              </ul>
+            </div>
           </div>
-          <div class="card">
-            <h3>Contextual query</h3>
-            <p><strong>“What is the recent Linux patch update?”</strong></p>
-            <p class="muted">Normalized into a time-aware search such as:</p>
-            <p><span class="accent">“What is the Linux patch update on &lt;CURRENT MONTH&gt;?”</span></p>
-            <ul>
-              <li>Better vendor routing</li>
-              <li>Better temporal filtering</li>
-              <li>More relevant release evidence</li>
-            </ul>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <section>
-        <h2>Technical Contribution 1: Vendor Extraction</h2>
-        <div class="grid-2">
-          <div class="card">
-            <h3>Why it helped</h3>
-            <ul>
-              <li>Maps user wording to canonical vendor names.</li>
-              <li>Handles aliases such as <code>k8s → kubernetes</code> and <code>nodejs → node</code>.</li>
-              <li>Improves retrieval precision before any API call is made.</li>
-              <li>Supports strict routing instead of loose keyword matching.</li>
-            </ul>
+        <section>
+          <h2>Improved Solution</h2>
+          <div class="flow">
+            <div class="flow-box">Realtime APIs<br><small>CISA · NVD · GitHub</small></div>
+            <div class="arrow">→</div>
+            <div class="flow-box">Routing Layer<br><small>vendor + intent + time</small></div>
+            <div class="arrow">→</div>
+            <div class="flow-box">RAG Context<br><small>FAISS + sentence embeddings</small></div>
+            <div class="arrow">→</div>
+            <div class="flow-box">LLM Fusion<br><small>grounded final answer</small></div>
           </div>
-          <div class="code-pane">
-            <div class="code-title">app.py · canonical vendor mapping</div>
-            <pre><code class="python" data-trim>
+          <div style="margin-top:18px;">
+            <span class="pill">More sources</span>
+            <span class="pill">Higher accuracy</span>
+            <span class="pill">Less noise</span>
+            <span class="pill">Lower manual effort</span>
+          </div>
+        </section>
+
+        <section>
+          <h2>Architecture</h2>
+          <div class="diagram">
+            <div class="diagram-row">
+              <div class="node">User Query</div>
+              <div class="arrow">→</div>
+              <div class="node">Time Parsing</div>
+              <div class="arrow">→</div>
+              <div class="node">Vendor Extraction</div>
+              <div class="arrow">→</div>
+              <div class="node">Source Routing</div>
+            </div>
+            <div class="diagram-row">
+              <div class="node blue">OS API</div>
+              <div class="node blue">Reddit API</div>
+              <div class="node blue">CISA KEV</div>
+              <div class="node blue">GitHub Releases</div>
+              <div class="node blue">NIST NVD</div>
+            </div>
+            <div class="diagram-row">
+              <div class="node">Filter by vendor + date</div>
+              <div class="arrow">→</div>
+              <div class="node">FAISS Retrieval</div>
+              <div class="arrow">→</div>
+              <div class="node">Live + RAG Merge</div>
+              <div class="arrow">→</div>
+              <div class="node">Grounded Answer</div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Query Improvement Example</h2>
+          <div class="grid-2">
+            <div class="card">
+              <h3>Keyword-oriented query</h3>
+              <p><strong>“Give me an update about Linux”</strong></p>
+              <ul>
+                <li>Too broad</li>
+                <li>High noise across unrelated results</li>
+                <li>Weak match to actual patch timing</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Contextual query</h3>
+              <p><strong>“What is the recent Linux patch update?”</strong></p>
+              <p class="muted">Normalized into a time-aware search:</p>
+              <p><span class="accent">“What is the Linux patch update on &lt;CURRENT MONTH&gt;?”</span></p>
+              <ul>
+                <li>Better vendor routing</li>
+                <li>Better temporal filtering</li>
+                <li>More relevant release evidence</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h2>Technical Contribution 1: Vendor Extraction</h2>
+          <div class="grid-2">
+
+            <!-- LEFT -->
+            <div class="card">
+              <h3>Why it helped</h3>
+              <ul>
+                <li>Maps user wording to canonical vendor names.</li>
+                <li>Handles aliases such as <code>k8s → kubernetes</code> and <code>nodejs → node</code>.</li>
+                <li>Improves retrieval precision before any API call is made.</li>
+                <li>Supports strict routing instead of loose keyword matching.</li>
+              </ul>
+
+              <p style="margin-top:18px; color:#ff6b6b; font-weight:600;">
+                Vendor is the key linking all data sources.
+              </p>
+            </div>
+
+            <!-- RIGHT -->
+            <div class="code-pane">
+              <div class="code-title">app.py · canonical vendor mapping</div>
+              <pre><code class="python" data-trim>
 def extract_vendors(q: str):
     alias_map = {
         "k8s": "kubernetes",
@@ -403,32 +545,42 @@ def extract_vendors(q: str):
         "linux": "linux",
         "windows": "windows",
         "nodejs": "node",
-        "microsoft": "windows",
+        "Linux": "windows",
     }
     found = []
     for alias, canonical in alias_map.items():
         if re.search(rf"\b{re.escape(alias)}\b", q.lower()):
             found.append(canonical)
     return list(dict.fromkeys(found))
-            </code></pre>
-          </div>
-        </div>
-      </section>
+      </code></pre>
+            </div>
 
-      <section>
-        <h2>Technical Contribution 2: Time-Aware Query Parsing</h2>
-        <div class="grid-2">
-          <div class="card">
-            <h3>Why it helped</h3>
-            <ul>
-              <li>Transforms vague phrases such as <em>last week</em> or <em>this month</em> into concrete date windows.</li>
-              <li>Reduces irrelevant historical results.</li>
-              <li>Supports contextual search instead of plain keyword matching.</li>
-            </ul>
           </div>
-          <div class="code-pane">
-            <div class="code-title">app.py · natural-language time windows</div>
-            <pre><code class="python" data-trim>
+        </section>
+
+        <section>
+          <h2>Technical Contribution 2: Time-Aware Query Parsing</h2>
+          <div class="grid-2">
+
+            <!-- LEFT -->
+            <div class="card">
+              <h3>Why it helped</h3>
+              <ul>
+                <li>Transforms vague phrases (e.g., <em>last week</em>, <em>this month</em>) into concrete date windows.
+                </li>
+                <li>Reduces irrelevant historical results.</li>
+                <li>Enables contextual search beyond keyword matching.</li>
+              </ul>
+
+              <p style="margin-top:18px; color:#ff6b6b; font-weight:600;">
+                Rephrasing temporal wording improves similarity matching.
+              </p>
+            </div>
+
+            <!-- RIGHT -->
+            <div class="code-pane">
+              <div class="code-title">app.py · natural-language time windows</div>
+              <pre><code class="python" data-trim>
 def parse_time_window(q: str, now=None):
     if "last week" in q.lower():
         monday = (now - timedelta(days=now.weekday() + 7)).date()
@@ -439,91 +591,95 @@ def parse_time_window(q: str, now=None):
         first = now.replace(day=1).date()
         last_day = calendar.monthrange(now.year, now.month)[1]
         return first, last_day
-            </code></pre>
-          </div>
-        </div>
-      </section>
+      </code></pre>
+            </div>
 
-      <section>
-        <h2>Technical Contribution 3: Intelligent Source Routing</h2>
-        <div class="grid-2">
-          <div class="card">
-            <h3>Why it helped</h3>
-            <ul>
-              <li>Selects only the sources relevant to the question.</li>
-              <li>Routes security questions to CISA-style feeds.</li>
-              <li>Routes vendor release questions to GitHub release feeds and OS feeds.</li>
-              <li>Reduces unnecessary calls and lowers response latency.</li>
-            </ul>
           </div>
-          <div class="code-pane">
-            <div class="code-title">app.py · route selection</div>
-            <pre><code class="python" data-trim>
-def determine_allowed_sources(query: str, vendors: list[str]):
-    wants_security = any(term in query.lower() for term in SECURITY_HINTS)
-    wants_release = is_release_query(query)
+        </section>
 
+        <section>
+          <h2>Technical Contribution 3: Intelligent Source Routing</h2>
+          <div class="grid-2">
+
+            <!-- LEFT -->
+            <div class="card">
+              <h3>Why it helped</h3>
+              <ul>
+                <li>Routes query → correct data source.</li>
+                <li>Separates security, updates, and user issues.</li>
+                <li>Reduces noise and improves response speed.</li>
+              </ul>
+
+              <p style="margin-top:18px; color:#ff6b6b; font-weight:600;">
+                Routing improves performance and accuracy.
+              </p>
+            </div>
+
+            <!-- RIGHT -->
+            <div class="code-pane">
+              <div class="code-title">app.py · routing logic</div>
+              <pre><code class="python" data-trim>
+def route(query):
     return {
-        "use_os": wants_release,
-        "use_reddit": any(term in query.lower() for term in DISCUSSION_HINTS),
-        "use_cisa": wants_security,
-        "gh_release_repos": sorted(set(repos_for(vendors))),
+        "cve": "vulnerability" in query or "cve" in query,
+        "release": "update" in query or "version" in query,
+        "community": "issue" in query or "reddit" in query
     }
-            </code></pre>
-          </div>
-        </div>
-      </section>
+      </code></pre>
+            </div>
 
-      <section>
-        <h2>Technical Contribution 4: Realtime GitHub Release Fetching</h2>
-        <div class="grid-2">
-          <div class="card">
-            <h3>Why it helped</h3>
-            <ul>
-              <li>Added live release evidence rather than relying only on imported static documents.</li>
-              <li>Helps answer recent vendor questions correctly.</li>
-              <li>Improves freshness of the final response.</li>
-            </ul>
           </div>
-          <div class="code-pane">
-            <div class="code-title">app.py · GitHub release API</div>
-            <pre><code class="python" data-trim>
-@st.cache_data(ttl=600)
-def fetch_github_releases(repo: str, limit: int = 30):
-    url = f"https://api.github.com/repos/{repo}/releases"
-    r = requests.get(url, headers={"Accept": "application/vnd.github+json"}, timeout=10)
-    if r.status_code == 200:
-        return [
-            {
-                "repo": repo,
-                "title": rel.get("name") or rel.get("tag_name"),
-                "summary": (rel.get("body") or "")[:500],
-                "published": rel.get("published_at"),
-            }
-            for rel in r.json()[:limit]
-        ]
-            </code></pre>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <section>
-        <h2>Technical Contribution 5: Live + RAG Fusion</h2>
-        <div class="grid-2">
-          <div class="card">
-            <h3>Why it helped</h3>
-            <ul>
-              <li>Live vendor-routed results remain the primary source of truth.</li>
-              <li>RAG adds background context instead of overriding current facts.</li>
-              <li>This reduced hallucination risk and improved final answer quality.</li>
-            </ul>
+        <section>
+          <h2>Technical Contribution 4: Realtime Fetching</h2>
+          <div class="grid-2">
+
+            <!-- LEFT -->
+            <div class="card">
+              <h3>Why it helped</h3>
+              <ul>
+                <li>Uses live release data instead of static documents.</li>
+                <li>Improves accuracy for recent updates.</li>
+                <li>Keeps responses current and relevant.</li>
+              </ul>
+
+              <p style="margin-top:18px; color:#ff6b6b; font-weight:600;">
+                On-request fetch improves accuracy.
+              </p>
+            </div>
+
+            <!-- RIGHT -->
+            <div class="code-pane">
+              <div class="code-title">app.py · GitHub API</div>
+              <pre><code class="python" data-trim>
+def fetch_releases(repo):
+    return requests.get(
+        f"https://api.github.com/repos/{repo}/releases"
+    ).json()[:5]
+      </code></pre>
+            </div>
+
           </div>
-          <div class="code-pane">
-            <div class="code-title">app.py · grounded answer composition</div>
-            <pre><code class="python" data-trim>
+        </section>
+
+        <section>
+          <h2>Technical Contribution 5: Live + RAG Fusion</h2>
+          <div class="grid-2">
+            <div class="card">
+              <h3>Why it helped</h3>
+              <ul>
+                <li>Live vendor-routed results remain the primary source of truth.</li>
+                <li>RAG adds background context instead of overriding current facts.</li>
+                <li>This reduced hallucination risk and improved final answer quality.</li>
+              </ul>
+            </div>
+            <div class="code-pane">
+              <div class="code-title">app.py · grounded answer composition</div>
+              <pre><code class="python" data-trim>
 def combine_live_and_rag(user_q, live_answer, rag_answer):
     prompt = f"""
-    - Prefer live vendor-routed results as the primary source of truth.
+    - Prefer live vendor-routed results as the primary source.
     - Use RAG only to add helpful context.
     - If live results exist, summarize them confidently.
     - Do not say unavailable unless both are empty.
@@ -531,190 +687,216 @@ def combine_live_and_rag(user_q, live_answer, rag_answer):
     resp = _gem.invoke(prompt)
     return getattr(resp, "content", str(resp))
             </code></pre>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section>
-        <h2>30% Reduction in Manual Inspection Effort</h2>
-        <div class="grid-2">
-          <div class="metric-card">
-            <div class="big-number">30%</div>
-            <p><strong>Less manual inspection</strong></p>
-            <ul>
-              <li>We filter results before human review.</li>
-              <li>The analyst inspects fewer low-value updates.</li>
-              <li>The query count stayed constant, but answer quality improved.</li>
-            </ul>
+        <section>
+          <h2>30% Reduction in Manual Inspection Effort</h2>
+          <div class="grid-2">
+            <div class="metric-card">
+              <div class="big-number">30%</div>
+              <p><strong>Less manual inspection</strong></p>
+              <ul>
+                <li>We filter results before human review.</li>
+                <li>The analyst inspects fewer invalid updates.</li>
+                <li>The query count stayed constant, but answer quality improved.</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Interpretation</h3>
+              <ul>
+                <li><strong>Before:</strong> 15 queries against RAG with broader, noisier results.</li>
+                <li><strong>After:</strong> 15 queries, but routed through better sources and filters.</li>
+                <li>Same amount of querying, lower amount of manual checking.</li>
+                <li>Accuracy improvement translated into less review effort.</li>
+              </ul>
+            </div>
           </div>
-          <div class="card">
-            <h3>Interpretation</h3>
-            <ul>
-              <li><strong>Before:</strong> 15 queries against RAG with broader, noisier results.</li>
-              <li><strong>After:</strong> 15 queries, but routed through better sources and filters.</li>
-              <li>Same amount of querying, lower amount of manual checking.</li>
-              <li>Accuracy improvement translated into less review effort.</li>
-            </ul>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <section>
-        <h2>Manual Inspection: Before vs After</h2>
-        <div class="grid-2">
-          <div class="soft-card baseline">
-            <h3 style="color:var(--red);">Baseline</h3>
-            <ul>
-              <li>Imported MongoDB CSV only</li>
-              <li>Similarity search over non-realtime content</li>
-              <li>Keyword retrieval such as vendor-name search</li>
-              <li>Many incorrect answers</li>
-              <li>Review <strong>all</strong> updates manually</li>
-            </ul>
+        <section>
+          <h2>Manual Inspection: Before vs After</h2>
+          <div class="grid-2">
+            <div class="soft-card baseline">
+              <h3 style="color:var(--red);">Baseline</h3>
+              <ul>
+                <li>Imported MongoDB CSV only</li>
+                <li>Similarity search over non-realtime content</li>
+                <li>Keyword retrieval such as vendor-name search</li>
+                <li>Many incorrect answers</li>
+                <li>Review <strong>all</strong> updates manually</li>
+              </ul>
+            </div>
+            <div class="soft-card improved">
+              <h3 class="check">Improved</h3>
+              <ul>
+                <li>Realtime APIs: CISA, NVD feeds, GitHub</li>
+                <li>Contextual whole-sentence search</li>
+                <li>Temporal query normalization</li>
+                <li>More data sources added into the evidence path</li>
+                <li>Filtered results reduce manual inspection by <strong>30%</strong></li>
+              </ul>
+            </div>
           </div>
-          <div class="soft-card improved">
-            <h3 class="check">Improved</h3>
-            <ul>
-              <li>Realtime APIs: CISA, NVD-style feeds, GitHub</li>
-              <li>Contextual whole-sentence search</li>
-              <li>Temporal query normalization</li>
-              <li>More data sources added into the evidence path</li>
-              <li>Filtered results reduce manual inspection by <strong>30%</strong></li>
-            </ul>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <section>
-        <h2>36% Detection of Correct Answer</h2>
-        <div class="grid-2">
-          <div class="metric-card">
-            <div class="big-number">36%</div>
-            <p><strong>Improvement in detection of the correct answer</strong></p>
-            <ul>
-              <li>Better source selection</li>
-              <li>Better freshness</li>
-              <li>Better context alignment</li>
-            </ul>
+        <section>
+          <h2>36% Detection of Correct Answer</h2>
+          <div class="grid-2">
+            <div class="metric-card">
+              <div class="big-number">36%</div>
+              <p><strong>Improvement in detection of the correct answer</strong></p>
+              <ul>
+                <li>Better source selection</li>
+                <li>Better freshness</li>
+                <li>Better context alignment</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Interpretation</h3>
+              <ul>
+                <li>The improvement reflects higher precision in final answers.</li>
+                <li>Realtime evidence helped resolve update questions more reliably.</li>
+                <li>RAG remained useful, but it performed best when grounded by live feeds.</li>
+              </ul>
+            </div>
           </div>
-          <div class="card">
-            <h3>Interpretation</h3>
-            <ul>
-              <li>The improvement reflects higher precision in final answers.</li>
-              <li>Realtime evidence helped resolve update questions more reliably.</li>
-              <li>RAG remained useful, but it performed best when grounded by live feeds.</li>
-            </ul>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <section>
-        <h2>System Evaluation Summary</h2>
-        <div class="grid-3">
-          <div class="metric-card">
-            <div class="big-number">1,200</div>
-            <p>Software version updates</p>
+        <section>
+          <h2>System Evaluation Summary</h2>
+          <div class="grid-3">
+            <div class="metric-card">
+              <div class="big-number">1,200</div>
+              <p>Software version updates</p>
+            </div>
+            <div class="metric-card">
+              <div class="big-number">248</div>
+              <p>Reddit discussions</p>
+            </div>
+            <div class="metric-card">
+              <div class="big-number">312</div>
+              <p>CVE / NVD records</p>
+            </div>
           </div>
-          <div class="metric-card">
-            <div class="big-number">248</div>
-            <p>Reddit discussions</p>
-          </div>
-          <div class="metric-card">
-            <div class="big-number">312</div>
-            <p>CVE / NVD records</p>
-          </div>
-        </div>
-        <div class="card" style="margin-top:20px;">
-          <ul>
-            <li>Two-year observation window.</li>
-            <li>Baseline comparison used keyword heuristics and TF-IDF style retrieval.</li>
-            <li>Evaluation focused on relevance, detection timeliness, and manual effort reduction.</li>
-          </ul>
-        </div>
-      </section>
-
-      <section>
-        <h2>Prototype Overview</h2>
-        <div class="grid-2">
-          <div class="card">
+          <div class="card" style="margin-top:20px;">
             <ul>
-              <li>Streamlit interface for interactive querying</li>
-              <li>FAISS vector store for semantic retrieval</li>
-              <li>Sentence-transformer embeddings</li>
-              <li>Live source badges for grounded answers</li>
-              <li>LLM answer synthesis with source preference rules</li>
+              <li>Two-year observation window.</li>
+              <li>Baseline comparison used keyword heuristics and TF-IDF style retrieval.</li>
+              <li>Evaluation focused on relevance, detection timeliness, and manual effort reduction.</li>
             </ul>
           </div>
-          <div class="card">
-            <div class="pill">FAISS</div>
-            <div class="pill">Sentence Transformers</div>
-            <div class="pill">GitHub API</div>
-            <div class="pill">CISA Feed</div>
-            <div class="pill">Reddit Feed</div>
-            <div class="pill">Gemini Flash</div>
-            <p class="muted" style="margin-top:16px;">The system combines traditional retrieval discipline with modern LLM synthesis, which remains a reliable pattern when current data quality matters.</p>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <section>
-        <h2>Lessons Learned</h2>
-        <div class="grid-2">
-          <div class="card">
-            <ul>
-              <li>Combining RAG with realtime APIs improves situational awareness.</li>
-              <li>Semantic retrieval is stronger than plain keyword lookup.</li>
-              <li>Routing is essential to avoid unnecessary noise and cost.</li>
-              <li>Caching and query filtering improve system speed.</li>
-            </ul>
+        <section>
+          <h2>Prototype Overview</h2>
+          <div class="grid-2">
+            <div class="card">
+              <ul>
+                <li>Streamlit interface for interactive querying</li>
+                <li>FAISS vector store for semantic retrieval</li>
+                <li>Sentence-transformer embeddings</li>
+                <li>Live source badges for grounded answers</li>
+                <li>LLM answer synthesis with source preference rules</li>
+              </ul>
+            </div>
+            <div class="card">
+              <div class="pill">FAISS</div>
+              <div class="pill">Sentence Transformers</div>
+              <div class="pill">GitHub API</div>
+              <div class="pill">CVE Feed</div>
+              <div class="pill">Reddit Feed</div>
+              <div class="pill">Gemini Flash</div>
+              <p class="muted" style="margin-top:16px;">The system combines traditional retrieval discipline with modern
+                LLM synthesis, which remains a reliable pattern when current data quality matters.</p>
+            </div>
           </div>
-          <div class="card">
-            <ul>
-              <li>Fresh evidence matters when answering update and security questions.</li>
-              <li>Static document stores remain useful for background context.</li>
-              <li>The strongest answers come from disciplined fusion, not from one source alone.</li>
-            </ul>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <section>
-        <h2>Limitations and Future Work</h2>
-        <div class="grid-2">
-          <div class="card">
-            <h3>Limitations</h3>
-            <ul>
-              <li>API latency can still affect responsiveness.</li>
-              <li>External sources may disagree or change format.</li>
-              <li>LLM interpretation still requires grounding safeguards.</li>
-              <li>Rate limits remain a practical constraint.</li>
-            </ul>
+        <section>
+          <h2>Lessons Learned</h2>
+          <div class="grid-2">
+            <div class="card">
+              <ul>
+                <li>Combining RAG with realtime APIs improves accuracy</li>
+                <li>Semantic retrieval is stronger than plain keyword lookup</li>
+                <li>Routing is essential to avoid unnecessary data</li>
+                <li>Caching and query filtering improve system speed</li>
+              </ul>
+            </div>
+            <div class="card">
+              <ul>
+                <li>Realtime evidence matters when answering update questions</li>
+                <li>Static document stores remain useful for background context</li>
+              </ul>
+            </div>
           </div>
-          <div class="card">
-            <h3>Future Work</h3>
-            <ul>
-              <li>More robust API routing and caching strategies</li>
-              <li>Additional security and package feeds</li>
-              <li>Larger-scale evaluation</li>
-              <li>Multi-agent orchestration and parallel fetching</li>
-            </ul>
+        </section>
+
+        <section>
+          <h2>Limitations and Future Work</h2>
+          <div class="grid-2">
+            <div class="card">
+              <h3>Limitations</h3>
+              <ul>
+                <li>API latency can still affect responsiveness</li>
+                <li>External sources may change format</li>
+                <li>LLM interpretation still requires grounding safeguards</li>
+                <li>Rate limits remain a practical constraint</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Future Work</h3>
+              <ul>
+                <li>More robust API routing and caching strategies</li>
+                <li>Additional security and package feeds</li>
+                <li>Larger-scale evaluation</li>
+                <li>Multi-agent orchestration and parallel fetching</li>
+              </ul>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section>
-        <h2>Conclusion</h2>
-        <div class="card" style="max-width:900px; margin:0 auto;">
-          <ul>
-            <li>Starting from a static RAG baseline, we improved the system with realtime evidence.</li>
-            <li>Intelligent routing and contextual query handling improved answer precision.</li>
-            <li>The result was <strong>30% less manual inspection</strong> and <strong>36% better correct-answer detection</strong>.</li>
-            <li>This prototype shows that software update intelligence benefits from a careful combination of established retrieval methods and realtime AI-assisted synthesis.</li>
-          </ul>
-        </div>
-        <p style="margin-top:22px;"><strong>Thank you</strong></p>
-      </section>
+        <section>
+          <h2>Thank you</h2>
 
+          <div class="grid-2">
+
+            <!-- LEFT SIDE -->
+            <div class="">
+              <ul>
+                <li>RAG + realtime → better answers</li>
+                <li>Smarter routing → better answers</li>
+                <li><strong>30% less manual inspection</strong></li>
+                <li><strong>36% better detection</strong></li>
+              </ul>
+            </div>
+
+            <!-- RIGHT SIDE -->
+            <div class="card">
+              <p><strong>Project Repository:</strong><br>
+                <a href="https://github.com/MohammedFahadd/ReleaseNotesRec-Agent" target="_blank">
+                  ReleaseNotesRec-Agent (GitHub)
+                </a>
+              </p>
+
+              <p><strong>Live Demo:</strong><br>
+                <a href="https://releasenotesrec-agentgit-ryuf7vkcm5wukd8wa4busk.streamlit.app/" target="_blank">
+                  Streamlit Application
+                </a>
+              </p>
+
+              <p><strong>Contact:</strong><br>
+                Mohammed Fahad<br>
+                <a href="mailto:m_lnu18@u.pacific.edu">m_lnu18@u.pacific.edu</a>
+              </p>
+            </div>
+
+          </div>
+        </section>
+
+      </section>
     </div>
   </div>
 
@@ -728,4 +910,5 @@ def combine_live_and_rag(user_q, live_answer, rag_answer):
     });
   </script>
 </body>
+
 </html>
