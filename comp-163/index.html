@@ -576,7 +576,8 @@
                     11</a>, <a href="./#/c14">Feb 13</a>)</td>
                 <td style="padding:6px; border:1px solid #666;"><a href="./#/module-5">Relational Database Advanced
                     SQL</a></td>
-                <td style="padding:6px; border:1px solid #666;">Lab 3 + Homework 3 (2w)</td>
+                <td style="padding:6px; border:1px solid #666;"><a href="./#/lab-3">Lab 3</a> + <a
+                    href="./#/homework-3">Homework 3</a> (2w)</td>
                 <td style="padding:6px; border:1px solid #666;"></td>
                 <td style="padding:6px; border:1px solid #666;"></td>
               </tr>
@@ -30232,7 +30233,7 @@ DEBUG=True</code></pre>
             </div>
           </section>
 
-          <section id="c27">
+          <section>
             <h5>Updating Code for Security</h5>
             <div class="split">
               <div class="left">
@@ -30894,6 +30895,59 @@ Design → Scale → Optimize
             </div>
           </section>
 
+          <section id="c27">
+            <h5>Agenda</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>UUID Fundamentals and Key Design</li>
+                  <li>Distributed Data Modeling</li>
+                  <li>Partitioning and Replication Strategies</li>
+                  <li>Consistency Models and Trade-offs</li>
+                  <li>Distributed Query Processing</li>
+                  <li>System Design Use Cases</li>
+                  <li>Best Practices in Distributed Databases</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+Flow:
+IDs → Data → Distribution
+→ Consistency → Queries → Design
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>UUID Across Distributed Databases</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Each node generates its own UUID</li>
+                  <li>No central coordination required</li>
+                  <li>Ensures global uniqueness</li>
+                  <li>Supports independent writes</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+        +------------------+
+        |     Client       |
+        +------------------+
+           /     |      \
+          v      v       v
+   +---------+ +---------+ +---------+
+   |  DB1    | |  DB2    | |  DB3    |
+   +---------+ +---------+ +---------+
+   | UUID A  | | UUID B  | | UUID C  |
+   | data... | | data... | | data... |
+   +---------+ +---------+ +---------+
+</code></pre>
+              </div>
+            </div>
+          </section>
+
           <!-- 1 -->
           <section>
             <h5>Primary Key Strategy</h5>
@@ -31071,7 +31125,516 @@ INSERT ... ON CONFLICT DO NOTHING;
             </div>
           </section>
 
-        </section>
+          <section>
+            <h5>UUID Fundamentals</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Universally unique identifier</li>
+                  <li>Generated without central coordination</li>
+                  <li>Supports distributed inserts</li>
+                  <li>128-bit value</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+550e8400-e29b-41d4-a716-446655440000
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>UUID vs Auto-Increment</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Auto-increment causes conflicts</li>
+                  <li>Requires coordination</li>
+                  <li>UUID avoids collisions</li>
+                  <li>Better for distributed systems</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+INT → centralized
+UUID → distributed safe
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>UUID Generation</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Generated at application layer</li>
+                  <li>No DB dependency</li>
+                  <li>Supports offline operations</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+import uuid
+id = uuid.uuid4()
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>UUID in SQL</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Used as primary key</li>
+                  <li>Ensures global uniqueness</li>
+                  <li>Supported in PostgreSQL</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+CREATE TABLE flowers(
+  id UUID PRIMARY KEY,
+  name TEXT
+);
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>UUID Trade-offs</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Larger storage size</li>
+                  <li>Random distribution</li>
+                  <li>Index fragmentation risk</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+UUID = 16 bytes
+INT  = 4 bytes
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Time-Ordered UUID (UUIDv7)</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Maintains time ordering</li>
+                  <li>Improves index locality</li>
+                  <li>Better write performance</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+UUIDv7 → time-based ordering
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Idempotent Writes with UUID</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Safe retry mechanism</li>
+                  <li>Avoid duplicate inserts</li>
+                  <li>Useful in distributed APIs</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+INSERT ... ON CONFLICT DO NOTHING;
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Question: Why Are UUIDs Unique Across Databases?</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>How can multiple nodes generate IDs independently?</li>
+                  <li>Why do collisions almost never occur?</li>
+                  <li>What makes UUIDs safe for distributed systems?</li>
+                  <li>How do UUIDs compare to centralized IDs?</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+DB1 → UUID ?
+DB2 → UUID ?
+DB3 → UUID ?
+
+How do we guarantee uniqueness?
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Why UUIDs Are Unique</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>128-bit identifier space</li>
+                  <li>Extremely large number of combinations</li>
+                  <li>Generated independently on each node</li>
+                  <li>Collision probability is negligible</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+2^128 ≈ 3.4 × 10^38 possible IDs
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>UUID Structure (Version 4)</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Random-based UUID</li>
+                  <li>122 bits used for randomness</li>
+                  <li>Remaining bits define version/variant</li>
+                  <li>Ensures high entropy</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx
+         ↑
+       version
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Randomness and Collision Probability</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Random number generation per node</li>
+                  <li>No shared state required</li>
+                  <li>Collisions statistically improbable</li>
+                  <li>Safe for distributed systems</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+Collision probability:
+~ 1 in 10^18 (extremely low)
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>UUID Generation Across Nodes</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Each node generates IDs locally</li>
+                  <li>No coordination between nodes</li>
+                  <li>Works in offline environments</li>
+                  <li>Supports parallel inserts</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+Node A → UUID A
+Node B → UUID B
+Node C → UUID C
+
+All unique without communication
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>UUID vs Centralized ID Generation</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Central IDs require coordination</li>
+                  <li>Single point of failure</li>
+                  <li>UUID removes bottleneck</li>
+                  <li>Improves scalability</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+Central ID Server → bottleneck
+UUID → fully distributed
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Practical Implication in Distributed DBs</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Safe concurrent inserts</li>
+                  <li>No ID conflicts across shards</li>
+                  <li>Simplifies data merging</li>
+                  <li>Supports replication</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+DB1 → UUID X
+DB2 → UUID Y
+
+Merge → no collision
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Questions</h5>
+          </section>
+
+          <section>
+            <h5>Use Case: Social Media Feed</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>High read throughput</li>
+                  <li>Eventual consistency acceptable</li>
+                  <li>Optimized for latency</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+User → Feed Service → Cache → DB
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Use Case: IoT Sensor Platform</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>High write volume</li>
+                  <li>Time-series data</li>
+                  <li>Partition by timestamp</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+Sensor → Gateway → DB shards
+(time-based)
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Use Case: E-Commerce</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Inventory consistency needed</li>
+                  <li>High read traffic</li>
+                  <li>Hybrid architecture</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+Users → API → Cache → DB
+Orders → Strong consistency
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Use Case: Analytics Platform</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Large data aggregation</li>
+                  <li>Batch processing</li>
+                  <li>Distributed queries</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+Query → Nodes → Merge → Result
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Use Case: Messaging System</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Ordering matters</li>
+                  <li>High availability</li>
+                  <li>Partition by user/channel</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+Sender → Queue → Receiver
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Use Case: Healthcare System</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Strict consistency required</li>
+                  <li>Privacy and security critical</li>
+                  <li>Low tolerance for errors</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+Doctor → Secure DB → Patient Record
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Partition Strategy Selection</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Hash → balanced load</li>
+                  <li>Range → ordered queries</li>
+                  <li>Semantic → domain-driven</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+hash(id)
+range(time)
+type(category)
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Replication Strategy Selection</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Primary-secondary for reads</li>
+                  <li>Multi-primary for writes</li>
+                  <li>Choose based on workload</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+Write → Primary
+Read  → Replica
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Consistency Strategy Selection</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Strong for critical systems</li>
+                  <li>Eventual for scalable systems</li>
+                  <li>Hybrid approaches common</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+Strong | Eventual | Hybrid
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Architecture Overview</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Client → API layer</li>
+                  <li>Routing to shards</li>
+                  <li>Replication for reliability</li>
+                  <li>Aggregation for queries</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+Client → API → Router
+        → db1/db2/db3
+        → Merge → Response
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Failure Handling</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Retry failed operations</li>
+                  <li>Use fallback nodes</li>
+                  <li>Ensure data durability</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+Try → Fail → Retry → Fallback
+</code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h5>Best Practices Summary</h5>
+            <div class="split">
+              <div class="left">
+                <ol>
+                  <li>Use UUID for distributed IDs</li>
+                  <li>Design proper partition keys</li>
+                  <li>Minimize cross-node queries</li>
+                  <li>Plan for failures</li>
+                </ol>
+              </div>
+              <div class="right">
+                <pre><code>
+Design → Scale → Optimize
+</code></pre>
+              </div>
+            </div>
+          </section>
 
         </section>
 
@@ -35802,6 +36365,322 @@ CREATE TABLE Bicycles (
 
         </section>
 
+        <section id="lab-3">
+
+          <section>
+            <div class="full-visual">
+              <div class="frame" style="display:flex;align-items:center;justify-content:center;flex-direction:column;">
+                <h2 style="margin:0;">Lab 3</h2>
+                <h2 style="margin:10px 0 0 0;">Relational Algebra & SQL</h2>
+                <p class="muted" style="margin:18px 0 0 0; font-size:0.95em;">
+                  Due: March 30
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <!-- SLIDE 1 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 1</h3>
+                <ul class="tight">
+                  <li>Retrieve the name and price of all red flowers with stock quantity greater than 20.</li>
+                  <li>Use relational algebra.</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Answer 1</h3>
+                <pre><code>
+π(name, price) (
+  σ(color = 'red' ∧ stockQuantity > 20) (Flowers)
+);
+</code></pre>
+                <ul class="tight">
+                  <li>Selection filters rows first.</li>
+                  <li>Projection returns only required attributes.</li>
+                </ul>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 2 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 2</h3>
+                <ul class="tight">
+                  <li>Join Flowers and Orders.</li>
+                  <li>Retrieve names of flowers that were ordered.</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Answer 2</h3>
+                <pre><code>
+π(name) (
+  Flowers ⨝ Orders
+);
+</code></pre>
+                <ul class="tight">
+                  <li>Join connects flowers with orders using flowerID.</li>
+                  <li>Projection extracts only flower names.</li>
+                </ul>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 3 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 3</h3>
+                <ul class="tight">
+                  <li>Identify inefficiency in the query.</li>
+                  <li>Rewrite optimized relational algebra expression.</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Answer 3</h3>
+                <ul class="tight">
+                  <li><strong>Inefficiency:</strong> Join happens before filtering, processing unnecessary rows.</li>
+                </ul>
+
+                <pre><code>
+T1 ← σ(color = 'Yellow') (F)
+T2 ← T1 ⨝ O
+T3 ← π(name) (T2)
+</code></pre>
+
+                <ul class="tight">
+                  <li>Filtering early reduces computation cost.</li>
+                </ul>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 4 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 4</h3>
+                <ul class="tight">
+                  <li>Explain API interaction with database.</li>
+                  <li>Write SQL query for red flowers.</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Answer 4</h3>
+                <p>
+                  The API receives a request with a parameter such as <code>color=red</code>. The backend translates
+                  this into
+                  an SQL query, sends it to the database, retrieves matching rows, and returns the result as a response
+                  to the
+                  client.
+                </p>
+
+                <pre><code>
+SELECT *
+FROM Flowers
+WHERE color = 'red';
+</code></pre>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 5 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 5</h3>
+                <ul class="tight">
+                  <li>Web interface: one advantage and one disadvantage.</li>
+                  <li>SQL console: one advantage and one disadvantage.</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Answer 5</h3>
+                <ul class="tight">
+                  <li><strong>Web Interface Advantage:</strong> Easy to use for non-technical users.</li>
+                  <li><strong>Web Interface Disadvantage:</strong> Limited flexibility for complex queries.</li>
+                  <li><strong>SQL Console Advantage:</strong> Full control over queries and operations.</li>
+                  <li><strong>SQL Console Disadvantage:</strong> Requires SQL knowledge and has higher risk of errors.
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 6 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 6</h3>
+                <ul class="tight">
+                  <li>Write GROUP BY query for average price per category.</li>
+                  <li>Filter categories with average price greater than 10.</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Answer 6</h3>
+                <pre><code>
+SELECT category, AVG(price) AS avg_price
+FROM Flowers
+GROUP BY category;
+</code></pre>
+
+                <pre><code>
+SELECT category, AVG(price) AS avg_price
+FROM Flowers
+GROUP BY category
+HAVING AVG(price) > 10;
+</code></pre>
+
+                <ul class="tight">
+                  <li>GROUP BY aggregates data per category.</li>
+                  <li>HAVING filters aggregated results.</li>
+                </ul>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 7 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 7</h3>
+                <ul class="tight">
+                  <li>Add 3 valid CHECK constraints.</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Answer 7</h3>
+                <pre><code>
+CREATE TABLE flower (
+ id INT PRIMARY KEY,
+ color VARCHAR(50),
+ heightInCm INT CHECK (heightInCm > 0),
+ petalCount INT CHECK (petalCount >= 0),
+ species VARCHAR(100),
+ bloomingSeason VARCHAR(50) CHECK (bloomingSeason IN ('Spring','Summer','Autumn','Winter')),
+ price DECIMAL(10,2) CHECK (price >= 0),
+ fragranceLevel INT CHECK (fragranceLevel BETWEEN 0 AND 10)
+);
+</code></pre>
+                <ul class="tight">
+                  <li>Constraints enforce valid and consistent data.</li>
+                </ul>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 8 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 8</h3>
+                <ul class="tight">
+                  <li>Write INNER JOIN query for flowers and suppliers.</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Answer 8</h3>
+                <pre><code>
+SELECT f.name AS flower_name,
+       f.color,
+       s.name AS supplier_name,
+       s.location
+FROM flower f
+INNER JOIN supplier s
+ON f.supplier_id = s.id;
+</code></pre>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 9 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 9</h3>
+                <ul class="tight">
+                  <li>Write LEFT JOIN query for customers and orders.</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Answer 9</h3>
+                <pre><code>
+SELECT c.name AS customer_name,
+       c.email,
+       o.id AS order_id,
+       o.order_date,
+       o.amount
+FROM customer c
+LEFT JOIN order o
+ON c.id = o.customer_id;
+</code></pre>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 10 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 10</h3>
+                <ul class="tight">
+                  <li>Write RIGHT JOIN query for products and sales.</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Answer 10</h3>
+                <pre><code>
+SELECT p.name AS product_name,
+       p.price,
+       s.id AS sale_id,
+       s.quantity_sold
+FROM product p
+LEFT JOIN sale s
+ON p.id = s.product_id;
+</code></pre>
+                <ul class="tight">
+                  <li>Ensures all products appear even if no sales exist.</li>
+                </ul>
+              </div>
+
+            </div>
+          </section>
+
+        </section>
+
         <section id="lab-4">
 
           <section>
@@ -35816,6 +36695,338 @@ CREATE TABLE Bicycles (
             </div>
           </section>
 
+          <!-- SLIDE 1 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 1</h3>
+                <ul class="tight">
+                  <li>Insert 10,000 flowers</li>
+                  <li>Verify count</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Answer 1</h3>
+
+                <pre><code>
+INSERT INTO Flower (Name, Color, Price)
+SELECT CONCAT('Flower_', id), 'Red', 9.99
+FROM seq_1_to_10000;
+
+SELECT COUNT(*) FROM Flower;
+</code></pre>
+
+                <ul class="tight">
+                  <li>Bulk insert rows</li>
+                  <li>COUNT verifies size</li>
+                </ul>
+
+                <pre><code>
+Result
+COUNT = 10000
+</code></pre>
+
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 2 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 2</h3>
+                <ul class="tight">
+                  <li>Measure query time</li>
+                  <li>Search "Rose"</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Answer 2</h3>
+
+                <pre><code>
+SELECT * FROM Flower
+WHERE Name = 'Rose';
+</code></pre>
+
+                <ul class="tight">
+                  <li>No index → slower</li>
+                  <li>Full table scan</li>
+                </ul>
+
+                <pre><code>
+Scan Type     Cost
+Full Scan     High
+</code></pre>
+
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 3 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 3</h3>
+                <ul class="tight">
+                  <li>Create index on Name</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Answer 3</h3>
+
+                <pre><code>
+CREATE INDEX idx_name
+ON Flower(Name);
+</code></pre>
+
+                <ul class="tight">
+                  <li>Speeds lookup</li>
+                  <li>Verified with SHOW INDEX</li>
+                </ul>
+
+                <pre><code>
+Column   Indexed
+Name     Yes
+</code></pre>
+
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 4 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 4</h3>
+                <ul class="tight">
+                  <li>Run query after index</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Answer 4</h3>
+
+                <pre><code>
+SELECT * FROM Flower
+WHERE Name = 'Rose';
+</code></pre>
+
+                <ul class="tight">
+                  <li>Uses index</li>
+                  <li>Faster execution</li>
+                </ul>
+
+                <pre><code>
+Scan Type       Cost
+Index Scan      Low
+</code></pre>
+
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 5 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 5</h3>
+                <ul class="tight">
+                  <li>Why not normalized?</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Answer 5</h3>
+                <ul class="tight">
+                  <li>Repeated supplier data</li>
+                  <li>Multiple values per field</li>
+                  <li>Mixed dependencies</li>
+                </ul>
+
+                <pre><code>
+Flower | Supplier | Phone
+Rose   | Flora    | 123...
+Rose   | Flora    | 123...
+</code></pre>
+
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 6 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 6</h3>
+                <ul class="tight">
+                  <li>Convert to 1NF</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Answer 6</h3>
+                <ul class="tight">
+                  <li>Single values per column</li>
+                  <li>No repeating groups</li>
+                </ul>
+
+                <pre><code>
+ID | Name | Phone1 | Phone2
+1  | Rose | 123    | 456
+</code></pre>
+
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 7 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 7</h3>
+                <ul class="tight">
+                  <li>Convert 1NF → 2NF</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Answer 7</h3>
+                <ul class="tight">
+                  <li>Remove partial dependency</li>
+                  <li>Split tables</li>
+                </ul>
+
+                <pre><code>
+Flower      Supplier
+ID Name     ID Name
+1  Rose     10 Flora
+</code></pre>
+
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 8 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 8</h3>
+                <ul class="tight">
+                  <li>Convert 2NF → 3NF</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Answer 8</h3>
+                <ul class="tight">
+                  <li>Remove transitive dependency</li>
+                  <li>Separate contact data</li>
+                </ul>
+
+                <pre><code>
+Supplier   Contact
+ID Name    ID Phone
+10 Flora   100 123
+</code></pre>
+
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 9 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 9</h3>
+                <ul class="tight">
+                  <li>Query normalized schema</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Answer 9</h3>
+
+                <pre><code>
+SELECT f.Name, s.Name
+FROM Flower f
+JOIN Supplier s
+ON f.SupplierID = s.ID;
+</code></pre>
+
+                <ul class="tight">
+                  <li>Join reconstructs data</li>
+                </ul>
+
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 10 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 10</h3>
+                <ul class="tight">
+                  <li>Scan vs Index?</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Answer 10</h3>
+                <ul class="tight">
+                  <li>Full scan → all rows</li>
+                  <li>Index → direct lookup</li>
+                  <li>Tradeoff: speed vs cost</li>
+                </ul>
+
+                <pre><code>
+Type        Speed
+Full Scan   Slow
+Index       Fast
+</code></pre>
+
+              </div>
+
+            </div>
+          </section>
+
+        </section>
+
+        <section id="homework-3">
+
+          <section>
+            <div class="full-visual">
+              <div class="frame" style="display:flex;align-items:center;justify-content:center;flex-direction:column;">
+                <h2 style="margin:0;">Homework 3</h2>
+                <h2 style="margin:10px 0 0 0;">Joins, GROUP BY, and CHECK Constraints</h2>
+                <p class="muted" style="margin:18px 0 0 0; font-size:0.95em;">
+                  Due: March 30
+                </p>
+              </div>
+            </div>
+          </section>
 
           <!-- SLIDE 1 -->
           <section>
@@ -35824,186 +37035,138 @@ CREATE TABLE Bicycles (
               <div class="left">
                 <h3>Question 1</h3>
                 <ul class="tight">
-                  <li>Write an <code>INSERT INTO</code> SQL statement to generate <strong>10,000 flowers</strong> in the
-                    <code>Flower</code> table.
-                  </li>
-                  <li>After inserting the records, run a query to verify the total number of rows.</li>
-                  <li>Upload a screenshot showing the <code>SELECT COUNT(*)</code> query and console output.</li>
-                  <li>MariaDB Reference:
-                    <a href="https://mariadb.com/kb/en/insert/" target="_blank">INSERT Statement</a>
-                  </li>
+                  <li>Risk of <strong>NATURAL JOIN</strong>?</li>
                 </ul>
               </div>
 
               <div class="right">
-                <h3>Question 2</h3>
+                <h3>Answer 1</h3>
                 <ul class="tight">
-                  <li>Measure the execution time of the following query in MariaDB.</li>
-                  <li>Search for the flower named <strong>Rose</strong>.</li>
-                  <li>Upload a screenshot showing the execution duration.</li>
-                  <li>MariaDB Reference:
-                    <a href="https://mariadb.com/kb/en/show-profile/" target="_blank">Query Profiling</a>
-                  </li>
+                  <li>Auto-joins same column names</li>
+                  <li>May create unintended matches</li>
                 </ul>
 
                 <pre><code>
-SET @start_time = NOW();
-
-SELECT * 
-FROM Flower 
-WHERE Name = 'Rose';
-
-SELECT TIMEDIFF(NOW(), @start_time) 
-AS execution_time;
+Table A           Table B
+id | name         id | dept
+1  | Rose         1  | Sales
 </code></pre>
 
               </div>
 
             </div>
           </section>
-
 
           <!-- SLIDE 2 -->
           <section>
             <div class="split">
 
               <div class="left">
-                <h3>Question 3</h3>
+                <h3>Question 2</h3>
                 <ul class="tight">
-                  <li>Create an <strong>index</strong> on the <code>Name</code> column to improve search performance.
-                  </li>
-                  <li>Run the query and verify that the index was created.</li>
-                  <li>Upload a screenshot showing the verification result.</li>
-                  <li>MariaDB Reference:
-                    <a href="https://mariadb.com/kb/en/create-index/" target="_blank">CREATE INDEX</a>
-                  </li>
+                  <li>Which queries require <strong>JOINs</strong>?</li>
                 </ul>
               </div>
 
               <div class="right">
-                <h3>Question 4</h3>
+                <h3>Answer 2</h3>
                 <ul class="tight">
-                  <li>Run the same search query again <strong>after creating the index</strong>.</li>
-                  <li>Measure the execution duration.</li>
-                  <li>Upload a screenshot showing the query time.</li>
+                  <li>Multi-table queries</li>
+                  <li>Combine related data</li>
                 </ul>
 
                 <pre><code>
-SET @start_time = NOW();
-
-SELECT * 
-FROM Flower 
-WHERE Name = 'Rose';
-
-SELECT TIMEDIFF(NOW(), @start_time) 
-AS execution_time;
+Flower       Order
+id | name    id | flower_id
+1  | Rose    10 | 1
 </code></pre>
 
               </div>
 
             </div>
           </section>
-
 
           <!-- SLIDE 3 -->
           <section>
             <div class="split">
 
               <div class="left">
-                <h3>Question 5</h3>
-
-                <p><strong>Flower Data:</strong></p>
-
-                <pre><code>
-Rose, Red, 9.99, 11.99, 50, 30,
-Flora Supply Co. in San Francisco,
-123-456-7890, 321-654-0987
-
-Lily, White, 7.49, 30,
-Greenhouse Growers in Stockton,
-987-654-3210
-
-Tulip, Yellow, 5.99, 6.49, 40, 25,
-Flora Supply Co. in San Jose,
-123-456-7890, 321-654-0987
-</code></pre>
-
+                <h3>Question 3</h3>
                 <ul class="tight">
-                  <li>Explain why this dataset is <strong>not normalized</strong>.</li>
-                  <li>List <strong>three different reasons</strong>.</li>
+                  <li>Unmatched rows + <strong>OUTER JOIN</strong>?</li>
                 </ul>
-
               </div>
 
               <div class="right">
-                <h3>Question 6</h3>
-
-                <p><strong>Flower Data:</strong></p>
+                <h3>Answer 3</h3>
+                <ul class="tight">
+                  <li>No match in other table</li>
+                  <li>OUTER JOIN keeps row</li>
+                  <li>Missing values → NULL</li>
+                </ul>
 
                 <pre><code>
-Rose, Red, 9.99, 11.99, 50, 30,
-Flora Supply Co. in San Francisco,
-123-456-7890, 321-654-0987
+Customer      Order
+id | name     id | cust_id
+1  | Ana      -  | NULL
 </code></pre>
-
-                <ul class="tight">
-                  <li>Transform the data to <strong>First Normal Form (1NF)</strong>.</li>
-                  <li>Add a working attribute.</li>
-                </ul>
 
               </div>
 
             </div>
           </section>
-
 
           <!-- SLIDE 4 -->
           <section>
             <div class="split">
 
               <div class="left">
-                <h3>Question 7</h3>
+                <h3>Question 4</h3>
                 <ul class="tight">
-                  <li>Transform the data from <strong>1NF → 2NF</strong>.</li>
-                  <li>Create working tables and attributes.</li>
+                  <li>GROUP BY vs no GROUP BY?</li>
                 </ul>
               </div>
 
               <div class="right">
-                <h3>Question 8</h3>
+                <h3>Answer 4</h3>
                 <ul class="tight">
-                  <li>Transform the data from <strong>2NF → 3NF</strong>.</li>
-                  <li>Create working tables and attributes.</li>
+                  <li>GROUP BY → per category</li>
+                  <li>HAVING → filter groups</li>
+                  <li>No GROUP BY → single total</li>
                 </ul>
+
+                <pre><code>
+type_id | count
+1       | 5
+2       | 3
+</code></pre>
+
               </div>
 
             </div>
           </section>
-
 
           <!-- SLIDE 5 -->
           <section>
             <div class="split">
 
               <div class="left">
-                <h3>Question 9</h3>
+                <h3>Question 5</h3>
                 <ul class="tight">
-                  <li>Assume the database schema is now in <strong>Third Normal Form (3NF)</strong>.</li>
-                  <li>Write a SQL query that retrieves <strong>all flowers and their supplier contact details</strong>.
-                  </li>
+                  <li>Meaning of CHECK constraints?</li>
                 </ul>
               </div>
 
               <div class="right">
+                <h3>Answer 5</h3>
+                <ul class="tight">
+                  <li>All conditions must be TRUE</li>
+                  <li>Otherwise → reject change</li>
+                </ul>
 
                 <pre><code>
-SELECT 
-  f.Name,
-  s.SupplierName,
-  s.Phone
-FROM Flower f
-JOIN Supplier s
-ON f.SupplierID = s.SupplierID;
+price > 0 ✓
+price = -5 ✗ rejected
 </code></pre>
 
               </div>
@@ -36027,7 +37190,6 @@ ON f.SupplierID = s.SupplierID;
             </div>
           </section>
 
-
           <!-- SLIDE 1 -->
           <section>
             <div class="split">
@@ -36035,126 +37197,276 @@ ON f.SupplierID = s.SupplierID;
               <div class="left">
                 <h3>Question 1</h3>
                 <ul class="tight">
-                  <li>This assignment reviews the concepts of <strong>database normalization</strong> and <strong>table
-                      indexing</strong>.</li>
-                  <li>Normalization structures data to reduce redundancy and maintain consistency.</li>
-                  <li>Indexing improves search performance and query efficiency.</li>
-                  <li>Answer each question with a <strong>short paragraph</strong>.</li>
+                  <li>Main topic of this homework?</li>
                 </ul>
               </div>
 
               <div class="right">
-                <h3>Question 2</h3>
+                <h3>Answer 1</h3>
                 <ul class="tight">
-                  <li>Read pages <strong>1–3</strong> of the paper:</li>
-                  <li><em>A Simple Guide to Five Normal Forms in Relational Database Theory</em></li>
-                  <li>Why does the paper recommend <strong>database normalization</strong>?</li>
-                  <li>Please list <strong>two main reasons</strong>.</li>
+                  <li>Normalization organizes data</li>
+                  <li>Indexing improves search speed</li>
                 </ul>
+
+                <pre><code>
+Topic          Purpose
+Normalization  Reduce redundancy
+Indexing       Faster lookup
+</code></pre>
+
               </div>
 
             </div>
           </section>
-
 
           <!-- SLIDE 2 -->
           <section>
             <div class="split">
 
               <div class="left">
-                <h3>Question 3</h3>
+                <h3>Question 2</h3>
                 <ul class="tight">
-                  <li>What are the properties of <strong>First Normal Form (1NF)</strong>?</li>
-                  <li>Explain the properties in your own words.</li>
-                  <li>Use the <strong>example provided in the paper</strong>.</li>
+                  <li>Why is database normalization recommended?</li>
+                  <li>Give two reasons.</li>
                 </ul>
               </div>
 
               <div class="right">
-                <h3>Question 4</h3>
+                <h3>Answer 2</h3>
                 <ul class="tight">
-                  <li>What are the properties of <strong>Second Normal Form (2NF)</strong>?</li>
-                  <li>Explain how <strong>partial dependency</strong> is removed.</li>
-                  <li>Use the <strong>example described in the paper</strong>.</li>
+                  <li>Reduces repeated data</li>
+                  <li>Prevents update anomalies</li>
                 </ul>
+
+                <pre><code>
+Problem        Effect
+Redundancy     Same data repeated
+Anomalies      Inconsistent updates
+</code></pre>
+
               </div>
 
             </div>
           </section>
-
 
           <!-- SLIDE 3 -->
           <section>
             <div class="split">
 
               <div class="left">
-                <h3>Question 5</h3>
+                <h3>Question 3</h3>
                 <ul class="tight">
-                  <li>What are the properties of <strong>Third Normal Form (3NF)</strong>?</li>
-                  <li>Explain how <strong>transitive dependencies</strong> are removed.</li>
-                  <li>Use the <strong>example provided in the paper</strong>.</li>
+                  <li>Properties of <strong>1NF</strong>?</li>
+                  <li>Use the paper example.</li>
                 </ul>
               </div>
 
               <div class="right">
-                <h3>Question 6</h3>
+                <h3>Answer 3</h3>
                 <ul class="tight">
-                  <li>Read pages <strong>335–338</strong> in the book:</li>
-                  <li><em>SQL: The Complete Reference (3rd Edition)</em></li>
-                  <li>Explain the meaning of the following terms:</li>
-                  <li><strong>Full Table Scan</strong></li>
-                  <li><strong>Index Tree Scan</strong></li>
+                  <li>One value per field</li>
+                  <li>No repeating groups</li>
+                  <li>Primary key identifies row</li>
                 </ul>
+
+                <pre><code>
+Before
+Employee | Skill
+Smith    | Cook, Type
+
+After
+Employee | Skill
+Smith    | Cook
+Smith    | Type
+</code></pre>
+
               </div>
 
             </div>
           </section>
-
 
           <!-- SLIDE 4 -->
           <section>
             <div class="split">
 
               <div class="left">
-                <h3>Question 7</h3>
+                <h3>Question 4</h3>
                 <ul class="tight">
-                  <li>Look at <strong>Figure 13-6</strong> in Chapter 13.</li>
-                  <li>How does the database differ <strong>before</strong> and <strong>after</strong> indexing the
-                    attribute <code>DESCRIPTION</code> in the table <code>PRODUCTS</code>?</li>
-                  <li>Explain the structural difference.</li>
+                  <li>Properties of <strong>2NF</strong>?</li>
+                  <li>How is partial dependency removed?</li>
                 </ul>
               </div>
 
               <div class="right">
-                <h3>Question 8</h3>
+                <h3>Answer 4</h3>
                 <ul class="tight">
-                  <li>What is <strong>one advantage</strong> of database indexing?</li>
-                  <li>What is <strong>one disadvantage</strong> of database indexing?</li>
-                  <li>Explain briefly.</li>
+                  <li>Must already be in 1NF</li>
+                  <li>All non-key fields depend on full key</li>
+                  <li>Remove partial dependency by splitting data</li>
                 </ul>
+
+                <pre><code>
+Key: (Employee, Skill)
+
+Bad:
+Employee | Skill | Dept
+Smith    | Cook  | Sales
+
+Dept depends only on Employee
+</code></pre>
+
               </div>
 
             </div>
           </section>
-
 
           <!-- SLIDE 5 -->
           <section>
             <div class="split">
 
               <div class="left">
-                <h3>Question 9</h3>
+                <h3>Question 5</h3>
                 <ul class="tight">
-                  <li>When is <strong>database indexing NOT recommended</strong>?</li>
-                  <li>Explain why indexing may negatively affect performance in some cases.</li>
-                  <li>Provide one example scenario.</li>
+                  <li>Properties of <strong>3NF</strong>?</li>
+                  <li>How are transitive dependencies removed?</li>
                 </ul>
               </div>
 
               <div class="right">
-                <div class="img-placeholder">
-                  Short Paragraph Response
-                </div>
+                <h3>Answer 5</h3>
+                <ul class="tight">
+                  <li>Must already be in 2NF</li>
+                  <li>Non-key fields must not depend on non-key fields</li>
+                  <li>Split transitive dependency into new table</li>
+                </ul>
+
+                <pre><code>
+Bad:
+Employee | Father | Father_Address
+
+Father_Address depends on Father
+</code></pre>
+
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 6 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 6</h3>
+                <ul class="tight">
+                  <li>Meaning of <strong>Full Table Scan</strong>?</li>
+                  <li>Meaning of <strong>Index Tree Scan</strong>?</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Answer 6</h3>
+                <ul class="tight">
+                  <li>Full Table Scan: checks every row</li>
+                  <li>Index Tree Scan: uses index first</li>
+                </ul>
+
+                <pre><code>
+Search Type        Method
+Full Scan          Row by row
+Index Tree Scan    Search index path
+</code></pre>
+
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 7 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 7</h3>
+                <ul class="tight">
+                  <li>Before vs after indexing <code>DESCRIPTION</code>?</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Answer 7</h3>
+                <ul class="tight">
+                  <li>Before: scan table directly</li>
+                  <li>After: search index, then rows</li>
+                  <li>Index adds separate search structure</li>
+                </ul>
+
+                <pre><code>
+Before           After
+PRODUCTS         PRODUCTS + INDEX
+Scan rows        Search index first
+</code></pre>
+
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 8 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 8</h3>
+                <ul class="tight">
+                  <li>One advantage and one disadvantage of indexing?</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Answer 8</h3>
+                <ul class="tight">
+                  <li>Advantage: faster searches</li>
+                  <li>Disadvantage: extra storage and update cost</li>
+                </ul>
+
+                <pre><code>
+Advantage      Disadvantage
+Fast lookup    More space used
+               More maintenance
+</code></pre>
+
+              </div>
+
+            </div>
+          </section>
+
+          <!-- SLIDE 9 -->
+          <section>
+            <div class="split">
+
+              <div class="left">
+                <h3>Question 9</h3>
+                <ul class="tight">
+                  <li>When is indexing not recommended?</li>
+                  <li>Why can it hurt performance?</li>
+                </ul>
+              </div>
+
+              <div class="right">
+                <h3>Answer 9</h3>
+                <ul class="tight">
+                  <li>Not ideal for heavy inserts or updates</li>
+                  <li>Index must be updated every time</li>
+                  <li>Can slow write operations</li>
+                </ul>
+
+                <pre><code>
+Scenario
+Log table with constant inserts
+→ index maintenance adds overhead
+</code></pre>
+
               </div>
 
             </div>
