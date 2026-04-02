@@ -636,8 +636,8 @@
               <td
                 style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
                 <a href="./#/module-12"
-                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">CASCADE,
-                  RESTRICT, NO, ACTION, DEFERRABLE, INITIALLY</a>
+                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">TRANSACTION,
+                  BEGIN, COMMIT, ROLLBACK, SAVEPOINT, RELEASE</a>
               </td>
               <td
                 style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
@@ -657,8 +657,8 @@
               <td
                 style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
                 <a href="./#/module-13"
-                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">TRANSACTION,
-                  BEGIN, COMMIT, ROLLBACK, SAVEPOINT, RELEASE</a>
+                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">LOCK, GRANT,
+                  REVOKE, USER, ROLE</a>
               </td>
               <td
                 style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
@@ -679,8 +679,8 @@
               <td
                 style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
                 <a href="./#/module-14"
-                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">LOCK, GRANT,
-                  REVOKE, USER, ROLE, SESSION</a>
+                  style="display:block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">SQL Databases
+                  Review</a>
               </td>
               <td
                 style="padding:6px; border:1px solid #666; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0;">
@@ -8121,6 +8121,5439 @@ WHERE bloom_season IS NULL;</code></pre>
 
       </section>
 
+      <section id="module-9">
+        <h5>Spring Break</h5>
+      </section>
+
+      <section id="module-10">
+
+        <!-- 01 COVER -->
+        <section>
+          <h2>Module 10</h2>
+          <h3>SCHEMA · COLUMN · SEQUENCE · REFERENCES · DATABASE · INDEX</h3>
+          <p class="muted">Reproducible SQL structure examples in a flower database system</p>
+        </section>
+
+        <!-- 02 GOALS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Understand database structure</li>
+                <li>Build schema and tables in correct order</li>
+                <li>Use CRUD to reproduce every example</li>
+                <li>Connect tables with references</li>
+                <li>Improve lookup with indexes</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:20px; line-height:1.2;">-- execution order
+
+-- CREATE
+-- INSERT
+-- UPDATE
+-- DELETE
+-- SELECT
+-- INDEX</code></pre>
+
+              <table class="table" style="font-size:15px; margin-top:12px;">
+                <tr>
+                  <th>phase</th>
+                  <th>purpose</th>
+                </tr>
+                <tr>
+                  <td>build</td>
+                  <td>create objects</td>
+                </tr>
+                <tr>
+                  <td>load</td>
+                  <td>insert rows</td>
+                </tr>
+                <tr>
+                  <td>inspect</td>
+                  <td>query results</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 03 CREATE DATABASE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Database is the top-level container</li>
+                <li>PostgreSQL supports multiple databases</li>
+                <li>SQLite uses a file-based database</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:20px; line-height:1.2;">CREATE DATABASE flower_shop;</code></pre>
+
+              <table class="table" style="font-size:15px; margin-top:12px;">
+                <tr>
+                  <th>status</th>
+                </tr>
+                <tr>
+                  <td>CREATE DATABASE</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 04 CREATE SCHEMA -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Schema groups related tables</li>
+                <li>Useful for inventory and sales separation</li>
+                <li>Improves structure and clarity</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:19px; line-height:1.2;">CREATE SCHEMA inventory;
+CREATE SCHEMA sales;</code></pre>
+
+              <table class="table" style="font-size:15px; margin-top:12px;">
+                <tr>
+                  <th>schema_name</th>
+                </tr>
+                <tr>
+                  <td>inventory</td>
+                </tr>
+                <tr>
+                  <td>sales</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 05 CREATE SEQUENCE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Sequence generates unique identifiers</li>
+                <li>Common in PostgreSQL table design</li>
+                <li>Used before inserting flower rows</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:19px; line-height:1.2;">CREATE SEQUENCE inventory.flower_seq
+START 1
+INCREMENT 1;</code></pre>
+
+              <table class="table" style="font-size:15px; margin-top:12px;">
+                <tr>
+                  <th>sequence_name</th>
+                </tr>
+                <tr>
+                  <td>flower_seq</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 06 CREATE CUSTOMERS TABLE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Customers table stores buyer information</li>
+                <li>Primary key identifies each customer</li>
+                <li>City and email support later examples</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">CREATE TABLE sales.customers (
+  customer_id INTEGER PRIMARY KEY,
+  customer_name VARCHAR(60) NOT NULL,
+  city VARCHAR(40),
+  email VARCHAR(80) UNIQUE
+);</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:10px;">
+                <tr>
+                  <th>column</th>
+                  <th>type</th>
+                </tr>
+                <tr>
+                  <td>customer_id</td>
+                  <td>INTEGER</td>
+                </tr>
+                <tr>
+                  <td>customer_name</td>
+                  <td>VARCHAR</td>
+                </tr>
+                <tr>
+                  <td>email</td>
+                  <td>VARCHAR</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 07 CREATE FLOWERS TABLE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Columns define flower attributes</li>
+                <li>Price and stock support CRUD examples</li>
+                <li>Constraints protect data quality</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">CREATE TABLE inventory.flowers (
+  flower_id INTEGER PRIMARY KEY,
+  flower_name VARCHAR(50) NOT NULL,
+  color VARCHAR(30),
+  price DECIMAL(6,2) NOT NULL,
+  stock INTEGER DEFAULT 0
+);</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:10px;">
+                <tr>
+                  <th>column</th>
+                  <th>rule</th>
+                </tr>
+                <tr>
+                  <td>flower_name</td>
+                  <td>NOT NULL</td>
+                </tr>
+                <tr>
+                  <td>price</td>
+                  <td>NOT NULL</td>
+                </tr>
+                <tr>
+                  <td>stock</td>
+                  <td>DEFAULT 0</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 08 CREATE ORDERS TABLE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Orders table stores purchase headers</li>
+                <li>Customer reference creates parent-child relation</li>
+                <li>Status supports later updates</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">CREATE TABLE sales.orders (
+  order_id INTEGER PRIMARY KEY,
+  customer_id INTEGER REFERENCES sales.customers(customer_id),
+  order_date DATE,
+  status VARCHAR(20)
+);</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:10px;">
+                <tr>
+                  <th>column</th>
+                  <th>reference</th>
+                </tr>
+                <tr>
+                  <td>customer_id</td>
+                  <td>customers(customer_id)</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 09 CREATE ORDER_ITEMS TABLE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Order items resolve many-to-many structure</li>
+                <li>Each row links one order and one flower</li>
+                <li>Quantity supports sales examples</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.15;">CREATE TABLE sales.order_items (
+  item_id INTEGER PRIMARY KEY,
+  order_id INTEGER REFERENCES sales.orders(order_id),
+  flower_id INTEGER REFERENCES inventory.flowers(flower_id),
+  quantity INTEGER NOT NULL
+);</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:10px;">
+                <tr>
+                  <th>column</th>
+                  <th>reference</th>
+                </tr>
+                <tr>
+                  <td>order_id</td>
+                  <td>orders(order_id)</td>
+                </tr>
+                <tr>
+                  <td>flower_id</td>
+                  <td>flowers(flower_id)</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 10 INSERT CUSTOMERS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Insert customer sample rows first</li>
+                <li>These rows are needed before inserting orders</li>
+                <li>City values support filter examples</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.15;">INSERT INTO sales.customers
+(customer_id, customer_name, city, email)
+VALUES
+(1, 'Alice', 'Stockton', 'alice@demo.com'),
+(2, 'Brian', 'Lodi', 'brian@demo.com'),
+(3, 'Carla', 'Stockton', 'carla@demo.com');
+
+SELECT customer_id, customer_name, city
+FROM sales.customers;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>customer_id</th>
+                  <th>customer_name</th>
+                  <th>city</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Alice</td>
+                  <td>Stockton</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Brian</td>
+                  <td>Lodi</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Carla</td>
+                  <td>Stockton</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 11 INSERT FLOWERS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Use sequence-generated flower identifiers</li>
+                <li>These rows support price, stock, and index examples</li>
+                <li>Result matches the query shown</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:14px; line-height:1.12;">INSERT INTO inventory.flowers
+(flower_id, flower_name, color, price, stock)
+VALUES
+(NEXTVAL('inventory.flower_seq'),'Rose','Red',4.50,20),
+(NEXTVAL('inventory.flower_seq'),'Tulip','Yellow',3.20,30),
+(NEXTVAL('inventory.flower_seq'),'Lily','White',5.00,15);
+
+SELECT flower_id, flower_name, price
+FROM inventory.flowers;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                  <th>price</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                  <td>4.50</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Tulip</td>
+                  <td>3.20</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Lily</td>
+                  <td>5.00</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 12 INSERT ORDERS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Orders can be inserted only after customers exist</li>
+                <li>Status and date support later examples</li>
+                <li>Each customer_id must already be valid</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.15;">INSERT INTO sales.orders
+(order_id, customer_id, order_date, status)
+VALUES
+(101, 1, '2026-04-01', 'OPEN'),
+(102, 2, '2026-04-02', 'PAID'),
+(103, 1, '2026-04-03', 'PAID');
+
+SELECT order_id, customer_id, status
+FROM sales.orders;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>order_id</th>
+                  <th>customer_id</th>
+                  <th>status</th>
+                </tr>
+                <tr>
+                  <td>101</td>
+                  <td>1</td>
+                  <td>OPEN</td>
+                </tr>
+                <tr>
+                  <td>102</td>
+                  <td>2</td>
+                  <td>PAID</td>
+                </tr>
+                <tr>
+                  <td>103</td>
+                  <td>1</td>
+                  <td>PAID</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 13 INSERT ORDER_ITEMS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Order items require both orders and flowers</li>
+                <li>Quantity supports later joins and summaries</li>
+                <li>Each referenced key must already exist</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:14px; line-height:1.12;">INSERT INTO sales.order_items
+(item_id, order_id, flower_id, quantity)
+VALUES
+(1, 101, 1, 6),
+(2, 101, 2, 4),
+(3, 102, 3, 2),
+(4, 103, 1, 5);
+
+SELECT item_id, order_id, flower_id, quantity
+FROM sales.order_items;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>item_id</th>
+                  <th>order_id</th>
+                  <th>flower_id</th>
+                  <th>quantity</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>101</td>
+                  <td>1</td>
+                  <td>6</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>101</td>
+                  <td>2</td>
+                  <td>4</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>102</td>
+                  <td>3</td>
+                  <td>2</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 14 SELECT FLOWERS PREVIEW -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Select verifies inserted flower rows</li>
+                <li>Shows the base table state</li>
+                <li>This preview is valid because inserts already happened</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">SELECT flower_id, flower_name, color, price
+FROM inventory.flowers;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                  <th>color</th>
+                  <th>price</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                  <td>Red</td>
+                  <td>4.50</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Tulip</td>
+                  <td>Yellow</td>
+                  <td>3.20</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Lily</td>
+                  <td>White</td>
+                  <td>5.00</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 15 SELECT CUSTOMERS PREVIEW -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Columns can be selected explicitly</li>
+                <li>Queries should return only needed fields</li>
+                <li>This improves readability and control</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">SELECT customer_id, customer_name
+FROM sales.customers;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>customer_id</th>
+                  <th>customer_name</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Alice</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Brian</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Carla</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 16 UPDATE FLOWER PRICE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Update changes an existing row</li>
+                <li>Price update affects later result tables</li>
+                <li>The select confirms the changed value</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">UPDATE inventory.flowers
+SET price = 4.80
+WHERE flower_name = 'Rose';
+
+SELECT flower_name, price
+FROM inventory.flowers
+WHERE flower_name = 'Rose';</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_name</th>
+                  <th>price</th>
+                </tr>
+                <tr>
+                  <td>Rose</td>
+                  <td>4.80</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 17 SELECT UPDATED PRICE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Read the table after the update</li>
+                <li>Result now reflects the modified price</li>
+                <li>This query is reproducible in sequence</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">SELECT flower_id, flower_name, price
+FROM inventory.flowers
+WHERE price >= 4.80;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                  <th>price</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                  <td>4.80</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Lily</td>
+                  <td>5.00</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 18 UPDATE FLOWER STOCK -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Update can use arithmetic expressions</li>
+                <li>Stock values often change after sales</li>
+                <li>The result confirms the new stock level</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">UPDATE inventory.flowers
+SET stock = stock - 5
+WHERE flower_id = 1;
+
+SELECT flower_id, flower_name, stock
+FROM inventory.flowers
+WHERE flower_id = 1;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                  <td>15</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 19 SELECT UPDATED STOCK -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Read the table after stock modification</li>
+                <li>Only flowers meeting the condition appear</li>
+                <li>This query depends on earlier inserts and updates</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">SELECT flower_name, stock
+FROM inventory.flowers
+WHERE stock >= 15;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_name</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>Rose</td>
+                  <td>15</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>30</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>15</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 20 UPDATE ORDER STATUS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Transactional rows often change state</li>
+                <li>Status update is a common business example</li>
+                <li>Result confirms the status transition</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">UPDATE sales.orders
+SET status = 'PAID'
+WHERE order_id = 101;
+
+SELECT order_id, status
+FROM sales.orders
+WHERE order_id = 101;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>order_id</th>
+                  <th>status</th>
+                </tr>
+                <tr>
+                  <td>101</td>
+                  <td>PAID</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 21 SELECT UPDATED ORDER STATUS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Read after status update</li>
+                <li>Customer 1 now has only paid orders</li>
+                <li>This result is valid only after the update slide</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">SELECT order_id, customer_id, status
+FROM sales.orders
+WHERE customer_id = 1;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>order_id</th>
+                  <th>customer_id</th>
+                  <th>status</th>
+                </tr>
+                <tr>
+                  <td>101</td>
+                  <td>1</td>
+                  <td>PAID</td>
+                </tr>
+                <tr>
+                  <td>103</td>
+                  <td>1</td>
+                  <td>PAID</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 22 DELETE ONE ORDER ITEM -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Delete removes a row permanently</li>
+                <li>Child table is a safe place to demonstrate delete</li>
+                <li>The result shows remaining rows afterward</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.12;">DELETE FROM sales.order_items
+WHERE item_id = 3;
+
+SELECT item_id, order_id, flower_id
+FROM sales.order_items;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>item_id</th>
+                  <th>order_id</th>
+                  <th>flower_id</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>101</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>101</td>
+                  <td>2</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>103</td>
+                  <td>1</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 23 SELECT REMAINING ORDER_ITEMS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Read confirms the deleted row is gone</li>
+                <li>The remaining rows still satisfy references</li>
+                <li>This state is needed for later joins</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.12;">SELECT order_id, flower_id, quantity
+FROM sales.order_items
+ORDER BY item_id;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>order_id</th>
+                  <th>flower_id</th>
+                  <th>quantity</th>
+                </tr>
+                <tr>
+                  <td>101</td>
+                  <td>1</td>
+                  <td>6</td>
+                </tr>
+                <tr>
+                  <td>101</td>
+                  <td>2</td>
+                  <td>4</td>
+                </tr>
+                <tr>
+                  <td>103</td>
+                  <td>1</td>
+                  <td>5</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 24 ATTEMPT INVALID DELETE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>References protect parent rows in use</li>
+                <li>Deleting customer 1 should fail</li>
+                <li>This demonstrates referential integrity</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">DELETE FROM sales.customers
+WHERE customer_id = 1;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>result</th>
+                </tr>
+                <tr>
+                  <td>foreign key violation</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 25 SELECT CUSTOMERS BY CITY -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Filtering works after rows are loaded</li>
+                <li>City is a simple searchable column</li>
+                <li>Only matching rows appear in the result</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">SELECT customer_id, customer_name, city
+FROM sales.customers
+WHERE city = 'Stockton';</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>customer_id</th>
+                  <th>customer_name</th>
+                  <th>city</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Alice</td>
+                  <td>Stockton</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Carla</td>
+                  <td>Stockton</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 26 SELECT FLOWERS BY PRICE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Price filter depends on earlier update</li>
+                <li>Only flowers at or above threshold are shown</li>
+                <li>Result is reproducible in this sequence</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">SELECT flower_name, price
+FROM inventory.flowers
+WHERE price >= 4.80;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_name</th>
+                  <th>price</th>
+                </tr>
+                <tr>
+                  <td>Rose</td>
+                  <td>4.80</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>5.00</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 27 SELECT ORDERS BY CUSTOMER -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>References allow meaningful lookup by customer</li>
+                <li>Result depends on earlier order rows</li>
+                <li>Status also reflects the completed update</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">SELECT order_id, customer_id, status
+FROM sales.orders
+WHERE customer_id = 1;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>order_id</th>
+                  <th>customer_id</th>
+                  <th>status</th>
+                </tr>
+                <tr>
+                  <td>101</td>
+                  <td>1</td>
+                  <td>PAID</td>
+                </tr>
+                <tr>
+                  <td>103</td>
+                  <td>1</td>
+                  <td>PAID</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 28 JOIN ORDERS AND CUSTOMERS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Join combines parent and child tables</li>
+                <li>References make the join valid</li>
+                <li>This is a core relational example</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.12;">SELECT o.order_id, c.customer_name, o.status
+FROM sales.orders o
+JOIN sales.customers c
+  ON o.customer_id = c.customer_id;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>order_id</th>
+                  <th>customer_name</th>
+                  <th>status</th>
+                </tr>
+                <tr>
+                  <td>101</td>
+                  <td>Alice</td>
+                  <td>PAID</td>
+                </tr>
+                <tr>
+                  <td>102</td>
+                  <td>Brian</td>
+                  <td>PAID</td>
+                </tr>
+                <tr>
+                  <td>103</td>
+                  <td>Alice</td>
+                  <td>PAID</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 29 JOIN ORDER_ITEMS AND FLOWERS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Join connects transaction rows to product names</li>
+                <li>The deleted item is no longer present</li>
+                <li>Result reflects current table state</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:14px; line-height:1.1;">SELECT oi.order_id, f.flower_name, oi.quantity
+FROM sales.order_items oi
+JOIN inventory.flowers f
+  ON oi.flower_id = f.flower_id;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>order_id</th>
+                  <th>flower_name</th>
+                  <th>quantity</th>
+                </tr>
+                <tr>
+                  <td>101</td>
+                  <td>Rose</td>
+                  <td>6</td>
+                </tr>
+                <tr>
+                  <td>101</td>
+                  <td>Tulip</td>
+                  <td>4</td>
+                </tr>
+                <tr>
+                  <td>103</td>
+                  <td>Rose</td>
+                  <td>5</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 30 CREATE INDEX ON FLOWER_NAME -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Indexes improve repeated search conditions</li>
+                <li>Names are common lookup targets</li>
+                <li>Create the index before index-based examples</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">CREATE INDEX idx_flower_name
+ON inventory.flowers(flower_name);</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>index_name</th>
+                  <th>column</th>
+                </tr>
+                <tr>
+                  <td>idx_flower_name</td>
+                  <td>flower_name</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 31 LOOKUP BY FLOWER_NAME -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Exact-match lookup benefits from indexing</li>
+                <li>Result table confirms the searched row</li>
+                <li>This slide comes only after index creation</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">SELECT flower_id, flower_name, price
+FROM inventory.flowers
+WHERE flower_name = 'Rose';</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                  <th>price</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                  <td>4.80</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 32 CREATE INDEX ON CUSTOMER_ID -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Foreign key columns are strong index candidates</li>
+                <li>They support joins and filters</li>
+                <li>Create the index before lookup by customer_id</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">CREATE INDEX idx_orders_customer
+ON sales.orders(customer_id);</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>index_name</th>
+                  <th>column</th>
+                </tr>
+                <tr>
+                  <td>idx_orders_customer</td>
+                  <td>customer_id</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 33 LOOKUP BY CUSTOMER_ID -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Customer-based order lookup is very common</li>
+                <li>Foreign key index supports this access pattern</li>
+                <li>The result depends on earlier loaded data</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">SELECT order_id, customer_id
+FROM sales.orders
+WHERE customer_id = 1;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>order_id</th>
+                  <th>customer_id</th>
+                </tr>
+                <tr>
+                  <td>101</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>103</td>
+                  <td>1</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 34 SEQUENCE NEXT VALUE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Sequence state advances as rows are inserted</li>
+                <li>This helps explain generated identifiers</li>
+                <li>Current value depends on prior inserts</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:18px; line-height:1.15;">SELECT NEXTVAL('inventory.flower_seq');</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>nextval</th>
+                </tr>
+                <tr>
+                  <td>4</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 35 INSERT NEW FLOWER -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Insert a new row using the sequence again</li>
+                <li>This demonstrates continued key generation</li>
+                <li>The result confirms the inserted flower</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:14px; line-height:1.12;">INSERT INTO inventory.flowers
+(flower_id, flower_name, color, price, stock)
+VALUES
+(NEXTVAL('inventory.flower_seq'),'Orchid','Purple',7.80,8);
+
+SELECT flower_id, flower_name, price
+FROM inventory.flowers
+WHERE flower_name = 'Orchid';</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                  <th>price</th>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td>Orchid</td>
+                  <td>7.80</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 36 SELECT INSERTED FLOWER -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Read the newly inserted row directly</li>
+                <li>This verifies sequence-based insertion</li>
+                <li>Result is valid because insert happened earlier</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">SELECT flower_name, color, stock
+FROM inventory.flowers
+WHERE flower_name = 'Orchid';</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_name</th>
+                  <th>color</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>Orchid</td>
+                  <td>Purple</td>
+                  <td>8</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 37 DELETE NEW FLOWER -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Delete the unused flower cleanly</li>
+                <li>This works because no child row references it</li>
+                <li>The select shows the remaining flowers</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:14px; line-height:1.12;">DELETE FROM inventory.flowers
+WHERE flower_name = 'Orchid';
+
+SELECT flower_id, flower_name
+FROM inventory.flowers;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Tulip</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Lily</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 38 SELECT AFTER DELETE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Read confirms the delete succeeded</li>
+                <li>Only the original flowers remain</li>
+                <li>This closes the CRUD cycle cleanly</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">SELECT flower_name, color, stock
+FROM inventory.flowers
+ORDER BY flower_name;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_name</th>
+                  <th>color</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>White</td>
+                  <td>15</td>
+                </tr>
+                <tr>
+                  <td>Rose</td>
+                  <td>Red</td>
+                  <td>15</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>Yellow</td>
+                  <td>30</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 39 CHEAT TABLE -->
+        <section>
+          <table class="table">
+            <tr>
+              <th>Concept</th>
+              <th>Purpose</th>
+            </tr>
+            <tr>
+              <td>DATABASE</td>
+              <td>top container</td>
+            </tr>
+            <tr>
+              <td>SCHEMA</td>
+              <td>object grouping</td>
+            </tr>
+            <tr>
+              <td>COLUMN</td>
+              <td>table attribute</td>
+            </tr>
+            <tr>
+              <td>SEQUENCE</td>
+              <td>generated id</td>
+            </tr>
+            <tr>
+              <td>REFERENCES</td>
+              <td>table relationship</td>
+            </tr>
+            <tr>
+              <td>INDEX</td>
+              <td>query speed</td>
+            </tr>
+            <tr>
+              <td>CREATE</td>
+              <td>add object or row</td>
+            </tr>
+            <tr>
+              <td>READ</td>
+              <td>query data</td>
+            </tr>
+            <tr>
+              <td>UPDATE</td>
+              <td>modify row</td>
+            </tr>
+            <tr>
+              <td>DELETE</td>
+              <td>remove row</td>
+            </tr>
+          </table>
+        </section>
+
+        <!-- 40 FINAL DIAGRAM -->
+        <section>
+          <svg width="100%" height="220">
+            <text x="600" y="70" text-anchor="middle" fill="white" font-size="24">
+              CREATE → INSERT → UPDATE → DELETE → SELECT
+            </text>
+            <text x="600" y="120" text-anchor="middle" fill="white" font-size="22">
+              DATABASE → SCHEMA → TABLE → COLUMN → REFERENCES → INDEX
+            </text>
+            <text x="600" y="170" text-anchor="middle" fill="white" font-size="20">
+              Reproducible flower database examples
+            </text>
+          </svg>
+        </section>
+
+      </section>
+
+      <section id="module-11">
+
+        <!-- 01 COVER -->
+        <section>
+          <h2>Module 11</h2>
+          <h3>CONSTRAINT · PRIMARY · FOREIGN · KEY · UNIQUE · CHECK</h3>
+          <p class="muted">Reproducible constraint examples in a flower database system</p>
+        </section>
+
+        <!-- 02 GOALS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Understand why constraints matter</li>
+                <li>Use primary and foreign keys correctly</li>
+                <li>Prevent duplicates with unique</li>
+                <li>Validate values with check</li>
+                <li>Reproduce every example in execution order</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:20px; line-height:1.2;">-- execution order
+
+-- CREATE TABLE
+-- INSERT valid rows
+-- INSERT invalid rows
+-- UPDATE rows
+-- DELETE rows
+-- SELECT results</code></pre>
+
+              <table class="table" style="font-size:15px; margin-top:12px;">
+                <tr>
+                  <th>focus</th>
+                  <th>goal</th>
+                </tr>
+                <tr>
+                  <td>constraint</td>
+                  <td>protect data</td>
+                </tr>
+                <tr>
+                  <td>key</td>
+                  <td>identify rows</td>
+                </tr>
+                <tr>
+                  <td>check</td>
+                  <td>validate values</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 03 CONSTRAINT CONCEPT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Constraints are table rules</li>
+                <li>They protect structure and values</li>
+                <li>Good design starts with strong rules</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:18px; line-height:1.15;">-- common constraint types
+
+PRIMARY KEY
+FOREIGN KEY
+UNIQUE
+CHECK</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>type</th>
+                  <th>purpose</th>
+                </tr>
+                <tr>
+                  <td>PRIMARY KEY</td>
+                  <td>identify row</td>
+                </tr>
+                <tr>
+                  <td>UNIQUE</td>
+                  <td>avoid duplicates</td>
+                </tr>
+                <tr>
+                  <td>CHECK</td>
+                  <td>enforce condition</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 04 CREATE CUSTOMERS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Customer table uses primary and unique rules</li>
+                <li>Customer ID identifies each row</li>
+                <li>Email must not repeat</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">CREATE TABLE customers (
+  customer_id INTEGER PRIMARY KEY,
+  customer_name VARCHAR(60) NOT NULL,
+  city VARCHAR(40),
+  email VARCHAR(80) UNIQUE
+);</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>column</th>
+                  <th>constraint</th>
+                </tr>
+                <tr>
+                  <td>customer_id</td>
+                  <td>PRIMARY KEY</td>
+                </tr>
+                <tr>
+                  <td>email</td>
+                  <td>UNIQUE</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 05 CREATE FLOWERS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Flower table uses primary, unique, and check rules</li>
+                <li>Name should not repeat in this example</li>
+                <li>Price and stock must be valid</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.12;">CREATE TABLE flowers (
+  flower_id INTEGER PRIMARY KEY,
+  flower_name VARCHAR(50) UNIQUE,
+  color VARCHAR(30),
+  price DECIMAL(6,2) CHECK (price > 0),
+  stock INTEGER CHECK (stock >= 0)
+);</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>column</th>
+                  <th>constraint</th>
+                </tr>
+                <tr>
+                  <td>flower_id</td>
+                  <td>PRIMARY KEY</td>
+                </tr>
+                <tr>
+                  <td>flower_name</td>
+                  <td>UNIQUE</td>
+                </tr>
+                <tr>
+                  <td>price</td>
+                  <td>CHECK</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 06 CREATE ORDERS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Orders link to customers</li>
+                <li>Foreign key protects valid parent rows</li>
+                <li>Status is controlled by check rule</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.12;">CREATE TABLE orders (
+  order_id INTEGER PRIMARY KEY,
+  customer_id INTEGER,
+  status VARCHAR(20) CHECK (status IN ('OPEN','PAID','CANCELLED')),
+  FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+);</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>column</th>
+                  <th>constraint</th>
+                </tr>
+                <tr>
+                  <td>order_id</td>
+                  <td>PRIMARY KEY</td>
+                </tr>
+                <tr>
+                  <td>customer_id</td>
+                  <td>FOREIGN KEY</td>
+                </tr>
+                <tr>
+                  <td>status</td>
+                  <td>CHECK</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 07 CREATE ORDER_ITEMS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Order items connect orders and flowers</li>
+                <li>Two foreign keys protect table links</li>
+                <li>Quantity must be positive</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:14px; line-height:1.1;">CREATE TABLE order_items (
+  item_id INTEGER PRIMARY KEY,
+  order_id INTEGER,
+  flower_id INTEGER,
+  quantity INTEGER CHECK (quantity > 0),
+  FOREIGN KEY (order_id) REFERENCES orders(order_id),
+  FOREIGN KEY (flower_id) REFERENCES flowers(flower_id)
+);</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>column</th>
+                  <th>constraint</th>
+                </tr>
+                <tr>
+                  <td>item_id</td>
+                  <td>PRIMARY KEY</td>
+                </tr>
+                <tr>
+                  <td>order_id</td>
+                  <td>FOREIGN KEY</td>
+                </tr>
+                <tr>
+                  <td>quantity</td>
+                  <td>CHECK</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 08 PRIMARY KEY CONCEPT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Primary key uniquely identifies each row</li>
+                <li>It cannot be null</li>
+                <li>It cannot repeat</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">SELECT customer_id, customer_name
+FROM customers;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>customer_id</th>
+                  <th>customer_name</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Alice</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Brian</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Carla</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 09 INSERT VALID CUSTOMERS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Insert valid rows first</li>
+                <li>Each primary key is unique</li>
+                <li>Each email is also unique</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.12;">INSERT INTO customers
+(customer_id, customer_name, city, email)
+VALUES
+(1, 'Alice', 'Stockton', 'alice@demo.com'),
+(2, 'Brian', 'Lodi', 'brian@demo.com'),
+(3, 'Carla', 'Manteca', 'carla@demo.com');
+
+SELECT customer_id, customer_name, email
+FROM customers;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>customer_id</th>
+                  <th>customer_name</th>
+                  <th>email</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Alice</td>
+                  <td>alice@demo.com</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Brian</td>
+                  <td>brian@demo.com</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Carla</td>
+                  <td>carla@demo.com</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 10 INSERT VALID FLOWERS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Insert flowers after table creation</li>
+                <li>Names are unique in this dataset</li>
+                <li>Price and stock satisfy check rules</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:14px; line-height:1.12;">INSERT INTO flowers
+(flower_id, flower_name, color, price, stock)
+VALUES
+(1, 'Rose', 'Red', 4.50, 20),
+(2, 'Tulip', 'Yellow', 3.20, 30),
+(3, 'Lily', 'White', 5.00, 15);
+
+SELECT flower_id, flower_name, price, stock
+FROM flowers;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                  <th>price</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                  <td>4.50</td>
+                  <td>20</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Tulip</td>
+                  <td>3.20</td>
+                  <td>30</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Lily</td>
+                  <td>5.00</td>
+                  <td>15</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 11 INSERT VALID ORDERS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Orders require existing customer rows</li>
+                <li>Status must match allowed values</li>
+                <li>Foreign key and check both apply here</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.12;">INSERT INTO orders
+(order_id, customer_id, status)
+VALUES
+(101, 1, 'OPEN'),
+(102, 2, 'PAID'),
+(103, 1, 'PAID');
+
+SELECT order_id, customer_id, status
+FROM orders;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>order_id</th>
+                  <th>customer_id</th>
+                  <th>status</th>
+                </tr>
+                <tr>
+                  <td>101</td>
+                  <td>1</td>
+                  <td>OPEN</td>
+                </tr>
+                <tr>
+                  <td>102</td>
+                  <td>2</td>
+                  <td>PAID</td>
+                </tr>
+                <tr>
+                  <td>103</td>
+                  <td>1</td>
+                  <td>PAID</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 12 INSERT VALID ORDER_ITEMS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Order items need valid orders and flowers</li>
+                <li>Quantity must be positive</li>
+                <li>Every relation must already exist</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:14px; line-height:1.1;">INSERT INTO order_items
+(item_id, order_id, flower_id, quantity)
+VALUES
+(1, 101, 1, 6),
+(2, 101, 2, 4),
+(3, 102, 3, 2);
+
+SELECT item_id, order_id, flower_id, quantity
+FROM order_items;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>item_id</th>
+                  <th>order_id</th>
+                  <th>flower_id</th>
+                  <th>quantity</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>101</td>
+                  <td>1</td>
+                  <td>6</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>101</td>
+                  <td>2</td>
+                  <td>4</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>102</td>
+                  <td>3</td>
+                  <td>2</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 13 PRIMARY KEY DUPLICATE ERROR -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>A primary key cannot repeat</li>
+                <li>Duplicate key inserts must fail</li>
+                <li>This protects row identity</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">INSERT INTO customers
+(customer_id, customer_name, city, email)
+VALUES
+(1, 'Diana', 'Lodi', 'diana@demo.com');</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>result</th>
+                </tr>
+                <tr>
+                  <td>primary key violation</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 14 PRIMARY KEY SELECT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>The original rows remain unchanged</li>
+                <li>Failed insert does not create a new row</li>
+                <li>Primary key rule is still preserved</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">SELECT customer_id, customer_name
+FROM customers
+ORDER BY customer_id;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>customer_id</th>
+                  <th>customer_name</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Alice</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Brian</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Carla</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 15 UNIQUE CONCEPT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Unique prevents duplicate values</li>
+                <li>It is useful for email and codes</li>
+                <li>It is different from primary key because a table can have many unique rules</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">SELECT customer_name, email
+FROM customers;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>customer_name</th>
+                  <th>email</th>
+                </tr>
+                <tr>
+                  <td>Alice</td>
+                  <td>alice@demo.com</td>
+                </tr>
+                <tr>
+                  <td>Brian</td>
+                  <td>brian@demo.com</td>
+                </tr>
+                <tr>
+                  <td>Carla</td>
+                  <td>carla@demo.com</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 16 UNIQUE DUPLICATE ERROR -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Duplicate email should fail</li>
+                <li>Unique rule protects business identity</li>
+                <li>This example uses an existing email</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.15;">INSERT INTO customers
+(customer_id, customer_name, city, email)
+VALUES
+(4, 'Diana', 'Lodi', 'alice@demo.com');</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>result</th>
+                </tr>
+                <tr>
+                  <td>unique constraint violation</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 17 UNIQUE SELECT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>The duplicate row was not inserted</li>
+                <li>Original unique values remain intact</li>
+                <li>Data quality is preserved</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">SELECT customer_id, email
+FROM customers
+ORDER BY customer_id;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>customer_id</th>
+                  <th>email</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>alice@demo.com</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>brian@demo.com</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>carla@demo.com</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 18 CHECK CONCEPT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Check validates data conditions</li>
+                <li>It prevents impossible or invalid values</li>
+                <li>Price, stock, and status are common uses</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">SELECT flower_name, price, stock
+FROM flowers;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_name</th>
+                  <th>price</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>Rose</td>
+                  <td>4.50</td>
+                  <td>20</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>3.20</td>
+                  <td>30</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>5.00</td>
+                  <td>15</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 19 CHECK PRICE ERROR -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Negative price should fail</li>
+                <li>Check rule blocks invalid business data</li>
+                <li>This protects reporting accuracy</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.15;">INSERT INTO flowers
+(flower_id, flower_name, color, price, stock)
+VALUES
+(4, 'Orchid', 'Purple', -2.00, 8);</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>result</th>
+                </tr>
+                <tr>
+                  <td>check constraint violation</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 20 CHECK STOCK ERROR -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Stock cannot be negative</li>
+                <li>Check rule prevents impossible inventory</li>
+                <li>This keeps totals meaningful</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.15;">INSERT INTO flowers
+(flower_id, flower_name, color, price, stock)
+VALUES
+(4, 'Orchid', 'Purple', 7.80, -1);</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>result</th>
+                </tr>
+                <tr>
+                  <td>check constraint violation</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 21 CHECK STATUS ERROR -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Status must match the approved list</li>
+                <li>Check can control small business vocabularies</li>
+                <li>Invalid status values must fail</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.15;">INSERT INTO orders
+(order_id, customer_id, status)
+VALUES
+(104, 2, 'SHIPPED');</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>result</th>
+                </tr>
+                <tr>
+                  <td>check constraint violation</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 22 FOREIGN KEY CONCEPT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Foreign key connects child rows to parent rows</li>
+                <li>It protects relational consistency</li>
+                <li>Child rows must point to existing parents</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">SELECT order_id, customer_id
+FROM orders;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>order_id</th>
+                  <th>customer_id</th>
+                </tr>
+                <tr>
+                  <td>101</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>102</td>
+                  <td>2</td>
+                </tr>
+                <tr>
+                  <td>103</td>
+                  <td>1</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 23 FOREIGN KEY INSERT ERROR -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Order cannot reference missing customer</li>
+                <li>This prevents orphaned rows</li>
+                <li>Foreign key rule blocks the insert</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.15;">INSERT INTO orders
+(order_id, customer_id, status)
+VALUES
+(104, 99, 'OPEN');</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>result</th>
+                </tr>
+                <tr>
+                  <td>foreign key violation</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 24 FOREIGN KEY CHILD INSERT ERROR -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Order item needs valid order and flower</li>
+                <li>Invalid parent reference must fail</li>
+                <li>Both foreign keys protect the child table</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:14px; line-height:1.1;">INSERT INTO order_items
+(item_id, order_id, flower_id, quantity)
+VALUES
+(4, 999, 1, 3);</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>result</th>
+                </tr>
+                <tr>
+                  <td>foreign key violation</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 25 FOREIGN KEY DELETE ERROR -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Deleting a parent in use should fail</li>
+                <li>Customer 1 is referenced by orders</li>
+                <li>Foreign key protects existing children</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">DELETE FROM customers
+WHERE customer_id = 1;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>result</th>
+                </tr>
+                <tr>
+                  <td>foreign key violation</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 26 VALID UPDATE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Updates are allowed when rules remain valid</li>
+                <li>This update keeps stock nonnegative</li>
+                <li>Check constraint still passes</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.15;">UPDATE flowers
+SET stock = 18
+WHERE flower_id = 1;
+
+SELECT flower_id, flower_name, stock
+FROM flowers
+WHERE flower_id = 1;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                  <td>18</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 27 INVALID UPDATE CHECK -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Update must also satisfy check rules</li>
+                <li>Negative stock should fail here too</li>
+                <li>Constraints apply on update, not just insert</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.15;">UPDATE flowers
+SET stock = -4
+WHERE flower_id = 2;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>result</th>
+                </tr>
+                <tr>
+                  <td>check constraint violation</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 28 INVALID UPDATE FOREIGN -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Updating a foreign key must keep a valid parent</li>
+                <li>Changing to missing customer 99 should fail</li>
+                <li>Relation integrity is preserved</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.15;">UPDATE orders
+SET customer_id = 99
+WHERE order_id = 102;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>result</th>
+                </tr>
+                <tr>
+                  <td>foreign key violation</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 29 INVALID UPDATE UNIQUE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Unique also applies during updates</li>
+                <li>Changing one email to an existing email should fail</li>
+                <li>Duplicates remain blocked after creation</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.15;">UPDATE customers
+SET email = 'alice@demo.com'
+WHERE customer_id = 2;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>result</th>
+                </tr>
+                <tr>
+                  <td>unique constraint violation</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 30 VALID DELETE CHILD -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Deleting a child row is usually safe</li>
+                <li>Parent rows remain valid</li>
+                <li>This is the normal order before parent deletion</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:14px; line-height:1.1;">DELETE FROM order_items
+WHERE item_id = 3;
+
+SELECT item_id, order_id, flower_id
+FROM order_items;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>item_id</th>
+                  <th>order_id</th>
+                  <th>flower_id</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>101</td>
+                  <td>1</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>101</td>
+                  <td>2</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 31 VALID DELETE ORDER -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>After deleting the child, parent may be removable</li>
+                <li>Order 102 no longer has order_items</li>
+                <li>This delete is now valid</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.15;">DELETE FROM orders
+WHERE order_id = 102;
+
+SELECT order_id, customer_id, status
+FROM orders;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>order_id</th>
+                  <th>customer_id</th>
+                  <th>status</th>
+                </tr>
+                <tr>
+                  <td>101</td>
+                  <td>1</td>
+                  <td>OPEN</td>
+                </tr>
+                <tr>
+                  <td>103</td>
+                  <td>1</td>
+                  <td>PAID</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 32 KEYWORD FOCUS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>PRIMARY KEY is one full phrase</li>
+                <li>FOREIGN KEY is one full phrase</li>
+                <li>KEY alone is part of both concepts</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:18px; line-height:1.15;">-- examples
+
+customer_id INTEGER PRIMARY KEY
+
+FOREIGN KEY (customer_id)
+REFERENCES customers(customer_id)</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>phrase</th>
+                  <th>role</th>
+                </tr>
+                <tr>
+                  <td>PRIMARY KEY</td>
+                  <td>identify row</td>
+                </tr>
+                <tr>
+                  <td>FOREIGN KEY</td>
+                  <td>link tables</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 33 MULTIPLE CONSTRAINTS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>One table can use many constraints together</li>
+                <li>Good schema design combines them carefully</li>
+                <li>Each rule solves a different problem</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:14px; line-height:1.1;">SELECT flower_id, flower_name, price, stock
+FROM flowers
+ORDER BY flower_id;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                  <th>price</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                  <td>4.50</td>
+                  <td>18</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Tulip</td>
+                  <td>3.20</td>
+                  <td>30</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Lily</td>
+                  <td>5.00</td>
+                  <td>15</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 34 JOIN WITH CONSTRAINTS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Foreign keys make joins reliable</li>
+                <li>Valid parent-child rows produce clean results</li>
+                <li>Constraints help query trustworthiness</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:14px; line-height:1.1;">SELECT o.order_id, c.customer_name, o.status
+FROM orders o
+JOIN customers c
+  ON o.customer_id = c.customer_id;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>order_id</th>
+                  <th>customer_name</th>
+                  <th>status</th>
+                </tr>
+                <tr>
+                  <td>101</td>
+                  <td>Alice</td>
+                  <td>OPEN</td>
+                </tr>
+                <tr>
+                  <td>103</td>
+                  <td>Alice</td>
+                  <td>PAID</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 35 CHECK WITH FILTER -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Check rules keep filtered results meaningful</li>
+                <li>There are no zero or negative prices</li>
+                <li>This makes comparisons safer</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">SELECT flower_name, price
+FROM flowers
+WHERE price > 3.00;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_name</th>
+                  <th>price</th>
+                </tr>
+                <tr>
+                  <td>Rose</td>
+                  <td>4.50</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>3.20</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>5.00</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 36 UNIQUE WITH LOOKUP -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Unique columns are strong lookup fields</li>
+                <li>Email can identify one customer row</li>
+                <li>This works because duplicates are blocked</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">SELECT customer_id, customer_name
+FROM customers
+WHERE email = 'brian@demo.com';</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>customer_id</th>
+                  <th>customer_name</th>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Brian</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 37 SUMMARY TABLE -->
+        <section>
+          <table class="table">
+            <tr>
+              <th>Constraint</th>
+              <th>Main Purpose</th>
+            </tr>
+            <tr>
+              <td>PRIMARY KEY</td>
+              <td>unique row identity</td>
+            </tr>
+            <tr>
+              <td>FOREIGN KEY</td>
+              <td>valid table relationship</td>
+            </tr>
+            <tr>
+              <td>UNIQUE</td>
+              <td>prevent duplicates</td>
+            </tr>
+            <tr>
+              <td>CHECK</td>
+              <td>enforce value rule</td>
+            </tr>
+            <tr>
+              <td>KEY</td>
+              <td>part of relational structure</td>
+            </tr>
+            <tr>
+              <td>CONSTRAINT</td>
+              <td>protect data quality</td>
+            </tr>
+          </table>
+        </section>
+
+        <!-- 38 PRACTICE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Insert one valid flower row</li>
+                <li>Try one invalid duplicate email</li>
+                <li>Try one invalid negative stock value</li>
+                <li>Delete child rows before parent rows</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">SELECT customer_id, city
+FROM customers
+WHERE city = 'Lodi';</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>customer_id</th>
+                  <th>city</th>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Lodi</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 39 REVIEW -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Constraints stop bad data before it spreads</li>
+                <li>Keys organize identity and relationships</li>
+                <li>Checks and unique rules keep values trustworthy</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">SELECT order_id, status
+FROM orders
+ORDER BY order_id;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>order_id</th>
+                  <th>status</th>
+                </tr>
+                <tr>
+                  <td>101</td>
+                  <td>OPEN</td>
+                </tr>
+                <tr>
+                  <td>103</td>
+                  <td>PAID</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 40 FINAL DIAGRAM -->
+        <section>
+          <svg width="100%" height="220">
+            <text x="600" y="70" text-anchor="middle" fill="white" font-size="24">
+              CONSTRAINT → PRIMARY KEY → FOREIGN KEY
+            </text>
+            <text x="600" y="120" text-anchor="middle" fill="white" font-size="22">
+              UNIQUE → CHECK → TRUSTED DATA
+            </text>
+            <text x="600" y="170" text-anchor="middle" fill="white" font-size="20">
+              Reproducible flower database examples
+            </text>
+          </svg>
+        </section>
+
+      </section>
+
+      <section id="module-12">
+
+        <!-- 01 COVER -->
+        <section>
+          <h2>Module 12</h2>
+          <h3>TRANSACTION · BEGIN · COMMIT · ROLLBACK · SAVEPOINT · RELEASE</h3>
+          <p class="muted">Reproducible transaction control examples in a flower database system</p>
+        </section>
+
+        <!-- 02 GOALS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Understand transaction control</li>
+                <li>Start work with BEGIN</li>
+                <li>Make changes permanent with COMMIT</li>
+                <li>Undo changes with ROLLBACK</li>
+                <li>Use SAVEPOINT and RELEASE correctly</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:20px; line-height:1.2;">-- execution order
+
+-- BEGIN
+-- INSERT or UPDATE
+-- SAVEPOINT
+-- more changes
+-- ROLLBACK or COMMIT</code></pre>
+
+              <table class="table" style="font-size:15px; margin-top:12px;">
+                <tr>
+                  <th>phase</th>
+                  <th>purpose</th>
+                </tr>
+                <tr>
+                  <td>begin</td>
+                  <td>start unit of work</td>
+                </tr>
+                <tr>
+                  <td>rollback</td>
+                  <td>undo changes</td>
+                </tr>
+                <tr>
+                  <td>commit</td>
+                  <td>save changes</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 03 TRANSACTION CONCEPT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>A transaction groups related operations</li>
+                <li>Changes should succeed together or fail together</li>
+                <li>This protects consistency in business work</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:18px; line-height:1.15;">-- transaction control words
+
+BEGIN
+COMMIT
+ROLLBACK
+SAVEPOINT
+RELEASE</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>term</th>
+                  <th>purpose</th>
+                </tr>
+                <tr>
+                  <td>BEGIN</td>
+                  <td>start transaction</td>
+                </tr>
+                <tr>
+                  <td>COMMIT</td>
+                  <td>make permanent</td>
+                </tr>
+                <tr>
+                  <td>ROLLBACK</td>
+                  <td>undo work</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 04 CREATE FLOWERS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Flower table stores inventory rows</li>
+                <li>Price and stock support transaction examples</li>
+                <li>This table is the base for later updates</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">CREATE TABLE flowers (
+  flower_id INTEGER PRIMARY KEY,
+  flower_name VARCHAR(50) UNIQUE,
+  color VARCHAR(30),
+  price DECIMAL(6,2),
+  stock INTEGER
+);</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>column</th>
+                  <th>role</th>
+                </tr>
+                <tr>
+                  <td>flower_id</td>
+                  <td>primary key</td>
+                </tr>
+                <tr>
+                  <td>flower_name</td>
+                  <td>flower label</td>
+                </tr>
+                <tr>
+                  <td>stock</td>
+                  <td>inventory count</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 05 CREATE CUSTOMERS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Customers table stores buyer rows</li>
+                <li>Used later for multi-table transaction examples</li>
+                <li>Simple structure keeps examples readable</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">CREATE TABLE customers (
+  customer_id INTEGER PRIMARY KEY,
+  customer_name VARCHAR(60),
+  city VARCHAR(40)
+);</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>column</th>
+                  <th>role</th>
+                </tr>
+                <tr>
+                  <td>customer_id</td>
+                  <td>primary key</td>
+                </tr>
+                <tr>
+                  <td>customer_name</td>
+                  <td>buyer name</td>
+                </tr>
+                <tr>
+                  <td>city</td>
+                  <td>location</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 06 CREATE ORDERS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Orders table supports transactional business flow</li>
+                <li>Customer link models real purchases</li>
+                <li>Status supports commit and rollback examples</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.12;">CREATE TABLE orders (
+  order_id INTEGER PRIMARY KEY,
+  customer_id INTEGER,
+  status VARCHAR(20),
+  FOREIGN KEY (customer_id) REFERENCES customers(customer_id)
+);</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>column</th>
+                  <th>role</th>
+                </tr>
+                <tr>
+                  <td>order_id</td>
+                  <td>primary key</td>
+                </tr>
+                <tr>
+                  <td>customer_id</td>
+                  <td>customer link</td>
+                </tr>
+                <tr>
+                  <td>status</td>
+                  <td>order state</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 07 INSERT FLOWERS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Load base inventory before transaction examples</li>
+                <li>These rows will be updated and rolled back later</li>
+                <li>Result shows the initial table state</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:14px; line-height:1.12;">INSERT INTO flowers
+(flower_id, flower_name, color, price, stock)
+VALUES
+(1, 'Rose', 'Red', 4.50, 20),
+(2, 'Tulip', 'Yellow', 3.20, 30),
+(3, 'Lily', 'White', 5.00, 15);
+
+SELECT flower_id, flower_name, stock
+FROM flowers;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                  <td>20</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Tulip</td>
+                  <td>30</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Lily</td>
+                  <td>15</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 08 INSERT CUSTOMERS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Load customers before order transactions</li>
+                <li>These parent rows support later inserts</li>
+                <li>Result confirms the base customer state</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.12;">INSERT INTO customers
+(customer_id, customer_name, city)
+VALUES
+(1, 'Alice', 'Stockton'),
+(2, 'Brian', 'Lodi');
+
+SELECT customer_id, customer_name, city
+FROM customers;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>customer_id</th>
+                  <th>customer_name</th>
+                  <th>city</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Alice</td>
+                  <td>Stockton</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Brian</td>
+                  <td>Lodi</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 09 INSERT ORDERS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Insert a few initial orders</li>
+                <li>These rows will support update and rollback examples</li>
+                <li>The base state must exist before transactions begin</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.12;">INSERT INTO orders
+(order_id, customer_id, status)
+VALUES
+(101, 1, 'OPEN'),
+(102, 2, 'PAID');
+
+SELECT order_id, customer_id, status
+FROM orders;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>order_id</th>
+                  <th>customer_id</th>
+                  <th>status</th>
+                </tr>
+                <tr>
+                  <td>101</td>
+                  <td>1</td>
+                  <td>OPEN</td>
+                </tr>
+                <tr>
+                  <td>102</td>
+                  <td>2</td>
+                  <td>PAID</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 10 BEGIN CONCEPT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>BEGIN starts a transaction block</li>
+                <li>Changes after BEGIN are not yet permanent</li>
+                <li>This is the first control point</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:18px; line-height:1.15;">BEGIN;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>transaction_state</th>
+                </tr>
+                <tr>
+                  <td>active</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 11 BEGIN WITH UPDATE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Work inside the transaction after BEGIN</li>
+                <li>This update changes stock temporarily</li>
+                <li>The result reflects the current uncommitted state</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.12;">BEGIN;
+
+UPDATE flowers
+SET stock = 12
+WHERE flower_id = 1;
+
+SELECT flower_id, flower_name, stock
+FROM flowers
+WHERE flower_id = 1;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                  <td>12</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 12 ROLLBACK CONCEPT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>ROLLBACK undoes work in the active transaction</li>
+                <li>It returns the database to the state before BEGIN</li>
+                <li>Use it when an operation should be cancelled</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:18px; line-height:1.15;">ROLLBACK;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>transaction_state</th>
+                </tr>
+                <tr>
+                  <td>cancelled</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 13 VERIFY ROLLBACK -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>The earlier stock change was undone</li>
+                <li>Original value is visible again</li>
+                <li>This proves rollback reversed the work</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">SELECT flower_id, flower_name, stock
+FROM flowers
+WHERE flower_id = 1;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                  <td>20</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 14 COMMIT CONCEPT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>COMMIT makes transaction changes permanent</li>
+                <li>After commit, rollback cannot undo that finished transaction</li>
+                <li>This closes the unit of work</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:18px; line-height:1.15;">COMMIT;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>transaction_state</th>
+                </tr>
+                <tr>
+                  <td>saved</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 15 BEGIN WITH COMMIT EXAMPLE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Start a new transaction for a permanent change</li>
+                <li>Update Tulip stock and commit it</li>
+                <li>The final select shows the committed result</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:14px; line-height:1.12;">BEGIN;
+
+UPDATE flowers
+SET stock = 25
+WHERE flower_id = 2;
+
+COMMIT;
+
+SELECT flower_id, flower_name, stock
+FROM flowers
+WHERE flower_id = 2;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Tulip</td>
+                  <td>25</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 16 VERIFY COMMIT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>The committed change remains in the table</li>
+                <li>This read occurs after the transaction ended</li>
+                <li>Commit preserved the new value</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">SELECT flower_name, stock
+FROM flowers
+ORDER BY flower_id;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_name</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>Rose</td>
+                  <td>20</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>25</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>15</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 17 SAVEPOINT CONCEPT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>SAVEPOINT marks a partial checkpoint inside a transaction</li>
+                <li>It lets you roll back part of the work</li>
+                <li>This gives finer control than full rollback</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:18px; line-height:1.15;">SAVEPOINT sp_stock;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>savepoint</th>
+                </tr>
+                <tr>
+                  <td>sp_stock</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 18 BEGIN WITH SAVEPOINT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Begin a transaction and create a checkpoint</li>
+                <li>Change one row before the savepoint</li>
+                <li>Later changes can be undone back to that marker</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:14px; line-height:1.1;">BEGIN;
+
+UPDATE flowers
+SET stock = 18
+WHERE flower_id = 1;
+
+SAVEPOINT sp_stock;
+
+SELECT flower_id, flower_name, stock
+FROM flowers
+WHERE flower_id = 1;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                  <td>18</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 19 CHANGE AFTER SAVEPOINT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Make more changes after the savepoint</li>
+                <li>These are the changes we may partially undo</li>
+                <li>The result shows current transaction state</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:14px; line-height:1.1;">UPDATE flowers
+SET stock = 10
+WHERE flower_id = 3;
+
+SELECT flower_id, flower_name, stock
+FROM flowers
+WHERE flower_id = 3;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Lily</td>
+                  <td>10</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 20 ROLLBACK TO SAVEPOINT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Rollback to savepoint undoes only later work</li>
+                <li>Earlier work before the savepoint remains</li>
+                <li>This is partial undo instead of full undo</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">ROLLBACK TO SAVEPOINT sp_stock;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>rollback_scope</th>
+                </tr>
+                <tr>
+                  <td>after sp_stock only</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 21 VERIFY SAVEPOINT ROLLBACK -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Rose stayed at the savepoint value</li>
+                <li>Lily returned to its old value</li>
+                <li>This proves partial rollback worked</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.12;">SELECT flower_id, flower_name, stock
+FROM flowers
+WHERE flower_id IN (1, 3)
+ORDER BY flower_id;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                  <td>18</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Lily</td>
+                  <td>15</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 22 COMMIT AFTER SAVEPOINT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Commit the transaction after partial rollback</li>
+                <li>The remaining valid change becomes permanent</li>
+                <li>This finalizes the checkpointed work</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">COMMIT;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>transaction_state</th>
+                </tr>
+                <tr>
+                  <td>saved after partial rollback</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 23 VERIFY COMMIT AFTER SAVEPOINT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Rose remains changed because it was before savepoint rollback</li>
+                <li>Lily remains unchanged because that later change was undone</li>
+                <li>The current table state is now permanent</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.12;">SELECT flower_name, stock
+FROM flowers
+ORDER BY flower_id;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_name</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>Rose</td>
+                  <td>18</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>25</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>15</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 24 RELEASE CONCEPT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>RELEASE removes a savepoint</li>
+                <li>It keeps the transaction active</li>
+                <li>After release, that savepoint name is gone</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:18px; line-height:1.15;">RELEASE SAVEPOINT sp_order;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>savepoint_state</th>
+                </tr>
+                <tr>
+                  <td>released</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 25 BEGIN RELEASE EXAMPLE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Create a new transaction for release example</li>
+                <li>Insert a new order and mark a savepoint</li>
+                <li>The row exists in current transaction state</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:14px; line-height:1.1;">BEGIN;
+
+INSERT INTO orders
+(order_id, customer_id, status)
+VALUES
+(103, 2, 'OPEN');
+
+SAVEPOINT sp_order;
+
+SELECT order_id, customer_id, status
+FROM orders
+WHERE order_id = 103;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>order_id</th>
+                  <th>customer_id</th>
+                  <th>status</th>
+                </tr>
+                <tr>
+                  <td>103</td>
+                  <td>2</td>
+                  <td>OPEN</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 26 RELEASE SAVEPOINT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Release the savepoint after deciding it is no longer needed</li>
+                <li>The transaction stays active</li>
+                <li>The inserted row still exists in current state</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">RELEASE SAVEPOINT sp_order;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>savepoint</th>
+                  <th>state</th>
+                </tr>
+                <tr>
+                  <td>sp_order</td>
+                  <td>removed</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 27 COMMIT AFTER RELEASE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Commit after releasing the savepoint</li>
+                <li>The new order becomes permanent</li>
+                <li>The transaction ends successfully</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">COMMIT;
+
+SELECT order_id, customer_id, status
+FROM orders
+ORDER BY order_id;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>order_id</th>
+                  <th>customer_id</th>
+                  <th>status</th>
+                </tr>
+                <tr>
+                  <td>101</td>
+                  <td>1</td>
+                  <td>OPEN</td>
+                </tr>
+                <tr>
+                  <td>102</td>
+                  <td>2</td>
+                  <td>PAID</td>
+                </tr>
+                <tr>
+                  <td>103</td>
+                  <td>2</td>
+                  <td>OPEN</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 28 FULL ROLLBACK EXAMPLE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>A full rollback undoes all work in the active transaction</li>
+                <li>This example changes two rows and cancels both</li>
+                <li>No savepoint is used here</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:13px; line-height:1.1;">BEGIN;
+
+UPDATE flowers
+SET price = 6.00
+WHERE flower_id = 1;
+
+UPDATE flowers
+SET price = 2.90
+WHERE flower_id = 2;
+
+ROLLBACK;
+
+SELECT flower_id, flower_name, price
+FROM flowers
+ORDER BY flower_id;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                  <th>price</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                  <td>4.50</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Tulip</td>
+                  <td>3.20</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Lily</td>
+                  <td>5.00</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 29 MULTI STEP COMMIT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>A transaction can include multiple related changes</li>
+                <li>Commit saves them together as one unit</li>
+                <li>This is useful for coordinated updates</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:13px; line-height:1.1;">BEGIN;
+
+UPDATE flowers
+SET stock = 17
+WHERE flower_id = 1;
+
+UPDATE orders
+SET status = 'PAID'
+WHERE order_id = 101;
+
+COMMIT;
+
+SELECT order_id, status
+FROM orders
+WHERE order_id = 101;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>order_id</th>
+                  <th>status</th>
+                </tr>
+                <tr>
+                  <td>101</td>
+                  <td>PAID</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 30 VERIFY MULTI STEP COMMIT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Both committed changes remain visible</li>
+                <li>This proves the transaction saved the full set</li>
+                <li>Related business updates moved together</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:14px; line-height:1.1;">SELECT flower_id, flower_name, stock
+FROM flowers
+WHERE flower_id = 1;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                  <td>17</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 31 SAVEPOINT WITH INSERT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Savepoints also work with insert operations</li>
+                <li>You can undo only the later insert</li>
+                <li>This supports careful batch work</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:13px; line-height:1.1;">BEGIN;
+
+INSERT INTO flowers
+(flower_id, flower_name, color, price, stock)
+VALUES
+(4, 'Orchid', 'Purple', 7.80, 8);
+
+SAVEPOINT sp_insert;
+
+INSERT INTO flowers
+(flower_id, flower_name, color, price, stock)
+VALUES
+(5, 'Daisy', 'White', 2.50, 22);
+
+SELECT flower_id, flower_name
+FROM flowers
+WHERE flower_id IN (4,5)
+ORDER BY flower_id;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>Orchid</td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td>Daisy</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 32 ROLLBACK TO INSERT SAVEPOINT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Rollback to the savepoint removes only the later insert</li>
+                <li>The earlier insert remains in the transaction</li>
+                <li>This is partial undo with rows</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:13px; line-height:1.1;">ROLLBACK TO SAVEPOINT sp_insert;
+
+SELECT flower_id, flower_name
+FROM flowers
+WHERE flower_id IN (4,5)
+ORDER BY flower_id;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>Orchid</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 33 COMMIT INSERT SAVEPOINT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Commit preserves the earlier remaining insert</li>
+                <li>The cancelled insert stays absent</li>
+                <li>The transaction ends with one saved row</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:13px; line-height:1.1;">COMMIT;
+
+SELECT flower_id, flower_name
+FROM flowers
+WHERE flower_id = 4;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>Orchid</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 34 RELEASE VS COMMIT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Release is not the same as commit</li>
+                <li>Release removes a savepoint only</li>
+                <li>Commit ends and saves the transaction</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">RELEASE SAVEPOINT name;
+COMMIT;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>command</th>
+                  <th>effect</th>
+                </tr>
+                <tr>
+                  <td>RELEASE</td>
+                  <td>remove savepoint</td>
+                </tr>
+                <tr>
+                  <td>COMMIT</td>
+                  <td>save transaction</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 35 ROLLBACK VS ROLLBACK TO -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Full rollback cancels the whole transaction</li>
+                <li>Rollback to savepoint cancels only later work</li>
+                <li>This distinction is important in long transactions</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">ROLLBACK;
+ROLLBACK TO SAVEPOINT sp1;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>command</th>
+                  <th>scope</th>
+                </tr>
+                <tr>
+                  <td>ROLLBACK</td>
+                  <td>entire transaction</td>
+                </tr>
+                <tr>
+                  <td>ROLLBACK TO</td>
+                  <td>after savepoint only</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 36 ORDER STATUS LOOKUP -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Committed transaction results are visible in normal reads</li>
+                <li>Order 101 was committed as paid</li>
+                <li>Order 103 was committed as open</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">SELECT order_id, status
+FROM orders
+ORDER BY order_id;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>order_id</th>
+                  <th>status</th>
+                </tr>
+                <tr>
+                  <td>101</td>
+                  <td>PAID</td>
+                </tr>
+                <tr>
+                  <td>102</td>
+                  <td>PAID</td>
+                </tr>
+                <tr>
+                  <td>103</td>
+                  <td>OPEN</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 37 FLOWER LOOKUP -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>The table now reflects all committed transaction history</li>
+                <li>Rolled-back changes are not present</li>
+                <li>Committed insert of Orchid is present</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:14px; line-height:1.1;">SELECT flower_id, flower_name, stock
+FROM flowers
+ORDER BY flower_id;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                  <td>17</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Tulip</td>
+                  <td>25</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Lily</td>
+                  <td>15</td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td>Orchid</td>
+                  <td>8</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 38 CHEAT TABLE -->
+        <section>
+          <table class="table">
+            <tr>
+              <th>Command</th>
+              <th>Purpose</th>
+            </tr>
+            <tr>
+              <td>TRANSACTION</td>
+              <td>group related work</td>
+            </tr>
+            <tr>
+              <td>BEGIN</td>
+              <td>start transaction</td>
+            </tr>
+            <tr>
+              <td>COMMIT</td>
+              <td>make changes permanent</td>
+            </tr>
+            <tr>
+              <td>ROLLBACK</td>
+              <td>undo entire transaction</td>
+            </tr>
+            <tr>
+              <td>SAVEPOINT</td>
+              <td>mark checkpoint</td>
+            </tr>
+            <tr>
+              <td>RELEASE</td>
+              <td>remove savepoint</td>
+            </tr>
+          </table>
+        </section>
+
+        <!-- 39 PRACTICE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Begin a transaction and update one row</li>
+                <li>Create a savepoint before the second change</li>
+                <li>Rollback to the savepoint and then commit</li>
+                <li>Compare final results with a full rollback</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">SELECT flower_name, stock
+FROM flowers
+WHERE stock >= 15
+ORDER BY flower_id;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_name</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>Rose</td>
+                  <td>17</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>25</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>15</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 40 FINAL DIAGRAM -->
+        <section>
+          <svg width="100%" height="220">
+            <text x="600" y="70" text-anchor="middle" fill="white" font-size="24">
+              BEGIN → SAVEPOINT → RELEASE
+            </text>
+            <text x="600" y="120" text-anchor="middle" fill="white" font-size="22">
+              ROLLBACK → COMMIT → CONTROLLED CHANGES
+            </text>
+            <text x="600" y="170" text-anchor="middle" fill="white" font-size="20">
+              Reproducible flower database transaction examples
+            </text>
+          </svg>
+        </section>
+
+      </section>
+
+      <section id="module-13">
+
+        <!-- 01 COVER -->
+        <section>
+          <h2>Module 13</h2>
+          <h3>LOCK · GRANT · REVOKE · USER · ROLE</h3>
+          <p class="muted">Reproducible access control examples in a flower database system</p>
+        </section>
+
+        <!-- 02 GOALS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Understand database access control</li>
+                <li>Work with users and roles</li>
+                <li>Give permissions with grant</li>
+                <li>Remove permissions with revoke</li>
+                <li>Understand lock behavior during changes</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:20px; line-height:1.2;">-- execution order
+
+-- CREATE USER
+-- CREATE ROLE
+-- GRANT
+-- REVOKE
+-- LOCK
+-- SELECT result</code></pre>
+
+              <table class="table" style="font-size:15px; margin-top:12px;">
+                <tr>
+                  <th>topic</th>
+                  <th>purpose</th>
+                </tr>
+                <tr>
+                  <td>USER</td>
+                  <td>account identity</td>
+                </tr>
+                <tr>
+                  <td>ROLE</td>
+                  <td>permission group</td>
+                </tr>
+                <tr>
+                  <td>LOCK</td>
+                  <td>control concurrent access</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 03 SECURITY CONCEPT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Databases need controlled access</li>
+                <li>Not every user should do every action</li>
+                <li>Security rules protect data and operations</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:18px; line-height:1.15;">-- security words
+
+USER
+ROLE
+GRANT
+REVOKE
+LOCK</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>term</th>
+                  <th>meaning</th>
+                </tr>
+                <tr>
+                  <td>USER</td>
+                  <td>login identity</td>
+                </tr>
+                <tr>
+                  <td>ROLE</td>
+                  <td>permission set</td>
+                </tr>
+                <tr>
+                  <td>GRANT</td>
+                  <td>give access</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 04 CREATE FLOWERS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Flower table will be used in permission examples</li>
+                <li>Read and update permissions can be tested here</li>
+                <li>Simple structure keeps access control clear</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">CREATE TABLE flowers (
+  flower_id INTEGER PRIMARY KEY,
+  flower_name VARCHAR(50),
+  color VARCHAR(30),
+  price DECIMAL(6,2),
+  stock INTEGER
+);</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>column</th>
+                  <th>use</th>
+                </tr>
+                <tr>
+                  <td>flower_id</td>
+                  <td>primary key</td>
+                </tr>
+                <tr>
+                  <td>flower_name</td>
+                  <td>product name</td>
+                </tr>
+                <tr>
+                  <td>stock</td>
+                  <td>inventory value</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 05 INSERT FLOWERS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Load flower rows before permission tests</li>
+                <li>These rows support select and update examples</li>
+                <li>Result shows the base table state</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.12;">INSERT INTO flowers
+(flower_id, flower_name, color, price, stock)
+VALUES
+(1, 'Rose', 'Red', 4.50, 20),
+(2, 'Tulip', 'Yellow', 3.20, 30),
+(3, 'Lily', 'White', 5.00, 15);
+
+SELECT flower_id, flower_name, stock
+FROM flowers;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                  <td>20</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Tulip</td>
+                  <td>30</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Lily</td>
+                  <td>15</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 06 USER CONCEPT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>A user is a database account</li>
+                <li>Users can log in and perform actions</li>
+                <li>Permissions decide what each user may do</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:18px; line-height:1.15;">-- user examples
+
+manager_user
+analyst_user
+cashier_user</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>user</th>
+                  <th>purpose</th>
+                </tr>
+                <tr>
+                  <td>manager_user</td>
+                  <td>manage data</td>
+                </tr>
+                <tr>
+                  <td>analyst_user</td>
+                  <td>read reports</td>
+                </tr>
+                <tr>
+                  <td>cashier_user</td>
+                  <td>limited operations</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 07 CREATE USER MANAGER -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Create a user for management work</li>
+                <li>This account may receive broad permissions</li>
+                <li>User creation comes before grant</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">CREATE USER manager_user
+IDENTIFIED BY 'demo123';</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>user_name</th>
+                </tr>
+                <tr>
+                  <td>manager_user</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 08 CREATE USER ANALYST -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Create a second user for reporting</li>
+                <li>This account will receive read-focused permissions</li>
+                <li>Different users can receive different rights</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">CREATE USER analyst_user
+IDENTIFIED BY 'demo123';</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>user_name</th>
+                </tr>
+                <tr>
+                  <td>analyst_user</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 09 ROLE CONCEPT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>A role groups permissions together</li>
+                <li>Roles make administration easier</li>
+                <li>Many users can share one role</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:18px; line-height:1.15;">-- role examples
+
+inventory_reader
+inventory_editor
+sales_manager</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>role</th>
+                  <th>purpose</th>
+                </tr>
+                <tr>
+                  <td>inventory_reader</td>
+                  <td>read stock</td>
+                </tr>
+                <tr>
+                  <td>inventory_editor</td>
+                  <td>change stock</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 10 CREATE ROLE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Create a role for read-only flower access</li>
+                <li>The role can later be assigned to users</li>
+                <li>This separates identity from permission design</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">CREATE ROLE inventory_reader;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>role_name</th>
+                </tr>
+                <tr>
+                  <td>inventory_reader</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 11 CREATE SECOND ROLE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Create a second role for editing inventory</li>
+                <li>This role will need stronger privileges</li>
+                <li>Roles can reflect actual job responsibilities</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">CREATE ROLE inventory_editor;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>role_name</th>
+                </tr>
+                <tr>
+                  <td>inventory_editor</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 12 GRANT CONCEPT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Grant gives a permission to a user or role</li>
+                <li>Permissions can be fine-grained</li>
+                <li>Examples include select, insert, update, and delete</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:18px; line-height:1.15;">GRANT SELECT ON flowers TO analyst_user;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>action</th>
+                  <th>object</th>
+                </tr>
+                <tr>
+                  <td>SELECT</td>
+                  <td>flowers</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 13 GRANT SELECT TO ROLE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Grant read permission to the reader role</li>
+                <li>Users with this role can query the table</li>
+                <li>This is a common reporting pattern</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">GRANT SELECT
+ON flowers
+TO inventory_reader;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>grantee</th>
+                  <th>permission</th>
+                </tr>
+                <tr>
+                  <td>inventory_reader</td>
+                  <td>SELECT</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 14 GRANT UPDATE TO ROLE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Grant update permission to the editor role</li>
+                <li>This role may change stock values</li>
+                <li>Editing should be limited to the right group</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">GRANT UPDATE
+ON flowers
+TO inventory_editor;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>grantee</th>
+                  <th>permission</th>
+                </tr>
+                <tr>
+                  <td>inventory_editor</td>
+                  <td>UPDATE</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 15 ASSIGN ROLE TO USER -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Assign the reader role to analyst_user</li>
+                <li>The user receives the role’s permissions</li>
+                <li>This is cleaner than granting many separate rights</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">GRANT inventory_reader
+TO analyst_user;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>user</th>
+                  <th>role</th>
+                </tr>
+                <tr>
+                  <td>analyst_user</td>
+                  <td>inventory_reader</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 16 ASSIGN SECOND ROLE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Assign the editor role to manager_user</li>
+                <li>The manager can now edit inventory rows</li>
+                <li>Roles can be distributed according to responsibility</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">GRANT inventory_editor
+TO manager_user;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>user</th>
+                  <th>role</th>
+                </tr>
+                <tr>
+                  <td>manager_user</td>
+                  <td>inventory_editor</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 17 ROLE BASED SELECT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>A read role should allow safe queries</li>
+                <li>Analyst can read flower inventory</li>
+                <li>Result shows allowed access pattern</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">SELECT flower_id, flower_name, stock
+FROM flowers;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                  <td>20</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Tulip</td>
+                  <td>30</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Lily</td>
+                  <td>15</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 18 ROLE BASED UPDATE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>An editor role may update stock</li>
+                <li>This permission should not be given to every user</li>
+                <li>Result confirms the allowed change</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.15;">UPDATE flowers
+SET stock = 18
+WHERE flower_id = 1;
+
+SELECT flower_id, flower_name, stock
+FROM flowers
+WHERE flower_id = 1;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                  <td>18</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 19 REVOKE CONCEPT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Revoke removes previously granted access</li>
+                <li>This is used when responsibilities change</li>
+                <li>Security is not only about giving rights</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:18px; line-height:1.15;">REVOKE UPDATE
+ON flowers
+FROM inventory_editor;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>action</th>
+                  <th>effect</th>
+                </tr>
+                <tr>
+                  <td>REVOKE</td>
+                  <td>remove permission</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 20 REVOKE UPDATE FROM ROLE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Remove update rights from the editor role</li>
+                <li>Users with that role lose the permission</li>
+                <li>This narrows allowed operations</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">REVOKE UPDATE
+ON flowers
+FROM inventory_editor;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>grantee</th>
+                  <th>removed_permission</th>
+                </tr>
+                <tr>
+                  <td>inventory_editor</td>
+                  <td>UPDATE</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 21 UPDATE AFTER REVOKE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>After revoke, the same update should fail</li>
+                <li>This shows that access control changed effectively</li>
+                <li>Permissions must be checked continuously</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.15;">UPDATE flowers
+SET stock = 16
+WHERE flower_id = 1;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>result</th>
+                </tr>
+                <tr>
+                  <td>permission denied</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 22 REVOKE ROLE FROM USER -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>A role assignment can also be removed</li>
+                <li>The user then loses inherited permissions</li>
+                <li>This is cleaner than editing many grants by hand</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">REVOKE inventory_reader
+FROM analyst_user;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>user</th>
+                  <th>removed_role</th>
+                </tr>
+                <tr>
+                  <td>analyst_user</td>
+                  <td>inventory_reader</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 23 SELECT AFTER ROLE REVOKE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Without the reader role, select may fail</li>
+                <li>This depends on whether direct rights still exist</li>
+                <li>In this example, access is removed</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">SELECT flower_id, flower_name
+FROM flowers;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>result</th>
+                </tr>
+                <tr>
+                  <td>permission denied</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 24 DIRECT GRANT TO USER -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Permissions may also be granted directly to a user</li>
+                <li>This works without using a role</li>
+                <li>Direct grants are simple but less scalable</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">GRANT SELECT
+ON flowers
+TO analyst_user;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>user</th>
+                  <th>permission</th>
+                </tr>
+                <tr>
+                  <td>analyst_user</td>
+                  <td>SELECT</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 25 SELECT AFTER DIRECT GRANT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>The user can read again after direct grant</li>
+                <li>This shows the difference between role-based and direct permission</li>
+                <li>Access was restored on the table</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">SELECT flower_name, price
+FROM flowers
+ORDER BY flower_id;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_name</th>
+                  <th>price</th>
+                </tr>
+                <tr>
+                  <td>Rose</td>
+                  <td>4.50</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>3.20</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>5.00</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 26 LOCK CONCEPT -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Locks control concurrent access to data</li>
+                <li>They help avoid conflicting changes</li>
+                <li>Writers and readers may be affected differently</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:18px; line-height:1.15;">LOCK TABLE flowers
+IN EXCLUSIVE MODE;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>lock_type</th>
+                  <th>target</th>
+                </tr>
+                <tr>
+                  <td>EXCLUSIVE</td>
+                  <td>flowers</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 27 LOCK FOR UPDATE SESSION A -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>One session can lock a table before changing it</li>
+                <li>This prevents conflicting concurrent work</li>
+                <li>Session A now controls the table</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:14px; line-height:1.12;">BEGIN;
+
+LOCK TABLE flowers
+IN EXCLUSIVE MODE;
+
+UPDATE flowers
+SET stock = 17
+WHERE flower_id = 1;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>session</th>
+                  <th>state</th>
+                </tr>
+                <tr>
+                  <td>A</td>
+                  <td>lock acquired</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 28 SECOND SESSION BLOCKED -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>A second session may be blocked by the lock</li>
+                <li>This prevents overlapping conflicting writes</li>
+                <li>The database waits or throws an error depending on settings</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.15;">UPDATE flowers
+SET stock = 40
+WHERE flower_id = 2;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>session</th>
+                  <th>result</th>
+                </tr>
+                <tr>
+                  <td>B</td>
+                  <td>blocked by lock</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 29 COMMIT RELEASES LOCK -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Committing usually releases transaction locks</li>
+                <li>The protected change becomes permanent</li>
+                <li>Other sessions may continue afterward</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">COMMIT;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>lock_state</th>
+                </tr>
+                <tr>
+                  <td>released after commit</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 30 VERIFY LOCKED UPDATE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>After commit, the locked update is visible</li>
+                <li>The new stock value is now stable</li>
+                <li>This confirms session A succeeded</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">SELECT flower_id, flower_name, stock
+FROM flowers
+WHERE flower_id = 1;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                  <td>17</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 31 GRANT MULTIPLE RIGHTS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Multiple rights can be granted together</li>
+                <li>This is useful for broader working roles</li>
+                <li>The object and grantee remain explicit</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.15;">GRANT SELECT, INSERT, UPDATE
+ON flowers
+TO manager_user;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>user</th>
+                  <th>permissions</th>
+                </tr>
+                <tr>
+                  <td>manager_user</td>
+                  <td>SELECT, INSERT, UPDATE</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 32 REVOKE ONE OF MANY -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>A single permission can be removed later</li>
+                <li>This allows gradual tightening of access</li>
+                <li>Other granted rights may remain</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.15;">REVOKE INSERT
+ON flowers
+FROM manager_user;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>user</th>
+                  <th>removed_permission</th>
+                </tr>
+                <tr>
+                  <td>manager_user</td>
+                  <td>INSERT</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 33 INSERT AFTER REVOKE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>After insert is revoked, the action should fail</li>
+                <li>This confirms the permission change took effect</li>
+                <li>Access control is dynamic and enforceable</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:14px; line-height:1.15;">INSERT INTO flowers
+(flower_id, flower_name, color, price, stock)
+VALUES
+(4, 'Orchid', 'Purple', 7.80, 8);</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>result</th>
+                </tr>
+                <tr>
+                  <td>permission denied</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 34 ROLE ADVANTAGE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Roles reduce repeated grant statements</li>
+                <li>They simplify administration for many users</li>
+                <li>This is usually better than many direct grants</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">GRANT inventory_reader TO analyst_user;
+GRANT inventory_reader TO cashier_user;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>role</th>
+                  <th>assigned_users</th>
+                </tr>
+                <tr>
+                  <td>inventory_reader</td>
+                  <td>2 users</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 35 USER VS ROLE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>User means who is acting</li>
+                <li>Role means what permissions are grouped</li>
+                <li>The two ideas should be kept distinct</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:18px; line-height:1.15;">-- identity vs permission
+
+USER = analyst_user
+ROLE = inventory_reader</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>concept</th>
+                  <th>question answered</th>
+                </tr>
+                <tr>
+                  <td>USER</td>
+                  <td>who?</td>
+                </tr>
+                <tr>
+                  <td>ROLE</td>
+                  <td>what rights?</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 36 LOCK SUMMARY EXAMPLE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Locks are about concurrency, not permission</li>
+                <li>Grant answers who may act</li>
+                <li>Lock answers when others must wait</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:17px; line-height:1.15;">LOCK TABLE flowers
+IN EXCLUSIVE MODE;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>question</th>
+                  <th>answered by</th>
+                </tr>
+                <tr>
+                  <td>who may update?</td>
+                  <td>GRANT</td>
+                </tr>
+                <tr>
+                  <td>who must wait now?</td>
+                  <td>LOCK</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 37 CURRENT FLOWERS -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>The table reflects the completed allowed updates</li>
+                <li>No unauthorized insert was added</li>
+                <li>Current state remains controlled</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:15px; line-height:1.15;">SELECT flower_id, flower_name, stock
+FROM flowers
+ORDER BY flower_id;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_id</th>
+                  <th>flower_name</th>
+                  <th>stock</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+                  <td>Rose</td>
+                  <td>17</td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td>Tulip</td>
+                  <td>30</td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td>Lily</td>
+                  <td>15</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 38 CHEAT TABLE -->
+        <section>
+          <table class="table">
+            <tr>
+              <th>Concept</th>
+              <th>Purpose</th>
+            </tr>
+            <tr>
+              <td>LOCK</td>
+              <td>control concurrent access</td>
+            </tr>
+            <tr>
+              <td>GRANT</td>
+              <td>give permission</td>
+            </tr>
+            <tr>
+              <td>REVOKE</td>
+              <td>remove permission</td>
+            </tr>
+            <tr>
+              <td>USER</td>
+              <td>database account</td>
+            </tr>
+            <tr>
+              <td>ROLE</td>
+              <td>permission group</td>
+            </tr>
+          </table>
+        </section>
+
+        <!-- 39 PRACTICE -->
+        <section>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Create one user and one role</li>
+                <li>Grant select on flowers to the role</li>
+                <li>Assign the role to the user</li>
+                <li>Revoke the role and compare the result</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size:16px; line-height:1.15;">SELECT flower_name, price
+FROM flowers
+WHERE price > 3.00;</code></pre>
+
+              <table class="table" style="font-size:14px; margin-top:8px;">
+                <tr>
+                  <th>flower_name</th>
+                  <th>price</th>
+                </tr>
+                <tr>
+                  <td>Rose</td>
+                  <td>4.50</td>
+                </tr>
+                <tr>
+                  <td>Tulip</td>
+                  <td>3.20</td>
+                </tr>
+                <tr>
+                  <td>Lily</td>
+                  <td>5.00</td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 40 FINAL DIAGRAM -->
+        <section>
+          <svg width="100%" height="220">
+            <text x="600" y="70" text-anchor="middle" fill="white" font-size="24">
+              USER → ROLE → GRANT → REVOKE
+            </text>
+            <text x="600" y="120" text-anchor="middle" fill="white" font-size="22">
+              LOCK → CONTROLLED ACCESS AND CHANGE
+            </text>
+            <text x="600" y="170" text-anchor="middle" fill="white" font-size="20">
+              Reproducible flower database security examples
+            </text>
+          </svg>
+        </section>
+
+      </section>
 
     </div>
   </div>
