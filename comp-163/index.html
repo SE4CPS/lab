@@ -662,7 +662,8 @@
               <tr style="color:#ccc;">
                 <td style="padding:6px; border:1px solid #666;">14 (<a href="./#/c32">Apr 13</a>, <a href="./#/c33">Apr
                     15</a>, <a href="./#/c34">Apr 17</a>)</td>
-                <td style="padding:6px; border:1px solid #666;">Relational Database and NoSQL, Semester Review</td>
+                <td style="padding:6px; border:1px solid #666;"><a href="./#/module-14">Relational Database and NoSQL,
+                    Semester Review</a></td>
                 <td style="padding:6px; border:1px solid #666;">Final Preparation</td>
                 <td style="padding:6px; border:1px solid #666;"></td>
                 <td style="padding:6px; border:1px solid #666;"></td>
@@ -35632,6 +35633,1423 @@ def get_max_completed_hours():
         <!-- ===================== MODULE 14 =====================  -->
 
         <section id="module-14">
+
+          <!-- 1: Title -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>Module 14</h5>
+                <h5>NoSQL Databases</h5>
+                <p class="muted">Motivation, history, types, ACID, CAP theorem and query languages.</p>
+              </div>
+              <div style="flex:1;">
+                <svg width="100%" viewBox="0 0 440 200" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:sans-serif;">
+                  <rect x="10" y="10" width="90" height="80" rx="6" fill="#1a2a3a" stroke="#93aee8" stroke-width="1" />
+                  <text x="55" y="46" text-anchor="middle" font-size="11" fill="#93aee8" font-weight="bold">SQL</text>
+                  <text x="55" y="62" text-anchor="middle" font-size="9" fill="#666">1970s</text>
+                  <text x="55" y="76" text-anchor="middle" font-size="9" fill="#666">relational</text>
+                  <rect x="120" y="10" width="90" height="80" rx="6" fill="#2a1a0a" stroke="#f5b85e" stroke-width="1" />
+                  <text x="165" y="46" text-anchor="middle" font-size="11" fill="#f5b85e" font-weight="bold">Web
+                    scale</text>
+                  <text x="165" y="62" text-anchor="middle" font-size="9" fill="#666">2000s</text>
+                  <text x="165" y="76" text-anchor="middle" font-size="9" fill="#666">billions of rows</text>
+                  <rect x="230" y="10" width="90" height="80" rx="6" fill="#2a1010" stroke="#e88" stroke-width="1" />
+                  <text x="275" y="46" text-anchor="middle" font-size="11" fill="#e88" font-weight="bold">Limits
+                    hit</text>
+                  <text x="275" y="62" text-anchor="middle" font-size="9" fill="#666">joins slow</text>
+                  <text x="275" y="76" text-anchor="middle" font-size="9" fill="#666">schema rigid</text>
+                  <rect x="340" y="10" width="90" height="80" rx="6" fill="#0a2a1a" stroke="#2e9e62" stroke-width="1" />
+                  <text x="385" y="46" text-anchor="middle" font-size="11" fill="#2e9e62"
+                    font-weight="bold">NoSQL</text>
+                  <text x="385" y="62" text-anchor="middle" font-size="9" fill="#666">2009+</text>
+                  <text x="385" y="76" text-anchor="middle" font-size="9" fill="#666">distributed</text>
+                  <rect x="10" y="110" width="420" height="70" rx="6" fill="#1a1a2a" stroke="#8866cc"
+                    stroke-width="0.5" />
+                  <text x="220" y="132" text-anchor="middle" font-size="12" fill="#8866cc" font-weight="bold">Four NoSQL
+                    families</text>
+                  <text x="55" y="158" text-anchor="middle" font-size="11" fill="#8866cc">Document</text>
+                  <text x="165" y="158" text-anchor="middle" font-size="11" fill="#8866cc">Key-Value</text>
+                  <text x="275" y="158" text-anchor="middle" font-size="11" fill="#8866cc">Column</text>
+                  <text x="385" y="158" text-anchor="middle" font-size="11" fill="#8866cc">Graph</text>
+                  <text x="55" y="174" text-anchor="middle" font-size="9" fill="#555">MongoDB</text>
+                  <text x="165" y="174" text-anchor="middle" font-size="9" fill="#555">Redis</text>
+                  <text x="275" y="174" text-anchor="middle" font-size="9" fill="#555">Cassandra</text>
+                  <text x="385" y="174" text-anchor="middle" font-size="9" fill="#555">Neo4j</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- 2: Why SQL dominated -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>Why SQL Dominated for 30 Years</h5>
+                <ul>
+                  <li>E.F. Codd published the relational model in 1970</li>
+                  <li>Tables, foreign keys matched business records well</li>
+                  <li>ACID transactions made banking and finance safe</li>
+                  <li>SQL became the universal query language</li>
+                  <li>Hardware expensive so vertical scaling standard</li>
+                  <li>Data volumes were millions of rows at most</li>
+                  <li>Schema rigidity was seen as a feature</li>
+                </ul>
+              </div>
+              <div style="flex:1;">
+                <svg width="100%" viewBox="0 0 440 220" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:sans-serif;">
+                  <rect x="10" y="10" width="420" height="30" rx="5" fill="#1a2a4a" />
+                  <text x="220" y="30" text-anchor="middle" font-size="12" fill="#93aee8" font-weight="bold">The
+                    Relational Model: E.F. Codd 1970</text>
+                  <rect x="10" y="50" width="130" height="60" rx="5" fill="#1a2a3a" stroke="#93aee8"
+                    stroke-width="0.5" />
+                  <text x="75" y="70" text-anchor="middle" font-size="10" fill="#93aee8"
+                    font-weight="bold">Tables</text>
+                  <text x="75" y="86" text-anchor="middle" font-size="9" fill="#666">rows and columns</text>
+                  <text x="75" y="100" text-anchor="middle" font-size="9" fill="#666">fixed schema</text>
+                  <rect x="160" y="50" width="130" height="60" rx="5" fill="#1a2a3a" stroke="#93aee8"
+                    stroke-width="0.5" />
+                  <text x="225" y="70" text-anchor="middle" font-size="10" fill="#93aee8" font-weight="bold">Foreign
+                    Keys</text>
+                  <text x="225" y="86" text-anchor="middle" font-size="9" fill="#666">enforce relationships</text>
+                  <text x="225" y="100" text-anchor="middle" font-size="9" fill="#666">data integrity</text>
+                  <rect x="310" y="50" width="120" height="60" rx="5" fill="#1a2a3a" stroke="#93aee8"
+                    stroke-width="0.5" />
+                  <text x="370" y="70" text-anchor="middle" font-size="10" fill="#93aee8" font-weight="bold">SQL</text>
+                  <text x="370" y="86" text-anchor="middle" font-size="9" fill="#666">declarative queries</text>
+                  <text x="370" y="100" text-anchor="middle" font-size="9" fill="#666">portable standard</text>
+                  <rect x="10" y="130" width="420" height="34" rx="5" fill="#0a2a1a" stroke="#2e9e62"
+                    stroke-width="0.5" />
+                  <text x="220" y="148" text-anchor="middle" font-size="11" fill="#2e9e62" font-weight="bold">30 years
+                    of dominance</text>
+                  <text x="220" y="160" text-anchor="middle" font-size="10" fill="#555">Oracle · IBM DB2 · SQL Server ·
+                    PostgreSQL · MySQL</text>
+                  <rect x="10" y="174" width="420" height="36" rx="5" fill="#2a1a0a" stroke="#f5b85e"
+                    stroke-width="0.5" />
+                  <text x="220" y="192" text-anchor="middle" font-size="11" fill="#f5b85e" font-weight="bold">One big
+                    server handled everything</text>
+                  <text x="220" y="206" text-anchor="middle" font-size="10" fill="#555">vertical scaling · millions of
+                    rows · manageable volumes</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- 3: The web scale problem -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>The Web Scale Problem</h5>
+                <ul>
+                  <li>Platforms grew to hundreds of millions of users</li>
+                  <li>A single server could not handle the load</li>
+                  <li>Vertical scaling hit physical hardware limits</li>
+                  <li>Horizontal scaling broke ACID joins across servers</li>
+                  <li>Schema changes on live tables took days</li>
+                  <li>User data semi-structured and not a fit for tables</li>
+                  <li>The relational model not designed for it</li>
+                </ul>
+              </div>
+              <div style="flex:1;">
+                <svg width="100%" viewBox="0 0 440 220" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:sans-serif;">
+                  <defs>
+                    <marker id="aWS" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                      orient="auto">
+                      <path d="M2 1L8 5L2 9" fill="none" stroke="#e44" stroke-width="1.5" stroke-linecap="round" />
+                    </marker>
+                  </defs>
+                  <rect x="170" y="10" width="100" height="50" rx="6" fill="#1a2a3a" stroke="#93aee8"
+                    stroke-width="1" />
+                  <text x="220" y="34" text-anchor="middle" font-size="11" fill="#93aee8" font-weight="bold">1 big
+                    server</text>
+                  <text x="220" y="50" text-anchor="middle" font-size="9" fill="#666">vertical scaling</text>
+                  <line x1="60" y1="90" x2="185" y2="65" stroke="#e44" stroke-width="1.5" marker-end="url(#aWS)" />
+                  <line x1="130" y1="100" x2="196" y2="68" stroke="#e44" stroke-width="1.5" marker-end="url(#aWS)" />
+                  <line x1="310" y1="90" x2="255" y2="65" stroke="#e44" stroke-width="1.5" marker-end="url(#aWS)" />
+                  <line x1="380" y1="100" x2="244" y2="68" stroke="#e44" stroke-width="1.5" marker-end="url(#aWS)" />
+                  <text x="30" y="104" text-anchor="middle" font-size="9" fill="#e44">millions</text>
+                  <text x="30" y="116" text-anchor="middle" font-size="9" fill="#e44">of users</text>
+                  <text x="410" y="104" text-anchor="middle" font-size="9" fill="#e44">millions</text>
+                  <text x="410" y="116" text-anchor="middle" font-size="9" fill="#e44">of users</text>
+                  <text x="220" y="92" text-anchor="middle" font-size="20" fill="#e44">💥</text>
+                  <text x="220" y="114" text-anchor="middle" font-size="10" fill="#e44" font-weight="bold">server
+                    overloaded</text>
+                  <rect x="10" y="130" width="130" height="40" rx="5" fill="#2a1010" stroke="#e88" stroke-width="0.5" />
+                  <text x="75" y="148" text-anchor="middle" font-size="9" fill="#e88" font-weight="bold">Schema
+                    changes</text>
+                  <text x="75" y="162" text-anchor="middle" font-size="9" fill="#666">lock table for days</text>
+                  <rect x="155" y="130" width="130" height="40" rx="5" fill="#2a1010" stroke="#e88"
+                    stroke-width="0.5" />
+                  <text x="220" y="148" text-anchor="middle" font-size="9" fill="#e88" font-weight="bold">JOIN across
+                    servers</text>
+                  <text x="220" y="162" text-anchor="middle" font-size="9" fill="#666">network too slow</text>
+                  <rect x="300" y="130" width="130" height="40" rx="5" fill="#2a1010" stroke="#e88"
+                    stroke-width="0.5" />
+                  <text x="365" y="148" text-anchor="middle" font-size="9" fill="#e88"
+                    font-weight="bold">Semi-structured data</text>
+                  <text x="365" y="162" text-anchor="middle" font-size="9" fill="#666">JSON in VARCHAR</text>
+                  <rect x="10" y="182" width="420" height="28" rx="5" fill="#0a2a1a" stroke="#2e9e62"
+                    stroke-width="0.5" />
+                  <text x="220" y="200" text-anchor="middle" font-size="11" fill="#2e9e62" font-weight="bold">Solution:
+                    distribute data across many commodity servers</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- 4: Timeline -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>Timeline: SQL to NoSQL</h5>
+                <ul>
+                  <li>1970: E.F. Codd publishes the relational model</li>
+                  <li>1979: Oracle ships the first commercial RDBMS</li>
+                  <li>1986: SQL becomes an ANSI/ISO standard</li>
+                  <li>1995: MySQL released and the web era begins</li>
+                  <li>2003: Google publishes the GFS paper</li>
+                  <li>2006: Google publishes the Bigtable paper</li>
+                  <li>2007: Amazon publishes the Dynamo paper</li>
+                  <li>2009: the term NoSQL is coined in San Francisco</li>
+                  <li>2009: MongoDB and Cassandra released publicly</li>
+                  <li>2010: Redis, Neo4j and HBase gain wide adoption</li>
+                </ul>
+              </div>
+              <div style="flex:1;">
+                <svg width="100%" viewBox="0 0 440 340" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:sans-serif;">
+                  <line x1="80" y1="10" x2="80" y2="330" stroke="#333" stroke-width="2" />
+                  <circle cx="80" cy="30" r="6" fill="#2a4ca0" />
+                  <text x="94" y="27" font-size="10" fill="#93aee8" font-weight="bold">1970</text>
+                  <text x="94" y="40" font-size="9" fill="#666">Codd relational model</text>
+                  <circle cx="80" cy="70" r="6" fill="#2a4ca0" />
+                  <text x="94" y="67" font-size="10" fill="#93aee8" font-weight="bold">1979</text>
+                  <text x="94" y="80" font-size="9" fill="#666">Oracle RDBMS</text>
+                  <circle cx="80" cy="110" r="6" fill="#2a4ca0" />
+                  <text x="94" y="107" font-size="10" fill="#93aee8" font-weight="bold">1986</text>
+                  <text x="94" y="120" font-size="9" fill="#666">SQL ANSI standard</text>
+                  <circle cx="80" cy="150" r="6" fill="#7a5200" />
+                  <text x="94" y="147" font-size="10" fill="#f5b85e" font-weight="bold">1995</text>
+                  <text x="94" y="160" font-size="9" fill="#666">MySQL · web era begins</text>
+                  <circle cx="80" cy="190" r="6" fill="#e07800" />
+                  <text x="94" y="187" font-size="10" fill="#f5b85e" font-weight="bold">2003 to 07</text>
+                  <text x="94" y="200" font-size="9" fill="#666">Google GFS · Bigtable · Amazon Dynamo</text>
+                  <circle cx="80" cy="240" r="8" fill="#2e9e62" />
+                  <text x="94" y="237" font-size="10" fill="#2e9e62" font-weight="bold">2009</text>
+                  <text x="94" y="250" font-size="9" fill="#666">NoSQL coined · MongoDB · Cassandra</text>
+                  <circle cx="80" cy="280" r="6" fill="#2e9e62" />
+                  <text x="94" y="277" font-size="10" fill="#2e9e62" font-weight="bold">2010+</text>
+                  <text x="94" y="290" font-size="9" fill="#666">Redis · Neo4j · HBase · ClickHouse</text>
+                  <circle cx="80" cy="318" r="6" fill="#8866cc" />
+                  <text x="94" y="315" font-size="10" fill="#8866cc" font-weight="bold">Today</text>
+                  <text x="94" y="328" font-size="9" fill="#666">SQL and NoSQL coexist in most systems</text>
+                  <rect x="10" y="16" width="62" height="126" rx="4" fill="#1a2a3a" stroke="#93aee8"
+                    stroke-width="0.5" />
+                  <text x="41" y="80" text-anchor="middle" font-size="9" fill="#93aee8" font-weight="bold"
+                    transform="rotate(-90 41 80)">SQL era</text>
+                  <rect x="10" y="176" width="62" height="56" rx="4" fill="#2a1a0a" stroke="#f5b85e"
+                    stroke-width="0.5" />
+                  <text x="41" y="204" text-anchor="middle" font-size="9" fill="#f5b85e" font-weight="bold"
+                    transform="rotate(-90 41 204)">transition</text>
+                  <rect x="10" y="226" width="62" height="100" rx="4" fill="#0a2a1a" stroke="#2e9e62"
+                    stroke-width="0.5" />
+                  <text x="41" y="276" text-anchor="middle" font-size="9" fill="#2e9e62" font-weight="bold"
+                    transform="rotate(-90 41 276)">NoSQL era</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- 5: What NoSQL means -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>What NoSQL Actually Means</h5>
+                <ul>
+                  <li>Not "No SQL", it means "Not Only SQL"</li>
+                  <li>NoSQL trades some relational guarantees for scale</li>
+                  <li>No fixed schema: docs, key-value pairs, graphs</li>
+                  <li>Designed to run on many commodity servers</li>
+                  <li>Horizontal scaling is a first-class design goal</li>
+                  <li>Many NoSQL dbs support SQL-like query syntax</li>
+                  <li>The right tool depends on the access pattern</li>
+                </ul>
+              </div>
+              <div style="flex:1;">
+                <svg width="100%" viewBox="0 0 440 220" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:sans-serif;">
+                  <rect x="10" y="10" width="420" height="26" rx="4" fill="#111" />
+                  <rect x="10" y="10" width="170" height="26" rx="4" fill="#1a2a3a" />
+                  <rect x="180" y="10" width="130" height="26" fill="#2a1a0a" />
+                  <rect x="310" y="10" width="120" height="26" fill="#0a2a1a" />
+                  <text x="18" y="27" text-anchor="start" font-size="10" fill="#888" font-weight="bold">Property</text>
+                  <text x="188" y="27" text-anchor="start" font-size="10" fill="#f5b85e" font-weight="bold">SQL</text>
+                  <text x="318" y="27" text-anchor="start" font-size="10" fill="#2e9e62" font-weight="bold">NoSQL</text>
+                  <rect x="10" y="40" width="170" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="180" y="40" width="130" height="24" fill="#1a1a2a" stroke="#333" stroke-width="0.5" />
+                  <rect x="310" y="40" width="120" height="24" fill="#0a1a0a" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="56" text-anchor="start" font-size="9" fill="#aaa">Schema</text>
+                  <text x="188" y="56" text-anchor="start" font-size="9" fill="#f5b85e">fixed · defined upfront</text>
+                  <text x="318" y="56" text-anchor="start" font-size="9" fill="#2e9e62">flexible · optional</text>
+                  <rect x="10" y="68" width="170" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="180" y="68" width="130" height="24" fill="#1a1a2a" stroke="#333" stroke-width="0.5" />
+                  <rect x="310" y="68" width="120" height="24" fill="#0a1a0a" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="84" text-anchor="start" font-size="9" fill="#aaa">Scaling</text>
+                  <text x="188" y="84" text-anchor="start" font-size="9" fill="#f5b85e">vertical: bigger server</text>
+                  <text x="318" y="84" text-anchor="start" font-size="9" fill="#2e9e62">horizontal: more servers</text>
+                  <rect x="10" y="96" width="170" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="180" y="96" width="130" height="24" fill="#1a1a2a" stroke="#333" stroke-width="0.5" />
+                  <rect x="310" y="96" width="120" height="24" fill="#0a1a0a" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="112" text-anchor="start" font-size="9" fill="#aaa">Transactions</text>
+                  <text x="188" y="112" text-anchor="start" font-size="9" fill="#f5b85e">full ACID</text>
+                  <text x="318" y="112" text-anchor="start" font-size="9" fill="#2e9e62">BASE · eventual
+                    consistency</text>
+                  <rect x="10" y="124" width="170" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="180" y="124" width="130" height="24" fill="#1a1a2a" stroke="#333" stroke-width="0.5" />
+                  <rect x="310" y="124" width="120" height="24" fill="#0a1a0a" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="140" text-anchor="start" font-size="9" fill="#aaa">Data model</text>
+                  <text x="188" y="140" text-anchor="start" font-size="9" fill="#f5b85e">tables · rows · joins</text>
+                  <text x="318" y="140" text-anchor="start" font-size="9" fill="#2e9e62">doc · kv · column ·
+                    graph</text>
+                  <rect x="10" y="152" width="170" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="180" y="152" width="130" height="24" fill="#1a1a2a" stroke="#333" stroke-width="0.5" />
+                  <rect x="310" y="152" width="120" height="24" fill="#0a1a0a" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="168" text-anchor="start" font-size="9" fill="#aaa">Query language</text>
+                  <text x="188" y="168" text-anchor="start" font-size="9" fill="#f5b85e">standard SQL</text>
+                  <text x="318" y="168" text-anchor="start" font-size="9" fill="#2e9e62">varies per database</text>
+                  <rect x="10" y="186" width="420" height="24" rx="4" fill="#1a1a2a" stroke="#8866cc"
+                    stroke-width="0.5" />
+                  <text x="18" y="202" text-anchor="start" font-size="9" fill="#8866cc" font-weight="bold">NoSQL = Not
+                    Only SQL · SQL-like query support is now common in NoSQL databases</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- 6: Four families -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>Four NoSQL Families</h5>
+                <ul>
+                  <li><strong>Document</strong>: JSON-like documents with nested fields</li>
+                  <li><strong>Key-Value</strong>: a key maps to a blob of data</li>
+                  <li><strong>Wide-Column</strong>: rows with dynamic columns</li>
+                  <li><strong>Graph</strong>: nodes, edges model relationships natively</li>
+                  <li>Each family optimises for a specific access pattern</li>
+                  <li>Choosing wrong db is worse than a bad SQL schema</li>
+                  <li>Many systems blend type, Redis has JSON support</li>
+                </ul>
+              </div>
+              <div style="flex:1;">
+                <svg width="100%" viewBox="0 0 440 260" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:sans-serif;">
+                  <rect x="10" y="10" width="200" height="110" rx="8" fill="#1a2a3a" stroke="#93aee8"
+                    stroke-width="1" />
+                  <rect x="10" y="10" width="200" height="24" rx="8" fill="#2a4ca0" />
+                  <text x="110" y="27" text-anchor="middle" font-size="11" fill="#fff"
+                    font-weight="bold">Document</text>
+                  <text x="20" y="52" text-anchor="start" font-size="10" fill="#93aee8">MongoDB · CouchDB ·
+                    Firestore</text>
+                  <text x="20" y="68" text-anchor="start" font-size="9" fill="#666">JSON documents · nested
+                    fields</text>
+                  <text x="20" y="84" text-anchor="start" font-size="9" fill="#666">flexible schema · rich
+                    queries</text>
+                  <text x="20" y="100" text-anchor="start" font-size="9" fill="#555">flower catalogues · user
+                    profiles</text>
+                  <rect x="230" y="10" width="200" height="110" rx="8" fill="#2a1a0a" stroke="#f5b85e"
+                    stroke-width="1" />
+                  <rect x="230" y="10" width="200" height="24" rx="8" fill="#e07800" />
+                  <text x="330" y="27" text-anchor="middle" font-size="11" fill="#fff"
+                    font-weight="bold">Key-Value</text>
+                  <text x="240" y="52" text-anchor="start" font-size="10" fill="#f5b85e">Redis · DynamoDB · Riak</text>
+                  <text x="240" y="68" text-anchor="start" font-size="9" fill="#666">key maps to value · O(1)
+                    lookup</text>
+                  <text x="240" y="84" text-anchor="start" font-size="9" fill="#666">in-memory option · TTL
+                    support</text>
+                  <text x="240" y="100" text-anchor="start" font-size="9" fill="#555">sessions · caching · flower
+                    cart</text>
+                  <rect x="10" y="140" width="200" height="110" rx="8" fill="#2a1010" stroke="#e88" stroke-width="1" />
+                  <rect x="10" y="140" width="200" height="24" rx="8" fill="#c00" />
+                  <text x="110" y="157" text-anchor="middle" font-size="11" fill="#fff"
+                    font-weight="bold">Wide-Column</text>
+                  <text x="20" y="182" text-anchor="start" font-size="10" fill="#e88">Cassandra · HBase ·
+                    Bigtable</text>
+                  <text x="20" y="198" text-anchor="start" font-size="9" fill="#666">rows with dynamic column
+                    families</text>
+                  <text x="20" y="214" text-anchor="start" font-size="9" fill="#666">write optimised · time
+                    series</text>
+                  <text x="20" y="230" text-anchor="start" font-size="9" fill="#555">flower sensor streams · IoT
+                    logs</text>
+                  <rect x="230" y="140" width="200" height="110" rx="8" fill="#0a2a1a" stroke="#2e9e62"
+                    stroke-width="1" />
+                  <rect x="230" y="140" width="200" height="24" rx="8" fill="#2e9e62" />
+                  <text x="330" y="157" text-anchor="middle" font-size="11" fill="#fff" font-weight="bold">Graph</text>
+                  <text x="240" y="182" text-anchor="start" font-size="10" fill="#2e9e62">Neo4j · Neptune ·
+                    ArangoDB</text>
+                  <text x="240" y="198" text-anchor="start" font-size="9" fill="#666">nodes · edges · properties</text>
+                  <text x="240" y="214" text-anchor="start" font-size="9" fill="#666">relationship traversal is
+                    O(1)</text>
+                  <text x="240" y="230" text-anchor="start" font-size="9" fill="#555">flower supplier networks ·
+                    fraud</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- 7: Document databases -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>Document Databases</h5>
+                <ul>
+                  <li>Document is self-contained JSON or BSON object</li>
+                  <li>Nested arrays and objects replace foreign key joins</li>
+                  <li>No schema enforced in the same collection</li>
+                  <li>Rich query language filters, aggregates</li>
+                  <li>Index on any nested field including array elements</li>
+                  <li>MongoDB widely deployed document database</li>
+                  <li>Best fit: catalogues, user profiles, content</li>
+                </ul>
+              </div>
+              <div style="flex:1;">
+                <svg width="100%" viewBox="0 0 440 260" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:monospace;">
+                  <rect x="10" y="10" width="420" height="240" rx="6" fill="#111" stroke="#333" stroke-width="1" />
+                  <rect x="10" y="10" width="420" height="22" rx="6" fill="#1a1a2a" />
+                  <text x="220" y="25" text-anchor="middle" font-size="9" fill="#666">MongoDB document: flowers
+                    collection</text>
+                  <text x="20" y="52" font-size="9" fill="#8866cc">{</text>
+                  <text x="30" y="68" font-size="9" fill="#666"> "_id":</text>
+                  <text x="100" y="68" font-size="9" fill="#4fd98e">ObjectId("64a1f2...")</text>
+                  <text x="30" y="84" font-size="9" fill="#666"> "name":</text>
+                  <text x="100" y="84" font-size="9" fill="#f7b24f">"Red Rose"</text>
+                  <text x="30" y="100" font-size="9" fill="#666"> "color":</text>
+                  <text x="100" y="100" font-size="9" fill="#f7b24f">"red"</text>
+                  <text x="30" y="116" font-size="9" fill="#666"> "price":</text>
+                  <text x="100" y="116" font-size="9" fill="#4fd98e">12.99</text>
+                  <text x="30" y="132" font-size="9" fill="#666"> "tags": [</text>
+                  <text x="50" y="148" font-size="9" fill="#f7b24f"> "outdoor", "seasonal"</text>
+                  <text x="30" y="164" font-size="9" fill="#666"> ],</text>
+                  <text x="30" y="180" font-size="9" fill="#666"> "supplier": {</text>
+                  <text x="50" y="196" font-size="9" fill="#f7b24f"> "name": "GardenCo",</text>
+                  <text x="50" y="212" font-size="9" fill="#f7b24f"> "country": "Netherlands"</text>
+                  <text x="30" y="228" font-size="9" fill="#666"> }</text>
+                  <text x="20" y="244" font-size="9" fill="#8866cc">}</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- 8: Key-Value databases -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>Key-Value Databases</h5>
+                <ul>
+                  <li>The simplest model: a key maps to a value</li>
+                  <li>The value is opaque: string, integer, JSON or binary</li>
+                  <li>O(1) read and write regardless of data size</li>
+                  <li>Redis stores data in RAM for microsecond latency</li>
+                  <li>TTL support: keys expire automatically > timeout</li>
+                  <li>Redis extends KV with lists, sets, sorted sets</li>
+                  <li>Best fit: session storage, caching, rate limiting</li>
+                </ul>
+              </div>
+              <div style="flex:1;">
+                <svg width="100%" viewBox="0 0 440 240" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:monospace;">
+                  <rect x="10" y="10" width="420" height="220" rx="6" fill="#111" stroke="#333" stroke-width="1" />
+                  <rect x="10" y="10" width="420" height="22" rx="6" fill="#1a1a2a" />
+                  <text x="220" y="25" text-anchor="middle" font-size="9" fill="#666">Redis commands: flower shop
+                    cart</text>
+                  <text x="20" y="52" font-size="9" fill="#666">-- store cart session</text>
+                  <text x="20" y="68" font-size="9" fill="#f76b6b">SET</text>
+                  <text x="50" y="68" font-size="9" fill="#f7b24f">cart:user:42</text>
+                  <text x="148" y="68" font-size="9" fill="#4fd98e">"{roses: 2, tulips: 1}"</text>
+                  <text x="20" y="84" font-size="9" fill="#f76b6b">EXPIRE</text>
+                  <text x="68" y="84" font-size="9" fill="#f7b24f">cart:user:42</text>
+                  <text x="166" y="84" font-size="9" fill="#4fd98e">3600</text>
+                  <text x="20" y="106" font-size="9" fill="#666">-- retrieve cart</text>
+                  <text x="20" y="122" font-size="9" fill="#f76b6b">GET</text>
+                  <text x="48" y="122" font-size="9" fill="#f7b24f">cart:user:42</text>
+                  <text x="20" y="138" font-size="9" fill="#4fd98e">→ "{roses: 2, tulips: 1}"</text>
+                  <text x="20" y="160" font-size="9" fill="#666">-- flower price leaderboard</text>
+                  <text x="20" y="176" font-size="9" fill="#f76b6b">ZADD</text>
+                  <text x="60" y="176" font-size="9" fill="#f7b24f">price:ranking</text>
+                  <text x="166" y="176" font-size="9" fill="#4fd98e">12.99 "rose"</text>
+                  <text x="20" y="192" font-size="9" fill="#f76b6b">ZADD</text>
+                  <text x="60" y="192" font-size="9" fill="#f7b24f">price:ranking</text>
+                  <text x="166" y="192" font-size="9" fill="#4fd98e">8.50 "tulip"</text>
+                  <rect x="18" y="204" width="390" height="18" rx="3" fill="#0a2a1a" stroke="#2e9e62"
+                    stroke-width="0.5" />
+                  <text x="213" y="216" text-anchor="middle" font-size="8" fill="#2e9e62">all operations are O(1): key
+                    lookup in hash table</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- 9: Wide-Column databases -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>Wide-Column Databases</h5>
+                <ul>
+                  <li>Rows identified by a partition key and clustering key</li>
+                  <li>Each row can have a different set of columns</li>
+                  <li>Columns are grouped into column families on disk</li>
+                  <li>Write path is append-only with no in-place updates</li>
+                  <li>Reads on the partition key are fast with no full scan</li>
+                  <li>Cassandra dist. partitions across ring of nodes</li>
+                  <li>Best fit: IoT sensor streams, time series, audit logs</li>
+                </ul>
+              </div>
+              <div style="flex:1;">
+                <svg width="100%" viewBox="0 0 440 240" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:sans-serif;">
+                  <rect x="10" y="10" width="420" height="24" rx="4" fill="#c00" />
+                  <text x="18" y="26" text-anchor="start" font-size="10" fill="#fff" font-weight="bold">flower_sales:
+                    Cassandra wide-column table</text>
+                  <rect x="10" y="38" width="80" height="20" fill="#1a0a0a" stroke="#444" stroke-width="0.5" />
+                  <rect x="94" y="38" width="80" height="20" fill="#1a0a0a" stroke="#444" stroke-width="0.5" />
+                  <rect x="178" y="38" width="60" height="20" fill="#1a0a0a" stroke="#444" stroke-width="0.5" />
+                  <rect x="242" y="38" width="60" height="20" fill="#1a0a0a" stroke="#444" stroke-width="0.5" />
+                  <rect x="306" y="38" width="60" height="20" fill="#1a0a0a" stroke="#444" stroke-width="0.5" />
+                  <rect x="370" y="38" width="60" height="20" fill="#1a0a0a" stroke="#444" stroke-width="0.5" />
+                  <text x="18" y="52" font-size="9" fill="#e88" font-weight="bold">flower (PK)</text>
+                  <text x="102" y="52" font-size="9" fill="#888">sale_date (CK)</text>
+                  <text x="186" y="52" font-size="9" fill="#888">qty</text>
+                  <text x="250" y="52" font-size="9" fill="#888">price</text>
+                  <text x="314" y="52" font-size="9" fill="#888">region</text>
+                  <text x="378" y="52" font-size="9" fill="#888">discount</text>
+                  <rect x="10" y="62" width="80" height="20" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="94" y="62" width="80" height="20" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="178" y="62" width="60" height="20" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="242" y="62" width="60" height="20" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="306" y="62" width="60" height="20" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="370" y="62" width="60" height="20" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="76" font-size="9" fill="#e88">rose</text>
+                  <text x="102" y="76" font-size="9" fill="#aaa">2024-01-01</text>
+                  <text x="186" y="76" font-size="9" fill="#aaa">120</text>
+                  <text x="250" y="76" font-size="9" fill="#aaa">12.99</text>
+                  <text x="314" y="76" font-size="9" fill="#aaa">EU</text>
+                  <text x="378" y="76" font-size="9" fill="#aaa">0.10</text>
+                  <rect x="10" y="86" width="80" height="20" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="94" y="86" width="80" height="20" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="178" y="86" width="60" height="20" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="242" y="86" width="60" height="20" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="306" y="86" width="60" height="20" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="370" y="86" width="60" height="20" fill="#222" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="100" font-size="9" fill="#e88">rose</text>
+                  <text x="102" y="100" font-size="9" fill="#aaa">2024-01-02</text>
+                  <text x="186" y="100" font-size="9" fill="#aaa">98</text>
+                  <text x="250" y="100" font-size="9" fill="#aaa">12.99</text>
+                  <text x="314" y="100" font-size="9" fill="#aaa">US</text>
+                  <text x="378" y="100" font-size="9" fill="#555">null</text>
+                  <rect x="10" y="110" width="80" height="20" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="94" y="110" width="80" height="20" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="178" y="110" width="60" height="20" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="242" y="110" width="60" height="20" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="306" y="110" width="60" height="20" fill="#222" stroke="#333" stroke-width="0.5" />
+                  <rect x="370" y="110" width="60" height="20" fill="#222" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="124" font-size="9" fill="#f5b85e">tulip</text>
+                  <text x="102" y="124" font-size="9" fill="#aaa">2024-01-01</text>
+                  <text x="186" y="124" font-size="9" fill="#aaa">200</text>
+                  <text x="250" y="124" font-size="9" fill="#aaa">8.50</text>
+                  <text x="314" y="124" font-size="9" fill="#555">null</text>
+                  <text x="378" y="124" font-size="9" fill="#555">null</text>
+                  <rect x="10" y="144" width="200" height="40" rx="5" fill="#2a1010" stroke="#e88" stroke-width="0.5" />
+                  <text x="20" y="160" font-size="9" fill="#e88" font-weight="bold">Partition key: flower</text>
+                  <text x="20" y="174" font-size="9" fill="#666">all rose rows on the same node</text>
+                  <rect x="230" y="144" width="200" height="40" rx="5" fill="#0a2a1a" stroke="#2e9e62"
+                    stroke-width="0.5" />
+                  <text x="240" y="160" font-size="9" fill="#2e9e62" font-weight="bold">Clustering key: sale_date</text>
+                  <text x="240" y="174" font-size="9" fill="#666">rows sorted by date on disk</text>
+                  <rect x="10" y="196" width="420" height="24" rx="5" fill="#2a1a0a" stroke="#f5b85e"
+                    stroke-width="0.5" />
+                  <text x="220" y="212" text-anchor="middle" font-size="9" fill="#f5b85e">null columns carry no penalty:
+                    wide rows save storage space</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- 10: Graph databases -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>Graph Databases</h5>
+                <ul>
+                  <li>Data is stored as nodes, edges and properties</li>
+                  <li>Traversing a relationship is O(1): follow a pointer</li>
+                  <li>In SQL the same traversal requires a JOIN per hop</li>
+                  <li>Depth-first and breadth-first traversals are native</li>
+                  <li>Neo4j uses the Cypher query language</li>
+                  <li>Find all suppliers of suppliers who sell roses</li>
+                  <li>Best fit: social net., fraud detection, rec.</li>
+                </ul>
+              </div>
+              <div style="flex:1;">
+                <svg width="100%" viewBox="0 0 440 240" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:sans-serif;">
+                  <defs>
+                    <marker id="aGDB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                      orient="auto">
+                      <path d="M2 1L8 5L2 9" fill="none" stroke="#2e9e62" stroke-width="1.5" stroke-linecap="round" />
+                    </marker>
+                  </defs>
+                  <circle cx="110" cy="80" r="28" fill="#1a2a3a" stroke="#2a4ca0" stroke-width="1.5" />
+                  <text x="110" y="77" text-anchor="middle" font-size="10" fill="#93aee8" font-weight="bold">Rose</text>
+                  <text x="110" y="91" text-anchor="middle" font-size="8" fill="#666">:Flower</text>
+                  <circle cx="280" cy="60" r="28" fill="#1a2a3a" stroke="#2a4ca0" stroke-width="1.5" />
+                  <text x="280" y="57" text-anchor="middle" font-size="10" fill="#93aee8"
+                    font-weight="bold">GardenCo</text>
+                  <text x="280" y="71" text-anchor="middle" font-size="8" fill="#666">:Supplier</text>
+                  <circle cx="390" cy="140" r="28" fill="#2a1a0a" stroke="#f5b85e" stroke-width="1.5" />
+                  <text x="390" y="137" text-anchor="middle" font-size="10" fill="#f5b85e"
+                    font-weight="bold">Netherlands</text>
+                  <text x="390" y="151" text-anchor="middle" font-size="8" fill="#666">:Country</text>
+                  <circle cx="160" cy="190" r="28" fill="#1a2a3a" stroke="#2a4ca0" stroke-width="1.5" />
+                  <text x="160" y="187" text-anchor="middle" font-size="10" fill="#93aee8"
+                    font-weight="bold">Tulip</text>
+                  <text x="160" y="201" text-anchor="middle" font-size="8" fill="#666">:Flower</text>
+                  <line x1="136" y1="70" x2="252" y2="64" stroke="#2e9e62" stroke-width="1.5" marker-end="url(#aGDB)" />
+                  <text x="190" y="60" text-anchor="middle" font-size="8" fill="#2e9e62">SUPPLIED_BY</text>
+                  <line x1="302" y1="84" x2="370" y2="118" stroke="#2e9e62" stroke-width="1.5"
+                    marker-end="url(#aGDB)" />
+                  <text x="350" y="98" text-anchor="middle" font-size="8" fill="#2e9e62">LOCATED_IN</text>
+                  <line x1="134" y1="96" x2="142" y2="164" stroke="#2e9e62" stroke-width="1.5"
+                    marker-end="url(#aGDB)" />
+                  <text x="110" y="138" text-anchor="middle" font-size="8" fill="#2e9e62">RELATED_TO</text>
+                  <line x1="186" y1="175" x2="254" y2="76" stroke="#2e9e62" stroke-width="1.5"
+                    marker-end="url(#aGDB)" />
+                  <text x="236" y="140" text-anchor="middle" font-size="8" fill="#2e9e62">SUPPLIED_BY</text>
+                  <rect x="10" y="216" width="420" height="18" rx="3" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="228" font-size="8" fill="#4fd98e" font-family="monospace">MATCH
+                    (f:Flower)-[:SUPPLIED_BY]->(s)-[:LOCATED_IN]->(c) RETURN f,s,c</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- 11: ACID -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>ACID: What It Actually Means</h5>
+                <ul>
+                  <li><strong>Atomicity</strong>: a transaction is all or nothing</li>
+                  <li><strong>Consistency</strong>: transactions move DB btw valid states</li>
+                  <li><strong>Isolation</strong>: concurrent trans. don't see each other</li>
+                  <li><strong>Durability</strong>: committed transaction survives crashes</li>
+                  <li>ACID is enforced through locks and write-ahead logs</li>
+                  <li>These guarantees are expensive at distributed scale</li>
+                  <li>RDMS pay cost; NoSQL systems often don't</li>
+                </ul>
+              </div>
+              <div style="flex:1;">
+                <svg width="100%" viewBox="0 0 440 280" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:sans-serif;">
+                  <rect x="10" y="10" width="420" height="56" rx="6" fill="#1a2a3a" stroke="#93aee8" stroke-width="1" />
+                  <rect x="10" y="10" width="420" height="22" rx="6" fill="#2a4ca0" />
+                  <text x="18" y="26" text-anchor="start" font-size="11" fill="#fff" font-weight="bold">A:
+                    Atomicity</text>
+                  <text x="18" y="48" text-anchor="start" font-size="10" fill="#93aee8">sell 10 roses: debit stock AND
+                    credit sales</text>
+                  <text x="18" y="62" text-anchor="start" font-size="9" fill="#666">if credit fails the debit rolls back
+                    completely</text>
+                  <rect x="10" y="76" width="420" height="56" rx="6" fill="#2a1a0a" stroke="#f5b85e" stroke-width="1" />
+                  <rect x="10" y="76" width="420" height="22" rx="6" fill="#e07800" />
+                  <text x="18" y="92" text-anchor="start" font-size="11" fill="#fff" font-weight="bold">C:
+                    Consistency</text>
+                  <text x="18" y="114" text-anchor="start" font-size="10" fill="#f5b85e">rose stock cannot go below zero
+                    if a CHECK forbids it</text>
+                  <rect x="10" y="142" width="420" height="56" rx="6" fill="#2a1010" stroke="#e88" stroke-width="1" />
+                  <rect x="10" y="142" width="420" height="22" rx="6" fill="#c00" />
+                  <text x="18" y="158" text-anchor="start" font-size="11" fill="#fff" font-weight="bold">I:
+                    Isolation</text>
+                  <text x="18" y="180" text-anchor="start" font-size="10" fill="#e88">two concurrent sales do not see
+                    each other's partial writes</text>
+                  <rect x="10" y="208" width="420" height="56" rx="6" fill="#0a2a1a" stroke="#2e9e62"
+                    stroke-width="1" />
+                  <rect x="10" y="208" width="420" height="22" rx="6" fill="#2e9e62" />
+                  <text x="18" y="224" text-anchor="start" font-size="11" fill="#fff" font-weight="bold">D:
+                    Durability</text>
+                  <text x="18" y="246" text-anchor="start" font-size="10" fill="#2e9e62">a committed flower sale is on
+                    disk after a power cut</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- 12: ACID is hard to distribute -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>Why ACID is Hard to Distribute</h5>
+                <ul>
+                  <li>Atomicity across servers requires two-phase commit</li>
+                  <li>2-phase commit needs all nodes to agree bf commit</li>
+                  <li>One slow node blocks the whole transaction</li>
+                  <li>Isolation req. locking rows across network</li>
+                  <li>Network latency turns ms locks into sec locks</li>
+                  <li>Durability req. write multiple replicas bf conf.</li>
+                  <li>Every ACID guarantee adds latency at scale</li>
+                </ul>
+              </div>
+              <div style="flex:1;">
+                <svg width="100%" viewBox="0 0 440 260" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:sans-serif;">
+                  <defs>
+                    <marker id="a2PC" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                      orient="auto">
+                      <path d="M2 1L8 5L2 9" fill="none" stroke="#666" stroke-width="1.5" stroke-linecap="round" />
+                    </marker>
+                  </defs>
+                  <rect x="160" y="10" width="120" height="36" rx="5" fill="#1a2a3a" stroke="#2a4ca0"
+                    stroke-width="1" />
+                  <text x="220" y="32" text-anchor="middle" font-size="11" fill="#93aee8"
+                    font-weight="bold">Coordinator</text>
+                  <text x="220" y="62" text-anchor="middle" font-size="9" fill="#666">Phase 1: can you commit?</text>
+                  <line x1="180" y1="46" x2="80" y2="96" stroke="#666" stroke-width="1" marker-end="url(#a2PC)" />
+                  <line x1="220" y1="46" x2="220" y2="96" stroke="#666" stroke-width="1" marker-end="url(#a2PC)" />
+                  <line x1="260" y1="46" x2="360" y2="96" stroke="#666" stroke-width="1" marker-end="url(#a2PC)" />
+                  <rect x="30" y="98" width="100" height="36" rx="5" fill="#111" stroke="#444" stroke-width="0.5" />
+                  <text x="80" y="120" text-anchor="middle" font-size="10" fill="#aaa">Node A</text>
+                  <rect x="170" y="98" width="100" height="36" rx="5" fill="#111" stroke="#444" stroke-width="0.5" />
+                  <text x="220" y="120" text-anchor="middle" font-size="10" fill="#aaa">Node B</text>
+                  <rect x="310" y="98" width="100" height="36" rx="5" fill="#2a1010" stroke="#e88" stroke-width="0.5" />
+                  <text x="360" y="114" text-anchor="middle" font-size="10" fill="#e88">Node C</text>
+                  <text x="360" y="128" text-anchor="middle" font-size="9" fill="#e44">slow…</text>
+                  <text x="220" y="158" text-anchor="middle" font-size="9" fill="#666">Phase 1 response: YES / YES /
+                    waiting...</text>
+                  <line x1="80" y1="134" x2="192" y2="160" stroke="#2e9e62" stroke-width="1" marker-end="url(#a2PC)" />
+                  <line x1="220" y1="134" x2="220" y2="162" stroke="#2e9e62" stroke-width="1" marker-end="url(#a2PC)" />
+                  <line x1="360" y1="134" x2="248" y2="162" stroke="#e44" stroke-width="1" stroke-dasharray="4 3"
+                    marker-end="url(#a2PC)" />
+                  <rect x="60" y="180" width="320" height="30" rx="5" fill="#2a1010" stroke="#e88" stroke-width="0.5" />
+                  <text x="220" y="200" text-anchor="middle" font-size="10" fill="#e88" font-weight="bold">coordinator
+                    blocks: all wait for Node C</text>
+                  <rect x="10" y="220" width="420" height="30" rx="5" fill="#2a1a0a" stroke="#f5b85e"
+                    stroke-width="0.5" />
+                  <text x="220" y="240" text-anchor="middle" font-size="10" fill="#f5b85e" font-weight="bold">slowest
+                    node latency = transaction latency</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- 13: BASE -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>BASE: The NoSQL Consistency Model</h5>
+                <ul>
+                  <li><strong>Basic Available</strong>: system responds during failures</li>
+                  <li><strong>Soft state</strong>: data still be propagating replicas</li>
+                  <li><strong>Eventually consistent</strong>: all replicas will agree</li>
+                  <li>BASE trades strict consistency for availability</li>
+                  <li>Flower catalogue shows stale price for few sec.</li>
+                  <li>Flower shop payment must never be stale</li>
+                  <li>Choose BASE when avail. > strict correctness</li>
+                </ul>
+              </div>
+              <div style="flex:1;">
+                <svg width="100%" viewBox="0 0 440 260" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:sans-serif;">
+                  <rect x="10" y="10" width="420" height="66" rx="6" fill="#1a2a3a" stroke="#93aee8" stroke-width="1" />
+                  <rect x="10" y="10" width="420" height="22" rx="6" fill="#2a4ca0" />
+                  <text x="18" y="26" text-anchor="start" font-size="11" fill="#fff" font-weight="bold">B: Basically
+                    Available</text>
+                  <text x="18" y="48" text-anchor="start" font-size="10" fill="#93aee8">system always responds even if
+                    some nodes are down</text>
+                  <text x="18" y="64" text-anchor="start" font-size="9" fill="#666">you may get stale flower prices but
+                    you always get a response</text>
+                  <rect x="10" y="86" width="420" height="56" rx="6" fill="#2a1a0a" stroke="#f5b85e" stroke-width="1" />
+                  <rect x="10" y="86" width="420" height="22" rx="6" fill="#e07800" />
+                  <text x="18" y="102" text-anchor="start" font-size="11" fill="#fff" font-weight="bold">S: Soft
+                    State</text>
+                  <text x="18" y="124" text-anchor="start" font-size="10" fill="#f5b85e">data may be changing even
+                    without new writes</text>
+                  <text x="18" y="138" text-anchor="start" font-size="9" fill="#666">replicas propagate updates
+                    asynchronously in the background</text>
+                  <rect x="10" y="152" width="420" height="56" rx="6" fill="#0a2a1a" stroke="#2e9e62"
+                    stroke-width="1" />
+                  <rect x="10" y="152" width="420" height="22" rx="6" fill="#2e9e62" />
+                  <text x="18" y="168" text-anchor="start" font-size="11" fill="#fff" font-weight="bold">E: Eventually
+                    Consistent</text>
+                  <text x="18" y="190" text-anchor="start" font-size="10" fill="#2e9e62">all replicas converge to the
+                    same value given no new writes</text>
+                  <text x="18" y="204" text-anchor="start" font-size="9" fill="#666">convergence time is milliseconds to
+                    seconds in practice</text>
+                  <rect x="10" y="220" width="420" height="30" rx="5" fill="#1a1a2a" stroke="#8866cc"
+                    stroke-width="0.5" />
+                  <text x="220" y="240" text-anchor="middle" font-size="10" fill="#8866cc" font-weight="bold">ACID =
+                    correct always · BASE = available always</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- 14: CAP Theorem -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>CAP Theorem</h5>
+                <ul>
+                  <li>Proposed by Eric Brewer in 2000</li>
+                  <li>Proved by Gilbert and Lynch in 2002</li>
+                  <li>Distr. system guarantees at most 2/3 properties</li>
+                  <li><strong>Consistency</strong>: every read sees the most recent write</li>
+                  <li><strong>Availability</strong>: every request receives a response</li>
+                  <li><strong>Part. tolerance</strong>: sys. cont. despite network splits</li>
+                  <li>Partitions always happen so the real choice is C or A</li>
+                </ul>
+              </div>
+              <div style="flex:1;">
+                <svg width="100%" viewBox="0 0 440 280" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:sans-serif;">
+                  <polygon points="220,20 60,240 380,240" fill="#0a0a0a" stroke="#333" stroke-width="1.5" />
+                  <circle cx="220" cy="20" r="36" fill="#1a2a3a" stroke="#2a4ca0" stroke-width="1.5" />
+                  <circle cx="60" cy="240" r="36" fill="#0a2a1a" stroke="#2e9e62" stroke-width="1.5" />
+                  <circle cx="380" cy="240" r="36" fill="#2a1a0a" stroke="#f5b85e" stroke-width="1.5" />
+                  <text x="220" y="16" text-anchor="middle" font-size="11" fill="#93aee8" font-weight="bold">C</text>
+                  <text x="220" y="30" text-anchor="middle" font-size="9" fill="#93aee8">Consistency</text>
+                  <text x="60" y="236" text-anchor="middle" font-size="11" fill="#2e9e62" font-weight="bold">A</text>
+                  <text x="60" y="250" text-anchor="middle" font-size="9" fill="#2e9e62">Availability</text>
+                  <text x="380" y="236" text-anchor="middle" font-size="11" fill="#f5b85e" font-weight="bold">P</text>
+                  <text x="380" y="250" text-anchor="middle" font-size="9" fill="#f5b85e">Partition</text>
+                  <text x="380" y="262" text-anchor="middle" font-size="9" fill="#f5b85e">Tolerance</text>
+                  <text x="148" y="120" text-anchor="middle" font-size="10" fill="#93aee8" font-weight="bold">CP</text>
+                  <text x="148" y="134" text-anchor="middle" font-size="9" fill="#666">HBase · MongoDB</text>
+                  <text x="148" y="146" text-anchor="middle" font-size="9" fill="#666">Zookeeper</text>
+                  <text x="292" y="120" text-anchor="middle" font-size="10" fill="#2e9e62" font-weight="bold">AP</text>
+                  <text x="292" y="134" text-anchor="middle" font-size="9" fill="#666">Cassandra · CouchDB</text>
+                  <text x="292" y="146" text-anchor="middle" font-size="9" fill="#666">DynamoDB</text>
+                  <text x="220" y="228" text-anchor="middle" font-size="10" fill="#555" font-weight="bold">CA</text>
+                  <text x="220" y="242" text-anchor="middle" font-size="9" fill="#444">not possible</text>
+                  <text x="220" y="254" text-anchor="middle" font-size="9" fill="#444">in distributed systems</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- 15: CAP C vs A -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>CAP: Consistency vs Availability</h5>
+                <ul>
+                  <li>Network partition splits nodes in 2 isolated parts</li>
+                  <li>CP system: refuse writes on the isolated side</li>
+                  <li>AP system: accept writes on both sides and diverge</li>
+                  <li>After the partition heals AP sys. resolve conflicts</li>
+                  <li>Cassandra: last-write-wins to resolve confl. writes</li>
+                  <li>DynamoDB offers tunable consistency per request</li>
+                  <li>Neither choice is right, depends on use case</li>
+                </ul>
+              </div>
+              <div style="flex:1;">
+                <svg width="100%" viewBox="0 0 440 260" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:sans-serif;">
+                  <defs>
+                    <marker id="aCAP" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                      orient="auto">
+                      <path d="M2 1L8 5L2 9" fill="none" stroke="#666" stroke-width="1.5" stroke-linecap="round" />
+                    </marker>
+                  </defs>
+                  <line x1="220" y1="10" x2="220" y2="210" stroke="#e44" stroke-width="2" stroke-dasharray="6 4" />
+                  <text x="220" y="8" text-anchor="middle" font-size="9" fill="#e44">network partition</text>
+                  <rect x="20" y="30" width="80" height="36" rx="5" fill="#1a2a3a" stroke="#93aee8"
+                    stroke-width="0.5" />
+                  <text x="60" y="52" text-anchor="middle" font-size="10" fill="#93aee8">Node 1</text>
+                  <rect x="20" y="80" width="80" height="36" rx="5" fill="#1a2a3a" stroke="#93aee8"
+                    stroke-width="0.5" />
+                  <text x="60" y="102" text-anchor="middle" font-size="10" fill="#93aee8">Node 2</text>
+                  <rect x="330" y="30" width="80" height="36" rx="5" fill="#1a2a3a" stroke="#93aee8"
+                    stroke-width="0.5" />
+                  <text x="370" y="52" text-anchor="middle" font-size="10" fill="#93aee8">Node 3</text>
+                  <rect x="330" y="80" width="80" height="36" rx="5" fill="#1a2a3a" stroke="#93aee8"
+                    stroke-width="0.5" />
+                  <text x="370" y="102" text-anchor="middle" font-size="10" fill="#93aee8">Node 4</text>
+                  <rect x="10" y="132" width="190" height="40" rx="5" fill="#2a1010" stroke="#e88" stroke-width="0.5" />
+                  <text x="105" y="148" text-anchor="middle" font-size="10" fill="#e88" font-weight="bold">CP
+                    choice</text>
+                  <text x="105" y="164" text-anchor="middle" font-size="9" fill="#666">reject writes on isolated
+                    side</text>
+                  <rect x="240" y="132" width="190" height="40" rx="5" fill="#0a2a1a" stroke="#2e9e62"
+                    stroke-width="0.5" />
+                  <text x="335" y="148" text-anchor="middle" font-size="10" fill="#2e9e62" font-weight="bold">AP
+                    choice</text>
+                  <text x="335" y="164" text-anchor="middle" font-size="9" fill="#666">accept writes and resolve
+                    later</text>
+                  <rect x="10" y="184" width="190" height="24" rx="4" fill="#1a2a3a" stroke="#93aee8"
+                    stroke-width="0.5" />
+                  <text x="105" y="200" text-anchor="middle" font-size="9" fill="#93aee8">HBase · MongoDB ·
+                    Zookeeper</text>
+                  <rect x="240" y="184" width="190" height="24" rx="4" fill="#0a2a1a" stroke="#2e9e62"
+                    stroke-width="0.5" />
+                  <text x="335" y="200" text-anchor="middle" font-size="9" fill="#2e9e62">Cassandra · CouchDB ·
+                    Dynamo</text>
+                  <rect x="10" y="220" width="420" height="30" rx="5" fill="#1a1a2a" stroke="#8866cc"
+                    stroke-width="0.5" />
+                  <text x="220" y="240" text-anchor="middle" font-size="10" fill="#8866cc" font-weight="bold">flower
+                    payment = CP · flower catalogue = AP</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- 16: PACELC -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>PACELC: Beyond CAP</h5>
+                <ul>
+                  <li>CAP only describes behaviour during a partition</li>
+                  <li>PACELC adds the normal case: no partition</li>
+                  <li>During Partition: choose A or C as in CAP</li>
+                  <li>Else in normal ops: choose Lat. or Cons.</li>
+                  <li>Low latency: ret: before all replicas confirm</li>
+                  <li>Strong cons. means waiting for all replicas</li>
+                  <li>DynamoDB is PA/EL: avail. during partition</li>
+                </ul>
+              </div>
+              <div style="flex:1;">
+                <svg width="100%" viewBox="0 0 440 240" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:sans-serif;">
+                  <rect x="10" y="10" width="420" height="26" rx="4" fill="#111" />
+                  <rect x="10" y="10" width="110" height="26" rx="4" fill="#1a1a1a" />
+                  <rect x="120" y="10" width="140" height="26" fill="#2a1010" />
+                  <rect x="260" y="10" width="170" height="26" fill="#0a2a1a" />
+                  <text x="18" y="27" text-anchor="start" font-size="10" fill="#888" font-weight="bold">System</text>
+                  <text x="128" y="27" text-anchor="start" font-size="10" fill="#e88" font-weight="bold">Partition: A or
+                    C</text>
+                  <text x="268" y="27" text-anchor="start" font-size="10" fill="#2e9e62" font-weight="bold">Else: L or
+                    C</text>
+                  <rect x="10" y="40" width="110" height="26" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="120" y="40" width="140" height="26" fill="#1a0a0a" stroke="#333" stroke-width="0.5" />
+                  <rect x="260" y="40" width="170" height="26" fill="#0a1a0a" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="57" text-anchor="start" font-size="9" fill="#aaa">DynamoDB</text>
+                  <text x="128" y="57" text-anchor="start" font-size="9" fill="#e88">PA: availability</text>
+                  <text x="268" y="57" text-anchor="start" font-size="9" fill="#2e9e62">EL: low latency</text>
+                  <rect x="10" y="70" width="110" height="26" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="120" y="70" width="140" height="26" fill="#1a0a0a" stroke="#333" stroke-width="0.5" />
+                  <rect x="260" y="70" width="170" height="26" fill="#0a1a0a" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="87" text-anchor="start" font-size="9" fill="#aaa">Cassandra</text>
+                  <text x="128" y="87" text-anchor="start" font-size="9" fill="#e88">PA: availability</text>
+                  <text x="268" y="87" text-anchor="start" font-size="9" fill="#2e9e62">EL: low latency</text>
+                  <rect x="10" y="100" width="110" height="26" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="120" y="100" width="140" height="26" fill="#1a1a2a" stroke="#333" stroke-width="0.5" />
+                  <rect x="260" y="100" width="170" height="26" fill="#1a0a0a" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="117" text-anchor="start" font-size="9" fill="#aaa">HBase</text>
+                  <text x="128" y="117" text-anchor="start" font-size="9" fill="#93aee8">PC: consistency</text>
+                  <text x="268" y="117" text-anchor="start" font-size="9" fill="#e88">EC: consistency</text>
+                  <rect x="10" y="130" width="110" height="26" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="120" y="130" width="140" height="26" fill="#1a1a2a" stroke="#333" stroke-width="0.5" />
+                  <rect x="260" y="130" width="170" height="26" fill="#1a0a0a" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="147" text-anchor="start" font-size="9" fill="#aaa">MongoDB</text>
+                  <text x="128" y="147" text-anchor="start" font-size="9" fill="#93aee8">PC: consistency</text>
+                  <text x="268" y="147" text-anchor="start" font-size="9" fill="#e88">EC: consistency</text>
+                  <rect x="10" y="170" width="420" height="56" rx="6" fill="#2a1a0a" stroke="#f5b85e"
+                    stroke-width="0.5" />
+                  <text x="18" y="188" text-anchor="start" font-size="10" fill="#f5b85e" font-weight="bold">PACELC
+                    formula</text>
+                  <text x="18" y="204" text-anchor="start" font-size="10" fill="#aaa">if Partition: choose A or C ·
+                    else: choose Latency or Consistency</text>
+                  <text x="18" y="218" text-anchor="start" font-size="9" fill="#666">CAP covers only the partition case:
+                    PACELC covers both</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- 17: Query languages comparison -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>Query Languages Across Databases</h5>
+                <ul>
+                  <li><strong>SQL</strong>: declarative · standard · PostgreSQL and MySQL</li>
+                  <li><strong>MQL</strong>: MongoDB Query Lang. · JSON-based syntax</li>
+                  <li><strong>CQL</strong>: Cassandra Query Lang. · SQL-like no joins</li>
+                  <li><strong>Cypher</strong>: Neo4j graph query lang. · pattern matching</li>
+                  <li><strong>Redis CLI</strong>: command-based · SET GET ZADD HGET</li>
+                  <li><strong>InfluxQL</strong>: SQL-like for time series data in InfluxDB</li>
+                  <li>Same question: diff. syntaxes dep. on the database</li>
+                </ul>
+              </div>
+              <div style="flex:1;">
+                <svg width="100%" viewBox="0 0 440 420" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:monospace;">
+                  <text x="220" y="16" text-anchor="middle" font-size="9" fill="#666" font-family="sans-serif">same
+                    question: find all red flowers priced above 10</text>
+
+                  <!-- SQL -->
+                  <rect x="10" y="24" width="420" height="54" rx="4" fill="#1a2a3a" stroke="#93aee8"
+                    stroke-width="0.5" />
+                  <text x="18" y="38" font-size="9" fill="#93aee8" font-weight="bold" font-family="sans-serif">SQL
+                    (PostgreSQL)</text>
+                  <text x="18" y="54" font-size="9" fill="#4fd98e">SELECT * FROM flowers</text>
+                  <text x="18" y="70" font-size="9" fill="#4fd98e">WHERE color = 'red' AND price &gt; 10;</text>
+
+                  <!-- MQL -->
+                  <rect x="10" y="84" width="420" height="54" rx="4" fill="#1a2a3a" stroke="#2a4ca0"
+                    stroke-width="0.5" />
+                  <text x="18" y="98" font-size="9" fill="#93aee8" font-weight="bold" font-family="sans-serif">MQL
+                    (MongoDB)</text>
+                  <text x="18" y="114" font-size="9" fill="#f7b24f">db.flowers.find(&#123;</text>
+                  <text x="18" y="130" font-size="9" fill="#f7b24f"> color: "red", price: &#123; $gt: 10 &#125;
+                    &#125;)</text>
+
+                  <!-- CQL -->
+                  <rect x="10" y="144" width="420" height="54" rx="4" fill="#2a1010" stroke="#e88" stroke-width="0.5" />
+                  <text x="18" y="158" font-size="9" fill="#e88" font-weight="bold" font-family="sans-serif">CQL
+                    (Cassandra) — partition key required</text>
+                  <text x="18" y="174" font-size="9" fill="#4fd98e">SELECT * FROM flowers</text>
+                  <text x="18" y="190" font-size="9" fill="#4fd98e">WHERE color = 'red' AND price &gt; 10 ALLOW
+                    FILTERING;</text>
+
+                  <!-- Cypher -->
+                  <rect x="10" y="204" width="420" height="54" rx="4" fill="#0a2a1a" stroke="#2e9e62"
+                    stroke-width="0.5" />
+                  <text x="18" y="218" font-size="9" fill="#2e9e62" font-weight="bold" font-family="sans-serif">Cypher
+                    (Neo4j)</text>
+                  <text x="18" y="234" font-size="9" fill="#4fd98e">MATCH (f:Flower)</text>
+                  <text x="18" y="250" font-size="9" fill="#4fd98e">WHERE f.color = 'red' AND f.price &gt; 10 RETURN
+                    f</text>
+
+                  <!-- Redis -->
+                  <rect x="10" y="264" width="420" height="54" rx="4" fill="#2a1a0a" stroke="#f5b85e"
+                    stroke-width="0.5" />
+                  <text x="18" y="278" font-size="9" fill="#f5b85e" font-weight="bold" font-family="sans-serif">Redis
+                    CLI — no native filter query on values</text>
+                  <text x="18" y="294" font-size="9" fill="#4fd98e">ZRANGEBYSCORE price:index 10 +inf</text>
+                  <text x="18" y="310" font-size="9" fill="#666">-- then filter by color in application code</text>
+
+                  <!-- InfluxQL -->
+                  <rect x="10" y="324" width="420" height="54" rx="4" fill="#1a1a2a" stroke="#8866cc"
+                    stroke-width="0.5" />
+                  <text x="18" y="338" font-size="9" fill="#8866cc" font-weight="bold" font-family="sans-serif">InfluxQL
+                    (InfluxDB) — time series only</text>
+                  <text x="18" y="354" font-size="9" fill="#4fd98e">SELECT * FROM flowers</text>
+                  <text x="18" y="370" font-size="9" fill="#4fd98e">WHERE color = 'red' AND price &gt; 10</text>
+
+                  <!-- Note -->
+                  <rect x="10" y="386" width="420" height="24" rx="4" fill="#1a1a2a" stroke="#8866cc"
+                    stroke-width="0.5" />
+                  <text x="18" y="402" font-size="9" fill="#8866cc" font-family="sans-serif">each database has its own
+                    query model: choose the database before learning the syntax</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- 18: MongoDB deep dive -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>MongoDB: Document Database Deep Dive</h5>
+                <ul>
+                  <li>Stores BSON docs: binary JSON with ext. types</li>
+                  <li>Collections replace tables with no enforced schema</li>
+                  <li>Queries use a JSON-based filter syntax called MQL</li>
+                  <li>Aggr. pipeline: $match, $group, $sort, $project</li>
+                  <li>Supports multi-doc ACID transactions since v4.0</li>
+                  <li>Replica set: one primary, two or more secondaries</li>
+                  <li>Sharding part. collections across multiple replica</li>
+                </ul>
+              </div>
+              <div style="flex:1;">
+                <svg width="100%" viewBox="0 0 440 260" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:monospace;">
+                  <rect x="10" y="10" width="420" height="240" rx="6" fill="#111" stroke="#333" stroke-width="1" />
+                  <rect x="10" y="10" width="420" height="22" rx="6" fill="#1a1a2a" />
+                  <text x="220" y="25" text-anchor="middle" font-size="9" fill="#666">MongoDB aggregation: flower sales
+                    by color</text>
+                  <text x="20" y="50" font-size="9" fill="#666">db.flowers.aggregate([</text>
+                  <text x="20" y="66" font-size="9" fill="#666"> // stage 1: filter</text>
+                  <text x="20" y="82" font-size="9" fill="#8866cc"> &#123; $match: &#123;</text>
+                  <text x="20" y="98" font-size="9" fill="#f7b24f"> price: &#123; $gt: 10 &#125;</text>
+                  <text x="20" y="114" font-size="9" fill="#8866cc"> &#125;&#125;,</text>
+                  <text x="20" y="130" font-size="9" fill="#666"> // stage 2: group and aggregate</text>
+                  <text x="20" y="146" font-size="9" fill="#8866cc"> &#123; $group: &#123;</text>
+                  <text x="20" y="162" font-size="9" fill="#f7b24f"> _id: "$color",</text>
+                  <text x="20" y="178" font-size="9" fill="#f7b24f"> avgPrice: &#123; $avg: "$price" &#125;,</text>
+                  <text x="20" y="194" font-size="9" fill="#f7b24f"> count: &#123; $sum: 1 &#125;</text>
+                  <text x="20" y="210" font-size="9" fill="#8866cc"> &#125;&#125;,</text>
+                  <text x="20" y="226" font-size="9" fill="#8866cc"> &#123; $sort: &#123; avgPrice: -1
+                    &#125;&#125;</text>
+                  <text x="20" y="242" font-size="9" fill="#666">])</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- 19: Redis deep dive -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>Redis: Key-Value Database Deep Dive</h5>
+                <ul>
+                  <li>All data lives in RAM for sub-millisecond latency</li>
+                  <li>Persistence: RDB snapshots, AOF append-only file</li>
+                  <li>Five core structures: string, list, set, hash</li>
+                  <li>Pub/Sub and Streams for real-time messaging</li>
+                  <li>Lua scripting for atomic compound operations</li>
+                  <li>Redis Cluster shards data across nodes aut.</li>
+                  <li>Twitter, GitHub and Stack Overflow for caching</li>
+                </ul>
+              </div>
+              <div style="flex:1;">
+                <svg width="100%" viewBox="0 0 440 240" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:sans-serif;">
+                  <rect x="10" y="10" width="420" height="26" rx="4" fill="#111" />
+                  <rect x="10" y="10" width="110" height="26" rx="4" fill="#1a1a1a" />
+                  <rect x="120" y="10" width="160" height="26" fill="#2a1010" />
+                  <rect x="280" y="10" width="150" height="26" fill="#0a2a1a" />
+                  <text x="18" y="27" text-anchor="start" font-size="10" fill="#888" font-weight="bold">Structure</text>
+                  <text x="128" y="27" text-anchor="start" font-size="10" fill="#e88" font-weight="bold">Command
+                    example</text>
+                  <text x="288" y="27" text-anchor="start" font-size="10" fill="#2e9e62" font-weight="bold">Use
+                    case</text>
+                  <rect x="10" y="40" width="110" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="120" y="40" width="160" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="280" y="40" width="150" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="56" text-anchor="start" font-size="9" fill="#aaa">String</text>
+                  <text x="128" y="56" text-anchor="start" font-size="9" fill="#f5b85e" font-family="monospace">SET
+                    flower:1 "rose"</text>
+                  <text x="288" y="56" text-anchor="start" font-size="9" fill="#2e9e62">cache · session</text>
+                  <rect x="10" y="68" width="110" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="120" y="68" width="160" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="280" y="68" width="150" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="84" text-anchor="start" font-size="9" fill="#aaa">List</text>
+                  <text x="128" y="84" text-anchor="start" font-size="9" fill="#f5b85e" font-family="monospace">LPUSH
+                    orders flower_id</text>
+                  <text x="288" y="84" text-anchor="start" font-size="9" fill="#2e9e62">order queue · feed</text>
+                  <rect x="10" y="96" width="110" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="120" y="96" width="160" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="280" y="96" width="150" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="112" text-anchor="start" font-size="9" fill="#aaa">Set</text>
+                  <text x="128" y="112" text-anchor="start" font-size="9" fill="#f5b85e" font-family="monospace">SADD
+                    tags "outdoor"</text>
+                  <text x="288" y="112" text-anchor="start" font-size="9" fill="#2e9e62">unique tags · flags</text>
+                  <rect x="10" y="124" width="110" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="120" y="124" width="160" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="280" y="124" width="150" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="140" text-anchor="start" font-size="9" fill="#aaa">Sorted Set</text>
+                  <text x="128" y="140" text-anchor="start" font-size="9" fill="#f5b85e" font-family="monospace">ZADD
+                    price 12.99 "rose"</text>
+                  <text x="288" y="140" text-anchor="start" font-size="9" fill="#2e9e62">price ranking</text>
+                  <rect x="10" y="152" width="110" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="120" y="152" width="160" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="280" y="152" width="150" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="168" text-anchor="start" font-size="9" fill="#aaa">Hash</text>
+                  <text x="128" y="168" text-anchor="start" font-size="9" fill="#f5b85e" font-family="monospace">HSET
+                    rose color "red"</text>
+                  <text x="288" y="168" text-anchor="start" font-size="9" fill="#2e9e62">flower object fields</text>
+                  <rect x="10" y="188" width="420" height="40" rx="5" fill="#2a1a0a" stroke="#f5b85e"
+                    stroke-width="0.5" />
+                  <text x="18" y="204" text-anchor="start" font-size="10" fill="#f5b85e" font-weight="bold">All
+                    structures stored in RAM</text>
+                  <text x="18" y="220" text-anchor="start" font-size="9" fill="#666">single-threaded event loop · no
+                    lock contention · sub-ms latency</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- 20: Cassandra deep dive -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>Cassandra: Wide-Column Deep Dive</h5>
+                <ul>
+                  <li>Designed at FB for inbox search problem in 2008</li>
+                  <li>No SPOF: every node equal in ring</li>
+                  <li>Const. hash assigns partitions to nodes</li>
+                  <li>Tunable const: ONE, QUORUM or ALL per operation</li>
+                  <li>Repl. factor cntr how many nodes hold each part.</li>
+                  <li>Best for write-heavy time series: IoT, logs, sensor</li>
+                </ul>
+              </div>
+              <div style="flex:1;">
+                <svg width="100%" viewBox="0 0 440 260" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:sans-serif;">
+                  <defs>
+                    <marker id="aCAS" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6"
+                      orient="auto">
+                      <path d="M2 1L8 5L2 9" fill="none" stroke="#e88" stroke-width="1.5" stroke-linecap="round" />
+                    </marker>
+                  </defs>
+                  <circle cx="220" cy="130" r="90" fill="none" stroke="#333" stroke-width="1" stroke-dasharray="4 3" />
+                  <circle cx="220" cy="44" r="22" fill="#2a1010" stroke="#c00" stroke-width="1.5" />
+                  <text x="220" y="49" text-anchor="middle" font-size="9" fill="#e88" font-weight="bold">N1</text>
+                  <circle cx="300" cy="80" r="22" fill="#2a1010" stroke="#c00" stroke-width="1.5" />
+                  <text x="300" y="85" text-anchor="middle" font-size="9" fill="#e88" font-weight="bold">N2</text>
+                  <circle cx="310" cy="175" r="22" fill="#2a1010" stroke="#c00" stroke-width="1.5" />
+                  <text x="310" y="180" text-anchor="middle" font-size="9" fill="#e88" font-weight="bold">N3</text>
+                  <circle cx="220" cy="216" r="22" fill="#2a1010" stroke="#c00" stroke-width="1.5" />
+                  <text x="220" y="221" text-anchor="middle" font-size="9" fill="#e88" font-weight="bold">N4</text>
+                  <circle cx="130" cy="175" r="22" fill="#2a1010" stroke="#c00" stroke-width="1.5" />
+                  <text x="130" y="180" text-anchor="middle" font-size="9" fill="#e88" font-weight="bold">N5</text>
+                  <circle cx="140" cy="80" r="22" fill="#2a1010" stroke="#c00" stroke-width="1.5" />
+                  <text x="140" y="85" text-anchor="middle" font-size="9" fill="#e88" font-weight="bold">N6</text>
+                  <circle cx="220" cy="130" r="18" fill="#1a2a3a" stroke="#2a4ca0" stroke-width="1" />
+                  <text x="220" y="128" text-anchor="middle" font-size="8" fill="#93aee8">client</text>
+                  <text x="220" y="140" text-anchor="middle" font-size="8" fill="#93aee8">write</text>
+                  <line x1="220" y1="112" x2="220" y2="68" stroke="#e88" stroke-width="1.5" marker-end="url(#aCAS)" />
+                  <line x1="232" y1="116" x2="280" y2="96" stroke="#e88" stroke-width="1.5" marker-end="url(#aCAS)" />
+                  <line x1="210" y1="116" x2="160" y2="96" stroke="#e88" stroke-width="1.5" marker-end="url(#aCAS)" />
+                  <text x="256" y="76" font-size="8" fill="#e88">RF=3</text>
+                  <rect x="10" y="230" width="420" height="24" rx="4" fill="#2a1010" stroke="#e88" stroke-width="0.5" />
+                  <text x="18" y="246" text-anchor="start" font-size="9" fill="#e88" font-weight="bold">RF=3 · QUORUM
+                    write: 2 of 3 replicas must confirm before returning</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- 21: Schema design — embedding vs referencing -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>Schema Design: Embedding vs Referencing</h5>
+                <ul>
+                  <li>Embedding nests related data inside one document</li>
+                  <li>Ref. stores an ID and looks up the related document</li>
+                  <li>Embed when data is always read together</li>
+                  <li>Ref. when data is large, shared or updated ind.</li>
+                  <li>MongoDB has no JOIN, ref. req. two round trips</li>
+                  <li>Wrong choice causes worse perf. than any query fix</li>
+                  <li>Model data for howto read, not for howto store it</li>
+                </ul>
+              </div>
+              <div style="flex:1;">
+                <svg width="100%" viewBox="0 0 440 260" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:monospace;">
+                  <rect x="10" y="10" width="420" height="22" rx="4" fill="#2a4ca0" />
+                  <text x="220" y="25" text-anchor="middle" font-size="9" fill="#fff"
+                    font-family="sans-serif">embedding: supplier nested inside flower document</text>
+                  <rect x="10" y="36" width="420" height="88" rx="4" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <text x="20" y="54" font-size="8" fill="#8866cc">&#123; "_id": "rose",</text>
+                  <text x="20" y="68" font-size="8" fill="#f7b24f"> "price": 12.99,</text>
+                  <text x="20" y="82" font-size="8" fill="#f7b24f"> "supplier": &#123;</text>
+                  <text x="20" y="96" font-size="8" fill="#4fd98e"> "name": "GardenCo", "country": "NL"</text>
+                  <text x="20" y="110" font-size="8" fill="#f7b24f"> &#125; &#125;</text>
+                  <text x="20" y="120" font-size="8" fill="#666">-- one read: supplier always returned with
+                    flower</text>
+                  <rect x="10" y="132" width="420" height="22" rx="4" fill="#c00" />
+                  <text x="220" y="147" text-anchor="middle" font-size="9" fill="#fff"
+                    font-family="sans-serif">referencing: supplier as a separate document</text>
+                  <rect x="10" y="158" width="420" height="68" rx="4" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <text x="20" y="176" font-size="8" fill="#8866cc">&#123; "_id": "rose",</text>
+                  <text x="20" y="190" font-size="8" fill="#f7b24f"> "price": 12.99,</text>
+                  <text x="20" y="204" font-size="8" fill="#4fd98e"> "supplier_id": "s001" ← two lookups needed</text>
+                  <text x="20" y="218" font-size="8" fill="#8866cc">&#125;</text>
+                  <rect x="10" y="234" width="420" height="18" rx="3" fill="#0a2a1a" stroke="#2e9e62"
+                    stroke-width="0.5" />
+                  <text x="220" y="246" text-anchor="middle" font-size="8" fill="#4fd98e" font-family="sans-serif">rule:
+                    if you always read it together then embed it</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- 22: Indexing -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>Indexing in NoSQL</h5>
+                <ul>
+                  <li>Without index every query does full collection scan</li>
+                  <li>MongoDB supports idx on any field incl. nested</li>
+                  <li>Compound idx cover queries on multiple fields</li>
+                  <li>Cassandra partition key is the primary index</li>
+                  <li>Sec. idx in Cassandra are expensive by design</li>
+                  <li>Redis sorted sets provide built-in score-based idx</li>
+                  <li>Index design is more critical in NoSQL than in SQL</li>
+                </ul>
+              </div>
+              <div style="flex:1;">
+                <svg width="100%" viewBox="0 0 440 240" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:sans-serif;">
+                  <rect x="10" y="10" width="420" height="26" rx="4" fill="#111" />
+                  <rect x="10" y="10" width="170" height="26" rx="4" fill="#1a1a1a" />
+                  <rect x="180" y="10" width="120" height="26" fill="#2a1010" />
+                  <rect x="300" y="10" width="130" height="26" fill="#0a2a1a" />
+                  <text x="18" y="27" text-anchor="start" font-size="10" fill="#888" font-weight="bold">Query</text>
+                  <text x="188" y="27" text-anchor="start" font-size="10" fill="#e88" font-weight="bold">No index</text>
+                  <text x="308" y="27" text-anchor="start" font-size="10" fill="#2e9e62" font-weight="bold">With
+                    index</text>
+                  <rect x="10" y="40" width="170" height="26" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="180" y="40" width="120" height="26" fill="#1a0a0a" stroke="#333" stroke-width="0.5" />
+                  <rect x="300" y="40" width="130" height="26" fill="#0a1a0a" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="57" text-anchor="start" font-size="9" fill="#aaa">find flowers where price above
+                    10</text>
+                  <text x="188" y="57" text-anchor="start" font-size="9" fill="#e88">scan all docs</text>
+                  <text x="308" y="57" text-anchor="start" font-size="9" fill="#2e9e62">index range scan</text>
+                  <rect x="10" y="70" width="170" height="26" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="180" y="70" width="120" height="26" fill="#1a0a0a" stroke="#333" stroke-width="0.5" />
+                  <rect x="300" y="70" width="130" height="26" fill="#0a1a0a" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="87" text-anchor="start" font-size="9" fill="#aaa">find flower by name</text>
+                  <text x="188" y="87" text-anchor="start" font-size="9" fill="#e88">O(n) collection scan</text>
+                  <text x="308" y="87" text-anchor="start" font-size="9" fill="#2e9e62">O(log n) B-tree</text>
+                  <rect x="10" y="100" width="170" height="26" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="180" y="100" width="120" height="26" fill="#1a0a0a" stroke="#333" stroke-width="0.5" />
+                  <rect x="300" y="100" width="130" height="26" fill="#0a1a0a" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="117" text-anchor="start" font-size="9" fill="#aaa">sort flowers by price</text>
+                  <text x="188" y="117" text-anchor="start" font-size="9" fill="#e88">load all then sort in RAM</text>
+                  <text x="308" y="117" text-anchor="start" font-size="9" fill="#2e9e62">index pre-sorted</text>
+                  <rect x="10" y="140" width="420" height="88" rx="5" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <text x="20" y="158" font-size="9" fill="#666" font-family="monospace">// MongoDB: create compound
+                    index on flowers</text>
+                  <text x="20" y="174" font-size="9" fill="#4fd98e"
+                    font-family="monospace">db.flowers.createIndex(</text>
+                  <text x="20" y="190" font-size="9" fill="#f7b24f" font-family="monospace"> &#123; color: 1, price: -1
+                    &#125;</text>
+                  <text x="20" y="206" font-size="9" fill="#4fd98e" font-family="monospace">)</text>
+                  <text x="20" y="222" font-size="9" fill="#666" font-family="monospace">// covers: find red flowers
+                    sorted by price descending</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- 23: Choosing the right database -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>Choosing the Right Database</h5>
+                <ul>
+                  <li>Access pattern first: how will you read and write</li>
+                  <li>Ad hoc joins and ACID: use PostgreSQL</li>
+                  <li>Flex. JSON docs with rich queries: use MongoDB</li>
+                  <li>Sub-millisecond lookups by key: use Redis</li>
+                  <li>Write-heavy time series at scale: use Cassandra</li>
+                  <li>Relationship across millions of edges: use Neo4j</li>
+                  <li>Polyglot persistence: multiple DBs in one system</li>
+                </ul>
+              </div>
+              <div style="flex:1;">
+                <svg width="100%" viewBox="0 0 440 280" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:sans-serif;">
+                  <rect x="10" y="10" width="420" height="26" rx="4" fill="#111" />
+                  <rect x="10" y="10" width="170" height="26" rx="4" fill="#1a1a1a" />
+                  <rect x="180" y="10" width="110" height="26" fill="#2a1010" />
+                  <rect x="290" y="10" width="140" height="26" fill="#0a2a1a" />
+                  <text x="18" y="27" text-anchor="start" font-size="10" fill="#888" font-weight="bold">Use Case</text>
+                  <text x="188" y="27" text-anchor="start" font-size="10" fill="#e88" font-weight="bold">Choose</text>
+                  <text x="298" y="27" text-anchor="start" font-size="10" fill="#2e9e62" font-weight="bold">Why</text>
+                  <rect x="10" y="40" width="170" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="180" y="40" width="110" height="24" fill="#1a1a2a" stroke="#333" stroke-width="0.5" />
+                  <rect x="290" y="40" width="140" height="24" fill="#0a1a0a" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="56" text-anchor="start" font-size="9" fill="#aaa">Flower shop payments</text>
+                  <text x="188" y="56" text-anchor="start" font-size="9" fill="#93aee8">PostgreSQL</text>
+                  <text x="298" y="56" text-anchor="start" font-size="9" fill="#2e9e62">ACID required</text>
+                  <rect x="10" y="68" width="170" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="180" y="68" width="110" height="24" fill="#1a1a2a" stroke="#333" stroke-width="0.5" />
+                  <rect x="290" y="68" width="140" height="24" fill="#0a1a0a" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="84" text-anchor="start" font-size="9" fill="#aaa">Flower product catalogue</text>
+                  <text x="188" y="84" text-anchor="start" font-size="9" fill="#93aee8">MongoDB</text>
+                  <text x="298" y="84" text-anchor="start" font-size="9" fill="#2e9e62">flexible schema</text>
+                  <rect x="10" y="96" width="170" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="180" y="96" width="110" height="24" fill="#2a1a0a" stroke="#333" stroke-width="0.5" />
+                  <rect x="290" y="96" width="140" height="24" fill="#0a1a0a" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="112" text-anchor="start" font-size="9" fill="#aaa">Flower cart session</text>
+                  <text x="188" y="112" text-anchor="start" font-size="9" fill="#f5b85e">Redis</text>
+                  <text x="298" y="112" text-anchor="start" font-size="9" fill="#2e9e62">sub-ms · TTL</text>
+                  <rect x="10" y="124" width="170" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="180" y="124" width="110" height="24" fill="#2a1010" stroke="#333" stroke-width="0.5" />
+                  <rect x="290" y="124" width="140" height="24" fill="#0a1a0a" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="140" text-anchor="start" font-size="9" fill="#aaa">Flower sensor stream</text>
+                  <text x="188" y="140" text-anchor="start" font-size="9" fill="#e88">Cassandra</text>
+                  <text x="298" y="140" text-anchor="start" font-size="9" fill="#2e9e62">write-heavy · time
+                    series</text>
+                  <rect x="10" y="152" width="170" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="180" y="152" width="110" height="24" fill="#0a2a1a" stroke="#333" stroke-width="0.5" />
+                  <rect x="290" y="152" width="140" height="24" fill="#0a1a0a" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="168" text-anchor="start" font-size="9" fill="#aaa">Supplier relationship graph</text>
+                  <text x="188" y="168" text-anchor="start" font-size="9" fill="#2e9e62">Neo4j</text>
+                  <text x="298" y="168" text-anchor="start" font-size="9" fill="#2e9e62">relationship traversal</text>
+                  <rect x="10" y="180" width="170" height="24" fill="#111" stroke="#333" stroke-width="0.5" />
+                  <rect x="180" y="180" width="110" height="24" fill="#1a1a2a" stroke="#333" stroke-width="0.5" />
+                  <rect x="290" y="180" width="140" height="24" fill="#0a1a0a" stroke="#333" stroke-width="0.5" />
+                  <text x="18" y="196" text-anchor="start" font-size="9" fill="#aaa">Flower sales analytics</text>
+                  <text x="188" y="196" text-anchor="start" font-size="9" fill="#8866cc">ClickHouse</text>
+                  <text x="298" y="196" text-anchor="start" font-size="9" fill="#2e9e62">columnar · OLAP</text>
+                  <rect x="10" y="216" width="420" height="52" rx="6" fill="#1a1a2a" stroke="#8866cc"
+                    stroke-width="0.5" />
+                  <text x="18" y="232" text-anchor="start" font-size="10" fill="#8866cc" font-weight="bold">Polyglot
+                    persistence example</text>
+                  <text x="18" y="248" text-anchor="start" font-size="9" fill="#aaa">PostgreSQL: orders · Redis: cart ·
+                    MongoDB: catalogue</text>
+                  <text x="18" y="264" text-anchor="start" font-size="9" fill="#aaa">Cassandra: sensor logs ·
+                    ClickHouse: analytics dashboard</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+            <!-- 25: Summary pyramid -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>Module 14 Summary</h5>
+                <ul>
+                  <li>SQL dominated 30 years: ACID, schema, vert. scaling</li>
+                  <li>Web scale broke those assumptions in the 2000s</li>
+                  <li>NoSQL = Not Only SQL: 4 families, 4 access patterns</li>
+                  <li>ACID: atomicity, consistency, isolation, durability</li>
+                  <li>BASE: basically avail., soft state, event. cons.</li>
+                  <li>CAP: a distr. system picks two of C, A and P</li>
+                  <li>PACELC ext. CAP: add lat. vs cons. in normal ops</li>
+                  <li>Polyglot persistence: match DBs to access pattern</li>
+                  <li>Each database family has its own query language</li>
+                </ul>
+              </div>
+              <div style="flex:1;">
+                <svg width="100%" viewBox="0 0 440 300" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:sans-serif;">
+                  <rect x="10" y="252" width="420" height="40" rx="4" fill="#1a1a1a" stroke="#444" stroke-width="0.5" />
+                  <text x="220" y="268" text-anchor="middle" font-size="11" fill="#aaa" font-weight="bold">SQL:
+                    relational · ACID · vertical scale</text>
+                  <text x="220" y="284" text-anchor="middle" font-size="9" fill="#666">PostgreSQL · MySQL ·
+                    OracleDB</text>
+                  <rect x="30" y="200" width="380" height="48" rx="4" fill="#1a2a3a" stroke="#93aee8"
+                    stroke-width="0.5" />
+                  <text x="220" y="218" text-anchor="middle" font-size="11" fill="#93aee8" font-weight="bold">Document:
+                    flexible schema · rich queries</text>
+                  <text x="220" y="234" text-anchor="middle" font-size="9" fill="#666">MongoDB · CouchDB ·
+                    Firestore</text>
+                  <rect x="50" y="152" width="340" height="44" rx="4" fill="#2a1a0a" stroke="#f5b85e"
+                    stroke-width="0.5" />
+                  <text x="220" y="170" text-anchor="middle" font-size="11" fill="#f5b85e" font-weight="bold">Key-Value:
+                    O(1) · in-memory · TTL</text>
+                  <text x="220" y="186" text-anchor="middle" font-size="9" fill="#666">Redis · DynamoDB · Riak</text>
+                  <rect x="70" y="104" width="300" height="44" rx="4" fill="#2a1010" stroke="#e88" stroke-width="0.5" />
+                  <text x="220" y="122" text-anchor="middle" font-size="11" fill="#e88" font-weight="bold">Wide-Column:
+                    write-heavy · time series</text>
+                  <text x="220" y="138" text-anchor="middle" font-size="9" fill="#666">Cassandra · HBase ·
+                    Bigtable</text>
+                  <rect x="100" y="56" width="240" height="44" rx="4" fill="#0a2a1a" stroke="#2e9e62"
+                    stroke-width="0.5" />
+                  <text x="220" y="74" text-anchor="middle" font-size="11" fill="#2e9e62" font-weight="bold">Graph:
+                    nodes · edges · traversal</text>
+                  <text x="220" y="90" text-anchor="middle" font-size="9" fill="#666">Neo4j · Neptune · ArangoDB</text>
+                  <rect x="150" y="10" width="140" height="40" rx="4" fill="#1a1a2a" stroke="#8866cc"
+                    stroke-width="1" />
+                  <text x="220" y="26" text-anchor="middle" font-size="10" fill="#8866cc" font-weight="bold">CAP · BASE
+                    · PACELC</text>
+                  <text x="220" y="42" text-anchor="middle" font-size="9" fill="#666">theoretical foundation</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
         </section>
 
         <!-- ===================== DATABASES ===================== -->
