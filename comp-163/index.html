@@ -37052,6 +37052,248 @@ def get_max_completed_hours():
             </div>
           </section>
 
+          <!-- UC-1: You Decide — Payment Processing -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>You Decide: Payment Processing</h5>
+                <p style="color:#f5b85e;">A flower shop processes hundreds of online payments per day. Each payment
+                  must debit the customer's account and credit the shop's account as a single, all-or-nothing
+                  operation. A partial write would leave money in limbo. Which database family fits best?</p>
+                <ul>
+                  <li>A) Document — MongoDB</li>
+                  <li>B) Key-Value — Redis</li>
+                  <li>C) Relational SQL — PostgreSQL</li>
+                  <li>D) Wide-Column — Cassandra</li>
+                </ul>
+                <p class="fragment" data-fragment-index="1" style="color:#2e9e62;">Answer: C — Relational SQL. Financial operations require
+                  ACID atomicity. A transaction either commits fully or rolls back. NoSQL BASE semantics risk
+                  a debit without a matching credit.</p>
+              </div>
+              <div style="flex:1;" class="fragment" data-fragment-index="1">
+                <svg width="100%" viewBox="0 0 440 240" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:sans-serif;">
+                  <rect x="10" y="10" width="420" height="28" rx="4" fill="#1a2a3a" stroke="#93aee8" stroke-width="0.5"/>
+                  <text x="220" y="29" text-anchor="middle" font-size="11" fill="#93aee8" font-weight="bold">ACID Transaction: debit + credit</text>
+                  <rect x="30" y="52" width="180" height="50" rx="4" fill="#1a1a1a" stroke="#555" stroke-width="0.5"/>
+                  <text x="120" y="72" text-anchor="middle" font-size="10" fill="#aaa" font-weight="bold">Customer Account</text>
+                  <text x="120" y="90" text-anchor="middle" font-size="10" fill="#e88">− $49.99</text>
+                  <rect x="230" y="52" width="180" height="50" rx="4" fill="#1a1a1a" stroke="#555" stroke-width="0.5"/>
+                  <text x="320" y="72" text-anchor="middle" font-size="10" fill="#aaa" font-weight="bold">Shop Account</text>
+                  <text x="320" y="90" text-anchor="middle" font-size="10" fill="#2e9e62">+ $49.99</text>
+                  <rect x="130" y="118" width="180" height="28" rx="4" fill="#0a2a1a" stroke="#2e9e62" stroke-width="0.5"/>
+                  <text x="220" y="136" text-anchor="middle" font-size="10" fill="#2e9e62" font-weight="bold">COMMIT — both or neither</text>
+                  <rect x="10" y="160" width="420" height="28" rx="4" fill="#2a1010" stroke="#e88" stroke-width="0.5"/>
+                  <text x="220" y="178" text-anchor="middle" font-size="10" fill="#e88" font-weight="bold">BASE: debit may commit, credit may not → money lost</text>
+                  <rect x="10" y="200" width="200" height="30" rx="4" fill="#1a1a2a" stroke="#8866cc" stroke-width="0.5"/>
+                  <text x="110" y="219" text-anchor="middle" font-size="10" fill="#8866cc">SQL · ACID · PostgreSQL</text>
+                  <rect x="230" y="200" width="200" height="30" rx="4" fill="#1a1a1a" stroke="#444" stroke-width="0.5"/>
+                  <text x="330" y="219" text-anchor="middle" font-size="9" fill="#555">NoSQL families → avoid here</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- UC-2: You Decide — Product Catalog -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>You Decide: Product Catalog</h5>
+                <p style="color:#f5b85e;">The flower shop sells roses (color, stem length), potted plants (pot size,
+                  sunlight), and gift baskets (items list, occasion). Each product type has completely different
+                  attributes. Adding a new product type must not require an ALTER TABLE. Which database fits?</p>
+                <ul>
+                  <li>A) Relational SQL — PostgreSQL</li>
+                  <li>B) Document — MongoDB</li>
+                  <li>C) Wide-Column — Cassandra</li>
+                  <li>D) Graph — Neo4j</li>
+                </ul>
+                <p class="fragment" data-fragment-index="1" style="color:#2e9e62;">Answer: B — Document. Each product is stored as a JSON
+                  document with its own fields. No schema migration needed when a new product type is added.
+                  SQL would require nullable columns or a complex EAV pattern.</p>
+              </div>
+              <div style="flex:1;" class="fragment" data-fragment-index="1">
+                <svg width="100%" viewBox="0 0 440 240" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:sans-serif;">
+                  <rect x="10" y="10" width="420" height="24" rx="4" fill="#1a2a3a" stroke="#93aee8" stroke-width="0.5"/>
+                  <text x="220" y="27" text-anchor="middle" font-size="10" fill="#93aee8" font-weight="bold">Document DB: flexible schema per product</text>
+                  <rect x="10" y="44" width="130" height="76" rx="4" fill="#1a2a3a" stroke="#93aee8" stroke-width="0.5"/>
+                  <text x="75" y="62" text-anchor="middle" font-size="9" fill="#93aee8" font-weight="bold">Rose</text>
+                  <text x="75" y="78" text-anchor="middle" font-size="8" fill="#666">color: red</text>
+                  <text x="75" y="92" text-anchor="middle" font-size="8" fill="#666">stem_cm: 60</text>
+                  <text x="75" y="106" text-anchor="middle" font-size="8" fill="#666">price: 4.99</text>
+                  <rect x="155" y="44" width="130" height="76" rx="4" fill="#2a1a0a" stroke="#f5b85e" stroke-width="0.5"/>
+                  <text x="220" y="62" text-anchor="middle" font-size="9" fill="#f5b85e" font-weight="bold">Potted Plant</text>
+                  <text x="220" y="78" text-anchor="middle" font-size="8" fill="#666">pot_size: 6in</text>
+                  <text x="220" y="92" text-anchor="middle" font-size="8" fill="#666">sunlight: full</text>
+                  <text x="220" y="106" text-anchor="middle" font-size="8" fill="#666">price: 19.99</text>
+                  <rect x="300" y="44" width="130" height="76" rx="4" fill="#0a2a1a" stroke="#2e9e62" stroke-width="0.5"/>
+                  <text x="365" y="62" text-anchor="middle" font-size="9" fill="#2e9e62" font-weight="bold">Gift Basket</text>
+                  <text x="365" y="78" text-anchor="middle" font-size="8" fill="#666">items: [...]</text>
+                  <text x="365" y="92" text-anchor="middle" font-size="8" fill="#666">occasion: bday</text>
+                  <text x="365" y="106" text-anchor="middle" font-size="8" fill="#666">price: 39.99</text>
+                  <rect x="10" y="132" width="420" height="24" rx="4" fill="#1a1a1a" stroke="#333" stroke-width="0.5"/>
+                  <text x="220" y="148" text-anchor="middle" font-size="9" fill="#555">SQL alternative: 20+ nullable columns or EAV anti-pattern</text>
+                  <rect x="10" y="168" width="420" height="28" rx="4" fill="#1a2a3a" stroke="#93aee8" stroke-width="0.5"/>
+                  <text x="220" y="186" text-anchor="middle" font-size="10" fill="#93aee8" font-weight="bold">MongoDB · CouchDB · Firestore — flexible schema · rich queries</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- UC-3: You Decide — Session Cache -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>You Decide: Session Cache</h5>
+                <p style="color:#f5b85e;">The flower shop's web app creates a login session token for every user.
+                  On each page request the app checks whether the token is valid. Sessions expire after 30 minutes
+                  of inactivity. The lookup must complete in under 1 ms. Which database fits?</p>
+                <ul>
+                  <li>A) Wide-Column — Cassandra</li>
+                  <li>B) Relational SQL — PostgreSQL</li>
+                  <li>C) Key-Value — Redis</li>
+                  <li>D) Graph — Neo4j</li>
+                </ul>
+                <p class="fragment" data-fragment-index="1" style="color:#2e9e62;">Answer: C — Key-Value (Redis). Sessions are a classic
+                  key→value pair (token → user data). Redis stores data in-memory for O(1) reads and supports
+                  TTL so expired sessions are deleted automatically. No SQL join needed.</p>
+              </div>
+              <div style="flex:1;" class="fragment" data-fragment-index="1">
+                <svg width="100%" viewBox="0 0 440 240" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:sans-serif;">
+                  <rect x="10" y="10" width="420" height="24" rx="4" fill="#2a1a0a" stroke="#f5b85e" stroke-width="0.5"/>
+                  <text x="220" y="27" text-anchor="middle" font-size="10" fill="#f5b85e" font-weight="bold">Key-Value Store: O(1) · in-memory · TTL</text>
+                  <rect x="10" y="46" width="200" height="30" rx="4" fill="#1a1a1a" stroke="#555" stroke-width="0.5"/>
+                  <text x="110" y="65" text-anchor="middle" font-size="9" fill="#aaa" font-weight="bold">Key: session token</text>
+                  <rect x="230" y="46" width="200" height="30" rx="4" fill="#1a1a1a" stroke="#555" stroke-width="0.5"/>
+                  <text x="330" y="65" text-anchor="middle" font-size="9" fill="#aaa" font-weight="bold">Value: {user_id, cart}</text>
+                  <rect x="10" y="90" width="420" height="24" rx="4" fill="#2a1a0a" stroke="#f5b85e" stroke-width="0.5"/>
+                  <text x="220" y="106" text-anchor="middle" font-size="9" fill="#f5b85e">TTL = 1800 s → Redis auto-deletes on expiry</text>
+                  <rect x="10" y="126" width="130" height="50" rx="4" fill="#1a1a2a" stroke="#8866cc" stroke-width="0.5"/>
+                  <text x="75" y="146" text-anchor="middle" font-size="9" fill="#8866cc" font-weight="bold">Redis GET</text>
+                  <text x="75" y="162" text-anchor="middle" font-size="9" fill="#555">&lt; 1 ms · in-memory</text>
+                  <rect x="155" y="126" width="130" height="50" rx="4" fill="#1a1a1a" stroke="#333" stroke-width="0.5"/>
+                  <text x="220" y="146" text-anchor="middle" font-size="9" fill="#555">SQL SELECT</text>
+                  <text x="220" y="162" text-anchor="middle" font-size="9" fill="#444">disk I/O · index scan</text>
+                  <rect x="300" y="126" width="130" height="50" rx="4" fill="#1a1a1a" stroke="#333" stroke-width="0.5"/>
+                  <text x="365" y="146" text-anchor="middle" font-size="9" fill="#555">Manual cron</text>
+                  <text x="365" y="162" text-anchor="middle" font-size="9" fill="#444">to purge sessions</text>
+                  <rect x="10" y="190" width="420" height="28" rx="4" fill="#2a1a0a" stroke="#f5b85e" stroke-width="0.5"/>
+                  <text x="220" y="208" text-anchor="middle" font-size="10" fill="#f5b85e" font-weight="bold">Redis · DynamoDB · Riak — speed + TTL = session store</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- UC-4: You Decide — IoT Sensor Logs -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>You Decide: IoT Sensor Logs</h5>
+                <p style="color:#f5b85e;">The flower shop's greenhouses have 500 sensors recording temperature and
+                  humidity every second — 43 million rows per day. Queries always filter by sensor ID and a time
+                  range. Reads are rare; writes are constant and must never block. Which database fits?</p>
+                <ul>
+                  <li>A) Relational SQL — PostgreSQL</li>
+                  <li>B) Document — MongoDB</li>
+                  <li>C) Wide-Column — Cassandra</li>
+                  <li>D) Key-Value — Redis</li>
+                </ul>
+                <p class="fragment" data-fragment-index="1" style="color:#2e9e62;">Answer: C — Wide-Column (Cassandra). Rows are partitioned
+                  by sensor_id and clustered by timestamp. Writes append to a commit log — no locking, no
+                  B-tree rebalancing. Exactly the write-heavy, time-series workload Cassandra is designed for.</p>
+              </div>
+              <div style="flex:1;" class="fragment" data-fragment-index="1">
+                <svg width="100%" viewBox="0 0 440 240" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:sans-serif;">
+                  <rect x="10" y="10" width="420" height="24" rx="4" fill="#2a1010" stroke="#e88" stroke-width="0.5"/>
+                  <text x="220" y="27" text-anchor="middle" font-size="10" fill="#e88" font-weight="bold">Wide-Column: write-heavy · time series · partition key</text>
+                  <rect x="10" y="46" width="90" height="160" rx="4" fill="#1a1a1a" stroke="#555" stroke-width="0.5"/>
+                  <text x="55" y="64" text-anchor="middle" font-size="8" fill="#aaa" font-weight="bold">sensor_id</text>
+                  <text x="55" y="82" text-anchor="middle" font-size="8" fill="#e88">GH-01</text>
+                  <text x="55" y="98" text-anchor="middle" font-size="8" fill="#e88">GH-01</text>
+                  <text x="55" y="114" text-anchor="middle" font-size="8" fill="#e88">GH-01</text>
+                  <text x="55" y="130" text-anchor="middle" font-size="8" fill="#f5b85e">GH-02</text>
+                  <text x="55" y="146" text-anchor="middle" font-size="8" fill="#f5b85e">GH-02</text>
+                  <rect x="110" y="46" width="110" height="160" rx="4" fill="#1a1a1a" stroke="#555" stroke-width="0.5"/>
+                  <text x="165" y="64" text-anchor="middle" font-size="8" fill="#aaa" font-weight="bold">timestamp</text>
+                  <text x="165" y="82" text-anchor="middle" font-size="8" fill="#666">10:00:01</text>
+                  <text x="165" y="98" text-anchor="middle" font-size="8" fill="#666">10:00:02</text>
+                  <text x="165" y="114" text-anchor="middle" font-size="8" fill="#666">10:00:03</text>
+                  <text x="165" y="130" text-anchor="middle" font-size="8" fill="#666">10:00:01</text>
+                  <text x="165" y="146" text-anchor="middle" font-size="8" fill="#666">10:00:02</text>
+                  <rect x="230" y="46" width="90" height="160" rx="4" fill="#1a1a1a" stroke="#555" stroke-width="0.5"/>
+                  <text x="275" y="64" text-anchor="middle" font-size="8" fill="#aaa" font-weight="bold">temp_c</text>
+                  <text x="275" y="82" text-anchor="middle" font-size="8" fill="#2e9e62">21.4</text>
+                  <text x="275" y="98" text-anchor="middle" font-size="8" fill="#2e9e62">21.5</text>
+                  <text x="275" y="114" text-anchor="middle" font-size="8" fill="#2e9e62">21.3</text>
+                  <text x="275" y="130" text-anchor="middle" font-size="8" fill="#2e9e62">19.1</text>
+                  <text x="275" y="146" text-anchor="middle" font-size="8" fill="#2e9e62">19.2</text>
+                  <rect x="330" y="46" width="100" height="160" rx="4" fill="#1a1a1a" stroke="#555" stroke-width="0.5"/>
+                  <text x="380" y="64" text-anchor="middle" font-size="8" fill="#aaa" font-weight="bold">humidity_%</text>
+                  <text x="380" y="82" text-anchor="middle" font-size="8" fill="#93aee8">68</text>
+                  <text x="380" y="98" text-anchor="middle" font-size="8" fill="#93aee8">67</text>
+                  <text x="380" y="114" text-anchor="middle" font-size="8" fill="#93aee8">69</text>
+                  <text x="380" y="130" text-anchor="middle" font-size="8" fill="#93aee8">72</text>
+                  <text x="380" y="146" text-anchor="middle" font-size="8" fill="#93aee8">71</text>
+                  <rect x="10" y="216" width="420" height="20" rx="4" fill="#2a1010" stroke="#e88" stroke-width="0.5"/>
+                  <text x="220" y="230" text-anchor="middle" font-size="9" fill="#e88">Cassandra · HBase · Bigtable — append-only writes · no locking</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- UC-5: You Decide — Social Network Traversal -->
+          <section>
+            <div style="display:flex;gap:2rem;align-items:center;">
+              <div style="flex:1;">
+                <h5>You Decide: Social Network Traversal</h5>
+                <p style="color:#f5b85e;">The flower shop launches a loyalty program where customers can refer
+                  friends. The app needs to find "customers within 3 referral hops of a VIP" and detect referral
+                  fraud rings. Queries follow chains of relationships, not rows. Which database fits?</p>
+                <ul>
+                  <li>A) Relational SQL — recursive CTEs</li>
+                  <li>B) Key-Value — Redis</li>
+                  <li>C) Wide-Column — Cassandra</li>
+                  <li>D) Graph — Neo4j</li>
+                </ul>
+                <p class="fragment" data-fragment-index="1" style="color:#2e9e62;">Answer: D — Graph (Neo4j). Nodes are customers, edges are
+                  referrals. A single Cypher traversal finds all paths within 3 hops natively. SQL recursive CTEs
+                  are possible but slow at depth; Redis and Cassandra have no traversal primitives.</p>
+              </div>
+              <div style="flex:1;" class="fragment" data-fragment-index="1">
+                <svg width="100%" viewBox="0 0 440 240" xmlns="http://www.w3.org/2000/svg"
+                  style="font-family:sans-serif;">
+                  <rect x="10" y="10" width="420" height="24" rx="4" fill="#0a2a1a" stroke="#2e9e62" stroke-width="0.5"/>
+                  <text x="220" y="27" text-anchor="middle" font-size="10" fill="#2e9e62" font-weight="bold">Graph DB: nodes · edges · traversal</text>
+                  <circle cx="220" cy="90" r="22" fill="#1a2a3a" stroke="#93aee8" stroke-width="1.5"/>
+                  <text x="220" y="86" text-anchor="middle" font-size="9" fill="#93aee8" font-weight="bold">VIP</text>
+                  <text x="220" y="98" text-anchor="middle" font-size="8" fill="#666">Alice</text>
+                  <circle cx="100" cy="160" r="18" fill="#0a2a1a" stroke="#2e9e62" stroke-width="1"/>
+                  <text x="100" y="164" text-anchor="middle" font-size="8" fill="#2e9e62">Bob</text>
+                  <circle cx="220" cy="175" r="18" fill="#0a2a1a" stroke="#2e9e62" stroke-width="1"/>
+                  <text x="220" y="179" text-anchor="middle" font-size="8" fill="#2e9e62">Carol</text>
+                  <circle cx="340" cy="160" r="18" fill="#0a2a1a" stroke="#2e9e62" stroke-width="1"/>
+                  <text x="340" y="164" text-anchor="middle" font-size="8" fill="#2e9e62">Dave</text>
+                  <circle cx="60" cy="210" r="15" fill="#2a1a0a" stroke="#f5b85e" stroke-width="1"/>
+                  <text x="60" y="214" text-anchor="middle" font-size="8" fill="#f5b85e">Eve</text>
+                  <circle cx="380" cy="210" r="15" fill="#2a1a0a" stroke="#f5b85e" stroke-width="1"/>
+                  <text x="380" y="214" text-anchor="middle" font-size="8" fill="#f5b85e">Frank</text>
+                  <line x1="201" y1="108" x2="116" y2="145" stroke="#2e9e62" stroke-width="1.2"/>
+                  <line x1="220" y1="112" x2="220" y2="157" stroke="#2e9e62" stroke-width="1.2"/>
+                  <line x1="239" y1="108" x2="324" y2="145" stroke="#2e9e62" stroke-width="1.2"/>
+                  <line x1="84" y1="175" x2="73" y2="197" stroke="#f5b85e" stroke-width="1"/>
+                  <line x1="356" y1="175" x2="368" y2="197" stroke="#f5b85e" stroke-width="1"/>
+                  <text x="152" y="125" text-anchor="middle" font-size="7" fill="#555">REFERRED</text>
+                  <text x="270" y="125" text-anchor="middle" font-size="7" fill="#555">REFERRED</text>
+                  <rect x="10" y="228" width="420" height="8" rx="2" fill="#0a2a1a" stroke="#2e9e62" stroke-width="0.3"/>
+                  <text x="220" y="234" text-anchor="middle" font-size="7" fill="#2e9e62">Neo4j · Neptune · ArangoDB — MATCH (a)-[:REFERRED*1..3]->(b)</text>
+                </svg>
+              </div>
+            </div>
+          </section>
+
           <section>
             <h3>Questions?</h3>
           </section>
