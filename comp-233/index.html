@@ -308,8 +308,6 @@
             color: rgb(117, 212, 117);
         }
     </style>
-
-
 </head>
 
 <body>
@@ -29693,7 +29691,2904 @@ network timeout, and lux above 65000."
                         </div>
                     </section>
 
-                </section>
+                    <!-- ======== IoT Light Sensor – 20 Teaching Sections ========= -->
+
+                    <!-- ─── S01 Project Overview ─────────────────────────────── -->
+                    <section id="c34">
+                        <h5>Project Overview</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>README.md</code></p>
+                                <ul>
+                                    <li>End-to-end indoor light monitoring system</li>
+                                    <li>Sensor detects ON/OFF → Flask backend stores events</li>
+                                    <li>Dashboard alerts when light ON &gt; 12 hours</li>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Clear scope</span> <span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Layered architecture</span></li>
+                                    <li><span
+                                            style="background:#3d2e0c;color:#e3b341;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">⚠
+                                            Auth not addressed</span> <span
+                                            style="background:#3d2e0c;color:#e3b341;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">⚠
+                                            12 h threshold hardcoded</span></li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <div class="tiers flow-lr cols-5" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">Sensor</div>
+                                        <div class="tier-sub">BH1750 + ESP32</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">Backend</div>
+                                        <div class="tier-sub">Flask API</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">Database</div>
+                                        <div class="tier-sub">MongoDB Atlas</div>
+                                    </div>
+                                    <div class="tier" style="background:#4a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Frontend</div>
+                                        <div class="tier-sub">Dashboard</div>
+                                    </div>
+                                    <div class="tier" style="background:#1a3a3a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Notify</div>
+                                        <div class="tier-sub">Alert &gt;12 h</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h3>Embedded</h3>
+                    </section>
+
+                    <!-- ─── S02 Repository Structure ─────────────────────────── -->
+                    <section>
+                        <h5>Repository Structure</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>/ (root)</code></p>
+                                <ul>
+                                    <li><code>app/embedded/</code> – Arduino sketches &amp; PCB</li>
+                                    <li><code>app/backend/</code> – Flask API</li>
+                                    <li><code>app/frontend/</code> – Dashboard</li>
+                                    <li><code>app/architect/</code> – ADRs, diagrams, interfaces</li>
+                                    <li><code>app/devOps/</code> – CI/CD configs</li>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Monorepo</span> <span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            hardware_tests/ is empty</span></li>
+                                    <li><span
+                                            style="background:#3d2e0c;color:#e3b341;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">⚠
+                                            backend/ and frontend/ stubs only</span></li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">embedded/</div>
+                                        <div class="tier-sub">BH1750_test.ino · PCB Design.png</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">architect/</div>
+                                        <div class="tier-sub">9 UML diagrams · ADRs · API specs</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">backend / frontend / devOps
+                                        </div>
+                                        <div class="tier-sub">readme.md stubs — to be implemented</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S03 BH1750 Sensor Hardware ───────────────────────── -->
+                    <section>
+                        <h5>BH1750
+                            Light Sensor</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/embedded/BH1750_test/BH1750_test.ino</code></p>
+                                <ul>
+                                    <li>16-bit digital ambient light sensor, I2C</li>
+                                    <li>Outputs lux directly — no ADC conversion needed</li>
+                                    <li>I2C address: <code>0x23</code> (ADDR=LOW) or <code>0x5C</code> (ADDR=HIGH)</li>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Direct lux output</span> <span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Only 2 signal wires</span></li>
+                                    <li><span
+                                            style="background:#3d2e0c;color:#e3b341;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">⚠
+                                            Range 1–65535 lx</span> <span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            ADDR pin not configured in sketch</span></li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <div class="tiers flow-lr cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">BH1750</div>
+                                        <div class="tier-sub">VCC · GND · SCL · SDA · ADDR</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d1a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">I2C Bus</div>
+                                        <div class="tier-sub">SDA=GPIO 21 · SCL=GPIO 22 · 4.7 kΩ pull-ups</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">ESP32 Thing Plus</div>
+                                        <div class="tier-sub">3.3 V · GND · GPIO 21 · GPIO 22</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S04 Full Embedded Sketch ─────────────────────────── -->
+                    <section>
+                        <h5>BH1750_test.ino
+                            – Full Sketch</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/embedded/BH1750_test/BH1750_test.ino</code></p>
+                                <pre><code>void setup() {
+  Serial.begin(115200);
+  Wire.begin(21, 22); // SDA, SCL
+  if (lightMeter.begin()) {
+    Serial.println("BH1750 started!");
+  } else {
+    Serial.println("Error initializing BH1750");
+  }
+}
+void loop() {
+  float lux = lightMeter.readLightLevel();
+  Serial.print("Light: ");
+  Serial.print(lux);
+  Serial.println(" lx");
+  delay(1000);
+}</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">Power ON</div>
+                                        <div class="tier-sub">MCU boots, runs setup() once</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">setup()</div>
+                                        <div class="tier-sub">Serial · Wire · lightMeter init</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">loop() ∞</div>
+                                        <div class="tier-sub">read lux → print → delay 1 s → repeat</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S05 #include Libraries ───────────────────────────── -->
+                    <section>
+                        <h5>#include
+                            Libraries</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>BH1750_test.ino · lines 1–2</code></p>
+                                <pre><code>#include &lt;Wire.h&gt;
+#include &lt;BH1750.h&gt;</code></pre>
+                                <ul>
+                                    <li><strong>Wire.h</strong> – Arduino I2C master (bundled with ESP32 core)</li>
+                                    <li><strong>BH1750.h</strong> – wraps register reads into
+                                        <code>readLightLevel()</code>
+                                    </li>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Wire.h needs no install</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            BH1750 version not pinned</span></li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <div class="tiers flow-lr cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">BH1750_test.ino</div>
+                                        <div class="tier-sub">sketch entry point</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">Wire.h</div>
+                                        <div class="tier-sub">I2C hardware registers · GPIO 21/22</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">BH1750.h</div>
+                                        <div class="tier-sub">begin() · readLightLevel() · 0x23</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S06 Wire.begin() ──────────────────────────────────── -->
+                    <section>
+                        <h5>Wire.begin()
+                            – I2C Initialization</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>BH1750_test.ino · line 7</code></p>
+                                <pre><code>Wire.begin(21, 22);  // SDA=21, SCL=22</code></pre>
+                                <ul>
+                                    <li>Initializes I2C bus with explicit pin numbers</li>
+                                    <li>Default clock: 100 kHz — fast mode: <code>Wire.setClock(400000)</code></li>
+                                    <li>Pull-up resistors 4.7 kΩ required on SDA and SCL</li>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Explicit pins — portable</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            No Wire.setClock() call</span> <span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            No bus error check</span></li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <div class="tiers flow-lr cols-4" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">Wire.begin()</div>
+                                        <div class="tier-sub">SDA=21 · SCL=22</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">100 kHz</div>
+                                        <div class="tier-sub">standard mode default</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">400 kHz</div>
+                                        <div class="tier-sub">fast mode (optional)</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">Multi-device</div>
+                                        <div class="tier-sub">BH1750 · BME280 · OLED share bus</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S07 Serial Communication ─────────────────────────── -->
+                    <section>
+                        <h5>Serial.begin()
+                            – Debug Output</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>BH1750_test.ino · lines 6, 18–21</code></p>
+                                <pre><code>Serial.begin(115200);
+Serial.print("Light: ");
+Serial.print(lux);
+Serial.println(" lx");</code></pre>
+                                <ul>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            115200 baud — fast enough for 1 s interval</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            Data never leaves the bench</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            No timestamp alongside lux value</span></li>
+                                    <li>Production: replace with HTTP POST over WiFi</li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <div class="tiers flow-lr cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Test Mode (now)</div>
+                                        <div class="tier-sub">ESP32 → UART → Serial Monitor · data stays on bench</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">Production Mode</div>
+                                        <div class="tier-sub">ESP32 → WiFi → HTTPS POST → Flask</div>
+                                    </div>
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">Improvement</div>
+                                        <div class="tier-sub">Add millis() timestamp to each Serial.print line</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S08 lightMeter.begin() ───────────────────────────── -->
+                    <section>
+                        <h5>lightMeter.begin()
+                            – Sensor Init</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>BH1750_test.ino · lines 9–13</code></p>
+                                <pre><code>if (lightMeter.begin()) {
+  Serial.println("BH1750 started!");
+} else {
+  Serial.println("Error initializing BH1750");
+}</code></pre>
+                                <ul>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Checks return value</span> <span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Prints error message</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            No retry on failure</span> <span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            No halt — loop() runs anyway</span></li>
+                                    <li>Fix: <code>if (!lightMeter.begin()) while(1) delay(100);</code></li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">begin() sends 0x07</div>
+                                        <div class="tier-sub">Reset command over I2C</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">ACK received?</div>
+                                        <div class="tier-sub">YES → sets H-res mode 0x10 → returns true</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">No ACK</div>
+                                        <div class="tier-sub">returns false · loop() still runs · lux = 0.0</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S09 readLightLevel() Loop ────────────────────────── -->
+                    <section>
+                        <h5>readLightLevel()
+                            – Measurement Loop</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>BH1750_test.ino · lines 17–22</code></p>
+                                <pre><code>float lux = lightMeter.readLightLevel();
+Serial.print("Light: ");
+Serial.print(lux);
+Serial.println(" lx");
+delay(1000);</code></pre>
+                                <ul>
+                                    <li>Internal: requestFrom(0x23) → 2 bytes → lux = (H&lt;&lt;8|L) / 1.2</li>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Simple and readable</span> <span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            float precision</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            No ON/OFF threshold logic</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            No HTTP transmission</span></li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <div class="tiers flow-lr cols-4" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">Read lux</div>
+                                        <div class="tier-sub">readLightLevel() via I2C</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">lux &gt; 10?</div>
+                                        <div class="tier-sub">Threshold → state = ON</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">State changed?</div>
+                                        <div class="tier-sub">Record timestamp</div>
+                                    </div>
+                                    <div class="tier" style="background:#1a3a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">POST event</div>
+                                        <div class="tier-sub">Send JSON to Flask backend</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S10 delay() Timing ───────────────────────────────── -->
+                    <section>
+                        <h5>delay()
+                            – Timing Strategy</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>BH1750_test.ino · line 22</code></p>
+                                <pre><code>delay(1000); // blocking — 1 second
+
+// Non-blocking alternative:
+unsigned long last = 0;
+void loop() {
+  if (millis() - last >= 1000) {
+    last = millis();
+    float lux = lightMeter.readLightLevel();
+  }
+  // WiFi tasks run here
+}</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">delay() — Blocking</div>
+                                        <div class="tier-sub">MCU halted 880 ms/cycle · WiFi starves</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">millis() — Non-blocking</div>
+                                        <div class="tier-sub">Check elapsed time · other tasks keep running</div>
+                                    </div>
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">FreeRTOS Tasks</div>
+                                        <div class="tier-sub">sensorTask (core 0) · networkTask (core 1)</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S11 PCB Design ───────────────────────────────────── -->
+                    <section>
+                        <h5>PCB
+                            Design</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/embedded/PCB Design.png</code></p>
+                                <ul>
+                                    <li>Custom PCB integrates ESP32 + BH1750 on one board</li>
+                                    <li>Eliminates breadboard wiring for deployment</li>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Reproducible hardware</span> <span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Compact form factor</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            No .sch / .kicad_sch source in repo</span></li>
+                                    <li><span
+                                            style="background:#3d2e0c;color:#e3b341;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">⚠
+                                            PNG only — not editable</span></li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <img src="https://raw.githubusercontent.com/SE4CPS/IoT-Light-Sensor/main/app/embedded/PCB%20Design.png"
+                                    alt="PCB Design – IoT Light Sensor" loading="lazy" />
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S12 Event Data Schema ────────────────────────────── -->
+                    <section>
+                        <h5>Event
+                            Data Schema</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>README.md · Data Structure</code></p>
+                                <pre><code>{
+  "meta": {
+    "entity": "room_light_event",
+    "version": "1.0",
+    "source": "indoor light sensor"
+  },
+  "data": {
+    "room_id": "string | integer",
+    "light_state": "ON | OFF",
+    "timestamp": "ISO-8601"
+  }
+}</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">Good</div>
+                                        <div class="tier-sub">Versioned schema · ISO-8601 timestamp</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Warning</div>
+                                        <div class="tier-sub">room_id type ambiguous (string | int)</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Missing</div>
+                                        <div class="tier-sub">No lux value · No device_id field</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S13 Component Architecture High Level ────────────── -->
+                    <section>
+                        <h5>Component
+                            Architecture – High Level</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/diagrams/01_component_high_level.png</code></p>
+                                <ul>
+                                    <li>IoT Device → Backend: HTTP POST (push)</li>
+                                    <li>Frontend → Backend: HTTP GET (pull)</li>
+                                    <li>Backend → User: notification (email/alert)</li>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Clear component boundaries</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            Single backend = SPOF · No message queue</span></li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <img src="https://raw.githubusercontent.com/SE4CPS/IoT-Light-Sensor/main/app/architect/diagrams/01_component_high_level.png"
+                                    alt="High Level Component Diagram" loading="lazy" />
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S14 Component Architecture Detailed ──────────────── -->
+                    <section>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/diagrams/02_component_detailed.png</code></p>
+                                <ul>
+                                    <li>ESP32 sub-components: BH1750 Driver · State Machine · HTTP Client</li>
+                                    <li>Backend sub-components: Router · Validator · DB Layer · Notifier</li>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Validation module explicit</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            No auth token · No local buffer on device</span></li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <img src="https://raw.githubusercontent.com/SE4CPS/IoT-Light-Sensor/main/app/architect/diagrams/02_component_detailed.png"
+                                    alt="Detailed Component Diagram" loading="lazy" />
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S15 Event-Driven Architecture ────────────────────── -->
+                    <section>
+                        <h5>Event-Driven
+                            Architecture</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/diagrams/Event-Driven Architecture.png</code></p>
+                                <ul>
+                                    <li>Each light state change produces one event</li>
+                                    <li>Event flows: sensor → backend → notification engine</li>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Loosely coupled · Easy to add consumers</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            No broker (Kafka/MQTT) — direct HTTP only</span></li>
+                                    <li><span
+                                            style="background:#3d2e0c;color:#e3b341;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">⚠
+                                            Consumer must be live to receive events</span></li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <img src="https://raw.githubusercontent.com/SE4CPS/IoT-Light-Sensor/main/app/architect/diagrams/Event-Driven%20Architecture.png"
+                                    alt="Event-Driven Architecture" loading="lazy" />
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S16 Use Case Diagram ─────────────────────────────── -->
+                    <section>
+                        <h5>Use
+                            Case Diagram</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/diagrams/Use Case Diagram.png</code></p>
+                                <ul>
+                                    <li><strong>IoT Device</strong>: Detect light state · Send event</li>
+                                    <li><strong>Occupant</strong>: View dashboard · Receive notification</li>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            System boundary drawn · Actors separated</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            No Admin actor · No historical query use case</span></li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <img src="https://raw.githubusercontent.com/SE4CPS/IoT-Light-Sensor/main/app/architect/diagrams/Use%20Case%20Diagram.png"
+                                    alt="Use Case Diagram" loading="lazy" />
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S17 Activity Diagram ─────────────────────────────── -->
+                    <section>
+                        <h5>Activity
+                            Diagram</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/diagrams/Activity Diagram.png</code></p>
+                                <ul>
+                                    <li>Device lane: sense → decide → POST</li>
+                                    <li>Backend lane: receive → validate → store → evaluate → notify</li>
+                                    <li>Rule: <code>if (ON_duration &gt; 12h) → send alert</code></li>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Swim lanes · Decision point explicit</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            Notification failure path not modeled</span></li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <img src="https://raw.githubusercontent.com/SE4CPS/IoT-Light-Sensor/main/app/architect/diagrams/Activity%20Diagram.png"
+                                    alt="Activity Diagram" loading="lazy" />
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S18 Deployment Architecture ─────────────────────── -->
+                    <section>
+                        <h5>Deployment
+                            Architecture</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/diagrams/04_deployment_architecture.puml</code></p>
+                                <ul>
+                                    <li>Backend deployed on <strong>Render.com</strong> (Flask 3.1.3 / Python 3.9)</li>
+                                    <li>Database on <strong>MongoDB Atlas</strong> M0 free tier</li>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Cloud-hosted · Free tiers available</span></li>
+                                    <li><span
+                                            style="background:#3d2e0c;color:#e3b341;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">⚠
+                                            Render free tier sleeps after 15 min idle</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            No HTTPS enforcement on device POST</span></li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <div class="tiers flow-lr cols-4" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">Physical Building</div>
+                                        <div class="tier-sub">ESP32 + BH1750 firmware</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">Render.com</div>
+                                        <div class="tier-sub">Flask API · Gunicorn · Python 3.9</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">MongoDB Atlas</div>
+                                        <div class="tier-sub">M0 free cluster · light_events collection</div>
+                                    </div>
+                                    <div class="tier" style="background:#1a3a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Browser</div>
+                                        <div class="tier-sub">Dashboard served from Render</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S19 CI/CD Pipeline ───────────────────────────────── -->
+                    <section>
+                        <h5>CI/CD
+                            Pipeline</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>.github/workflows/ · app/devOps/readme.md</code></p>
+                                <ul>
+                                    <li>Trigger: push to <code>main</code> or pull request</li>
+                                    <li>Steps: checkout → install deps → pytest → flake8 → deploy to Render</li>
+                                    <li>Secrets: <code>RENDER_API_KEY</code> · <code>MONGO_URI</code> in GitHub Secrets
+                                    </li>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Automated deploy · Free for public repos</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            No Arduino CI · No staging environment</span></li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <div class="tiers flow-lr cols-4" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">git push main</div>
+                                        <div class="tier-sub">Triggers GitHub Actions workflow</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">pytest + flake8</div>
+                                        <div class="tier-sub">Tests and lint run in parallel</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">Both pass?</div>
+                                        <div class="tier-sub">Gate before deploy job</div>
+                                    </div>
+                                    <div class="tier" style="background:#1a3a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Deploy</div>
+                                        <div class="tier-sub">Curl Render hook → restart Flask</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S20 Improvements Roadmap ─────────────────────────── -->
+                    <section>
+                        <h5>Improvements
+                            Roadmap</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>RELEASE_NOTES.md · README.md</code></p>
+                                <ul>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            No API authentication (device or user)</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            No offline buffer on ESP32</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            No configurable alert threshold</span></li>
+                                    <li><span
+                                            style="background:#3d2e0c;color:#e3b341;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">⚠
+                                            Backend / Frontend stubs need implementation</span></li>
+                                    <li><span
+                                            style="background:#3d2e0c;color:#e3b341;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">⚠
+                                            Single sensor per room assumed</span></li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">High Impact · Low Effort</div>
+                                        <div class="tier-sub">Halt on init fail · Add lux + device_id to payload ·
+                                            Timestamp in Serial log</div>
+                                    </div>
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">High Impact · High Effort
+                                        </div>
+                                        <div class="tier-sub">API key auth · ESP32 offline buffer · Full dashboard ·
+                                            MQTT broker</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Low Impact · Low Effort</div>
+                                        <div class="tier-sub">millis() vs delay() · Pin library versions · KiCad
+                                            schematic source</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h3>Backend</h3>
+                    </section>
+
+                    <!-- ============================================================
+     IoT Light Sensor – 20 Backend Sections
+     Uses ONLY styles already defined in index.html.
+     No new <style> block. Always uses <pre><code> for code.
+     ============================================================ -->
+
+                    <!-- ─── S01 Backend Overview ─────────────────────────────── -->
+                    <section>
+                        <h5>Backend
+                            Overview</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/backend/ · requirements.txt · runtime.txt</code></p>
+                                <ul>
+                                    <li>Flask 3.1.3 · Python 3.9+ · Deployed on Render.com</li>
+                                    <li>7 REST endpoints across 3 categories: Sensor, Dashboard, Usage</li>
+                                    <li>MongoDB Atlas as the data store (pymongo driver)</li>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Lightweight framework</span> <span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Free-tier deployable</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            No auth yet</span> <span
+                                            style="background:#3d2e0c;color:#e3b341;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">⚠
+                                            backend/ is stub only</span></li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <div class="tiers flow-lr cols-4" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">ESP32</div>
+                                        <div class="tier-sub">HTTPS POST sensor events</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">Flask API</div>
+                                        <div class="tier-sub">Route · Validate · Store · Notify</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">MongoDB Atlas</div>
+                                        <div class="tier-sub">6 collections · TTL indexes</div>
+                                    </div>
+                                    <div class="tier" style="background:#1a3a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Dashboard</div>
+                                        <div class="tier-sub">GET current · history · stats</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S02 POST /api/events ──────────────────────────────── -->
+                    <section>
+                        <h5>POST
+                            /api/events – Ingest Sensor Reading</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/api/readme.md · Sensor Endpoints</code></p>
+                                <pre><code>POST /api/events
+Content-Type: application/json
+
+{
+  "device_id": "ls-100-0001",
+  "room_id": "room-101",
+  "event_type": "light.measurement",
+  "lux": 342.5,
+  "light_state": "ON",
+  "timestamp": "2026-02-10T15:30:00Z",
+  "meta": {
+    "battery_pct": 87,
+    "signal_rssi_dbm": -45,
+    "firmware_version": "1.0.0"
+  }
+}
+
+// Success → 202 Accepted
+{
+  "event_id": "evt_20260210_001",
+  "processed_at": "2026-02-10T15:30:01Z"
+}</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">202 Accepted</div>
+                                        <div class="tier-sub">Event queued, event_id returned</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">400 Bad Request</div>
+                                        <div class="tier-sub">Validation failed — lux range, device_id pattern,
+                                            timestamp drift</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">429 Too Many</div>
+                                        <div class="tier-sub">Rate limit: 1000 req/hr per device</div>
+                                    </div>
+                                </div>
+                                <ul>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            202 = async-friendly</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            No auth header required yet</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S03 GET /api/sensor/current ──────────────────────── -->
+                    <section>
+                        <h5>GET
+                            /api/sensor/current – Live Room State</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/api/readme.md · Dashboard Endpoints</code></p>
+                                <pre><code>GET /api/sensor/current?room_id=room-101
+
+// Response 200 OK
+{
+  "room_id": "room-101",
+  "lux": 342.5,
+  "state": "ON",
+  "timestamp": "2026-02-10T15:30:00Z",
+  "freshness_seconds": 2
+}
+
+// Cache: 3 seconds (reduces DB load)
+// Served from: room_state collection</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers flow-lr cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">Request</div>
+                                        <div class="tier-sub">GET ?room_id=room-101</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">Cache (3 s)</div>
+                                        <div class="tier-sub">Hit → return cached · Miss → query room_state</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">Response</div>
+                                        <div class="tier-sub">lux · state · timestamp · freshness_seconds</div>
+                                    </div>
+                                </div>
+                                <ul>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Fast — reads room_state not raw events</span></li>
+                                    <li><span
+                                            style="background:#3d2e0c;color:#e3b341;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">⚠
+                                            freshness_seconds shows staleness</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S04 GET /api/history ──────────────────────────────── -->
+                    <section>
+                        <h5>GET
+                            /api/history – Historical Readings</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/api/readme.md · Dashboard Endpoints</code></p>
+                                <pre><code>GET /api/history
+  ?room_id=room-101
+  &amp;limit=100
+  &amp;from=2026-02-10T00:00:00Z
+  &amp;to=2026-02-10T23:59:59Z
+
+// Response 200 OK
+{
+  "room_id": "room-101",
+  "count": 100,
+  "events": [
+    {
+      "lux": 342.5,
+      "state": "ON",
+      "timestamp": "2026-02-10T15:30:00Z"
+    }
+  ]
+}
+// Cache: 30 seconds · max limit: 500</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">Good</div>
+                                        <div class="tier-sub">ISO-8601 time filter · limit cap at 500</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Warning</div>
+                                        <div class="tier-sub">30 s cache may show stale results</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Missing</div>
+                                        <div class="tier-sub">No cursor/pagination for &gt;500 rows</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S05 GET /api/stats ────────────────────────────────── -->
+                    <section>
+                        <h5>GET
+                            /api/stats – Aggregated Metrics</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/api/readme.md · Dashboard Endpoints</code></p>
+                                <pre><code>GET /api/stats?room_id=room-101
+
+// Response 200 OK
+{
+  "room_id": "room-101",
+  "period": "today",
+  "avg_lux": 285.5,
+  "min_lux": 12.0,
+  "max_lux": 850.0,
+  "sample_count": 28800,
+  "energy_wh": 230.4
+}
+// Cache: 5 minutes
+// Reads from: daily_usage collection</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers flow-lr cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">28,800 events/day</div>
+                                        <div class="tier-sub">1 reading every 3 seconds</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">Pre-aggregated</div>
+                                        <div class="tier-sub">daily_usage collection avoids full scan</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">5-min cache</div>
+                                        <div class="tier-sub">Tolerable staleness for analytics view</div>
+                                    </div>
+                                </div>
+                                <ul>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Energy (Wh) included</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            No weekly/monthly period param yet</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S06 Usage Endpoints ───────────────────────────────── -->
+                    <section>
+                        <h5>Usage
+                            Endpoints</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/api/readme.md · Usage Endpoints</code></p>
+                                <pre><code>// Get daily stats for a specific date
+GET /api/usage/2026-02-10
+
+// Save a day's aggregated usage
+POST /api/usage/save
+{
+  "room_id": "room-101",
+  "date": "2026-02-10",
+  "on_seconds": 28800,
+  "energy_wh": 230.4
+}
+
+// Aggregate across periods
+GET /api/usage/statistics
+  ?room_id=room-101
+  &amp;period=weekly   // daily | weekly | monthly</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">GET /usage/{date}</div>
+                                        <div class="tier-sub">Reads daily_usage by YYYY-MM-DD</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">POST /usage/save</div>
+                                        <div class="tier-sub">Upserts daily_usage collection</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">GET /usage/statistics</div>
+                                        <div class="tier-sub">Aggregates daily | weekly | monthly</div>
+                                    </div>
+                                </div>
+                                <ul>
+                                    <li><span
+                                            style="background:#3d2e0c;color:#e3b341;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">⚠
+                                            POST /usage/save has no auth — anyone can write</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            No idempotency key on save</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S07 Input Validation ──────────────────────────────── -->
+                    <section>
+                        <h5>Input
+                            Validation Rules</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small">
+                                    <code>app/architect/api/readme.md · app/architect/interface/sensor-backend.md</code>
+                                </p>
+                                <pre><code># Flask validation (pseudocode)
+def validate_event(data):
+    # lux range
+    assert 0 &lt;= data["lux"] &lt;= 120000
+
+    # device_id pattern: ls-NNN-NNNN
+    assert re.match(r"^ls-\d{3}-\d{4}$",
+                    data["device_id"])
+
+    # timestamp within 5-min of server time
+    delta = abs(now() - parse(data["timestamp"]))
+    assert delta &lt;= timedelta(minutes=5)
+
+    # light_state enum
+    assert data["light_state"] in {"ON","OFF","UNKNOWN"}</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">lux</div>
+                                        <div class="tier-sub">0 – 120,000 lx (BH1750 max + headroom)</div>
+                                    </div>
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">device_id</div>
+                                        <div class="tier-sub">Pattern: ls-[0-9]{3}-[0-9]{4}</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">timestamp</div>
+                                        <div class="tier-sub">ISO-8601 UTC · ±5 min server drift allowed</div>
+                                    </div>
+                                </div>
+                                <ul>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Tight constraints prevent garbage data</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            No JSON Schema library enforcing this at the framework level</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S08 Rate Limiting ──────────────────────────────────── -->
+                    <section>
+                        <h5>Rate
+                            Limiting</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/api/readme.md · Rate Limiting section</code></p>
+                                <pre><code># POST /api/events
+# Limit: 1000 req / hour / device_id
+
+# GET endpoints
+# Limit: 10,000 req / hour / IP
+
+# 429 response when exceeded:
+{
+  "error": "rate_limit_exceeded",
+  "retry_after_seconds": 3600,
+  "limit": 1000,
+  "window": "1h"
+}</code></pre>
+                                <ul>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Per-device POST limit prevents flood</span></li>
+                                    <li><span
+                                            style="background:#3d2e0c;color:#e3b341;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">⚠
+                                            1000/hr = ~16/min — fine for 3 s interval</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            No burst allowance defined</span></li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <div class="tiers flow-lr cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">POST /api/events</div>
+                                        <div class="tier-sub">1,000 req / hr per device_id</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">GET endpoints</div>
+                                        <div class="tier-sub">10,000 req / hr per IP</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">429 Too Many</div>
+                                        <div class="tier-sub">retry_after_seconds returned in body</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S09 CORS & Error Responses ───────────────────────── -->
+                    <section>
+                        <h5>CORS
+                            &amp; Error Response Format</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/interface/backend-frontend.md</code></p>
+                                <pre><code># Allowed origins (CORS)
+ALLOWED_ORIGINS = [
+    "https://se4cps.github.io",    # GitHub Pages
+    "https://iot-dashboard.onrender.com",
+    "http://localhost:5500"        # dev
+]
+ALLOWED_METHODS = ["GET", "POST", "OPTIONS"]
+
+# Structured error response
+{
+  "error": "validation_failed",
+  "detail": "lux must be between 0 and 120000",
+  "timestamp": "2026-02-10T15:30:00Z",
+  "request_id": "req_abc123"
+}</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">Good</div>
+                                        <div class="tier-sub">request_id enables tracing · structured errors</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Warning</div>
+                                        <div class="tier-sub">Wildcard origin not used — origins are explicit</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Missing</div>
+                                        <div class="tier-sub">No auth header in CORS preflight yet</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S10 Sensor→Backend Interface Contract ─────────────── -->
+                    <section>
+                        <h5>Sensor
+                            → Backend Interface Contract</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/interface/sensor-backend.md</code></p>
+                                <pre><code># Transport: HTTPS POST (TLS 1.3)
+# Endpoint: /api/events
+# Retry: 3 attempts, exponential backoff
+#   attempt 1: wait 1s
+#   attempt 2: wait 2s
+#   attempt 3: wait 4s
+# Retry on: 500, 502, 503, 504
+# Timeout per attempt: 10s
+
+# Full event payload
+{
+  "device_id": "ls-100-0001",
+  "room_id":   "room-101",
+  "event_type": "light.measurement",
+  "lux": 342.5,
+  "light_state": "ON",
+  "timestamp": "2026-02-10T15:30:00Z",
+  "meta": {
+    "battery_pct": 87,
+    "signal_rssi_dbm": -45,
+    "firmware_version": "1.0.0"
+  }
+}</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">Good</div>
+                                        <div class="tier-sub">TLS 1.3 · exponential backoff · 10 s timeout</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Warning</div>
+                                        <div class="tier-sub">3 retries max — events dropped after that</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Missing</div>
+                                        <div class="tier-sub">No API key in Authorization header yet</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S11 ADR-001 Event-Driven Architecture ─────────────── -->
+                    <section>
+                        <h5>ADR-001
+                            – Event-Driven Architecture Decision</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/decisions/001-event-driven-architecture.md</code>
+                                </p>
+                                <pre><code># Decision: Event-Driven Architecture
+
+# Rejected options:
+# - Layered Monolith → requires polling
+#   (2-day battery life unacceptable)
+# - Microservices → over-engineered for MVP
+
+# Chosen: Event-Driven
+# Battery: 2 days → 30 days (15x improvement)
+# Bus (MVP): in-memory Python queue
+# Bus (prod): RabbitMQ or Kafka (planned)
+
+# 4 event types:
+# 1. measurement  → DB persist
+# 2. state_change → notification trigger
+# 3. anomaly      → alert generate
+# 4. alert        → observability log</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers flow-lr cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">Event Published</div>
+                                        <div class="tier-sub">ESP32 POST on state change</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">In-memory Queue</div>
+                                        <div class="tier-sub">Python queue (MVP) · RabbitMQ (prod)</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">Consumers</div>
+                                        <div class="tier-sub">DB · Notifier · Validator · Observability</div>
+                                    </div>
+                                </div>
+                                <ul>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            15× battery improvement vs polling</span></li>
+                                    <li><span
+                                            style="background:#3d2e0c;color:#e3b341;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">⚠
+                                            Eventual consistency accepted</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S12 event Collection Schema ──────────────────────── -->
+                    <section>
+                        <h5>MongoDB:
+                            event Collection</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/data/database-schema.md · Collection 1</code></p>
+                                <pre><code>// event document
+{
+  event_id: "evt_20260210_001",
+  schema_version: "1.0",
+  ts: ISODate("2026-02-10T15:30:00Z"),
+  room_id:   "room-101",
+  device_id: "ls-100-0001",
+  light_state: "ON",  // ON | OFF | UNKNOWN
+  lux: 342.5,
+  meta: {
+    seq: 1234,
+    battery_pct: 87,
+    signal_rssi_dbm: -45,
+    firmware_version: "1.0.0",
+    power_mw: 2400,
+    motion_detected: true
+  }
+}
+
+// Indexes
+db.event.createIndex({ device_id:1, ts:-1 })
+db.event.createIndex({ room_id:1,   ts:-1 })
+db.event.createIndex({ ts:1 }, { expireAfterSeconds: 7776000 })</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">Good</div>
+                                        <div class="tier-sub">Append-only · TTL 90 days · schema versioned</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Size</div>
+                                        <div class="tier-sub">~800 MB per room per 90 days</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Missing</div>
+                                        <div class="tier-sub">No compound index on (room_id, light_state, ts)</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S13 room_state Collection ────────────────────────── -->
+                    <section>
+                        <h5>MongoDB:
+                            room_state Collection</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/data/database-schema.md · Collection 2</code></p>
+                                <pre><code>// room_state document (one per room)
+{
+  _id: "room-101",
+  room_id: "room-101",
+  light_state: "ON",
+  lux: 342.5,
+  power_mw: 2400,
+  motion_detected: true,
+  last_event_id: "evt_20260210_001",
+  last_ts: ISODate("2026-02-10T15:30:00Z"),
+  updated_at: ISODate("2026-02-10T15:30:00.123Z")
+}
+
+// Upsert on every incoming event
+db.room_state.updateOne(
+  { room_id: "room-101" },
+  { $set: { light_state:"ON", lux:342.5,
+            updated_at: new Date() } },
+  { upsert: true }
+)</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers flow-lr cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">Event arrives</div>
+                                        <div class="tier-sub">POST /api/events validated</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">Upsert</div>
+                                        <div class="tier-sub">room_state updated atomically</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">Fast read</div>
+                                        <div class="tier-sub">GET /api/sensor/current → ~5 ms</div>
+                                    </div>
+                                </div>
+                                <ul>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            1 document per room — O(1) lookup</span></li>
+                                    <li><span
+                                            style="background:#3d2e0c;color:#e3b341;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">⚠
+                                            Race condition if two events arrive simultaneously</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S14 daily_usage Collection ───────────────────────── -->
+                    <section>
+                        <h5>MongoDB:
+                            daily_usage Collection</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/data/database-schema.md · Collection 3</code></p>
+                                <pre><code>// daily_usage document
+{
+  _id: "room-101-20260210",
+  room_id: "room-101",
+  date: "2026-02-10",
+  on_seconds: 28800,
+  off_seconds: 57600,
+  avg_lux: 285.5,
+  energy_wh: 230.4,
+  updated_at: ISODate("2026-02-10T23:59:59Z")
+}
+
+// Aggregation to build it
+db.event.aggregate([
+  { $match: { room_id:"room-101",
+    ts: { $gte: ISODate("2026-02-10T00:00:00Z"),
+          $lt:  ISODate("2026-02-11T00:00:00Z") }}},
+  { $group: { _id: null,
+      avg_lux: { $avg: "$lux" },
+      energy_wh: { $sum: { $divide:["$meta.power_mw",3600000] }}
+  }}
+])</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">Good</div>
+                                        <div class="tier-sub">Pre-aggregated — fast stats API · 2-year TTL</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Size</div>
+                                        <div class="tier-sub">~100 KB per room per 90 days</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Risk</div>
+                                        <div class="tier-sub">energy_wh calc depends on meta.power_mw being present
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S15 device Collection ─────────────────────────────── -->
+                    <section>
+                        <h5>MongoDB:
+                            device Collection</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/data/database-schema.md · Collection 4</code></p>
+                                <pre><code>// device document
+{
+  _id: "ls-100-0001",
+  device_id: "ls-100-0001",
+  room_id: "room-101",
+  device_type: "light_sensor",
+  status: "ACTIVE", // ACTIVE|DISABLED|RETIRED
+  firmware_version: "1.0.0",
+  hardware: {
+    mcu:           "ESP32 Thing Plus",
+    light_sensor:  "VEML7700",
+    power_sensor:  "INA260",
+    motion_sensor: "PIR"
+  },
+  provisioned_at: ISODate("2026-02-01T10:00:00Z"),
+  last_seen_at:   ISODate("2026-02-10T15:30:00Z")
+}
+
+// Indexes
+db.device.createIndex({ device_id:1 }, { unique:true })
+db.device.createIndex({ room_id:1 })
+db.device.createIndex({ last_seen_at:-1 })  // offline detect</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">Good</div>
+                                        <div class="tier-sub">Firmware version tracked · last_seen_at for offline
+                                            detection</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Warning</div>
+                                        <div class="tier-sub">hardware.light_sensor shows VEML7700 but sketch uses
+                                            BH1750</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Missing</div>
+                                        <div class="tier-sub">No auto-provisioning flow documented</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S16 room Collection ───────────────────────────────── -->
+                    <section>
+                        <h5>MongoDB:
+                            room Collection</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/data/database-schema.md · Collection 5</code></p>
+                                <pre><code>// room document
+{
+  _id: "room-101",
+  room_id: "room-101",
+  building: "CTC",
+  room_number: "113",
+  floor: 1,
+  tags: ["classroom", "computer-lab"],
+  area_sqft: 1200,
+  max_occupancy: 30,
+  created_at: ISODate("2026-02-01T00:00:00Z"),
+  updated_at: ISODate("2026-02-01T00:00:00Z")
+}
+
+// Indexes
+db.room.createIndex({ room_id:1 }, { unique:true })
+db.room.createIndex({ building:1, floor:1 })
+
+// Seed for CTC 113
+db.room.insertOne({
+  room_id: "room-101", building:"CTC",
+  room_number:"113", floor:1,
+  tags:["classroom","computer-lab"],
+  created_at: new Date()
+})</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">Good</div>
+                                        <div class="tier-sub">Tags array enables flexible queries · building + floor
+                                            index</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Warning</div>
+                                        <div class="tier-sub">area_sqft and max_occupancy unused in current logic</div>
+                                    </div>
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">Opportunity</div>
+                                        <div class="tier-sub">Use max_occupancy to adjust alert threshold dynamically
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S17 alert Collection ──────────────────────────────── -->
+                    <section>
+                        <h5>MongoDB:
+                            alert Collection</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/data/database-schema.md · Collection 6</code></p>
+                                <pre><code>// alert document
+{
+  alert_id: "alert-20260210-001",
+  ts: ISODate("2026-02-10T15:30:00Z"),
+  room_id: "room-101",
+  device_id: "ls-100-0001",
+  type: "LIGHT_STUCK_ON",
+  // types: LIGHT_STUCK_ON | SUDDEN_LUX_DROP
+  //        DEVICE_OFFLINE | SENSOR_ANOMALY
+  severity: "WARN",
+  // levels: INFO | WARN | CRITICAL
+  linked_event_id: "evt_20260210_001",
+  explain: {
+    duration_hours: 13.5,
+    threshold_hours: 12
+  }
+}
+
+// TTL: auto-delete after 90 days
+db.alert.createIndex({ ts:1 },
+  { expireAfterSeconds: 7776000 })</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">Good</div>
+                                        <div class="tier-sub">explain block shows duration vs threshold · linked to
+                                            event</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Warning</div>
+                                        <div class="tier-sub">No delivery receipt — alert created ≠ alert received</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Missing</div>
+                                        <div class="tier-sub">No acknowledged_at field · no snooze / suppression logic
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S18 Data Relationships ────────────────────────────── -->
+                    <section>
+                        <h5>Collection
+                            Relationships &amp; Storage Estimates</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/data/database-schema.md · Data Relationships</code>
+                                </p>
+                                <pre><code>// Cardinalities
+Room (1) ──── (N) Device
+Room (1) ──── (1) RoomState
+Room (1) ──── (N) Event
+Room (1) ──── (N) DailyUsage
+Room (1) ──── (N) Alert
+Device (1) ── (N) Event
+
+// Storage per room (90 days)
+// event       ~800 MB  (28,800 docs/day)
+// room_state   200 B   (1 doc forever)
+// daily_usage  13.5 KB (1 doc/day, 2-yr TTL)
+// device       300 B   (reference)
+// alert        ~22 KB  (~10 alerts/day)
+// Total:       ~850 MB per room
+
+// 10 rooms  →  ~8.5 GB
+// 100 rooms → ~85.0 GB</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers flow-lr cols-4" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">room</div>
+                                        <div class="tier-sub">reference · forever</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">device</div>
+                                        <div class="tier-sub">reference · forever</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">event</div>
+                                        <div class="tier-sub">time-series · TTL 90 d</div>
+                                    </div>
+                                    <div class="tier" style="background:#1a3a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">alert</div>
+                                        <div class="tier-sub">immutable · TTL 90 d</div>
+                                    </div>
+                                </div>
+                                <ul>
+                                    <li><span
+                                            style="background:#3d2e0c;color:#e3b341;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">⚠
+                                            Atlas M0 free tier limit: 512 MB</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            1 room for 90 days already exceeds M0</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S19 Query Performance & Indexes ───────────────────── -->
+                    <section>
+                        <h5>Query
+                            Performance &amp; Index Strategy</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/data/database-schema.md · Query Performance</code>
+                                </p>
+                                <pre><code>// Target query times
+// GET current state   → &lt; 10 ms  (actual ~5 ms)
+// GET last 100 events → &lt; 50 ms  (actual ~30 ms)
+// Daily aggregation   → &lt;200 ms  (actual ~150 ms)
+// Weekly stats        → &lt;500 ms  (actual ~400 ms)
+
+// Key compound indexes:
+db.event.createIndex({ device_id:1, ts:-1 })
+db.event.createIndex({ room_id:1,   ts:-1 })
+
+// Caching layer (Flask)
+// /api/sensor/current  → cache 3 s
+// /api/history         → cache 30 s
+// /api/stats           → cache 5 min</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">Fast Path</div>
+                                        <div class="tier-sub">room_state lookup: O(1) by _id · ~5 ms</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">Medium Path</div>
+                                        <div class="tier-sub">event range query uses compound index · ~30 ms</div>
+                                    </div>
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">Slow Path</div>
+                                        <div class="tier-sub">Aggregation pipeline · mitigated by daily_usage cache
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Compound indexes match query patterns</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            No index on (room_id, light_state) for ON-duration queries</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S20 Backend Improvements Roadmap ──────────────────── -->
+                    <section>
+                        <h5>Backend
+                            Improvements Roadmap</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/decisions/ · app/architect/api/readme.md</code></p>
+                                <pre><code># Planned improvements
+
+# 1. Authentication (high priority)
+#    Add: Authorization: Bearer &lt;token&gt;
+#    to all POST endpoints
+
+# 2. Replace in-memory queue with RabbitMQ
+#    producer.publish(event)
+#    consumer.subscribe(handle_event)
+
+# 3. Schema migration v1.0 → v1.1
+db.event.updateMany(
+  { "meta.power_mw": { $exists: false } },
+  { $set: { "meta.power_mw": 0 } }
+)
+
+# 4. Upgrade Atlas M0 → M10
+#    M0: 512 MB · M10: 10 GB · ~$57/mo</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">High Impact · Low Effort</div>
+                                        <div class="tier-sub">Add Bearer token auth · Add (room_id, light_state) index ·
+                                            Fix device.hardware.light_sensor to BH1750</div>
+                                    </div>
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">High Impact · High Effort
+                                        </div>
+                                        <div class="tier-sub">Replace in-memory queue with RabbitMQ · Upgrade Atlas
+                                            M0→M10 · Add alert acknowledged_at field</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Low Impact · Low Effort</div>
+                                        <div class="tier-sub">Add cursor pagination to /api/history · Add idempotency
+                                            key to POST /usage/save</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h3>Frontend</h3>
+                    </section>
+
+                    <!-- ============================================================
+     IoT Light Sensor – 20 Frontend Sections
+     Uses ONLY styles already defined in index.html.
+     No new <style> block. Always <pre><code>. No h5 span badge.
+     ============================================================ -->
+
+                    <!-- ─── S01 Frontend Overview ────────────────────────────── -->
+                    <section>
+                        <h5>Frontend Overview</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>dashboard/ · dashboard/app.py · dashboard/requirements.txt</code>
+                                </p>
+                                <ul>
+                                    <li>Flask 3.0 serves the dashboard · PyMongo · Gunicorn in production</li>
+                                    <li>6 room control cards · lux gauge · usage charts · user auth</li>
+                                    <li>Dark theme with orange accent <code>#f5a623</code> · glassmorphism effects</li>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Real data from MongoDB</span> <span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            Responsive layout</span></li>
+                                    <li><span
+                                            style="background:#3d2e0c;color:#e3b341;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">⚠
+                                            Simulated lux (0–50) not real BH1750 data</span></li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <div class="tiers flow-lr cols-4" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">Flask app.py</div>
+                                        <div class="tier-sub">Routes · API · Auth · MongoDB</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">templates/</div>
+                                        <div class="tier-sub">dashboard.html · diagram.html</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">dashboard.html</div>
+                                        <div class="tier-sub">Sidebar · Room cards · Gauge</div>
+                                    </div>
+                                    <div class="tier" style="background:#1a3a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">tests/</div>
+                                        <div class="tier-sub">app_test.py · 3 unit tests</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S02 File Structure ────────────────────────────────── -->
+                    <section>
+                        <h5>Dashboard File Structure</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>dashboard/</code></p>
+                                <pre><code>dashboard/
+├── app.py              # Flask app + all routes
+├── requirements.txt    # Flask · pymongo · gunicorn
+├── dashboard.html      # standalone HTML (root)
+├── diagram.html        # architecture diagram view
+├── templates/
+│   ├── dashboard.html  # Jinja2 template
+│   └── diagram.html
+└── tests/
+    └── app_test.py     # unit tests</code></pre>
+                                <ul>
+                                    <li><span
+                                            style="background:#3d2e0c;color:#e3b341;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">⚠
+                                            dashboard.html exists in both root and templates/</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            No static/ folder — CSS/JS inlined</span></li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">app.py</div>
+                                        <div class="tier-sub">Single file for all Flask logic — routes, DB, auth, sensor
+                                        </div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Duplication</div>
+                                        <div class="tier-sub">dashboard.html in root AND templates/ — risk of drift
+                                        </div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">tests/</div>
+                                        <div class="tier-sub">app_test.py covers sensor classification + range</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S03 Flask App Entry Point ────────────────────────── -->
+                    <section>
+                        <h5>Flask App Entry Point</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>dashboard/app.py</code></p>
+                                <pre><code>from flask import Flask, jsonify, request
+from pymongo import MongoClient
+from dotenv import load_dotenv
+import os, certifi, pytz
+
+load_dotenv()
+
+app = Flask(__name__)
+
+# MongoDB connection (TLS + certifi)
+client = MongoClient(
+    os.getenv("MONGO_URI"),
+    tlsCAFile=certifi.where()
+)
+db = client["light_sensor_db"]</code></pre>
+                                <ul>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            .env for secrets</span> <span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            TLS via certifi</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            All routes in one file — no blueprints</span></li>
+                                </ul>
+                            </div>
+                            <div class="right">
+                                <div class="tiers flow-lr cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">load_dotenv()</div>
+                                        <div class="tier-sub">Reads MONGO_URI from .env</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">MongoClient</div>
+                                        <div class="tier-sub">TLS + certifi · Atlas connection</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">db object</div>
+                                        <div class="tier-sub">light_sensor_db · shared across all routes</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S04 Sensor Simulation ─────────────────────────────── -->
+                    <section>
+                        <h5>Sensor Data Simulation</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>dashboard/app.py · generate_sensor_reading()</code></p>
+                                <pre><code>import random, datetime, pytz
+
+def generate_sensor_reading():
+    pst = pytz.timezone("America/Los_Angeles")
+    hour = datetime.datetime.now(pst).hour
+    # Vary lux by time of day
+    base = 30 if 8 <= hour <= 18 else 10
+    lux = round(random.uniform(0, base + 20), 2)
+    return lux  # range: 0–50
+
+def classify_lux(lux):
+    if lux < 5:   return "Dark",        "#333", "🌑"
+    if lux < 15:  return "Dim",         "#666", "🌘"
+    if lux < 30:  return "Normal",      "#f5a623", "🌤"
+    if lux < 45:  return "Bright",      "#ffd700", "☀️"
+    return             "Very Bright",   "#fff",  "🌞"</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers flow-lr cols-5" style="gap:8px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#222;">
+                                        <div class="tier-title" style="font-size:.8rem;">Dark</div>
+                                        <div class="tier-sub">&lt; 5 lx</div>
+                                    </div>
+                                    <div class="tier" style="background:#333;">
+                                        <div class="tier-title" style="font-size:.8rem;">Dim</div>
+                                        <div class="tier-sub">&lt; 15 lx</div>
+                                    </div>
+                                    <div class="tier" style="background:#7a5200;">
+                                        <div class="tier-title" style="font-size:.8rem;">Normal</div>
+                                        <div class="tier-sub">&lt; 30 lx</div>
+                                    </div>
+                                    <div class="tier" style="background:#7a6800;">
+                                        <div class="tier-title" style="font-size:.8rem;">Bright</div>
+                                        <div class="tier-sub">&lt; 45 lx</div>
+                                    </div>
+                                    <div class="tier" style="background:#4a4a1a;">
+                                        <div class="tier-title" style="font-size:.8rem;">Very Bright</div>
+                                        <div class="tier-sub;">≥ 45 lx</div>
+                                    </div>
+                                </div>
+                                <ul>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            Simulated — not reading real BH1750 sensor</span></li>
+                                    <li><span
+                                            style="background:#3d2e0c;color:#e3b341;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">⚠
+                                            Max 50 lx vs BH1750 max 65,535 lx</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S05 GET /api/sensor ───────────────────────────────── -->
+                    <section>
+                        <h5>GET /api/sensor – Current Reading</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>dashboard/app.py · /api/sensor</code></p>
+                                <pre><code>@app.route("/api/sensor")
+def get_sensor():
+    lux = generate_sensor_reading()
+    level, color, icon = classify_lux(lux)
+    return jsonify({
+        "lux":   lux,
+        "level": level,
+        "color": color,
+        "icon":  icon,
+        "timestamp": datetime.datetime.utcnow()
+                      .isoformat() + "Z"
+    })
+
+# Example response:
+# {
+#   "lux": 28.4,
+#   "level": "Normal",
+#   "color": "#f5a623",
+#   "icon": "🌤",
+#   "timestamp": "2026-02-10T15:30:00Z"
+# }</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">Good</div>
+                                        <div class="tier-sub">Returns color + icon — UI-ready payload</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Issue</div>
+                                        <div class="tier-sub">No room_id param — returns same reading for all rooms
+                                        </div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Warning</div>
+                                        <div class="tier-sub">No caching — new random value on every call</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S06 GET /api/history & /api/stats ────────────────── -->
+                    <section>
+                        <h5>GET /api/history &amp; /api/stats</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>dashboard/app.py · history + stats routes</code></p>
+                                <pre><code>@app.route("/api/history")
+def get_history():
+    room = request.args.get("room_id", "living")
+    limit = int(request.args.get("limit", 50))
+    col = db[f"room_{room}"]
+    docs = list(col.find({},{"_id":0})
+                   .sort("timestamp",-1)
+                   .limit(limit))
+    return jsonify({"room_id": room,
+                    "count": len(docs),
+                    "events": docs})
+
+@app.route("/api/stats")
+def get_stats():
+    room = request.args.get("room_id","living")
+    col  = db[f"room_{room}"]
+    docs = list(col.find({}, {"lux":1}))
+    luxes = [d["lux"] for d in docs if "lux" in d]
+    return jsonify({
+        "avg_lux": round(sum(luxes)/len(luxes),2),
+        "min_lux": min(luxes),
+        "max_lux": max(luxes),
+        "count":   len(luxes)
+    })</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">Good</div>
+                                        <div class="tier-sub">Per-room collections · limit param</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Issue</div>
+                                        <div class="tier-sub">stats loads ALL docs into memory — no aggregation pipeline
+                                        </div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Warning</div>
+                                        <div class="tier-sub">ZeroDivisionError if collection is empty</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S07 Usage Save & Statistics ──────────────────────── -->
+                    <section>
+                        <h5>Usage Save &amp; Statistics Endpoints</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>dashboard/app.py · /api/usage/save · /api/usage/statistics</code>
+                                </p>
+                                <pre><code>@app.route("/api/usage/save", methods=["POST"])
+def save_usage():
+    data = request.json
+    data["saved_at"] = datetime.datetime.utcnow()
+    db["daily_usage"].insert_one(data)
+    return jsonify({"status": "saved"})
+
+@app.route("/api/usage/statistics")
+def usage_statistics():
+    today = datetime.date.today().isoformat()
+    # Exclude today — partial day
+    docs = list(db["daily_usage"].find(
+        {"date": {"$ne": today}}, {"_id":0}
+    ))
+    weekly  = sum(d.get("hours",0) for d in docs[-7:])
+    monthly = sum(d.get("hours",0) for d in docs[-30:])
+    return jsonify({"weekly_hours": weekly,
+                    "monthly_hours": monthly})</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Issue</div>
+                                        <div class="tier-sub">POST /usage/save has no auth — anyone can write</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Warning</div>
+                                        <div class="tier-sub">weekly/monthly sliced by list index — breaks if docs are
+                                            sparse</div>
+                                    </div>
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">Good</div>
+                                        <div class="tier-sub">Excludes today to avoid partial-day skew</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S08 Room Endpoints ────────────────────────────────── -->
+                    <section>
+                        <h5>Room-Level Endpoints</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small">
+                                    <code>dashboard/app.py · /api/rooms/&lt;room&gt; · /api/rooms/all/&lt;date&gt;</code>
+                                </p>
+                                <pre><code># Per-room usage
+@app.route("/api/rooms/&lt;room&gt;")
+def room_data(room):
+    doc = db[f"room_{room}"].find_one(
+        sort=[("timestamp", -1)]
+    )
+    return jsonify(doc or {})
+
+# All rooms for a date
+@app.route("/api/rooms/all/&lt;date&gt;")
+def all_rooms(date):
+    rooms = ["living","bedroom","kitchen",
+             "bathroom","office","garage"]
+    result = {}
+    for r in rooms:
+        doc = db[f"room_{r}"].find_one(
+            {"date": date}, {"_id":0}
+        )
+        result[r] = doc or {}
+    return jsonify(result)</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers flow-lr cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">6 Rooms</div>
+                                        <div class="tier-sub">living · bedroom · kitchen · bathroom · office · garage
+                                        </div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">Per-room collection</div>
+                                        <div class="tier-sub">db["room_living"] pattern — 6 collections</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Issue</div>
+                                        <div class="tier-sub">all_rooms does 6 separate DB queries — no $in aggregation
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S09 User Authentication ──────────────────────────── -->
+                    <section>
+                        <h5>User Authentication</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>dashboard/app.py · /api/user/login</code></p>
+                                <pre><code>from hashlib import pbkdf2_hmac
+import os
+
+@app.route("/api/user/login", methods=["POST"])
+def user_login():
+    data = request.json
+    username = data["username"]
+    password = data["password"]
+    user = db["user_logins"].find_one(
+        {"username": username}
+    )
+    if not user:
+        # First-time: register with hashed pw
+        salt = os.urandom(16)
+        hashed = pbkdf2_hmac(
+            "sha256", password.encode(),
+            salt, 100000
+        )
+        db["user_logins"].insert_one({
+            "username": username,
+            "password": hashed, "salt": salt
+        })
+        return jsonify({"status": "registered"})
+    # Verify existing user
+    hashed = pbkdf2_hmac(
+        "sha256", password.encode(),
+        user["salt"], 100000
+    )
+    ok = hashed == user["password"]
+    return jsonify({"status":"ok" if ok else "fail"})</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">Good</div>
+                                        <div class="tier-sub">PBKDF2-SHA256 · random salt · 100,000 iterations</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Issue</div>
+                                        <div class="tier-sub">No session token returned — client has no proof of auth
+                                        </div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Warning</div>
+                                        <div class="tier-sub">Auto-register on first login — no email verification</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S10 Logging Endpoints ─────────────────────────────── -->
+                    <section>
+                        <h5>Logging Endpoints</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>dashboard/app.py · admin · device · alert logging</code></p>
+                                <pre><code># Admin access log
+@app.route("/api/log/admin", methods=["POST"])
+def log_admin():
+    db["admin_logs"].insert_one({
+        **request.json,
+        "ts": datetime.datetime.utcnow()
+    })
+    return jsonify({"status": "logged"})
+
+# Device activation log
+@app.route("/api/log/device", methods=["POST"])
+def log_device():
+    db["device_activity"].insert_one(request.json)
+    return jsonify({"status": "logged"})
+
+# Alert: light on too long (&gt;40 min)
+@app.route("/api/log/alert", methods=["POST"])
+def log_alert():
+    data = request.json
+    # triggered when light ON &gt; 40 minutes
+    db["alerts"].insert_one(data)
+    return jsonify({"status": "alert_logged"})</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">Good</div>
+                                        <div class="tier-sub">Separate collections per log type — easy to query</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Issue</div>
+                                        <div class="tier-sub">No auth on any log endpoint — open write access</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Warning</div>
+                                        <div class="tier-sub">Alert threshold 40 min vs architecture spec of 12 h —
+                                            mismatch</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S11 Dashboard Layout ──────────────────────────────── -->
+                    <section>
+                        <h5>Dashboard Layout – HTML Structure</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>dashboard/templates/dashboard.html · layout</code></p>
+                                <pre><code>&lt;!-- Top-level layout --&gt;
+&lt;body&gt;
+  &lt;div class="app-container"&gt;
+
+    &lt;!-- Left sidebar --&gt;
+    &lt;aside class="sidebar"&gt;
+      &lt;div class="clock"&gt;...&lt;/div&gt;
+      &lt;div class="mini-calendar"&gt;...&lt;/div&gt;
+      &lt;div class="donut-chart"&gt;...&lt;/div&gt;
+      &lt;div class="room-bars"&gt;...&lt;/div&gt;
+    &lt;/aside&gt;
+
+    &lt;!-- Main content --&gt;
+    &lt;main class="content"&gt;
+      &lt;div class="room-cards"&gt;...&lt;/div&gt;
+      &lt;div class="gauge-panel"&gt;...&lt;/div&gt;
+      &lt;div class="controls"&gt;...&lt;/div&gt;
+      &lt;div class="stats-section"&gt;...&lt;/div&gt;
+    &lt;/main&gt;
+
+  &lt;/div&gt;
+&lt;/body&gt;</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers flow-lr cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">Sidebar</div>
+                                        <div class="tier-sub">Clock · Calendar · Donut chart · Room bars</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">Main</div>
+                                        <div class="tier-sub">6 room cards · lux gauge · controls</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">Stats</div>
+                                        <div class="tier-sub">Daily · Weekly · Monthly progress bars</div>
+                                    </div>
+                                </div>
+                                <ul>
+                                    <li><span
+                                            style="background:#1a4731;color:#3fb950;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✓
+                                            All-in-one dark UI</span></li>
+                                    <li><span
+                                            style="background:#3d1f1f;color:#f85149;border-radius:3px;padding:.05rem .35rem;font-size:.78rem;">✗
+                                            CSS/JS inlined — no separate static files</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S12 Lux Gauge Component ───────────────────────────── -->
+                    <section>
+                        <h5>Lux Gauge Component</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>dashboard/templates/dashboard.html · gauge-panel</code></p>
+                                <pre><code>&lt;!-- SVG gauge: 0–50 lux range --&gt;
+&lt;svg class="gauge" viewBox="0 0 200 120"&gt;
+  &lt;path class="gauge-bg"
+    d="M 20,100 A 80,80 0 0,1 180,100"
+    fill="none" stroke="#333" stroke-width="16"/&gt;
+  &lt;path class="gauge-fill"
+    id="gauge-arc"
+    d="M 20,100 A 80,80 0 0,1 180,100"
+    fill="none" stroke="#f5a623"
+    stroke-width="16"
+    stroke-dasharray="0 251"/&gt;
+  &lt;text id="gauge-value" x="100" y="95"
+    text-anchor="middle"
+    font-size="24" fill="#fff"&gt;--&lt;/text&gt;
+  &lt;text x="100" y="115"
+    text-anchor="middle"
+    font-size="10" fill="#888"&gt;lux&lt;/text&gt;
+&lt;/svg&gt;
+
+// JS update
+function updateGauge(lux) {
+  const pct = lux / 50;
+  const dash = pct * 251;
+  document.getElementById("gauge-arc")
+    .style.strokeDasharray = `${dash} 251`;
+  document.getElementById("gauge-value")
+    .textContent = lux.toFixed(1);
+}</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">Good</div>
+                                        <div class="tier-sub">SVG arc — no canvas dependency · scales cleanly</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Warning</div>
+                                        <div class="tier-sub">Max 50 lx hardcoded — real BH1750 needs 0–65535 range
+                                        </div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Issue</div>
+                                        <div class="tier-sub">Magic number 251 = semicircle arc length — not documented
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S13 Room Cards ────────────────────────────────────── -->
+                    <section>
+                        <h5>Room Control Cards</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>dashboard/templates/dashboard.html · room-cards</code></p>
+                                <pre><code>&lt;!-- Generated for each of 6 rooms --&gt;
+&lt;div class="room-card" data-room="living"&gt;
+  &lt;div class="room-icon"&gt;🛋️&lt;/div&gt;
+  &lt;div class="room-name"&gt;Living Room&lt;/div&gt;
+  &lt;div class="room-lux" id="lux-living"&gt;--&lt;/div&gt;
+  &lt;div class="room-status"
+       id="status-living"&gt;--&lt;/div&gt;
+  &lt;div class="room-duration"
+       id="dur-living"&gt;0 min&lt;/div&gt;
+&lt;/div&gt;
+
+// Poll every 3 seconds
+setInterval(() =&gt; {
+  fetch("/api/sensor")
+    .then(r =&gt; r.json())
+    .then(d =&gt; {
+      document.getElementById("lux-living")
+        .textContent = d.lux + " lx";
+    });
+}, 3000);</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">Good</div>
+                                        <div class="tier-sub">3 s polling matches backend cache window</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Issue</div>
+                                        <div class="tier-sub">All 6 cards share same /api/sensor — no per-room data
+                                        </div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Warning</div>
+                                        <div class="tier-sub">setInterval without clearInterval — leaks on page hide
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S14 Sidebar Clock & Calendar ─────────────────────── -->
+                    <section>
+                        <h5>Sidebar – Clock &amp; Calendar</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>dashboard/templates/dashboard.html · sidebar</code></p>
+                                <pre><code>// Real-time PST clock
+function updateClock() {
+  const pst = new Date().toLocaleString(
+    "en-US",
+    { timeZone: "America/Los_Angeles",
+      hour: "2-digit", minute: "2-digit",
+      second: "2-digit", hour12: true }
+  );
+  document.getElementById("clock")
+    .textContent = pst;
+}
+setInterval(updateClock, 1000);
+
+// Mini calendar navigation
+function prevMonth() { currentMonth--; renderCalendar(); }
+function nextMonth() { currentMonth++; renderCalendar(); }
+function renderCalendar() {
+  // builds grid of &lt;td&gt; for each day
+  // highlights today
+}</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">Good</div>
+                                        <div class="tier-sub">PST timezone explicit · toLocaleString for formatting
+                                        </div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Warning</div>
+                                        <div class="tier-sub">currentMonth is a global — state management not modular
+                                        </div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Issue</div>
+                                        <div class="tier-sub">Calendar is decorative — no booking or event integration
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S15 Donut Chart ───────────────────────────────────── -->
+                    <section>
+                        <h5>Sidebar – Donut Chart (Daily Usage)</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>dashboard/templates/dashboard.html · donut-chart</code></p>
+                                <pre><code>&lt;!-- SVG donut: hours used / 24 --&gt;
+&lt;svg viewBox="0 0 100 100"&gt;
+  &lt;circle cx="50" cy="50" r="40"
+    fill="none" stroke="#222"
+    stroke-width="12"/&gt;
+  &lt;circle cx="50" cy="50" r="40"
+    fill="none" stroke="#f5a623"
+    stroke-width="12"
+    stroke-dasharray="0 251"
+    id="donut-arc"
+    transform="rotate(-90 50 50)"/&gt;
+  &lt;text x="50" y="55"
+    text-anchor="middle"
+    font-size="14" fill="#fff"
+    id="donut-label"&gt;0h&lt;/text&gt;
+&lt;/svg&gt;
+
+function updateDonut(hoursOn) {
+  const pct = hoursOn / 24;
+  const arc = pct * 251;
+  donutArc.style.strokeDasharray =
+    `${arc} 251`;
+  donutLabel.textContent = hoursOn + "h";
+}</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">Good</div>
+                                        <div class="tier-sub">SVG — no chart library needed · rotate(-90) for 12 o'clock
+                                            start</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Warning</div>
+                                        <div class="tier-sub">Same magic number 251 as gauge — should be a constant
+                                        </div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Issue</div>
+                                        <div class="tier-sub">hoursOn sourced from localStorage — not server data</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S16 Screensaver & Wallpaper ───────────────────────── -->
+                    <section>
+                        <h5>Screensaver &amp; Wallpaper Customization</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small">
+                                    <code>dashboard/templates/dashboard.html · screensaver · wallpaper</code>
+                                </p>
+                                <pre><code>// Screensaver: activates after 15 s idle
+let idleTimer;
+function resetIdle() {
+  clearTimeout(idleTimer);
+  idleTimer = setTimeout(showScreensaver, 15000);
+}
+document.addEventListener("mousemove", resetIdle);
+document.addEventListener("keydown",   resetIdle);
+
+function showScreensaver() {
+  document.getElementById("screensaver")
+    .style.display = "flex"; // shows PST clock
+}
+
+// 12 preset wallpapers
+const WALLPAPERS = [
+  "linear-gradient(135deg,#1a1a2e,#16213e)",
+  "linear-gradient(135deg,#0d0d0d,#1a0a0a)",
+  // ... 10 more gradients / photo URLs
+];
+function setWallpaper(i) {
+  document.body.style.background = WALLPAPERS[i];
+}</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">Good</div>
+                                        <div class="tier-sub">Idle detection via mousemove + keydown · clean timeout
+                                            reset</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Warning</div>
+                                        <div class="tier-sub">15 s is very short for a mounted display — should be
+                                            configurable</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Issue</div>
+                                        <div class="tier-sub">No touch / pointer events — screensaver stays on mobile
+                                            tap</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S17 localStorage Persistence ─────────────────────── -->
+                    <section>
+                        <h5>Data Persistence – localStorage</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>dashboard/templates/dashboard.html · auto-save</code></p>
+                                <pre><code>// Save usage to localStorage AND MongoDB
+function saveUsage() {
+  const payload = {
+    date:         new Date().toISOString().slice(0,10),
+    hours:        roomDurations["living"] / 3600,
+    wallpaper_id: currentWallpaper
+  };
+  // 1. Local persistence
+  localStorage.setItem(
+    "usage_" + payload.date,
+    JSON.stringify(payload)
+  );
+  // 2. Remote persistence
+  fetch("/api/usage/save", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify(payload)
+  });
+}
+// Auto-save every 5 minutes
+setInterval(saveUsage, 300000);</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">Good</div>
+                                        <div class="tier-sub">Dual-write: localStorage fallback if API is down</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Issue</div>
+                                        <div class="tier-sub">fetch() result not checked — silent failure on network
+                                            error</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Warning</div>
+                                        <div class="tier-sub">roomDurations["living"] only — other 5 rooms not saved
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S18 Unit Tests ────────────────────────────────────── -->
+                    <section>
+                        <h5>Unit Tests – app_test.py</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>dashboard/tests/app_test.py</code></p>
+                                <pre><code>import sys
+sys.path.insert(0, "..")
+from app import get_sensor_level, generate_sensor_reading
+
+# Test 1: lux=10 → "Dark"
+def test_sensor_status_dark():
+    assert get_sensor_level(10) == "Dark"
+
+# Test 2: lux=30 → "Normal"
+def test_sensor_status_normal():
+    assert get_sensor_level(30) == "Normal"
+
+# Test 3: 100 readings stay within 0–50
+def test_generate_sensor_range():
+    for _ in range(100):
+        val = generate_sensor_reading()
+        assert 0 &lt;= val &lt;= 50, \
+            f"Out of range: {val}"</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">Good</div>
+                                        <div class="tier-sub">Boundary test · statistical range test · readable
+                                            assertions</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Issue</div>
+                                        <div class="tier-sub">Only 3 tests · no tests for API routes or DB calls</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Warning</div>
+                                        <div class="tier-sub">sys.path hack instead of proper package setup</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S19 Backend-Frontend Interface ───────────────────── -->
+                    <section>
+                        <h5>Backend → Frontend Interface Contract</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>app/architect/interface/backend-frontend.md</code></p>
+                                <pre><code># GET /api/sensor/current?room_id=room-101
+# Cache: 3 s · Returns: lux · state · freshness
+
+# GET /api/history
+#   ?room_id=room-101 &amp;limit=500
+#   ?start_time=ISO &amp;end_time=ISO
+# Cache: 30 s
+
+# GET /api/stats?room_id=room-101
+# Cache: 5 min
+# Returns: avg_lux · min · max · count
+
+# CORS allowed origins:
+#   https://se4cps.github.io
+#   https://iot-dashboard.onrender.com
+#   http://localhost:5001
+# Methods: GET · OPTIONS only
+
+# Error shape:
+# { "error": "...", "detail": "...",
+#   "timestamp": "...", "request_id": "..." }</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">Good</div>
+                                        <div class="tier-sub">Explicit CORS origins · request_id for tracing · tiered
+                                            caching</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Issue</div>
+                                        <div class="tier-sub">Dashboard uses /api/sensor (no room_id) — diverges from
+                                            contract</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Warning</div>
+                                        <div class="tier-sub">Contract says GET only — but POST /usage/save exists</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- ─── S20 Frontend Improvements Roadmap ────────────────── -->
+                    <section>
+                        <h5>Frontend Improvements Roadmap</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small"><code>dashboard/ · app/architect/interface/backend-frontend.md</code>
+                                </p>
+                                <pre><code># Key improvements
+
+# 1. Replace simulated lux with real sensor
+#    fetch("/api/sensor/current?room_id="+room)
+#    instead of generate_sensor_reading()
+
+# 2. Fix gauge range
+#    const MAX_LUX = 65535; // BH1750 max
+#    const arc = (lux / MAX_LUX) * 251;
+
+# 3. Add session token after login
+#    const { token } = await fetch("/api/user/login")
+#    localStorage.setItem("token", token)
+
+# 4. Per-room polling
+#    rooms.forEach(r =&gt;
+#      fetch(`/api/sensor/current?room_id=${r}`)
+#    )
+
+# 5. Replace setInterval with
+#    Page Visibility API to pause when hidden</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">High Impact · Low Effort</div>
+                                        <div class="tier-sub">Fix gauge max to 65535 · pass room_id to /api/sensor ·
+                                            check fetch() errors</div>
+                                    </div>
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">High Impact · High Effort
+                                        </div>
+                                        <div class="tier-sub">Replace simulated lux · JWT session token · per-room
+                                            independent polling</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Low Impact · Low Effort</div>
+                                        <div class="tier-sub">Configurable screensaver timeout · add touch event · fix
+                                            duplicate dashboard.html</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <h3>Questions?</h3>
+                    </section>
+
+                    <section>
+                        <h5>Weekend Test – IoT Light Sensor App</h5>
+                        <div class="split">
+                            <div class="left">
+                                <p class="small">
+                                    <code>dashboard/app.py ·                             dashboard/tests/app_test.py · embedded/BH1750_test.ino</code>
+                                </p>
+                                <ul>
+                                    <li>Leave the device running Friday → Monday and record observations</li>
+                                    <li>Verify sensor readings, backend ingestion, dashboard updates, and alerts
+                                        end-to-end</li>
+                                </ul>
+                                <pre><code># Weekend test checklist
+
+  # EMBEDDED
+  # [ ] BH1750 reads lux every 3 s without freeze
+  # [ ] Serial monitor shows no 0.0 lux gaps
+  # [ ] WiFi reconnects after router reboot
+
+  # BACKEND (Render.com)
+  # [ ] POST /api/events accepted (202) all weekend
+  # [ ] No 429 rate-limit hits in logs
+  # [ ] MongoDB Atlas event count grows as expected
+
+  # DASHBOARD
+  # [ ] Room cards update every 3 s
+  # [ ] Usage stats persist across browser refresh
+</code></pre>
+                            </div>
+                            <div class="right">
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.5rem;">
+                                    <div class="tier" style="background:#1a3a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">Friday
+                                            Setup</div>
+                                        <div class="tier-sub">Flash firmware · confirm Serial OK ·
+                                            deploy backend · open dashboard</div>
+                                    </div>
+                                    <div class="tier" style="background:#2d4a1e;">
+                                        <div class="tier-title" style="font-size:.85rem;">Saturday –
+                                            Sunday</div>
+                                        <div class="tier-sub">Leave light ON overnight · check Atlas
+                                            event count · verify alert triggered</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a5c;">
+                                        <div class="tier-title" style="font-size:.85rem;">Monday
+                                            Review</div>
+                                        <div class="tier-sub">Query daily_usage · check for 0.0 lux
+                                            gaps · run app_test.py · file issues</div>
+                                    </div>
+                                </div>
+                                <div class="tiers cols-3" style="gap:10px;margin-top:.8rem;">
+                                    <div class="tier" style="background:#1a4731;">
+                                        <div class="tier-title" style="font-size:.85rem;">Pass
+                                            Criteria</div>
+                                        <div class="tier-sub">No firmware crash · &gt;95% events
+                                            stored · alert delivered within 5 min of threshold</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a1a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Known
+                                            Risks</div>
+                                        <div class="tier-sub">Render free tier sleeps · Atlas M0 512
+                                            MB cap · WiFi drop loses events</div>
+                                    </div>
+                                    <div class="tier" style="background:#3a2a1a;">
+                                        <div class="tier-title" style="font-size:.85rem;">Log
+                                            Everything</div>
+                                        <div class="tier-sub">Serial output to file · Render log
+                                            export · screenshot dashboard Sunday night</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
 
                 </section>
 
@@ -29757,7 +32652,8 @@ network timeout, and lux above 65000."
                     <section style="font-size: 65%;">
                         <h4>Industry 4.0 Ecosystem Exploration 2/2</h4>
                         <ul class="alpha-list">
-                            <li>Delving into the development processes, standards, methodologies, and best practices
+                            <li>Delving into the developme
+                                nt processes, standards, methodologies, and best practices
                                 for
                                 Industry 4.0 applications</li>
                             <li>Focusing on testing and verification procedures specific to these advanced systems
