@@ -1,0 +1,709 @@
+<!-- ========================================================= -->
+<!-- Lab 4: AI-Assisted IoT Development — 20 Review Sections -->
+<!-- Copy these <section> blocks into index.html              -->
+<!-- ========================================================= -->
+
+<!-- 1. Title -->
+<section>
+    <h4>Lab 4 — AI-Assisted IoT Development</h4>
+    <p class="muted">Reviewing what students found when using Copilot across the full engineering lifecycle: requirements, architecture, implementation, testing, and verification.</p>
+</section>
+
+<!-- 2. Task 1: Requirements prompt -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Task 1 — Requirements Generation</h4>
+            <p class="muted">Prompt given to Copilot:</p>
+            <p class="tiny">Generate user requirements for an IoT indoor light sensor system that monitors ambient lux levels in a smart building and sends alerts when high lux is detected outside regular work hours.</p>
+            <p class="muted tiny">What did Copilot produce? What did it leave out?</p>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 280" style="width:100%;max-width:380px;">
+                <rect x="20" y="20" width="340" height="240" rx="14" fill="none" stroke="#555" stroke-width="2"/>
+                <text x="190" y="50" text-anchor="middle" fill="#ddd" font-size="13">Copilot Requirements Output</text>
+                <line x1="40" y1="62" x2="340" y2="62" stroke="#444" stroke-width="1"/>
+                <text x="40" y="85"  fill="#aaa" font-size="11">✓  Continuous light monitoring</text>
+                <text x="40" y="108" fill="#aaa" font-size="11">✓  Configurable work hours</text>
+                <text x="40" y="131" fill="#aaa" font-size="11">✓  Real-time alerts (email/SMS)</text>
+                <text x="40" y="154" fill="#aaa" font-size="11">✓  Web dashboard</text>
+                <text x="40" y="177" fill="#aaa" font-size="11">✓  Role-based access control</text>
+                <line x1="40" y1="192" x2="340" y2="192" stroke="#444" stroke-width="1" stroke-dasharray="4"/>
+                <text x="40" y="213" fill="#666" font-size="11">✗  Latency bounds ("instant"?)</text>
+                <text x="40" y="236" fill="#666" font-size="11">✗  Sensor noise / calibration</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 3. Functional vs Non-functional -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>What did AI cover vs miss?</h4>
+            <ul class="alpha-list">
+                <li>AI covered <strong>functional</strong> requirements well</li>
+                <li>Missed <strong>non-functional</strong>: latency, accuracy, uptime</li>
+                <li>Missed <strong>operational</strong>: calibration, seasonal variation</li>
+                <li>Students noted: high-level but not deployment-ready</li>
+            </ul>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 260" style="width:100%;max-width:380px;">
+                <rect x="20"  y="30" width="155" height="200" rx="12" fill="none" stroke="#aaa" stroke-width="2"/>
+                <rect x="205" y="30" width="155" height="200" rx="12" fill="none" stroke="#555" stroke-width="2"/>
+                <text x="98"  y="58" text-anchor="middle" fill="#ddd" font-size="12">Functional</text>
+                <text x="283" y="58" text-anchor="middle" fill="#666" font-size="12">Non-Functional</text>
+                <text x="35"  y="84"  fill="#aaa" font-size="10">Alert on high lux</text>
+                <text x="35"  y="104" fill="#aaa" font-size="10">Dashboard view</text>
+                <text x="35"  y="124" fill="#aaa" font-size="10">Role-based access</text>
+                <text x="35"  y="144" fill="#aaa" font-size="10">Configure hours</text>
+                <text x="35"  y="164" fill="#aaa" font-size="10">Event logging</text>
+                <text x="220" y="84"  fill="#666" font-size="10">Alert &lt; 3 s latency</text>
+                <text x="220" y="104" fill="#666" font-size="10">±5 lux accuracy</text>
+                <text x="220" y="124" fill="#666" font-size="10">99.9% uptime</text>
+                <text x="220" y="144" fill="#666" font-size="10">Sensor calibration</text>
+                <text x="220" y="164" fill="#666" font-size="10">Seasonal variation</text>
+                <text x="98"  y="218" text-anchor="middle" fill="#5a5" font-size="10">AI covered</text>
+                <text x="283" y="218" text-anchor="middle" fill="#a55" font-size="10">AI missed</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 4. Task 2: Architecture pipeline -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Task 2 — System Architecture</h4>
+            <ul class="alpha-list">
+                <li>Embedded sensor transmits via HTTP or MQTT</li>
+                <li>Backend API validates and stores in MongoDB</li>
+                <li>Dashboard queries backend via REST</li>
+                <li>Alert engine monitors thresholds + work hours</li>
+                <li>Notifications: email, SMS, push</li>
+            </ul>
+            <p class="muted tiny">Copilot proposed a 6-layer pipeline with clear separation of concerns.</p>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 280" style="width:100%;max-width:380px;">
+                <defs>
+                    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                        <path d="M0,0 L0,6 L8,3 z" fill="#888"/>
+                    </marker>
+                </defs>
+                <!-- boxes -->
+                <rect x="140" y="10"  width="100" height="36" rx="8" fill="none" stroke="#aaa" stroke-width="1.5"/>
+                <rect x="140" y="70"  width="100" height="36" rx="8" fill="none" stroke="#aaa" stroke-width="1.5"/>
+                <rect x="140" y="130" width="100" height="36" rx="8" fill="none" stroke="#aaa" stroke-width="1.5"/>
+                <rect x="140" y="190" width="100" height="36" rx="8" fill="none" stroke="#aaa" stroke-width="1.5"/>
+                <rect x="10"  y="190" width="100" height="36" rx="8" fill="none" stroke="#555" stroke-width="1.5"/>
+                <!-- labels -->
+                <text x="190" y="33"  text-anchor="middle" fill="#ddd" font-size="11">Sensor (lux)</text>
+                <text x="190" y="93"  text-anchor="middle" fill="#ddd" font-size="11">Backend API</text>
+                <text x="190" y="153" text-anchor="middle" fill="#ddd" font-size="11">MongoDB</text>
+                <text x="190" y="213" text-anchor="middle" fill="#ddd" font-size="11">Dashboard</text>
+                <text x="60"  y="208" text-anchor="middle" fill="#888" font-size="10">Alert Engine</text>
+                <text x="60"  y="220" text-anchor="middle" fill="#888" font-size="10">email/SMS</text>
+                <!-- arrows -->
+                <line x1="190" y1="46"  x2="190" y2="68"  stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+                <line x1="190" y1="106" x2="190" y2="128" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+                <line x1="190" y1="166" x2="190" y2="188" stroke="#888" stroke-width="1.5" marker-end="url(#arr)"/>
+                <line x1="140" y1="155" x2="112" y2="198" stroke="#555" stroke-width="1" stroke-dasharray="4" marker-end="url(#arr)"/>
+                <text x="190" y="265" text-anchor="middle" fill="#555" font-size="10">HTTP / MQTT</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 5. Architecture pro: separation of concerns -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Pro: Separation of Concerns</h4>
+            <ul class="alpha-list">
+                <li>Each layer can scale independently</li>
+                <li>Swap MongoDB without touching sensor firmware</li>
+                <li>Upgrade backend framework without changing dashboard</li>
+                <li>Teams can own individual layers</li>
+            </ul>
+            <p class="muted tiny">Students correctly identified this as the main architectural benefit.</p>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 240" style="width:100%;max-width:380px;">
+                <rect x="20"  y="20"  width="340" height="44" rx="10" fill="none" stroke="#aaa" stroke-width="1.5"/>
+                <rect x="20"  y="80"  width="340" height="44" rx="10" fill="none" stroke="#aaa" stroke-width="1.5"/>
+                <rect x="20"  y="140" width="340" height="44" rx="10" fill="none" stroke="#aaa" stroke-width="1.5"/>
+                <text x="190" y="48" text-anchor="middle" fill="#ddd" font-size="12">Sensor Layer — change firmware independently</text>
+                <text x="190" y="108" text-anchor="middle" fill="#ddd" font-size="12">Backend Layer — swap DB without touching sensors</text>
+                <text x="190" y="168" text-anchor="middle" fill="#ddd" font-size="12">Dashboard Layer — update UI without API changes</text>
+                <text x="190" y="215" text-anchor="middle" fill="#555" font-size="10">Stable interfaces between layers = independent evolution</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 6. Con: Single point of failure -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Con: Single Point of Failure</h4>
+            <ul class="alpha-list">
+                <li>Centralized backend = one failure point</li>
+                <li>If it goes down: no ingest, no alerts, no dashboard</li>
+                <li>Valid mitigations students identified:</li>
+            </ul>
+            <ul class="alpha-list tiny">
+                <li>Local buffer on the embedded device</li>
+                <li>MQTT broker with message persistence</li>
+                <li>Retry logic with exponential backoff</li>
+            </ul>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 260" style="width:100%;max-width:380px;">
+                <defs>
+                    <marker id="arr2" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                        <path d="M0,0 L0,6 L8,3 z" fill="#a55"/>
+                    </marker>
+                </defs>
+                <rect x="120" y="10"  width="140" height="36" rx="8" fill="none" stroke="#aaa" stroke-width="1.5"/>
+                <rect x="120" y="100" width="140" height="36" rx="8" fill="none" stroke="#a55" stroke-width="2"/>
+                <rect x="20"  y="190" width="100" height="36" rx="8" fill="none" stroke="#555" stroke-width="1.5"/>
+                <rect x="260" y="190" width="100" height="36" rx="8" fill="none" stroke="#555" stroke-width="1.5"/>
+                <text x="190" y="33"  text-anchor="middle" fill="#ddd" font-size="11">Sensors</text>
+                <text x="190" y="118" text-anchor="middle" fill="#a55" font-size="11">Backend ← SPOF</text>
+                <text x="70"  y="213" text-anchor="middle" fill="#555" font-size="10">MongoDB</text>
+                <text x="310" y="208" text-anchor="middle" fill="#555" font-size="10">Dashboard /</text>
+                <text x="310" y="220" text-anchor="middle" fill="#555" font-size="10">Alerts</text>
+                <line x1="190" y1="46"  x2="190" y2="98"  stroke="#888" stroke-width="1.5" marker-end="url(#arr2)"/>
+                <line x1="155" y1="136" x2="100" y2="188" stroke="#555" stroke-width="1"/>
+                <line x1="225" y1="136" x2="280" y2="188" stroke="#555" stroke-width="1"/>
+                <text x="190" y="175" text-anchor="middle" fill="#a55" font-size="10">all downstream blocked if this fails</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 7. Task 3: API Implementation -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Task 3 — Backend API Implementation</h4>
+            <p class="muted">Prompt: Write an API endpoint that receives POST requests with sensor readings, validates input, stores in MongoDB, and returns a status response.</p>
+            <ul class="alpha-list tiny">
+                <li>Fields: <code>sensorId</code>, <code>lux</code>, <code>timestamp</code></li>
+                <li>Copilot produced a working Express + Mongoose scaffold</li>
+                <li>One student was asked if Copilot should commit it directly — they declined</li>
+            </ul>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 260" style="width:100%;max-width:380px;">
+                <rect x="20" y="20" width="340" height="220" rx="12" fill="#222" stroke="#555" stroke-width="1.5"/>
+                <text x="40" y="48"  fill="#569cd6" font-size="11" font-family="monospace">POST /api/readings</text>
+                <text x="40" y="70"  fill="#aaa" font-size="10" font-family="monospace">{</text>
+                <text x="55" y="88"  fill="#9cdcfe" font-size="10" font-family="monospace">"sensorId"  : "room-1",</text>
+                <text x="55" y="106" fill="#9cdcfe" font-size="10" font-family="monospace">"lux"       : 420,</text>
+                <text x="55" y="124" fill="#9cdcfe" font-size="10" font-family="monospace">"timestamp" : "2025-04-20..."</text>
+                <text x="40" y="142" fill="#aaa" font-size="10" font-family="monospace">}</text>
+                <line x1="40" y1="155" x2="340" y2="155" stroke="#444" stroke-width="1"/>
+                <text x="40" y="174" fill="#6a9955" font-size="10" font-family="monospace">// validate → store → respond</text>
+                <text x="40" y="194" fill="#ce9178" font-size="10" font-family="monospace">200 { status: "stored" }</text>
+                <text x="40" y="214" fill="#f44747" font-size="10" font-family="monospace">400 { error: "lux required" }</text>
+                <text x="40" y="232" fill="#f44747" font-size="10" font-family="monospace">500 { error: "db write failed" }</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 8. What AI generated API is missing -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>What the Generated API Is Missing</h4>
+            <ul class="alpha-list">
+                <li>No authentication — any device can write</li>
+                <li>No range validation — lux could be -999</li>
+                <li>No rate limiting — 100 sensors burst at once</li>
+                <li>No retry / dead-letter queue on DB failure</li>
+            </ul>
+            <p class="muted tiny">Copilot produces a functional scaffold, not a production-ready service.</p>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 260" style="width:100%;max-width:380px;">
+                <rect x="20" y="20" width="340" height="220" rx="12" fill="none" stroke="#555" stroke-width="1.5"/>
+                <text x="190" y="50" text-anchor="middle" fill="#ddd" font-size="12">Copilot scaffold vs production</text>
+                <line x1="40" y1="62" x2="340" y2="62" stroke="#444" stroke-width="1"/>
+                <!-- row headers -->
+                <text x="50"  y="82" fill="#888" font-size="10">Feature</text>
+                <text x="200" y="82" fill="#888" font-size="10">Copilot</text>
+                <text x="290" y="82" fill="#888" font-size="10">Prod need</text>
+                <line x1="40" y1="88" x2="340" y2="88" stroke="#333" stroke-width="1"/>
+                <!-- rows -->
+                <text x="50"  y="108" fill="#aaa" font-size="10">Validation</text>
+                <text x="200" y="108" fill="#5a5" font-size="10">required fields</text>
+                <text x="290" y="108" fill="#fa5" font-size="10">+ range checks</text>
+
+                <text x="50"  y="130" fill="#aaa" font-size="10">Auth</text>
+                <text x="200" y="130" fill="#a55" font-size="10">none</text>
+                <text x="290" y="130" fill="#fa5" font-size="10">API key / JWT</text>
+
+                <text x="50"  y="152" fill="#aaa" font-size="10">Rate limit</text>
+                <text x="200" y="152" fill="#a55" font-size="10">none</text>
+                <text x="290" y="152" fill="#fa5" font-size="10">burst protection</text>
+
+                <text x="50"  y="174" fill="#aaa" font-size="10">DB error</text>
+                <text x="200" y="174" fill="#5a5" font-size="10">try/catch</text>
+                <text x="290" y="174" fill="#fa5" font-size="10">retry + queue</text>
+
+                <text x="50"  y="196" fill="#aaa" font-size="10">Schema</text>
+                <text x="200" y="196" fill="#5a5" font-size="10">Mongoose</text>
+                <text x="290" y="196" fill="#fa5" font-size="10">+ JSON Schema</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 9. Letting Copilot commit -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Should Copilot Commit Directly?</h4>
+            <ul class="alpha-list">
+                <li>Copilot offered to commit the generated file to the repo</li>
+                <li>Student declined — a deliberate choice</li>
+                <li><strong>Pro:</strong> saves boilerplate commit time</li>
+                <li><strong>Con:</strong> unreviewed code enters version history</li>
+            </ul>
+            <p class="muted tiny">Treat AI output like a PR from a new contributor — read every line before merging.</p>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 260" style="width:100%;max-width:380px;">
+                <rect x="20"  y="20"  width="155" height="220" rx="12" fill="none" stroke="#5a5" stroke-width="1.5"/>
+                <rect x="205" y="20"  width="155" height="220" rx="12" fill="none" stroke="#a55" stroke-width="1.5"/>
+                <text x="98"  y="50" text-anchor="middle" fill="#5a5" font-size="12">Auto-commit</text>
+                <text x="283" y="50" text-anchor="middle" fill="#a55" font-size="12">Review first</text>
+                <line x1="40"  y1="62" x2="160" y2="62" stroke="#5a5" stroke-width="1"/>
+                <line x1="225" y1="62" x2="345" y2="62" stroke="#a55" stroke-width="1"/>
+                <text x="35"  y="84"  fill="#aaa" font-size="10">Saves time</text>
+                <text x="35"  y="104" fill="#aaa" font-size="10">Instant scaffold</text>
+                <text x="35"  y="124" fill="#aaa" font-size="10">Less context switching</text>
+                <text x="35"  y="160" fill="#666" font-size="10">Bugs in history</text>
+                <text x="35"  y="180" fill="#666" font-size="10">Hard to audit</text>
+                <text x="35"  y="200" fill="#666" font-size="10">False confidence</text>
+                <text x="220" y="84"  fill="#aaa" font-size="10">Catch silent bugs</text>
+                <text x="220" y="104" fill="#aaa" font-size="10">Understand the code</text>
+                <text x="220" y="124" fill="#aaa" font-size="10">Clean history</text>
+                <text x="220" y="160" fill="#666" font-size="10">Slower</text>
+                <text x="220" y="180" fill="#666" font-size="10">Interrupts flow</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 10. Task 4: Unit testing classifyLight -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Task 4 — Unit Testing</h4>
+            <p class="muted">Prompt: Generate unit tests for <code>classifyLight(lux)</code>.</p>
+            <ul class="alpha-list tiny">
+                <li><code>'dark'</code> — lux &lt; 50</li>
+                <li><code>'dim'</code> — 50 ≤ lux &lt; 150</li>
+                <li><code>'normal'</code> — 150 ≤ lux ≤ 500</li>
+                <li><code>'bright'</code> — lux &gt; 500</li>
+            </ul>
+            <p class="muted tiny">Copilot produced 38 test cases covering boundaries, null, NaN, Infinity, and negatives.</p>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 260" style="width:100%;max-width:380px;">
+                <!-- number line -->
+                <line x1="30" y1="130" x2="350" y2="130" stroke="#888" stroke-width="2"/>
+                <!-- markers -->
+                <line x1="30"  y1="122" x2="30"  y2="138" stroke="#aaa" stroke-width="1.5"/>
+                <line x1="130" y1="122" x2="130" y2="138" stroke="#fa5" stroke-width="2"/>
+                <line x1="210" y1="122" x2="210" y2="138" stroke="#fa5" stroke-width="2"/>
+                <line x1="310" y1="122" x2="310" y2="138" stroke="#fa5" stroke-width="2"/>
+                <line x1="350" y1="122" x2="350" y2="138" stroke="#aaa" stroke-width="1.5"/>
+                <!-- labels below -->
+                <text x="30"  y="155" text-anchor="middle" fill="#888" font-size="10">0</text>
+                <text x="130" y="155" text-anchor="middle" fill="#fa5" font-size="10">50</text>
+                <text x="210" y="155" text-anchor="middle" fill="#fa5" font-size="10">150</text>
+                <text x="310" y="155" text-anchor="middle" fill="#fa5" font-size="10">500</text>
+                <text x="350" y="155" text-anchor="middle" fill="#888" font-size="10">∞</text>
+                <!-- zone labels above -->
+                <text x="80"  y="110" text-anchor="middle" fill="#aaa" font-size="12">dark</text>
+                <text x="170" y="110" text-anchor="middle" fill="#aaa" font-size="12">dim</text>
+                <text x="260" y="110" text-anchor="middle" fill="#aaa" font-size="12">normal</text>
+                <text x="335" y="110" text-anchor="middle" fill="#aaa" font-size="12">bright</text>
+                <!-- boundary test markers -->
+                <text x="130" y="190" text-anchor="middle" fill="#fa5" font-size="9">test 49, 50, 51</text>
+                <text x="210" y="190" text-anchor="middle" fill="#fa5" font-size="9">test 149, 150, 151</text>
+                <text x="310" y="190" text-anchor="middle" fill="#fa5" font-size="9">test 499, 500, 501</text>
+                <!-- invalid -->
+                <text x="190" y="230" text-anchor="middle" fill="#666" font-size="10">also test: null, NaN, -1, Infinity</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 11. Boundary value analysis -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Boundary Value Analysis</h4>
+            <ul class="alpha-list">
+                <li>Test one value below, at, and above each boundary</li>
+                <li>Reveals off-by-one errors that range tests miss</li>
+                <li>Copilot naturally applies this pattern when asked to "account for edge cases"</li>
+            </ul>
+            <p class="muted tiny">This is standard test technique — AI executes it reliably for pure functions.</p>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 240" style="width:100%;max-width:380px;">
+                <rect x="20" y="20" width="340" height="200" rx="12" fill="none" stroke="#555" stroke-width="1.5"/>
+                <text x="190" y="46" text-anchor="middle" fill="#ddd" font-size="12">Boundary at lux = 50 (dark → dim)</text>
+                <line x1="40" y1="58" x2="340" y2="58" stroke="#444" stroke-width="1"/>
+                <text x="60"  y="80" fill="#888" font-size="10">Input</text>
+                <text x="160" y="80" fill="#888" font-size="10">Expected</text>
+                <text x="270" y="80" fill="#888" font-size="10">Why</text>
+                <line x1="40" y1="86" x2="340" y2="86" stroke="#333" stroke-width="1"/>
+                <text x="60"  y="106" fill="#aaa" font-size="10">49</text>
+                <text x="160" y="106" fill="#5a5" font-size="10">'dark'</text>
+                <text x="270" y="106" fill="#666" font-size="10">just below</text>
+                <text x="60"  y="128" fill="#fa5" font-size="10">50</text>
+                <text x="160" y="128" fill="#fa5" font-size="10">'dim'</text>
+                <text x="270" y="128" fill="#666" font-size="10">at boundary</text>
+                <text x="60"  y="150" fill="#aaa" font-size="10">51</text>
+                <text x="160" y="150" fill="#5a5" font-size="10">'dim'</text>
+                <text x="270" y="150" fill="#666" font-size="10">just above</text>
+                <text x="190" y="200" text-anchor="middle" fill="#555" font-size="10">repeat for 150 and 500</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 12. Too many tests? -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>38 Tests — Too Many?</h4>
+            <ul class="alpha-list">
+                <li>Copilot produced 38 tests for a 4-branch function</li>
+                <li>Pro: exhaustive, catches every edge case</li>
+                <li>Con: maintenance overhead, slower CI, harder to diagnose failures</li>
+                <li>A focused suite of ~12 tests covers the same risk</li>
+            </ul>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 240" style="width:100%;max-width:380px;">
+                <!-- bar chart -->
+                <text x="190" y="24" text-anchor="middle" fill="#ddd" font-size="12">Test count trade-off</text>
+                <!-- axis -->
+                <line x1="60" y1="180" x2="320" y2="180" stroke="#555" stroke-width="1.5"/>
+                <line x1="60" y1="40"  x2="60"  y2="180" stroke="#555" stroke-width="1.5"/>
+                <!-- copilot bar -->
+                <rect x="90"  y="56"  width="60" height="124" fill="#a55" opacity="0.7" rx="4"/>
+                <text x="120" y="50"  text-anchor="middle" fill="#a55" font-size="10">38</text>
+                <text x="120" y="200" text-anchor="middle" fill="#aaa" font-size="10">Copilot</text>
+                <!-- focused bar -->
+                <rect x="230" y="140" width="60" height="40"  fill="#5a5" opacity="0.7" rx="4"/>
+                <text x="260" y="134" text-anchor="middle" fill="#5a5" font-size="10">~12</text>
+                <text x="260" y="200" text-anchor="middle" fill="#aaa" font-size="10">Focused</text>
+                <!-- labels -->
+                <text x="40" y="184" text-anchor="end" fill="#666" font-size="9">0</text>
+                <text x="40" y="100" text-anchor="end" fill="#666" font-size="9">20</text>
+                <text x="40" y="60"  text-anchor="end" fill="#666" font-size="9">38</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 13. Task 5: System test plan -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Task 5 — System-Level Test Plan</h4>
+            <p class="muted">Prompt: Describe a system test plan that checks end-to-end data flow from sensor reading to dashboard, including latency and alert accuracy.</p>
+            <ul class="alpha-list tiny">
+                <li>12 end-to-end test cases</li>
+                <li>End-to-end latency ≤ 3 seconds</li>
+                <li>API response ≤ 500 ms, dashboard render ≤ 1 s</li>
+                <li>Alert boundary tests: 299 / 300 / 300.01 lux</li>
+                <li>6-week execution timeline</li>
+            </ul>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 260" style="width:100%;max-width:380px;">
+                <defs>
+                    <marker id="arr3" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                        <path d="M0,0 L0,6 L8,3 z" fill="#888"/>
+                    </marker>
+                </defs>
+                <text x="190" y="22" text-anchor="middle" fill="#ddd" font-size="12">End-to-End Latency Budget</text>
+                <!-- pipeline boxes -->
+                <rect x="10"  y="40" width="68" height="32" rx="6" fill="none" stroke="#aaa" stroke-width="1.5"/>
+                <rect x="98"  y="40" width="68" height="32" rx="6" fill="none" stroke="#aaa" stroke-width="1.5"/>
+                <rect x="186" y="40" width="68" height="32" rx="6" fill="none" stroke="#aaa" stroke-width="1.5"/>
+                <rect x="274" y="40" width="96" height="32" rx="6" fill="none" stroke="#aaa" stroke-width="1.5"/>
+                <text x="44"  y="61" text-anchor="middle" fill="#ddd" font-size="10">Sensor</text>
+                <text x="132" y="61" text-anchor="middle" fill="#ddd" font-size="10">Network</text>
+                <text x="220" y="56" text-anchor="middle" fill="#ddd" font-size="10">Backend</text>
+                <text x="220" y="66" text-anchor="middle" fill="#ddd" font-size="9">≤500ms</text>
+                <text x="322" y="56" text-anchor="middle" fill="#ddd" font-size="10">Dashboard</text>
+                <text x="322" y="66" text-anchor="middle" fill="#ddd" font-size="9">≤1s</text>
+                <!-- arrows -->
+                <line x1="78"  y1="56" x2="96"  y2="56" stroke="#888" stroke-width="1.5" marker-end="url(#arr3)"/>
+                <line x1="166" y1="56" x2="184" y2="56" stroke="#888" stroke-width="1.5" marker-end="url(#arr3)"/>
+                <line x1="254" y1="56" x2="272" y2="56" stroke="#888" stroke-width="1.5" marker-end="url(#arr3)"/>
+                <!-- total bar -->
+                <rect x="10" y="100" width="360" height="20" rx="4" fill="none" stroke="#fa5" stroke-width="1.5"/>
+                <text x="190" y="115" text-anchor="middle" fill="#fa5" font-size="10">Total end-to-end ≤ 3 seconds</text>
+                <!-- alert boundary -->
+                <text x="190" y="155" text-anchor="middle" fill="#ddd" font-size="12">Alert Boundary Tests</text>
+                <line x1="40" y1="175" x2="340" y2="175" stroke="#555" stroke-width="1.5"/>
+                <line x1="185" y1="165" x2="185" y2="185" stroke="#fa5" stroke-width="2"/>
+                <text x="120" y="196" text-anchor="middle" fill="#aaa" font-size="10">299 lux → no alert</text>
+                <text x="185" y="205" text-anchor="middle" fill="#fa5" font-size="10">300</text>
+                <text x="270" y="196" text-anchor="middle" fill="#aaa" font-size="10">300.01 lux → alert fires</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 14. Unit test vs system test -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Unit Test vs System Test</h4>
+            <ul class="alpha-list">
+                <li><strong>Unit:</strong> one function in isolation, fast, no services needed</li>
+                <li><strong>System:</strong> full pipeline running, sensors to dashboard</li>
+                <li>Both are necessary — they catch different classes of bug</li>
+                <li>AI generates both but needs guidance on scope</li>
+            </ul>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 240" style="width:100%;max-width:380px;">
+                <!-- V shape -->
+                <polyline points="30,30 190,180 350,30" fill="none" stroke="#555" stroke-width="2"/>
+                <!-- left side labels -->
+                <text x="18"  y="50"  fill="#aaa" font-size="10" text-anchor="middle">Req</text>
+                <text x="65"  y="90"  fill="#aaa" font-size="10" text-anchor="middle">Arch</text>
+                <text x="112" y="130" fill="#aaa" font-size="10" text-anchor="middle">Design</text>
+                <text x="160" y="170" fill="#aaa" font-size="10" text-anchor="middle">Code</text>
+                <!-- right side labels -->
+                <text x="362" y="50"  fill="#fa5" font-size="10" text-anchor="middle">System</text>
+                <text x="315" y="90"  fill="#fa5" font-size="10" text-anchor="middle">Integration</text>
+                <text x="270" y="130" fill="#fa5" font-size="10" text-anchor="middle">Component</text>
+                <text x="222" y="170" fill="#fa5" font-size="10" text-anchor="middle">Unit</text>
+                <!-- bottom -->
+                <text x="190" y="210" text-anchor="middle" fill="#888" font-size="10">Lab 4: Task 4 = Unit    Task 5 = System</text>
+                <!-- connecting lines -->
+                <line x1="18"  y1="38" x2="350" y2="38" stroke="#333" stroke-width="1" stroke-dasharray="4"/>
+                <line x1="65"  y1="78" x2="310" y2="78" stroke="#333" stroke-width="1" stroke-dasharray="4"/>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 15. Copilot across the V-Model -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Copilot Across the V-Model</h4>
+            <ul class="alpha-list">
+                <li><strong>Requirements:</strong> functional ✓, non-functional ✗</li>
+                <li><strong>Architecture:</strong> layer separation ✓, resilience ✗</li>
+                <li><strong>Implementation:</strong> scaffold ✓, auth / rate limit ✗</li>
+                <li><strong>Unit test:</strong> boundaries ✓, test count discipline ✗</li>
+                <li><strong>System test:</strong> thorough plan ✓, automation strategy ✗</li>
+            </ul>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 260" style="width:100%;max-width:380px;">
+                <text x="190" y="22" text-anchor="middle" fill="#ddd" font-size="12">AI Coverage per Phase</text>
+                <!-- bars horizontal -->
+                <text x="95"  y="55"  text-anchor="end" fill="#aaa" font-size="10">Requirements</text>
+                <text x="95"  y="90"  text-anchor="end" fill="#aaa" font-size="10">Architecture</text>
+                <text x="95"  y="125" text-anchor="end" fill="#aaa" font-size="10">Implementation</text>
+                <text x="95"  y="160" text-anchor="end" fill="#aaa" font-size="10">Unit Test</text>
+                <text x="95"  y="195" text-anchor="end" fill="#aaa" font-size="10">System Test</text>
+                <!-- covered -->
+                <rect x="100" y="40"  width="165" height="18" fill="#5a5" opacity="0.7" rx="3"/>
+                <rect x="100" y="75"  width="145" height="18" fill="#5a5" opacity="0.7" rx="3"/>
+                <rect x="100" y="110" width="130" height="18" fill="#5a5" opacity="0.7" rx="3"/>
+                <rect x="100" y="145" width="200" height="18" fill="#5a5" opacity="0.7" rx="3"/>
+                <rect x="100" y="180" width="155" height="18" fill="#5a5" opacity="0.7" rx="3"/>
+                <!-- gaps -->
+                <rect x="265" y="40"  width="90"  height="18" fill="#a55" opacity="0.5" rx="3"/>
+                <rect x="245" y="75"  width="110" height="18" fill="#a55" opacity="0.5" rx="3"/>
+                <rect x="230" y="110" width="125" height="18" fill="#a55" opacity="0.5" rx="3"/>
+                <rect x="300" y="145" width="55"  height="18" fill="#a55" opacity="0.5" rx="3"/>
+                <rect x="255" y="180" width="100" height="18" fill="#a55" opacity="0.5" rx="3"/>
+                <text x="230" y="232" text-anchor="middle" fill="#5a5" font-size="9">covered</text>
+                <text x="320" y="232" text-anchor="middle" fill="#a55" font-size="9">gap</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 16. AI strengths in IoT -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Where AI Tools Add the Most Value</h4>
+            <ul class="alpha-list">
+                <li>Generating boilerplate: schemas, routes, CRUD</li>
+                <li>Covering happy-path requirements quickly</li>
+                <li>Producing boundary test cases for pure functions</li>
+                <li>Structuring test plans with concrete metrics</li>
+            </ul>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 240" style="width:100%;max-width:380px;">
+                <text x="190" y="22" text-anchor="middle" fill="#ddd" font-size="12">AI value by task type</text>
+                <!-- quadrant -->
+                <line x1="190" y1="40"  x2="190" y2="220" stroke="#444" stroke-width="1.5"/>
+                <line x1="30"  y1="130" x2="350" y2="130" stroke="#444" stroke-width="1.5"/>
+                <text x="110" y="36"  text-anchor="middle" fill="#666" font-size="9">Repetitive</text>
+                <text x="270" y="36"  text-anchor="middle" fill="#666" font-size="9">Novel</text>
+                <text x="18"  y="90"  text-anchor="middle" fill="#666" font-size="9" transform="rotate(-90,18,90)">Well-defined</text>
+                <text x="18"  y="180" text-anchor="middle" fill="#666" font-size="9" transform="rotate(-90,18,180)">Fuzzy</text>
+                <!-- dots -->
+                <circle cx="110" cy="75"  r="6" fill="#5a5" opacity="0.8"/>
+                <text   x="116" cy="75"  y="72"  fill="#aaa" font-size="9">boilerplate</text>
+                <circle cx="115" cy="95"  r="6" fill="#5a5" opacity="0.8"/>
+                <text   x="121" cy="95"  y="92"  fill="#aaa" font-size="9">unit tests</text>
+                <circle cx="270" cy="170" r="6" fill="#a55" opacity="0.8"/>
+                <text   x="276" cy="170" y="167" fill="#aaa" font-size="9">resilience</text>
+                <circle cx="265" cy="185" r="6" fill="#a55" opacity="0.8"/>
+                <text   x="271" cy="185" y="182" fill="#aaa" font-size="9">IoT constraints</text>
+                <text x="110" y="225" text-anchor="middle" fill="#5a5" font-size="9">AI excels here</text>
+                <text x="270" y="225" text-anchor="middle" fill="#a55" font-size="9">AI struggles here</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 17. AI gaps in IoT -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Where AI Tools Fall Short in IoT</h4>
+            <ul class="alpha-list">
+                <li>Sensor noise, drift, and calibration strategy</li>
+                <li>Latency and reliability requirements</li>
+                <li>Authentication for embedded devices</li>
+                <li>Offline handling and reconnect logic</li>
+                <li>Real-world data: fluctuating readings, seasonal variation</li>
+            </ul>
+            <p class="muted tiny">These require domain knowledge that AI cannot infer from a prompt.</p>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 240" style="width:100%;max-width:380px;">
+                <text x="190" y="22" text-anchor="middle" fill="#ddd" font-size="12">IoT-specific gaps in AI output</text>
+                <rect x="20" y="40" width="340" height="180" rx="12" fill="none" stroke="#555" stroke-width="1.5"/>
+                <line x1="40" y1="68" x2="340" y2="68" stroke="#444" stroke-width="1"/>
+                <text x="190" y="60" text-anchor="middle" fill="#888" font-size="10">Prompt → AI → Output</text>
+                <text x="40" y="92"  fill="#666" font-size="10">✗ "sensor noise ±5 lux" not mentioned</text>
+                <text x="40" y="114" fill="#666" font-size="10">✗ "alert within 3 s" not specified</text>
+                <text x="40" y="136" fill="#666" font-size="10">✗ no device API key / mutual TLS</text>
+                <text x="40" y="158" fill="#666" font-size="10">✗ no local buffer on outage</text>
+                <text x="40" y="180" fill="#666" font-size="10">✗ no smoothing before classification</text>
+                <text x="190" y="210" text-anchor="middle" fill="#fa5" font-size="10">Engineer must supply these constraints</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 18. MongoDB schema -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>MongoDB Schema Design</h4>
+            <ul class="alpha-list">
+                <li>Collection: <code>sensor_readings</code></li>
+                <li>Index on <code>(sensorId, timestamp desc)</code> — dashboard queries</li>
+                <li>Validate: <code>lux ≥ 0</code>, <code>sensorId</code> required</li>
+                <li>Store raw events — derive aggregates later</li>
+            </ul>
+            <p class="muted tiny">Copilot produced the schema; students correctly noted missing range validation.</p>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 260" style="width:100%;max-width:380px;">
+                <rect x="20" y="20" width="340" height="220" rx="12" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/>
+                <text x="190" y="46" text-anchor="middle" fill="#569cd6" font-size="11" font-family="monospace">sensor_readings (MongoDB)</text>
+                <line x1="40" y1="56" x2="340" y2="56" stroke="#333" stroke-width="1"/>
+                <text x="40" y="76"  fill="#9cdcfe" font-size="10" font-family="monospace">_id        ObjectId  (auto)</text>
+                <text x="40" y="96"  fill="#9cdcfe" font-size="10" font-family="monospace">sensorId   String    required</text>
+                <text x="40" y="116" fill="#9cdcfe" font-size="10" font-family="monospace">lux        Number    min: 0</text>
+                <text x="40" y="136" fill="#9cdcfe" font-size="10" font-family="monospace">timestamp  Date      default: now</text>
+                <line x1="40" y1="150" x2="340" y2="150" stroke="#333" stroke-width="1"/>
+                <text x="40" y="170" fill="#6a9955" font-size="10" font-family="monospace">// index</text>
+                <text x="40" y="188" fill="#ce9178" font-size="10" font-family="monospace">{ sensorId: 1, timestamp: -1 }</text>
+                <line x1="40" y1="200" x2="340" y2="200" stroke="#333" stroke-width="1"/>
+                <text x="40" y="218" fill="#666" font-size="10" font-family="monospace">Copilot gap: no lux range check</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 19. Review: valid answers -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Review — Valid Answers from Students</h4>
+            <ul class="alpha-list">
+                <li>What type of requirement did AI most often skip?</li>
+                <li>Name one way to handle a backend outage.</li>
+                <li>What is one risk of letting Copilot commit directly?</li>
+                <li>Why test at 299, 300, and 300.01 lux specifically?</li>
+                <li>What makes a 6-week test plan hard to execute?</li>
+            </ul>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 260" style="width:100%;max-width:380px;">
+                <text x="190" y="22" text-anchor="middle" fill="#ddd" font-size="12">Valid answer space</text>
+                <rect x="20" y="36" width="340" height="214" rx="12" fill="none" stroke="#555" stroke-width="1.5"/>
+                <line x1="40" y1="60" x2="340" y2="60" stroke="#333" stroke-width="1"/>
+                <text x="50"  y="52" fill="#888" font-size="9">Question</text>
+                <text x="230" y="52" fill="#888" font-size="9">Valid answers</text>
+                <text x="50"  y="80"  fill="#aaa" font-size="9">AI missing type</text>
+                <text x="230" y="80"  fill="#aaa" font-size="9">non-functional / operational</text>
+                <text x="50"  y="102" fill="#aaa" font-size="9">Outage handling</text>
+                <text x="230" y="102" fill="#aaa" font-size="9">queue / local buffer / retry</text>
+                <text x="50"  y="124" fill="#aaa" font-size="9">Commit risk</text>
+                <text x="230" y="124" fill="#aaa" font-size="9">bugs enter repo / hard to audit</text>
+                <text x="50"  y="146" fill="#aaa" font-size="9">299/300/300.01</text>
+                <text x="230" y="146" fill="#aaa" font-size="9">boundary value analysis</text>
+                <text x="50"  y="168" fill="#aaa" font-size="9">Plan is expensive</text>
+                <text x="230" y="168" fill="#aaa" font-size="9">manual steps / no automation</text>
+                <line x1="40" y1="180" x2="340" y2="180" stroke="#333" stroke-width="1" stroke-dasharray="3"/>
+                <text x="190" y="200" text-anchor="middle" fill="#555" font-size="9">multiple phrasings are valid —</text>
+                <text x="190" y="216" text-anchor="middle" fill="#555" font-size="9">look for the underlying concept</text>
+                <text x="190" y="236" text-anchor="middle" fill="#555" font-size="9">not the exact wording</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 20. Takeaway -->
+<section>
+    <h4>Takeaway — AI as a Co-Engineer</h4>
+    <svg viewBox="0 0 900 300" style="width:100%;max-width:900px;">
+        <rect x="60" y="50" width="780" height="190" rx="18" fill="none" stroke="#555" stroke-width="2"/>
+        <text x="450" y="100" text-anchor="middle" fill="#ddd" font-size="16">
+            AI accelerates the work — it does not replace engineering judgment
+        </text>
+        <line x1="120" y1="120" x2="780" y2="120" stroke="#444" stroke-width="1"/>
+        <text x="450" y="150" text-anchor="middle" fill="#aaa" font-size="13">
+            Review every requirement, every endpoint, every test it generates
+        </text>
+        <text x="450" y="178" text-anchor="middle" fill="#aaa" font-size="13">
+            Your job is to supply what it cannot infer: constraints, resilience, and security
+        </text>
+        <text x="450" y="222" text-anchor="middle" fill="#555" font-size="11">
+            Lab 4 showed this pattern across all five phases of the V-Model
+        </text>
+    </svg>
+</section>

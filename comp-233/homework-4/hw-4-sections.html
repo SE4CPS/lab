@@ -1,0 +1,845 @@
+<!-- ========================================================= -->
+<!-- Homework 4: IoT + LLM Research Application              -->
+<!-- 20 Review Sections — copy into index.html               -->
+<!-- ========================================================= -->
+
+<!-- 1. Title -->
+<section>
+    <h4>Homework 4 — IoT-LLM Research Application</h4>
+    <p class="muted">Three techniques from the paper applied to the lux sensor system: data preprocessing, RAG with re-ranking, and chain-of-thought prompting.</p>
+</section>
+
+<!-- 2. The core problem: raw numbers vs LLM -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Why LLMs Struggle with Raw Sensor Data</h4>
+            <ul class="alpha-list">
+                <li>LLMs are trained on natural language, not numeric streams</li>
+                <li>720 raw lux floats per hour carry no room context</li>
+                <li>LLM cannot distinguish noise from anomaly without metadata</li>
+                <li>Sending raw data: GPT-4o-mini accuracy = <strong>37.3%</strong></li>
+            </ul>
+            <p class="muted tiny">All three homework examples address this root problem.</p>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 250" style="width:100%;max-width:380px;">
+                <rect x="20" y="20" width="340" height="210" rx="12" fill="none" stroke="#555" stroke-width="1.5"/>
+                <text x="190" y="46" text-anchor="middle" fill="#ddd" font-size="12">What the LLM receives today</text>
+                <line x1="40" y1="56" x2="340" y2="56" stroke="#444" stroke-width="1"/>
+                <text x="40" y="80"  fill="#666" font-size="10" font-family="monospace">[480, 481, 479, 15, 14, 16,</text>
+                <text x="40" y="96"  fill="#666" font-size="10" font-family="monospace"> 482, 480, 479, 477, 480, ...</text>
+                <text x="40" y="112" fill="#666" font-size="10" font-family="monospace"> 720 values total ]</text>
+                <line x1="40" y1="124" x2="340" y2="124" stroke="#444" stroke-width="1" stroke-dasharray="4"/>
+                <text x="190" y="148" text-anchor="middle" fill="#a55" font-size="11">LLM sees a sudden drop to 15</text>
+                <text x="190" y="168" text-anchor="middle" fill="#666" font-size="10">Is it a sensor fault?</text>
+                <text x="190" y="186" text-anchor="middle" fill="#666" font-size="10">A power cut? Lights off? Noise?</text>
+                <text x="190" y="214" text-anchor="middle" fill="#a55" font-size="10">No room context → cannot tell</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 3. Example 1: Data Preprocessing -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Example 1 — Data Preprocessing</h4>
+            <p class="muted">Research idea: simplify + enrich raw sensor data before the LLM sees it.</p>
+            <ul class="alpha-list">
+                <li>Compute statistics: mean, variance, min, max, trend</li>
+                <li>Add metadata: room name, sensor placement, units, sampling rate, expected range</li>
+                <li>Result: a short natural-language description instead of a raw array</li>
+            </ul>
+            <p class="muted tiny">Accuracy: 37.3% → <strong>43.3%</strong></p>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 260" style="width:100%;max-width:380px;">
+                <defs>
+                    <marker id="hw1a" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+                        <path d="M0,0 L0,6 L7,3 z" fill="#888"/>
+                    </marker>
+                </defs>
+                <!-- raw box -->
+                <rect x="20" y="20" width="140" height="60" rx="8" fill="none" stroke="#555" stroke-width="1.5"/>
+                <text x="90" y="46" text-anchor="middle" fill="#666" font-size="10">Raw lux stream</text>
+                <text x="90" y="64" text-anchor="middle" fill="#666" font-size="9">[480, 481, 15, 14 ...]</text>
+                <!-- arrow -->
+                <line x1="160" y1="50" x2="218" y2="50" stroke="#888" stroke-width="1.5" marker-end="url(#hw1a)"/>
+                <text x="190" y="44" text-anchor="middle" fill="#569cd6" font-size="8">preprocess</text>
+                <!-- enriched box -->
+                <rect x="220" y="20" width="140" height="60" rx="8" fill="none" stroke="#98c379" stroke-width="1.5"/>
+                <text x="290" y="40" text-anchor="middle" fill="#98c379" font-size="10">Enriched description</text>
+                <text x="290" y="58" text-anchor="middle" fill="#aaa" font-size="8">"Room B, mean 210,</text>
+                <text x="290" y="70" text-anchor="middle" fill="#aaa" font-size="8">drop at t=35, ceiling"</text>
+                <!-- LLM box -->
+                <rect x="130" y="140" width="120" height="40" rx="8" fill="none" stroke="#569cd6" stroke-width="1.5"/>
+                <text x="190" y="165" text-anchor="middle" fill="#569cd6" font-size="11">LLM</text>
+                <!-- arrows down -->
+                <line x1="90"  y1="80" x2="155" y2="138" stroke="#555" stroke-width="1" stroke-dasharray="3,3"/>
+                <line x1="290" y1="80" x2="225" y2="138" stroke="#98c379" stroke-width="1.5" marker-end="url(#hw1a)"/>
+                <!-- labels -->
+                <text x="80"  y="120" text-anchor="middle" fill="#a55" font-size="9">LLM confused</text>
+                <text x="310" y="120" text-anchor="middle" fill="#5a5" font-size="9">LLM reasons</text>
+                <!-- output -->
+                <text x="190" y="210" text-anchor="middle" fill="#aaa" font-size="10">Dashboard alert with context</text>
+                <line x1="190" y1="182" x2="190" y2="202" stroke="#888" stroke-width="1.5" marker-end="url(#hw1a)"/>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 4. What statistics to extract -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>What Statistical Features to Extract</h4>
+            <ul class="alpha-list">
+                <li>Mean lux over a time window (e.g., 1-min or 5-min)</li>
+                <li>Variance — stable vs. fluctuating light</li>
+                <li>Min / max — detect clipping or spikes</li>
+                <li>Rate of change / trend — gradual fade vs. sudden drop</li>
+                <li>FFT mean — frequency-domain pattern</li>
+            </ul>
+            <p class="muted tiny">Students applied 1-min averages (720 → 60 values), rolling stats, and scalar quantization (32-bit float → 8-bit int, 4× compression).</p>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 250" style="width:100%;max-width:380px;">
+                <!-- axes -->
+                <line x1="40" y1="190" x2="360" y2="190" stroke="#444" stroke-width="1.5"/>
+                <line x1="40" y1="40"  x2="40"  y2="190" stroke="#444" stroke-width="1.5"/>
+                <text x="200" y="218" text-anchor="middle" fill="#666" font-size="9">time (5-sec samples)</text>
+                <text x="22" y="120" text-anchor="middle" fill="#666" font-size="9" transform="rotate(-90 22 120)">lux</text>
+                <!-- raw line (noisy) -->
+                <polyline points="40,100 55,98 70,102 85,99 100,103 115,97 130,101 145,50 160,48 175,52 190,49 205,101 220,98 235,103 250,99 265,102 280,98 295,101 310,100 325,99 340,101"
+                          fill="none" stroke="#555" stroke-width="1.5"/>
+                <!-- mean line -->
+                <line x1="40" y1="90" x2="340" y2="90" stroke="#569cd6" stroke-width="1.5" stroke-dasharray="6,3"/>
+                <!-- trend arrow -->
+                <line x1="130" y1="100" x2="200" y2="50" stroke="#fa5" stroke-width="2"/>
+                <!-- labels -->
+                <text x="355" y="94"  fill="#569cd6" font-size="9">mean</text>
+                <text x="205" y="46"  fill="#fa5"    font-size="9">drop</text>
+                <text x="200" y="170" text-anchor="middle" fill="#666" font-size="9">raw stream (noisy)</text>
+                <!-- stats box -->
+                <rect x="240" y="100" width="130" height="80" rx="6" fill="none" stroke="#98c379" stroke-width="1"/>
+                <text x="305" y="118" text-anchor="middle" fill="#98c379" font-size="9">extracted features</text>
+                <text x="250" y="134" fill="#aaa" font-size="8">mean: 95 lux</text>
+                <text x="250" y="148" fill="#aaa" font-size="8">var: 520</text>
+                <text x="250" y="162" fill="#aaa" font-size="8">drop at t=145</text>
+                <text x="250" y="176" fill="#aaa" font-size="8">trend: ↓ sudden</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 5. Metadata enrichment -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>What Metadata to Attach</h4>
+            <ul class="alpha-list">
+                <li>Room name and type (office, hallway, server room)</li>
+                <li>Sensor placement (ceiling, window-facing, table)</li>
+                <li>Window orientation (south-facing = morning sunlight)</li>
+                <li>Unit (lux), sampling rate, expected range</li>
+                <li>Time context (daytime, after-hours, unoccupied schedule)</li>
+            </ul>
+            <p class="muted tiny">Without metadata: LLM sees "15." With metadata: "Room B server room, ceiling, south window, 15 lux at 11 PM outside work hours."</p>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 250" style="width:100%;max-width:380px;">
+                <rect x="20" y="15" width="340" height="220" rx="12" fill="#1a1a1a" stroke="#555" stroke-width="1.5"/>
+                <text x="190" y="38" text-anchor="middle" fill="#ddd" font-size="11" font-family="monospace">Enriched MongoDB Document</text>
+                <line x1="40" y1="48" x2="340" y2="48" stroke="#333" stroke-width="1"/>
+                <text x="40" y="66"  fill="#666" font-size="9" font-family="monospace">"avgLux": 720,</text>
+                <text x="40" y="82"  fill="#9cdcfe" font-size="9" font-family="monospace">"room": "living_room",</text>
+                <text x="40" y="98"  fill="#9cdcfe" font-size="9" font-family="monospace">"room_type": "hallway",</text>
+                <text x="40" y="114" fill="#9cdcfe" font-size="9" font-family="monospace">"sensor_location": "table",</text>
+                <text x="40" y="130" fill="#9cdcfe" font-size="9" font-family="monospace">"unit": "lux",</text>
+                <text x="40" y="146" fill="#9cdcfe" font-size="9" font-family="monospace">"expected_range": "0-300",</text>
+                <text x="40" y="162" fill="#9cdcfe" font-size="9" font-family="monospace">"time_context": "daytime",</text>
+                <text x="40" y="178" fill="#9cdcfe" font-size="9" font-family="monospace">"usage_status": "active"</text>
+                <line x1="40" y1="190" x2="340" y2="190" stroke="#333" stroke-width="1" stroke-dasharray="3"/>
+                <text x="190" y="210" text-anchor="middle" fill="#6a9955" font-size="9">LLM input: context + number, not just number</text>
+                <text x="190" y="226" text-anchor="middle" fill="#6a9955" font-size="9">"720 lux is too high for a hallway (expected 0–300)"</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 6. Before vs After pipeline -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Pipeline Before and After</h4>
+            <ul class="alpha-list">
+                <li><strong>Before:</strong> Sensor → DB → Dashboard → "250"</li>
+                <li><strong>After:</strong> Sensor → Enrichment → DB → LLM → Dashboard → "720 lux is too high for living room during daytime"</li>
+                <li>LLM replaces hard-coded if/else rules</li>
+                <li>MongoDB becomes a knowledge layer, not just storage</li>
+            </ul>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 260" style="width:100%;max-width:380px;">
+                <defs>
+                    <marker id="hw1b" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+                        <path d="M0,0 L0,6 L7,3 z" fill="#555"/>
+                    </marker>
+                    <marker id="hw1g" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+                        <path d="M0,0 L0,6 L7,3 z" fill="#98c379"/>
+                    </marker>
+                </defs>
+                <!-- BEFORE row -->
+                <text x="22" y="46" fill="#666" font-size="10">Before:</text>
+                <rect x="60"  y="30" width="54" height="24" rx="5" fill="none" stroke="#555" stroke-width="1"/>
+                <rect x="140" y="30" width="40" height="24" rx="5" fill="none" stroke="#555" stroke-width="1"/>
+                <rect x="210" y="30" width="70" height="24" rx="5" fill="none" stroke="#555" stroke-width="1"/>
+                <text x="87"  y="47" text-anchor="middle" fill="#666" font-size="9">Sensor</text>
+                <text x="160" y="47" text-anchor="middle" fill="#666" font-size="9">DB</text>
+                <text x="245" y="47" text-anchor="middle" fill="#666" font-size="9">Dashboard</text>
+                <line x1="114" y1="42" x2="138" y2="42" stroke="#555" stroke-width="1" marker-end="url(#hw1b)"/>
+                <line x1="180" y1="42" x2="208" y2="42" stroke="#555" stroke-width="1" marker-end="url(#hw1b)"/>
+                <text x="295" y="47" fill="#a55" font-size="9">"250"</text>
+                <!-- AFTER row -->
+                <text x="22" y="116" fill="#98c379" font-size="10">After:</text>
+                <rect x="55"  y="98" width="44" height="24" rx="5" fill="none" stroke="#555" stroke-width="1"/>
+                <rect x="115" y="98" width="62" height="24" rx="5" fill="none" stroke="#98c379" stroke-width="1.5"/>
+                <rect x="193" y="98" width="36" height="24" rx="5" fill="none" stroke="#555" stroke-width="1"/>
+                <rect x="245" y="98" width="36" height="24" rx="5" fill="none" stroke="#569cd6" stroke-width="1.5"/>
+                <rect x="295" y="98" width="62" height="24" rx="5" fill="none" stroke="#555" stroke-width="1"/>
+                <text x="77"  y="115" text-anchor="middle" fill="#666" font-size="8">Sensor</text>
+                <text x="146" y="115" text-anchor="middle" fill="#98c379" font-size="8">Enrichment</text>
+                <text x="211" y="115" text-anchor="middle" fill="#666" font-size="8">DB</text>
+                <text x="263" y="115" text-anchor="middle" fill="#569cd6" font-size="8">LLM</text>
+                <text x="326" y="115" text-anchor="middle" fill="#666" font-size="8">Dashboard</text>
+                <line x1="99"  y1="110" x2="113" y2="110" stroke="#888" stroke-width="1" marker-end="url(#hw1b)"/>
+                <line x1="177" y1="110" x2="191" y2="110" stroke="#888" stroke-width="1" marker-end="url(#hw1b)"/>
+                <line x1="229" y1="110" x2="243" y2="110" stroke="#888" stroke-width="1" marker-end="url(#hw1b)"/>
+                <line x1="281" y1="110" x2="293" y2="110" stroke="#888" stroke-width="1" marker-end="url(#hw1b)"/>
+                <!-- output quote -->
+                <text x="190" y="160" text-anchor="middle" fill="#5a5" font-size="8">"720 lux is too high for living room</text>
+                <text x="190" y="174" text-anchor="middle" fill="#5a5" font-size="8">during daytime" (expected 0–300)</text>
+                <!-- accuracy label -->
+                <rect x="100" y="200" width="180" height="40" rx="8" fill="none" stroke="#333" stroke-width="1"/>
+                <text x="190" y="218" text-anchor="middle" fill="#aaa" font-size="10">Accuracy lift</text>
+                <text x="190" y="234" text-anchor="middle" fill="#fa5" font-size="10">37.3% → 43.3%</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 7. Example 2: RAG -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Example 2 — RAG: Retrieval-Augmented Generation</h4>
+            <p class="muted">Research idea: automatically retrieve domain knowledge + labeled demonstrations instead of hard-coding expert rules.</p>
+            <ul class="alpha-list">
+                <li>Build a knowledge base: lighting standards, anomaly patterns, Q&amp;A demos</li>
+                <li>At inference time: hybrid search retrieves 2–3 most relevant passages</li>
+                <li>Inject retrieved context into LLM prompt</li>
+                <li>LLM grounds its answer in standards, not guesses</li>
+            </ul>
+            <p class="muted tiny">Accuracy: 43.3% → <strong>59.3%</strong> (+ demos: <strong>66.7%</strong>)</p>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 260" style="width:100%;max-width:380px;">
+                <defs>
+                    <marker id="hw2a" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+                        <path d="M0,0 L0,6 L7,3 z" fill="#888"/>
+                    </marker>
+                </defs>
+                <!-- knowledge base -->
+                <rect x="20" y="20" width="130" height="140" rx="10" fill="none" stroke="#98c379" stroke-width="1.5"/>
+                <text x="85" y="42" text-anchor="middle" fill="#98c379" font-size="10">Knowledge Base</text>
+                <text x="30" y="62"  fill="#aaa" font-size="8">• lighting standards</text>
+                <text x="30" y="78"  fill="#aaa" font-size="8">• server room: 300–500 lux</text>
+                <text x="30" y="94"  fill="#aaa" font-size="8">• anomaly patterns</text>
+                <text x="30" y="110" fill="#aaa" font-size="8">• past Q&amp;A demos</text>
+                <text x="30" y="126" fill="#aaa" font-size="8">• MongoDB history</text>
+                <text x="30" y="142" fill="#aaa" font-size="8">• calibration notes</text>
+                <!-- query arrow -->
+                <line x1="150" y1="130" x2="195" y2="130" stroke="#888" stroke-width="1.5" marker-end="url(#hw2a)"/>
+                <text x="172" y="122" text-anchor="middle" fill="#666" font-size="8">query</text>
+                <!-- retriever -->
+                <rect x="196" y="110" width="80" height="40" rx="8" fill="none" stroke="#569cd6" stroke-width="1.5"/>
+                <text x="236" y="125" text-anchor="middle" fill="#569cd6" font-size="9">Retriever</text>
+                <text x="236" y="140" text-anchor="middle" fill="#569cd6" font-size="8">top 2–3 docs</text>
+                <!-- retrieved arrow to llm -->
+                <line x1="236" y1="150" x2="236" y2="190" stroke="#888" stroke-width="1.5" marker-end="url(#hw2a)"/>
+                <!-- LLM box -->
+                <rect x="176" y="192" width="120" height="36" rx="8" fill="none" stroke="#569cd6" stroke-width="1.5"/>
+                <text x="236" y="215" text-anchor="middle" fill="#569cd6" font-size="11">LLM + context</text>
+                <!-- sensor data arrow -->
+                <line x1="85" y1="162" x2="200" y2="210" stroke="#555" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#hw2a)"/>
+                <text x="118" y="196" text-anchor="middle" fill="#666" font-size="8">sensor data</text>
+                <!-- output -->
+                <text x="236" y="246" text-anchor="middle" fill="#5a5" font-size="8">"Luminaire failure — maintenance check"</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 8. What goes in the knowledge base -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>What the Knowledge Base Contains</h4>
+            <ul class="alpha-list">
+                <li>Lighting standards (server room: 300–500 lux, hallway: 0–300)</li>
+                <li>Anomaly pattern descriptions (sudden drop = fixture failure vs. power cut)</li>
+                <li>Labeled demo Q&amp;A from historical MongoDB data</li>
+                <li>Sensor placement and calibration notes</li>
+                <li>Alert rules and Swagger API behavior</li>
+            </ul>
+            <p class="muted tiny">Students noted: MongoDB history already contains this — the KB is curated from existing sprint data.</p>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 250" style="width:100%;max-width:380px;">
+                <rect x="20" y="20" width="340" height="210" rx="12" fill="none" stroke="#98c379" stroke-width="1.5"/>
+                <text x="190" y="46" text-anchor="middle" fill="#98c379" font-size="12">Knowledge Base — Document Types</text>
+                <line x1="40" y1="56" x2="340" y2="56" stroke="#3a5a30" stroke-width="1"/>
+                <!-- type 1 -->
+                <rect x="36" y="68" width="8" height="8" fill="#98c379" rx="1"/>
+                <text x="52" y="78" fill="#ddd" font-size="10">Standards</text>
+                <text x="52" y="92" fill="#666" font-size="9">"Office rooms: 300–500 lux recommended"</text>
+                <!-- type 2 -->
+                <rect x="36" y="106" width="8" height="8" fill="#ce9178" rx="1"/>
+                <text x="52" y="116" fill="#ddd" font-size="10">Anomaly patterns</text>
+                <text x="52" y="130" fill="#666" font-size="9">"Drop from 480→15 in 10s = fixture failure"</text>
+                <!-- type 3 -->
+                <rect x="36" y="144" width="8" height="8" fill="#569cd6" rx="1"/>
+                <text x="52" y="154" fill="#ddd" font-size="10">Demo Q&amp;A pair</text>
+                <text x="52" y="168" fill="#666" font-size="9">Q: "8 lux at 1:30 PM, Room A"</text>
+                <text x="52" y="182" fill="#666" font-size="9">A: "Sensor disconnection — check cable"</text>
+                <!-- type 4 -->
+                <rect x="36" y="196" width="8" height="8" fill="#c678dd" rx="1"/>
+                <text x="52" y="206" fill="#ddd" font-size="10">Placement notes</text>
+                <text x="52" y="220" fill="#666" font-size="9">"Sensor 2 near window — high lux expected AM"</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 9. Re-ranking: n vs m -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Re-ranking: Retrieve n, Keep m</h4>
+            <ul class="alpha-list">
+                <li>Retrieve n = 5 candidate documents from knowledge base</li>
+                <li>Re-ranker scores relevance to the specific query</li>
+                <li>Keep only m = 1–2 most relevant passages for the LLM</li>
+                <li>Discards: outdoor lighting, night rules (irrelevant to hallway daytime query)</li>
+            </ul>
+            <p class="muted tiny">Too many docs (m=5) → LLM output becomes noisy and inconsistent.</p>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 260" style="width:100%;max-width:380px;">
+                <defs>
+                    <marker id="hw3a" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+                        <path d="M0,0 L0,6 L7,3 z" fill="#888"/>
+                    </marker>
+                </defs>
+                <!-- n=5 candidates -->
+                <text x="90" y="20" text-anchor="middle" fill="#ddd" font-size="10">n = 5 retrieved</text>
+                <rect x="20" y="28"  width="140" height="20" rx="4" fill="none" stroke="#98c379" stroke-width="1"/>
+                <rect x="20" y="54"  width="140" height="20" rx="4" fill="none" stroke="#98c379" stroke-width="1"/>
+                <rect x="20" y="80"  width="140" height="20" rx="4" fill="none" stroke="#555" stroke-width="1" stroke-dasharray="3"/>
+                <rect x="20" y="106" width="140" height="20" rx="4" fill="none" stroke="#555" stroke-width="1" stroke-dasharray="3"/>
+                <rect x="20" y="132" width="140" height="20" rx="4" fill="none" stroke="#555" stroke-width="1" stroke-dasharray="3"/>
+                <text x="90" y="43"  text-anchor="middle" fill="#aaa" font-size="8">Hallway lighting: 0–300 lux</text>
+                <text x="90" y="69"  text-anchor="middle" fill="#aaa" font-size="8">High lux causes glare</text>
+                <text x="90" y="95"  text-anchor="middle" fill="#666" font-size="8">Outdoor lighting standards</text>
+                <text x="90" y="121" text-anchor="middle" fill="#666" font-size="8">Night lighting recommendations</text>
+                <text x="90" y="147" text-anchor="middle" fill="#666" font-size="8">Energy saving tips</text>
+                <!-- re-ranker arrow -->
+                <line x1="160" y1="85" x2="208" y2="85" stroke="#888" stroke-width="1.5" marker-end="url(#hw3a)"/>
+                <text x="185" y="78" text-anchor="middle" fill="#569cd6" font-size="8">re-rank</text>
+                <!-- m=2 kept -->
+                <text x="290" y="20" text-anchor="middle" fill="#ddd" font-size="10">m = 2 kept</text>
+                <rect x="210" y="28" width="150" height="20" rx="4" fill="#2a3a2a" stroke="#98c379" stroke-width="1.5"/>
+                <rect x="210" y="54" width="150" height="20" rx="4" fill="#2a3a2a" stroke="#98c379" stroke-width="1.5"/>
+                <text x="285" y="43" text-anchor="middle" fill="#98c379" font-size="8">Hallway lighting: 0–300 lux</text>
+                <text x="285" y="69" text-anchor="middle" fill="#98c379" font-size="8">High lux causes glare</text>
+                <!-- LLM output -->
+                <rect x="210" y="130" width="150" height="36" rx="8" fill="none" stroke="#569cd6" stroke-width="1.5"/>
+                <text x="285" y="148" text-anchor="middle" fill="#569cd6" font-size="9">LLM output</text>
+                <text x="285" y="162" text-anchor="middle" fill="#aaa" font-size="8">"above range, causes glare"</text>
+                <line x1="285" y1="75" x2="285" y2="128" stroke="#888" stroke-width="1.5" marker-end="url(#hw3a)"/>
+                <!-- warning if m=5 -->
+                <text x="190" y="210" text-anchor="middle" fill="#a55" font-size="9">If m=5: noise from outdoor/night docs</text>
+                <text x="190" y="226" text-anchor="middle" fill="#666" font-size="8">→ inconsistent or off-topic LLM answer</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 10. Why focused retrieval matters -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Why Focused Retrieval Beats Stuffing Context</h4>
+            <ul class="alpha-list">
+                <li>Each irrelevant document adds noise to the prompt</li>
+                <li>LLMs can be "distracted" by off-topic but plausible passages</li>
+                <li>Small, high-precision context = better reasoning</li>
+                <li>Optimal: n ≈ 3–5 retrieved, m ≈ 1–2 kept</li>
+            </ul>
+            <p class="muted tiny">Students identified this as the key trade-off: more retrieval ≠ better answers.</p>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 240" style="width:100%;max-width:380px;">
+                <text x="190" y="20" text-anchor="middle" fill="#ddd" font-size="12">Accuracy vs. docs injected into prompt</text>
+                <!-- axes -->
+                <line x1="50" y1="190" x2="340" y2="190" stroke="#555" stroke-width="1.5"/>
+                <line x1="50" y1="50"  x2="50"  y2="190" stroke="#555" stroke-width="1.5"/>
+                <!-- y labels -->
+                <text x="44" y="194" text-anchor="end" fill="#666" font-size="8">low</text>
+                <text x="44" y="80"  text-anchor="end" fill="#666" font-size="8">high</text>
+                <text x="190" y="210" text-anchor="middle" fill="#666" font-size="9">docs injected (m)</text>
+                <!-- curve: peaks then drops -->
+                <polyline points="50,180 100,120 160,75 200,68 240,80 280,110 320,150"
+                          fill="none" stroke="#98c379" stroke-width="2"/>
+                <!-- optimal marker -->
+                <line x1="200" y1="60" x2="200" y2="190" stroke="#fa5" stroke-width="1" stroke-dasharray="4,3"/>
+                <text x="204" y="58" fill="#fa5" font-size="8">m≈1–2</text>
+                <text x="204" y="70" fill="#fa5" font-size="8">optimal</text>
+                <!-- noise zone -->
+                <rect x="240" y="50" width="80" height="140" fill="#a55" opacity="0.1" rx="4"/>
+                <text x="280" y="130" text-anchor="middle" fill="#a55" font-size="8">noise</text>
+                <text x="280" y="144" text-anchor="middle" fill="#a55" font-size="8">zone</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 11. Example 3: Chain-of-Thought -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Example 3 — Chain-of-Thought + Role</h4>
+            <p class="muted">Research idea: assign the LLM a domain-expert role and require step-by-step reasoning before a final answer.</p>
+            <ul class="alpha-list">
+                <li>Role: "You are a building lighting systems engineer"</li>
+                <li>Require two sections: ANALYSIS then ANSWER</li>
+                <li>LLM must cross-reference rooms, schedule, and retrieved knowledge</li>
+                <li>Dashboard shows the reasoning trace, not just the label</li>
+            </ul>
+            <p class="muted tiny">Accuracy: 66.7% → <strong>77.8%</strong></p>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 260" style="width:100%;max-width:380px;">
+                <defs>
+                    <marker id="hw4a" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+                        <path d="M0,0 L0,6 L7,3 z" fill="#888"/>
+                    </marker>
+                </defs>
+                <!-- prompt structure flow -->
+                <rect x="20" y="14" width="340" height="26" rx="6" fill="none" stroke="#c678dd" stroke-width="1.5"/>
+                <text x="190" y="31" text-anchor="middle" fill="#c678dd" font-size="10">Role: "building lighting systems engineer"</text>
+                <line x1="190" y1="40" x2="190" y2="54" stroke="#888" stroke-width="1" marker-end="url(#hw4a)"/>
+                <rect x="20" y="56" width="340" height="22" rx="6" fill="none" stroke="#98c379" stroke-width="1"/>
+                <text x="190" y="71" text-anchor="middle" fill="#98c379" font-size="9">Retrieved knowledge (2–3 docs from KB)</text>
+                <line x1="190" y1="78" x2="190" y2="92" stroke="#888" stroke-width="1" marker-end="url(#hw4a)"/>
+                <rect x="20" y="94" width="340" height="22" rx="6" fill="none" stroke="#aaa" stroke-width="1"/>
+                <text x="190" y="109" text-anchor="middle" fill="#aaa" font-size="9">Sensor data description (enriched)</text>
+                <line x1="190" y1="116" x2="190" y2="130" stroke="#888" stroke-width="1" marker-end="url(#hw4a)"/>
+                <rect x="20" y="132" width="340" height="22" rx="6" fill="none" stroke="#aaa" stroke-width="1"/>
+                <text x="190" y="147" text-anchor="middle" fill="#aaa" font-size="9">Task question</text>
+                <line x1="190" y1="154" x2="190" y2="168" stroke="#888" stroke-width="1" marker-end="url(#hw4a)"/>
+                <!-- CoT output -->
+                <rect x="20" y="170" width="155" height="26" rx="6" fill="none" stroke="#569cd6" stroke-width="1.5"/>
+                <rect x="205" y="170" width="155" height="26" rx="6" fill="none" stroke="#fa5" stroke-width="1.5"/>
+                <text x="98"  y="187" text-anchor="middle" fill="#569cd6" font-size="10">ANALYSIS (steps)</text>
+                <text x="283" y="187" text-anchor="middle" fill="#fa5" font-size="10">ANSWER (final)</text>
+                <line x1="175" y1="183" x2="203" y2="183" stroke="#888" stroke-width="1" marker-end="url(#hw4a)"/>
+                <text x="190" y="230" text-anchor="middle" fill="#555" font-size="9">Both displayed on dashboard →</text>
+                <text x="190" y="246" text-anchor="middle" fill="#555" font-size="9">managers see reasoning, not just label</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 12. CoT concrete example -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>CoT in Action — Room C at 11 PM</h4>
+            <ul class="alpha-list">
+                <li>Room C: 600 lux at 11 PM</li>
+                <li>Rooms A + B: 0–5 lux</li>
+                <li>Building scheduled as unoccupied</li>
+            </ul>
+            <p class="muted tiny">ANALYSIS: cross-reference schedule + compare all rooms.<br>
+            ANSWER: "Lights left on; check motion sensor and relay; ~0.6 kWh/hr energy waste."</p>
+            <p class="muted tiny">Without CoT: "high lux anomaly detected." With CoT: actionable diagnosis with energy cost.</p>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 250" style="width:100%;max-width:380px;">
+                <!-- room comparison at 11PM -->
+                <text x="190" y="18" text-anchor="middle" fill="#ddd" font-size="11">Room readings at 11 PM</text>
+                <!-- bars -->
+                <line x1="40" y1="170" x2="340" y2="170" stroke="#444" stroke-width="1.5"/>
+                <!-- Room A bar -->
+                <rect x="60"  y="164" width="50" height="6"   fill="#555" rx="2"/>
+                <text x="85"  y="186" text-anchor="middle" fill="#666" font-size="9">Room A</text>
+                <text x="85"  y="158" text-anchor="middle" fill="#666" font-size="8">~5 lux</text>
+                <!-- Room B bar -->
+                <rect x="155" y="164" width="50" height="6"   fill="#555" rx="2"/>
+                <text x="180" y="186" text-anchor="middle" fill="#666" font-size="9">Room B</text>
+                <text x="180" y="158" text-anchor="middle" fill="#666" font-size="8">~5 lux</text>
+                <!-- Room C bar (tall) -->
+                <rect x="250" y="50"  width="50" height="120" fill="#fa5" opacity="0.7" rx="2"/>
+                <text x="275" y="186" text-anchor="middle" fill="#fa5" font-size="9">Room C</text>
+                <text x="275" y="44"  text-anchor="middle" fill="#fa5" font-size="8">600 lux</text>
+                <!-- CoT reasoning box -->
+                <rect x="20" y="200" width="340" height="42" rx="8" fill="none" stroke="#569cd6" stroke-width="1"/>
+                <text x="30" y="216" fill="#569cd6" font-size="8">Step 1: Only Room C affected → not a building outage</text>
+                <text x="30" y="228" fill="#569cd6" font-size="8">Step 2: Building unoccupied → lights should be off</text>
+                <text x="30" y="240" fill="#569cd6" font-size="8">Answer: "Lights left on — check relay, ~0.6 kWh/hr waste"</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 13. Accuracy ablation -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Accuracy at Each Step (GPT-4o-mini)</h4>
+            <ul class="alpha-list">
+                <li>Baseline (raw data): <strong>37.3%</strong></li>
+                <li>+ Preprocessing: <strong>43.3%</strong> (+6 pts)</li>
+                <li>+ RAG retrieval: <strong>59.3%</strong> (+16 pts)</li>
+                <li>+ Demonstrations: <strong>66.7%</strong> (+7 pts)</li>
+                <li>+ Role + CoT: <strong>77.8%</strong> (+11 pts)</li>
+            </ul>
+            <p class="muted tiny">Each technique adds independently; the combination achieves expert-level reasoning.</p>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 250" style="width:100%;max-width:380px;">
+                <text x="190" y="18" text-anchor="middle" fill="#ddd" font-size="11">Ablation Study — GPT-4o-mini</text>
+                <!-- axes -->
+                <line x1="40" y1="210" x2="360" y2="210" stroke="#555" stroke-width="1.5"/>
+                <line x1="40" y1="40"  x2="40"  y2="210" stroke="#555" stroke-width="1.5"/>
+                <!-- y ticks -->
+                <line x1="36" y1="210" x2="40" y2="210" stroke="#555" stroke-width="1"/>
+                <line x1="36" y1="138" x2="40" y2="138" stroke="#555" stroke-width="1"/>
+                <line x1="36" y1="80"  x2="40" y2="80"  stroke="#555" stroke-width="1"/>
+                <line x1="36" y1="40"  x2="40" y2="40"  stroke="#555" stroke-width="1"/>
+                <text x="34" y="213" text-anchor="end" fill="#666" font-size="8">0%</text>
+                <text x="34" y="141" text-anchor="end" fill="#666" font-size="8">40%</text>
+                <text x="34" y="83"  text-anchor="end" fill="#666" font-size="8">70%</text>
+                <text x="34" y="43"  text-anchor="end" fill="#666" font-size="8">100%</text>
+                <!-- bars: scale 0-100% mapped to y210 (0%) to y40 (100%), range=170px -->
+                <!-- 37.3% → y = 210 - 170*0.373 = 210-63.4 = 146.6 -->
+                <rect x="50"  y="147" width="46" height="63"  fill="#555"    rx="3"/>
+                <!-- 43.3% → y = 210 - 170*0.433 = 210-73.6 = 136.4 -->
+                <rect x="106" y="136" width="46" height="74"  fill="#569cd6" opacity="0.7" rx="3"/>
+                <!-- 59.3% → y = 210 - 170*0.593 = 210-100.8 = 109.2 -->
+                <rect x="162" y="109" width="46" height="101" fill="#98c379" opacity="0.7" rx="3"/>
+                <!-- 66.7% → y = 210 - 170*0.667 = 210-113.4 = 96.6 -->
+                <rect x="218" y="97"  width="46" height="113" fill="#ce9178" opacity="0.7" rx="3"/>
+                <!-- 77.8% → y = 210 - 170*0.778 = 210-132.3 = 77.7 -->
+                <rect x="274" y="78"  width="46" height="132" fill="#c678dd" opacity="0.7" rx="3"/>
+                <!-- value labels above bars -->
+                <text x="73"  y="144" text-anchor="middle" fill="#aaa" font-size="8">37.3%</text>
+                <text x="129" y="133" text-anchor="middle" fill="#aaa" font-size="8">43.3%</text>
+                <text x="185" y="106" text-anchor="middle" fill="#aaa" font-size="8">59.3%</text>
+                <text x="241" y="94"  text-anchor="middle" fill="#aaa" font-size="8">66.7%</text>
+                <text x="297" y="75"  text-anchor="middle" fill="#aaa" font-size="8">77.8%</text>
+                <!-- x labels -->
+                <text x="73"  y="226" text-anchor="middle" fill="#666" font-size="7">baseline</text>
+                <text x="129" y="226" text-anchor="middle" fill="#569cd6" font-size="7">+preproc</text>
+                <text x="185" y="226" text-anchor="middle" fill="#98c379" font-size="7">+RAG</text>
+                <text x="241" y="226" text-anchor="middle" fill="#ce9178" font-size="7">+demos</text>
+                <text x="297" y="226" text-anchor="middle" fill="#c678dd" font-size="7">+CoT</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 14. Combined system architecture -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>All Three Techniques Combined</h4>
+            <ul class="alpha-list">
+                <li>Preprocessing: sensor → enriched description</li>
+                <li>RAG: query KB → re-rank → inject 2 docs</li>
+                <li>CoT: role + retrieved + data → step analysis → answer</li>
+                <li>Each layer builds on the previous one</li>
+                <li>LLM acts as a reasoning layer, not a lookup table</li>
+            </ul>
+            <p class="muted tiny">Students confirmed: combination outperforms any single technique alone (ablation result).</p>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 260" style="width:100%;max-width:380px;">
+                <defs>
+                    <marker id="hw5a" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto">
+                        <path d="M0,0 L0,6 L7,3 z" fill="#888"/>
+                    </marker>
+                </defs>
+                <!-- layer stack -->
+                <rect x="20" y="20"  width="340" height="36" rx="8" fill="none" stroke="#555"    stroke-width="1.5"/>
+                <rect x="20" y="76"  width="340" height="36" rx="8" fill="none" stroke="#569cd6" stroke-width="1.5"/>
+                <rect x="20" y="132" width="340" height="36" rx="8" fill="none" stroke="#98c379" stroke-width="1.5"/>
+                <rect x="20" y="188" width="340" height="36" rx="8" fill="none" stroke="#c678dd" stroke-width="1.5"/>
+                <!-- labels -->
+                <text x="190" y="34"  text-anchor="middle" fill="#aaa"    font-size="10">Sensor → mean, variance, trend + room metadata</text>
+                <text x="190" y="48"  text-anchor="middle" fill="#666"    font-size="8">Preprocessing Layer</text>
+                <text x="190" y="90"  text-anchor="middle" fill="#569cd6" font-size="10">Query KB → re-rank → inject top 2 passages</text>
+                <text x="190" y="104" text-anchor="middle" fill="#569cd6" font-size="8">RAG Layer</text>
+                <text x="190" y="146" text-anchor="middle" fill="#98c379" font-size="10">Role assignment + structured prompt template</text>
+                <text x="190" y="160" text-anchor="middle" fill="#98c379" font-size="8">Chain-of-Thought Layer</text>
+                <text x="190" y="202" text-anchor="middle" fill="#c678dd" font-size="10">ANALYSIS → ANSWER → Dashboard</text>
+                <text x="190" y="216" text-anchor="middle" fill="#c678dd" font-size="8">LLM Reasoning Layer</text>
+                <!-- arrows between layers -->
+                <line x1="190" y1="56"  x2="190" y2="74"  stroke="#888" stroke-width="1.5" marker-end="url(#hw5a)"/>
+                <line x1="190" y1="112" x2="190" y2="130" stroke="#888" stroke-width="1.5" marker-end="url(#hw5a)"/>
+                <line x1="190" y1="168" x2="190" y2="186" stroke="#888" stroke-width="1.5" marker-end="url(#hw5a)"/>
+                <!-- accuracy label -->
+                <text x="190" y="246" text-anchor="middle" fill="#fa5" font-size="10">Combined: 77.8% accuracy</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 15. LLM replaces if/else rules -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>LLM as Reasoning Layer vs Rule Engine</h4>
+            <ul class="alpha-list">
+                <li>Old approach: hard-coded if/else for every alert condition</li>
+                <li>New approach: LLM interprets enriched context dynamically</li>
+                <li>No need to enumerate every edge case manually</li>
+                <li>New room or anomaly type → add docs to KB, not new rules</li>
+            </ul>
+            <p class="muted tiny">Students noted: KB is extensible — one team can add domain docs without rewriting reasoning logic.</p>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 240" style="width:100%;max-width:380px;">
+                <rect x="20"  y="20" width="155" height="200" rx="12" fill="none" stroke="#555"    stroke-width="1.5"/>
+                <rect x="205" y="20" width="155" height="200" rx="12" fill="none" stroke="#98c379" stroke-width="1.5"/>
+                <text x="98"  y="46" text-anchor="middle" fill="#666"    font-size="11">Rule Engine</text>
+                <text x="283" y="46" text-anchor="middle" fill="#98c379" font-size="11">LLM + RAG</text>
+                <line x1="40"  y1="56" x2="160" y2="56" stroke="#444" stroke-width="1"/>
+                <line x1="225" y1="56" x2="345" y2="56" stroke="#3a5a30" stroke-width="1"/>
+                <text x="35"  y="76"  fill="#666" font-size="9">if lux &lt; 50: alert</text>
+                <text x="35"  y="96"  fill="#666" font-size="9">if lux &gt; 800: alert</text>
+                <text x="35"  y="116" fill="#666" font-size="9">if drop &gt; 200: alert</text>
+                <text x="35"  y="136" fill="#666" font-size="9">if night and lux&gt;0:</text>
+                <text x="35"  y="150" fill="#666" font-size="9">  ...</text>
+                <text x="35"  y="176" fill="#a55" font-size="9">Every case = new rule</text>
+                <text x="35"  y="196" fill="#a55" font-size="9">Brittle, hard to maintain</text>
+                <text x="220" y="76"  fill="#aaa" font-size="9">Receives enriched data</text>
+                <text x="220" y="96"  fill="#aaa" font-size="9">Retrieves domain KB</text>
+                <text x="220" y="116" fill="#aaa" font-size="9">Reasons step by step</text>
+                <text x="220" y="136" fill="#aaa" font-size="9">Explains its conclusion</text>
+                <text x="220" y="176" fill="#5a5" font-size="9">New case = add doc to KB</text>
+                <text x="220" y="196" font-size="9" fill="#5a5">Flexible, explainable</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 16. Dashboard: before vs after LLM -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>What Changes on the Dashboard</h4>
+            <ul class="alpha-list">
+                <li><strong>Before:</strong> a number — "250"</li>
+                <li><strong>After:</strong> an explanation — "720 lux is too high for living room during daytime (expected 0–300)"</li>
+                <li>ANALYSIS section: step-by-step reasoning trace</li>
+                <li>ANSWER section: final recommendation with action</li>
+                <li>Facility managers can verify or challenge the AI's reasoning</li>
+            </ul>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 250" style="width:100%;max-width:380px;">
+                <rect x="20" y="20" width="340" height="210" rx="12" fill="#1a1a1a" stroke="#555" stroke-width="1.5"/>
+                <text x="190" y="42" text-anchor="middle" fill="#ddd" font-size="11">Dashboard — LLM Output</text>
+                <line x1="40" y1="52" x2="340" y2="52" stroke="#333" stroke-width="1"/>
+                <!-- sensor value -->
+                <text x="40" y="72" fill="#666" font-size="9">Room C — 11:03 PM — 600 lux</text>
+                <line x1="40" y1="82" x2="340" y2="82" stroke="#222" stroke-width="1"/>
+                <!-- analysis -->
+                <text x="40" y="100" fill="#569cd6" font-size="9" font-weight="bold">ANALYSIS</text>
+                <text x="40" y="116" fill="#aaa" font-size="8">Step 1: Only Room C elevated — building-wide issue ruled out</text>
+                <text x="40" y="130" fill="#aaa" font-size="8">Step 2: Schedule shows unoccupied — lights should be off</text>
+                <text x="40" y="144" fill="#aaa" font-size="8">Step 3: Cross-ref KB — matches "lights left on" pattern</text>
+                <line x1="40" y1="154" x2="340" y2="154" stroke="#222" stroke-width="1"/>
+                <!-- answer -->
+                <text x="40" y="172" fill="#fa5" font-size="9" font-weight="bold">ANSWER</text>
+                <text x="40" y="188" fill="#aaa" font-size="8">Lights left on in Room C. Check motion sensor and relay.</text>
+                <text x="40" y="204" fill="#aaa" font-size="8">Estimated waste: ~0.6 kWh/hr.</text>
+                <text x="40" y="220" fill="#5a5" font-size="8">Confidence: high (multiple cross-references agree)</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 17. Scalar quantization detail (Farheen) -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Dimensionality Reduction: Scalar Quantization</h4>
+            <ul class="alpha-list">
+                <li>Normalize: <code>lux / max_range</code></li>
+                <li>Quantize: <code>int((lux / 300) × 255)</code> → 8-bit integer</li>
+                <li>Before: 8 values × 4 bytes = <strong>32 bytes</strong></li>
+                <li>After: 8 values × 1 byte = <strong>8 bytes</strong> (4× compression)</li>
+                <li>Vector sent to API instead of raw floats</li>
+            </ul>
+            <p class="muted tiny">Smaller payload = faster transmission + cheaper storage. Vector space enables semantic similarity.</p>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 250" style="width:100%;max-width:380px;">
+                <text x="190" y="18" text-anchor="middle" fill="#ddd" font-size="11">Float → Int8 Scalar Quantization</text>
+                <!-- float values -->
+                <rect x="20" y="30" width="155" height="90" rx="8" fill="none" stroke="#555" stroke-width="1.5"/>
+                <text x="98" y="50"  text-anchor="middle" fill="#666" font-size="10">32-bit floats</text>
+                <text x="30" y="68"  fill="#666" font-size="9" font-family="monospace">[180.5, 182.2,</text>
+                <text x="30" y="82"  fill="#666" font-size="9" font-family="monospace"> 179.8, 185.1,</text>
+                <text x="30" y="96"  fill="#666" font-size="9" font-family="monospace"> 183.7, 181.9 ...]</text>
+                <text x="98" y="114" text-anchor="middle" fill="#a55" font-size="8">8 × 4 bytes = 32 bytes</text>
+                <!-- arrow -->
+                <line x1="175" y1="75" x2="203" y2="75" stroke="#888" stroke-width="1.5"/>
+                <path d="M 199,71 L 207,75 L 199,79" fill="#888"/>
+                <text x="190" y="67" text-anchor="middle" fill="#569cd6" font-size="8">÷300 × 255</text>
+                <text x="190" y="86" text-anchor="middle" fill="#569cd6" font-size="8">→ int()</text>
+                <!-- int8 values -->
+                <rect x="205" y="30" width="155" height="90" rx="8" fill="none" stroke="#98c379" stroke-width="1.5"/>
+                <text x="283" y="50"  text-anchor="middle" fill="#98c379" font-size="10">8-bit integers</text>
+                <text x="215" y="68"  fill="#aaa" font-size="9" font-family="monospace">[153, 154, 152,</text>
+                <text x="215" y="82"  fill="#aaa" font-size="9" font-family="monospace"> 157, 156, 154,</text>
+                <text x="215" y="96"  fill="#aaa" font-size="9" font-family="monospace"> 154, 153]</text>
+                <text x="283" y="114" text-anchor="middle" fill="#5a5" font-size="8">8 × 1 byte = 8 bytes</text>
+                <!-- payload box -->
+                <rect x="20" y="150" width="340" height="80" rx="8" fill="#222" stroke="#333" stroke-width="1"/>
+                <text x="40" y="168" fill="#569cd6" font-size="9" font-family="monospace">API payload (compressed):</text>
+                <text x="40" y="184" fill="#9cdcfe" font-size="9" font-family="monospace">&#123; "room": "A",</text>
+                <text x="40" y="200" fill="#9cdcfe" font-size="9" font-family="monospace">  "lux_embedding": [153,154,152,157...] &#125;</text>
+                <text x="355" y="225" text-anchor="end" fill="#5a5" font-size="8">4× smaller</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 18. Per-sensor normalization (Haad's point) -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Per-Sensor Context Matters</h4>
+            <ul class="alpha-list">
+                <li>Sensor 2 near window: 10,000–15,000 lux in sunlight</li>
+                <li>Dashboard cap at 800 lux flattened the display</li>
+                <li>Raw data was correct; the display made it look wrong</li>
+                <li>LLM summary: "Sensor 2, near window, current 12,400 lux, dashboard likely clipping"</li>
+                <li>Distinguishes sensor fault from display artifact</li>
+            </ul>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 250" style="width:100%;max-width:380px;">
+                <text x="190" y="18" text-anchor="middle" fill="#ddd" font-size="11">Dashboard cap vs actual reading</text>
+                <!-- axes -->
+                <line x1="40" y1="200" x2="340" y2="200" stroke="#444" stroke-width="1.5"/>
+                <line x1="40" y1="40"  x2="40"  y2="200" stroke="#444" stroke-width="1.5"/>
+                <!-- cap line -->
+                <line x1="40" y1="80" x2="340" y2="80" stroke="#a55" stroke-width="1.5" stroke-dasharray="5,3"/>
+                <text x="345" y="84" fill="#a55" font-size="8">cap: 800 lux</text>
+                <!-- actual data (high, clipped) -->
+                <polyline points="40,80 80,80 120,80 160,80 200,80 240,80 280,80 320,80"
+                          fill="none" stroke="#a55" stroke-width="2" opacity="0.5"/>
+                <!-- actual line (real) -->
+                <polyline points="40,55 80,52 120,50 160,53 200,51 240,54 280,52 320,53"
+                          fill="none" stroke="#98c379" stroke-width="2"/>
+                <!-- labels -->
+                <text x="345" y="52" fill="#98c379" font-size="8">actual: ~12,400</text>
+                <text x="40"  y="38" fill="#aaa"    font-size="8">lux</text>
+                <!-- annotation -->
+                <rect x="80" y="115" width="220" height="52" rx="8" fill="none" stroke="#569cd6" stroke-width="1"/>
+                <text x="190" y="133" text-anchor="middle" fill="#569cd6" font-size="9">LLM-generated summary:</text>
+                <text x="190" y="149" text-anchor="middle" fill="#aaa" font-size="8">"Sensor 2, near window, 12,400 lux —</text>
+                <text x="190" y="161" text-anchor="middle" fill="#aaa" font-size="8">dashboard likely clipping high-range values"</text>
+                <text x="190" y="192" text-anchor="middle" fill="#555" font-size="8">Correct diagnosis vs "sensor looks wrong"</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 19. Review: valid answers -->
+<section>
+    <div class="split">
+        <div class="left">
+            <h4>Review — Valid Answers from Students</h4>
+            <ul class="alpha-list">
+                <li>Why can't an LLM reason over raw lux floats?</li>
+                <li>What two things does preprocessing add?</li>
+                <li>Why retrieve n=5 but only inject m=2 into the prompt?</li>
+                <li>What is the role of a "demo Q&amp;A pair" in the knowledge base?</li>
+                <li>Why show ANALYSIS + ANSWER on the dashboard?</li>
+            </ul>
+        </div>
+        <div class="right">
+            <svg viewBox="0 0 380 260" style="width:100%;max-width:380px;">
+                <text x="190" y="20" text-anchor="middle" fill="#ddd" font-size="12">Valid answer space</text>
+                <rect x="20" y="30" width="340" height="220" rx="12" fill="none" stroke="#555" stroke-width="1.5"/>
+                <line x1="40" y1="54" x2="340" y2="54" stroke="#333" stroke-width="1"/>
+                <text x="50"  y="46" fill="#888" font-size="9">Question</text>
+                <text x="210" y="46" fill="#888" font-size="9">Valid directions</text>
+                <text x="50"  y="74"  fill="#aaa" font-size="8">Raw float problem</text>
+                <text x="210" y="74"  fill="#aaa" font-size="8">no context / trained on language</text>
+                <text x="50"  y="96"  fill="#aaa" font-size="8">Preprocessing adds</text>
+                <text x="210" y="96"  fill="#aaa" font-size="8">statistics + metadata</text>
+                <text x="50"  y="118" fill="#aaa" font-size="8">n=5, keep m=2</text>
+                <text x="210" y="118" fill="#aaa" font-size="8">filter noise / focused context</text>
+                <text x="50"  y="140" fill="#aaa" font-size="8">Demo Q&amp;A role</text>
+                <text x="210" y="140" fill="#aaa" font-size="8">few-shot example for reasoning</text>
+                <text x="50"  y="162" fill="#aaa" font-size="8">ANALYSIS + ANSWER</text>
+                <text x="210" y="162" fill="#aaa" font-size="8">transparent / verifiable reasoning</text>
+                <line x1="40" y1="176" x2="340" y2="176" stroke="#333" stroke-width="1" stroke-dasharray="3"/>
+                <text x="190" y="196" text-anchor="middle" fill="#555" font-size="9">each question has a cluster of valid phrasings</text>
+                <text x="190" y="214" text-anchor="middle" fill="#555" font-size="9">look for the core concept, not exact wording</text>
+                <text x="190" y="238" text-anchor="middle" fill="#fa5" font-size="9">bonus: citing specific accuracy numbers from the paper</text>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<!-- 20. Takeaway -->
+<section>
+    <h4>Takeaway — IoT + LLM Design Principles</h4>
+    <svg viewBox="0 0 900 300" style="width:100%;max-width:900px;">
+        <rect x="50" y="40" width="800" height="210" rx="18" fill="none" stroke="#555" stroke-width="2"/>
+        <!-- three columns -->
+        <line x1="320" y1="60" x2="320" y2="230" stroke="#333" stroke-width="1"/>
+        <line x1="590" y1="60" x2="590" y2="230" stroke="#333" stroke-width="1"/>
+        <!-- headers -->
+        <text x="185" y="75" text-anchor="middle" fill="#569cd6" font-size="13">Preprocess</text>
+        <text x="455" y="75" text-anchor="middle" fill="#98c379" font-size="13">RAG</text>
+        <text x="725" y="75" text-anchor="middle" fill="#c678dd" font-size="13">Chain-of-Thought</text>
+        <!-- body -->
+        <text x="185" y="105" text-anchor="middle" fill="#aaa" font-size="11">raw → statistics</text>
+        <text x="185" y="125" text-anchor="middle" fill="#aaa" font-size="11">+ metadata</text>
+        <text x="185" y="155" text-anchor="middle" fill="#666" font-size="10">37.3% → 43.3%</text>
+        <text x="455" y="105" text-anchor="middle" fill="#aaa" font-size="11">retrieve domain docs</text>
+        <text x="455" y="125" text-anchor="middle" fill="#aaa" font-size="11">re-rank to top m</text>
+        <text x="455" y="155" text-anchor="middle" fill="#666" font-size="10">43.3% → 66.7%</text>
+        <text x="725" y="105" text-anchor="middle" fill="#aaa" font-size="11">role + step-by-step</text>
+        <text x="725" y="125" text-anchor="middle" fill="#aaa" font-size="11">analysis before answer</text>
+        <text x="725" y="155" text-anchor="middle" fill="#666" font-size="10">66.7% → 77.8%</text>
+        <!-- footer -->
+        <line x1="70" y1="175" x2="830" y2="175" stroke="#333" stroke-width="1"/>
+        <text x="450" y="198" text-anchor="middle" fill="#ddd" font-size="12">
+            Numbers alone are not data. Context + retrieval + reasoning = interpretable AI.
+        </text>
+        <text x="450" y="224" text-anchor="middle" fill="#555" font-size="10">
+            Each technique adds independently. The full stack achieves expert-level diagnosis.
+        </text>
+    </svg>
+</section>
