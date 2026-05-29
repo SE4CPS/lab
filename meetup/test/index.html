@@ -1,0 +1,1413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Prompt-Based Testing · Mobile Web Apps</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧪</text></svg>">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css"/>
+
+<style>
+:root {
+  --green: #86efac; --blue: #93c5fd; --amber: #fcd34d;
+  --red: #f87171; --purple: #d8b4fe; --dim: #444; --bg: #0d0d0d;
+}
+.reveal { background: var(--bg); }
+.reveal .slides section { text-align: left; padding: 0 28px; box-sizing: border-box; }
+.reveal .slides section:not(.title-section) { height: 100% !important; padding-bottom: 1.8em; }
+.reveal .slides section.title-section { padding: 0; height: 100% !important; }
+.reveal .slides section.title-section .title-sl { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; text-align: center; display: flex; flex-direction: column; align-items: center; }
+
+.reveal h1 { font-size: 1.6em; color: var(--green); font-weight: 700; margin: 0 0 .2em; }
+.reveal h2 { font-size: .95em; color: var(--green); border-bottom: 1px solid #1a2f1a;
+             padding-bottom: .12em; margin: 0 0 .28em; }
+.reveal h3 { font-size: .65em; color: var(--amber); margin: 0 0 .1em;
+             text-transform: uppercase; letter-spacing: .06em; }
+.reveal p  { font-size: .62em; color: #ccc; line-height: 1.4; margin: .04em 0; }
+.reveal li { font-size: .62em; color: #ccc; line-height: 1.45; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.reveal strong { color: #fff; }
+.reveal em { color: var(--amber); font-style: normal; }
+.reveal code { font-family: 'Courier New', monospace; font-size: .84em;
+               background: #1a1a1a; padding: 1px 4px; border-radius: 3px; }
+
+.reveal pre { width: 100%; margin: .14em 0; box-shadow: none;
+              border: 1px solid #1e2e1e; border-radius: 5px; }
+.reveal pre code { font-size: .55em; line-height: 1.38; padding: 7px 9px;
+                   overflow: visible; max-height: none; border-radius: 5px;
+                   display: block; white-space: pre; }
+.reveal ul  { margin: 0; padding-left: 1em; }
+.reveal ul li { margin-bottom: .04em; }
+.reveal ol  { margin: 0; padding-left: 1.1em; }
+
+/* two-column layout */
+.two-col { display: grid; grid-template-columns: 48% 50%; gap: 2%;
+           align-items: start; }
+.col { min-width: 0; }
+
+/* right column: flex column so example box sticks to bottom */
+.col-r { display: flex; flex-direction: column; min-width: 0; }
+.col-r .diagram { flex: 1 1 auto; }
+.col-r .diagram svg { width: 100%; height: auto; display: block; }
+
+/* example box - pinned to slide bottom, full width */
+.ex-box { position: absolute; bottom: 0; left: 0; right: 0; margin: 0;
+          background: #0a100a; border-top: 1px solid #1a3020; border-radius: 0;
+          padding: .22em .7em; box-sizing: border-box; }
+.ex-box .ex-label { font-size: .55em; font-family: monospace; color: var(--dim);
+                    text-transform: uppercase; letter-spacing: .05em; }
+.ex-box code { font-size: .57em; color: #86efac; background: none; padding: 0; }
+
+/* tags */
+.tag { display: inline-block; padding: 1px 6px; border-radius: 3px;
+       font-size: .52em; font-family: monospace; font-weight: 700;
+       text-transform: uppercase; letter-spacing: .05em; vertical-align: middle; }
+.tu { background:#14532d; color:var(--green);  border:1px solid #166534; }
+.tc { background:#1e3a5f; color:var(--blue);   border:1px solid #1d4ed8; }
+.ti { background:#3b1f00; color:var(--amber);  border:1px solid #92400e; }
+.ts { background:#3b0f0f; color:var(--red);    border:1px solid #991b1b; }
+.ta { background:#2d1b4e; color:var(--purple); border:1px solid #6d28d9; }
+
+/* title slide */
+.title-sl { display:flex; flex-direction:column; align-items:center;
+            justify-content:center; text-align:center !important; height:100%; }
+.title-sl h1  { font-size:1.9em; }
+.title-sl .sub  { font-size:.72em; color:#666; margin:.25em 0 .8em; }
+.title-sl .meta { font-size:.55em; color:#333; font-family:monospace; }
+
+/* check / cross */
+.reveal ul.ck li::marker { content:"+ "; color:var(--green); }
+.reveal ul.xx li::marker { content:"x "; color:var(--red); }
+
+/* box */
+.box { background:#111; border:1px solid #222; border-radius:5px;
+       padding:.22em .5em; margin:.15em 0; }
+.bx-g { border-color:#166534; }
+.bx-b { border-color:#1d4ed8; }
+.bx-a { border-color:#92400e; }
+.bx-p { border-color:#6d28d9; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+<section>
+
+<!-- ══════════════════════════════════════════════════════
+     1. TITLE
+══════════════════════════════════════════════════════ -->
+<section class="title-section">
+<div class="title-sl">
+  <h1>Prompt-Based Testing</h1>
+  <div class="sub">Mobile Web Apps · V-Model · Agents · Feedback Loops</div>
+
+  <!-- Human → Prompt → Agent diagram -->
+  <svg viewBox="0 0 560 110" xmlns="http://www.w3.org/2000/svg" style="width:620px;max-width:90%;margin:.6em auto 0">
+    <!-- Human -->
+    <circle cx="60" cy="28" r="14" fill="none" stroke="#93c5fd" stroke-width="2"/>
+    <text x="60" y="33" fill="#93c5fd" font-size="14" font-family="sans-serif" text-anchor="middle">👤</text>
+    <line x1="60" y1="42" x2="60" y2="68" stroke="#93c5fd" stroke-width="2"/>
+    <line x1="60" y1="52" x2="44" y2="64" stroke="#93c5fd" stroke-width="2"/>
+    <line x1="60" y1="52" x2="76" y2="64" stroke="#93c5fd" stroke-width="2"/>
+    <line x1="60" y1="68" x2="48" y2="86" stroke="#93c5fd" stroke-width="2"/>
+    <line x1="60" y1="68" x2="72" y2="86" stroke="#93c5fd" stroke-width="2"/>
+    <text x="60" y="100" fill="#93c5fd" font-size="9" font-family="monospace" text-anchor="middle">Human</text>
+
+    <!-- Arrow Human → Prompt -->
+    <line x1="82" y1="50" x2="152" y2="50" stroke="#555" stroke-width="1.5"/>
+    <polygon points="152,46 162,50 152,54" fill="#555"/>
+    <text x="122" y="44" fill="#444" font-size="8" font-family="monospace" text-anchor="middle">writes</text>
+
+    <!-- Prompt box (center) -->
+    <rect x="164" y="28" width="192" height="44" rx="6" fill="#1c1430" stroke="#6d28d9" stroke-width="2"/>
+    <text x="260" y="46" fill="#d8b4fe" font-size="11" font-family="monospace" text-anchor="middle" font-weight="bold">Prompt</text>
+    <text x="260" y="62" fill="#666"   font-size="8"  font-family="monospace" text-anchor="middle">context · task · format · agents.md</text>
+    <text x="260" y="100" fill="#6d28d9" font-size="9" font-family="monospace" text-anchor="middle">spec-first · versioned · reusable</text>
+
+    <!-- Arrow Prompt → Agent -->
+    <line x1="358" y1="50" x2="428" y2="50" stroke="#555" stroke-width="1.5"/>
+    <polygon points="428,46 438,50 428,54" fill="#555"/>
+    <text x="398" y="44" fill="#444" font-size="8" font-family="monospace" text-anchor="middle">runs</text>
+
+    <!-- Agent -->
+    <rect x="440" y="28" width="68" height="44" rx="6" fill="#2d1b4e" stroke="#6d28d9" stroke-width="2"/>
+    <text x="474" y="46" fill="#d8b4fe" font-size="13" font-family="monospace" text-anchor="middle">🤖</text>
+    <text x="474" y="62" fill="#d8b4fe" font-size="8"  font-family="monospace" text-anchor="middle">Agent</text>
+    <text x="474" y="100" fill="#6d28d9" font-size="9" font-family="monospace" text-anchor="middle">generates · runs · learns</text>
+  </svg>
+
+  <p style="color:#555;font-size:.62em;margin-top:.5em">
+    <span class="tag tu">Unit</span>
+    <span class="tag tc">Component</span>
+    <span class="tag ti">Integration</span>
+    <span class="tag ts">System</span>
+    <span class="tag ta">Agents</span>
+  </p>
+  <div class="meta">Mobile Web Meetup · 2026</div>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     2. WHAT IS A PROMPT
+══════════════════════════════════════════════════════ -->
+<section>
+<h2>What Is a Prompt?</h2>
+<div class="two-col">
+  <div class="col">
+    <h3>A prompt structured input for LLMs</h3>
+    <ul>
+      <li><em>System</em> - who the model is, its rules and constraints</li>
+      <li><em>Context</em> - the situation: platform, screen, state</li>
+      <li><em>Task</em> - what to do: write, test, fix, explain</li>
+      <li><em>Format</em> - how to respond: framework, style, length</li>
+    </ul>
+    <p style="margin-top:.35em">A well-structured prompt is <strong>deterministic input</strong> - same structure, same quality output.</p>
+    <div class="box bx-b" style="margin-top:.3em">
+      <p style="font-size:.58em;color:#93c5fd">Unlike a chat message, a prompt is <strong>versioned</strong>, <strong>reusable</strong>, and parameterised with context</p>
+    </div>
+  </div>
+  <div class="col-r">
+    <h3>Example</h3>
+    <pre><code class="language-markdown"># SYSTEM
+You are a senior mobile QA engineer.
+Assert behaviour only - no speculation.
+
+# CONTEXT
+App: Shop Screen: LoginForm
+Platform: iOS Safari  Viewport: 390px
+
+# TASK
+Write component tests for the login form.
+Cover: empty submit, invalid email, success.
+
+# FORMAT
+Vitest + RTL · one describe block
+fireEvent.touchEnd not click
+Fail loudly with clear messages.</code></pre>
+  </div>
+</div>
+<div class="ex-box"><span class="ex-label">Key insight: </span><code>the prompt is the spec - write it before asking the agent to generate anything</code></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     2b. PAST vs NOW
+══════════════════════════════════════════════════════ -->
+<section>
+<h2>Testing: Past vs Now</h2>
+<div class="two-col">
+  <div class="col">
+    <h3>Before</h3>
+    <svg viewBox="0 0 260 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+      <defs><marker id="bef" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0,0 L0,5 L5,2.5 Z" fill="#92400e"/></marker></defs>
+      <rect x="60" y="8"  width="140" height="22" rx="4" fill="#1a1208" stroke="#92400e" stroke-width="1.2"/>
+      <text x="130" y="22" fill="#fcd34d" font-size="8.5" font-family="monospace" text-anchor="middle">Write test by hand</text>
+      <line x1="130" y1="30" x2="130" y2="44" stroke="#92400e" stroke-width="1.2" marker-end="url(#bef)"/>
+      <rect x="60" y="46" width="140" height="22" rx="4" fill="#1a1208" stroke="#92400e" stroke-width="1.2"/>
+      <text x="130" y="60" fill="#fcd34d" font-size="8.5" font-family="monospace" text-anchor="middle">Run - read failure</text>
+      <line x1="130" y1="68" x2="130" y2="82" stroke="#92400e" stroke-width="1.2" marker-end="url(#bef)"/>
+      <rect x="60" y="84" width="140" height="22" rx="4" fill="#1a1208" stroke="#92400e" stroke-width="1.2"/>
+      <text x="130" y="98" fill="#fcd34d" font-size="8.5" font-family="monospace" text-anchor="middle">Fix manually</text>
+      <line x1="130" y1="106" x2="130" y2="120" stroke="#92400e" stroke-width="1.2" marker-end="url(#bef)"/>
+      <rect x="60" y="122" width="140" height="22" rx="4" fill="#1a1208" stroke="#92400e" stroke-width="1.2"/>
+      <text x="130" y="136" fill="#fcd34d" font-size="8.5" font-family="monospace" text-anchor="middle">Context lost - repeat</text>
+      <text x="130" y="165" fill="#555" font-size="7.5" font-family="monospace" text-anchor="middle">no memory - no consistency</text>
+    </svg>
+  </div>
+  <div class="col-r">
+    <h3>Now - like TDD with agents.md first</h3>
+    <svg viewBox="0 0 260 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">
+      <defs><marker id="now" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0,0 L0,5 L5,2.5 Z" fill="#166534"/></marker></defs>
+      <rect x="50" y="8"  width="160" height="22" rx="4" fill="#1c1430" stroke="#6d28d9" stroke-width="1.5"/>
+      <text x="130" y="22" fill="#d8b4fe" font-size="8.5" font-family="monospace" text-anchor="middle">Write agents.md first</text>
+      <line x1="130" y1="30" x2="130" y2="44" stroke="#166534" stroke-width="1.5" marker-end="url(#now)"/>
+      <rect x="50" y="46" width="160" height="22" rx="4" fill="#0f172a" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="130" y="60" fill="#93c5fd" font-size="8.5" font-family="monospace" text-anchor="middle">Prompt references agents.md</text>
+      <line x1="130" y1="68" x2="130" y2="82" stroke="#166534" stroke-width="1.5" marker-end="url(#now)"/>
+      <rect x="50" y="84" width="160" height="22" rx="4" fill="#2d1b4e" stroke="#6d28d9" stroke-width="1.5"/>
+      <text x="130" y="98" fill="#d8b4fe" font-size="8.5" font-family="monospace" text-anchor="middle">Agent generates + runs</text>
+      <line x1="130" y1="106" x2="130" y2="120" stroke="#166534" stroke-width="1.5" marker-end="url(#now)"/>
+      <rect x="50" y="122" width="160" height="22" rx="4" fill="#0a1a0a" stroke="#166534" stroke-width="1.5"/>
+      <text x="130" y="136" fill="#86efac" font-size="8.5" font-family="monospace" text-anchor="middle">Fail - §12 grows - retry</text>
+      <text x="130" y="165" fill="#86efac" font-size="7.5" font-family="monospace" text-anchor="middle">memory persists - consistent - spec-first</text>
+    </svg>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     2d. WHAT IS AN AGENT
+══════════════════════════════════════════════════════ -->
+<section>
+<h2>What Is an Agent?</h2>
+<div class="two-col">
+  <div class="col">
+    <h3>An agent is a loop</h3>
+    <ul>
+      <li><em>Think</em> - <strong>LLM</strong> reads context, goal, memory</li>
+      <li><em>Plan</em> - <strong>LLM</strong> selects and sequences steps</li>
+      <li><em>Act</em> - tools execute: write, run, read, search</li>
+      <li><em>Observe</em> - tool output fed back into LLM context</li>
+      <li><em>Learn</em> - <strong>LLM</strong> synthesises result, updates memory</li>
+    </ul>
+    <p style="margin-top:.35em">Not a single call - a <strong>running loop</strong> that stops when the goal is met or it gives up.</p>
+    <div class="box bx-p" style="margin-top:.3em">
+      <p style="font-size:.58em;color:#d8b4fe"><strong>LLM</strong> reasons at Think · Plan · Learn &nbsp;·&nbsp; <strong>Tools</strong> execute at Act · Observe</p>
+    </div>
+  </div>
+  <div class="col-r">
+    <div class="diagram">
+    <svg viewBox="0 0 300 218" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="ag1" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+          <path d="M0,0 L0,5 L5,2.5 Z" fill="#6d28d9"/>
+        </marker>
+        <marker id="ag2" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+          <path d="M0,0 L0,5 L5,2.5 Z" fill="#3b82f6"/>
+        </marker>
+        <marker id="ag3" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+          <path d="M0,0 L0,5 L5,2.5 Z" fill="#22c55e"/>
+        </marker>
+        <marker id="ag4" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+          <path d="M0,0 L0,5 L5,2.5 Z" fill="#d97706"/>
+        </marker>
+        <marker id="ag5" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+          <path d="M0,0 L0,5 L5,2.5 Z" fill="#a855f7"/>
+        </marker>
+      </defs>
+      <!-- THINK -->
+      <rect x="100" y="8" width="100" height="26" rx="5" fill="#2d1b4e" stroke="#6d28d9" stroke-width="1.8"/>
+      <text x="150" y="18" fill="#d8b4fe" font-size="9" font-family="monospace" text-anchor="middle" font-weight="bold">THINK</text>
+      <text x="150" y="29" fill="#8b7ca8" font-size="7.5" font-family="monospace" text-anchor="middle">LLM · reads context + goal</text>
+      <!-- THINK -> PLAN -->
+      <line x1="150" y1="34" x2="150" y2="50" stroke="#6d28d9" stroke-width="1.5" marker-end="url(#ag1)"/>
+      <!-- PLAN -->
+      <rect x="100" y="52" width="100" height="26" rx="5" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1.8"/>
+      <text x="150" y="62" fill="#93c5fd" font-size="9" font-family="monospace" text-anchor="middle" font-weight="bold">PLAN</text>
+      <text x="150" y="73" fill="#5b7fa8" font-size="7.5" font-family="monospace" text-anchor="middle">LLM · selects next step</text>
+      <!-- PLAN -> ACT -->
+      <line x1="150" y1="78" x2="150" y2="94" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ag2)"/>
+      <!-- ACT -->
+      <rect x="100" y="96" width="100" height="26" rx="5" fill="#14532d" stroke="#22c55e" stroke-width="1.8"/>
+      <text x="150" y="106" fill="#86efac" font-size="9" font-family="monospace" text-anchor="middle" font-weight="bold">ACT</text>
+      <text x="150" y="117" fill="#4d8a6a" font-size="7.5" font-family="monospace" text-anchor="middle">tools only · no LLM call</text>
+      <!-- ACT -> OBSERVE -->
+      <line x1="150" y1="122" x2="150" y2="138" stroke="#22c55e" stroke-width="1.5" marker-end="url(#ag3)"/>
+      <!-- OBSERVE -->
+      <rect x="100" y="140" width="100" height="26" rx="5" fill="#3b1f00" stroke="#d97706" stroke-width="1.8"/>
+      <text x="150" y="150" fill="#fcd34d" font-size="9" font-family="monospace" text-anchor="middle" font-weight="bold">OBSERVE</text>
+      <text x="150" y="161" fill="#8a6a2e" font-size="7.5" font-family="monospace" text-anchor="middle">output → back to LLM</text>
+      <!-- OBSERVE -> LEARN -->
+      <line x1="150" y1="166" x2="150" y2="182" stroke="#d97706" stroke-width="1.5" marker-end="url(#ag4)"/>
+      <!-- LEARN -->
+      <rect x="100" y="184" width="100" height="28" rx="5" fill="#2d1b4e" stroke="#a855f7" stroke-width="1.8"/>
+      <text x="150" y="196" fill="#e9d5ff" font-size="9" font-family="monospace" text-anchor="middle" font-weight="bold">LEARN</text>
+      <text x="150" y="207" fill="#9f7aca" font-size="7.5" font-family="monospace" text-anchor="middle">LLM · updates memory</text>
+      <!-- right side: loop arrow -->
+      <line x1="200" y1="109" x2="222" y2="109" stroke="#6d28d9" stroke-width="1.2"/>
+      <line x1="222" y1="109" x2="222" y2="198" stroke="#6d28d9" stroke-width="1.2"/>
+      <line x1="222" y1="198" x2="200" y2="198" stroke="#6d28d9" stroke-width="1.2" marker-end="url(#ag1)"/>
+      <text x="232" y="157" fill="#555" font-size="7" font-family="monospace" text-anchor="middle" transform="rotate(90,232,157)">loop until done</text>
+      <!-- left side: LEARN back to THINK -->
+      <line x1="100" y1="198" x2="78" y2="198" stroke="#a855f7" stroke-width="1.2"/>
+      <line x1="78"  y1="198" x2="78"  y2="21"  stroke="#a855f7" stroke-width="1.2"/>
+      <line x1="78"  y1="21"  x2="100" y2="21"  stroke="#a855f7" stroke-width="1.2" marker-end="url(#ag5)"/>
+      <text x="68" y="120" fill="#555" font-size="7" font-family="monospace" text-anchor="middle" transform="rotate(-90,68,120)">update memory</text>
+      <!-- legend -->
+      <rect x="242" y="6" width="56" height="48" rx="3" fill="#0d0d0d" stroke="#333" stroke-width="1"/>
+      <rect x="247" y="12" width="7" height="7" rx="1" fill="#2d1b4e" stroke="#6d28d9" stroke-width="1"/>
+      <text x="258" y="19" fill="#d8b4fe" font-size="7" font-family="monospace">LLM</text>
+      <text x="247" y="30" fill="#555" font-size="6" font-family="monospace">Think·Plan·Learn</text>
+      <rect x="247" y="35" width="7" height="7" rx="1" fill="#14532d" stroke="#22c55e" stroke-width="1"/>
+      <text x="258" y="42" fill="#86efac" font-size="7" font-family="monospace">tools</text>
+      <text x="247" y="52" fill="#555" font-size="6" font-family="monospace">Act·Observe</text>
+    </svg>
+    </div>
+  </div>
+</div>
+<div class="ex-box"><span class="ex-label">In testing: </span><code>Think: read agents.md · Plan: list test cases · Act: write + run · Observe: failure · Learn: update §12</code></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     2e. MORE CODE = MORE TESTING
+══════════════════════════════════════════════════════ -->
+<section>
+<h2>More Generated Code - More Testing Matters</h2>
+<div class="two-col">
+  <div class="col">
+    <h3>Why confidence shrinks as output grows</h3>
+    <ul>
+      <li>Each LLM call adds code you did not write</li>
+      <li>Agent loops stack changes across many files</li>
+      <li>Unverified output compounds - bugs hide deeper</li>
+      <li>No tests = no signal when generation drifts</li>
+      <li>Tests are the only objective measure of agent output</li>
+    </ul>
+    <div class="box bx-a" style="margin-top:.35em">
+      <p style="font-size:.58em;color:#fcd34d">The faster code is generated, the faster bad code is generated - tests are the speed limit</p>
+    </div>
+  </div>
+  <div class="col-r">
+    <div class="diagram">
+    <svg viewBox="0 0 320 210" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="mc1" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+          <path d="M0,0 L0,5 L5,2.5 Z" fill="#374151"/>
+        </marker>
+        <marker id="mc2" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+          <path d="M0,0 L0,5 L5,2.5 Z" fill="#22c55e"/>
+        </marker>
+        <marker id="mc3" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+          <path d="M0,0 L0,5 L5,2.5 Z" fill="#ef4444"/>
+        </marker>
+      </defs>
+      <!-- axes -->
+      <line x1="36" y1="16" x2="36" y2="168" stroke="#374151" stroke-width="1.5" marker-end="url(#mc1)"/>
+      <line x1="36" y1="168" x2="300" y2="168" stroke="#374151" stroke-width="1.5" marker-end="url(#mc1)"/>
+      <text x="28" y="92" fill="#555" font-size="7.5" font-family="monospace" text-anchor="middle" transform="rotate(-90,28,92)">confidence / risk</text>
+      <text x="168" y="182" fill="#555" font-size="7.5" font-family="monospace" text-anchor="middle">lines of generated code →</text>
+
+      <!-- WITHOUT TESTS: confidence drops (red curve) -->
+      <!-- points: (36,50) (90,70) (150,105) (210,135) (270,160) -->
+      <polyline points="36,50 90,72 150,108 210,140 270,162"
+                fill="none" stroke="#ef4444" stroke-width="2" stroke-dasharray="5,3"/>
+      <text x="274" y="160" fill="#f87171" font-size="7.5" font-family="monospace">no tests</text>
+      <text x="274" y="170" fill="#555" font-size="6.5" font-family="monospace">confidence ↓</text>
+
+      <!-- WITH TESTS: confidence stays high (green curve) -->
+      <!-- points: (36,50) (90,55) (150,58) (210,60) (270,62) -->
+      <polyline points="36,50 90,54 150,57 210,59 270,61"
+                fill="none" stroke="#22c55e" stroke-width="2"/>
+      <text x="274" y="59" fill="#86efac" font-size="7.5" font-family="monospace">with tests</text>
+      <text x="274" y="69" fill="#555" font-size="6.5" font-family="monospace">confidence ↑</text>
+
+      <!-- risk zone shading between curves -->
+      <polygon points="36,50 90,54 150,57 210,59 270,61 270,162 210,140 150,108 90,72 36,50"
+               fill="#ef444410" stroke="none"/>
+
+      <!-- axis labels -->
+      <text x="32" y="53" fill="#555" font-size="6.5" font-family="monospace" text-anchor="end">high</text>
+      <text x="32" y="164" fill="#555" font-size="6.5" font-family="monospace" text-anchor="end">low</text>
+      <text x="39" y="178" fill="#555" font-size="6.5" font-family="monospace">0</text>
+
+      <!-- annotations: agent milestones on x axis -->
+      <line x1="90" y1="162" x2="90" y2="168" stroke="#444" stroke-width="1"/>
+      <text x="90" y="178" fill="#555" font-size="6.5" font-family="monospace" text-anchor="middle">1 agent</text>
+      <text x="90" y="186" fill="#555" font-size="6" font-family="monospace" text-anchor="middle">loop</text>
+      <line x1="150" y1="162" x2="150" y2="168" stroke="#444" stroke-width="1"/>
+      <text x="150" y="178" fill="#555" font-size="6.5" font-family="monospace" text-anchor="middle">5 loops</text>
+      <line x1="210" y1="162" x2="210" y2="168" stroke="#444" stroke-width="1"/>
+      <text x="210" y="178" fill="#555" font-size="6.5" font-family="monospace" text-anchor="middle">20 loops</text>
+      <line x1="270" y1="162" x2="270" y2="168" stroke="#444" stroke-width="1"/>
+      <text x="270" y="178" fill="#555" font-size="6.5" font-family="monospace" text-anchor="middle">50 loops</text>
+
+      <!-- risk gap label -->
+      <line x1="210" y1="59" x2="210" y2="140" stroke="#ef4444" stroke-width="1" stroke-dasharray="2,2"/>
+      <text x="214" y="100" fill="#f87171" font-size="7" font-family="monospace">risk</text>
+      <text x="214" y="109" fill="#f87171" font-size="7" font-family="monospace">gap</text>
+    </svg>
+    </div>
+  </div>
+</div>
+<div class="ex-box"><span class="ex-label">Rule: </span><code>agent generates 500 lines across 3 files - without tests you have no idea if any of it works</code></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     3. V-MODEL OVERVIEW
+══════════════════════════════════════════════════════ -->
+<section>
+<h2>The V-Model and Prompt Testing</h2>
+<div class="two-col">
+  <div class="col">
+    <h3>Left - Specification</h3>
+    <ul>
+      <li>Requirements - System - Architecture - Module - Code</li>
+    </ul>
+    <h3 style="margin-top:.35em">Right - Prompt-driven tests</h3>
+    <ul>
+      <li>Each level has one prompt template</li>
+      <li>Agent generates, runs and refines</li>
+      <li>Fails feed back into agents.md</li>
+    </ul>
+  </div>
+  <div class="col-r">
+    <div class="diagram">
+    <svg viewBox="0 0 380 228" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="vm1" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+          <path d="M0,0 L0,5 L5,2.5 Z" fill="#555"/>
+        </marker>
+      </defs>
+      <line x1="90" y1="12" x2="190" y2="185" stroke="#374151" stroke-width="2"/>
+      <line x1="190" y1="185" x2="290" y2="12" stroke="#16a34a" stroke-width="2"/>
+      <line x1="90"  y1="12"  x2="290" y2="12"  stroke="#1f2937" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="115" y1="57"  x2="265" y2="57"  stroke="#1f2937" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="140" y1="102" x2="240" y2="102" stroke="#1f2937" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="165" y1="147" x2="215" y2="147" stroke="#1f2937" stroke-width="1" stroke-dasharray="3,3"/>
+      <circle cx="90"  cy="12"  r="4" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1.5"/>
+      <circle cx="115" cy="57"  r="4" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1.5"/>
+      <circle cx="140" cy="102" r="4" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1.5"/>
+      <circle cx="165" cy="147" r="4" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1.5"/>
+      <circle cx="190" cy="185" r="6" fill="#78350f" stroke="#d97706" stroke-width="2"/>
+      <circle cx="290" cy="12"  r="4" fill="#14532d" stroke="#22c55e" stroke-width="1.5"/>
+      <circle cx="265" cy="57"  r="4" fill="#14532d" stroke="#22c55e" stroke-width="1.5"/>
+      <circle cx="240" cy="102" r="4" fill="#14532d" stroke="#22c55e" stroke-width="1.5"/>
+      <circle cx="215" cy="147" r="4" fill="#14532d" stroke="#22c55e" stroke-width="1.5"/>
+      <text x="83"  y="15"  fill="#93c5fd" font-size="9" font-family="monospace" text-anchor="end">Requirements</text>
+      <text x="108" y="60"  fill="#93c5fd" font-size="9" font-family="monospace" text-anchor="end">System Design</text>
+      <text x="133" y="105" fill="#93c5fd" font-size="9" font-family="monospace" text-anchor="end">Architecture</text>
+      <text x="158" y="150" fill="#93c5fd" font-size="9" font-family="monospace" text-anchor="end">Module Design</text>
+      <text x="183" y="200" fill="#d97706" font-size="9" font-family="monospace" text-anchor="end">Code</text>
+      <text x="296" y="10"  fill="#86efac" font-size="9" font-family="monospace">Acceptance</text>
+      <rect x="296" y="14" width="52" height="11" rx="2" fill="#1c1430" stroke="#6d28d9" stroke-width="1"/>
+      <text x="322" y="22" fill="#d8b4fe" font-size="7.5" font-family="monospace" text-anchor="middle">⚡ prompt</text>
+      <text x="271" y="55"  fill="#86efac" font-size="9" font-family="monospace">System Tests</text>
+      <rect x="271" y="59" width="52" height="11" rx="2" fill="#1c1430" stroke="#6d28d9" stroke-width="1"/>
+      <text x="297" y="67" fill="#d8b4fe" font-size="7.5" font-family="monospace" text-anchor="middle">⚡ prompt</text>
+      <text x="246" y="100" fill="#86efac" font-size="9" font-family="monospace">Integration</text>
+      <rect x="246" y="104" width="52" height="11" rx="2" fill="#1c1430" stroke="#6d28d9" stroke-width="1"/>
+      <text x="272" y="112" fill="#d8b4fe" font-size="7.5" font-family="monospace" text-anchor="middle">⚡ prompt</text>
+      <text x="221" y="145" fill="#86efac" font-size="9" font-family="monospace">Component</text>
+      <rect x="221" y="149" width="52" height="11" rx="2" fill="#1c1430" stroke="#6d28d9" stroke-width="1"/>
+      <text x="247" y="157" fill="#d8b4fe" font-size="7.5" font-family="monospace" text-anchor="middle">⚡ prompt</text>
+      <text x="196" y="200" fill="#86efac" font-size="9" font-family="monospace">Unit Tests</text>
+      <rect x="196" y="203" width="52" height="11" rx="2" fill="#1c1430" stroke="#6d28d9" stroke-width="1"/>
+      <text x="222" y="211" fill="#d8b4fe" font-size="7.5" font-family="monospace" text-anchor="middle">⚡ prompt</text>
+    </svg>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     4. PROMPT ANATOMY
+══════════════════════════════════════════════════════ -->
+<section>
+<h2>Prompt Anatomy</h2>
+<div class="two-col">
+  <div class="col">
+    <h3>4-part template</h3>
+    <pre><code class="language-markdown"># SYSTEM
+Senior mobile QA on {{platform}}.
+Assert behaviour, no hallucination.
+
+# CONTEXT
+App: {{app}}  Screen: {{screen}}
+Viewport: {{vp}}  Network: {{net}}
+
+# TASK
+Write {{type}} tests for: {{feature}}
+Cover: happy path, empty, error, edge.
+
+# FORMAT
+{{framework}} | one describe block
+Fail loudly with clear messages.</code></pre>
+    <p style="margin-top:.2em;font-size:.58em;color:var(--dim)">
+      Placeholders filled from agents.md context
+    </p>
+  </div>
+  <div class="col-r">
+    <div class="diagram">
+    <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+      <rect x="9"   y="8"  width="68" height="28" rx="4" fill="#1c1430" stroke="#6d28d9" stroke-width="1.5"/>
+      <text x="15"  y="20" fill="#6d28d9" font-size="10" font-family="monospace" font-weight="bold">①</text>
+      <text x="43"  y="20" fill="#d8b4fe" font-size="7.5" font-family="monospace" text-anchor="middle">agents.md</text>
+      <text x="43"  y="31" fill="#666"   font-size="6.5" font-family="monospace" text-anchor="middle">rules + context</text>
+      <rect x="86"  y="8"  width="68" height="28" rx="4" fill="#0f172a" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="92"  y="20" fill="#3b82f6" font-size="10" font-family="monospace" font-weight="bold">②</text>
+      <text x="120" y="20" fill="#93c5fd" font-size="7.5" font-family="monospace" text-anchor="middle">platform.ctx</text>
+      <text x="120" y="31" fill="#666"   font-size="6.5" font-family="monospace" text-anchor="middle">viewport · touch</text>
+      <rect x="163" y="8"  width="68" height="28" rx="4" fill="#0a1a0a" stroke="#16a34a" stroke-width="1.5"/>
+      <text x="169" y="20" fill="#16a34a" font-size="10" font-family="monospace" font-weight="bold">③</text>
+      <text x="197" y="20" fill="#86efac" font-size="7.5" font-family="monospace" text-anchor="middle">task.md</text>
+      <text x="197" y="31" fill="#666"   font-size="6.5" font-family="monospace" text-anchor="middle">feature + states</text>
+      <rect x="240" y="8"  width="72" height="28" rx="4" fill="#3b1f00" stroke="#92400e" stroke-width="1.5"/>
+      <text x="246" y="20" fill="#92400e" font-size="10" font-family="monospace" font-weight="bold">④</text>
+      <text x="276" y="20" fill="#fcd34d" font-size="7.5" font-family="monospace" text-anchor="middle">memory.md</text>
+      <text x="276" y="31" fill="#666"   font-size="6.5" font-family="monospace" text-anchor="middle">§12 · patterns</text>
+      <rect x="90"  y="56" width="140" height="28" rx="4" fill="#1a1a1a" stroke="#374151" stroke-width="1.5"/>
+      <text x="96"  y="68" fill="#555"   font-size="10" font-family="monospace" font-weight="bold">⑤</text>
+      <text x="160" y="68" fill="#e5e7eb" font-size="8" font-family="monospace" text-anchor="middle">Assembled Prompt</text>
+      <text x="160" y="79" fill="#444"   font-size="7" font-family="monospace" text-anchor="middle">① + ② + ③ + ④ combined</text>
+      <rect x="80"  y="104" width="160" height="28" rx="4" fill="#2d1b4e" stroke="#6d28d9" stroke-width="1.5"/>
+      <text x="86"  y="116" fill="#6d28d9" font-size="10" font-family="monospace" font-weight="bold">⑥</text>
+      <text x="160" y="116" fill="#d8b4fe" font-size="8.5" font-family="monospace" text-anchor="middle">AI Agent</text>
+      <text x="160" y="127" fill="#777"   font-size="7" font-family="monospace" text-anchor="middle">generates + runs test</text>
+      <rect x="50"  y="152" width="95" height="28" rx="4" fill="#0a1a0a" stroke="#16a34a" stroke-width="1.5"/>
+      <text x="56"  y="164" fill="#16a34a" font-size="10" font-family="monospace" font-weight="bold">⑦</text>
+      <text x="97"  y="164" fill="#86efac" font-size="8" font-family="monospace" text-anchor="middle">Pass</text>
+      <text x="97"  y="175" fill="#555"   font-size="7" font-family="monospace" text-anchor="middle">pattern → ④</text>
+      <rect x="175" y="152" width="95" height="28" rx="4" fill="#1a0a0a" stroke="#991b1b" stroke-width="1.5"/>
+      <text x="181" y="164" fill="#991b1b" font-size="10" font-family="monospace" font-weight="bold">⑦</text>
+      <text x="222" y="164" fill="#f87171" font-size="8" font-family="monospace" text-anchor="middle">Fail</text>
+      <text x="222" y="175" fill="#555"   font-size="7" font-family="monospace" text-anchor="middle">refine → ⑤</text>
+    </svg>
+    </div>
+  </div>
+</div>
+<div class="ex-box"><span class="ex-label">Running example: </span><code>TASK: test login form - empty submit shows error</code></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     5a. UNIT
+══════════════════════════════════════════════════════ -->
+<section>
+<h2><span class="tag tu">Unit</span> Testing with Prompts</h2>
+<div class="two-col">
+  <div class="col">
+    <h3>Prompt</h3>
+    <pre><code class="language-markdown">CONTEXT: login form - validateEmail(value)
+TASK: Jest unit tests.
+COVER: empty string, no @, valid, null.
+FORMAT: Jest, no DOM.</code></pre>
+    <ul style="margin-top:.25em">
+      <li>No DOM - fast CI</li>
+      <li>Edge cases listed - none skipped</li>
+    </ul>
+  </div>
+  <div class="col-r">
+    <div class="diagram">
+    <svg viewBox="0 0 370 200" xmlns="http://www.w3.org/2000/svg">
+      <line x1="88" y1="12" x2="185" y2="180" stroke="#1f2937" stroke-width="2"/>
+      <line x1="185" y1="180" x2="282" y2="12" stroke="#1f2937" stroke-width="2"/>
+      <line x1="88"  y1="12"  x2="282" y2="12"  stroke="#1f2937" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="111" y1="55"  x2="259" y2="55"  stroke="#1f2937" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="134" y1="98"  x2="236" y2="98"  stroke="#1f2937" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="157" y1="141" x2="213" y2="141" stroke="#1f2937" stroke-width="1" stroke-dasharray="3,3"/>
+      <circle cx="88"  cy="12"  r="3.5" fill="#111" stroke="#374151" stroke-width="1.5"/>
+      <circle cx="111" cy="55"  r="3.5" fill="#111" stroke="#374151" stroke-width="1.5"/>
+      <circle cx="134" cy="98"  r="3.5" fill="#111" stroke="#374151" stroke-width="1.5"/>
+      <circle cx="157" cy="141" r="3.5" fill="#111" stroke="#374151" stroke-width="1.5"/>
+      <circle cx="282" cy="12"  r="3.5" fill="#111" stroke="#374151" stroke-width="1.5"/>
+      <circle cx="259" cy="55"  r="3.5" fill="#111" stroke="#374151" stroke-width="1.5"/>
+      <circle cx="236" cy="98"  r="3.5" fill="#111" stroke="#374151" stroke-width="1.5"/>
+      <circle cx="213" cy="141" r="3.5" fill="#111" stroke="#374151" stroke-width="1.5"/>
+      <!-- Unit highlighted -->
+      <line x1="157" y1="141" x2="185" y2="180" stroke="#16a34a" stroke-width="2.5"/>
+      <line x1="185" y1="180" x2="213" y2="141" stroke="#16a34a" stroke-width="2.5"/>
+      <circle cx="185" cy="180" r="6" fill="#78350f" stroke="#d97706" stroke-width="2"/>
+      <text x="150" y="144" fill="#374151" font-size="8.5" font-family="monospace" text-anchor="end">Module Design</text>
+      <text x="180" y="196" fill="#d97706" font-size="8.5" font-family="monospace" text-anchor="end">Code</text>
+      <text x="219" y="144" fill="#86efac" font-size="8.5" font-family="monospace">Unit Tests ⚡</text>
+      <text x="190" y="196" fill="#86efac" font-size="8.5" font-family="monospace">Jest · pure logic</text>
+    </svg>
+    </div>
+  </div>
+</div>
+<div class="ex-box"><span class="ex-label">Running example: </span><code>validateEmail("") → false · validateEmail(null) → TypeError</code></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     5b. COMPONENT
+══════════════════════════════════════════════════════ -->
+<section>
+<h2><span class="tag tc">Component</span> Testing with Prompts</h2>
+<div class="two-col">
+  <div class="col">
+    <h3>Prompt</h3>
+    <pre><code class="language-markdown">CONTEXT: LoginForm component - Ionic 7
+         Viewport 375px
+TASK: Vitest + RTL tests.
+COVER: renders fields, submit fires
+  onLogin(email,pass), error shown.
+MOBILE: fireEvent.touchEnd not click.</code></pre>
+    <ul style="margin-top:.25em">
+      <li>touchEnd - not click</li>
+      <li>aria-disabled on element AND wrapper</li>
+    </ul>
+  </div>
+  <div class="col-r">
+    <div class="diagram">
+    <svg viewBox="0 0 370 200" xmlns="http://www.w3.org/2000/svg">
+      <line x1="88" y1="12" x2="185" y2="180" stroke="#1f2937" stroke-width="2"/>
+      <line x1="185" y1="180" x2="282" y2="12" stroke="#1f2937" stroke-width="2"/>
+      <line x1="88"  y1="12"  x2="282" y2="12"  stroke="#1f2937" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="111" y1="55"  x2="259" y2="55"  stroke="#1f2937" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="134" y1="98"  x2="236" y2="98"  stroke="#1f2937" stroke-width="1" stroke-dasharray="3,3"/>
+      <!-- Component highlighted -->
+      <line x1="157" y1="141" x2="213" y2="141" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="3,3"/>
+      <line x1="157" y1="141" x2="185" y2="180" stroke="#1d4ed8" stroke-width="2.5"/>
+      <line x1="185" y1="180" x2="213" y2="141" stroke="#22c55e" stroke-width="2.5"/>
+      <circle cx="88"  cy="12"  r="3.5" fill="#111" stroke="#374151" stroke-width="1.5"/>
+      <circle cx="111" cy="55"  r="3.5" fill="#111" stroke="#374151" stroke-width="1.5"/>
+      <circle cx="134" cy="98"  r="3.5" fill="#111" stroke="#374151" stroke-width="1.5"/>
+      <circle cx="185" cy="180" r="4"   fill="#111" stroke="#374151" stroke-width="1.5"/>
+      <circle cx="282" cy="12"  r="3.5" fill="#111" stroke="#374151" stroke-width="1.5"/>
+      <circle cx="259" cy="55"  r="3.5" fill="#111" stroke="#374151" stroke-width="1.5"/>
+      <circle cx="236" cy="98"  r="3.5" fill="#111" stroke="#374151" stroke-width="1.5"/>
+      <circle cx="157" cy="141" r="5.5" fill="#1e3a8a" stroke="#3b82f6" stroke-width="2"/>
+      <circle cx="213" cy="141" r="5.5" fill="#14532d" stroke="#22c55e" stroke-width="2"/>
+      <text x="150" y="144" fill="#93c5fd" font-size="8.5" font-family="monospace" text-anchor="end">Module Design</text>
+      <text x="219" y="144" fill="#86efac" font-size="8.5" font-family="monospace">Component ⚡</text>
+      <rect x="82" y="160" width="206" height="20" rx="3" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1"/>
+      <text x="185" y="173" fill="#93c5fd" font-size="8" font-family="monospace" text-anchor="middle">render · touchEnd · aria · 375px</text>
+    </svg>
+    </div>
+  </div>
+</div>
+<div class="ex-box"><span class="ex-label">Running example: </span><code>submit with empty email - error "Email required" shown</code></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     6. INTEGRATION
+══════════════════════════════════════════════════════ -->
+<section>
+<h2><span class="tag ti">Integration</span> Testing with Prompts</h2>
+<div class="two-col">
+  <div class="col">
+    <h3>Prompt</h3>
+    <pre><code class="language-markdown">CONTEXT: Login flow - form to dashboard
+TASK: Playwright component tests.
+COVER:
+- Happy path - redirect to /dashboard
+- 401 response - error toast shown
+- Slow 3G - loading spinner visible
+API: MSW handlers - no real network.
+MOBILE: 390x844, touch:true.
+ASSERT: text + aria roles, not CSS.</code></pre>
+    <p style="margin-top:.2em;font-size:.58em;color:#555">MSW: reproducible 401/500/3G - no real network</p>
+  </div>
+  <div class="col-r">
+    <div class="diagram">
+    <svg viewBox="0 0 320 195" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="8"  width="300" height="30" rx="4" fill="#1e3a5f22" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="16" y="21" fill="#3b82f6" font-size="10" font-family="monospace" font-weight="bold">①</text>
+      <text x="160" y="21" fill="#93c5fd" font-size="8.5" font-family="monospace" text-anchor="middle">UI - LoginForm</text>
+      <text x="160" y="33" fill="#555"   font-size="7.5" font-family="monospace" text-anchor="middle">Playwright · 375px · touch</text>
+      <rect x="10" y="52" width="300" height="30" rx="4" fill="#3b1f0022" stroke="#d97706" stroke-width="1.5"/>
+      <text x="16" y="65" fill="#d97706" font-size="10" font-family="monospace" font-weight="bold">②</text>
+      <text x="160" y="65" fill="#fcd34d" font-size="8.5" font-family="monospace" text-anchor="middle">MSW Handler</text>
+      <text x="160" y="77" fill="#555"   font-size="7.5" font-family="monospace" text-anchor="middle">intercepts · injects delay or error</text>
+      <rect x="10"  y="96" width="84" height="30" rx="3" fill="#0a1a0a" stroke="#166534" stroke-width="1.2"/>
+      <text x="16"  y="109" fill="#166534" font-size="10" font-family="monospace" font-weight="bold">③</text>
+      <text x="52"  y="109" fill="#86efac" font-size="8" font-family="monospace" text-anchor="middle">200 OK</text>
+      <text x="52"  y="121" fill="#555"   font-size="7" font-family="monospace" text-anchor="middle">redirect</text>
+      <rect x="118" y="96" width="84" height="30" rx="3" fill="#1a0a0a" stroke="#991b1b" stroke-width="1.2"/>
+      <text x="124" y="109" fill="#991b1b" font-size="10" font-family="monospace" font-weight="bold">③</text>
+      <text x="160" y="109" fill="#f87171" font-size="8" font-family="monospace" text-anchor="middle">401 Error</text>
+      <text x="160" y="121" fill="#555"   font-size="7" font-family="monospace" text-anchor="middle">toast shown</text>
+      <rect x="226" y="96" width="84" height="30" rx="3" fill="#1a160a" stroke="#92400e" stroke-width="1.2"/>
+      <text x="232" y="109" fill="#92400e" font-size="10" font-family="monospace" font-weight="bold">③</text>
+      <text x="268" y="109" fill="#fcd34d" font-size="8" font-family="monospace" text-anchor="middle">Slow 3G</text>
+      <text x="268" y="121" fill="#555"   font-size="7" font-family="monospace" text-anchor="middle">spinner</text>
+      <rect x="10"  y="142" width="300" height="30" rx="4" fill="#14532d22" stroke="#22c55e" stroke-width="1.5"/>
+      <text x="16"  y="155" fill="#22c55e" font-size="10" font-family="monospace" font-weight="bold">④</text>
+      <text x="160" y="155" fill="#86efac" font-size="8.5" font-family="monospace" text-anchor="middle">Assertions</text>
+      <text x="160" y="167" fill="#555"   font-size="7.5" font-family="monospace" text-anchor="middle">aria roles · visible text · no CSS checks</text>
+    </svg>
+    </div>
+  </div>
+</div>
+<div class="ex-box"><span class="ex-label">Running example: </span><code>401 response - toast "Invalid credentials" shown</code></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     7. SYSTEM / E2E
+══════════════════════════════════════════════════════ -->
+<section>
+<h2><span class="tag ts">System</span> / E2E Testing with Prompts</h2>
+<div class="two-col">
+  <div class="col">
+    <h3>Prompt</h3>
+    <pre><code class="language-markdown">CONTEXT: App - full login journey
+DEVICE: iPhone 14 Pro (Playwright preset)
+TASK: Guest completes login and lands
+      on /dashboard.
+NETWORK: Fast wifi - Slow 3G at submit.
+ASSERT:
+- Dashboard title visible after login
+- Token stored in localStorage
+- Back button does not re-login
+SCREENSHOT: capture dashboard for diff.</code></pre>
+    <ul style="margin-top:.25em">
+      <li>PWA - offline - rotate</li>
+    </ul>
+  </div>
+  <div class="col-r">
+    <div class="diagram">
+    <svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg">
+      <rect x="80" y="8"  width="110" height="195" rx="12" fill="#111" stroke="#374151" stroke-width="2"/>
+      <rect x="87" y="20" width="96"  height="170" rx="3"  fill="#0d0d0d" stroke="#1f2937" stroke-width="1"/>
+      <rect x="120" y="10" width="30" height="7" rx="3" fill="#000"/>
+      <rect x="118" y="196" width="34" height="3" rx="2" fill="#374151"/>
+      <rect x="87" y="20" width="96"  height="40" rx="3" fill="#3b0f0f44" stroke="#991b1b" stroke-width="1"/>
+      <text x="135" y="35" fill="#f87171" font-size="7.5" font-family="monospace" text-anchor="middle">System / E2E</text>
+      <text x="135" y="52" fill="#555" font-size="7" font-family="monospace" text-anchor="middle">Playwright journey</text>
+      <rect x="87" y="62" width="96"  height="36" rx="0" fill="#3b1f0044" stroke="#92400e" stroke-width="1"/>
+      <text x="135" y="76" fill="#fcd34d" font-size="7.5" font-family="monospace" text-anchor="middle">Integration</text>
+      <text x="135" y="90" fill="#555" font-size="7" font-family="monospace" text-anchor="middle">MSW · API flow</text>
+      <rect x="87" y="100" width="96"  height="36" rx="0" fill="#1e3a5f44" stroke="#1d4ed8" stroke-width="1"/>
+      <text x="135" y="114" fill="#93c5fd" font-size="7.5" font-family="monospace" text-anchor="middle">Component</text>
+      <text x="135" y="128" fill="#555" font-size="7" font-family="monospace" text-anchor="middle">RTL · touch events</text>
+      <rect x="87" y="138" width="96"  height="36" rx="0" fill="#14532d44" stroke="#166534" stroke-width="1"/>
+      <text x="135" y="152" fill="#86efac" font-size="7.5" font-family="monospace" text-anchor="middle">Unit</text>
+      <text x="135" y="165" fill="#555" font-size="7" font-family="monospace" text-anchor="middle">Jest · pure logic</text>
+      <!-- right annotations - outside phone, no crossing -->
+      <line x1="183" y1="40" x2="200" y2="40" stroke="#555" stroke-width="1" stroke-dasharray="2,2"/>
+      <text x="203" y="43" fill="#f87171" font-size="7" font-family="monospace">⚡ system</text>
+      <line x1="183" y1="80" x2="200" y2="80" stroke="#555" stroke-width="1" stroke-dasharray="2,2"/>
+      <text x="203" y="83" fill="#fcd34d" font-size="7" font-family="monospace">⚡ integ</text>
+      <line x1="183" y1="118" x2="200" y2="118" stroke="#555" stroke-width="1" stroke-dasharray="2,2"/>
+      <text x="203" y="121" fill="#93c5fd" font-size="7" font-family="monospace">⚡ comp</text>
+      <line x1="183" y1="156" x2="200" y2="156" stroke="#555" stroke-width="1" stroke-dasharray="2,2"/>
+      <text x="203" y="159" fill="#86efac" font-size="7" font-family="monospace">⚡ unit</text>
+      <rect x="80" y="208" width="110" height="14" rx="3" fill="#2d1b4e" stroke="#6d28d9" stroke-width="1"/>
+      <text x="135" y="218" fill="#d8b4fe" font-size="7" font-family="monospace" text-anchor="middle">Playwright device</text>
+    </svg>
+    </div>
+  </div>
+</div>
+<div class="ex-box"><span class="ex-label">Running example: </span><code>login journey - lands on /dashboard - token in localStorage</code></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     8. AGENT ARCHITECTURE
+══════════════════════════════════════════════════════ -->
+<section>
+<h2><span class="tag ta">Agent</span> Architecture</h2>
+<div class="two-col">
+  <div class="col">
+    <pre><code style="font-size:.55em">// Claude Code CLI
+Write Vitest component tests for
+LoginForm using agents.md context.
+Platform: iOS Safari, viewport 390px.
+Cover empty, error, success states.</code></pre>
+  </div>
+  <div class="col-r">
+    <div class="diagram">
+    <svg viewBox="0 0 320 205" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8"   y="8"  width="100" height="28" rx="4" fill="#1c1430" stroke="#6d28d9" stroke-width="1.5"/>
+      <text x="14"  y="20" fill="#6d28d9" font-size="10" font-family="monospace" font-weight="bold">①</text>
+      <text x="58"  y="20" fill="#d8b4fe" font-size="8" font-family="monospace" text-anchor="middle">agents.md</text>
+      <text x="58"  y="31" fill="#666"    font-size="7" font-family="monospace" text-anchor="middle">root · client · server</text>
+      <rect x="212" y="8"  width="100" height="28" rx="4" fill="#0f172a" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="218" y="20" fill="#3b82f6" font-size="10" font-family="monospace" font-weight="bold">②</text>
+      <text x="262" y="20" fill="#93c5fd" font-size="8" font-family="monospace" text-anchor="middle">Prompt</text>
+      <text x="262" y="31" fill="#666"    font-size="7" font-family="monospace" text-anchor="middle">template + task</text>
+      <rect x="100" y="56" width="120" height="32" rx="5" fill="#2d1b4e" stroke="#6d28d9" stroke-width="2"/>
+      <text x="106" y="68" fill="#6d28d9" font-size="10" font-family="monospace" font-weight="bold">③</text>
+      <text x="160" y="68" fill="#d8b4fe" font-size="8.5" font-family="monospace" text-anchor="middle" font-weight="bold">AI Agent</text>
+      <text x="160" y="81" fill="#8b7ca8" font-size="7"   font-family="monospace" text-anchor="middle">plan · generate · evaluate</text>
+      <rect x="86"  y="108" width="148" height="28" rx="4" fill="#0a1a0a" stroke="#166534" stroke-width="1.5"/>
+      <text x="92"  y="120" fill="#166534" font-size="10" font-family="monospace" font-weight="bold">④</text>
+      <text x="160" y="120" fill="#86efac" font-size="8" font-family="monospace" text-anchor="middle">Generated Test File</text>
+      <text x="160" y="131" fill="#555"    font-size="7" font-family="monospace" text-anchor="middle">login.spec.ts</text>
+      <rect x="86"  y="156" width="148" height="28" rx="4" fill="#1a1208" stroke="#92400e" stroke-width="1.5"/>
+      <text x="92"  y="168" fill="#92400e" font-size="10" font-family="monospace" font-weight="bold">⑤</text>
+      <text x="160" y="168" fill="#fcd34d" font-size="8" font-family="monospace" text-anchor="middle">CI Runner</text>
+      <text x="160" y="179" fill="#555"    font-size="7" font-family="monospace" text-anchor="middle">pass → ① · fail → ②</text>
+    </svg>
+    </div>
+  </div>
+</div>
+<div class="ex-box"><span class="ex-label">Running example: </span><code>agent reads agents.md - generates login.spec.ts - runs CI</code></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     9. FEEDBACK LOOP
+══════════════════════════════════════════════════════ -->
+<section>
+<h2><span class="tag ta">agents.md</span> Feedback Loop</h2>
+<div class="two-col">
+  <div class="col">
+    <pre><code style="font-size:.54em">## §12 Test patterns
+
+### Component - 2026-05-28
+- touchEnd not click (mobile)
+- aria-disabled: button AND wrapper
+
+### Integration - 2026-05-20
+- MSW intercept OPTIONS preflight
+- Assert skeleton BEFORE awaiting res</code></pre>
+  </div>
+  <div class="col-r">
+    <div class="diagram">
+    <svg viewBox="0 0 320 188" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8"   y="8"  width="82" height="28" rx="4" fill="#1c1430" stroke="#6d28d9" stroke-width="1.5"/>
+      <text x="14"  y="20" fill="#6d28d9" font-size="10" font-family="monospace" font-weight="bold">①</text>
+      <text x="49"  y="20" fill="#d8b4fe" font-size="8" font-family="monospace" text-anchor="middle">Prompt</text>
+      <text x="49"  y="31" fill="#666"    font-size="7" font-family="monospace" text-anchor="middle">+ agents.md</text>
+      <rect x="119" y="8"  width="82" height="28" rx="4" fill="#2d1b4e" stroke="#6d28d9" stroke-width="1.5"/>
+      <text x="125" y="20" fill="#6d28d9" font-size="10" font-family="monospace" font-weight="bold">②</text>
+      <text x="160" y="20" fill="#d8b4fe" font-size="8" font-family="monospace" text-anchor="middle">Agent</text>
+      <text x="160" y="31" fill="#666"    font-size="7" font-family="monospace" text-anchor="middle">generates test</text>
+      <rect x="230" y="8"  width="82" height="28" rx="4" fill="#1a1208" stroke="#92400e" stroke-width="1.5"/>
+      <text x="236" y="20" fill="#92400e" font-size="10" font-family="monospace" font-weight="bold">③</text>
+      <text x="271" y="20" fill="#fcd34d" font-size="8" font-family="monospace" text-anchor="middle">CI Run</text>
+      <text x="271" y="31" fill="#666"    font-size="7" font-family="monospace" text-anchor="middle">pass or fail</text>
+      <rect x="166" y="56" width="110" height="28" rx="4" fill="#0a1a0a" stroke="#166534" stroke-width="1.5"/>
+      <text x="172" y="68" fill="#166534" font-size="10" font-family="monospace" font-weight="bold">④</text>
+      <text x="221" y="68" fill="#86efac" font-size="8" font-family="monospace" text-anchor="middle">Pass</text>
+      <text x="221" y="79" fill="#555"    font-size="7" font-family="monospace" text-anchor="middle">accept → ①</text>
+      <rect x="8"   y="56" width="110" height="28" rx="4" fill="#1a0a0a" stroke="#991b1b" stroke-width="1.5"/>
+      <text x="14"  y="68" fill="#991b1b" font-size="10" font-family="monospace" font-weight="bold">④</text>
+      <text x="63"  y="68" fill="#f87171" font-size="8" font-family="monospace" text-anchor="middle">Fail</text>
+      <text x="63"  y="79" fill="#555"    font-size="7" font-family="monospace" text-anchor="middle">paste error</text>
+      <rect x="8"   y="108" width="110" height="28" rx="4" fill="#1a1a1a" stroke="#374151" stroke-width="1.5"/>
+      <text x="14"  y="120" fill="#555"   font-size="10" font-family="monospace" font-weight="bold">⑤</text>
+      <text x="63"  y="120" fill="#e5e7eb" font-size="8" font-family="monospace" text-anchor="middle">Explain</text>
+      <text x="63"  y="131" fill="#555"    font-size="7" font-family="monospace" text-anchor="middle">agent fixes</text>
+      <rect x="90"  y="156" width="140" height="28" rx="4" fill="#1c1430" stroke="#6d28d9" stroke-width="1.5"/>
+      <text x="96"  y="168" fill="#6d28d9" font-size="10" font-family="monospace" font-weight="bold">⑥</text>
+      <text x="160" y="168" fill="#d8b4fe" font-size="8.5" font-family="monospace" text-anchor="middle">Update §12</text>
+      <text x="160" y="179" fill="#555"    font-size="7" font-family="monospace" text-anchor="middle">agents.md grows · loops to ①</text>
+    </svg>
+    </div>
+  </div>
+</div>
+<div class="ex-box"><span class="ex-label">Running example: </span><code>touchEnd fix added to agents.md - next prompt includes it</code></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     10a. AGENTS.MD - ROOT + CLIENT
+══════════════════════════════════════════════════════ -->
+<section>
+<h2><span class="tag ta">agents.md</span> · root and client tiers</h2>
+<div class="two-col">
+  <div class="col">
+    <h3>root/agents.md - global rules</h3>
+    <pre><code class="language-markdown"># root/agents.md
+- Framework: Vitest + RTL + Playwright
+- No mocks except MSW
+- Viewport default: 375px
+- CI: GitHub Actions, 10 min timeout</code></pre>
+    <h3>client/agents.md - UI rules</h3>
+    <pre><code class="language-markdown"># client/agents.md
+- Touch: fireEvent.touchEnd not click
+- aria-disabled on button AND wrapper
+- Ionic: test rendered output only
+- §12: all resolved test failures</code></pre>
+  </div>
+  <div class="col-r">
+    <div class="diagram">
+    <svg viewBox="0 0 320 205" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="th1" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+          <path d="M0,0 L0,5 L5,2.5 Z" fill="#6d28d9"/>
+        </marker>
+      </defs>
+      <rect x="100" y="8"  width="120" height="28" rx="5" fill="#2d1b4e" stroke="#6d28d9" stroke-width="2"/>
+      <text x="160" y="19" fill="#d8b4fe" font-size="8.5" font-family="monospace" text-anchor="middle" font-weight="bold">root/agents.md</text>
+      <text x="160" y="31" fill="#666"    font-size="7.5" font-family="monospace" text-anchor="middle">global rules · frameworks · CI</text>
+      <line x1="160" y1="36" x2="160" y2="50" stroke="#6d28d9" stroke-width="1.5"/>
+      <line x1="160" y1="50" x2="74"  y2="50" stroke="#6d28d9" stroke-width="1.5"/>
+      <line x1="160" y1="50" x2="246" y2="50" stroke="#6d28d9" stroke-width="1.5"/>
+      <line x1="74"  y1="50" x2="74"  y2="60" stroke="#6d28d9" stroke-width="1.5" marker-end="url(#th1)"/>
+      <line x1="246" y1="50" x2="246" y2="60" stroke="#6d28d9" stroke-width="1.5" marker-end="url(#th1)"/>
+      <rect x="14"  y="62" width="120" height="28" rx="5" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="74"  y="73" fill="#93c5fd" font-size="8.5" font-family="monospace" text-anchor="middle" font-weight="bold">client/agents.md</text>
+      <text x="74"  y="85" fill="#666"    font-size="7.5" font-family="monospace" text-anchor="middle">UI · touch · components</text>
+      <rect x="186" y="62" width="120" height="28" rx="5" fill="#14532d" stroke="#166534" stroke-width="1.5"/>
+      <text x="246" y="73" fill="#86efac" font-size="8.5" font-family="monospace" text-anchor="middle" font-weight="bold">server/agents.md</text>
+      <text x="246" y="85" fill="#666"    font-size="7.5" font-family="monospace" text-anchor="middle">API · contracts · auth</text>
+      <line x1="74"  y1="90" x2="74"  y2="104" stroke="#3b82f6" stroke-width="1"/>
+      <rect x="14"  y="106" width="120" height="62" rx="3" fill="#0d1020" stroke="#1d4ed8" stroke-width="1"/>
+      <text x="22" y="120" fill="#555" font-size="7.5" font-family="monospace">· Viewport 375px default</text>
+      <text x="22" y="134" fill="#555" font-size="7.5" font-family="monospace">· touchEnd not click</text>
+      <text x="22" y="148" fill="#555" font-size="7.5" font-family="monospace">· aria-disabled rules</text>
+      <text x="22" y="162" fill="#d8b4fe" font-size="7.5" font-family="monospace">· §12 test patterns</text>
+      <line x1="246" y1="90" x2="246" y2="104" stroke="#166534" stroke-width="1"/>
+      <rect x="186" y="106" width="120" height="62" rx="3" fill="#0a120a" stroke="#166534" stroke-width="1"/>
+      <text x="194" y="120" fill="#555" font-size="7.5" font-family="monospace">· POST 201 / 422 format</text>
+      <text x="194" y="134" fill="#555" font-size="7.5" font-family="monospace">· Bearer token auth</text>
+      <text x="194" y="148" fill="#555" font-size="7.5" font-family="monospace">· Rate limit 429</text>
+      <text x="194" y="162" fill="#d8b4fe" font-size="7.5" font-family="monospace">· §12 API failures</text>
+      <rect x="100" y="180" width="120" height="16" rx="3" fill="#1c1430" stroke="#6d28d9" stroke-width="1"/>
+      <text x="160" y="191" fill="#d8b4fe" font-size="7.5" font-family="monospace" text-anchor="middle">agent reads all tiers</text>
+    </svg>
+    </div>
+  </div>
+</div>
+<div class="ex-box"><span class="ex-label">Running example: </span><code>client/agents.md: touchEnd rule prevents click on mobile</code></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     10b. AGENTS.MD - SERVER + §12
+══════════════════════════════════════════════════════ -->
+<section>
+<h2><span class="tag ta">agents.md</span> · server tier and §12</h2>
+<div class="two-col">
+  <div class="col">
+    <h3>server/agents.md - API contracts</h3>
+    <pre><code class="language-markdown"># server/agents.md
+- POST /api/login - 200 + {token}
+- 401 body: {error:"Invalid credentials"}
+- Auth: Bearer token in Authorization
+- Rate limit: 429 after 10 req/min</code></pre>
+    <h3>§12 - living test patterns</h3>
+    <pre><code class="language-markdown">## §12 Test patterns (auto-updated)
+
+### Component - 2026-05-28
+- touchEnd not click - Playwright fail
+- aria-disabled: button AND wrapper
+
+### Integration - 2026-05-20
+- MSW intercept OPTIONS preflight
+- Assert skeleton BEFORE awaiting res</code></pre>
+  </div>
+  <div class="col-r">
+    <div class="diagram">
+    <svg viewBox="0 0 300 188" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8"   y="8"  width="128" height="28" rx="4" fill="#1a0a0a" stroke="#991b1b" stroke-width="1.5"/>
+      <text x="14"  y="20" fill="#991b1b" font-size="10" font-family="monospace" font-weight="bold">①</text>
+      <text x="72"  y="20" fill="#f87171" font-size="8.5" font-family="monospace" text-anchor="middle">CI Fails</text>
+      <text x="72"  y="31" fill="#666"    font-size="7.5" font-family="monospace" text-anchor="middle">stack trace</text>
+      <rect x="164" y="8"  width="128" height="28" rx="4" fill="#2d1b4e" stroke="#6d28d9" stroke-width="1.5"/>
+      <text x="170" y="20" fill="#6d28d9" font-size="10" font-family="monospace" font-weight="bold">②</text>
+      <text x="228" y="20" fill="#d8b4fe" font-size="8.5" font-family="monospace" text-anchor="middle">Agent explains</text>
+      <text x="228" y="31" fill="#666"    font-size="7.5" font-family="monospace" text-anchor="middle">root cause + fix</text>
+      <rect x="164" y="56" width="128" height="28" rx="4" fill="#0a1a0a" stroke="#166534" stroke-width="1.5"/>
+      <text x="170" y="68" fill="#166534" font-size="10" font-family="monospace" font-weight="bold">③</text>
+      <text x="228" y="68" fill="#86efac" font-size="8.5" font-family="monospace" text-anchor="middle">Fix applied</text>
+      <text x="228" y="79" fill="#666"    font-size="7.5" font-family="monospace" text-anchor="middle">test passes</text>
+      <rect x="8"   y="56" width="128" height="28" rx="4" fill="#1c1430" stroke="#6d28d9" stroke-width="2"/>
+      <text x="14"  y="68" fill="#6d28d9" font-size="10" font-family="monospace" font-weight="bold">④</text>
+      <text x="72"  y="68" fill="#d8b4fe" font-size="8.5" font-family="monospace" text-anchor="middle" font-weight="bold">§12 updated</text>
+      <text x="72"  y="79" fill="#666"    font-size="7.5" font-family="monospace" text-anchor="middle">pattern saved</text>
+      <rect x="8"   y="104" width="128" height="28" rx="4" fill="#2d1b4e" stroke="#6d28d9" stroke-width="1.5"/>
+      <text x="14"  y="116" fill="#6d28d9" font-size="10" font-family="monospace" font-weight="bold">⑤</text>
+      <text x="72"  y="116" fill="#d8b4fe" font-size="8.5" font-family="monospace" text-anchor="middle">agents.md</text>
+      <text x="72"  y="127" fill="#666"    font-size="7.5" font-family="monospace" text-anchor="middle">memory grows</text>
+      <rect x="164" y="104" width="128" height="28" rx="4" fill="#0f172a" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="170" y="116" fill="#3b82f6" font-size="10" font-family="monospace" font-weight="bold">⑥</text>
+      <text x="228" y="116" fill="#93c5fd" font-size="8.5" font-family="monospace" text-anchor="middle">Next prompt</text>
+      <text x="228" y="127" fill="#666"    font-size="7.5" font-family="monospace" text-anchor="middle">includes new rule</text>
+      <text x="150" y="152" fill="#374151" font-size="7.5" font-family="monospace" text-anchor="middle">① → ② → ③ → ④ → ⑤ → ⑥ → back to ①</text>
+    </svg>
+    </div>
+  </div>
+</div>
+<div class="ex-box"><span class="ex-label">Running example: </span><code>§12: "assert aria-disabled on wrapper too" - added after fail</code></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     11a. MOBILE - TOUCH + NETWORK
+══════════════════════════════════════════════════════ -->
+<section>
+<h2>Mobile Patterns - Touch and Network</h2>
+<div class="two-col">
+  <div class="col">
+    <h3>Touch gestures</h3>
+    <pre><code class="language-markdown">CONTEXT: LoginForm - mobile
+TASK: test submit via touchEnd.
+Assert button triggers onLogin.
+Use fireEvent.touchEnd not click.</code></pre>
+    <h3>Offline / sync</h3>
+    <pre><code class="language-markdown">Set offline after page load.
+Submit login form.
+Assert request queued in IndexedDB.
+Go online. Assert sync fires once.</code></pre>
+  </div>
+  <div class="col-r">
+    <div class="diagram">
+    <svg viewBox="0 0 290 170" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8"   y="8"  width="130" height="48" rx="5" fill="#111" stroke="#fcd34d" stroke-width="1.5"/>
+      <text x="73"  y="24" fill="#fcd34d" font-size="9" font-family="monospace" text-anchor="middle">Touch</text>
+      <text x="73"  y="37" fill="#666"    font-size="7.5" font-family="monospace" text-anchor="middle">touchStart · touchEnd</text>
+      <text x="73"  y="50" fill="#666"    font-size="7.5" font-family="monospace" text-anchor="middle">swipe · long-press</text>
+      <rect x="152" y="8"  width="130" height="48" rx="5" fill="#111" stroke="#86efac" stroke-width="1.5"/>
+      <text x="217" y="24" fill="#86efac" font-size="9" font-family="monospace" text-anchor="middle">Network</text>
+      <text x="217" y="37" fill="#666"    font-size="7.5" font-family="monospace" text-anchor="middle">Slow 3G · offline</text>
+      <text x="217" y="50" fill="#666"    font-size="7.5" font-family="monospace" text-anchor="middle">IndexedDB sync</text>
+      <rect x="8"   y="70" width="130" height="48" rx="5" fill="#111" stroke="#d8b4fe" stroke-width="1.5"/>
+      <text x="73"  y="86" fill="#d8b4fe" font-size="9" font-family="monospace" text-anchor="middle">PWA</text>
+      <text x="73"  y="99" fill="#666"    font-size="7.5" font-family="monospace" text-anchor="middle">install prompt</text>
+      <text x="73"  y="112" fill="#666"   font-size="7.5" font-family="monospace" text-anchor="middle">service worker</text>
+      <rect x="152" y="70" width="130" height="48" rx="5" fill="#111" stroke="#fcd34d" stroke-width="1.5"/>
+      <text x="217" y="86" fill="#fcd34d" font-size="9" font-family="monospace" text-anchor="middle">Dark Mode</text>
+      <text x="217" y="99" fill="#666"    font-size="7.5" font-family="monospace" text-anchor="middle">prefers-color-scheme</text>
+      <text x="217" y="112" fill="#666"   font-size="7.5" font-family="monospace" text-anchor="middle">contrast checks</text>
+      <rect x="80" y="132" width="130" height="16" rx="3" fill="#1c1430" stroke="#6d28d9" stroke-width="1"/>
+      <text x="145" y="143" fill="#d8b4fe" font-size="7.5" font-family="monospace" text-anchor="middle">each needs explicit prompt</text>
+    </svg>
+    </div>
+  </div>
+</div>
+<div class="ex-box"><span class="ex-label">Running example: </span><code>login offline - queued - syncs on reconnect - no duplicate</code></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     11b. MOBILE - VIEWPORT + LAYOUT
+══════════════════════════════════════════════════════ -->
+<section>
+<h2>Mobile Patterns - Viewport and Layout</h2>
+<div class="two-col">
+  <div class="col">
+    <h3>Viewport / orientation</h3>
+    <pre><code class="language-markdown">DEVICE: 375px portrait.
+Rotate to 1024px landscape.
+Assert form state preserved.
+Assert layout reflows no overflow.</code></pre>
+    <h3>Safe area insets</h3>
+    <pre><code class="language-markdown">DEVICE: iPhone 14 Pro.
+Assert submit button above home bar.
+Computed env(safe-area-inset-bottom)
+must not be 0px on notch device.</code></pre>
+  </div>
+  <div class="col-r">
+    <div class="diagram">
+    <svg viewBox="0 0 290 170" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8"   y="8"  width="130" height="48" rx="5" fill="#111" stroke="#93c5fd" stroke-width="1.5"/>
+      <text x="73"  y="24" fill="#93c5fd" font-size="9" font-family="monospace" text-anchor="middle">Viewport</text>
+      <text x="73"  y="37" fill="#666"    font-size="7.5" font-family="monospace" text-anchor="middle">375 · 390 · 414px</text>
+      <text x="73"  y="50" fill="#666"    font-size="7.5" font-family="monospace" text-anchor="middle">portrait / landscape</text>
+      <rect x="152" y="8"  width="130" height="48" rx="5" fill="#111" stroke="#f87171" stroke-width="1.5"/>
+      <text x="217" y="24" fill="#f87171" font-size="9" font-family="monospace" text-anchor="middle">Safe Area</text>
+      <text x="217" y="37" fill="#666"    font-size="7.5" font-family="monospace" text-anchor="middle">notch · home bar</text>
+      <text x="217" y="50" fill="#666"    font-size="7.5" font-family="monospace" text-anchor="middle">env(safe-area-*)</text>
+      <rect x="8"   y="70" width="130" height="48" rx="5" fill="#111" stroke="#86efac" stroke-width="1.5"/>
+      <text x="73"  y="86" fill="#86efac" font-size="9" font-family="monospace" text-anchor="middle">Accessibility</text>
+      <text x="73"  y="99" fill="#666"    font-size="7.5" font-family="monospace" text-anchor="middle">aria-roles · focus</text>
+      <text x="73"  y="112" fill="#666"   font-size="7.5" font-family="monospace" text-anchor="middle">announce on touch</text>
+      <rect x="152" y="70" width="130" height="48" rx="5" fill="#111" stroke="#fcd34d" stroke-width="1.5"/>
+      <text x="217" y="86" fill="#fcd34d" font-size="9" font-family="monospace" text-anchor="middle">Screenshot</text>
+      <text x="217" y="99" fill="#666"    font-size="7.5" font-family="monospace" text-anchor="middle">visual diff baseline</text>
+      <text x="217" y="112" fill="#666"   font-size="7.5" font-family="monospace" text-anchor="middle">Playwright capture</text>
+      <rect x="80" y="132" width="130" height="16" rx="3" fill="#1c1430" stroke="#6d28d9" stroke-width="1"/>
+      <text x="145" y="143" fill="#d8b4fe" font-size="7.5" font-family="monospace" text-anchor="middle">state explicit in every prompt</text>
+    </svg>
+    </div>
+  </div>
+</div>
+<div class="ex-box"><span class="ex-label">Running example: </span><code>rotate portrait to landscape - email field value preserved</code></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     11c. TOKEN EFFICIENCY
+══════════════════════════════════════════════════════ -->
+<section>
+<h2>Controlling Token Growth - Reuse Over Regeneration</h2>
+<div class="two-col">
+  <div class="col">
+    <h3>Problem - agent repeats boilerplate</h3>
+    <pre><code class="language-javascript">// agent writes this in every test file:
+const wrapper = ({ children }) => (
+  &lt;Provider store={createStore()}&gt;
+    {children}
+  &lt;/Provider&gt;
+);
+const mockUser = { id:1, email:'a@b.com' };
+// × 20 files = ~800 repeated tokens</code></pre>
+    <h3 style="margin-top:.28em">Fix - add §rules to agents.md</h3>
+    <pre><code class="language-markdown">## §rules - test libraries
+- render: import from ../../test-utils
+- users: import from test/factories/user
+- Never write inline mock data
+- Never redefine render wrappers</code></pre>
+  </div>
+  <div class="col-r">
+    <div class="diagram">
+    <svg viewBox="0 0 310 190" xmlns="http://www.w3.org/2000/svg">
+      <!-- divider -->
+      <line x1="155" y1="6" x2="155" y2="168" stroke="#1f2937" stroke-width="1" stroke-dasharray="3,3"/>
+
+      <!-- LEFT: no rules -->
+      <text x="76"  y="10" fill="#f87171" font-size="8" font-family="monospace" text-anchor="middle" font-weight="bold">no rules</text>
+      <rect x="6"   y="14" width="140" height="26" rx="3" fill="#1a0a0a" stroke="#991b1b" stroke-width="1.2"/>
+      <text x="76"  y="24" fill="#f87171" font-size="7.5" font-family="monospace" text-anchor="middle">test1.spec.ts</text>
+      <text x="76"  y="35" fill="#555"    font-size="6.5" font-family="monospace" text-anchor="middle">renderLogin · mockUser · mockApi</text>
+      <rect x="6"   y="46" width="140" height="26" rx="3" fill="#1a0a0a" stroke="#991b1b" stroke-width="1.2"/>
+      <text x="76"  y="56" fill="#f87171" font-size="7.5" font-family="monospace" text-anchor="middle">test2.spec.ts</text>
+      <text x="76"  y="67" fill="#555"    font-size="6.5" font-family="monospace" text-anchor="middle">renderLogin · mockUser · mockApi</text>
+      <rect x="6"   y="78" width="140" height="26" rx="3" fill="#1a0a0a" stroke="#991b1b" stroke-width="1.2"/>
+      <text x="76"  y="88" fill="#f87171" font-size="7.5" font-family="monospace" text-anchor="middle">test3.spec.ts</text>
+      <text x="76"  y="99" fill="#555"    font-size="6.5" font-family="monospace" text-anchor="middle">renderLogin · mockUser · mockApi</text>
+      <rect x="6"   y="114" width="140" height="18" rx="3" fill="#3b0f0f" stroke="#991b1b" stroke-width="1.5"/>
+      <text x="76"  y="126" fill="#fca5a5" font-size="8" font-family="monospace" text-anchor="middle">~800 tokens · helpers untested</text>
+      <text x="76"  y="145" fill="#555"   font-size="7" font-family="monospace" text-anchor="middle">boilerplate duplicated 20x</text>
+      <text x="76"  y="156" fill="#555"   font-size="7" font-family="monospace" text-anchor="middle">helpers drift - never tested</text>
+
+      <!-- RIGHT: with rules -->
+      <text x="234" y="10" fill="#86efac" font-size="8" font-family="monospace" text-anchor="middle" font-weight="bold">with agents.md §rules</text>
+      <rect x="162" y="14" width="142" height="20" rx="3" fill="#1c1430" stroke="#6d28d9" stroke-width="1.5"/>
+      <text x="233" y="27" fill="#d8b4fe" font-size="7.5" font-family="monospace" text-anchor="middle">§rules: import · never redefine</text>
+      <rect x="162" y="40" width="142" height="18" rx="3" fill="#0a1a0a" stroke="#166534" stroke-width="1"/>
+      <text x="233" y="52" fill="#86efac" font-size="7" font-family="monospace" text-anchor="middle">test1.spec.ts - import renderLogin</text>
+      <rect x="162" y="64" width="142" height="18" rx="3" fill="#0a1a0a" stroke="#166534" stroke-width="1"/>
+      <text x="233" y="76" fill="#86efac" font-size="7" font-family="monospace" text-anchor="middle">test2.spec.ts - import renderLogin</text>
+      <rect x="162" y="88" width="142" height="18" rx="3" fill="#0a1a0a" stroke="#166534" stroke-width="1"/>
+      <text x="233" y="100" fill="#86efac" font-size="7" font-family="monospace" text-anchor="middle">test3.spec.ts - import renderLogin</text>
+      <!-- connector lines to shared lib -->
+      <line x1="233" y1="106" x2="233" y2="114" stroke="#166534" stroke-width="1"/>
+      <line x1="197" y1="106" x2="197" y2="108" stroke="#166534" stroke-width="1"/>
+      <line x1="269" y1="106" x2="269" y2="108" stroke="#166534" stroke-width="1"/>
+      <line x1="197" y1="108" x2="269" y2="108" stroke="#166534" stroke-width="1"/>
+      <line x1="233" y1="108" x2="233" y2="114" stroke="#166534" stroke-width="1.2"/>
+      <rect x="179" y="114" width="108" height="20" rx="3" fill="#14532d" stroke="#22c55e" stroke-width="1.5"/>
+      <text x="233" y="127" fill="#86efac" font-size="7.5" font-family="monospace" text-anchor="middle" font-weight="bold">test-utils.ts (shared)</text>
+      <rect x="162" y="142" width="142" height="18" rx="3" fill="#0a1a0a" stroke="#22c55e" stroke-width="1.5"/>
+      <text x="233" y="154" fill="#86efac" font-size="8" font-family="monospace" text-anchor="middle">~60 tokens · helpers tested once</text>
+      <text x="233" y="172" fill="#86efac" font-size="7" font-family="monospace" text-anchor="middle">consistent · reused by all prompts</text>
+    </svg>
+    </div>
+  </div>
+</div>
+<div class="ex-box"><span class="ex-label">Rule: </span><code>agents.md §rules: "import renderLogin from ../../test-utils - never redefine render wrappers"</code></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     12. BEST PRACTICES
+══════════════════════════════════════════════════════ -->
+<section>
+<h2>Best Practices</h2>
+<div class="two-col">
+  <div class="col">
+    <h3>Do</h3>
+    <ul class="ck">
+      <li>State platform + viewport in every prompt</li>
+      <li>List states: empty, loading, error, success</li>
+      <li>Paste stack traces back into the loop</li>
+      <li>Append resolved fails to agents.md §12</li>
+    </ul>
+    <h3 style="margin-top:.3em">Do not</h3>
+    <ul class="xx">
+      <li>"Test everything" - agent over-generates</li>
+      <li>Use click on mobile touch targets</li>
+      <li>Accept green tests without reading them</li>
+    </ul>
+  </div>
+  <div class="col-r">
+    <pre><code style="font-size:.55em"># Good prompt
+CONTEXT: LoginForm · 375px · iOS
+TASK: test empty submit
+ASSERT: error "Email required" shown
+FORMAT: Vitest + RTL · one describe</code></pre>
+    <pre style="margin-top:.2em"><code style="font-size:.55em"># Bad prompt
+"Write tests for the login form"</code></pre>
+  </div>
+</div>
+<div class="ex-box"><span class="ex-label">Running example: </span><code>bad: "test login" - good: "TASK: test empty submit shows error"</code></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     13. PEN TEST + REGRESSION
+══════════════════════════════════════════════════════ -->
+<section>
+<h2>Pen Test and Regression with Prompts</h2>
+<div class="two-col">
+  <div class="col">
+    <h3>Pen test prompt</h3>
+    <pre><code style="font-size:.55em">CONTEXT: LoginForm · mobile web
+TASK: security tests.
+COVER:
+- SQL injection in email field
+- XSS in password field
+- Auth bypass via empty token
+- Brute-force 429 rate limit
+FORMAT: Playwright · report findings.</code></pre>
+    <h3 style="margin-top:.3em">Regression prompt</h3>
+    <pre><code style="font-size:.55em">CONTEXT: login fix - commit abc123
+TASK: regression suite.
+COVER: all prior §12 failures.
+ASSERT: previously broken paths pass.
+FORMAT: Vitest · one file per fix.</code></pre>
+  </div>
+  <div class="col-r">
+    <div class="diagram">
+    <svg viewBox="0 0 320 215" xmlns="http://www.w3.org/2000/svg">
+      <!-- PEN TEST column -->
+      <text x="80"  y="10" fill="#f87171" font-size="8" font-family="monospace" text-anchor="middle" font-weight="bold">PEN TEST</text>
+      <rect x="10"  y="16" width="140" height="28" rx="4" fill="#1a0a0a" stroke="#991b1b" stroke-width="1.5"/>
+      <text x="16"  y="28" fill="#991b1b" font-size="10" font-family="monospace" font-weight="bold">①</text>
+      <text x="80"  y="28" fill="#f87171" font-size="8" font-family="monospace" text-anchor="middle">Prompt: attack vectors</text>
+      <text x="80"  y="39" fill="#666"    font-size="7" font-family="monospace" text-anchor="middle">SQLi · XSS · auth bypass</text>
+      <rect x="10"  y="54" width="140" height="28" rx="4" fill="#2d1b4e" stroke="#6d28d9" stroke-width="1.5"/>
+      <text x="16"  y="66" fill="#6d28d9" font-size="10" font-family="monospace" font-weight="bold">②</text>
+      <text x="80"  y="66" fill="#d8b4fe" font-size="8" font-family="monospace" text-anchor="middle">Agent probes app</text>
+      <text x="80"  y="77" fill="#666"    font-size="7" font-family="monospace" text-anchor="middle">generates attack tests</text>
+      <rect x="10"  y="92" width="65" height="26" rx="3" fill="#0a1a0a" stroke="#166534" stroke-width="1.2"/>
+      <text x="16"  y="104" fill="#166534" font-size="10" font-family="monospace" font-weight="bold">③</text>
+      <text x="42"  y="104" fill="#86efac" font-size="8" font-family="monospace" text-anchor="middle">Blocked</text>
+      <text x="42"  y="113" fill="#555"    font-size="7" font-family="monospace" text-anchor="middle">pass</text>
+      <rect x="85"  y="92" width="65" height="26" rx="3" fill="#1a0a0a" stroke="#991b1b" stroke-width="1.2"/>
+      <text x="91"  y="104" fill="#991b1b" font-size="10" font-family="monospace" font-weight="bold">③</text>
+      <text x="117" y="104" fill="#f87171" font-size="8" font-family="monospace" text-anchor="middle">Exploited</text>
+      <text x="117" y="113" fill="#555"    font-size="7" font-family="monospace" text-anchor="middle">fix + §12</text>
+      <!-- REGRESSION column -->
+      <text x="240" y="10" fill="#fcd34d" font-size="8" font-family="monospace" text-anchor="middle" font-weight="bold">REGRESSION</text>
+      <rect x="170" y="16" width="140" height="28" rx="4" fill="#1a1208" stroke="#92400e" stroke-width="1.5"/>
+      <text x="176" y="28" fill="#92400e" font-size="10" font-family="monospace" font-weight="bold">①</text>
+      <text x="240" y="28" fill="#fcd34d" font-size="8" font-family="monospace" text-anchor="middle">Prompt: §12 failures</text>
+      <text x="240" y="39" fill="#666"    font-size="7" font-family="monospace" text-anchor="middle">every prior resolved fix</text>
+      <rect x="170" y="54" width="140" height="28" rx="4" fill="#2d1b4e" stroke="#6d28d9" stroke-width="1.5"/>
+      <text x="176" y="66" fill="#6d28d9" font-size="10" font-family="monospace" font-weight="bold">②</text>
+      <text x="240" y="66" fill="#d8b4fe" font-size="8" font-family="monospace" text-anchor="middle">Agent runs suite</text>
+      <text x="240" y="77" fill="#666"    font-size="7" font-family="monospace" text-anchor="middle">one file per §12 entry</text>
+      <rect x="170" y="92" width="65" height="26" rx="3" fill="#0a1a0a" stroke="#166534" stroke-width="1.2"/>
+      <text x="176" y="104" fill="#166534" font-size="10" font-family="monospace" font-weight="bold">③</text>
+      <text x="202" y="104" fill="#86efac" font-size="8" font-family="monospace" text-anchor="middle">All pass</text>
+      <text x="202" y="113" fill="#555"    font-size="7" font-family="monospace" text-anchor="middle">green</text>
+      <rect x="245" y="92" width="65" height="26" rx="3" fill="#1a0a0a" stroke="#991b1b" stroke-width="1.2"/>
+      <text x="251" y="104" fill="#991b1b" font-size="10" font-family="monospace" font-weight="bold">③</text>
+      <text x="277" y="104" fill="#f87171" font-size="8" font-family="monospace" text-anchor="middle">Regressed</text>
+      <text x="277" y="113" fill="#555"    font-size="7" font-family="monospace" text-anchor="middle">new §12</text>
+      <!-- Shared bottom: agents.md + next prompt -->
+      <rect x="60"  y="134" width="200" height="28" rx="4" fill="#1c1430" stroke="#6d28d9" stroke-width="1.5"/>
+      <text x="66"  y="146" fill="#6d28d9" font-size="10" font-family="monospace" font-weight="bold">④</text>
+      <text x="160" y="146" fill="#d8b4fe" font-size="8.5" font-family="monospace" text-anchor="middle">agents.md §12 updated</text>
+      <text x="160" y="157" fill="#555"    font-size="7" font-family="monospace" text-anchor="middle">both flows feed same memory</text>
+      <rect x="60"  y="180" width="200" height="24" rx="4" fill="#0f172a" stroke="#3b82f6" stroke-width="1.2"/>
+      <text x="66"  y="192" fill="#3b82f6" font-size="10" font-family="monospace" font-weight="bold">⑤</text>
+      <text x="160" y="192" fill="#93c5fd" font-size="8" font-family="monospace" text-anchor="middle">Next prompt inherits rules</text>
+    </svg>
+    </div>
+  </div>
+</div>
+<div class="ex-box"><span class="ex-label">Running example: </span><code>XSS in email field blocked - §12 entry added</code></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     13. SUMMARY
+══════════════════════════════════════════════════════ -->
+<section>
+<h2>Summary - Prompt Testing across the V-Model</h2>
+<div class="two-col">
+  <div class="col">
+    <ul>
+      <li><span class="tag tu">Unit</span> Jest · pure logic</li>
+      <li><span class="tag tc">Component</span> RTL · touchEnd · 375px</li>
+      <li><span class="tag ti">Integration</span> MSW · API contracts</li>
+      <li><span class="tag ts">System</span> Playwright · device</li>
+      <li><span class="tag ta">agents.md</span> root - client - server</li>
+    </ul>
+    <p style="margin-top:.35em;font-size:.6em;color:var(--green)">
+      Prompt - Agent - Test - Fail - §12 - Better Prompt
+    </p>
+  </div>
+  <div class="col-r">
+    <div class="diagram">
+    <svg viewBox="0 0 370 195" xmlns="http://www.w3.org/2000/svg">
+      <line x1="88" y1="12" x2="185" y2="178" stroke="#374151" stroke-width="2"/>
+      <line x1="185" y1="178" x2="282" y2="12" stroke="#22c55e" stroke-width="2.5"/>
+      <line x1="88"  y1="12"  x2="282" y2="12"  stroke="#1f2937" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="111" y1="55"  x2="259" y2="55"  stroke="#1f2937" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="134" y1="98"  x2="236" y2="98"  stroke="#1f2937" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="157" y1="141" x2="213" y2="141" stroke="#1f2937" stroke-width="1" stroke-dasharray="3,3"/>
+      <circle cx="88"  cy="12"  r="4" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1.5"/>
+      <circle cx="111" cy="55"  r="4" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1.5"/>
+      <circle cx="134" cy="98"  r="4" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1.5"/>
+      <circle cx="157" cy="141" r="4" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1.5"/>
+      <circle cx="185" cy="178" r="6" fill="#78350f" stroke="#d97706" stroke-width="2"/>
+      <circle cx="282" cy="12"  r="4.5" fill="#7f1d1d" stroke="#ef4444" stroke-width="1.5"/>
+      <circle cx="259" cy="55"  r="4.5" fill="#78350f" stroke="#f59e0b" stroke-width="1.5"/>
+      <circle cx="236" cy="98"  r="4.5" fill="#78350f" stroke="#fcd34d" stroke-width="1.5"/>
+      <circle cx="213" cy="141" r="4.5" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="81"  y="15"  fill="#93c5fd" font-size="8.5" font-family="monospace" text-anchor="end">Requirements</text>
+      <text x="104" y="58"  fill="#93c5fd" font-size="8.5" font-family="monospace" text-anchor="end">System Design</text>
+      <text x="127" y="101" fill="#93c5fd" font-size="8.5" font-family="monospace" text-anchor="end">Architecture</text>
+      <text x="150" y="144" fill="#93c5fd" font-size="8.5" font-family="monospace" text-anchor="end">Module Design</text>
+      <text x="178" y="193" fill="#d97706" font-size="8.5" font-family="monospace" text-anchor="end">Code</text>
+      <text x="288" y="10"  fill="#f87171" font-size="8.5" font-family="monospace">Acceptance ⚡</text>
+      <text x="265" y="53"  fill="#f59e0b" font-size="8.5" font-family="monospace">System ⚡</text>
+      <text x="242" y="96"  fill="#fcd34d" font-size="8.5" font-family="monospace">Integration ⚡</text>
+      <text x="219" y="139" fill="#93c5fd" font-size="8.5" font-family="monospace">Component ⚡</text>
+      <text x="191" y="193" fill="#86efac" font-size="8.5" font-family="monospace">Unit ⚡</text>
+      <rect x="133" y="112" width="64" height="16" rx="3" fill="#2d1b4e" stroke="#6d28d9" stroke-width="1.2"/>
+      <text x="165" y="123" fill="#d8b4fe" font-size="7.5" font-family="monospace" text-anchor="middle">agents.md</text>
+    </svg>
+    </div>
+  </div>
+</div>
+<div class="ex-box"><span class="ex-label">Running example complete: </span><code>login form - unit + component + integration + e2e</code></div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     14. HOW TO RUN
+══════════════════════════════════════════════════════ -->
+<section>
+<h2>How to Run the Example</h2>
+<div class="two-col">
+  <div class="col">
+    <h3>① Setup</h3>
+    <pre><code style="font-size:.56em"># folder: meetup/test/example/
+node --version   # 18+
+npm install      # installs jest only</code></pre>
+    <h3 style="margin-top:.35em">② Folder structure</h3>
+    <pre><code style="font-size:.54em">example/
+├── package.json       jest only
+├── agents.md          root tier
+├── client/agents.md   UI rules + §12
+├── server/agents.md   API contracts + §12
+├── src/
+│   └── validateEmail.js
+└── tests/
+    └── unit/
+        └── validateEmail.test.js</code></pre>
+  </div>
+  <div class="col-r">
+    <h3>③ Run</h3>
+    <pre><code style="font-size:.56em"># Unit tests - pure logic, no DOM
+npm test
+
+# Output:
+# PASS tests/unit/validateEmail.test.js
+#   validateEmail
+#     ✓ returns false for empty string
+#     ✓ returns false when @ is missing
+#     ✓ returns false when domain missing
+#     ✓ returns true for a valid email
+#     ✓ throws TypeError for null
+#     ✓ throws TypeError for undefined
+#
+# Tests: 6 passed, 6 total</code></pre>
+    <div class="ex-box">
+      <span class="ex-label">Running example: </span>
+      <code>npm test → 6 tests · all green · pure JS · no DOM</code>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+     QUESTIONS
+══════════════════════════════════════════════════════ -->
+<section class="title-section">
+<div class="title-sl">
+  <h1 style="font-size:2.4em;margin-bottom:.6em">Questions?</h1>
+
+  <div class="fragment" style="margin:.4em 0;width:80%;text-align:left;background:#111;border:1px solid #1a2f1a;border-radius:6px;padding:.5em .9em">
+    <p style="font-size:.68em;color:#86efac;margin:0">What stops an agent from generating tests that always pass?</p>
+  </div>
+
+  <div class="fragment" style="margin:.4em 0;width:80%;text-align:left;background:#111;border:1px solid #1e3a5f;border-radius:6px;padding:.5em .9em">
+    <p style="font-size:.68em;color:#93c5fd;margin:0">If the agent writes the test and the code, who is accountable?</p>
+  </div>
+
+  <div class="fragment" style="margin:.4em 0;width:80%;text-align:left;background:#111;border:1px solid #2d1b4e;border-radius:6px;padding:.5em .9em">
+    <p style="font-size:.68em;color:#d8b4fe;margin:0">When does agents.md become the real codebase?</p>
+  </div>
+
+  <div class="meta" style="margin-top:1.2em">Mobile Web Meetup · 2026</div>
+  <a href="https://github.com/antrunner/meetup" style="margin-top:.6em;font-size:.52em;font-family:monospace;color:#333;text-decoration:none;letter-spacing:.04em" target="_blank">github.com/antrunner/meetup</a>
+</div>
+</section>
+
+</section><!-- end vertical stack -->
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script>
+Reveal.initialize({
+  hash: true,
+  slideNumber: 'c/t',
+  transition: 'slide',
+  transitionSpeed: 'fast',
+  navigationMode: 'linear',
+  controls: true,
+  progress: true,
+  center: false,
+  width: 1280,
+  height: 660,
+  margin: 0.03,
+  minScale: 0.2,
+  maxScale: 2.0,
+  plugins: [ RevealHighlight, RevealNotes ]
+});
+</script>
+</body>
+</html>
