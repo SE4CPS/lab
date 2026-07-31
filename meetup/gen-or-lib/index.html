@@ -1,124 +1,196 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
-<title>Generated Code vs Existing Libraries</title>
+<title>Who Should Implement the Code</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/white.min.css" id="theme"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-light.min.css"/>
 <style>
-body { margin:0; font-family:Arial,Helvetica,sans-serif; background:#fff; }
+body { margin:0; font-family:Arial,Helvetica,sans-serif; background:#eef7ee; }
+.reveal { --r-background-color:#eef7ee; background:#eef7ee; color:#1a1a1a; }
+.reveal .slides { background:#eef7ee; }
 .slides { width:98% !important; }
-.reveal { color:#1a1a1a; }
-
 h3, h4 { color:#1a1a1a !important; }
 h4 {
-    font-size:0.68em !important; font-weight:600 !important;
+    font-size:0.82em !important; font-weight:600 !important;
     color:#555 !important; letter-spacing:0.08em;
-    text-transform:uppercase; margin-bottom:.5rem !important;
+    text-transform:uppercase; margin-bottom:.6rem !important;
 }
-li   { font-size:10.5pt; line-height:1.4em; color:#222; }
+li { font-size:11.5pt; line-height:1.4em; color:#222; }
 
-.hl  { background:#fef3c7; color:#92400e; padding:1px 4px; border-radius:3px;
-       font-weight:bold; font-family:monospace; font-size:.9em; border:1px solid #d97706; }
-.dim { font-size:0.74em; color:#777; }
-.tag { display:inline-block; border:1px solid #999; padding:1px 6px;
-       border-radius:5px; font-size:0.74em; color:#444; margin:2px; }
+.hl { background:#fef3c7; color:#92400e; padding:1px 4px; border-radius:3px;
+      font-weight:bold; font-family:monospace; font-size:.95em; border:1px solid #d97706; }
+.dim { font-size:0.8em; color:#777; }
+.tag { display:inline-block; border:1px solid #999; padding:2px 7px;
+       border-radius:5px; font-size:0.8em; color:#444; margin:2px; }
 
-/* ── Two cards side by side ── */
-.pair { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-.plabel { font-size:0.58em; text-transform:uppercase; letter-spacing:.06em;
-          text-align:center; margin-bottom:3px; font-weight:600; }
-.tlabel { font-size:0.58em; color:#777; text-transform:uppercase;
-          letter-spacing:.06em; margin:4px 0 3px; }
+/* ── layout grids: split with vertical divider, centered ── */
+.pair  { display:grid; grid-template-columns:1fr 1fr; gap:0; align-items:center; }
+.triad { display:grid; grid-template-columns:1fr 1fr 1fr; gap:0; align-items:center; }
+.pair > div, .triad > div { text-align:center; padding:0 20px; }
+.pair > div:not(:first-child), .triad > div:not(:first-child) { border-left:1px solid #eee; }
+.plabel { font-size:0.7em; text-transform:uppercase; letter-spacing:.05em;
+          text-align:center; margin-bottom:6px; font-weight:600; color:#999; }
 
-/* ── Code / template card ── */
+/* ── code / concept card ── */
 .tmpl {
-    background:#f5f5f5; border:1px solid #ccc; border-radius:6px;
-    padding:8px 12px; font-family:monospace;
-    font-size:0.66em; line-height:1.5; color:#333;
-    white-space:pre; overflow:hidden; text-align:left; margin:0;
+    background:#fff; border:1px solid #e2e2e2; border-radius:8px;
+    padding:9px 13px; font-family:monospace;
+    font-size:0.82em; line-height:1.6; color:#333;
+    white-space:pre-wrap; overflow:hidden; text-align:left; margin:0 auto;
+    display:inline-block;
 }
-.tmpl.ios     { border-color:#2563eb; background:#eff6ff; }
-.tmpl.android { border-color:#15803d; background:#f0fdf4; }
-.tmpl.danger  { border-color:#b91c1c; background:#fef2f2; }
-.tmpl.gen     { border-color:#7c3aed; background:#f5f3ff; }
-.tmpl.lib     { border-color:#15803d; background:#f0fdf4; }
+.tmpl.full    { border-color:#c4b5fd; background:#fbfaff; }
+.tmpl.partial { border-color:#fcd34d; background:#fffdf7; }
+.tmpl.zero    { border-color:#86efac; background:#f8fdf9; }
+.tmpl.danger  { border-color:#fca5a5; background:#fffafa; }
+.tmpl .c { color:#8a8f98; } .tmpl .g { color:#15803d; } .tmpl .r { color:#b91c1c; }
+.tmpl code.hljs { background:transparent !important; padding:0; }
 
-.tmpl .v { color:#a16207; }
-.tmpl .c { color:#6b7280; }
-.tmpl .g { color:#15803d; }
-.tmpl .r { color:#b91c1c; }
-.tmpl .b { color:#1d4ed8; }
-.tmpl .y { color:#a16207; }
-.tmpl .p { color:#7c3aed; }
+/* ── callout ── */
+.box { background:#f0f6fd; border-left:3px solid #93c5fd; border-radius:0 6px 6px 0;
+       padding:7px 11px; font-size:0.82em; color:#1e3a5f; margin:6px 0; line-height:1.5; }
+.box.warn { background:#fdf2f2; border-left-color:#fca5a5; color:#7f1d1d; }
+.ann { font-size:0.74em; color:#888; font-style:italic; }
 
-/* ── Callout box ── */
-.box {
-    background:#eff6ff; border-left:3px solid #2563eb;
-    border-radius:0 5px 5px 0; padding:5px 9px;
-    font-size:0.72em; color:#1e3a5f; margin:5px 0; line-height:1.4;
-}
-.box.warn { background:#fef2f2; border-left-color:#b91c1c; color:#7f1d1d; }
-.sep  { border-top:1px solid #e5e7eb; margin:5px 0; }
-.ann  { font-size:0.63em; color:#666; font-style:italic; }
+/* ── assumptions list ── */
+ul.assume, .reveal ul.assume { list-style:none !important; margin:0; padding:0; }
+.assume li, .reveal ul.assume li { list-style:none !important; font-size:0.72em; color:#333; padding:4px 0 4px 20px; position:relative; border-bottom:1px solid #f0f0f0; }
+.assume li::marker { content:""; }
+.assume li:before { content:"•"; position:absolute; left:4px; color:#2563eb; font-weight:bold; }
+
+/* ── stepper ── */
+.stepper { display:flex; align-items:center; width:100%; margin:10px 0 6px; }
+.step { flex:0 0 auto; text-align:center; width:100px; }
+.step-dot { width:16px; height:16px; border-radius:50%; margin:0 auto 5px; border:2px solid #fff; box-shadow:0 0 0 1px #ccc; }
+.step-label { font-size:0.6em; font-weight:600; color:#333; }
+.step-line { flex:1; height:2px; background:#ccc; }
+
+/* ── concept diagrams ── */
+.concept-app { border:2px dashed #aaa; border-radius:8px; padding:9px; width:100%; }
+.concept-row { display:flex; gap:5px; justify-content:center; margin:4px 0; flex-wrap:wrap; }
+.concept-box { padding:5px 8px; border-radius:5px; font-family:monospace; font-size:0.62em; text-align:center; border:1px solid #999; }
+.concept-box.gen { background:#ede9fe; border-color:#7c3aed; color:#6d28d9; }
+.concept-box.lib { background:#dcfce7; border-color:#16a34a; color:#15803d; }
+.concept-box.cfg { background:#fef3c7; border-color:#d97706; color:#92400e; }
+.concept-arrow { text-align:center; font-size:0.6em; color:#888; margin:2px 0; }
+.concept-foot { text-align:center; font-size:0.58em; color:#666; margin-top:5px; font-family:monospace; }
 
 /* ══ VTREE ══ */
 .vtree { display:flex; flex-direction:column; align-items:center; font-size:0.85em; gap:0; width:100%; }
 .vt-root { background:#fef3c7; border:1.5px solid #d97706; color:#92400e; padding:5px 20px; border-radius:5px; font-family:monospace; font-weight:bold; }
 .vt-line-v { width:1px; background:#ccc; height:12px; }
-.vt-hbar   { height:1px; background:#ccc; width:96%; align-self:stretch; margin:0 2%; }
+.vt-hbar { height:1px; background:#ccc; width:96%; align-self:stretch; margin:0 2%; }
 .vt-branches { display:flex; justify-content:space-around; width:100%; gap:4px; }
 .vt-branch { display:flex; flex-direction:column; align-items:center; flex:1; }
 .vt-dim { background:#dbeafe; border:1px solid #2563eb; color:#1d4ed8; padding:4px 12px; border-radius:4px; font-family:monospace; text-align:center; }
-.vt-leaves { display:flex; gap:6px; flex-wrap:wrap; justify-content:center; }
-.vt-leaf { background:#dcfce7; border:1px solid #16a34a; color:#15803d; padding:3px 10px; border-radius:4px; font-size:0.85em; white-space:nowrap; }
-.vt-leaf.off { background:#fef3c7; border-color:#d97706; color:#92400e; }
-.vt-leaf.low { background:#fee2e2; border-color:#dc2626; color:#b91c1c; }
-.vt-leaf.p   { background:#ede9fe; border-color:#7c3aed; color:#6d28d9; }
-.vt-ann  { font-size:0.72em; color:#666; margin-top:3px; text-align:center; line-height:1.3; }
-.vt-out-node { background:#dcfce7; border:1.5px solid #16a34a; color:#15803d; padding:5px 18px; border-radius:5px; font-family:monospace; text-align:center; line-height:1.5; }
-.vt-out-node.prompt { background:#ede9fe; border-color:#7c3aed; color:#6d28d9; }
+.vt-ann { font-size:0.68em; color:#666; margin-top:3px; text-align:center; line-height:1.3; }
 
-/* ══ V-MODEL (recurring process diagram) ══ */
+/* ══ V-MODEL ══ */
 .vmodel { width:100%; margin:4px 0; }
-.vm-title { text-align:center; font-size:0.6em; color:#777; text-transform:uppercase; letter-spacing:.06em; margin-bottom:5px; }
-.vm-row { display:flex; justify-content:space-between; margin:3px 0; }
-.vm-box {
-    flex:0 0 44%; padding:5px 6px; border-radius:4px; font-size:0.6em;
-    font-family:monospace; text-align:center; border:1px solid #bbb;
-    background:#f5f5f5; color:#333;
-}
-.vm-box.here { background:#dbeafe; border-color:#2563eb; color:#1d4ed8; font-weight:bold; }
-.vm-apex {
-    width:36%; margin:4px auto 0; padding:6px 8px; border-radius:4px;
-    font-size:0.62em; font-family:monospace; text-align:center;
-    border:1.5px solid #7c3aed; background:#ede9fe; color:#6d28d9;
-}
-.vm-apex.here { border-color:#2563eb; background:#dbeafe; color:#1d4ed8; }
+.vm-row { display:flex; justify-content:space-between; margin:9px 0; }
+.vm-box { flex:0 0 44%; width:44%; height:34px; box-sizing:border-box;
+          display:flex; align-items:center; justify-content:center;
+          padding:0 6px; border-radius:6px; font-size:0.52em; font-family:monospace;
+          text-align:center; border:1px solid #e5e5e5; background:#fff; color:#444; }
+.vm-box.here { background:#dbeafe; border-color:#93c5fd; color:#1d4ed8; font-weight:bold; }
+.vm-box.good { background:#dcfce7; border-color:#86efac; color:#15803d; font-weight:bold; }
+.vm-box.mid  { background:#fef3c7; border-color:#fcd34d; color:#92400e; font-weight:bold; }
+.vm-box.bad  { background:#fee2e2; border-color:#fca5a5; color:#b91c1c; font-weight:bold; }
+.vm-apex { width:58%; height:36px; box-sizing:border-box; margin:8px auto 0;
+           display:flex; align-items:center; justify-content:center;
+           padding:0 8px; border-radius:6px; font-size:0.56em; font-family:monospace;
+           text-align:center; border:1.5px solid #c4b5fd; background:#faf8ff; color:#6d28d9; }
+.vm-apex.here { border-color:#93c5fd; background:#dbeafe; color:#1d4ed8; }
+.vm-apex.full { border-color:#c4b5fd; background:#faf8ff; color:#6d28d9; }
+.vm-apex.partial { border-color:#fcd34d; background:#fffdf5; color:#92400e; }
+.vm-apex.zero { border-color:#86efac; background:#f7fdf9; color:#15803d; }
 .vm-sub { font-size:0.85em; font-weight:normal; margin-top:2px; }
+.vm-legend { display:flex; justify-content:center; gap:14px; font-size:0.62em; margin-top:12px; color:#888; }
+.vm-legend-item { display:flex; align-items:center; gap:4px; }
+.vm-legend-dot { width:9px; height:9px; border-radius:50%; }
 
-/* ── File tree ── */
-.ftree { background:#f5f5f5; border:1px solid #ddd; border-radius:6px; padding:10px 16px; font-family:monospace; font-size:0.7em; line-height:1.9; color:#333; text-align:left; width:100%; }
-.ft-y { color:#a16207; } .ft-g { color:#15803d; } .ft-b { color:#1d4ed8; } .ft-p { color:#7c3aed; } .ft-d { color:#888; } .ft-r { color:#b91c1c; }
 
-/* ── Decision matrix ── */
-.matrix { width:100%; border-collapse:collapse; font-size:0.62em; }
-.matrix th { color:#666; text-transform:uppercase; letter-spacing:.05em; font-weight:600; padding:4px 6px; border-bottom:1px solid #ccc; text-align:left; }
-.matrix td { padding:4px 6px; border-bottom:1px solid #eee; color:#333; }
+
+/* ── bar-based comparisons ── */
+.tcard { text-align:center; }
+.tcard-label { font-size:0.76em; font-family:monospace; color:#444; margin-bottom:7px; min-height:2.4em; }
 .bar-wrap { display:flex; align-items:center; gap:4px; }
-.bar-track { background:#e5e7eb; height:6px; border-radius:3px; flex:1; overflow:hidden; }
-.bar-fill { height:100%; border-radius:3px; }
-.bar-fill.gen { background:#7c3aed; }
-.bar-fill.lib { background:#16a34a; }
+.bar-track { background:#f0f0f0; height:8px; border-radius:4px; flex:1; overflow:hidden; }
+.bar-fill { height:100%; border-radius:4px; }
+.bar-fill.full { background:#a78bfa; }
+.bar-fill.partial { background:#fbbf24; }
+.bar-fill.zero { background:#4ade80; }
 
-/* ── Mobile fit ── */
+/* ── decision matrix ── */
+.matrix { width:100%; border-collapse:collapse; font-size:0.68em; }
+.matrix th { color:#666; text-transform:uppercase; letter-spacing:.04em; font-weight:600; padding:5px 6px; border-bottom:1px solid #ccc; text-align:left; }
+.matrix td { padding:5px 6px; border-bottom:1px solid #eee; color:#333; }
+.matrix td.max { background:#dcfce7; color:#15803d; font-weight:700; border-radius:4px; }
+.matrix td.min { background:#fee2e2; color:#b91c1c; font-weight:700; border-radius:4px; }
+
+/* ── quadrant chart ── */
+.quad-block { max-width:420px; margin:6px auto 0; }
+.quad-ylabel { text-align:center; font-size:0.62em; color:#666; font-family:monospace; margin:5px 0; }
+.quad-grid { position:relative; width:100%; aspect-ratio:1/1; display:grid;
+             grid-template-columns:1fr 1fr; grid-template-rows:1fr 1fr;
+             border:2px solid #333; border-radius:8px; overflow:hidden; }
+.quad-cell { display:flex; flex-direction:column; align-items:center; justify-content:center;
+             font-size:0.58em; font-family:monospace; text-align:center; padding:4px; line-height:1.3; }
+.quad-cell .qc-sub { font-size:0.85em; color:#666; font-weight:normal; }
+.quad-cell.tl { background:#f0fdf4; border-right:1px dashed #999; border-bottom:1px dashed #999; color:#15803d; }
+.quad-cell.tr { background:#fffbeb; border-bottom:1px dashed #999; color:#92400e; }
+.quad-cell.bl { background:#f0fdf4; border-right:1px dashed #999; color:#15803d; }
+.quad-cell.br { background:#f5f3ff; color:#6d28d9; }
+.quad-xlabels { display:flex; justify-content:space-between; max-width:420px; margin:6px auto 0;
+                font-size:0.58em; color:#666; font-family:monospace; padding:0 4px; }
+.chip { position:absolute; transform:translate(-50%,-50%); background:#fff; border:1.5px solid #333;
+        border-radius:16px; padding:4px 9px; font-size:0.56em; font-family:monospace; cursor:grab;
+        box-shadow:0 1px 3px rgba(0,0,0,.18); touch-action:none; user-select:none; white-space:nowrap; z-index:5; }
+.chip:active { cursor:grabbing; box-shadow:0 2px 6px rgba(0,0,0,.3); }
+.quad-reset { display:block; margin:8px auto 0; font-size:0.62em; font-family:monospace; padding:4px 12px;
+              border:1px solid #999; border-radius:5px; background:#f5f5f5; color:#333; cursor:pointer; }
+.quad-reset:hover { background:#eee; }
+
+/* ── poll chart ── */
+.poll { width:100%; max-width:480px; margin:0 auto; }
+.poll-row { display:flex; align-items:center; gap:8px; margin:9px 0; }
+.poll-label { flex:0 0 80px; font-size:0.78em; font-family:monospace; text-align:right; color:#333; }
+.poll-track { flex:1; background:#eee; height:16px; border-radius:5px; overflow:hidden; }
+.poll-fill { height:100%; border-radius:5px; }
+.poll-fill.zero { background:#4ade80; }
+.poll-fill.partial { background:#fbbf24; }
+.poll-fill.full { background:#a78bfa; }
+.poll-count { flex:0 0 20px; font-size:0.78em; font-family:monospace; color:#333; }
+.quote-row { display:flex; gap:6px; flex-wrap:wrap; justify-content:center; margin-top:14px; }
+.quote-chip { background:#fff; border:1px solid #e5e5e5; border-radius:14px; padding:4px 11px;
+              font-size:0.68em; font-family:monospace; color:#555; }
+.quote-chip b { color:#222; }
+
+/* ── phone mockup (weather widget example) ── */
+.phone-mock { width:150px; border:3px solid #333; border-radius:20px; padding:12px 10px;
+              margin:0 auto; background:#fff; }
+.phone-mock .pm-label { font-size:0.6em; color:#888; font-family:monospace; margin-bottom:2px; }
+.phone-mock .pm-field { background:#fff; border:1px solid #ccc; border-radius:5px; padding:5px 7px;
+                         font-size:0.7em; font-family:monospace; color:#333; margin-bottom:8px; }
+.phone-mock .pm-btns { display:flex; gap:4px; margin-bottom:8px; }
+.phone-mock .pm-btn { flex:1; text-align:center; background:#eee; border:1px solid #ccc; border-radius:5px;
+                       padding:4px 0; font-size:0.62em; font-family:monospace; color:#555; }
+.phone-mock .pm-btn.sel { background:#dbeafe; border-color:#2563eb; color:#1d4ed8; font-weight:bold; }
+.phone-mock .pm-total { background:#f0fdf4; border:1px solid #16a34a; border-radius:5px; padding:6px 7px;
+                         font-size:0.72em; font-family:monospace; color:#15803d; text-align:center; font-weight:bold; }
+
 @media (max-width:720px) {
-  .pair { grid-template-columns:1fr; gap:6px; }
-  .tmpl { font-size:0.74em; }
+  .pair, .triad { grid-template-columns:1fr; gap:10px; }
+  .pair > div:not(:first-child), .triad > div:not(:first-child) { border-left:none; border-top:1px solid #ddd; padding:10px 0 0; }
+  .pair > div, .triad > div { padding-left:0; padding-right:0; }
+  .tmpl { font-size:0.85em; }
   .vt-branches { flex-direction:column; gap:8px; }
-  .vm-box { font-size:0.68em; }
+  .vm-box { font-size:0.78em; }
+  .stepper { flex-direction:column; gap:8px; }
+  .step-line { width:2px; height:16px; }
 }
 </style>
 </head>
@@ -127,670 +199,530 @@ li   { font-size:10.5pt; line-height:1.4em; color:#222; }
 
 <!-- 1. TITLE -->
 <section style="text-align:center">
-    <h3>Generated Code vs <span class="hl">Existing Libraries</span></h3>
-    <p style="margin-top:.3rem;color:#555;font-size:.82em">Mobile web apps — technical comparison</p>
-    <hr style="margin:.7rem 28%;border-color:#ddd">
-    <div style="display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-top:.7rem">
-        <span class="tag">speed</span><span class="tag">maintainability</span><span class="tag">security</span>
-        <span class="tag">support</span><span class="tag">community</span><span class="tag">collaboration</span>
-        <span class="tag">dependencies</span><span class="tag">license</span><span class="tag">legal</span><span class="tag">safety</span>
-    </div>
-    <p class="dim" style="margin-top:.8rem">antrunner meetup · Fri Jul 31 · meetup.com/antrunner</p>
+    <h3>Who Should Implement <span class="hl">the Code?</span></h3>
+    <p style="margin-top:.3rem;color:#555;font-size:.85em">Full · partial · zero generation</p>
+    <hr style="margin:.9rem 30%;border-color:#ddd">
+    <p class="dim">Example: a <b>weather widget</b></p>
 </section>
 
-<!-- 2. FRAMING -->
+<!-- 1b. LIVE POLL -->
 <section>
-    <h4>Two Ways to Get a Feature</h4>
+    <div class="poll">
+        <div class="poll-row"><div class="poll-label">libraries</div><div class="poll-track"><div class="poll-fill zero" style="width:100%"></div></div><div class="poll-count">5</div></div>
+        <div class="poll-row"><div class="poll-label">depends</div><div class="poll-track"><div class="poll-fill partial" style="width:40%"></div></div><div class="poll-count">2</div></div>
+        <div class="poll-row"><div class="poll-label">generate</div><div class="poll-track"><div class="poll-fill full" style="width:20%"></div></div><div class="poll-count">1</div></div>
+    </div>
+</section>
+
+<!-- 2. V-MODEL INTRO -->
+<section>
+    <h4>Guiding Process</h4>
+    <div class="vmodel">
+        <div class="vm-row" style="margin:0 0%"><div class="vm-box">Requirements</div><div class="vm-box">Acceptance</div></div>
+        <div class="vm-row" style="margin:0 9%"><div class="vm-box">System Design</div><div class="vm-box">System Test</div></div>
+        <div class="vm-row" style="margin:0 19%"><div class="vm-box">Architecture</div><div class="vm-box">Integration</div></div>
+        <div class="vm-row" style="margin:0 28%"><div class="vm-box">Module Design</div><div class="vm-box">Unit Test</div></div>
+        <div class="vm-apex here">Coding: who implements?</div>
+    </div>
+</section>
+
+<!-- 3b. WEATHER WIDGET EXAMPLE -->
+<section>
     <div class="pair">
         <div>
-            <div class="plabel" style="color:#7c3aed">Generated code</div>
-            <pre class="tmpl gen"><span class="c">Prompt: "date picker for a
-mobile web app"</span>
-
-<span class="c">→ new file, written for this app
-→ no external package added
-→ not reviewed by anyone else</span></pre>
+            <div class="plabel">requirement</div>
+            <ul class="assume">
+                <li>Enter a city</li>
+                <li>Show current temperature</li>
+                <li>Show condition</li>
+                <li>Works on mobile</li>
+            </ul>
         </div>
         <div>
-            <div class="plabel" style="color:#15803d">Existing library</div>
-            <pre class="tmpl lib"><span class="g">npm install flatpickr</span>
-
-<span class="c">→ existing, versioned package
-→ maintained outside this repo
-→ transitive dependencies added</span></pre>
+            <div class="phone-mock">
+                <div class="pm-label">City</div>
+                <div class="pm-field">Stuttgart</div>
+                <div class="pm-label">Now</div>
+                <div class="pm-total">18° Cloudy</div>
+            </div>
         </div>
     </div>
-    <div class="box">Each option changes what you own, what you test, and what you depend on. We compare both across a fixed set of aspects, then place the decision on a process model.</div>
 </section>
 
-<!-- 3. V-MODEL INTRO -->
+<!-- 4. THREE OPTIONS -->
 <section>
-    <h4>Guiding Process: the V-Model</h4>
-    <div class="vmodel">
-        <div class="vm-row" style="margin:0 0%">
-            <div class="vm-box">Requirements</div>
-            <div class="vm-box">Acceptance Test</div>
-        </div>
-        <div class="vm-row" style="margin:0 6%">
-            <div class="vm-box">System Design</div>
-            <div class="vm-box">System Test</div>
-        </div>
-        <div class="vm-row" style="margin:0 12%">
-            <div class="vm-box">Architecture</div>
-            <div class="vm-box">Integration Test</div>
-        </div>
-        <div class="vm-row" style="margin:0 18%">
-            <div class="vm-box">Module Design</div>
-            <div class="vm-box">Unit Test</div>
-        </div>
-        <div class="vm-apex here">Coding<div class="vm-sub">generated code vs library</div></div>
+    <h4>Three Options</h4>
+    <div class="stepper">
+        <div class="step"><div class="step-dot" style="background:#7c3aed"></div><div class="step-label">Full</div></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-dot" style="background:#d97706"></div><div class="step-label">Partial</div></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-dot" style="background:#15803d"></div><div class="step-label">Zero</div></div>
     </div>
-    <div class="box">Left side: specification, decomposed down to a module. Right side: verification against each corresponding left-side artifact. The generate-vs-borrow decision is made at the bottom (Coding) and is checked against every right-side stage above it. This diagram recurs through the deck to mark which stage each set of aspects maps to.</div>
+    <div class="triad" style="margin-top:10px">
+        <pre class="tmpl full">fetch + format
+by hand</pre>
+        <pre class="tmpl partial">fetch by hand
+icons: library</pre>
+        <pre class="tmpl zero">ready-made
+widget</pre>
+    </div>
 </section>
 
-<!-- 4. ASPECTS OVERVIEW -->
+<!-- 5. FULL GENERATION -->
+<section>
+    <div class="vmodel">
+        <div class="vm-row" style="margin:0 0%"><div class="vm-box">Requirements</div><div class="vm-box bad">Acceptance</div></div>
+        <div class="vm-row" style="margin:0 9%"><div class="vm-box">System Design</div><div class="vm-box bad">System Test</div></div>
+        <div class="vm-row" style="margin:0 19%"><div class="vm-box">Architecture</div><div class="vm-box bad">Integration</div></div>
+        <div class="vm-row" style="margin:0 28%"><div class="vm-box">Module Design</div><div class="vm-box bad">Unit Test</div></div>
+        <div class="vm-apex full">Coding: full generation</div>
+    </div>
+    <div class="plabel" style="margin-top:14px">weather widget</div>
+    <pre class="tmpl full" style="font-size:.68em"><code class="language-javascript" data-trim>function display(temp) {
+  return Math.round(temp) + '°';
+}</code></pre>
+    <div class="vm-legend">
+        <div class="vm-legend-item"><div class="vm-legend-dot" style="background:#16a34a"></div>already covered</div>
+        <div class="vm-legend-item"><div class="vm-legend-dot" style="background:#d97706"></div>partially covered</div>
+        <div class="vm-legend-item"><div class="vm-legend-dot" style="background:#dc2626"></div>your responsibility</div>
+    </div>
+</section>
+
+<!-- 6. PARTIAL GENERATION -->
+<section>
+    <div class="vmodel">
+        <div class="vm-row" style="margin:0 0%"><div class="vm-box">Requirements</div><div class="vm-box mid">Acceptance</div></div>
+        <div class="vm-row" style="margin:0 9%"><div class="vm-box">System Design</div><div class="vm-box mid">System Test</div></div>
+        <div class="vm-row" style="margin:0 19%"><div class="vm-box">Architecture</div><div class="vm-box mid">Integration</div></div>
+        <div class="vm-row" style="margin:0 28%"><div class="vm-box">Module Design</div><div class="vm-box mid">Unit Test</div></div>
+        <div class="vm-apex partial">Coding: partial generation</div>
+    </div>
+    <div class="plabel" style="margin-top:14px">weather widget</div>
+    <pre class="tmpl partial" style="font-size:.68em"><code class="language-javascript" data-trim>function display(temp) {
+  return Math.round(temp) + '°';
+}</code></pre>
+    <pre class="tmpl partial" style="font-size:.68em;margin-top:4px"><code class="language-bash" data-trim>npm install temperature-icons</code></pre>
+    <div class="vm-legend">
+        <div class="vm-legend-item"><div class="vm-legend-dot" style="background:#16a34a"></div>already covered</div>
+        <div class="vm-legend-item"><div class="vm-legend-dot" style="background:#d97706"></div>partially covered</div>
+        <div class="vm-legend-item"><div class="vm-legend-dot" style="background:#dc2626"></div>your responsibility</div>
+    </div>
+</section>
+
+<!-- 7. ZERO GENERATION -->
+<section>
+    <div class="vmodel">
+        <div class="vm-row" style="margin:0 0%"><div class="vm-box">Requirements</div><div class="vm-box good">Acceptance</div></div>
+        <div class="vm-row" style="margin:0 9%"><div class="vm-box">System Design</div><div class="vm-box mid">System Test</div></div>
+        <div class="vm-row" style="margin:0 19%"><div class="vm-box">Architecture</div><div class="vm-box good">Integration</div></div>
+        <div class="vm-row" style="margin:0 28%"><div class="vm-box">Module Design</div><div class="vm-box good">Unit Test</div></div>
+        <div class="vm-apex zero">Coding: zero generation</div>
+    </div>
+    <div class="plabel" style="margin-top:14px">weather widget</div>
+    <pre class="tmpl zero" style="font-size:.68em"><code class="language-bash" data-trim>npm install weather-widget</code></pre>
+    <div class="vm-legend">
+        <div class="vm-legend-item"><div class="vm-legend-dot" style="background:#16a34a"></div>already covered</div>
+        <div class="vm-legend-item"><div class="vm-legend-dot" style="background:#d97706"></div>partially covered</div>
+        <div class="vm-legend-item"><div class="vm-legend-dot" style="background:#dc2626"></div>your responsibility</div>
+    </div>
+</section>
+
+
+<!-- 8. ASPECTS OVERVIEW -->
 <section>
     <h4>Aspects Compared</h4>
     <div class="vtree">
-        <div class="vt-root">build vs borrow</div>
+        <div class="vt-root">who implements?</div>
         <div class="vt-line-v"></div>
         <div class="vt-hbar"></div>
         <div class="vt-branches">
-            <div class="vt-branch"><div class="vt-dim">runtime</div><div class="vt-ann">speed<br>performance<br>bundle size</div></div>
-            <div class="vt-branch"><div class="vt-dim">lifecycle</div><div class="vt-ann">maintainability<br>testing<br>docs</div></div>
-            <div class="vt-branch"><div class="vt-dim">risk</div><div class="vt-ann">security<br>dependencies<br>license / legal / safety</div></div>
-            <div class="vt-branch"><div class="vt-dim">people</div><div class="vt-ann">support<br>community<br>collaboration</div></div>
+            <div class="vt-branch"><div class="vt-dim">runtime</div><div class="vt-ann">speed<br>size</div></div>
+            <div class="vt-branch"><div class="vt-dim">lifecycle</div><div class="vt-ann">maintain<br>test</div></div>
+            <div class="vt-branch"><div class="vt-dim">risk</div><div class="vt-ann">security<br>license<br>legal · safety<br>accountability</div></div>
+            <div class="vt-branch"><div class="vt-dim">people</div><div class="vt-ann">support<br>community</div></div>
         </div>
     </div>
 </section>
 
-<!-- 5. SPEED -->
+<!-- 9. SPEED -->
 <section>
-    <h4>Speed: Time to a Working Screen</h4>
-    <div class="pair">
-        <div>
-            <div class="plabel" style="color:#7c3aed">Generated</div>
-            <pre class="tmpl gen"><span class="c">// toast.js</span>
-function toast(msg){
-  const el=document.createElement('div');
-  el.textContent=msg;
-  el.className='toast';
-  document.body.append(el);
-  setTimeout(()=>el.remove(),2000);
-}</pre>
-        </div>
-        <div>
-            <div class="plabel" style="color:#15803d">Library</div>
-            <pre class="tmpl lib"><span class="g">&lt;script src="toastify.js"&gt;&lt;/script&gt;
-&lt;link rel="stylesheet"
-  href="toastify.css"&gt;</span>
-
-Toastify({text:"Saved"}).showToast();</pre>
-        </div>
+    <h4>Speed to Working Screen</h4>
+    <div class="triad">
+        <div class="tcard"><div class="tcard-label">code exists<br>immediately</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill full" style="width:90%"></div></div></div></div>
+        <div class="tcard"><div class="tcard-label">glue fast,<br>lib install adds time</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill partial" style="width:65%"></div></div></div></div>
+        <div class="tcard"><div class="tcard-label">install + read<br>docs per piece</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill zero" style="width:50%"></div></div></div></div>
     </div>
-    <div class="ann">Generated: no lookup step, code is present immediately. Library: install + read API before first use.</div>
 </section>
 
-<!-- 6. MAINTAINABILITY -->
+<!-- 10. MAINTAINABILITY -->
 <section>
     <h4>Maintainability</h4>
-    <div class="pair">
-        <div>
-            <div class="plabel" style="color:#7c3aed">Generated</div>
-            <pre class="tmpl gen"><span class="c">// validateForm.js</span>
-function validateForm(f){
-  if(!f.email.includes('@'))return false;
-  <span class="r">// 12 more inline rules,
-  // no comments, no tests</span>
-  return true;
-}</pre>
-        </div>
-        <div>
-            <div class="plabel" style="color:#15803d">Library</div>
-            <pre class="tmpl lib"><span class="g">const schema = yup.object({
-  email: yup.string().email(),
-  age: yup.number().min(18)
-});
-schema.validate(form);</span></pre>
-        </div>
-    </div>
-    <div class="ann">Generated: logic lives only in this file. Library: declarative schema, documented API, shared across the codebase.</div>
-</section>
-
-<!-- 7. SECURITY -->
-<section>
-    <h4>Security: Untrusted Input</h4>
-    <div class="pair">
-        <div>
-            <div class="plabel" style="color:#7c3aed">Generated</div>
-            <pre class="tmpl danger"><span class="c">function clean(html){</span>
-  <span class="r">return html.replace(/&lt;script&gt;/g,'');</span>
-<span class="c">}</span>
-el.innerHTML = clean(userBio);
-
-<span class="r">misses onerror=, svg, style=</span></pre>
-        </div>
-        <div>
-            <div class="plabel" style="color:#15803d">Library</div>
-            <pre class="tmpl lib"><span class="g">import DOMPurify from 'dompurify';
-el.innerHTML =
-  DOMPurify.sanitize(userBio);</span>
-
-<span class="c">tested against known XSS vectors,
-patched on CVE disclosure</span></pre>
-        </div>
+    <div class="triad">
+        <div class="tcard"><div class="tcard-label">no shared<br>pattern</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill full" style="width:30%"></div></div></div></div>
+        <div class="tcard"><div class="tcard-label">shared pattern<br>for lib part only</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill partial" style="width:60%"></div></div></div></div>
+        <div class="tcard"><div class="tcard-label">shared pattern<br>throughout</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill zero" style="width:85%"></div></div></div></div>
     </div>
 </section>
 
-<!-- 8. SUPPORT -->
+<!-- 11. SECURITY -->
 <section>
-    <h4>Support When Something Breaks</h4>
-    <div class="pair">
-        <div>
-            <div class="plabel" style="color:#7c3aed">Generated</div>
-            <pre class="tmpl gen"><span class="c">Bug: swipe-to-dismiss glitches
-on iOS Safari.</span>
-<span class="r">→ re-prompt, no changelog,
-  no record of prior fixes</span></pre>
-        </div>
-        <div>
-            <div class="plabel" style="color:#15803d">Library</div>
-            <pre class="tmpl lib"><span class="c">Same bug in
-react-swipeable-views.</span>
-<span class="g">→ GitHub issue exists
-→ patched in a released version
-→ CHANGELOG documents the fix</span></pre>
-        </div>
+    <h4>Security</h4>
+    <div class="triad">
+        <div class="tcard"><div class="tcard-label">sanitizer<br>reimplemented</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill full" style="width:25%"></div></div></div></div>
+        <div class="tcard"><div class="tcard-label">sanitizer via lib,<br>small glue surface</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill partial" style="width:70%"></div></div></div></div>
+        <div class="tcard"><div class="tcard-label">sanitizer fully<br>audited</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill zero" style="width:85%"></div></div></div></div>
     </div>
 </section>
 
-<!-- 9. COMMUNITY -->
+<!-- 12. SUPPORT & COMMUNITY -->
 <section>
-    <h4>Community Coverage</h4>
-    <div class="pair">
-        <div>
-            <div class="plabel" style="color:#7c3aed">Generated</div>
-            <pre class="tmpl gen">function debounce(fn, ms){
-  let t;
-  return (...a)=>{
-    clearTimeout(t);
-    t=setTimeout(()=>fn(...a),ms);
-  };
-}
-<span class="r">single implementation, unreviewed</span></pre>
-        </div>
-        <div>
-            <div class="plabel" style="color:#15803d">Library</div>
-            <pre class="tmpl lib"><span class="g">import { debounce } from 'lodash';</span>
-
-<span class="c">60k stars, 30M weekly downloads,
-edge cases reported over years</span></pre>
-        </div>
+    <h4>Support &amp; Community</h4>
+    <div class="triad">
+        <div class="tcard"><div class="tcard-label">no issue tracker,<br>no changelog</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill full" style="width:20%"></div></div></div></div>
+        <div class="tcard"><div class="tcard-label">coverage for<br>lib part only</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill partial" style="width:55%"></div></div></div></div>
+        <div class="tcard"><div class="tcard-label">full issue history,<br>changelogs</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill zero" style="width:90%"></div></div></div></div>
     </div>
 </section>
 
-<!-- 10. COLLABORATION -->
+<!-- 13. V-MODEL CHECKPOINT 2 -->
 <section>
-    <h4>Collaboration Across a Team</h4>
-    <div class="pair">
-        <div>
-            <div class="plabel" style="color:#7c3aed">Generated</div>
-            <pre class="tmpl gen"><span class="c">Dev A prompt → carousel v1
-Dev B prompt → carousel v2</span>
-<span class="r">different API shape each time</span></pre>
-        </div>
-        <div>
-            <div class="plabel" style="color:#15803d">Library</div>
-            <pre class="tmpl lib"><span class="g">import Swiper from 'swiper';
-new Swiper('.carousel', {...});</span>
-<span class="c">one documented API, one baseline
-for code review</span></pre>
-        </div>
-    </div>
-</section>
-
-<!-- 11. V-MODEL CHECKPOINT 2 -->
-<section>
-    <h4>Process Checkpoint: Module Design / Unit Test</h4>
     <div class="vmodel">
-        <div class="vm-row" style="margin:0 0%"><div class="vm-box">Requirements</div><div class="vm-box">Acceptance Test</div></div>
-        <div class="vm-row" style="margin:0 6%"><div class="vm-box">System Design</div><div class="vm-box">System Test</div></div>
-        <div class="vm-row" style="margin:0 12%"><div class="vm-box">Architecture</div><div class="vm-box">Integration Test</div></div>
-        <div class="vm-row" style="margin:0 18%"><div class="vm-box">Module Design</div><div class="vm-box here">Unit Test</div></div>
+        <div class="vm-row" style="margin:0 0%"><div class="vm-box">Requirements</div><div class="vm-box">Acceptance</div></div>
+        <div class="vm-row" style="margin:0 9%"><div class="vm-box">System Design</div><div class="vm-box">System Test</div></div>
+        <div class="vm-row" style="margin:0 19%"><div class="vm-box">Architecture</div><div class="vm-box">Integration</div></div>
+        <div class="vm-row" style="margin:0 28%"><div class="vm-box">Module Design</div><div class="vm-box here">Unit Test</div></div>
         <div class="vm-apex">Coding</div>
     </div>
-    <div class="box">The next slides (dependencies, bundle size, testing, docs) map to the module/unit-test level: what a single component costs and how it is verified in isolation.</div>
+    <div class="ann" style="text-align:center;margin-top:8px">Unit Test verifies a single module in isolation: does this one piece do what it's supposed to, on its own, before anything else depends on it.</div>
 </section>
 
-<!-- 12. DEPENDENCY TREE -->
+<!-- 14. DEPENDENCY FOOTPRINT -->
 <section>
-    <h4>Libraries Depend on Libraries</h4>
+    <h4>Dependency Footprint</h4>
     <div class="vtree">
-        <div class="vt-root">your-mobile-app</div>
+        <div class="vt-root">your-app</div>
         <div class="vt-line-v"></div>
         <div class="vt-hbar"></div>
         <div class="vt-branches">
-            <div class="vt-branch"><div class="vt-dim">swiper</div><div class="vt-line-v"></div>
-                <div class="vt-leaves"><div class="vt-leaf">dom7</div><div class="vt-leaf">ssr-window</div></div></div>
-            <div class="vt-branch"><div class="vt-dim">dompurify</div><div class="vt-line-v"></div>
-                <div class="vt-leaves"><div class="vt-leaf p">zero deps</div></div></div>
+            <div class="vt-branch"><div class="vt-dim">weather-widget</div>
+                <div class="vt-line-v"></div>
+                <div class="vt-leaves">
+                    <div class="vt-leaf">moment</div>
+                    <div class="vt-leaf">dom-helpers</div>
+                    <div class="vt-leaf">prop-types</div>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="ann">One `npm install` can pull in transitive packages you never chose directly.</div>
+    <div class="ann" style="text-align:center;margin-top:8px">One npm install can pull in packages you never chose directly.</div>
 </section>
 
-<!-- 13. DEPENDENCY RISK -->
+<!-- 15. BUNDLE SIZE -->
 <section>
-    <h4>Dependency Risk: left-pad (2016)</h4>
-    <pre class="tmpl danger" style="font-size:.7em">your-app
-  └─ ui-kit
-       └─ left-pad@1.3.0   <span class="r">unpublished from npm</span>
-
-<span class="r">$ npm install
-npm ERR! 404  'left-pad@1.3.0' is not in the registry</span></pre>
-    <div class="box">Generated code has no transitive dependencies by construction — this failure mode does not apply to it, at the cost of everything on the previous slides.</div>
-</section>
-
-<!-- 14. BUNDLE SIZE -->
-<section>
-    <h4>Bundle Size (minified)</h4>
-    <pre class="tmpl" style="font-size:.68em"><span class="p">generated toast.js      0.4 kB</span>
-<span class="g">toastify-js             3.1 kB</span>
-<span class="g">flatpickr               16 kB</span>
-<span class="g">moment.js               67 kB</span>
-<span class="g">lodash (full)           71 kB</span>
-<span class="b">react + react-dom       130 kB</span></pre>
-    <div class="ann">On throttled mobile networks each additional 50 kB adds measurable load time.</div>
-</section>
-
-<!-- 15. RUNTIME PERFORMANCE -->
-<section>
-    <h4>Runtime: Narrow vs General Purpose</h4>
-    <div class="pair">
-        <div>
-            <div class="plabel" style="color:#7c3aed">Generated</div>
-            <pre class="tmpl gen">function fmtPrice(cents){
-  return '$' + (cents/100).toFixed(2);
-}
-<span class="c">no locale table, one branch</span></pre>
-        </div>
-        <div>
-            <div class="plabel" style="color:#15803d">Library</div>
-            <pre class="tmpl lib"><span class="g">new Intl.NumberFormat('en-US',
-  {style:'currency',currency:'USD'})
-  .format(cents/100);</span>
-<span class="c">190+ locales, more branching per call</span></pre>
-        </div>
+    <h4>Bundle Size</h4>
+    <div class="triad">
+        <div class="tcard"><div class="tcard-label">smallest<br>only used paths</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill full" style="width:15%"></div></div></div></div>
+        <div class="tcard"><div class="tcard-label">glue light,<br>lib adds weight</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill partial" style="width:50%"></div></div></div></div>
+        <div class="tcard"><div class="tcard-label">largest<br>general purpose</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill zero" style="width:80%"></div></div></div></div>
     </div>
 </section>
 
-<!-- 16. LEARNING CURVE -->
+<!-- 16. TESTING & DOCS -->
 <section>
-    <h4>Learning Curve for a New Contributor</h4>
-    <div class="pair">
-        <div>
-            <div class="plabel" style="color:#7c3aed">Generated</div>
-            <pre class="tmpl gen"><span class="c">gestureHandler.js
-200 lines, no comments,
-one prompt session's decisions</span>
-<span class="r">must read the whole file</span></pre>
-        </div>
-        <div>
-            <div class="plabel" style="color:#15803d">Library</div>
-            <pre class="tmpl lib"><span class="g">import { useSwipeable } from
-  'react-swipeable';</span>
-<span class="c">docs and prior examples exist</span></pre>
-        </div>
+    <h4>Testing &amp; Docs</h4>
+    <div class="triad">
+        <div class="tcard"><div class="tcard-label">none unless<br>separately built</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill full" style="width:10%"></div></div></div></div>
+        <div class="tcard"><div class="tcard-label">lib part covered,<br>glue is not</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill partial" style="width:55%"></div></div></div></div>
+        <div class="tcard"><div class="tcard-label">fully tested<br>&amp; documented</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill zero" style="width:90%"></div></div></div></div>
     </div>
 </section>
 
-<!-- 17. CUSTOMIZATION -->
-<section>
-    <h4>Customization</h4>
-    <div class="pair">
-        <div>
-            <div class="plabel" style="color:#7c3aed">Generated</div>
-            <pre class="tmpl gen"><span class="c">// exact behaviour requested,
-// no more, no less</span>
-function openSheet(el){ ... }</pre>
-        </div>
-        <div>
-            <div class="plabel" style="color:#15803d">Library</div>
-            <pre class="tmpl lib"><span class="g">new BottomSheet(el, {
-  initialBreakpoint: 0.5,
-  breakpoints:[0,0.5,1]
-});</span>
-<span class="r">limited to exposed options</span></pre>
-        </div>
-    </div>
-</section>
-
-<!-- 18. TESTING -->
-<section>
-    <h4>Test Coverage</h4>
-    <div class="pair">
-        <div>
-            <div class="plabel" style="color:#7c3aed">Generated</div>
-            <pre class="tmpl gen"><span class="c">no tests unless separately
-requested and reviewed</span></pre>
-        </div>
-        <div>
-            <div class="plabel" style="color:#15803d">Library</div>
-            <pre class="tmpl lib"><span class="c">hammer.js test suite:</span>
-<span class="g">400+ unit tests
-CI across Chrome / Safari / Firefox</span></pre>
-        </div>
-    </div>
-</section>
-
-<!-- 19. DOCUMENTATION -->
-<section>
-    <h4>Documentation</h4>
-    <div class="pair">
-        <div>
-            <div class="plabel" style="color:#7c3aed">Generated</div>
-            <pre class="tmpl gen"><span class="c">only artifact is the prompt
-that produced it, if kept</span></pre>
-        </div>
-        <div>
-            <div class="plabel" style="color:#15803d">Library</div>
-            <pre class="tmpl lib"><span class="g">swiperjs.com/swiper-api</span>
-<span class="c">versioned docs, migration guides</span></pre>
-        </div>
-    </div>
-    <div class="ann">Recommendation independent of the choice: write a short README for generated code, same as for a dependency.</div>
-</section>
-
-<!-- 20. LICENSE -->
+<!-- 17. LICENSE -->
 <section>
     <h4>License</h4>
-    <div class="pair">
-        <div>
-            <div class="plabel" style="color:#7c3aed">Generated</div>
-            <pre class="tmpl gen"><span class="c">Training data provenance is not
-traceable per snippet.</span>
-<span class="r">reuse of licensed patterns from
-training data cannot be ruled out</span></pre>
-        </div>
-        <div>
-            <div class="plabel" style="color:#15803d">Library</div>
-            <pre class="tmpl lib"><span class="g">package.json → "license": "MIT"</span>
-<span class="c">SPDX identifier, scannable in CI,
-compatible/incompatible with your
-project's license is checkable</span></pre>
-        </div>
+    <div class="triad">
+        <div class="tcard"><div class="tcard-label">no traceable<br>provenance</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill full" style="width:20%"></div></div></div></div>
+        <div class="tcard"><div class="tcard-label">clear for lib,<br>unclear for glue</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill partial" style="width:60%"></div></div></div></div>
+        <div class="tcard"><div class="tcard-label">every line<br>declared</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill zero" style="width:95%"></div></div></div></div>
     </div>
-    <div class="box">Check license compatibility before adding a dependency: MIT/BSD/Apache-2.0 are generally permissive; GPL/AGPL impose copyleft obligations on distribution.</div>
 </section>
 
-<!-- 21. LEGAL -->
+<!-- 18. LEGAL -->
 <section>
     <h4>Legal</h4>
-    <pre class="tmpl" style="font-size:.66em"><span class="c">Library:</span>     license file states terms; author/copyright
-             holder is identified; most licenses disclaim
-             warranty ("AS IS").
-
-<span class="c">Generated:</span>   output ownership and IP status of
-             AI-generated code varies by jurisdiction and
-             by the terms of the tool used to generate it.
-             No warranty is typically offered either way.</pre>
-    <div class="box warn">Review the terms of service of the code-generation tool for IP/ownership clauses, and check your organization's policy before shipping AI-generated code in a product.</div>
+    <div class="triad">
+        <div class="tcard"><div class="tcard-label">IP status<br>unclear, app-wide</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill full" style="width:20%"></div></div></div></div>
+        <div class="tcard"><div class="tcard-label">unclear only<br>for glue</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill partial" style="width:55%"></div></div></div></div>
+        <div class="tcard"><div class="tcard-label">standard OSS<br>terms apply</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill zero" style="width:90%"></div></div></div></div>
+    </div>
+    <div class="box warn">Check the code-gen tool's ToS for IP/ownership clauses.</div>
 </section>
 
-<!-- 22. SAFETY -->
+<!-- 19. SAFETY -->
 <section>
-    <h4>Safety: Executing Unreviewed Code</h4>
+    <h4>Safety</h4>
     <div class="pair">
         <div>
-            <div class="plabel" style="color:#7c3aed">Generated</div>
-            <pre class="tmpl gen"><span class="c">Risk: plausible-looking code
-that is subtly wrong, run without
-independent review.</span></pre>
+            <div class="plabel">full / partial</div>
+            <pre class="tmpl full" style="font-size:.64em">risk: plausible code
+that is subtly wrong,
+run without prior use</pre>
         </div>
         <div>
-            <div class="plabel" style="color:#15803d">Library</div>
-            <pre class="tmpl danger"><span class="c">Risk: supply-chain attack —
-typosquatted package name, or a
-compromised maintainer account
-publishing a malicious version.</span></pre>
+            <div class="plabel">zero</div>
+            <pre class="tmpl zero" style="font-size:.64em">risk: supply-chain:
+typosquatting, compromised
+maintainer account</pre>
         </div>
     </div>
-    <div class="box warn">Both paths need review before running in production: diff generated code like any patch; pin and audit library versions (lockfile + `npm audit` / SCA tooling).</div>
+    <div class="box warn">All three need review: diff generated code like a patch; pin + audit library versions.</div>
 </section>
 
-<!-- 23. V-MODEL CHECKPOINT 3 -->
+<!-- 20. V-MODEL CHECKPOINT 3 -->
 <section>
-    <h4>Process Checkpoint: Acceptance Test</h4>
     <div class="vmodel">
-        <div class="vm-row" style="margin:0 0%"><div class="vm-box">Requirements</div><div class="vm-box here">Acceptance Test</div></div>
-        <div class="vm-row" style="margin:0 6%"><div class="vm-box">System Design</div><div class="vm-box">System Test</div></div>
-        <div class="vm-row" style="margin:0 12%"><div class="vm-box">Architecture</div><div class="vm-box">Integration Test</div></div>
-        <div class="vm-row" style="margin:0 18%"><div class="vm-box">Module Design</div><div class="vm-box">Unit Test</div></div>
+        <div class="vm-row" style="margin:0 0%"><div class="vm-box">Requirements</div><div class="vm-box here">Acceptance</div></div>
+        <div class="vm-row" style="margin:0 9%"><div class="vm-box">System Design</div><div class="vm-box">System Test</div></div>
+        <div class="vm-row" style="margin:0 19%"><div class="vm-box">Architecture</div><div class="vm-box">Integration</div></div>
+        <div class="vm-row" style="margin:0 28%"><div class="vm-box">Module Design</div><div class="vm-box">Unit Test</div></div>
         <div class="vm-apex">Coding</div>
     </div>
-    <div class="box">License, legal, and safety checks belong here: they validate against the original requirements (compliance, IP, deployability), not against a single module's logic.</div>
+    <div class="ann" style="text-align:center;margin-top:6px">License / legal / safety validate here, against requirements.</div>
 </section>
 
-<!-- 24. VENDOR LOCK-IN -->
+<!-- 21. LOCK-IN & VIABILITY -->
 <section>
-    <h4>Vendor Lock-in</h4>
-    <div class="pair">
-        <div>
-            <div class="plabel" style="color:#7c3aed">Generated</div>
-            <pre class="tmpl gen"><span class="g">No import tied to a third party.</span>
-<span class="c">file can be rewritten independently</span></pre>
+    <h4>Lock-in &amp; Viability</h4>
+    <div class="box">Lock-in: how hard it is to replace later. Viability: whether it will still be maintained.</div>
+    <div class="triad">
+        <div class="tcard"><div class="tcard-label">no dep to<br>abandon</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill full" style="width:10%"></div></div></div></div>
+        <div class="tcard"><div class="tcard-label">limited to<br>chosen libs</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill partial" style="width:50%"></div></div></div></div>
+        <div class="tcard"><div class="tcard-label">spread across<br>full stack</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill zero" style="width:85%"></div></div></div></div>
+    </div>
+    <div class="ann">moment.js marked legacy by its own maintainers, 2020.</div>
+</section>
+
+<!-- 21b. ONGOING MAINTENANCE -->
+<section>
+    <h4>Ongoing Maintenance</h4>
+    <div class="vtree">
+        <div class="vt-root">weather-widget</div>
+        <div class="vt-line-v"></div>
+        <div class="vt-hbar"></div>
+        <div class="vt-branches">
+            <div class="vt-branch">
+                <div class="vt-dim">moment</div>
+                <div class="vt-line-v"></div>
+                <div class="vt-leaves">
+                    <div class="vt-leaf off">patch</div>
+                    <div class="vt-leaf off">minor</div>
+                    <div class="vt-leaf off">major</div>
+                </div>
+            </div>
+            <div class="vt-branch">
+                <div class="vt-dim">dom-helpers</div>
+                <div class="vt-line-v"></div>
+                <div class="vt-leaves"><div class="vt-leaf off">update</div></div>
+            </div>
+            <div class="vt-branch">
+                <div class="vt-dim">prop-types</div>
+                <div class="vt-line-v"></div>
+                <div class="vt-leaves"><div class="vt-leaf off">update</div></div>
+            </div>
         </div>
-        <div>
-            <div class="plabel" style="color:#15803d">Library</div>
-            <pre class="tmpl lib"><span class="r">import { Chart } from 'chart.js';
-// 40 call sites use this API</span>
-<span class="c">swapping libraries means rewriting
-every call site</span></pre>
-        </div>
+    </div>
+    <div class="ann" style="text-align:center;margin-top:8px">Each dependency is a future update to track. Full generation has no tree to update, but no track record either.</div>
+</section>
+
+<!-- 22. DEBUGGING & REVIEW -->
+<section>
+    <h4>Debugging &amp; Review</h4>
+    <div class="triad">
+        <div class="tcard"><div class="tcard-label">full trace,<br>full review load</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill full" style="width:90%"></div></div></div></div>
+        <div class="tcard"><div class="tcard-label">scales with<br>glue size</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill partial" style="width:55%"></div></div></div></div>
+        <div class="tcard"><div class="tcard-label">review: pick<br>right version</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill zero" style="width:30%"></div></div></div></div>
     </div>
 </section>
 
-<!-- 25. LONG-TERM VIABILITY -->
+<!-- 23. FROM-SCRATCH RISK -->
 <section>
-    <h4>Long-Term Viability</h4>
-    <pre class="tmpl" style="font-size:.66em"><span class="c">moment.js  → marked legacy by its own maintainers (2020)</span>
-<span class="c">request    → deprecated, "feature complete"</span>
-<span class="c">left-pad   → unpublished entirely (2016)</span>
-
-<span class="c">check before adding: last commit date, open issue
-age, number of maintainers, deprecation notices</span></pre>
-    <div class="ann">Generated code is not "abandoned", but it also receives no upstream patch for a CVE found later.</div>
-</section>
-
-<!-- 26. DEBUGGING -->
-<section>
-    <h4>Debugging</h4>
-    <div class="pair">
-        <div>
-            <div class="plabel" style="color:#7c3aed">Generated</div>
-            <pre class="tmpl gen"><span class="g">Stack trace points to your own
-40-line file.</span></pre>
-        </div>
-        <div>
-            <div class="plabel" style="color:#15803d">Library</div>
-            <pre class="tmpl lib"><span class="r">Stack trace goes into minified
-vendor code; needs source maps.</span></pre>
-        </div>
+    <h4>Risk of From-Scratch Code</h4>
+    <pre class="tmpl danger" style="font-size:.68em"><code class="language-javascript" data-trim>fetch('/api/v2/verify')  // endpoint doesn't exist
+el.innerHTML = renderMarkdown(x)  // looks safe, isn't</code></pre>
+    <div class="triad" style="margin-top:6px">
+        <div class="tcard"><div class="tcard-label">exposure:<br>whole app</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill full" style="width:90%"></div></div></div></div>
+        <div class="tcard"><div class="tcard-label">exposure:<br>glue only</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill partial" style="width:35%"></div></div></div></div>
+        <div class="tcard"><div class="tcard-label">not<br>applicable</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill zero" style="width:5%"></div></div></div></div>
     </div>
 </section>
 
-<!-- 27. CODE REVIEW -->
+<!-- 24. ACCESSIBILITY & COMPAT -->
 <section>
-    <h4>Code Review</h4>
-    <div class="pair">
-        <div>
-            <div class="plabel" style="color:#7c3aed">Generated</div>
-            <pre class="tmpl gen"><span class="c">every line needs verification —
-nothing pre-reviewed by anyone</span></pre>
-        </div>
-        <div>
-            <div class="plabel" style="color:#15803d">Library</div>
-            <pre class="tmpl lib"><span class="c">review checks: correct library,
-correct version, correct usage</span></pre>
-        </div>
+    <h4>Accessibility &amp; Compatibility</h4>
+    <div class="triad">
+        <div class="tcard"><div class="tcard-label">build &amp; verify<br>yourself</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill full" style="width:20%"></div></div></div></div>
+        <div class="tcard"><div class="tcard-label">lib covers<br>sensitive UI</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill partial" style="width:60%"></div></div></div></div>
+        <div class="tcard"><div class="tcard-label">inherited,<br>verify assembly</div><div class="bar-wrap"><div class="bar-track"><div class="bar-fill zero" style="width:85%"></div></div></div></div>
     </div>
 </section>
 
-<!-- 28. AI-SPECIFIC RISKS -->
+<!-- 26. DECISION MATRIX -->
 <section>
-    <h4>Risks Specific to Generated Code</h4>
-    <pre class="tmpl danger" style="font-size:.66em"><span class="r">fetch('/api/v2/users/verify')  // endpoint doesn't
-                                // exist; API is v1
-el.innerHTML = renderMarkdown(input); // not sanitized,
-                                       // despite appearance
-import { debounce } from 'lodash.debounce'; // plausible
-                                             // package name,
-                                             // may not exist</span></pre>
-    <div class="box warn">Generated output needs the same review as a new dependency — no prior production usage exists to surface these errors first.</div>
-</section>
-
-<!-- 29. ACCESSIBILITY -->
-<section>
-    <h4>Accessibility</h4>
-    <div class="pair">
-        <div>
-            <div class="plabel" style="color:#7c3aed">Generated</div>
-            <pre class="tmpl gen">&lt;div onclick="openMenu()"&gt;
-  Menu
-&lt;/div&gt;
-<span class="r">no keyboard support, no aria-*</span></pre>
-        </div>
-        <div>
-            <div class="plabel" style="color:#15803d">Library</div>
-            <pre class="tmpl lib">&lt;<span class="g">Menu.Button</span>&gt;Menu&lt;/&gt;
-&lt;<span class="g">Menu.Items</span>&gt;...&lt;/&gt;
-<span class="c">@headlessui/react ships keyboard
-+ screen-reader support</span></pre>
-        </div>
-    </div>
-</section>
-
-<!-- 30. COMPATIBILITY -->
-<section>
-    <h4>Cross-Browser / Cross-Device Compatibility</h4>
-    <div class="pair">
-        <div>
-            <div class="plabel" style="color:#7c3aed">Generated</div>
-            <pre class="tmpl gen"><span class="g">navigator.vibrate(200);</span>
-<span class="r">no-ops silently on iOS Safari,
-not flagged</span></pre>
-        </div>
-        <div>
-            <div class="plabel" style="color:#15803d">Library</div>
-            <pre class="tmpl lib"><span class="g">import haptic from 'haptics-js';
-haptic.impact('light');</span>
-<span class="c">per-platform checks abstracted</span></pre>
-        </div>
-    </div>
-</section>
-
-<!-- 31. LIFECYCLE COST -->
-<section>
-    <h4>Cost Over the App Lifecycle</h4>
-    <pre class="tmpl" style="font-size:.66em">           <span class="p">generated</span>      <span class="g">library</span>
-day 1      <span class="p">low</span>            <span class="g">low-medium</span>
-month 3    <span class="p">rising (bugs)</span>  <span class="g">flat (patched upstream)</span>
-year 1     <span class="p">possible rewrite</span> <span class="g">version bump</span>
-security   <span class="p">owned by you</span>   <span class="g">shared with maintainers</span></pre>
-</section>
-
-<!-- 32. V-MODEL CHECKPOINT 4 -->
-<section>
-    <h4>Process Checkpoint: Full V, All Aspects Mapped</h4>
-    <div class="vmodel">
-        <div class="vm-row" style="margin:0 0%"><div class="vm-box here">Requirements</div><div class="vm-box here">Acceptance Test</div></div>
-        <div class="vm-row" style="margin:0 6%"><div class="vm-box">System Design</div><div class="vm-box here">System Test</div></div>
-        <div class="vm-row" style="margin:0 12%"><div class="vm-box">Architecture</div><div class="vm-box here">Integration Test</div></div>
-        <div class="vm-row" style="margin:0 18%"><div class="vm-box">Module Design</div><div class="vm-box here">Unit Test</div></div>
-        <div class="vm-apex here">Coding</div>
-    </div>
-    <div class="ann">License / legal / safety → acceptance level. Dependencies / bundle size / testing → unit level. Security / accessibility → integration and system level. The build-vs-borrow decision at Coding is verified against all of them.</div>
-</section>
-
-<!-- 33. DECISION MATRIX -->
-<section>
-    <h4>Decision Matrix</h4>
     <table class="matrix">
-        <tr><th>Aspect</th><th>Generated</th><th>Library</th></tr>
-        <tr><td>Speed to prototype</td><td><div class="bar-wrap"><div class="bar-track"><div class="bar-fill gen" style="width:85%"></div></div></div></td><td><div class="bar-wrap"><div class="bar-track"><div class="bar-fill lib" style="width:55%"></div></div></div></td></tr>
-        <tr><td>Maintainability</td><td><div class="bar-wrap"><div class="bar-track"><div class="bar-fill gen" style="width:35%"></div></div></div></td><td><div class="bar-wrap"><div class="bar-track"><div class="bar-fill lib" style="width:80%"></div></div></div></td></tr>
-        <tr><td>Security (common tasks)</td><td><div class="bar-wrap"><div class="bar-track"><div class="bar-fill gen" style="width:30%"></div></div></div></td><td><div class="bar-wrap"><div class="bar-track"><div class="bar-fill lib" style="width:85%"></div></div></div></td></tr>
-        <tr><td>Bundle size</td><td><div class="bar-wrap"><div class="bar-track"><div class="bar-fill gen" style="width:90%"></div></div></div></td><td><div class="bar-wrap"><div class="bar-track"><div class="bar-fill lib" style="width:50%"></div></div></div></td></tr>
-        <tr><td>Dependency risk</td><td><div class="bar-wrap"><div class="bar-track"><div class="bar-fill gen" style="width:95%"></div></div></div></td><td><div class="bar-wrap"><div class="bar-track"><div class="bar-fill lib" style="width:40%"></div></div></div></td></tr>
+        <tr><th>Aspect</th><th>Full</th><th>Partial</th><th>Zero</th></tr>
+        <tr><td>Speed</td><td class="max">90</td><td>65</td><td class="min">50</td></tr>
+        <tr><td>Maintainability</td><td class="min">30</td><td>60</td><td class="max">85</td></tr>
+        <tr><td>Security</td><td class="min">25</td><td>70</td><td class="max">85</td></tr>
+        <tr><td>Bundle size (smaller=better)</td><td class="max">85</td><td>50</td><td class="min">20</td></tr>
+        <tr><td>Dependency risk (lower=better)</td><td class="max">95</td><td>50</td><td class="min">15</td></tr>
+        <tr><td>License / legal clarity</td><td class="min">20</td><td>58</td><td class="max">90</td></tr>
     </table>
-    <div class="ann" style="margin-top:6px">Longer bar = stronger on that aspect.</div>
+    <div class="ann" style="margin-top:6px">Score 0 to 100. Higher is stronger on that aspect. Green = best, red = worst.</div>
 </section>
 
-<!-- 34. RULE OF THUMB -->
+<!-- 27. SELECTION CRITERIA -->
 <section>
     <h4>Selection Criteria</h4>
-    <div class="pair">
+    <div class="triad">
         <div>
-            <div class="plabel" style="color:#7c3aed">Generate when</div>
-            <pre class="tmpl gen">app-specific, one-off logic
-small surface, easy to review
-no security-sensitive input
-exact design control needed
-bundle weight matters</pre>
+            <div class="plabel" style="color:#7c3aed">Full</div>
+            <pre class="tmpl full">one-off, app-specific
+small, easy to review
+no sensitive input</pre>
         </div>
         <div>
-            <div class="plabel" style="color:#15803d">Use a library when</div>
-            <pre class="tmpl lib">common, previously-solved problem
-security or correctness critical
-multiple developers touch it
-long-term maintenance expected
-accessibility required</pre>
+            <div class="plabel" style="color:#d97706">Partial</div>
+            <pre class="tmpl partial">solved problem exists
++ genuine custom logic
+around it</pre>
+        </div>
+        <div>
+            <div class="plabel" style="color:#15803d">Zero</div>
+            <pre class="tmpl zero">fully solved problem
+security-critical
+long-term maintenance</pre>
         </div>
     </div>
 </section>
 
-<!-- 35. HYBRID -->
+<!-- 28. QUADRANT CHART: AXES -->
 <section>
-    <h4>Hybrid Pattern: Thin Wrapper</h4>
-    <pre class="tmpl" style="border-color:#7c3aed;background:#f5f3ff;font-size:.68em"><span class="c">// generated: app-specific adapter around a library</span>
-<span class="p">import Flatpickr from 'flatpickr';
-
-export function datePicker(el){
-  return Flatpickr(el, {
-    dateFormat:'Y-m-d',
-    disable:[isPastDate]   // app rule, generated
-  });
-}</span></pre>
-    <div class="ann">Security/correctness-relevant core from a library; app-specific glue as a small generated file.</div>
+    <div class="quad-block">
+        <div class="quad-ylabel">high stakes</div>
+        <div class="quad-grid">
+            <div class="quad-cell tl">Partial<div class="qc-sub">novel + high stakes</div></div>
+            <div class="quad-cell tr">Zero<div class="qc-sub">solved + high stakes</div></div>
+            <div class="quad-cell bl">Full<div class="qc-sub">novel + low stakes</div></div>
+            <div class="quad-cell br">Zero / Partial<div class="qc-sub">solved + low stakes</div></div>
+        </div>
+        <div class="quad-ylabel">low stakes</div>
+    </div>
+    <div class="quad-xlabels"><span>← app-specific</span><span>solved problem →</span></div>
+    <div class="ann" style="text-align:center;margin-top:8px">X: how solved is the problem. Y: cost of getting it wrong.</div>
 </section>
 
-<!-- 36. SUMMARY -->
+<!-- 29. QUADRANT CHART: PLACE YOUR DOMAINS -->
+<section>
+    <h4>Place Your Domains</h4>
+    <div class="quad-block">
+        <div class="quad-ylabel">high stakes</div>
+        <div class="quad-grid" id="quadGrid">
+            <div class="quad-cell tl">Partial</div>
+            <div class="quad-cell tr">Zero</div>
+            <div class="quad-cell bl">Full</div>
+            <div class="quad-cell br">Zero / Partial</div>
+            <div class="chip" data-x="72" data-y="22" style="left:72%;top:22%">Hospital</div>
+            <div class="chip" data-x="35" data-y="55" style="left:35%;top:55%">Social Media</div>
+            <div class="chip" data-x="80" data-y="80" style="left:80%;top:80%">Personal Todo App</div>
+        </div>
+        <div class="quad-ylabel">low stakes</div>
+    </div>
+    <div class="quad-xlabels"><span>← app-specific</span><span>solved problem →</span></div>
+    <button class="quad-reset" id="quadReset">Reset positions</button>
+</section>
+
+<!-- 29b. LIVE POLL (reprise) -->
+<section>
+    <div class="poll">
+        <div class="poll-row"><div class="poll-label">libraries</div><div class="poll-track"><div class="poll-fill zero" style="width:100%"></div></div><div class="poll-count">5</div></div>
+        <div class="poll-row"><div class="poll-label">depends</div><div class="poll-track"><div class="poll-fill partial" style="width:40%"></div></div><div class="poll-count">2</div></div>
+        <div class="poll-row"><div class="poll-label">generate</div><div class="poll-track"><div class="poll-fill full" style="width:20%"></div></div><div class="poll-count">1</div></div>
+    </div>
+</section>
+
+<!-- 30. SUMMARY -->
 <section>
     <h4>Summary</h4>
-    <div class="vmodel">
-        <div class="vm-row" style="margin:0 0%"><div class="vm-box">Requirements</div><div class="vm-box">Acceptance Test</div></div>
-        <div class="vm-row" style="margin:0 6%"><div class="vm-box">System Design</div><div class="vm-box">System Test</div></div>
-        <div class="vm-row" style="margin:0 12%"><div class="vm-box">Architecture</div><div class="vm-box">Integration Test</div></div>
-        <div class="vm-row" style="margin:0 18%"><div class="vm-box">Module Design</div><div class="vm-box">Unit Test</div></div>
-        <div class="vm-apex here">Coding: generated vs library</div>
+    <div class="stepper" style="margin-top:4px">
+        <div class="step"><div class="step-dot" style="background:#7c3aed"></div><div class="step-label">Full</div></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-dot" style="background:#d97706"></div><div class="step-label">Partial</div></div>
+        <div class="step-line"></div>
+        <div class="step"><div class="step-dot" style="background:#15803d"></div><div class="step-label">Zero</div></div>
     </div>
-    <div class="sep" style="margin:8px 0"></div>
-    <div class="pair">
-        <div class="box">Generate for small, app-specific, easily-reviewed logic with no external dependency footprint.</div>
-        <div class="box">Use a library for common, security-sensitive, or long-lived functionality with license/legal terms you can check.</div>
+    <div class="vmodel" style="margin-top:8px">
+        <div class="vm-row" style="margin:0 0%"><div class="vm-box">Requirements</div><div class="vm-box">Acceptance</div></div>
+        <div class="vm-row" style="margin:0 9%"><div class="vm-box">System Design</div><div class="vm-box">System Test</div></div>
+        <div class="vm-row" style="margin:0 19%"><div class="vm-box">Architecture</div><div class="vm-box">Integration</div></div>
+        <div class="vm-row" style="margin:0 28%"><div class="vm-box">Module Design</div><div class="vm-box">Unit Test</div></div>
+        <div class="vm-apex here">Coding: who implements?</div>
     </div>
-    <p class="dim" style="text-align:center;margin-top:8px">antrunner · meetup.com/antrunner · Fri Jul 31</p>
 </section>
 
 </section></div></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/highlight.min.js"></script>
 <script>
     Reveal.initialize({
         controls:true, progress:true, center:true, hash:true,
         margin:0.06, width:1000, height:720,
-        minScale:0.2, maxScale:1.6
+        minScale:0.2, maxScale:1.6,
+        touch:false,
+        slideNumber:'c/t',
+        plugins:[ RevealHighlight ]
     });
+
+    function initQuadrant(){
+        var grid = document.getElementById('quadGrid');
+        if(!grid || grid.dataset.wired) return;
+        grid.dataset.wired = '1';
+        var chips = grid.querySelectorAll('.chip');
+        chips.forEach(function(chip){
+            chip.addEventListener('pointerdown', function(e){
+                e.stopPropagation();
+                chip.setPointerCapture(e.pointerId);
+                function move(ev){
+                    var rect = grid.getBoundingClientRect();
+                    var x = ((ev.clientX - rect.left) / rect.width) * 100;
+                    var y = ((ev.clientY - rect.top) / rect.height) * 100;
+                    x = Math.min(97, Math.max(3, x));
+                    y = Math.min(97, Math.max(3, y));
+                    chip.style.left = x + '%';
+                    chip.style.top = y + '%';
+                }
+                function up(ev){
+                    chip.releasePointerCapture(e.pointerId);
+                    document.removeEventListener('pointermove', move);
+                    document.removeEventListener('pointerup', up);
+                }
+                document.addEventListener('pointermove', move);
+                document.addEventListener('pointerup', up);
+            });
+        });
+        var resetBtn = document.getElementById('quadReset');
+        if(resetBtn){
+            resetBtn.addEventListener('click', function(){
+                chips.forEach(function(chip){
+                    chip.style.left = chip.dataset.x + '%';
+                    chip.style.top = chip.dataset.y + '%';
+                });
+            });
+        }
+    }
+    document.addEventListener('DOMContentLoaded', initQuadrant);
+    Reveal.on('ready', initQuadrant);
 </script>
 </body>
 </html>
