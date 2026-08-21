@@ -1,0 +1,224 @@
+/*
+ * Shared chrome for Fall 2026 reveal.js course decks (comp-051, comp-175,
+ * data-013). Keeps the seal, quick-links footer, highlight color, and
+ * slides width consistent across every course deck. See CLAUDE.md's
+ * "Standardizing chrome across decks" section for the convention this
+ * file implements.
+ *
+ * Each deck links to this file with a relative path from its own folder,
+ * e.g. <link rel="stylesheet" href="../assets/deck-chrome.css">
+ */
+
+.slides {
+    width: 90% !important;
+}
+
+/* Fragment (click-to-reveal) note: warnings/risks only, never plain
+   supplementary info -- see CLAUDE.md's "Conventions" section. */
+.note-below {
+    font-size: 1.4rem;
+    opacity: 0.9;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+/* Citation/source line: always visible (not a fragment), smaller and more
+   muted than .note-below so a warning and its source stay visually
+   distinct on the same slide. */
+.source-line {
+    font-size: 1.1rem;
+    opacity: 0.85;
+    text-align: center;
+    margin-top: 0.6rem;
+}
+
+.seal {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    width: 120px;
+    height: auto;
+    z-index: 9999;
+    opacity: 0.92;
+}
+
+.quick-links {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    z-index: 9999;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-width: calc(100% - 160px);
+}
+
+.footer-link {
+    color: #aaa;
+    font-size: 0.82rem;
+    text-decoration: none;
+    background: rgba(0, 0, 0, 0.25);
+    padding: 4px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    line-height: 1.4;
+}
+
+.footer-link:hover {
+    color: #ddd;
+    text-decoration: underline;
+}
+
+.highlight {
+    color: #bf4a12;
+    font-weight: bold;
+    background: rgba(255, 234, 120, 0.25);
+    padding: 0 .25rem;
+    border-radius: .25rem;
+    outline: 1px solid rgba(240, 200, 50, .25);
+}
+
+/* TOC / schedule table, used inside <section id="toc"> (or "module-toc"). A
+   deck may still add its own per-column inline styles on top (fixed
+   widths, ellipsis truncation) for content-specific layout needs. */
+.toc-table {
+    margin: 0 auto;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    border: 1px solid #666;
+}
+
+.toc-table thead tr {
+    background-color: #444;
+    color: #fff;
+}
+
+.toc-table tbody tr {
+    color: #ccc;
+}
+
+/* Qualified with .reveal to out-specify reveal.js's theme CSS, which sets
+   ".reveal table td, .reveal table th { padding: .2em .5em; }" -- that rule
+   has higher specificity (1 class + 2 elements) than a bare ".toc-table td"
+   (1 class + 1 element) and silently wins regardless of link order. */
+.reveal .toc-table th {
+    padding: 10px 8px;
+    border: 1px solid #666;
+}
+
+/* Fixed-size container for paired left/right figures (logos, screenshots).
+   Two images shown side by side rarely share a native aspect ratio, so
+   sizing each by width-only (or height-only) with the other dimension
+   "auto" makes them drift to different rendered heights/widths. .fig-box
+   gives both images in a pair an identical bounding box -- set an explicit
+   width/height on the .fig-box element itself per use, and let the image
+   scale down to fit inside it via max-width/max-height. No margin here on
+   purpose: .fig-box is often itself a flex item (e.g. next to a heading in
+   a logo+text row), and an item-level "margin:0 auto" there is read as an
+   AUTO MARGIN, which consumes all free space in the flex line and shoves
+   the box away from its sibling instead of sitting flush against it -- this
+   actually happened (Unix/Linux logos drifting far from their headings).
+   Center a .fig-box via its *container* (text-align:center, a flex row's
+   justify-content:center, or justify-items:center on a grid), never via
+   margin on the .fig-box itself. */
+.fig-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.fig-box img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+}
+
+.reveal .toc-table td {
+    padding: 8px 8px;
+    border: 1px solid #666;
+}
+
+/* Diagonal corner-ribbon tag (GitHub-style "Fork me" ribbon), pinned to the
+   true top-left corner of the PAGE (like .seal is pinned top-right) -- not
+   scoped to one slide's own content box, which auto-sizes/centers and so
+   isn't the full slide area. A slide's own <section> can't just get
+   "position:relative" for this: reveal.js only expands the *current*
+   section to fill .slides, and even then content is centered inside it, so
+   an absolutely-positioned child ends up inset from the real corner, not
+   flush with it. Instead this is ONE shared fixed element, created once in
+   the counter/footer <script> at the bottom of the page and shown/hidden by
+   reading the current slide's `data-tag` attribute on `Reveal.on('slidechanged', ...)`
+   -- the same mechanism already used there for the slide counter. To tag a
+   slide, add `data-tag="terminology"` to its <section> (no wrapper markup
+   needed inside it). More tag kinds can reuse this by adding another
+   `data-tag` value and a color entry in that script's tag-color map. */
+.tag-ribbon-wrap {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 160px;
+    height: 160px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 9999;
+    display: none;
+}
+
+.tag-terminology {
+    position: absolute;
+    top: 24px;
+    left: -40px;
+    width: 170px;
+    transform: rotate(-45deg);
+    background: #FF671D;
+    color: #fff;
+    text-align: center;
+    padding: 4px 0;
+    font-size: 0.72rem;
+    font-weight: bold;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+}
+
+/* GLOBAL RULE -- word-cloud-styled terms for a module's "Terminology" recap
+   slide (.term-recap): weighted plain text, no pill chrome, flowed into
+   centered rows -- genuinely reads as a word cloud, not a uniform highlighted
+   list. This module's own tagged terms use .term-pill (orange, bold); terms
+   carried over from earlier modules use .term-pill-muted (gray) -- that part
+   sets the COLOR tier. SIZE varies independently within each color tier via
+   one of three modifier classes (.w1/.w2/.w3, smallest to largest), assigned
+   per term by a deterministic hash of the term string (see the term-recap
+   IIFE in each deck's footer script) so weight is stable across rebuilds
+   without hand-authoring a term list. Without this second axis, every term
+   in a module's own first recap (nothing earlier to mute yet) rendered at
+   one identical size -- a flat highlighted list, not a cloud -- since the
+   only size distinction that existed was current-module vs. earlier-module. */
+.term-pill-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: baseline;
+    gap: 0.3em 1em;
+}
+
+.term-pill {
+    display: inline-block;
+    color: #FF671D;
+    font-weight: bold;
+}
+
+.term-pill.w1 { font-size: 1.3rem; }
+.term-pill.w2 { font-size: 1.8rem; }
+.term-pill.w3 { font-size: 2.4rem; }
+
+.term-pill-muted {
+    display: inline-block;
+    color: #888;
+    font-weight: normal;
+}
+
+.term-pill-muted.w1 { font-size: 0.85rem; }
+.term-pill-muted.w2 { font-size: 1.05rem; }
+.term-pill-muted.w3 { font-size: 1.3rem; }
