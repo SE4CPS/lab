@@ -13,21 +13,136 @@
       font-family: Arial, sans-serif;
       background: #f4f6f9;
       color: #333;
-      padding: 2em 1em;
     }
 
-    .container {
-      max-width: 640px;
+    .layout {
+      display: flex;
+      align-items: flex-start;
+      max-width: 1320px;
       margin: 0 auto;
     }
 
+    .sidebar {
+      width: 250px;
+      flex-shrink: 0;
+      position: sticky;
+      top: 0;
+      align-self: flex-start;
+      padding: 2em 1.2em;
+      background: #fff;
+      border-right: 1px solid #e1e5ec;
+    }
+
+    .main {
+      flex: 1;
+      min-width: 0;
+      padding: 1.2em 1.5em 2em;
+    }
+
     h1 {
-      font-size: 1.3rem;
-      font-weight: 600;
+      font-size: 1.15rem;
+      font-weight: 700;
       color: #111;
-      margin-bottom: 1.5em;
-      padding-bottom: 0.5em;
+      margin-bottom: 1em;
+    }
+
+    .toc-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #999;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.6em;
+    }
+
+    .toc a {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #444;
+      padding: 0.4em 0;
+      border-bottom: 1px solid #f0f2f5;
+    }
+
+    .toc a:hover {
+      color: #0056b3;
+      text-decoration: none;
+    }
+
+    .toc a.active {
+      color: #0056b3;
+      border-bottom-color: #0056b3;
+    }
+
+    .updated {
+      margin-top: 1.5em;
+      font-size: 0.7rem;
+      color: #bbb;
+    }
+
+    .proto-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 0.6em;
+    }
+
+    .proto-card {
+      background: #fff;
+      border: 1px solid #e1e5ec;
+      border-radius: 6px;
+      padding: 0.6em;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .proto-figure {
+      aspect-ratio: 16 / 7;
+      background: #f4f6f9;
+      border: 1px dashed #ccd3dc;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: #aaa;
+      margin-bottom: 0.4em;
+      overflow: hidden;
+    }
+
+    .proto-figure img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .proto-title {
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: #111;
+      margin-bottom: 0.25em;
+    }
+
+    .proto-desc {
+      font-size: 0.74rem;
+      color: #555;
+      line-height: 1.35;
+      margin-bottom: 0.4em;
+      flex: 1;
+    }
+
+    .proto-card > a {
+      font-size: 0.76rem;
+      align-self: flex-start;
+    }
+
+    h2.category {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #111;
+      margin: 0 0 0.5em;
+      padding-bottom: 0.25em;
       border-bottom: 2px solid #dde2ea;
+      scroll-margin-top: 1em;
     }
 
     ul {
@@ -38,7 +153,7 @@
       background: #fff;
       border: 1px solid #e1e5ec;
       border-radius: 6px;
-      padding: 0.9em 1.1em;
+      padding: 0.9em 5.5em 1.9em 1.1em;
       margin-bottom: 0.7em;
       transition: box-shadow 0.15s;
       position: relative;
@@ -48,12 +163,18 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
+    li:target {
+      border-color: #0056b3;
+      box-shadow: 0 0 0 2px rgba(0,86,179,0.25);
+    }
+
     .date {
       font-size: 0.75rem;
       color: #999;
       position: absolute;
       top: 0.9em;
       right: 1.1em;
+      white-space: nowrap;
     }
 
     a {
@@ -65,38 +186,499 @@
 
     a:hover { text-decoration: underline; }
 
+    .title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #111;
+      overflow-wrap: break-word;
+    }
+
     .desc {
       display: block;
       font-size: 0.8rem;
       color: #666;
       margin-top: 0.2em;
     }
+
+    .resources {
+      display: block;
+      font-size: 0.78rem;
+      color: #888;
+      margin-top: 0.4em;
+    }
+
+    .resources a {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #0056b3;
+    }
+
+    .copy-btn {
+      position: absolute;
+      bottom: 0.7em;
+      right: 1.1em;
+      font-size: 0.95rem;
+      line-height: 1;
+      color: #ccc;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover {
+      color: #0056b3;
+    }
+
+    @media (max-width: 780px) {
+      .layout { flex-direction: column; }
+      .sidebar {
+        width: 100%;
+        position: relative;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid #e1e5ec;
+      }
+    }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <h1>Research &amp; Development</h1>
+  <div class="layout">
+    <div class="sidebar">
+      <h1>Research &amp; Development</h1>
+      <div class="toc-title">Categories</div>
+      <div class="toc">
+        <a href="#cat-prototypes">Projects and Prototypes</a>
+        <a href="#cat-agentic">Agentic Software Engineering</a>
+        <a href="#cat-iot">Internet of Things</a>
+        <a href="#cat-ecosystems">Modeling Software Ecosystems</a>
+        <a href="#cat-clinical">Clinical &amp; Health Informatics</a>
+        <a href="#cat-security">Secure Software Engineering</a>
+        <a href="#cat-ontology">Ontology &amp; Model-Driven Engineering</a>
+      </div>
+      <div class="updated">Updated: 2026-08-21 02:07 PT</div>
+    </div>
+
+    <div class="main">
+
+    <h2 class="category" id="cat-prototypes">Projects and Prototypes</h2>
+    <div class="proto-grid">
+      <div class="proto-card">
+        <div class="proto-figure"><img src="proto-releasetrain.png" alt="Releasetrain screenshot"></div>
+        <div class="proto-title">Releasetrain</div>
+        <p class="proto-desc">Open-source framework tracking software updates, CVEs, and community discussion signals across software ecosystems, exposed via a public API and live dashboard.</p>
+        <a href="https://github.com/SE4CPS/releasetrain-client" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <div class="proto-card">
+        <div class="proto-figure"><img src="proto-pip-package.png" alt="Releasetrain Pip Package terminal screenshot"></div>
+        <div class="proto-title">Releasetrain Pip Package</div>
+        <p class="proto-desc">Python package and CLI that analyzes a user's software stack and suggests fixes for reported issues, with an AI agent mode for natural-language prompts. Published on TestPyPI via pip.</p>
+        <a href="https://github.com/SE4CPS/releasetrain-pip-package" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <div class="proto-card">
+        <div class="proto-figure"><img src="proto-vnsp.png" alt="Vehicle Navigation Software System screenshot"></div>
+        <div class="proto-title">Vehicle Navigation Software System</div>
+        <p class="proto-desc">Client/server navigation system prototype, with separate browser client, bus client, and backend app/database services.</p>
+        <a href="https://github.com/SE4CPS/VNSP" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <div class="proto-card">
+        <div class="proto-figure"><img src="proto-light-sensor.png" alt="Indoor Light Sensor screenshot"></div>
+        <div class="proto-title">Indoor Light Sensor</div>
+        <p class="proto-desc">IoT light sensor that measures ambient light levels and sends readings to connected systems for monitoring or automated control.</p>
+        <a href="https://github.com/SE4CPS/IoT-Light-Sensor" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <div class="proto-card">
+        <div class="proto-figure"><img src="proto-sproutly.png" alt="Sproutly screenshot"></div>
+        <div class="proto-title">Sproutly: Plant Hydration Reminder</div>
+        <p class="proto-desc">Helps track plant watering times and sends reminders so houseplants don't get forgotten.</p>
+        <a href="https://github.com/SE4CPS/PlantWaterSystem" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <div class="proto-card">
+        <div class="proto-figure"><img src="proto-anilarm.png" alt="AniLarm screenshot"></div>
+        <div class="proto-title">AniLarm</div>
+        <p class="proto-desc">Offline AI system that detects small animals sheltering under cars using a thermal camera, to prevent injury before a vehicle starts. <strong>97.83% detection accuracy</strong>, processed locally in <strong>28 seconds</strong>.</p>
+        <a href="https://github.com/SE4CPS/AniLarm-Offline-AI-for-Small-Animal-Detection-Under-Cars-Using-Thermal-Camera" target="_blank" rel="noopener">GitHub</a>
+      </div>
+      <div class="proto-card">
+        <div class="proto-figure"><img src="proto-sdn-rl.png" alt="SDN Reinforcement Learning Routing screenshot"></div>
+        <div class="proto-title">SDN Reinforcement Learning Routing</div>
+        <p class="proto-desc">AI-enhanced reinforcement learning system for real-time dynamic traffic routing in software-defined networks for IoT edge environments.</p>
+        <a href="https://github.com/MayureshMore/REAL-TIME-DYNAMIC-TRAFFIC-ROUTING-IN-SDN-USING-AI-ENHANCED-REINFORCEMENT-LEARNING" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+
+    <h2 class="category" id="cat-agentic">Agentic Software Engineering</h2>
     <ul>
-      <li>
+      <li id="rise-fall2026">
+        <span class="date">Sep 24, 2026</span>
+        <button class="copy-btn" onclick="copyLink('rise-fall2026', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">Software Update Questions and Answers (RISE Fall 2026)</span>
+        <span class="desc">Research Seminar and Information Session</span>
+        <span class="resources">
+          Resources:
+          <a href="rise-seminar/Fall2026/index.html" target="_blank">Slides (HTML)</a>
+        </span>
+      </li>
+      <li id="multi-agent-rag-2026">
+        <span class="date">May 2026</span>
+        <button class="copy-btn" onclick="copyLink('multi-agent-rag-2026', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">An Adaptive Multi-Agent RAG Architecture for Software Ecosystem Update Monitoring</span>
+        <span class="desc">ACM CAIS Workshop on Agentic Software Engineering</span>
+        <span class="resources">
+          Resources:
+          <a href="https://openreview.net/forum?id=iXjdym520H" target="_blank" rel="noopener">Paper</a> &middot;
+          <a href="https://openreview.net/pdf?id=iXjdym520H" target="_blank" rel="noopener">Paper (PDF)</a> &middot;
+          <a href="multi-agent-rag-2026-poster.pdf" target="_blank">Poster (PDF)</a> &middot;
+          <a href="https://github.com/Shradhapujari/Adaptive-Multi-Agent-RAG-Architecture-for-Software-Ecosystem-Update-Monitoring" target="_blank" rel="noopener">Code</a> &middot;
+          <a href="https://github.com/Shradhapujari/Adaptive-Multi-Agent-RAG-Architecture-for-Software-Ecosystem-Update-Monitoring" target="_blank" rel="noopener">Data</a>
+        </span>
+      </li>
+      <li id="okip-2026">
         <span class="date">Apr 1, 2026</span>
-        <a href="2026okip/" target="_blank">OkIP – Conference on Artificial Intelligence Frontiers 2026</a>
-        <span class="desc">Retrieval-Augmented Generation (RAG) Based Semantic Retrieval</span>
+        <button class="copy-btn" onclick="copyLink('okip-2026', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">Retrieval-Augmented Generation (RAG) Based Semantic Retrieval (OkIP CAIF 2026)</span>
+        <span class="resources">
+          Resources:
+          <a href="https://www.okipublishing.com/book/index.php/okip/catalog/book/81" target="_blank" rel="noopener">Paper (PDF)</a> &middot;
+          <a href="2026okip/" target="_blank">Slides (HTML)</a> &middot;
+          <a href="https://releasenotesrec-agentgit-ryuf7vkcm5wukd8wa4busk.streamlit.app/" target="_blank" rel="noopener">Prototype</a> &middot;
+          <a href="https://github.com/MohammedFahadd/ReleaseNotesRec-Agent" target="_blank" rel="noopener">Code</a> &middot;
+          <a href="https://github.com/MohammedFahadd/ReleaseNotesRec-Agent/tree/main/data" target="_blank" rel="noopener">Data</a>
+        </span>
       </li>
-      <li>
-        <a href="intro-agent.html" target="_blank">Agentic AI for Mobile App Development &amp; Software Engineering</a>
-      </li>
-      <li>
-        <span class="date">Apr 23, 2025</span>
-        <a href="2025-04-23-edi40.html" target="_blank">8th International Conference on Emerging Data and Industry (EDI40)</a>
-      </li>
-      <li>
-        <span class="date">Apr 18, 2025</span>
-        <a href="2025-04-18-rise-seminar.html" target="_blank">Research Seminar and Information Session (RISE)</a>
-        <span class="desc">Impact-Driven Software Update Prioritization</span>
+      <li id="agentic-ai-mobile-2026">
+        <span class="date">2026</span>
+        <button class="copy-btn" onclick="copyLink('agentic-ai-mobile-2026', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">Agentic AI for Mobile App Development &amp; Software Engineering</span>
+        <span class="resources">
+          Resources:
+          <a href="intro-agent.html" target="_blank">Slides (HTML)</a>
+        </span>
       </li>
     </ul>
+
+    <h2 class="category" id="cat-iot">Internet of Things</h2>
+    <ul>
+      <li id="sdn-rl-routing-2026">
+        <span class="date">2026</span>
+        <button class="copy-btn" onclick="copyLink('sdn-rl-routing-2026', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">Real-Time Dynamic Routing in Software-Defined Networks with Reinforcement Learning for IoT Edge Networks</span>
+        <span class="desc">Procedia Computer Science, Vol. 280, pp. 921&ndash;928</span>
+        <span class="resources">
+          Resources:
+          <a href="https://www.sciencedirect.com/science/article/pii/S1877050926011282" target="_blank" rel="noopener">Paper (PDF)</a> &middot;
+          <a href="https://github.com/MayureshMore/REAL-TIME-DYNAMIC-TRAFFIC-ROUTING-IN-SDN-USING-AI-ENHANCED-REINFORCEMENT-LEARNING" target="_blank" rel="noopener">Code</a>
+        </span>
+      </li>
+      <li id="anilarm-2025">
+        <span class="date">2025</span>
+        <button class="copy-btn" onclick="copyLink('anilarm-2025', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">AniLarm: AI for Small Animal Detection Under Cars Using Thermal Camera</span>
+        <span class="desc">2025 IEEE Conference on Artificial Intelligence (CAI), pp. 741&ndash;746</span>
+        <span class="resources">
+          Resources:
+          <a href="https://ieeexplore.ieee.org/abstract/document/11050510/" target="_blank" rel="noopener">Paper (PDF)</a> &middot;
+          <a href="https://github.com/SE4CPS/AniLarm-Offline-AI-for-Small-Animal-Detection-Under-Cars-Using-Thermal-Camera" target="_blank" rel="noopener">Code</a>
+        </span>
+      </li>
+      <li id="iot-edge-security-2025">
+        <span class="date">2025</span>
+        <button class="copy-btn" onclick="copyLink('iot-edge-security-2025', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">Poster: Securing IoT Edge Devices: Applying NIST IR 8259A to a Realtime Animal Detection System</span>
+        <span class="desc">NDSS Symposium, Workshop on Security and Privacy in Standardized IoT (SDIoTSec)</span>
+        <span class="resources">
+          Resources:
+          <a href="https://www.ndss-symposium.org/wp-content/uploads/SDIoTSec-54.pdf" target="_blank" rel="noopener">Paper (PDF)</a> &middot;
+          <a href="anilarm-2025-poster.pdf" target="_blank" rel="noopener">Poster (PDF)</a> &middot;
+          <a href="https://github.com/SE4CPS/AniLarm-Offline-AI-for-Small-Animal-Detection-Under-Cars-Using-Thermal-Camera" target="_blank" rel="noopener">Code</a>
+        </span>
+      </li>
+      <li id="iot-updates-user-perspectives-2025">
+        <span class="date">2025</span>
+        <button class="copy-btn" onclick="copyLink('iot-updates-user-perspectives-2025', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">IoT Software Updates: User Perspectives in the Context of NIST IR 8259A</span>
+        <span class="desc">NDSS Symposium, Workshop on Security and Privacy in Standardized IoT (SDIoTSec)</span>
+        <span class="resources">
+          Resources:
+          <a href="https://www.ndss-symposium.org/wp-content/uploads/sdiotsec25-78.pdf" target="_blank" rel="noopener">Paper (PDF)</a>
+        </span>
+      </li>
+    </ul>
+
+    <h2 class="category" id="cat-ecosystems">Modeling Software Ecosystems</h2>
+    <ul>
+      <li id="edi40-2025">
+        <span class="date">Apr 23, 2025</span>
+        <button class="copy-btn" onclick="copyLink('edi40-2025', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">Automated UML Visualization of Software Ecosystems: Tracking Versions, Dependencies, and Security Updates (EDI40 2025)</span>
+        <span class="resources">
+          Resources:
+          <a href="https://www.sciencedirect.com/science/article/pii/S1877050925008440" target="_blank" rel="noopener">Paper (PDF)</a> &middot;
+          <a href="2025-04-23-edi40.html" target="_blank">Slides (HTML)</a> &middot;
+          <a href="https://releasetrain.io/?q=linux,apache,php,mysql&amp;view=arch" target="_blank" rel="noopener">Prototype</a>
+        </span>
+      </li>
+      <li id="rise-spring2025">
+        <span class="date">Apr 18, 2025</span>
+        <button class="copy-btn" onclick="copyLink('rise-spring2025', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">Impact-Driven Software Update Prioritization (RISE Spring 2025)</span>
+        <span class="desc">Research Seminar and Information Session</span>
+        <span class="resources">
+          Resources:
+          <a href="rise-seminar/Spring2025/index.html" target="_blank">Slides (HTML)</a>
+        </span>
+      </li>
+      <li id="triage-2024">
+        <span class="date">Apr 23, 2024</span>
+        <button class="copy-btn" onclick="copyLink('triage-2024', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">Triage Software Update Impact via Release Notes Classification (EDI40 2024)</span>
+        <span class="desc">Procedia Computer Science, Vol. 238, pp. 618&ndash;622. Logistic Regression reached <strong>99% accuracy</strong> on Security Risk and <strong>88% accuracy</strong> on Component Type.</span>
+        <span class="resources">
+          Resources:
+          <a href="https://publications.polymtl.ca/59770/1/59770_Triage_software.pdf" target="_blank" rel="noopener">Paper (PDF)</a> &middot;
+          <a href="https://huggingface.co/datasets/sberhe/2023-1000-software-release-notes" target="_blank" rel="noopener">Dataset</a> &middot;
+          <a href="https://github.com/SE4CPS/Research-on-Software-Updates/tree/main/release-notes-classifier-edi2024" target="_blank" rel="noopener">Labeling code</a>
+        </span>
+      </li>
+      <li id="maintenance-cost-2023">
+        <span class="date">2023</span>
+        <button class="copy-btn" onclick="copyLink('maintenance-cost-2023', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">Maintenance Cost of Software Ecosystem Updates</span>
+        <span class="desc">Procedia Computer Science, Vol. 220, pp. 608&ndash;615</span>
+        <span class="resources">
+          Resources:
+          <a href="https://www.sciencedirect.com/science/article/pii/S1877050923006129" target="_blank" rel="noopener">Paper (PDF)</a>
+        </span>
+      </li>
+      <li id="release-patterns-2020">
+        <span class="date">2020</span>
+        <button class="copy-btn" onclick="copyLink('release-patterns-2020', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">Software Release Patterns: When Is It a Good Time to Update a Software Component?</span>
+        <span class="desc">3rd International Conference on Emerging Data and Industry 4.0 (EDI40), Procedia Computer Science, Vol. 170, pp. 618&ndash;625</span>
+        <span class="resources">
+          Resources:
+          <a href="https://www.sciencedirect.com/science/article/pii/S1877050920305986" target="_blank" rel="noopener">Paper (PDF)</a>
+        </span>
+      </li>
+    </ul>
+
+    <h2 class="category" id="cat-clinical">Clinical &amp; Health Informatics</h2>
+    <ul>
+      <li id="digital-health-security-2016">
+        <span class="date">2016</span>
+        <button class="copy-btn" onclick="copyLink('digital-health-security-2016', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">A Viewpoint of Security for Digital Health Care in the United States: What's There? What Works? What's Needed?</span>
+        <span class="desc">E-Health and Telemedicine: Concepts, Methodologies, Tools, and Applications, pp. 1245&ndash;1263</span>
+        <span class="resources">
+          Resources:
+          <a href="https://www.igi-global.com/gateway/chapter/138455" target="_blank" rel="noopener">Paper (PDF)</a>
+        </span>
+      </li>
+      <li id="impact-clinical-trials-2013">
+        <span class="date">2013</span>
+        <button class="copy-btn" onclick="copyLink('impact-clinical-trials-2013', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">An Integrated Model for Patient Care and Clinical Trials (IMPACT) to Support Clinical Research Visit Scheduling Workflow for Future Learning Health Systems</span>
+        <span class="desc">Journal of Biomedical Informatics</span>
+        <span class="resources">
+          Resources:
+          <a href="https://www.sciencedirect.com/science/article/pii/S1532046413000531" target="_blank" rel="noopener">Paper (PDF)</a>
+        </span>
+      </li>
+      <li id="pcmh-collaboration-2010">
+        <span class="date">2010</span>
+        <button class="copy-btn" onclick="copyLink('pcmh-collaboration-2010', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">Secure, Obligated and Coordinated Collaboration in Health Care for the Patient-Centered Medical Home</span>
+        <span class="desc">AMIA Annual Symposium Proceedings</span>
+        <span class="resources">
+          Resources:
+          <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC3041320/" target="_blank" rel="noopener">Paper (PDF)</a>
+        </span>
+      </li>
+      <li id="health-info-exchange-2009">
+        <span class="date">2009</span>
+        <button class="copy-btn" onclick="copyLink('health-info-exchange-2009', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">An Integrated Ontology Framework for Health Information Exchange</span>
+        <span class="desc">SEKE, pp. 575&ndash;580</span>
+        <span class="resources">
+          Resources:
+          <a href="https://scholar.google.com/citations?user=ESVx5DUAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>
+        </span>
+      </li>
+    </ul>
+
+    <h2 class="category" id="cat-security">Secure Software Engineering</h2>
+    <ul>
+      <li id="secure-se-approach-2014">
+        <span class="date">2014</span>
+        <button class="copy-btn" onclick="copyLink('secure-se-approach-2014', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">An Integrated Secure Software Engineering Approach for Functional, Collaborative, and Information Concerns</span>
+        <span class="desc">Handbook of Research on Emerging Advancements and Technologies in Software Engineering</span>
+        <span class="resources">
+          Resources:
+          <a href="https://www.igi-global.com/chapter/an-integrated-secure-software-engineering-approach-for-functional-collaborative-and-information-concerns/108625" target="_blank" rel="noopener">Paper (PDF)</a>
+        </span>
+      </li>
+      <li id="xml-schema-security-2012">
+        <span class="date">2012</span>
+        <button class="copy-btn" onclick="copyLink('xml-schema-security-2012', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">A Security Framework for XML Schemas and Documents for Healthcare</span>
+        <span class="desc">IEEE International Conference on Bioinformatics and Biomedicine</span>
+        <span class="resources">
+          Resources:
+          <a href="https://ieeexplore.ieee.org/document/6470239/" target="_blank" rel="noopener">Paper (PDF)</a>
+        </span>
+      </li>
+      <li id="rbac-framework-2011">
+        <span class="date">2011</span>
+        <button class="copy-btn" onclick="copyLink('rbac-framework-2011', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">A Framework for Secure, Obligated, Coordinated and Dynamic Collaboration that Extends NIST RBAC</span>
+        <span class="desc">Doctoral dissertation, University of Connecticut</span>
+        <span class="resources">
+          Resources:
+          <a href="https://digitalcommons.lib.uconn.edu/dissertations/AAI3485253" target="_blank" rel="noopener">Paper (PDF)</a>
+        </span>
+      </li>
+      <li id="uml-security-rbac-2011">
+        <span class="date">2011</span>
+        <button class="copy-btn" onclick="copyLink('uml-security-rbac-2011', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">Leveraging UML for Security Engineering and Enforcement in a Collaboration on Duty and Adaptive Workflow Model that Extends NIST RBAC</span>
+        <span class="desc">IFIP Annual Conference on Data and Applications Security and Privacy (DBSec), pp. 293&ndash;300</span>
+        <span class="resources">
+          Resources:
+          <a href="https://opendl.ifip-tc6.org/db/conf/dbsec/dbsec2011/BerheDGPS11.pdf" target="_blank" rel="noopener">Paper (PDF)</a>
+        </span>
+      </li>
+      <li id="uml-access-control-2010">
+        <span class="date">2010</span>
+        <button class="copy-btn" onclick="copyLink('uml-access-control-2010', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">Integrating Access Control into UML for Secure Software Modeling and Analysis</span>
+        <span class="desc">International Journal of Secure Software Engineering</span>
+        <span class="resources">
+          Resources:
+          <a href="https://doi.org/10.4018/jsse.2010102001" target="_blank" rel="noopener">Paper (PDF)</a>
+        </span>
+      </li>
+      <li id="web-portal-rbac-2010">
+        <span class="date">2010</span>
+        <button class="copy-btn" onclick="copyLink('web-portal-rbac-2010', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">Improving the Information Security of Collaborative Web Portals via Fine-Grained Role-Based Access Control</span>
+        <span class="desc">Handbook of Research on Web 2.0, 3.0, and X.0</span>
+        <span class="resources">
+          Resources:
+          <a href="https://www.igi-global.com/gateway/chapter/70988" target="_blank" rel="noopener">Paper (PDF)</a>
+        </span>
+      </li>
+      <li id="rbac-healthcare-2009">
+        <span class="date">2009</span>
+        <button class="copy-btn" onclick="copyLink('rbac-healthcare-2009', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">Emerging Trends in Health Care Delivery: Towards Collaborative Security for NIST RBAC</span>
+        <span class="desc">IFIP Annual Conference on Data and Applications Security and Privacy</span>
+        <span class="resources">
+          Resources:
+          <a href="https://link.springer.com/chapter/10.1007/978-3-642-03007-9_19" target="_blank" rel="noopener">Paper (PDF)</a>
+        </span>
+      </li>
+      <li id="axon-portal-2008">
+        <span class="date">2008</span>
+        <button class="copy-btn" onclick="copyLink('axon-portal-2008', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">Axon: An Adaptive Collaborative Web Portal</span>
+        <span class="desc">International Workshop on Adaptation and Evolution in Web Services</span>
+        <span class="resources">
+          Resources:
+          <a href="https://scholar.google.com/citations?user=ESVx5DUAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>
+        </span>
+      </li>
+    </ul>
+
+    <h2 class="category" id="cat-ontology">Ontology &amp; Model-Driven Engineering</h2>
+    <ul>
+      <li id="ontology-design-2011">
+        <span class="date">2011</span>
+        <button class="copy-btn" onclick="copyLink('ontology-design-2011', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">Towards Software Design Process for Ontologies</span>
+        <span class="desc">International Conference on Software and Intelligent Information</span>
+        <span class="resources">
+          Resources:
+          <a href="https://scholar.google.com/citations?user=ESVx5DUAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>
+        </span>
+      </li>
+      <li id="mda-verification-2007">
+        <span class="date">2007</span>
+        <button class="copy-btn" onclick="copyLink('mda-verification-2007', this)" title="Copy link" aria-label="Copy link">&#128203;</button>
+        <span class="title">Data Verification using Model-Driven Architecture</span>
+        <span class="desc">MoDeVVa Workshop</span>
+        <span class="resources">
+          Resources:
+          <a href="https://scholar.google.com/citations?user=ESVx5DUAAAAJ&hl=en" target="_blank" rel="noopener">Google Scholar</a>
+        </span>
+      </li>
+    </ul>
+
+    </div>
   </div>
+
+  <script>
+    function copyLink(id, btn) {
+      const url = location.origin + location.pathname + '#' + id;
+      navigator.clipboard.writeText(url).then(function () {
+        const original = btn.innerHTML;
+        btn.innerHTML = '&#9989;';
+        setTimeout(function () { btn.innerHTML = original; }, 1200);
+      });
+    }
+
+    var categoryHeadings = Array.prototype.slice.call(document.querySelectorAll('h2.category'));
+
+    function showCategory(catId) {
+      categoryHeadings.forEach(function (h2) {
+        var show = h2.id === catId;
+        h2.style.display = show ? '' : 'none';
+        var sibling = h2.nextElementSibling;
+        if (sibling && (sibling.tagName === 'UL' || sibling.classList.contains('proto-grid'))) {
+          sibling.style.display = show ? '' : 'none';
+        }
+      });
+      document.querySelectorAll('.toc a').forEach(function (a) {
+        a.classList.toggle('active', a.getAttribute('href') === '#' + catId);
+      });
+    }
+
+    document.querySelectorAll('.toc a').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        var catId = this.getAttribute('href').slice(1);
+        showCategory(catId);
+        history.pushState(null, '', '#' + catId);
+      });
+    });
+
+    function initFromHash() {
+      var hash = location.hash.slice(1);
+      var categoryIds = categoryHeadings.map(function (h2) { return h2.id; });
+
+      if (categoryIds.indexOf(hash) !== -1) {
+        showCategory(hash);
+        return;
+      }
+
+      if (hash) {
+        var el = document.getElementById(hash);
+        var ul = el ? el.closest('ul') : null;
+        var h2 = ul ? ul.previousElementSibling : null;
+        if (h2 && h2.classList.contains('category')) {
+          showCategory(h2.id);
+          setTimeout(function () { el.scrollIntoView({ block: 'center' }); }, 0);
+          return;
+        }
+      }
+
+      showCategory(categoryIds[0]);
+    }
+
+    initFromHash();
+    window.addEventListener('hashchange', initFromHash);
+  </script>
 </body>
 
 </html>
