@@ -13,6 +13,17 @@
     width: 90% !important;
 }
 
+/* Push reveal.js's own bottom-right prev/next/up/down arrow cluster up out
+   of the way of the module-counter/Agenda-link chrome, which sits at the
+   true bottom-right corner (bottom:10px). Without this, the two fixed
+   elements occupy the same corner and visually collide. Also scaled down
+   slightly so the cluster takes up a little less space. */
+.reveal .controls {
+    bottom: 50px !important;
+    transform: scale(0.85);
+    transform-origin: bottom right;
+}
+
 /* Fragment (click-to-reveal) note: warnings/risks only, never plain
    supplementary info -- see CLAUDE.md's "Conventions" section. */
 .note-below {
@@ -139,6 +150,27 @@
     border: 1px solid #666;
 }
 
+/* Row of quick-links shown directly below the TOC/Schedule table itself,
+   inside <section id="toc"> (or "module-toc") -- distinct from the
+   persistent bottom-left .quick-links footer, which keeps only "Schedule"
+   and the "Updated:" stamp (see CLAUDE.md's "Standardizing chrome across
+   decks"). Left-aligned, wraps on narrow content, links separated by a
+   plain .toc-dot rather than baked into each pill via ::after so the dot
+   sits in the gap between pills instead of inside one's own background. */
+.toc-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 20px;
+    justify-content: flex-start;
+}
+
+.toc-links .toc-dot {
+    color: #888;
+    opacity: 0.7;
+}
+
 /* Diagonal corner-ribbon tag (GitHub-style "Fork me" ribbon), pinned to the
    true top-left corner of the PAGE (like .seal is pinned top-right) -- not
    scoped to one slide's own content box, which auto-sizes/centers and so
@@ -222,3 +254,19 @@
 .term-pill-muted.w1 { font-size: 0.85rem; }
 .term-pill-muted.w2 { font-size: 1.05rem; }
 .term-pill-muted.w3 { font-size: 1.3rem; }
+
+/* The bottom-right slide counter doubles as a link back to the current
+   module's Agenda slide (see the counter IIFE in each deck's footer
+   script). The link text is plainly "Agenda" (not the counter numbers
+   themselves, which stay next to it as plain muted text) -- clearer than
+   trying to make a bare number pair read as clickable. Positioned above
+   reveal.js's own bottom-right navigation arrows (bottom:70px, not 10px)
+   so the two never overlap. */
+.module-back-link {
+    color: #FF671D;
+    text-decoration: none;
+    font-weight: bold;
+}
+.module-back-link:hover {
+    text-decoration: underline;
+}
