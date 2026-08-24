@@ -195,7 +195,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-08-24 15:03 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-08-24 10:11 PT</span>
   </div>
 
   <!--
@@ -2909,10 +2909,6 @@ $ VBoxManage modifyvm "lab1-ubuntu" \
           <h2 style="text-align:center;"><a href="https://pacific.instructure.com/courses/146243/assignments" target="_blank" rel="noopener" style="color:#8ab4f8; text-decoration:underline;">Lab 1 &amp; Homework 1</a></h2>
         </section>
 
-        <section class="term-recap">
-          <div class="term-pill-container"></div>
-        </section>
-
         <section>
           <div class="twocol">
             <div class="col">
@@ -2927,6 +2923,14 @@ $ VBoxManage modifyvm "lab1-ubuntu" \
           </div>
         </section>
         </section>
+
+      <!-- Deck-wide "Key Terms" word cloud: lives at the end of the deck
+           (the last module), not repeated as every module's own last
+           slide -- see the GLOBAL RULE in CLAUDE.md. Built automatically
+           by the term-recap script in the footer <script>. -->
+      <section class="term-recap">
+        <div class="term-pill-container"></div>
+      </section>
 
       <!-- Modules 2-16 not yet built out for this term; hidden until ready.
       <section id="module-2">
@@ -3179,28 +3183,20 @@ $ VBoxManage modifyvm "lab1-ubuntu" \
       Reveal.on('slidechanged', updateTag);
     })();
     (function () {
-      // Auto-build every "Module N: Terminology" recap slide (class="term-recap")
-      // by scanning the whole deck for [data-tag="terminology"][data-term="..."]
-      // slides -- no term list is hand-authored. This module's own terms render
-      // as .term-pill (highlighted); everything earlier as .term-pill-muted.
-      // A second, independent size axis (.w1/.w2/.w3) is assigned per term by
-      // a deterministic hash of the term string, so the slide reads as an
-      // actual word cloud (varied sizes) rather than a flat list of same-size
-      // highlighted words -- see the GLOBAL RULE comment on .term-pill in
-      // assets/deck-chrome.css.
-      var moduleOrder = Array.prototype.slice.call(
-        document.querySelectorAll('.reveal > .slides > section[id^="module-"]')
-      ).map(function (s) { return s.id; });
-
+      // Auto-build the single, deck-wide "Key Terms" word cloud
+      // (class="term-recap") by scanning the whole deck for
+      // [data-tag="terminology"][data-term="..."] slides -- no term list is
+      // hand-authored. This lives once, at the end of the deck (the last
+      // module), not repeated as every module's own last slide -- see the
+      // GLOBAL RULE in CLAUDE.md. Every term renders as .term-pill
+      // (highlighted); a second, independent size axis (.w1/.w2/.w3) is
+      // assigned per term by a deterministic hash of the term string, so
+      // the slide reads as an actual word cloud (varied sizes) rather than
+      // a flat list of same-size words -- see the GLOBAL RULE comment on
+      // .term-pill in assets/deck-chrome.css.
       var terms = Array.prototype.slice.call(
         document.querySelectorAll('[data-tag="terminology"][data-term]')
-      ).map(function (s) {
-        var mod = s.closest('section[id^="module-"]');
-        return {
-          term: s.getAttribute('data-term'),
-          moduleId: mod ? mod.id : null
-        };
-      }).filter(function (t) { return t.moduleId; });
+      ).map(function (s) { return s.getAttribute('data-term'); });
 
       function weightClass(term) {
         var h = 0;
@@ -3208,20 +3204,13 @@ $ VBoxManage modifyvm "lab1-ubuntu" \
         return 'w' + (1 + (h % 3));
       }
 
-      var recaps = document.querySelectorAll('.term-recap');
-      for (var i = 0; i < recaps.length; i++) {
-        var recap = recaps[i];
-        var mod = recap.closest('section[id^="module-"]');
-        var container = recap.querySelector('.term-pill-container');
-        if (!mod || !container) continue;
-        var thisIdx = moduleOrder.indexOf(mod.id);
-        terms.forEach(function (t) {
-          var termIdx = moduleOrder.indexOf(t.moduleId);
-          if (termIdx === -1 || termIdx > thisIdx) return;
+      var recap = document.querySelector('.term-recap');
+      var container = recap ? recap.querySelector('.term-pill-container') : null;
+      if (container) {
+        terms.forEach(function (term) {
           var pill = document.createElement('span');
-          var base = (termIdx === thisIdx) ? 'term-pill' : 'term-pill-muted';
-          pill.className = base + ' ' + weightClass(t.term);
-          pill.textContent = t.term;
+          pill.className = 'term-pill ' + weightClass(term);
+          pill.textContent = term;
           container.appendChild(pill);
         });
       }

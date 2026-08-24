@@ -292,7 +292,7 @@
 
     <div class="quick-links">
       <a href="./#toc" class="footer-link" target="_self">Schedule</a>
-      <span id="updated-stamp" class="footer-link">Updated: 2026-08-24 09:35 PT</span>
+      <span id="updated-stamp" class="footer-link">Updated: 2026-08-24 10:18 PT</span>
     </div>
 
     <div class="reveal">
@@ -755,14 +755,11 @@
                                 <h4>Enroll Student (C Code)</h4>
                                 <pre><code class="language-c" style="font-size: 14pt;">
     #include &lt;stdio.h&gt;
-
-    // Simulated function to enroll a student
+    // Enroll a student
     void enroll_student() {
         printf("Connecting to registrar\n");
-        // Simulate I/O or network call
         printf("Enrollment confirmed!\n");
     }
-
     int main() {
         enroll_student();
         return 0;
@@ -1043,71 +1040,128 @@
                 </section>
 
 
-        <section>
-                    <h4>Develop C++ Course Credit Calculator</h4>
-                </section>
-
-                <section>
-                    <pre><code>
+        <section data-background-color="#0a0a0a">
+                    <div style="display:flex; flex-direction:row; align-items:center; gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Requirements</h4>
+                            <ul>
+                                <li>Read a, operator, b</li>
+                                <li>Support + - * /</li>
+                                <li>Handle divide by 0</li>
+                                <li>Print the result</li>
+                            </ul>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <pre><code>
     #include &lt;iostream&gt;
     using namespace std;
-
     int main() {
         double a, b;
         char op;
-
         // TODO: read a, op, b
-        // TODO: compute and print result
-
+        // TODO: compute, print
         return 0;
     }
     </code></pre>
+                        </div>
+                    </div>
                 </section>
 
-                <section>
-                    <pre><code>
+                <section data-background-color="#0a0a0a">
+                    <div style="display:flex; flex-direction:row; align-items:center; gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Read Input</h4>
+                            <ul>
+                                <li>Show a prompt message</li>
+                                <li>Read a, op, b with cin</li>
+                            </ul>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <pre><code>
     cout &lt;&lt; "Enter a, op, b (e.g. 3 + 4): ";
     cin &gt;&gt; a &gt;&gt; op &gt;&gt; b;
     </code></pre>
+                        </div>
+                    </div>
                 </section>
 
-                <section>
-                    <pre><code>
+                <section data-background-color="#0a0a0a">
+                    <div style="display:flex; flex-direction:row; align-items:center; gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Switch: + and -</h4>
+                            <ul>
+                                <li>Case '+': add a + b</li>
+                                <li>Case '-': subtract b</li>
+                            </ul>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <pre><code>
     switch (op) {
         case '+':
-            cout &lt;&lt; a + b &lt;&lt; endl;
+            cout &lt;&lt; a + b &lt;&lt; endl; // sum
             break;
         case '-':
-            cout &lt;&lt; a - b &lt;&lt; endl;
+            cout &lt;&lt; a - b &lt;&lt; endl; // diff
             break;
+    </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section data-background-color="#0a0a0a">
+                    <div style="display:flex; flex-direction:row; align-items:center; gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Switch: * and /</h4>
+                            <ul>
+                                <li>Case '*': multiply a,b</li>
+                                <li>Case '/': guard b == 0</li>
+                            </ul>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <pre><code>
         case '*':
-            cout &lt;&lt; a * b &lt;&lt; endl;
+            cout &lt;&lt; a * b &lt;&lt; endl; // product
             break;
         case '/':
             if (b == 0)
                 cout &lt;&lt; "No /0" &lt;&lt; endl;
             else
-                cout &lt;&lt; a / b &lt;&lt; endl;
+                cout &lt;&lt; a / b &lt;&lt; endl; // ans
             break;
+    </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section data-background-color="#0a0a0a">
+                    <div style="display:flex; flex-direction:row; align-items:center; gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Switch: Default</h4>
+                            <ul>
+                                <li>default: catch bad op</li>
+                            </ul>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <pre><code>
         default:
-            cout &lt;&lt; "Bad op" &lt;&lt; endl;
+            cout &lt;&lt; "Bad op" &lt;&lt; endl; // ?
     }
     </code></pre>
+                        </div>
+                    </div>
                 </section>
 
                 <section>
-                    <h4>Full Program</h4>
+                    <h4>Full Program: Setup &amp; Switch (1/2)</h4>
                     <div style="display:flex; flex-direction:row; gap:20px; align-items:flex-start;">
                         <div style="flex:1;">
                             <pre style="margin:0;"><code style="font-size:14pt;">
     #include &lt;iostream&gt;
     using namespace std;
-
     int main() {
         double a, b;
         char op;
-
-        cout &lt;&lt; "Enter a, op, b (e.g. 3 + 4): ";
+        cout &lt;&lt; "a op b (ex: 3 + 4): ";
         if (!(cin &gt;&gt; a &gt;&gt; op &gt;&gt; b)) {
             cout &lt;&lt; "Input error\n";
             return 0;
@@ -1123,6 +1177,16 @@
             case '-':
                 cout &lt;&lt; a - b &lt;&lt; endl;
                 break;
+    </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Full Program: Switch (2/2)</h4>
+                    <div style="display:flex; flex-direction:row; gap:20px; align-items:flex-start;">
+                        <div style="flex:1;">
+                            <pre style="margin:0;"><code style="font-size:14pt;">
             case '*':
                 cout &lt;&lt; a * b &lt;&lt; endl;
                 break;
@@ -1132,9 +1196,13 @@
                 else
                     cout &lt;&lt; a / b &lt;&lt; endl;
                 break;
-            default: cout &lt;&lt; "Bad op" &lt;&lt; endl;
+    </code></pre>
+                        </div>
+                        <div style="flex:1;">
+                            <pre style="margin:0;"><code style="font-size:14pt;">
+            default:
+                cout &lt;&lt; "Bad op" &lt;&lt; endl;
         }
-
         return 0;
     }
     </code></pre>
@@ -1197,34 +1265,34 @@
                 </section>
 
                 <section>
-                    <pre><code>// Full program copy/paste
+                    <h4>Full Program</h4>
+                    <div style="display:flex; flex-direction:row; gap:20px; align-items:flex-start;">
+                        <div style="flex:1;">
+                            <pre style="margin:0;"><code style="font-size:14pt;">
     #include &lt;iostream&gt;
     #include &lt;cstdlib&gt;
     #include &lt;ctime&gt;
     using namespace std;
-
     int main() {
         srand(time(0));
         int pick, avail;
-        string names[] = {"AM", "PM", "Eve"};
-
+        string names[] = {"AM","PM","Eve"};
         cout &lt;&lt; "0=AM 1=PM 2=Eve: ";
-        cin &gt;&gt; pick;
+        cin &gt;&gt; pick;</code></pre>
+                        </div>
+                        <div style="flex:1;">
+                            <pre style="margin:0;"><code style="font-size:14pt;">
         avail = rand() % 3;
-
-        cout &lt;&lt; "You: " &lt;&lt; names[pick]
-             &lt;&lt; endl;
-        cout &lt;&lt; "Avail: " &lt;&lt; names[avail]
-             &lt;&lt; endl;
-
+        cout &lt;&lt; names[pick] &lt;&lt; endl; // pick
+        cout &lt;&lt; names[avail] &lt;&lt; endl; // avail
         if (pick == avail)
             cout &lt;&lt; "Match!" &lt;&lt; endl;
         else
             cout &lt;&lt; "Reassigned." &lt;&lt; endl;
-
         return 0;
-    }
-    </code></pre>
+    }</code></pre>
+                        </div>
+                    </div>
                 </section>
 
                 <section>
@@ -1261,6 +1329,19 @@
                     </div>
                 </section>
                 </section>
+
+            <!-- Deck-wide "Key Terms" word cloud (class="term-recap") lives
+                 at the end of the deck (the last module), not repeated as
+                 every module's own last slide -- see the GLOBAL RULE in
+                 CLAUDE.md. Not added yet: Module 1 has no
+                 data-tag="terminology" slides, and an empty .term-recap
+                 still renders as a real (blank) slide, so it stays out of
+                 the DOM until some module actually has tagged terms to
+                 populate it -- add <section class="term-recap"><div
+                 class="term-pill-container"></div></section> here, right
+                 after the last built-out module, the day that's true. The
+                 auto-build script in the footer <script> is already wired
+                 up and will populate it the moment it exists. -->
 
             <!-- Modules 2-16 not yet built out for this term; hidden until ready.
             <section id="module-2">
@@ -13414,109 +13495,28 @@
             </section>
             -->
 
-            <section id="module-17">
-                <section id="syllabus">
-                    <h2>Module 17</h2>
-                    <h3>Syllabus</h3>
-                </section>
-
-                <section>
-                    <h2>Course Resources</h2>
-                    <ul>
-                        <li><a href="https://pacific.instructure.com/courses/148497/" target="_blank">Canvas</a></li>
-                        <li><a href="https://github.com/SE4CPS/2025-COMP-051" target="_blank">GitHub Repository</a></li>
-                        <li><a href="https://pacific.zoom.us/my/berhe" target="_blank">Zoom Link</a></li>
-                        <li><a href="https://se4cps.github.io/lab/comp-051/" target="_blank">Slides</a></li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h2>Course Description</h2>
-                    <p>
-                        This course provides an introduction to programming with <b>C++</b>, covering both procedural
-                        and
-                        object-oriented approaches. Students begin with the fundamentals of variables, control flow,
-                        loops,
-                        arrays, and functions, then progress to advanced topics such as classes, inheritance, pointers,
-                        recursion, and exception handling.
-                    </p>
-                </section>
-
-                <section>
-                    <h2>Course Topics</h2>
-                    <ul>
-                        <li>Introduction to C++</li>
-                        <li>Variables and Assignments</li>
-                        <li>Branches (Conditionals)</li>
-                        <li>Loops</li>
-                        <li>Arrays and Vectors</li>
-                        <li>User-Defined Functions</li>
-                        <li>Objects and Classes</li>
-                        <li>Inheritance</li>
-                        <li>Streams (I/O)</li>
-                        <li>Recursion</li>
-                        <li>Pointers</li>
-                        <li>Exceptions</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h2>Course Goals by Terms</h2>
-                    <p style="font-size:14pt; line-height:1.6;">
-                        <span class="highlight">C++</span>, Compiler, Linker,
-                        <span class="highlight">Variables</span>, Data Types, Constants, Operators,
-                        <span class="highlight">Assignments</span>, Expressions,
-                        <span class="highlight">Conditionals</span>, Branches, If/Else, Switch,
-                        <span class="highlight">Loops</span>, For, While, Do-While,
-                        <span class="highlight">Arrays</span>, Vectors, Strings,
-                        <span class="highlight">Functions</span>, Parameters, Return Values, Scope,
-                        <span class="highlight">Objects</span>, Classes, Encapsulation,
-                        <span class="highlight">Constructors</span>, Destructors,
-                        <span class="highlight">Inheritance</span>, Polymorphism, Virtual Functions,
-                        <span class="highlight">Streams</span>, cin, cout, File I/O,
-                        <span class="highlight">Recursion</span>, Call Stack,
-                        <span class="highlight">Pointers</span>, References, Dynamic Memory,
-                        <span class="highlight">Exceptions</span>, Try/Catch, Error Handling,
-                        Header Files, Namespaces, Standard Library,
-                        <span class="highlight">Templates</span>, STL, Iterators, Containers,
-                        <span class="highlight">Algorithm Library</span>, Sorting, Searching,
-                        Compilation Process, Debugging, Testing,
-                        <span class="highlight">Code Reuse</span>, Modularization, Maintainability.
-                    </p>
-                </section>
-
-                <section>
-                    <h2>Grading Schema</h2>
-                    <ul>
-                        <li>Attendance: 5%</li>
-                        <li>Homework: 15%</li>
-                        <li>Labs: 15%</li>
-                        <li>Project: 30%</li>
-                        <li>Midterm Exam: 15%</li>
-                        <li>Final Exam: 20% (cumulative)</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h2>Policies</h2>
-                    <ul>
-                        <li><strong>Late Work:</strong> 20% penalty; extensions only if requested before deadline by
-                            email.</li>
-                        <li><strong>Attendance:</strong> Required and tracked; email in advance if absent.</li>
-                        <li><strong>Collaboration & AI:</strong> Collaboration allowed on labs; work must be your own.
-                            AI tools allowed if you understand the output.</li>
-                    </ul>
-                </section>
-
-                <section>
-                    <h2>University Policies</h2>
-                    <ul>
-                        <li><strong>ADA Accommodations:</strong> Contact SSD (ssd@pacific.edu).</li>
-                        <li><strong>Honor Code:</strong> Academic honesty required; violations reported.</li>
-                        <li><strong>Assessment:</strong> Student work may be retained for program evaluation.</li>
-                        <li><strong>Support Services:</strong> Tutoring, Writing Center, Care Managers.</li>
-                    </ul>
-                </section>
+            <section id="key-terms">
+                <p style="font-size:14pt; line-height:1.6;">
+                    <span class="highlight">C++</span>, Compiler, Linker,
+                    <span class="highlight">Variables</span>, Data Types, Constants, Operators,
+                    <span class="highlight">Assignments</span>, Expressions,
+                    <span class="highlight">Conditionals</span>, Branches, If/Else, Switch,
+                    <span class="highlight">Loops</span>, For, While, Do-While,
+                    <span class="highlight">Arrays</span>, Vectors, Strings,
+                    <span class="highlight">Functions</span>, Parameters, Return Values, Scope,
+                    <span class="highlight">Objects</span>, Classes, Encapsulation,
+                    <span class="highlight">Constructors</span>, Destructors,
+                    <span class="highlight">Inheritance</span>, Polymorphism, Virtual Functions,
+                    <span class="highlight">Streams</span>, cin, cout, File I/O,
+                    <span class="highlight">Recursion</span>, Call Stack,
+                    <span class="highlight">Pointers</span>, References, Dynamic Memory,
+                    <span class="highlight">Exceptions</span>, Try/Catch, Error Handling,
+                    Header Files, Namespaces, Standard Library,
+                    <span class="highlight">Templates</span>, STL, Iterators, Containers,
+                    <span class="highlight">Algorithm Library</span>, Sorting, Searching,
+                    Compilation Process, Debugging, Testing,
+                    <span class="highlight">Code Reuse</span>, Modularization, Maintainability.
+                </p>
             </section>
 
         </div>
@@ -13611,28 +13611,20 @@
       Reveal.on('slidechanged', updateTag);
     })();
     (function () {
-      // Auto-build every "Module N: Terminology" recap slide (class="term-recap")
-      // by scanning the whole deck for [data-tag="terminology"][data-term="..."]
-      // slides -- no term list is hand-authored. This module's own terms render
-      // as .term-pill (highlighted); everything earlier as .term-pill-muted.
-      // A second, independent size axis (.w1/.w2/.w3) is assigned per term by
-      // a deterministic hash of the term string, so the slide reads as an
-      // actual word cloud (varied sizes) rather than a flat list of same-size
-      // highlighted words -- see the GLOBAL RULE comment on .term-pill in
-      // assets/deck-chrome.css.
-      var moduleOrder = Array.prototype.slice.call(
-        document.querySelectorAll('.reveal > .slides > section[id^="module-"]')
-      ).map(function (s) { return s.id; });
-
+      // Auto-build the single, deck-wide "Key Terms" word cloud
+      // (class="term-recap") by scanning the whole deck for
+      // [data-tag="terminology"][data-term="..."] slides -- no term list is
+      // hand-authored. This lives once, at the end of the deck (the last
+      // module), not repeated as every module's own last slide -- see the
+      // GLOBAL RULE in CLAUDE.md. Every term renders as .term-pill
+      // (highlighted); a second, independent size axis (.w1/.w2/.w3) is
+      // assigned per term by a deterministic hash of the term string, so
+      // the slide reads as an actual word cloud (varied sizes) rather than
+      // a flat list of same-size words -- see the GLOBAL RULE comment on
+      // .term-pill in assets/deck-chrome.css.
       var terms = Array.prototype.slice.call(
         document.querySelectorAll('[data-tag="terminology"][data-term]')
-      ).map(function (s) {
-        var mod = s.closest('section[id^="module-"]');
-        return {
-          term: s.getAttribute('data-term'),
-          moduleId: mod ? mod.id : null
-        };
-      }).filter(function (t) { return t.moduleId; });
+      ).map(function (s) { return s.getAttribute('data-term'); });
 
       function weightClass(term) {
         var h = 0;
@@ -13640,20 +13632,13 @@
         return 'w' + (1 + (h % 3));
       }
 
-      var recaps = document.querySelectorAll('.term-recap');
-      for (var i = 0; i < recaps.length; i++) {
-        var recap = recaps[i];
-        var mod = recap.closest('section[id^="module-"]');
-        var container = recap.querySelector('.term-pill-container');
-        if (!mod || !container) continue;
-        var thisIdx = moduleOrder.indexOf(mod.id);
-        terms.forEach(function (t) {
-          var termIdx = moduleOrder.indexOf(t.moduleId);
-          if (termIdx === -1 || termIdx > thisIdx) return;
+      var recap = document.querySelector('.term-recap');
+      var container = recap ? recap.querySelector('.term-pill-container') : null;
+      if (container) {
+        terms.forEach(function (term) {
           var pill = document.createElement('span');
-          var base = (termIdx === thisIdx) ? 'term-pill' : 'term-pill-muted';
-          pill.className = base + ' ' + weightClass(t.term);
-          pill.textContent = t.term;
+          pill.className = 'term-pill ' + weightClass(term);
+          pill.textContent = term;
           container.appendChild(pill);
         });
       }
