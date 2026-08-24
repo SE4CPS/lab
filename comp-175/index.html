@@ -195,7 +195,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-08-23 19:27 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-08-24 15:03 PT</span>
   </div>
 
   <!--
@@ -1914,6 +1914,49 @@ $ nmap -sn scanme.nmap.org       # host discovery only
 $ nmap -p 22,80 scanme.nmap.org  # specific ports
 $ nmap -A scanme.nmap.org        # OS + version detect</div>
               <p class="source-line">Sample calls against Nmap's own test target (Source: <a href="https://scanme.nmap.org" target="_blank" rel="noopener">scanme.nmap.org</a>)</p>
+            </div>
+          </div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <div class="twocol">
+            <div class="col">
+              <h4>What Does the Output Mean?</h4>
+              <ul>
+                <li>Real scan: scanme.nmap.org</li>
+                <li>4 open ports, OS guessed</li>
+                <li>31337: a classic 'leet' port</li>
+              </ul>
+            </div>
+            <div class="col">
+              <div class="terminal-ps">Nmap scan report for scanme.nmap.org (45.33.32.156)  # target + IP
+Host is up (0.024s latency)       # host responded
+Not shown: 996 filtered ports     # most ports hidden
+PORT      STATE SERVICE
+22/tcp    open  ssh                # remote login
+80/tcp    open  http                # web server
+9929/tcp  open  nping-echo         # Nmap's own test service
+31337/tcp open  Elite               # classic "leet" backdoor port
+Running: Linux 4.X|5.X             # OS guess
+Network Distance: 15 hops           # hops to target</div>
+              <p class="source-line">Live scan output, run by the instructor against scanme.nmap.org (Source: sudo nmap -O scanme.nmap.org, Aug 2026)</p>
+            </div>
+          </div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <div class="twocol">
+            <div class="col">
+              <h4>Why Does an Open Port Matter?</h4>
+              <ul>
+                <li>Each port = attack surface</li>
+                <li>Old software often unpatched</li>
+                <li>One flaw can mean full access</li>
+              </ul>
+            </div>
+            <div class="col">
+              <svg viewBox="0 0 340 346" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><defs><marker id="arrowExploit" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="20.0" y="10" width="300" height="46" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="170.0" y="30" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Recon</text><text x="170.0" y="47" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#999" font-weight="normal">nmap finds port 22 open</text><line x1="170.0" y1="56" x2="170.0" y2="76" stroke="#888" stroke-width="1.5" marker-end="url(#arrowExploit)"/><rect x="20.0" y="80" width="300" height="46" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="170.0" y="100" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Fingerprint</text><text x="170.0" y="117" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#999" font-weight="normal">identify OpenSSH version</text><line x1="170.0" y1="126" x2="170.0" y2="146" stroke="#888" stroke-width="1.5" marker-end="url(#arrowExploit)"/><rect x="20.0" y="150" width="300" height="46" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="170.0" y="170" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Check known CVEs</text><text x="170.0" y="187" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#999" font-weight="normal">e.g. CVE-2024-6387</text><line x1="170.0" y1="196" x2="170.0" y2="216" stroke="#888" stroke-width="1.5" marker-end="url(#arrowExploit)"/><rect x="20.0" y="220" width="300" height="46" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="170.0" y="240" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Exploit</text><text x="170.0" y="257" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#999" font-weight="normal">regreSSHion race condition</text><line x1="170.0" y1="266" x2="170.0" y2="286" stroke="#888" stroke-width="1.5" marker-end="url(#arrowExploit)"/><rect x="20.0" y="290" width="300" height="46" rx="7" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="170.0" y="310" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">Root access</text><text x="170.0" y="327" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#ffd9b3" font-weight="normal">unauthenticated RCE</text></svg>
+              <p class="source-line">CVE-2024-6387 "regreSSHion," OpenSSH unauthenticated RCE (Source: <a href="https://blog.qualys.com/vulnerabilities-threat-research/2024/07/01/regresshion-remote-unauthenticated-code-execution-vulnerability-in-openssh-server" target="_blank" rel="noopener">Qualys</a>, Jul 2024)</p>
             </div>
           </div>
         </section>

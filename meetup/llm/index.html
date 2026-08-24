@@ -214,6 +214,8 @@ li   { font-size:10.5pt; line-height:1.4em; }
 </style>
 </head>
 <body>
+  <div style="position: fixed; bottom: 10px; left: 10px; z-index: 9999; display: flex; gap: 8px;"><span style="color: #ccc; font-size: 0.8rem; background: rgba(0,0,0,0.4); padding: 4px 10px; border-radius: 4px;">Updated: 2026-08-10 12:26 PT</span></div>
+
 <div class="reveal"><div class="slides"><section>
 
 <!-- ══ 1. TITLE ════════════════════════════════════════════════════════ -->
@@ -692,7 +694,29 @@ not as an instruction.
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
 <script>
-    Reveal.initialize({ controls:true, progress:true, center:true, hash:true, margin:0.04 });
+    Reveal.initialize({ slideNumber: false, controls:true, progress:true, center:true, hash:true, margin:0.04 }).then(function () {
+    (function () {
+      var el = document.createElement('div');
+      el.style.cssText = 'position:fixed; bottom:10px; right:10px; z-index:9999; color:#ccc; ' +
+        'font-size:0.8rem; background:rgba(0,0,0,0.4); padding:4px 10px; border-radius:4px; ' +
+        'pointer-events:none;';
+      document.body.appendChild(el);
+      function updateCounter() {
+        var hSlides = document.querySelectorAll('.reveal > .slides > section');
+        var idx = Reveal.getIndices();
+        var h = idx.h, v = idx.v || 0;
+        var cur = hSlides[h];
+        var vSlides = cur ? cur.querySelectorAll(':scope > section') : [];
+        var text = (h + 1) + '/' + hSlides.length;
+        if (vSlides.length > 1) {
+          text += ' &middot; ' + (v + 1) + '/' + vSlides.length;
+        }
+        el.innerHTML = text;
+      }
+      updateCounter();
+      Reveal.on('slidechanged', updateCounter);
+    })();
+    });
 </script>
 </body>
 </html>

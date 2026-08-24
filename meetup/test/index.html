@@ -92,6 +92,8 @@
 </style>
 </head>
 <body>
+  <div style="position: fixed; bottom: 10px; left: 10px; z-index: 9999; display: flex; gap: 8px;"><span style="color: #ccc; font-size: 0.8rem; background: rgba(0,0,0,0.4); padding: 4px 10px; border-radius: 4px;">Updated: 2026-08-10 12:26 PT</span></div>
+
 <div class="reveal">
 <div class="slides">
 <section>
@@ -1394,7 +1396,7 @@ npm test
 <script>
 Reveal.initialize({
   hash: true,
-  slideNumber: 'c/t',
+  slideNumber: false,
   transition: 'slide',
   transitionSpeed: 'fast',
   navigationMode: 'linear',
@@ -1407,7 +1409,29 @@ Reveal.initialize({
   minScale: 0.2,
   maxScale: 2.0,
   plugins: [ RevealHighlight, RevealNotes ]
-});
+}).then(function () {
+    (function () {
+      var el = document.createElement('div');
+      el.style.cssText = 'position:fixed; bottom:10px; right:10px; z-index:9999; color:#ccc; ' +
+        'font-size:0.8rem; background:rgba(0,0,0,0.4); padding:4px 10px; border-radius:4px; ' +
+        'pointer-events:none;';
+      document.body.appendChild(el);
+      function updateCounter() {
+        var hSlides = document.querySelectorAll('.reveal > .slides > section');
+        var idx = Reveal.getIndices();
+        var h = idx.h, v = idx.v || 0;
+        var cur = hSlides[h];
+        var vSlides = cur ? cur.querySelectorAll(':scope > section') : [];
+        var text = (h + 1) + '/' + hSlides.length;
+        if (vSlides.length > 1) {
+          text += ' &middot; ' + (v + 1) + '/' + vSlides.length;
+        }
+        el.innerHTML = text;
+      }
+      updateCounter();
+      Reveal.on('slidechanged', updateCounter);
+    })();
+    });
 </script>
 </body>
 </html>
