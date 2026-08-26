@@ -148,6 +148,7 @@
       color: #d4d4d4;
       overflow-x: auto;
       white-space: pre;
+      position: relative;
     }
 
     /* PowerShell console theme: classic PS blue background, larger font.
@@ -165,6 +166,39 @@
       color: #f2f2f2;
       overflow-x: auto;
       white-space: pre;
+      position: relative;
+    }
+
+    /* Subtle copy-command button, top-right of any .terminal/.terminal-ps
+       box -- copies just the runnable command(s) (the "$ " prompt and any
+       trailing "  # comment" stripped), not the whole block verbatim. */
+    .code-copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 4px;
+      color: #ccc;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      font-size: 0.72rem;
+      padding: 2px 8px;
+      cursor: pointer;
+      opacity: 0.32;
+      transition: opacity 0.15s ease, background 0.15s ease;
+      z-index: 5;
+    }
+    .terminal:hover .code-copy-btn,
+    .terminal-ps:hover .code-copy-btn {
+      opacity: 0.9;
+    }
+    .code-copy-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .code-copy-btn.copied {
+      opacity: 1;
+      color: #4ade80;
+      border-color: #4ade80;
     }
 
     .os-tabs {
@@ -195,7 +229,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-08-24 15:00 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-08-26 14:59 PT</span>
   </div>
 
   <!--
@@ -246,7 +280,7 @@
             <strong>Course:</strong> COMP 175-01 (CRN 80249)<br>
             <strong>Term:</strong> Fall 2026 (Aug 24 &ndash; Dec 11, 2026)<br>
             <strong>Time:</strong> 8:25 AM &ndash; 9:45 AM on Tuesday, Thursday<br>
-            <strong>Location:</strong> John T Chambers Technology Ctr 214<br>
+            <strong>Location:</strong> CTC 214<br>
             <strong>Credits:</strong> 3.000<br>
             <strong>Office Hours:</strong> Tuesday, Thursday 1:30&ndash;2:30 PM, CTC 117 or <a
               href="https://pacific.zoom.us/my/berhe" target="_blank" rel="noopener">Zoom</a>
@@ -281,7 +315,14 @@
               <td>Week 1</td>
               <td><a href="./#/module-1">Aug 25</a>, <a href="./#/module-1">Aug 27</a></td>
               <td data-module="1">Virtualization &amp; Isolation</td>
-              <td></td>
+              <td>Commands: <a href="./#/cmd-wsl" target="_self">wsl</a>,
+                <a href="./#/cmd-sudo" target="_self">sudo</a>,
+                <a href="./#/cmd-apt" target="_self">apt</a>,
+                <a href="./#/cmd-pacman" target="_self">pacman</a>,
+                <a href="./#/cmd-nmap" target="_self">nmap</a>,
+                <a href="./#/cmd-whois" target="_self">whois</a>,
+                <a href="./#/cmd-dig" target="_self">dig</a>,
+                <a href="./#/cmd-vboxmanage" target="_self">VBoxManage</a></td>
               <td>Lab/HW 1</td>
               <td>🎓 University</td>
             </tr>
@@ -402,7 +443,7 @@
               <td>Dec 8, Dec 10</td>
               <td data-module="16">Final Presentations &amp; Course Wrap-up</td>
               <td></td>
-              <td><span class="highlight">Final Exam:</span> Dec. 10th, 8&ndash;10AM in JT Chambers Technology Ctr 214</td>
+              <td><span class="highlight">Final Exam:</span> Dec. 10th, 8&ndash;10AM in CTC 214</td>
               <td></td>
             </tr>
           </tbody>
@@ -451,10 +492,9 @@
                 <li><a href="./#/module-1-agenda-4" target="_self">Hands-on: install Linux</a></li>
                 <li><a href="./#/module-1-agenda-5" target="_self">University Domain: Plan VM</a></li>
                 <li><a href="./#/module-1-agenda-6" target="_self">What is virtualization</a></li>
-                <li><a href="./#/module-1-agenda-7" target="_self">Hypervisors &amp; VirtualBox</a></li>
-                <li><a href="./#/module-1-agenda-8" target="_self">Anatomy of a VM</a></li>
-                <li><a href="./#/module-1-agenda-9" target="_self">Real-world risks</a></li>
-                <li><a href="./#/module-1-agenda-10" target="_self">Lab 1 &amp; Homework 1</a></li>
+                <li><a href="./#/module-1-agenda-7" target="_self">VirtualBox &amp; WSL</a></li>
+                <li><a href="./#/module-1-agenda-8" target="_self">Real-world risks</a></li>
+                <li><a href="./#/module-1-agenda-9" target="_self">Lab 1 &amp; Homework 1</a></li>
               </ol>
             </div>
             <div class="col" style="text-align:center;">
@@ -1210,7 +1250,7 @@ veh3210:x:1003:1003:Vehicle,,,:/home/veh3210:/bin/sh</div>
           </div>
         </section>
 
-        <section>
+        <section id="cmd-apt">
           <div class="twocol">
             <div class="col">
               <h4>How Do You Install with apt?</h4>
@@ -1231,7 +1271,7 @@ veh3210:x:1003:1003:Vehicle,,,:/home/veh3210:/bin/sh</div>
           </div>
         </section>
 
-        <section>
+        <section id="cmd-pacman">
           <div class="twocol">
             <div class="col">
               <h4>How Do You Install with pacman?</h4>
@@ -1628,7 +1668,7 @@ $ Get-History  # past commands</div>
           </div>
         </section>
 
-        <section data-background-color="#0a0a0a">
+        <section id="cmd-wsl" data-background-color="#0a0a0a">
           <div class="twocol">
             <div class="col">
               <h4>Open PowerShell</h4>
@@ -1719,7 +1759,7 @@ $ sudo apt full-upgrade -y</div>
           </div>
         </section>
 
-        <section data-tag="terminology" data-term="sudo">
+        <section id="cmd-sudo" data-tag="terminology" data-term="sudo">
           <div class="twocol">
             <div class="col">
               <h4>Word Origin: "sudo"</h4>
@@ -1872,7 +1912,7 @@ $ sudo apt update &amp;&amp; sudo apt full-upgrade -y</div>
           </div>
         </section>
 
-        <section>
+        <section id="cmd-nmap">
           <h4>What Is Nmap?</h4>
           <div style="text-align:center;">
             <svg viewBox="0 0 990 314" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1040px;display:block;margin:0 auto;"><defs><marker id="arrowNmap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><line x1="190" y1="190.0" x2="246" y2="169.0" stroke="#888" stroke-width="1.5" marker-end="url(#arrowNmap)"/><text x="218.0" y="171.5" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">TCP/SYN probes</text><line x1="630" y1="169.0" x2="686" y2="137.0" stroke="#888" stroke-width="1.5" marker-end="url(#arrowNmap)"/><text x="658.0" y="145.0" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">results</text><rect x="20" y="145" width="170" height="90" rx="8" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="105.0" y="183" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Your Machine</text><text x="105.0" y="207" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#999">running nmap</text><text x="440.0" y="20" text-anchor="middle" font-size="13.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Target Host: Operating System</text><rect x="250" y="44" width="380" height="74" rx="7" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="440.0" y="73" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">Well-Known Ports</text><text x="440.0" y="97" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#ffd9b3" font-weight="normal">0–1023</text><rect x="250" y="132" width="380" height="74" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="440.0" y="161" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Registered Ports</text><text x="440.0" y="185" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#ccc" font-weight="normal">1024–49151</text><rect x="250" y="220" width="380" height="74" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="440.0" y="249" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Dynamic / Private</text><text x="440.0" y="273" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#ccc" font-weight="normal">49152–65535</text><text x="830.0" y="20" text-anchor="middle" font-size="13.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Scan Results</text><rect x="690" y="44" width="280" height="54" rx="6" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="704" y="67" text-anchor="start" font-size="13" font-family="Consolas, monospace" fill="#eee" font-weight="bold">22/tcp</text><text x="704" y="86" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">ssh</text><text x="956" y="75" text-anchor="end" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#4ade80" font-weight="bold">open</text><rect x="690" y="110" width="280" height="54" rx="6" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="704" y="133" text-anchor="start" font-size="13" font-family="Consolas, monospace" fill="#eee" font-weight="bold">80/tcp</text><text x="704" y="152" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">http</text><text x="956" y="141" text-anchor="end" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#4ade80" font-weight="bold">open</text><rect x="690" y="176" width="280" height="54" rx="6" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="704" y="199" text-anchor="start" font-size="13" font-family="Consolas, monospace" fill="#eee" font-weight="bold">443/tcp</text><text x="704" y="218" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">https</text><text x="956" y="207" text-anchor="end" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#f87171" font-weight="bold">closed</text></svg>
@@ -2034,6 +2074,47 @@ $ nmap 192.168.56.101        # local Metasploitable2 VM</div>
         <section data-background-color="#0a0a0a">
           <div class="twocol">
             <div class="col">
+              <h4>OS Detection: Real Output</h4>
+              <ul>
+                <li>Same 4 ports, still open</li>
+                <li>OS guess: Linux 4.15&ndash;5.19</li>
+                <li>16 hops to the target</li>
+              </ul>
+            </div>
+            <div class="col">
+              <div class="terminal-ps">$ sudo nmap -O scanme.nmap.org
+PORT      STATE SERVICE
+22/tcp    open  ssh
+80/tcp    open  http
+9929/tcp  open  nping-echo
+31337/tcp open  Elite
+Device type: general purpose         # broad category
+Running: Linux 4.X|5.X               # OS family guess
+OS details: Linux 4.15 - 5.19        # narrowed version range
+Network Distance: 16 hops</div>
+              <p class="source-line">Live scan output, run by the instructor against scanme.nmap.org (Source: sudo nmap -O scanme.nmap.org, Aug 2026)</p>
+            </div>
+          </div>
+          <div class="fragment" style="display:flex; gap:16px; margin-top:16px;">
+            <div style="flex:1; background:#2a2a2a; border:2px solid #e03131; border-radius:8px; padding:0.8rem 1rem;">
+              <p style="margin:0; font-size:1.1rem; color:#eee;">&#128308; <strong>Red Team:</strong> the OS/version guess narrows which known exploits are worth trying against this target.</p>
+            </div>
+            <div style="flex:1; background:#2a2a2a; border:2px solid #3b82f6; border-radius:8px; padding:0.8rem 1rem;">
+              <p style="margin:0; font-size:1.1rem; color:#eee;">&#128309; <strong>Blue Team:</strong> the same fingerprint tells defenders what to patch, and whether to suppress it from scanners.</p>
+            </div>
+          </div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <h4>Heads Up: OS Guesses Aren't Certain</h4>
+          <p class="note-below" style="margin-top:2.5rem;">&#9888;&#65039; Nmap warns that OS-scan results may be
+            <span class="highlight">unreliable</span> when it can't find at least one open and one
+            closed port on the target. Treat the guess as a best estimate, not a certainty.</p>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <div class="twocol">
+            <div class="col">
               <h4>How Do You Scan All 65,535 Ports?</h4>
               <ul>
                 <li>Slower, but thorough</li>
@@ -2045,7 +2126,7 @@ $ nmap 192.168.56.101        # local Metasploitable2 VM</div>
           </div>
         </section>
 
-        <section data-background-color="#0a0a0a">
+        <section id="cmd-whois" data-background-color="#0a0a0a">
           <div class="twocol">
             <div class="col">
               <h4>How Do You Look Up Domain Info?</h4>
@@ -2060,19 +2141,23 @@ $ nmap 192.168.56.101        # local Metasploitable2 VM</div>
           </div>
           <div class="fragment" style="display:flex; gap:16px; margin-top:16px;">
             <div style="flex:1; background:#2a2a2a; border:2px solid #e03131; border-radius:8px; padding:0.8rem 1rem;">
-              <p style="margin:0; font-size:0.95rem; color:#eee;">&#128308; <strong>Red Team:</strong> registrant, registrar &amp; name-server info feeds phishing pretexts and social engineering.</p>
+              <p style="margin:0; font-size:1.1rem; color:#eee;">&#128308; <strong>Red Team:</strong> registrant, registrar &amp; name-server info feeds phishing pretexts and social engineering.</p>
             </div>
             <div style="flex:1; background:#2a2a2a; border:2px solid #3b82f6; border-radius:8px; padding:0.8rem 1rem;">
-              <p style="margin:0; font-size:0.95rem; color:#eee;">&#128309; <strong>Blue Team:</strong> confirms your own domain hasn't expired or been hijacked; profiles lookalike phishing domains.</p>
+              <p style="margin:0; font-size:1.1rem; color:#eee;">&#128309; <strong>Blue Team:</strong> confirms your own domain hasn't expired or been hijacked; profiles lookalike phishing domains.</p>
             </div>
           </div>
-          <p class="fragment note-below">&#9888;&#65039; WHOIS looks up the registered
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <h4>Heads Up: WHOIS Needs the Base Domain</h4>
+          <p class="note-below" style="margin-top:2.5rem;">&#9888;&#65039; WHOIS looks up the registered
             <span class="highlight">domain</span>, not a subdomain. `whois
             scanme.nmap.org` fails with "Malformed request" on some registries;
             use the base domain instead.</p>
         </section>
 
-        <section data-background-color="#0a0a0a">
+        <section id="cmd-dig" data-background-color="#0a0a0a">
           <div class="twocol">
             <div class="col">
               <h4>How Do You Look Up DNS Records?</h4>
@@ -2086,10 +2171,10 @@ $ nmap 192.168.56.101        # local Metasploitable2 VM</div>
           </div>
           <div class="fragment" style="display:flex; gap:16px; margin-top:16px;">
             <div style="flex:1; background:#2a2a2a; border:2px solid #e03131; border-radius:8px; padding:0.8rem 1rem;">
-              <p style="margin:0; font-size:0.95rem; color:#eee;">&#128308; <strong>Red Team:</strong> maps mail servers, subdomains &amp; DNS infrastructure to find attack surface.</p>
+              <p style="margin:0; font-size:1.1rem; color:#eee;">&#128308; <strong>Red Team:</strong> maps mail servers, subdomains &amp; DNS infrastructure to find attack surface.</p>
             </div>
             <div style="flex:1; background:#2a2a2a; border:2px solid #3b82f6; border-radius:8px; padding:0.8rem 1rem;">
-              <p style="margin:0; font-size:0.95rem; color:#eee;">&#128309; <strong>Blue Team:</strong> verifies DNS resolves correctly and that SPF/DKIM/DMARC anti-phishing records are published.</p>
+              <p style="margin:0; font-size:1.1rem; color:#eee;">&#128309; <strong>Blue Team:</strong> verifies DNS resolves correctly and that SPF/DKIM/DMARC anti-phishing records are published.</p>
             </div>
           </div>
         </section>
@@ -2136,6 +2221,23 @@ $ nmap 192.168.56.101        # local Metasploitable2 VM</div>
           </div>
           <p class="fragment note-below">A vague name like "server1" becomes unmanageable
             once you have 50 VMs.</p>
+        </section>
+
+        <section>
+          <div class="twocol">
+            <div class="col">
+              <h4>Why a Web Server First?</h4>
+              <ul>
+                <li>Top ports: 80/443 (web)</li>
+                <li>Most exposed service, by far</li>
+                <li>That's why reg-web01 is first</li>
+              </ul>
+            </div>
+            <div class="col">
+              <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:400px;display:block;margin:0 auto;"><text x="200" y="18" text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Most-Exposed Internet Ports</text><rect x="120" y="34" width="255" height="26" rx="4" fill="#3a1f0a" stroke="#FF671D" stroke-width="1.5"/><text x="112" y="52" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee">443 (https)</text><text x="382" y="52" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#ffd9b3">11.8%</text><rect x="120" y="66" width="248" height="26" rx="4" fill="#3a1f0a" stroke="#FF671D" stroke-width="1.5"/><text x="112" y="84" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee">80 (http)</text><text x="382" y="84" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#ffd9b3">11.5%</text><rect x="120" y="98" width="130" height="26" rx="4" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="112" y="116" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee">8080</text><text x="264" y="116" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">6%</text><rect x="120" y="130" width="89" height="26" rx="4" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="112" y="148" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee">22 (ssh)</text><text x="223" y="148" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">4.1%</text></svg>
+              <p class="source-line">Share of devices exposing each port, Shodan scan data (Source: <a href="https://securebin.ai/blog/open-ports-security-risks/" target="_blank" rel="noopener">SecureBin, Open Port Security Risks</a>)</p>
+            </div>
+          </div>
         </section>
 
         <section>
@@ -2242,6 +2344,229 @@ $ wsl --install -d openSUSE-Leap-15.6   # enterprise tooling (YaST)</div>
           </div>
         </section>
 
+        <section data-background-color="#0a0a0a">
+          <div class="twocol">
+            <div class="col">
+              <h4>Practice:<br>Log In &amp; Go Home (Ubuntu)</h4>
+              <ul>
+                <li>Starts in your home dir</li>
+                <li>Only you can write here</li>
+                <li>~ is shorthand for it</li>
+              </ul>
+            </div>
+            <div class="col">
+              <div class="terminal-ps">$ wsl -d Ubuntu-24.04
+$ pwd
+/home/yourname
+$ whoami
+yourname</div>
+            </div>
+          </div>
+          <p class="fragment note-below">&#9888;&#65039; Every user gets exactly one
+            <span class="highlight">home</span> directory (`/home/&lt;username&gt;`). It's the only
+            place you're guaranteed write access without `sudo`, which is why every exercise in this
+            course starts there instead of somewhere like `/etc` or `/var`.</p>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <div class="twocol">
+            <div class="col">
+              <h4>Practice:<br>Create the Catalog Page (Ubuntu)</h4>
+              <ul>
+                <li>Create index.html locally</li>
+                <li>Book list = the response body</li>
+              </ul>
+            </div>
+            <div class="col">
+              <div class="terminal-ps">$ mkdir library &amp;&amp; cd library
+$ cat &gt; index.html &lt;&lt; 'EOF'
+&lt;h1&gt;Pacific Library Catalog&lt;/h1&gt;
+&lt;ul&gt;&lt;li&gt;Introduction to System
+Admin and Security&lt;/li&gt;&lt;/ul&gt;
+EOF</div>
+            </div>
+          </div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <div class="twocol">
+            <div class="col">
+              <h4>Practice:<br>Serve lib-web01 (Ubuntu)</h4>
+              <ul>
+                <li>Serves the current directory</li>
+                <li>Listens on port 8080</li>
+              </ul>
+            </div>
+            <div class="col">
+              <div class="terminal-ps">$ python3 -m http.server 8080
+Serving HTTP on 0.0.0.0 port 8080 ...</div>
+            </div>
+          </div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <div class="twocol">
+            <div class="col">
+              <h4>Practice:<br>Find lib-web01's IP (Ubuntu)</h4>
+              <ul>
+                <li>Every distro gets its own IP</li>
+                <li>Yours will differ, that's OK</li>
+              </ul>
+            </div>
+            <div class="col">
+              <div class="terminal-ps">$ hostname -I
+172.20.145.10</div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="twocol">
+            <div class="col">
+              <h4>Practice:<br>Two Machines, One Laptop</h4>
+              <ul>
+                <li>lib-web01 hosts the catalog</li>
+                <li>client tests the connection</li>
+              </ul>
+            </div>
+            <div class="col">
+              <svg viewBox="0 0 520 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:520px;display:block;margin:0 auto;"><defs><marker id="arrowLib" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="20" y="50" width="190" height="100" rx="9" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="115" y="78" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">lib-web01 (Ubuntu)</text><text x="115" y="100" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#ffd9b3">172.20.145.10</text><text x="115" y="120" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#ffd9b3">serves :8080</text><rect x="310" y="50" width="190" height="100" rx="9" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="405" y="78" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">client (Kali)</text><text x="405" y="100" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">172.20.145.11</text><text x="405" y="120" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">nmap + curl</text><line x1="214" y1="100" x2="302" y2="100" stroke="#888" stroke-width="1.5" marker-end="url(#arrowLib)"/><text x="258" y="90" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#999">same laptop</text><text x="258" y="180" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Ubuntu + Kali, one physical machine</text></svg>
+            </div>
+          </div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <div class="twocol">
+            <div class="col">
+              <h4>Practice:<br>Confirm From the Client (Kali)</h4>
+              <ul>
+                <li>nmap confirms the port is open</li>
+                <li>curl fetches the real page</li>
+              </ul>
+            </div>
+            <div class="col">
+              <div class="terminal-ps">$ nmap -p 8080 172.20.145.10
+$ curl http://172.20.145.10:8080</div>
+            </div>
+          </div>
+          <div class="fragment" style="display:flex; gap:16px; margin-top:16px;">
+            <div style="flex:1; background:#2a2a2a; border:2px solid #3b82f6; border-radius:8px; padding:0.8rem 1rem;">
+              <p style="margin:0; font-size:1.1rem; color:#eee;">&#128309; <strong>Blue Team:</strong> confirming a port from another machine is exactly how you'd verify your own service is actually reachable, not just "should be" reachable on paper.</p>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="twocol">
+            <div class="col">
+              <h4>How Does a Firewall Block a Port?</h4>
+              <ul>
+                <li>Firewall = a rule checkpoint</li>
+                <li>Allow: packet passes through</li>
+                <li>Deny: packet just vanishes</li>
+              </ul>
+            </div>
+            <div class="col">
+              <svg viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:400px;display:block;margin:0 auto;"><defs><marker id="arrowFw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><line x1="200" y1="54" x2="200" y2="80" stroke="#888" stroke-width="1.5" marker-end="url(#arrowFw)"/><line x1="170" y1="128" x2="105" y2="186" stroke="#888" stroke-width="1.5" marker-end="url(#arrowFw)"/><line x1="230" y1="128" x2="295" y2="186" stroke="#888" stroke-width="1.5" marker-end="url(#arrowFw)"/><text x="130" y="155" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#999">rule: allow</text><text x="270" y="155" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#ffb37a">rule: deny</text><rect x="100" y="10" width="200" height="44" rx="8" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="200.0" y="36.5" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">client (Kali) requests :8080</text><rect x="100" y="84" width="200" height="44" rx="8" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="200.0" y="110.5" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">Firewall (ufw) checks rules</text><rect x="20" y="190" width="170" height="54" rx="8" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="105.0" y="213.5" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">Service :8080</text><text x="105.0" y="229.5" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">replies normally</text><rect x="210" y="190" width="170" height="54" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="295.0" y="213.5" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">Packet dropped</text><text x="295.0" y="229.5" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">no reply at all</text></svg>
+            </div>
+          </div>
+          <div class="fragment" style="display:flex; gap:16px; margin-top:16px;">
+            <div style="flex:1; background:#2a2a2a; border:2px solid #e03131; border-radius:8px; padding:0.8rem 1rem;">
+              <p style="margin:0; font-size:1.1rem; color:#eee;">&#128308; <strong>Red Team:</strong> at a university, attackers scan every public IP for forgotten open ports, like an old admin panel left listening on 8080.</p>
+            </div>
+            <div style="flex:1; background:#2a2a2a; border:2px solid #3b82f6; border-radius:8px; padding:0.8rem 1rem;">
+              <p style="margin:0; font-size:1.1rem; color:#eee;">&#128309; <strong>Blue Team:</strong> campus IT firewalls every server down to only the ports a service actually needs. 8080 is a well-known dev/alt-HTTP port and should never be public.</p>
+            </div>
+          </div>
+          <p class="source-line">Port 8080 is registered with IANA as "http-alt" (HTTP Alternate) (Source: <a href="https://www.iana.org/assignments/service-names-port-numbers?search=8080" target="_blank" rel="noopener">IANA, Service Name and Transport Protocol Port Number Registry</a>)</p>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <div class="twocol">
+            <div class="col">
+              <h4>Practice:<br>Block the Port (Ubuntu)</h4>
+              <ul>
+                <li>ufw = simple firewall frontend</li>
+                <li>Deny inbound on port 8080</li>
+                <li>Allow just one trusted subnet</li>
+              </ul>
+            </div>
+            <div class="col">
+              <div class="terminal-ps">$ sudo apt install -y ufw
+$ sudo ufw enable
+$ sudo ufw deny 8080/tcp
+$ sudo ufw allow from 172.20.145.0/24 to any port 8080</div>
+            </div>
+          </div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <div class="twocol">
+            <div class="col">
+              <h4>Practice:<br>Try Again From the Client (Kali)</h4>
+              <ul>
+                <li>Port now blocked, not open</li>
+                <li>filtered = silently dropped</li>
+              </ul>
+            </div>
+            <div class="col">
+              <div class="terminal-ps">$ nmap -p 8080 172.20.145.10
+$ curl http://172.20.145.10:8080</div>
+            </div>
+          </div>
+          <p class="fragment note-below">&#9888;&#65039; nmap now reports port 8080 as
+            <span class="highlight">filtered</span>, not `closed`. `closed` means a host
+            replied "nothing's listening here," while `filtered` means nothing replied at
+            all, because ufw silently dropped the packet. `curl` just hangs until it
+            times out.</p>
+        </section>
+
+        <section>
+          <div class="twocol">
+            <div class="col">
+              <h4>What Is IANA?</h4>
+              <ul>
+                <li>IANA = the global registry</li>
+                <li>Assigns port numbers &amp; names</li>
+                <li>Free to search, no login</li>
+              </ul>
+            </div>
+            <div class="col">
+              <p style="font-size:1.15rem;">Not sure what a port is for? Look it up:</p>
+              <p style="text-align:center; margin:1.2rem 0;"><a href="https://www.iana.org/assignments/service-names-port-numbers?search=8080" target="_blank" rel="noopener">https://www.iana.org/assignments/service-names-port-numbers?search=8080</a></p>
+              <p class="fragment" style="font-size:1.2rem; margin-top:1.5rem;"><strong>Try it:</strong> look up 3 ports (not 80, 443, or 8080) that you think are useful to know.</p>
+            </div>
+          </div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <div class="twocol">
+            <div class="col">
+              <h4>Practice:<br>Real Domain vs. Your Server (Kali)</h4>
+              <ul>
+                <li>nmap.org: real WHOIS + DNS</li>
+                <li>lib-web01: private, unlisted</li>
+              </ul>
+            </div>
+            <div class="col">
+              <div class="terminal-ps">$ whois nmap.org
+$ dig scanme.nmap.org
+
+$ whois 172.20.145.10
+$ dig -x 172.20.145.10</div>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h4>From Practice to Concept</h4>
+          <p style="font-size:1.3rem; text-align:center; margin-top:2rem;">You just ran
+            <span class="highlight">two</span> operating systems, Ubuntu and Kali, on one
+            physical laptop, at the same time.</p>
+          <p class="fragment" style="font-size:1.6rem; text-align:center; margin-top:2.5rem; font-weight:bold;">
+            How can we have multiple OS on one physical machine?</p>
+        </section>
+
         <section>
           <h2 style="text-align:center;">Questions?</h2>
         </section>
@@ -2324,62 +2649,17 @@ $ wsl --install -d openSUSE-Leap-15.6   # enterprise tooling (YaST)</div>
         <section>
           <div class="twocol">
             <div class="col">
-              <h4>Virtualization in Practice: WSL2</h4>
+              <h4>Virtual Machine</h4>
               <ul>
-                <li>Host: Windows 11</li>
-                <li>Hypervisor: Hyper-V, built-in</li>
-                <li>Guest: Kali Linux kernel</li>
-                <li>No VM manager UI needed</li>
+                <li>A full computer, virtualized</li>
+                <li>Its own OS, CPU, RAM, disk</li>
+                <li>Many VMs, one physical box</li>
               </ul>
             </div>
-            <div class="col">
-              <table style="font-size: 0.8rem;">
-                <tbody>
-                  <tr style="color:#ccc;">
-                    <td style="padding:6px; border:1px solid #666;">Pattern</td>
-                    <td style="padding:6px; border:1px solid #666;">Example</td>
-                    <td style="padding:6px; border:1px solid #666;">What You See</td>
-                  </tr>
-                  <tr style="color:#ccc;">
-                    <td style="padding:6px; border:1px solid #666;">Type 1 (bare-metal)</td>
-                    <td style="padding:6px; border:1px solid #666;">VMware ESXi</td>
-                    <td style="padding:6px; border:1px solid #666;">Runs directly on hardware</td>
-                  </tr>
-                  <tr style="color:#ccc;">
-                    <td style="padding:6px; border:1px solid #666;">Type 2 (hosted)</td>
-                    <td style="padding:6px; border:1px solid #666;">VirtualBox</td>
-                    <td style="padding:6px; border:1px solid #666;">An app on your OS</td>
-                  </tr>
-                  <tr style="color:#ccc;">
-                    <td style="padding:6px; border:1px solid #666;">WSL2 (Microsoft)</td>
-                    <td style="padding:6px; border:1px solid #666;">Kali on Windows</td>
-                    <td style="padding:6px; border:1px solid #666;">Auto-managed, no VM UI</td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="col" style="text-align:center;">
+              <svg viewBox="0 0 400 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><defs><marker id="arrowHv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><line x1="70" y1="130" x2="70" y2="74" stroke="#888" stroke-width="1.5" marker-end="url(#arrowHv)"/><line x1="200" y1="130" x2="200" y2="74" stroke="#888" stroke-width="1.5" marker-end="url(#arrowHv)"/><line x1="330" y1="130" x2="330" y2="74" stroke="#888" stroke-width="1.5" marker-end="url(#arrowHv)"/><rect x="20" y="20" width="100" height="50" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="70" y="50" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">VM 1</text><rect x="150" y="20" width="100" height="50" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="200" y="50" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">VM 2</text><rect x="280" y="20" width="100" height="50" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="330" y="50" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">VM 3</text><rect x="20" y="130" width="360" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="200" y="160" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">Hypervisor</text><text x="200" y="178" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#ffd9b3" font-weight="normal">allocates CPU / RAM / disk</text></svg>
             </div>
           </div>
-          <p class="fragment note-below">&#9888;&#65039; WSL2 is still
-            <span class="highlight">real</span> virtualization. A real Linux kernel runs inside
-            a Microsoft-managed VM, using Hyper-V under the hood, even though you never see a VM
-            manager window.</p>
-        </section>
-
-        <section>
-          <div class="twocol">
-            <div class="col">
-              <h4>WSL2 vs. Virtualization</h4>
-              <ul>
-                <li>A real kernel, virtualized</li>
-                <li>No visible VM manager</li>
-                <li>Runs via Hyper-V, hidden</li>
-              </ul>
-            </div>
-            <div class="diagram"><svg viewBox="0 0 380 216" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><defs><marker id="arrowWv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="10" y="10" width="170" height="30" rx="7" fill="#222" stroke="#555" stroke-width="1.5"/><text x="95" y="29.5" text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">Virtualization</text><rect x="10" y="56" width="170" height="36" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="95" y="78.5" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">Guest OS (own kernel)</text><line x1="95" y1="92" x2="95" y2="108" stroke="#888" stroke-width="1.5" marker-end="url(#arrowWv)"/><rect x="10" y="108" width="170" height="40" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal"><tspan x="95" y="125.5">Hypervisor</tspan><tspan x="95" y="139.5">(VirtualBox)</tspan></text><line x1="95" y1="148" x2="95" y2="164" stroke="#888" stroke-width="1.5" marker-end="url(#arrowWv)"/><rect x="10" y="164" width="170" height="36" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="95" y="186.5" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">Hardware</text><rect x="200" y="10" width="170" height="30" rx="7" fill="#222" stroke="#555" stroke-width="1.5"/><text x="285" y="29.5" text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">WSL2</text><rect x="200" y="56" width="170" height="36" rx="7" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="285" y="78.5" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">Real Linux Kernel</text><line x1="285" y1="92" x2="285" y2="108" stroke="#888" stroke-width="1.5" marker-end="url(#arrowWv)"/><rect x="200" y="108" width="170" height="40" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal"><tspan x="285" y="125.5">Hyper-V</tspan><tspan x="285" y="139.5">(built-in, hidden)</tspan></text><line x1="285" y1="148" x2="285" y2="164" stroke="#888" stroke-width="1.5" marker-end="url(#arrowWv)"/><rect x="200" y="164" width="170" height="36" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="285" y="186.5" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">Hardware</text></svg></div>
-          </div>
-          <p class="fragment note-below">&#9888;&#65039; WSL2 skips a full guest OS. It runs a
-            real Linux kernel <span class="highlight">directly</span>, with no separate virtual
-            BIOS or drivers to install.</p>
         </section>
 
         <section>
@@ -2387,7 +2667,7 @@ $ wsl --install -d openSUSE-Leap-15.6   # enterprise tooling (YaST)</div>
         </section>
 
         <section id="module-1-agenda-7">
-          <h2 style="text-align:center;">Hypervisors &amp; VirtualBox</h2>
+          <h2 style="text-align:center;">VirtualBox &amp; WSL</h2>
         </section>
 
         <section data-tag="terminology" data-term="Host / Guest">
@@ -2575,11 +2855,68 @@ $ wsl --install -d openSUSE-Leap-15.6   # enterprise tooling (YaST)</div>
         </section>
 
         <section>
-          <h2 style="text-align:center;">Questions?</h2>
+          <div class="twocol">
+            <div class="col">
+              <h4>Virtualization in Practice: WSL2</h4>
+              <ul>
+                <li>Host: Windows 11</li>
+                <li>Hypervisor: Hyper-V, built-in</li>
+                <li>Guest: Kali Linux kernel</li>
+                <li>No VM manager UI needed</li>
+              </ul>
+            </div>
+            <div class="col">
+              <table style="font-size: 0.8rem;">
+                <tbody>
+                  <tr style="color:#ccc;">
+                    <td style="padding:6px; border:1px solid #666;">Pattern</td>
+                    <td style="padding:6px; border:1px solid #666;">Example</td>
+                    <td style="padding:6px; border:1px solid #666;">What You See</td>
+                  </tr>
+                  <tr style="color:#ccc;">
+                    <td style="padding:6px; border:1px solid #666;">Type 1 (bare-metal)</td>
+                    <td style="padding:6px; border:1px solid #666;">VMware ESXi</td>
+                    <td style="padding:6px; border:1px solid #666;">Runs directly on hardware</td>
+                  </tr>
+                  <tr style="color:#ccc;">
+                    <td style="padding:6px; border:1px solid #666;">Type 2 (hosted)</td>
+                    <td style="padding:6px; border:1px solid #666;">VirtualBox</td>
+                    <td style="padding:6px; border:1px solid #666;">An app on your OS</td>
+                  </tr>
+                  <tr style="color:#ccc;">
+                    <td style="padding:6px; border:1px solid #666;">WSL2 (Microsoft)</td>
+                    <td style="padding:6px; border:1px solid #666;">Kali on Windows</td>
+                    <td style="padding:6px; border:1px solid #666;">Auto-managed, no VM UI</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <p class="fragment note-below">&#9888;&#65039; WSL2 is still
+            <span class="highlight">real</span> virtualization. A real Linux kernel runs inside
+            a Microsoft-managed VM, using Hyper-V under the hood, even though you never see a VM
+            manager window.</p>
         </section>
 
-        <section id="module-1-agenda-8">
-          <h2 style="text-align:center;">Anatomy of a VM</h2>
+        <section>
+          <div class="twocol">
+            <div class="col">
+              <h4>WSL2 vs. Virtualization</h4>
+              <ul>
+                <li>A real kernel, virtualized</li>
+                <li>No visible VM manager</li>
+                <li>Runs via Hyper-V, hidden</li>
+              </ul>
+            </div>
+            <div class="diagram"><svg viewBox="0 0 380 262" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><defs><marker id="arrowWv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><line x1="95.0" y1="40" x2="95.0" y2="52" stroke="#888" stroke-width="1.5" marker-end="url(#arrowWv)"/><line x1="95.0" y1="92" x2="95.0" y2="104" stroke="#888" stroke-width="1.5" marker-end="url(#arrowWv)"/><line x1="95.0" y1="148" x2="95.0" y2="160" stroke="#888" stroke-width="1.5" marker-end="url(#arrowWv)"/><line x1="95.0" y1="200" x2="95.0" y2="212" stroke="#888" stroke-width="1.5" marker-end="url(#arrowWv)"/><line x1="285.0" y1="40" x2="285.0" y2="52" stroke="#888" stroke-width="1.5" marker-end="url(#arrowWv)"/><line x1="285.0" y1="92" x2="285.0" y2="104" stroke="#888" stroke-width="1.5" marker-end="url(#arrowWv)"/><line x1="285.0" y1="148" x2="285.0" y2="160" stroke="#888" stroke-width="1.5" marker-end="url(#arrowWv)"/><line x1="285.0" y1="200" x2="285.0" y2="212" stroke="#888" stroke-width="1.5" marker-end="url(#arrowWv)"/><rect x="10" y="10" width="170" height="30" rx="7" fill="#222" stroke="#555" stroke-width="1.5"/><text x="95.0" y="29.5" text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">Virtualization</text><rect x="10" y="56" width="170" height="36" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="95.0" y="78.5" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">Guest OS (own kernel)</text><rect x="10" y="108" width="170" height="40" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal"><tspan x="95.0" y="125.5">Hypervisor</tspan><tspan x="95.0" y="139.5">(VirtualBox)</tspan></text><rect x="10" y="160" width="170" height="36" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text text-anchor="middle" font-size="10.3" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal"><tspan x="95.0" y="178">Host OS</tspan><tspan x="95.0" y="190">Windows, Linux, or macOS</tspan></text><rect x="10" y="212" width="170" height="36" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="95.0" y="234.5" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">Hardware</text><rect x="200" y="10" width="170" height="30" rx="7" fill="#222" stroke="#555" stroke-width="1.5"/><text x="285.0" y="29.5" text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">WSL2</text><rect x="200" y="56" width="170" height="36" rx="7" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="285.0" y="78.5" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">Real Linux Kernel</text><rect x="200" y="108" width="170" height="40" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal"><tspan x="285.0" y="125.5">Hyper-V</tspan><tspan x="285.0" y="139.5">(built-in, hidden)</tspan></text><rect x="200" y="160" width="170" height="36" rx="7" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text text-anchor="middle" font-size="10.3" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold"><tspan x="285.0" y="178">Host OS</tspan><tspan x="285.0" y="190">Windows only</tspan></text><rect x="200" y="212" width="170" height="36" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="285.0" y="234.5" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">Hardware</text></svg></div>
+          </div>
+          <p class="fragment note-below">&#9888;&#65039; WSL2 skips a full guest OS. It runs a
+            real Linux kernel <span class="highlight">directly</span>, with no separate virtual
+            BIOS or drivers to install.</p>
+        </section>
+
+        <section>
+          <h2 style="text-align:center;">Questions?</h2>
         </section>
 
         <section>
@@ -2629,7 +2966,7 @@ $ wsl --install -d openSUSE-Leap-15.6   # enterprise tooling (YaST)</div>
           </div>
         </section>
 
-        <section data-background-color="#0a0a0a">
+        <section id="cmd-vboxmanage" data-background-color="#0a0a0a">
           <div class="twocol">
             <div class="col">
               <h4>CLI: Create a VM</h4>
@@ -2819,7 +3156,7 @@ $ VBoxManage modifyvm "lab1-ubuntu" \
           <h2 style="text-align:center;">Questions?</h2>
         </section>
 
-        <section id="module-1-agenda-9">
+        <section id="module-1-agenda-8">
           <h2 style="text-align:center;">Real-world risks</h2>
         </section>
 
@@ -2954,7 +3291,7 @@ $ VBoxManage modifyvm "lab1-ubuntu" \
           <h2 style="text-align:center;">Questions?</h2>
         </section>
 
-        <section id="module-1-agenda-10">
+        <section id="module-1-agenda-9">
           <h2 style="text-align:center;"><a href="https://pacific.instructure.com/courses/146243/assignments" target="_blank" rel="noopener" style="color:#8ab4f8; text-decoration:underline;">Lab 1 &amp; Homework 1</a></h2>
         </section>
 
@@ -3341,6 +3678,60 @@ $ VBoxManage modifyvm "lab1-ubuntu" \
       if (stampDate >= todayPT) {
         el.textContent = 'Updated: Today ' + rest;
       }
+    })();
+    (function () {
+      // Subtle "Copy" button, top-right of every .terminal / .terminal-ps
+      // box. Copies only the runnable command(s): lines are kept only if
+      // they start with the shell prompt "$ ", that prefix is stripped,
+      // and any trailing "  # comment" is stripped too -- so pasting into
+      // a real terminal never includes the prompt or the annotation. A
+      // block with no "$ "-prefixed lines (nothing but sample output) has
+      // nothing to copy, so it gets no button at all.
+      function extractCommands(el) {
+        var lines = el.textContent.split('\n');
+        var cmds = [];
+        var continuing = false;
+        lines.forEach(function (line) {
+          var trimmed = line.trim();
+          if (continuing) {
+            // A backslash-continuation line (e.g. VBoxManage's multi-line
+            // calls) has no "$ " of its own -- keep it attached to the
+            // previous command line so the pasted result is still one
+            // valid multi-line shell command.
+            cmds[cmds.length - 1] += '\n' + trimmed;
+            continuing = /\\$/.test(trimmed);
+            return;
+          }
+          if (trimmed.indexOf('$ ') === 0) {
+            var cmd = trimmed.slice(2).replace(/\s{2,}#.*$/, '');
+            cmds.push(cmd);
+            continuing = /\\$/.test(cmd);
+          }
+        });
+        return cmds.join('\n');
+      }
+      var boxes = document.querySelectorAll('.terminal, .terminal-ps');
+      boxes.forEach(function (box) {
+        var text = extractCommands(box);
+        if (!text) return;
+        var btn = document.createElement('button');
+        btn.className = 'code-copy-btn';
+        btn.type = 'button';
+        btn.textContent = 'Copy';
+        btn.setAttribute('aria-label', 'Copy command');
+        btn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          navigator.clipboard.writeText(extractCommands(box)).then(function () {
+            btn.textContent = 'Copied!';
+            btn.classList.add('copied');
+            setTimeout(function () {
+              btn.textContent = 'Copy';
+              btn.classList.remove('copied');
+            }, 1500);
+          });
+        });
+        box.appendChild(btn);
+      });
     })();
     });
   </script>
