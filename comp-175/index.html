@@ -229,7 +229,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-08-26 15:11 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-08-26 15:58 PT</span>
   </div>
 
   <!--
@@ -3627,10 +3627,22 @@ $ VBoxManage modifyvm "lab1-ubuntu" \
         16: 'Final Presentations & Course Wrap-up'
       };
 
-      // Keep the TOC's own Topic cells in sync with moduleTopics.
+      // Keep the TOC's own Topic cells in sync with moduleTopics. A cell
+      // whose module is actually built out wraps its text in a real
+      // <a href="#module-N"> link (see the GLOBAL RULE on Topic-cell
+      // links) -- update that link's own text instead of overwriting the
+      // whole cell, or the link would be silently destroyed on every page
+      // load. A stub module's cell (plain text, no link yet) still gets
+      // a plain textContent update as before.
       document.querySelectorAll('#toc td[data-module]').forEach(function (td) {
         var n = td.getAttribute('data-module');
-        if (moduleTopics[n]) td.textContent = moduleTopics[n];
+        if (!moduleTopics[n]) return;
+        var link = td.querySelector('a');
+        if (link) {
+          link.textContent = moduleTopics[n];
+        } else {
+          td.textContent = moduleTopics[n];
+        }
       });
 
       // Render every module-position nav diagram (16-module stack,
