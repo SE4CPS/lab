@@ -292,7 +292,7 @@
 
     <div class="quick-links">
       <a href="./#toc" class="footer-link" target="_self">Schedule</a>
-      <span id="updated-stamp" class="footer-link">Updated: 2026-08-25 14:39 PT</span>
+      <span id="updated-stamp" class="footer-link">Updated: 2026-08-27 12:42 PT</span>
     </div>
 
     <div class="reveal">
@@ -329,10 +329,10 @@
                         <tbody>
                             <tr>
                                 <td>Week 1</td>
-                                <td><a href="./#module-1">Aug 25</a>, <a href="./#module-1">Aug 27</a>
+                                <td>Aug 25, Aug 27
                                 </td>
-                                <td data-module="1">Course Overview, What is a Program?,
-                                    First C++ Program</td>
+                                <td data-module="1"><a href="./#module-1" target="_self">Course Overview, What is a Program?,
+                                    First C++ Program</a></td>
                                 <td></td>
                                 <td>Lab/HW 1</td>
                                 <td>🎓 University</td>
@@ -14058,10 +14058,20 @@
         return t ? (t.short || t.full) : '';
       }
 
-      // Keep the TOC's own Topic cells in sync with moduleTopics.
+      // Keep the TOC's own Topic cells in sync with moduleTopics. A cell
+      // whose module is actually built out wraps its text in a real
+      // <a href="#module-N"> link -- update that link's own text instead
+      // of overwriting the whole cell, or the link would be silently
+      // destroyed on every page load (see the GLOBAL RULE in CLAUDE.md).
       document.querySelectorAll('#toc td[data-module]').forEach(function (td) {
         var n = td.getAttribute('data-module');
-        if (moduleTopics[n]) td.textContent = topicFull(n);
+        if (!moduleTopics[n]) return;
+        var link = td.querySelector('a');
+        if (link) {
+          link.textContent = topicFull(n);
+        } else {
+          td.textContent = topicFull(n);
+        }
       });
 
       // Render every module-position nav diagram (16-module stack,
