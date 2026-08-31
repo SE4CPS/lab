@@ -154,6 +154,49 @@
     /* PowerShell console theme: classic PS blue background, larger font.
        Used for the Module 1 Kali/WSL2 lab slides, where every command is
        actually typed into a Windows PowerShell or Win-KeX window. */
+    /* Full-slide code companion: a .terminal (or .terminal-ps) block shown
+       full-width on its own slide, no diagram/bullets sharing the column,
+       so the font can go much larger than the twocol default -- see the
+       GLOBAL RULE in CLAUDE.md on splitting an unreadable code column into
+       a follow-up code-only slide. Combine with the base class, e.g.
+       class="terminal terminal-slide". One place to retune the size. */
+    .terminal-slide {
+      /* !important: .terminal-slide is combined with .terminal or
+         .terminal-ps (e.g. class="terminal-ps terminal-slide"). Both base
+         classes set their own font-size at equal (0,0,1,0) specificity, so
+         without !important, whichever of .terminal/.terminal-ps/.terminal-
+         slide is declared LAST in this stylesheet silently wins the
+         cascade regardless of which makes more sense -- .terminal-ps in
+         particular comes after .terminal-slide in source order, so its
+         1.15rem was quietly beating .terminal-slide's 2rem on every
+         terminal-ps-based companion slide. Same lesson as the comp-051
+         code-font-size GLOBAL RULE: never trust source order to win a
+         tie, force it. */
+      font-size: 2.15rem !important;
+      max-width: 1150px;
+      margin: 1.5rem auto 0;
+    }
+
+    /* Hand-marked token colors for a .terminal-slide, so it reads like a
+       real editor/terminal instead of flat gray text -- GLOBAL RULE:
+       ONLY the code-only full-slide companion (.terminal-slide) gets this;
+       the many regular half-width .terminal/.terminal-ps blocks stay plain
+       text, unchanged (that's still correct -- see the .terminal authoring
+       note elsewhere in this file). Safe to hand-wrap in span elements
+       here specifically because .terminal-slide's content is a plain div,
+       not a pre/code pair, so RevealHighlight's auto-processing (which
+       re-escapes tags nested inside pre-code) never touches it. */
+    .terminal-slide .tk-prompt  { color: #666; }
+    .terminal-slide .tk-cmd     { color: #4fc3f7; font-weight: bold; }
+    .terminal-slide .tk-flag    { color: #ffca28; }
+    .terminal-slide .tk-str     { color: #8bc34a; }
+    .terminal-slide .tk-user    { color: #fff; font-weight: bold; }
+    .terminal-slide .tk-num     { color: #ce93d8; }
+    .terminal-slide .tk-path    { color: #4fc3f7; }
+    .terminal-slide .tk-shell   { color: #f06292; }
+    .terminal-slide .tk-comment { color: #888; font-style: italic; }
+    .terminal-slide .tk-punct   { color: #666; }
+
     .terminal-ps {
       background: #012456;
       border: 1px solid #1e3a6e;
@@ -218,6 +261,110 @@
 
     /* .note-below and .source-line are defined in ../assets/deck-chrome.css
        (shared across Fall 2026 decks) */
+
+    /* Module 2 gets its own white-background theme, for deliberate visual
+       variance against the rest of the deck (which stays on reveal.js's
+       dark "black" theme) -- keeps the same orange (#FF671D) accent.
+       Every non-code Module 2 slide got data-background-color="#ffffff"
+       added directly on its section element (reveal.js's own native
+       per-slide background mechanism, already used deck-wide for the dark
+       #0a0a0a code/terminal slides -- the code/terminal slides in
+       Module 2 keep that #0a0a0a background unchanged, since the
+       .terminal/.terminal-ps token colors are calibrated for a dark
+       backdrop and a white one would hurt their contrast).
+       Two things still need fixing for a white background to actually
+       be legible, both scoped to #module-2 so nothing else is touched:
+       1. Plain slide text (headings/bullets/paragraphs) -- the black
+          theme's default text color is light, for a dark page; on white
+          it would be nearly invisible without this override.
+       2. Every diagram (SVG) in Module 2 was authored assuming a dark
+          slide background. Most already draw their own self-contained
+          dark boxes (fill #2a2a2a/#3a1f0a/#1e1e1e) with light text
+          inside them, so those stay legible on white with nothing more
+          than a subtle orange-tinted frame around the whole SVG -- an
+          extra solid card background behind an already-boxed diagram
+          just looked redundant. The exception is the chronological-
+          motivation timeline diagrams (a vertical line + dots, no
+          per-entry box, label text floating directly on the slide
+          background) -- those genuinely need a dark backdrop or their
+          light text disappears, so those three get an explicit dark
+          background rect drawn as part of the diagram itself (see the
+          "Unix begins at Bell Labs" / grep / chmod timelines) instead
+          of a CSS card. Data tables (Symbolic vs. Octal, Read/Write/
+          Execute) have the same floating-light-text issue as the
+          timelines but no per-row box to lean on, so their text color
+          is forced dark directly instead. */
+    /* Scoped to section[data-background-color="#ffffff"] specifically,
+       not a blanket #module-2 selector -- Module 2 also has genuinely
+       dark slides (code/terminal-slide answer slides, data-background-
+       color="#0a0a0a"), and a blanket dark-text rule was forcing those
+       slides' own <h4> headline dark-on-dark too. Only the white
+       slides get this override; dark slides keep the theme's normal
+       light heading/body text. */
+    #module-2 section[data-background-color="#ffffff"] h2,
+    #module-2 section[data-background-color="#ffffff"] h3,
+    #module-2 section[data-background-color="#ffffff"] h4,
+    #module-2 section[data-background-color="#ffffff"] h5,
+    #module-2 section[data-background-color="#ffffff"] p,
+    #module-2 section[data-background-color="#ffffff"] li,
+    #module-2 section[data-background-color="#ffffff"] ol,
+    #module-2 section[data-background-color="#ffffff"] ul {
+      color: #1a1a1a;
+    }
+    #module-2 svg {
+      border: 1px solid rgba(255, 103, 29, 0.28);
+      border-radius: 10px;
+      padding: 6px;
+      box-sizing: border-box;
+    }
+    #module-2 table tr,
+    #module-2 table td {
+      color: #1a1a1a !important;
+    }
+    /* Module 2's .terminal-ps boxes are real Ubuntu/Kali bash commands,
+       not PowerShell -- .terminal-ps's deck-wide navy-blue (#012456) is
+       correct for Module 1's actual Kali/WSL2-in-PowerShell lab slides,
+       but reads oddly here. Scoped override swaps it for the same
+       neutral near-black .terminal already uses elsewhere in this
+       deck, without touching the shared class definition. */
+    #module-2 .terminal-ps {
+      background: #0d0d0d;
+      border-color: #333;
+    }
+
+    /* Base styling for the bottom-right slide counter (created via JS,
+       see the updateCounter IIFE) -- was inline cssText before, moved
+       to a class so body.light-slide (below) can override it cleanly. */
+    .deck-counter {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      z-index: 9999;
+      color: #ccc;
+      font-size: 0.8rem;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+
+    /* Higher-contrast chrome while a light (white-background) slide is
+       showing -- see the "light-slide" GLOBAL comment on the JS IIFE
+       that toggles this class. Everything here stays the same shape/
+       position as the dark-slide default, just swapped from light-on-
+       dark to dark-on-light so it stays readable against white. */
+    body.light-slide .deck-counter {
+      color: #1a1a1a;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(0, 0, 0, 0.15);
+    }
+    body.light-slide .footer-link {
+      color: #1a1a1a;
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(0, 0, 0, 0.15);
+    }
+    body.light-slide .footer-link:hover {
+      color: #000;
+    }
   </style>
 </head>
 
@@ -229,7 +376,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-08-26 15:58 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-08-31 14:39 PT</span>
   </div>
 
   <!--
@@ -329,8 +476,12 @@
             <tr>
               <td>Week 2</td>
               <td>Sep 1, Sep 3</td>
-              <td data-module="2">Command-Line &amp; Permissions</td>
-              <td>Sep 7 is Labor Day.</td>
+              <td data-module="2"><a href="./#/module-2" target="_self">Command-Line &amp; Permissions</a></td>
+              <td>Sep 7 is Labor Day. Commands: <a href="./#/cmd-ls" target="_self">ls</a>,
+                <a href="./#/cmd-cd" target="_self">cd</a>,
+                <a href="./#/cmd-grep" target="_self">grep</a>,
+                <a href="./#/cmd-chmod" target="_self">chmod</a>,
+                <a href="./#/cmd-chown" target="_self">chown</a></td>
               <td></td>
               <td></td>
             </tr>
@@ -640,6 +791,15 @@ icu047:x:1002:1002:Hospital,,,:/home/icu047:/bin/rbash
 veh3210:x:1003:1003:Vehicle,,,:/home/veh3210:/bin/sh</div>
             </div>
           </div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <h4>OS User Accounts: /etc/passwd</h4>
+          <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">cat</span> <span class="tk-path">/etc/passwd</span> <span class="tk-punct">|</span> <span class="tk-cmd">grep</span> <span class="tk-flag">-E</span> <span class="tk-str">'alex|jdoe|icu|veh'</span>
+<span class="tk-user">alex</span><span class="tk-punct">:</span>x<span class="tk-punct">:</span><span class="tk-num">1000</span><span class="tk-punct">:</span><span class="tk-num">1000</span><span class="tk-punct">:</span><span class="tk-comment">Personal,,,</span><span class="tk-punct">:</span><span class="tk-path">/home/alex</span><span class="tk-punct">:</span><span class="tk-shell">/bin/bash</span>
+<span class="tk-user">jdoe</span><span class="tk-punct">:</span>x<span class="tk-punct">:</span><span class="tk-num">1001</span><span class="tk-punct">:</span><span class="tk-num">1001</span><span class="tk-punct">:</span><span class="tk-comment">Student,,,</span><span class="tk-punct">:</span><span class="tk-path">/home/jdoe</span><span class="tk-punct">:</span><span class="tk-shell">/bin/bash</span>
+<span class="tk-user">icu047</span><span class="tk-punct">:</span>x<span class="tk-punct">:</span><span class="tk-num">1002</span><span class="tk-punct">:</span><span class="tk-num">1002</span><span class="tk-punct">:</span><span class="tk-comment">Hospital,,,</span><span class="tk-punct">:</span><span class="tk-path">/home/icu047</span><span class="tk-punct">:</span><span class="tk-shell">/bin/rbash</span>
+<span class="tk-user">veh3210</span><span class="tk-punct">:</span>x<span class="tk-punct">:</span><span class="tk-num">1003</span><span class="tk-punct">:</span><span class="tk-num">1003</span><span class="tk-punct">:</span><span class="tk-comment">Vehicle,,,</span><span class="tk-punct">:</span><span class="tk-path">/home/veh3210</span><span class="tk-punct">:</span><span class="tk-shell">/bin/sh</span></div>
         </section>
 
         <section>
@@ -1602,19 +1762,33 @@ veh3210:x:1003:1003:Vehicle,,,:/home/veh3210:/bin/sh</div>
               <p class="fragment" style="margin-top:0.8rem; font-size:1.3rem;">&rarr; <span class="highlight">Start your computer and open PowerShell</span></p>
             </div>
             <div class="col">
-              <div class="terminal-ps">$ Get-Process  # running processes
-$ Get-Service  # Windows services
-$ Get-ChildItem  # list files (ls)
-$ Get-Content  # read a file
-$ Get-NetIPAddress  # show IP config
-$ Get-EventLog  # view event logs
-$ Get-Help  # cmdlet docs
-$ Get-Member  # object properties
-$ Set-ExecutionPolicy  # allow/block scripts
-$ Get-History  # past commands</div>
+              <div class="terminal-ps">$ Get-Process # running processes
+$ Get-Service # Windows services
+$ Get-ChildItem # list files (ls)
+$ Get-Content # read a file
+$ Get-NetIPAddress # show IP config
+$ Get-EventLog # view event logs
+$ Get-Help # cmdlet docs
+$ Get-Member # object properties
+$ Set-ExecutionPolicy # allow/block scripts
+$ Get-History # past commands</div>
               <p class="source-line">PowerShell cmdlet reference (Source: <a href="https://learn.microsoft.com/en-us/powershell/module/?view=powershell-7.5" target="_blank" rel="noopener">Microsoft Learn</a>)</p>
             </div>
           </div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <h4>Why PowerShell, Not CMD, for Admins?</h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">Get-Process</span><span class="tk-comment"> # running processes</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">Get-Service</span><span class="tk-comment"> # Windows services</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">Get-ChildItem</span><span class="tk-comment"> # list files (ls)</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">Get-Content</span><span class="tk-comment"> # read a file</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">Get-NetIPAddress</span><span class="tk-comment"> # show IP config</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">Get-EventLog</span><span class="tk-comment"> # view event logs</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">Get-Help</span><span class="tk-comment"> # cmdlet docs</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">Get-Member</span><span class="tk-comment"> # object properties</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">Set-ExecutionPolicy</span><span class="tk-comment"> # allow/block scripts</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">Get-History</span><span class="tk-comment"> # past commands</span></div>
         </section>
 
         <section>
@@ -1686,6 +1860,12 @@ $ wsl --version</div>
         </section>
 
         <section data-background-color="#0a0a0a">
+          <h4>Open PowerShell</h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">wsl</span> <span class="tk-flag">--status</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">wsl</span> <span class="tk-flag">--version</span></div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
           <div class="twocol">
             <div class="col">
               <h4>Check for Kali</h4>
@@ -1699,6 +1879,11 @@ $ wsl --version</div>
               <div class="terminal-ps">$ wsl --list --verbose</div>
             </div>
           </div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <h4>Check for Kali</h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">wsl</span> <span class="tk-flag">--list</span> <span class="tk-flag">--verbose</span></div>
         </section>
 
         <section data-background-color="#0a0a0a">
@@ -1727,6 +1912,15 @@ $ wsl --set-default kali-linux</div>
         </section>
 
         <section data-background-color="#0a0a0a">
+          <h4>Install Kali</h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">wsl</span> <span class="tk-flag">--list</span> <span class="tk-flag">--online</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">wsl</span> <span class="tk-flag">--set-default-version</span> <span class="tk-num">2</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">wsl</span> <span class="tk-flag">--install</span> <span class="tk-flag">-d</span> kali-linux
+<span class="tk-prompt">$</span> <span class="tk-cmd">wsl</span> <span class="tk-flag">--list</span> <span class="tk-flag">--verbose</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">wsl</span> <span class="tk-flag">--set-default</span> kali-linux</div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
           <div class="twocol">
             <div class="col">
               <h4>Start Kali</h4>
@@ -1740,6 +1934,11 @@ $ wsl --set-default kali-linux</div>
               <div class="terminal-ps">$ wsl -d kali-linux</div>
             </div>
           </div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <h4>Start Kali</h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">wsl</span> <span class="tk-flag">-d</span> kali-linux</div>
         </section>
 
         <section data-background-color="#0a0a0a">
@@ -1757,6 +1956,12 @@ $ wsl --set-default kali-linux</div>
 $ sudo apt full-upgrade -y</div>
             </div>
           </div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <h4>Update Kali First</h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt update
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt full-upgrade <span class="tk-flag">-y</span></div>
         </section>
 
         <section id="cmd-sudo" data-tag="terminology" data-term="sudo">
@@ -1787,22 +1992,36 @@ $ sudo apt full-upgrade -y</div>
               </ul>
             </div>
             <div class="col">
-              <div class="terminal-ps">$ sudo apt install -y git                 # version control, ~30 MB
-$ sudo apt install -y curl                # data transfer, ~5 MB
-$ sudo apt install -y nmap                # port scanner, ~15 MB
-$ sudo apt install -y nikto               # web scanner, ~3 MB
-$ sudo apt install -y hydra               # login cracker, ~5 MB
-$ sudo apt install -y sqlmap              # SQL injector, ~15 MB
-$ sudo apt install -y john                # password cracker, ~10 MB
-$ sudo apt install -y gobuster            # directory scanner, ~10 MB
-$ sudo apt install -y kali-win-kex        # GUI desktop, ~1.8 GB
-$ sudo apt install -y kali-linux-default  # full toolset, ~13 GB (GUI)</div>
+              <div class="terminal-ps">$ sudo apt install -y git # version control, ~30 MB
+$ sudo apt install -y curl # data transfer, ~5 MB
+$ sudo apt install -y nmap # port scanner, ~15 MB
+$ sudo apt install -y nikto # web scanner, ~3 MB
+$ sudo apt install -y hydra # login cracker, ~5 MB
+$ sudo apt install -y sqlmap # SQL injector, ~15 MB
+$ sudo apt install -y john # password cracker
+$ sudo apt install -y gobuster # directory scanner
+$ sudo apt install -y kali-win-kex # GUI desktop
+$ sudo apt install -y kali-linux-default # toolset</div>
               <p class="source-line">Full package list (Source: <a href="https://www.kali.org/tools/" target="_blank" rel="noopener">kali.org/tools</a>)</p>
             </div>
           </div>
           <p class="fragment note-below">&#9888;&#65039; This step can take a long time and a
             lot of disk space. Start it during a lecture day, well
             <span class="highlight">before</span> you need the GUI.</p>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <h4>Install Win-KeX &amp; Tools</h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> git<span class="tk-comment"> # version control, ~30 MB</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> curl<span class="tk-comment"> # data transfer, ~5 MB</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> nmap<span class="tk-comment"> # port scanner, ~15 MB</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> nikto<span class="tk-comment"> # web scanner, ~3 MB</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> hydra<span class="tk-comment"> # login cracker, ~5 MB</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> sqlmap<span class="tk-comment"> # SQL injector, ~15 MB</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> john<span class="tk-comment"> # password cracker</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> gobuster<span class="tk-comment"> # directory scanner</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> kali-win-kex<span class="tk-comment"> # GUI desktop</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> kali-linux-default<span class="tk-comment"> # toolset</span></div>
         </section>
 
         <section data-background-color="#0a0a0a">
@@ -1821,6 +2040,12 @@ $ sudo apt install -y kali-linux-default  # full toolset, ~13 GB (GUI)</div>
 $ ls /mnt/c/Users</div>
             </div>
           </div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <h4>Files &amp; Windows Access</h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-path">/home</span>/$USER
+<span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-path">/mnt/c/Users</span></div>
         </section>
 
         <section data-background-color="#0a0a0a">
@@ -1844,6 +2069,12 @@ $ wsl --install -d kali-linux</div>
         </section>
 
         <section data-background-color="#0a0a0a">
+          <h4>Resetting Kali <span class="highlight">(Not Now)</span></h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">wsl</span> <span class="tk-flag">--unregister</span> kali-linux
+<span class="tk-prompt">$</span> <span class="tk-cmd">wsl</span> <span class="tk-flag">--install</span> <span class="tk-flag">-d</span> kali-linux</div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
           <div class="twocol">
             <div class="col">
               <h4>Choosing a Username</h4>
@@ -1856,14 +2087,22 @@ $ wsl --install -d kali-linux</div>
               </ul>
             </div>
             <div class="col">
-              <div class="terminal-ps">$ whoami                   # your own username
-$ id                       # UID and groups
-$ passwd                   # change your password
-$ sudo usermod -l new old  # rename a username</div>
+              <div class="terminal-ps">$ whoami # your own username
+$ id # UID and groups
+$ passwd # change your password
+$ sudo usermod -l new old # rename a username</div>
             </div>
           </div>
           <p class="fragment note-below">Break this rule and Kali will flatly reject the
             username. It's not just a suggestion.</p>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <h4>Choosing a Username</h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">whoami</span><span class="tk-comment"> # your own username</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">id</span><span class="tk-comment"> # UID and groups</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">passwd</span><span class="tk-comment"> # change your password</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> usermod <span class="tk-flag">-l</span> new old<span class="tk-comment"> # rename a username</span></div>
         </section>
 
         <section data-background-color="#0a0a0a">
@@ -1879,12 +2118,12 @@ $ sudo usermod -l new old  # rename a username</div>
               </ul>
             </div>
             <div class="col">
-              <div class="terminal-ps">$ passwd                # change your own password
-$ sudo passwd jsmith    # change another user's
-$ passwd -S             # check password status
-$ chage -l jsmith       # view expiry info
-$ sudo chage -M 30 jsmith          # password expires in 30 days
-$ sudo chage -E 2026-11-21 jsmith  # account expires in 90 days</div>
+              <div class="terminal-ps">$ passwd # change your own password
+$ sudo passwd jsmith # change another user's
+$ passwd -S # check password status
+$ chage -l jsmith # view expiry info
+$ sudo chage -M 30 jsmith # expires in 30 days
+$ sudo chage -E 2026-11-21 jsmith # expires in 90 days</div>
               <p class="source-line">Password &amp; account-aging commands (Source: <a
                   href="https://pages.nist.gov/800-63-4/sp800-63b.html" target="_blank"
                   rel="noopener">NIST SP 800-63B</a>)</p>
@@ -1892,6 +2131,16 @@ $ sudo chage -E 2026-11-21 jsmith  # account expires in 90 days</div>
           </div>
           <p class="fragment note-below">Forced periodic password changes make passwords
             weaker, not stronger &ndash; don't do it.</p>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <h4>Choosing a Password</h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">passwd</span><span class="tk-comment"> # change your own password</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> passwd jsmith<span class="tk-comment"> # change another user's</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">passwd</span> <span class="tk-flag">-S</span><span class="tk-comment"> # check password status</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">chage</span> <span class="tk-flag">-l</span> jsmith<span class="tk-comment"> # view expiry info</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> chage <span class="tk-flag">-M</span> <span class="tk-num">30</span> jsmith<span class="tk-comment"> # expires in 30 days</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> chage <span class="tk-flag">-E</span> <span class="tk-num">2026</span>-<span class="tk-num">11</span>-<span class="tk-num">21</span> jsmith<span class="tk-comment"> # expires in 90 days</span></div>
         </section>
 
         <section data-background-color="#0a0a0a">
@@ -1912,6 +2161,13 @@ $ sudo apt update &amp;&amp; sudo apt full-upgrade -y</div>
           </div>
         </section>
 
+        <section data-background-color="#0a0a0a">
+          <h4>Verify (CLI)</h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">uname</span> <span class="tk-flag">-a</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-path">/mnt/c/Users</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt update &amp;&amp; sudo apt full-upgrade <span class="tk-flag">-y</span></div>
+        </section>
+
         <section id="cmd-nmap">
           <h4>What Is Nmap?</h4>
           <div style="text-align:center;">
@@ -1930,12 +2186,19 @@ $ sudo apt update &amp;&amp; sudo apt full-upgrade -y</div>
               </ul>
             </div>
             <div class="col">
-              <div class="terminal-ps">$ man nmap        # full manual page
-$ nmap -h         # quick help summary
-$ nmap --version  # check installed version</div>
+              <div class="terminal-ps">$ man nmap # full manual page
+$ nmap -h # quick help summary
+$ nmap --version # check installed version</div>
               <p class="source-line">Nmap Reference Guide (Source: <a href="https://nmap.org/book/man.html" target="_blank" rel="noopener">nmap.org</a>)</p>
             </div>
           </div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <h4>Where Do You Find Nmap Docs?</h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">man</span> nmap<span class="tk-comment"> # full manual page</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">nmap</span> <span class="tk-flag">-h</span><span class="tk-comment"> # quick help summary</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">nmap</span> <span class="tk-flag">--version</span><span class="tk-comment"> # check installed version</span></div>
         </section>
 
         <section data-background-color="#0a0a0a">
@@ -1949,13 +2212,21 @@ $ nmap --version  # check installed version</div>
               </ul>
             </div>
             <div class="col">
-              <div class="terminal-ps">$ nmap scanme.nmap.org           # default scan
-$ nmap -sn scanme.nmap.org       # host discovery only
-$ nmap -p 22,80 scanme.nmap.org  # specific ports
-$ nmap -A scanme.nmap.org        # OS + version detect</div>
+              <div class="terminal-ps">$ nmap scanme.nmap.org # default scan
+$ nmap -sn scanme.nmap.org # host discovery only
+$ nmap -p 22,80 scanme.nmap.org # specific ports
+$ nmap -A scanme.nmap.org # OS + version detect</div>
               <p class="source-line">Sample calls against Nmap's own test target (Source: <a href="https://scanme.nmap.org" target="_blank" rel="noopener">scanme.nmap.org</a>)</p>
             </div>
           </div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <h4>What Are Some Sample Nmap Calls?</h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">nmap</span> scanme.nmap.org<span class="tk-comment"> # default scan</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">nmap</span> <span class="tk-flag">-sn</span> scanme.nmap.org<span class="tk-comment"> # host discovery only</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">nmap</span> <span class="tk-flag">-p</span> <span class="tk-num">22</span>,<span class="tk-num">80</span> scanme.nmap.org<span class="tk-comment"> # specific ports</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">nmap</span> <span class="tk-flag">-A</span> scanme.nmap.org<span class="tk-comment"> # OS + version detect</span></div>
         </section>
 
         <section data-background-color="#0a0a0a">
@@ -1969,19 +2240,33 @@ $ nmap -A scanme.nmap.org        # OS + version detect</div>
               </ul>
             </div>
             <div class="col">
-              <div class="terminal-ps">Nmap scan report for scanme.nmap.org (45.33.32.156)  # target + IP
-Host is up (0.024s latency)       # host responded
-Not shown: 996 filtered ports     # most ports hidden
+              <div class="terminal-ps">Nmap scan report for scanme.nmap.org (45.33.32.156)
+Host is up (0.024s latency) # host responded
+Not shown: 996 filtered ports # most ports hidden
 PORT      STATE SERVICE
-22/tcp    open  ssh                # remote login
-80/tcp    open  http                # web server
-9929/tcp  open  nping-echo         # Nmap's own test service
-31337/tcp open  Elite               # classic "leet" backdoor port
-Running: Linux 4.X|5.X             # OS guess
-Network Distance: 15 hops           # hops to target</div>
+22/tcp    open  ssh # remote login
+80/tcp    open  http # web server
+9929/tcp  open  nping-echo # Nmap's own test service
+31337/tcp open  Elite # classic "leet" backdoor port
+Running: Linux 4.X|5.X # OS guess
+Network Distance: 15 hops # hops to target</div>
               <p class="source-line">Live scan output, run by the instructor against scanme.nmap.org (Source: sudo nmap -O scanme.nmap.org, Aug 2026)</p>
             </div>
           </div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <h4>What Does the Output Mean?</h4>
+          <div class="terminal-ps terminal-slide">Nmap scan report for scanme.nmap.org (<span class="tk-num">45.33.32.156</span>)
+Host is up (0.024s latency)<span class="tk-comment"> # host responded</span>
+Not shown: <span class="tk-num">996</span> filtered ports<span class="tk-comment"> # most ports hidden</span>
+PORT      STATE SERVICE
+<span class="tk-num">22</span>/tcp    open  ssh<span class="tk-comment"> # remote login</span>
+<span class="tk-num">80</span>/tcp    open  http<span class="tk-comment"> # web server</span>
+<span class="tk-num">9929</span>/tcp  open  nping-echo<span class="tk-comment"> # Nmap's own test service</span>
+<span class="tk-num">31337</span>/tcp open  Elite<span class="tk-comment"> # classic "leet" backdoor port</span>
+Running: Linux 4.X|5.X<span class="tk-comment"> # OS guess</span>
+Network Distance: <span class="tk-num">15</span> hops<span class="tk-comment"> # hops to target</span></div>
         </section>
 
         <section data-background-color="#0a0a0a">
@@ -2012,13 +2297,21 @@ Network Distance: 15 hops           # hops to target</div>
               </ul>
             </div>
             <div class="col">
-              <div class="terminal-ps">$ nmap scanme.nmap.org       # Nmap's own test target
-$ nmap 10.10.x.x             # TryHackMe VPN target
-$ nmap 10.10.x.x             # HackTheBox VPN target
-$ nmap 192.168.56.101        # local Metasploitable2 VM</div>
+              <div class="terminal-ps">$ nmap scanme.nmap.org # Nmap's own test target
+$ nmap 10.10.x.x # TryHackMe VPN target
+$ nmap 10.10.x.x # HackTheBox VPN target
+$ nmap 192.168.56.101 # local Metasploitable2 VM</div>
               <p class="source-line">Public scan targets (Source: <a href="https://scanme.nmap.org" target="_blank" rel="noopener">scanme.nmap.org</a>)</p>
             </div>
           </div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <h4>Where Can You Legally Practice?</h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">nmap</span> scanme.nmap.org<span class="tk-comment"> # Nmap's own test target</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">nmap</span> 10.10.x.x<span class="tk-comment"> # TryHackMe VPN target</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">nmap</span> 10.10.x.x<span class="tk-comment"> # HackTheBox VPN target</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">nmap</span> <span class="tk-num">192.168.56.101</span><span class="tk-comment"> # local Metasploitable2 VM</span></div>
         </section>
 
         <section>
@@ -2088,9 +2381,9 @@ PORT      STATE SERVICE
 80/tcp    open  http
 9929/tcp  open  nping-echo
 31337/tcp open  Elite
-Device type: general purpose         # broad category
-Running: Linux 4.X|5.X               # OS family guess
-OS details: Linux 4.15 - 5.19        # narrowed version range
+Device type: general purpose # broad category
+Running: Linux 4.X|5.X # OS family guess
+OS details: Linux 4.15 - 5.19 # narrower range
 Network Distance: 16 hops</div>
               <p class="source-line">Live scan output, run by the instructor against scanme.nmap.org (Source: sudo nmap -O scanme.nmap.org, Aug 2026)</p>
             </div>
@@ -2103,6 +2396,20 @@ Network Distance: 16 hops</div>
               <p style="margin:0; font-size:1.1rem; color:#eee;">&#128309; <strong>Blue Team:</strong> the same fingerprint tells defenders what to patch, and whether to suppress it from scanners.</p>
             </div>
           </div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <h4>OS Detection: Real Output</h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> nmap <span class="tk-flag">-O</span> scanme.nmap.org
+PORT      STATE SERVICE
+<span class="tk-num">22</span>/tcp    open  ssh
+<span class="tk-num">80</span>/tcp    open  http
+<span class="tk-num">9929</span>/tcp  open  nping-echo
+<span class="tk-num">31337</span>/tcp open  Elite
+Device type: general purpose<span class="tk-comment"> # broad category</span>
+Running: Linux 4.X|5.X<span class="tk-comment"> # OS family guess</span>
+OS details: Linux 4.15 - 5.19<span class="tk-comment"> # narrower range</span>
+Network Distance: <span class="tk-num">16</span> hops</div>
         </section>
 
         <section data-background-color="#0a0a0a">
@@ -2298,13 +2605,22 @@ Network Distance: 16 hops</div>
               <p class="fragment" style="margin-top:0.8rem; font-size:1.3rem;">&rarr; <span class="highlight">Pick one and install it</span></p>
             </div>
             <div class="col">
-              <div class="terminal-ps">$ wsl --install -d Ubuntu-24.04         # LTS, matches course build
-$ wsl --install -d Debian               # very stable, slow-moving
-$ wsl --install -d kali-linux           # 600+ security tools
-$ wsl --install -d AlmaLinux-9          # RHEL-compatible, free
-$ wsl --install -d openSUSE-Leap-15.6   # enterprise tooling (YaST)</div>
+              <div class="terminal-ps">$ wsl --install -d Ubuntu-24.04 # LTS build
+$ wsl --install -d Debian # very stable, slow-moving
+$ wsl --install -d kali-linux # 600+ security tools
+$ wsl --install -d AlmaLinux-9 # RHEL-compatible
+$ wsl --install -d openSUSE-Leap-15.6 # enterprise</div>
             </div>
           </div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <h4>&#127891; Which OS Do You Recommend?</h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">wsl</span> <span class="tk-flag">--install</span> <span class="tk-flag">-d</span> Ubuntu-24.04<span class="tk-comment"> # LTS build</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">wsl</span> <span class="tk-flag">--install</span> <span class="tk-flag">-d</span> Debian<span class="tk-comment"> # very stable, slow-moving</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">wsl</span> <span class="tk-flag">--install</span> <span class="tk-flag">-d</span> kali-linux<span class="tk-comment"> # 600+ security tools</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">wsl</span> <span class="tk-flag">--install</span> <span class="tk-flag">-d</span> AlmaLinux-<span class="tk-num">9</span><span class="tk-comment"> # RHEL-compatible</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">wsl</span> <span class="tk-flag">--install</span> <span class="tk-flag">-d</span> openSUSE-Leap-15.6<span class="tk-comment"> # enterprise</span></div>
         </section>
 
         <section>
@@ -2369,6 +2685,15 @@ yourname</div>
         </section>
 
         <section data-background-color="#0a0a0a">
+          <h4>Practice:<br>Log In &amp; Go Home (Ubuntu)</h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">wsl</span> <span class="tk-flag">-d</span> Ubuntu-24.04
+<span class="tk-prompt">$</span> <span class="tk-cmd">pwd</span>
+<span class="tk-path">/home/yourname</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">whoami</span>
+yourname</div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
           <div class="twocol">
             <div class="col">
               <h4>Practice:<br>Create the Catalog Page (Ubuntu)</h4>
@@ -2389,6 +2714,16 @@ EOF</div>
         </section>
 
         <section data-background-color="#0a0a0a">
+          <h4>Practice:<br>Create the Catalog Page (Ubuntu)</h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">mkdir</span> library &amp;&amp; cd library
+<span class="tk-prompt">$</span> <span class="tk-cmd">cat</span> &gt; index.html &lt;&lt; <span class="tk-str">'EOF'</span>
+&lt;h1&gt;Pacific Library Catalog&lt;<span class="tk-path">/h1</span>&gt;
+&lt;ul&gt;&lt;li&gt;Introduction to System
+Admin and Security&lt;<span class="tk-path">/li</span>&gt;&lt;<span class="tk-path">/ul</span>&gt;
+EOF</div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
           <div class="twocol">
             <div class="col">
               <h4>Practice:<br>Serve lib-web01 (Ubuntu)</h4>
@@ -2405,6 +2740,12 @@ Serving HTTP on 0.0.0.0 port 8080 ...</div>
         </section>
 
         <section data-background-color="#0a0a0a">
+          <h4>Practice:<br>Serve lib-web01 (Ubuntu)</h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">python3</span> <span class="tk-flag">-m</span> http.server <span class="tk-num">8080</span>
+Serving HTTP on <span class="tk-num">0.0.0.0</span> port <span class="tk-num">8080</span> ...</div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
           <div class="twocol">
             <div class="col">
               <h4>Practice:<br>Find lib-web01's IP (Ubuntu)</h4>
@@ -2418,6 +2759,12 @@ Serving HTTP on 0.0.0.0 port 8080 ...</div>
 172.20.145.10</div>
             </div>
           </div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <h4>Practice:<br>Find lib-web01's IP (Ubuntu)</h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">hostname</span> <span class="tk-flag">-I</span>
+<span class="tk-num">172.20.145.10</span></div>
         </section>
 
         <section>
@@ -2454,6 +2801,12 @@ $ curl http://172.20.145.10:8080</div>
               <p style="margin:0; font-size:1.1rem; color:#eee;">&#128309; <strong>Blue Team:</strong> confirming a port from another machine is exactly how you'd verify your own service is actually reachable, not just "should be" reachable on paper.</p>
             </div>
           </div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <h4>Practice:<br>Confirm From the Client (Kali)</h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">nmap</span> <span class="tk-flag">-p</span> <span class="tk-num">8080</span> <span class="tk-num">172.20.145.10</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">curl</span> http:<span class="tk-path">//172.20.145.10</span>:<span class="tk-num">8080</span></div>
         </section>
 
         <section>
@@ -2501,6 +2854,14 @@ $ sudo ufw allow from 172.20.145.0/24 to any port 8080</div>
         </section>
 
         <section data-background-color="#0a0a0a">
+          <h4>Practice:<br>Block the Port (Ubuntu)</h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> ufw
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> ufw enable
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> ufw deny <span class="tk-num">8080</span>/tcp
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> ufw allow from <span class="tk-num">172.20.145.0</span>/<span class="tk-num">24</span> to any port <span class="tk-num">8080</span></div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
           <div class="twocol">
             <div class="col">
               <h4>Practice:<br>Try Again From the Client (Kali)</h4>
@@ -2519,6 +2880,12 @@ $ curl http://172.20.145.10:8080</div>
             replied "nothing's listening here," while `filtered` means nothing replied at
             all, because ufw silently dropped the packet. `curl` just hangs until it
             times out.</p>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <h4>Practice:<br>Try Again From the Client (Kali)</h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">nmap</span> <span class="tk-flag">-p</span> <span class="tk-num">8080</span> <span class="tk-num">172.20.145.10</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">curl</span> http:<span class="tk-path">//172.20.145.10</span>:<span class="tk-num">8080</span></div>
         </section>
 
         <section>
@@ -2556,6 +2923,15 @@ $ whois 172.20.145.10
 $ dig -x 172.20.145.10</div>
             </div>
           </div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <h4>Practice:<br>Real Domain vs. Your Server (Kali)</h4>
+          <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">whois</span> nmap.org
+<span class="tk-prompt">$</span> <span class="tk-cmd">dig</span> scanme.nmap.org
+
+<span class="tk-prompt">$</span> <span class="tk-cmd">whois</span> <span class="tk-num">172.20.145.10</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">dig</span> <span class="tk-flag">-x</span> <span class="tk-num">172.20.145.10</span></div>
         </section>
 
         <section>
@@ -2991,6 +3367,20 @@ $ VBoxManage storagectl "lab1-ubuntu" \
           </div>
         </section>
 
+        <section data-background-color="#0a0a0a">
+          <h4>CLI: Create a VM</h4>
+          <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">VBoxManage</span> createvm <span class="tk-flag">--name</span> <span class="tk-str">"lab1-ubuntu"</span> \
+    <span class="tk-flag">--ostype</span> Ubuntu_64 <span class="tk-flag">--register</span>
+
+<span class="tk-prompt">$</span> <span class="tk-cmd">VBoxManage</span> modifyvm <span class="tk-str">"lab1-ubuntu"</span> \
+    <span class="tk-flag">--cpus</span> <span class="tk-num">2</span> <span class="tk-flag">--memory</span> <span class="tk-num">2048</span> <span class="tk-flag">--nic1</span> nat
+
+<span class="tk-prompt">$</span> <span class="tk-cmd">VBoxManage</span> createmedium disk \
+    <span class="tk-flag">--filename</span> lab1-ubuntu.vdi <span class="tk-flag">--size</span> <span class="tk-num">20000</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">VBoxManage</span> storagectl <span class="tk-str">"lab1-ubuntu"</span> \
+    <span class="tk-flag">--name</span> SATA <span class="tk-flag">--add</span> sata</div>
+        </section>
+
         <section>
           <div class="twocol">
             <div class="col">
@@ -3073,6 +3463,20 @@ $ VBoxManage modifyvm "lab1-ubuntu" \
     --hostonlyadapter1 vboxnet0</div>
             </div>
           </div>
+        </section>
+
+        <section data-background-color="#0a0a0a">
+          <h4>CLI: Configure Networking</h4>
+          <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">VBoxManage</span> showvminfo <span class="tk-str">"lab1-ubuntu"</span> \
+    | grep NIC
+
+<span class="tk-prompt">$</span> <span class="tk-cmd">VBoxManage</span> modifyvm <span class="tk-str">"lab1-ubuntu"</span> \
+    <span class="tk-flag">--nic1</span> bridged \
+    <span class="tk-flag">--bridgeadapter1</span> <span class="tk-str">"Wi-Fi"</span>
+
+<span class="tk-prompt">$</span> <span class="tk-cmd">VBoxManage</span> modifyvm <span class="tk-str">"lab1-ubuntu"</span> \
+    <span class="tk-flag">--nic1</span> hostonly \
+    <span class="tk-flag">--hostonlyadapter1</span> vboxnet0</div>
         </section>
 
         <section>
@@ -3310,6 +3714,1305 @@ $ VBoxManage modifyvm "lab1-ubuntu" \
         </section>
         </section>
 
+<section id="module-2">
+        <section data-background-color="#ffffff">
+          <div class="twocol">
+            <div class="col">
+              <h2>Module 2</h2>
+              <h3>Command-Line &amp; Permissions</h3>
+            </div>
+            <div class="diagram"></div>
+          </div>
+        </section>
+
+<section id="module-2-agenda" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Agenda</h4>
+<ol style="line-height: 1.8;">
+<li><a href="./#/module-2-agenda-1" target="_self">History of the Command Line</a></li>
+<li><a href="./#/module-2-agenda-2" target="_self">Command Syntax &amp; Navigation</a></li>
+<li><a href="./#/module-2-agenda-3" target="_self">Search &amp; Getting Help</a></li>
+<li><a href="./#/module-2-agenda-4" target="_self">Understanding Permissions</a></li>
+<li><a href="./#/module-2-agenda-5" target="_self">Read &amp; Change Permissions</a></li>
+<li><a href="./#/module-2-agenda-6" target="_self">Ownership, sudo &amp; Practice</a></li>
+</ol>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 320 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:320px;display:block;margin:0 auto;"><defs><marker id="arrowCliStack" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><line x1="160" y1="60" x2="160" y2="76" stroke="#888" stroke-width="1.5" marker-end="url(#arrowCliStack)"/><line x1="160" y1="140" x2="160" y2="156" stroke="#888" stroke-width="1.5" marker-end="url(#arrowCliStack)"/><line x1="160" y1="220" x2="160" y2="236" stroke="#888" stroke-width="1.5" marker-end="url(#arrowCliStack)"/><rect x="20" y="10" width="280" height="50" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="160" y="40" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">CLI (Shell)</text><rect x="20" y="90" width="280" height="50" rx="8" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="160" y="120" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">Operating System</text><rect x="20" y="170" width="280" height="50" rx="8" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="160" y="200" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">File System</text><rect x="20" y="250" width="280" height="50" rx="8" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="160" y="280" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc" font-weight="normal">Hardware</text></svg>
+</div>
+</div>
+</section>
+
+<section id="module-2-agenda-1" data-background-color="#ffffff">
+<h2 style="text-align:center;">History of the Command Line</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>What the CLI Manages</h4>
+<ul>
+<li>Six broad task categories</li>
+<li>Each has its own commands</li>
+<li>We'll cover each in turn</li>
+</ul>
+</div>
+<div class="col">
+<svg viewBox="0 0 640 520" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:480px;display:block;margin:0 auto;"><rect x="222.0" y="23.0" width="196" height="64" rx="8" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold"><tspan x="320.0" y="45.0">Permissions</tspan></text><text text-anchor="middle" font-size="9.8" font-family="Segoe UI, Arial, sans-serif" fill="#ccc" font-weight="normal"><tspan x="320.0" y="62.0">chmod, chown decide who</tspan><tspan x="320.0" y="77.0">can read, write or run it</tspan></text><rect x="399.5" y="125.5" width="196" height="64" rx="8" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold"><tspan x="497.5" y="147.5">Files</tspan></text><text text-anchor="middle" font-size="9.8" font-family="Segoe UI, Arial, sans-serif" fill="#ccc" font-weight="normal"><tspan x="497.5" y="164.5">cp, mv, rm, cat copy,</tspan><tspan x="497.5" y="179.5">move, delete &amp; view them</tspan></text><rect x="399.5" y="330.5" width="196" height="64" rx="8" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold"><tspan x="497.5" y="352.5">Processes</tspan></text><text text-anchor="middle" font-size="9.8" font-family="Segoe UI, Arial, sans-serif" fill="#ccc" font-weight="normal"><tspan x="497.5" y="369.5">ps, top, kill show &amp;</tspan><tspan x="497.5" y="384.5">stop running programs</tspan></text><rect x="222.0" y="433.0" width="196" height="64" rx="8" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold"><tspan x="320.0" y="455.0">Devices</tspan></text><text text-anchor="middle" font-size="9.8" font-family="Segoe UI, Arial, sans-serif" fill="#ccc" font-weight="normal"><tspan x="320.0" y="472.0">lsblk, dmesg, mount</tspan><tspan x="320.0" y="487.0">inspect &amp; attach storage</tspan></text><rect x="44.5" y="330.5" width="196" height="64" rx="8" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold"><tspan x="142.5" y="352.5">Users</tspan></text><text text-anchor="middle" font-size="9.8" font-family="Segoe UI, Arial, sans-serif" fill="#ccc" font-weight="normal"><tspan x="142.5" y="369.5">useradd, passwd add &amp;</tspan><tspan x="142.5" y="384.5">manage accounts</tspan></text><rect x="44.5" y="125.5" width="196" height="64" rx="8" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold"><tspan x="142.5" y="147.5">Network</tspan></text><text text-anchor="middle" font-size="9.8" font-family="Segoe UI, Arial, sans-serif" fill="#ccc" font-weight="normal"><tspan x="142.5" y="164.5">ip, ping, ssh reach &amp;</tspan><tspan x="142.5" y="179.5">test other machines</tspan></text><circle cx="320" cy="260" r="92" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="320" y="270" text-anchor="middle" font-size="26" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">CLI</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>A Short CLI History</h4>
+</div>
+<div class="col">
+<svg viewBox="0 0 380 290" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="0" y="0" width="380" height="290" rx="10" fill="#1e1e1e"/><line x1="70" y1="16" x2="70" y2="276" stroke="#555" stroke-width="2"/><circle cx="70" cy="42.0" r="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="54" y="46.0" text-anchor="end" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">1969</text><text x="86" y="38.0" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="86" y="38.0">Unix begins at Bell Labs,</tspan><tspan x="86" y="53.0">a shared multi-user machine</tspan></text><circle cx="70" cy="94.0" r="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="54" y="98.0" text-anchor="end" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">1971</text><text x="86" y="90.0" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="86" y="90.0">Unix v1 ships with chmod</tspan><tspan x="86" y="105.0">and the rwx permission bits</tspan></text><circle cx="70" cy="146.0" r="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="54" y="150.0" text-anchor="end" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">1973</text><text x="86" y="142.0" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="86" y="142.0">grep is written by Ken</tspan><tspan x="86" y="157.0">Thompson for fast text search</tspan></text><circle cx="70" cy="198.0" r="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="54" y="202.0" text-anchor="end" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">1991</text><text x="86" y="194.0" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="86" y="194.0">Linux (Torvalds) reuses</tspan><tspan x="86" y="209.0">the exact same rwx model</tspan></text><circle cx="70" cy="250.0" r="7" fill="#FF671D" stroke="#FF671D" stroke-width="1.5"/><text x="54" y="254.0" text-anchor="end" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Today</text><text x="86" y="246.0" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="86" y="246.0">Same rwx model runs Linux,</tspan><tspan x="86" y="261.0">macOS, Android &amp; most servers</tspan></text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>How the OS <span class="highlight">Decides</span></h4>
+<ul>
+<li>One machine, many people</li>
+<li>Files must stay protected</li>
+<li>Not everyone should see it</li>
+</ul>
+</div>
+<div class="col">
+<svg viewBox="0 0 340 196" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><defs><marker id="arrowFV" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="20" y="10" width="300" height="48" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="170.0" y="32" text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">Permissions Decide</text><text x="170.0" y="48" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#ccc" font-weight="normal">who can read, write, or run it</text><line x1="170.0" y1="58" x2="170.0" y2="74" stroke="#888" stroke-width="1.5" marker-end="url(#arrowFV)"/><rect x="20" y="74" width="300" height="48" rx="7" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="170.0" y="96" text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">Every File Has an Owner</text><text x="170.0" y="112" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#ccc" font-weight="normal">and a set of permissions</text><line x1="170.0" y1="122" x2="170.0" y2="138" stroke="#888" stroke-width="1.5" marker-end="url(#arrowFV)"/><rect x="20" y="138" width="300" height="48" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="170.0" y="160" text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">Shared Unix Machine</text><text x="170.0" y="176" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#ccc" font-weight="normal">many logged-in users at once</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Authenticate vs. Authorize</h4>
+<ul>
+<li>A password: authentication</li>
+<li>A permission: authorization</li>
+<li>You genuinely need both</li>
+</ul>
+</div>
+<div class="col">
+<svg viewBox="0 0 300 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:300px;display:block;margin:0 auto;"><rect x="10" y="10" width="130" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="75" y="88" text-anchor="middle" font-size="42">&#128273;</text><text x="75" y="118" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Authentication</text><text x="75" y="136" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#999">a password:</text><text x="75" y="152" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#999">who you are</text><rect x="160" y="10" width="130" height="180" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="225" y="88" text-anchor="middle" font-size="42">&#128274;</text><text x="225" y="118" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">Authorization</text><text x="225" y="136" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">a permission:</text><text x="225" y="152" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">what you can do</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>What Happens Without Them?</h4>
+<ul>
+<li>Could expose private data</li>
+<li>Could corrupt shared scripts</li>
+<li>One mistake breaks the server</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#9888;&#65039;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">No Safety Net</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Lock Down backup.sh</h4>
+<ul>
+<li>Staff-only, execute allowed</li>
+<li>Nobody else gets in</li>
+<li>Type the chmod command</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#9000;&#65039;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Your Turn</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Lock Down backup.sh</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">chmod</span> <span class="tk-num">700</span> backup.sh</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Archive Old Records</h4>
+<ul>
+<li>Move records/ to archive</li>
+<li>Rename with this year</li>
+<li>Type the mv command</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#9000;&#65039;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Your Turn</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Archive Old Records</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">mv</span> records/ archive/records-2025/</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check for a New Scanner</h4>
+<ul>
+<li>A scanner was just plugged in</li>
+<li>Check the kernel log</li>
+<li>Type the dmesg command</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#9000;&#65039;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Your Turn</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Check for a New Scanner</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">dmesg</span> | tail</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Add a Student Worker</h4>
+<ul>
+<li>New hire: jsmith</li>
+<li>Needs a home directory</li>
+<li>Type the useradd command</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#9000;&#65039;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Your Turn</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Add a Student Worker</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> useradd <span class="tk-flag">-m</span> jsmith</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Reach the Branch Server</h4>
+<ul>
+<li>Branch server: branch-lib01</li>
+<li>Confirm it's reachable</li>
+<li>Type the ping command</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#9000;&#65039;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Your Turn</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Reach the Branch Server</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ping</span> branch-lib01</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-2-agenda-2" data-background-color="#ffffff">
+<h2 style="text-align:center;">Command Syntax &amp; Navigation</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Why Learn the Command Line?</h4>
+<ul>
+<li>Faster than clicking menus</li>
+<li>The only way into servers</li>
+<li>Every sysadmin tool assumes it</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#128421;&#65039;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">The Command Line</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Anatomy of a Command</h4>
+<ul>
+<li>command -flags argument</li>
+<li>Flags change the behavior</li>
+<li>Arguments say what to act on</li>
+</ul>
+</div>
+<div class="col">
+<svg viewBox="0 0 420 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="10" y="10" width="110" height="46" rx="7" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="65" y="38" text-anchor="middle" font-size="15" font-family="Consolas, monospace" fill="#fff" font-weight="bold">ls</text><text x="65" y="72" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#666">command</text><rect x="140" y="10" width="110" height="46" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="195" y="38" text-anchor="middle" font-size="15" font-family="Consolas, monospace" fill="#eee" font-weight="bold">-la</text><text x="195" y="72" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#666">flags (options)</text><rect x="270" y="10" width="140" height="46" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="340" y="38" text-anchor="middle" font-size="15" font-family="Consolas, monospace" fill="#eee" font-weight="bold">/home</text><text x="340" y="72" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#666">argument</text><text x="210" y="118" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#666" font-style="italic">$ ls -la /home</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Good For</h4>
+<ul>
+<li>Fast, repeatable, scriptable</li>
+<li>Remote servers, no GUI needed</li>
+<li>Automation &amp; administration</li>
+</ul>
+</div>
+<div class="col">
+<h4>Not Good For</h4>
+<ul>
+<li>Writing &amp; editing real code</li>
+<li>Visual, GUI-heavy design work</li>
+<li>A debugger's step-through view</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section id="cmd-ls" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Where Am I?</h4>
+<ul>
+<li>pwd prints your location</li>
+<li>ls lists what's there</li>
+<li>-l for details, -a for hidden</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal-ps">$ pwd
+/home/jdoe
+
+$ ls -la
+drwxr-xr-x  4 jdoe library  4096 notes</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Where Am I?</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">pwd</span>
+<span class="tk-path">/home/jdoe</span>
+
+<span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-la</span>
+drwxr-xr-x  <span class="tk-num">4</span> jdoe library  <span class="tk-num">4096</span> notes</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Moving Around: cd</h4>
+<ul>
+<li>cd path, moves you there</li>
+<li>cd .. goes up one level</li>
+<li>cd ~ jumps to your home</li>
+</ul>
+</div>
+<div class="col">
+<svg viewBox="0 0 380 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><line x1="190" y1="40" x2="190" y2="60" stroke="#666" stroke-width="1.5"/><line x1="190" y1="60" x2="50" y2="100" stroke="#666" stroke-width="1.5"/><line x1="190" y1="60" x2="150" y2="100" stroke="#666" stroke-width="1.5"/><line x1="190" y1="60" x2="230" y2="100" stroke="#666" stroke-width="1.5"/><line x1="190" y1="60" x2="330" y2="100" stroke="#666" stroke-width="1.5"/><line x1="50" y1="130" x2="50" y2="150" stroke="#666" stroke-width="1.5"/><rect x="150" y="10" width="80" height="30" rx="6" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="30" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff" font-weight="bold">/</text><rect x="15" y="100" width="70" height="30" rx="6" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="50" y="120" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#eee">home</text><rect x="115" y="100" width="70" height="30" rx="6" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="150" y="120" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#eee">etc</text><rect x="195" y="100" width="70" height="30" rx="6" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="230" y="120" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#eee">bin</text><rect x="295" y="100" width="70" height="30" rx="6" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="330" y="120" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#eee">var</text><rect x="15" y="150" width="70" height="30" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="50" y="170" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#ccc">jdoe</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>The Standard Linux Folders</h4>
+<ul>
+<li>Eight core system folders</li>
+<li>Orange needs root access</li>
+<li>Gray is user-writable</li>
+</ul>
+</div>
+<div class="col">
+<svg viewBox="0 0 320 389" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:320px;display:block;margin:0 auto;"><rect x="10" y="10" width="300" height="38" rx="6" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="22" y="34" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#fff"><tspan font-family="Consolas, monospace" font-weight="bold">/</tspan>: Root of the filesystem</text><rect x="10" y="54" width="300" height="38" rx="6" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="22" y="78" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#fff"><tspan font-family="Consolas, monospace" font-weight="bold">/bin</tspan>: Essential command programs</text><rect x="10" y="98" width="300" height="38" rx="6" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="22" y="122" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#fff"><tspan font-family="Consolas, monospace" font-weight="bold">/etc</tspan>: System-wide config files</text><rect x="10" y="142" width="300" height="38" rx="6" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="22" y="166" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan font-family="Consolas, monospace" font-weight="bold">/home</tspan>: Personal user directories</text><rect x="10" y="186" width="300" height="38" rx="6" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="22" y="210" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#fff"><tspan font-family="Consolas, monospace" font-weight="bold">/var</tspan>: Logs, caches, changing data</text><rect x="10" y="230" width="300" height="38" rx="6" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="22" y="254" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan font-family="Consolas, monospace" font-weight="bold">/tmp</tspan>: Temporary, cleared on reboot</text><rect x="10" y="274" width="300" height="38" rx="6" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="22" y="298" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#fff"><tspan font-family="Consolas, monospace" font-weight="bold">/usr</tspan>: Installed programs &amp; libraries</text><rect x="10" y="318" width="300" height="38" rx="6" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="22" y="342" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#fff"><tspan font-family="Consolas, monospace" font-weight="bold">/srv</tspan>: Data served to others</text><rect x="10" y="368" width="16" height="13" rx="3" fill="#3a1f0a" stroke="#FF671D" stroke-width="1.5"/><text x="32" y="379" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#666">Requires root to modify</text><rect x="170" y="368" width="16" height="13" rx="3" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="192" y="379" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#666">User-writable</text></svg>
+</div>
+</div>
+</section>
+
+<section id="cmd-cd" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Changing Directory</h4>
+<ul>
+<li>cd changes location</li>
+<li>.. means one level up</li>
+<li>~ is always your home</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal-ps">$ cd /home/jdoe
+$ cd ..
+$ pwd
+/home
+$ cd ~</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Changing Directory</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">cd</span> <span class="tk-path">/home/jdoe</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">cd</span> ..
+<span class="tk-prompt">$</span> <span class="tk-cmd">pwd</span>
+<span class="tk-path">/home</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">cd</span> ~</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Making &amp; Removing Files</h4>
+<ul>
+<li>mkdir makes a folder</li>
+<li>touch makes an empty file</li>
+<li>rm removes; -r for folders</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal-ps">$ mkdir notes
+$ touch catalog/checkout.txt
+$ cp checkout.txt checkout-old.txt
+$ mv checkout-old.txt catalog/
+$ rm catalog/checkout-old.txt</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Making &amp; Removing Files</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">mkdir</span> notes
+<span class="tk-prompt">$</span> <span class="tk-cmd">touch</span> catalog/checkout.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">cp</span> checkout.txt checkout-old.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">mv</span> checkout-old.txt catalog/
+<span class="tk-prompt">$</span> <span class="tk-cmd">rm</span> catalog/checkout-old.txt</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Reading a File</h4>
+<ul>
+<li>cat prints the whole file</li>
+<li>less lets you scroll it</li>
+<li>q quits the less viewer</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal-ps">$ cat checkout.txt
+Restock mystery section
+Reshelve returns
+
+$ less checkout.txt</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Reading a File</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">cat</span> checkout.txt
+Restock mystery section
+Reshelve returns
+
+<span class="tk-prompt">$</span> <span class="tk-cmd">less</span> checkout.txt</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Organize Today's Notes</h4>
+<ul>
+<li>Make a checkin folder</li>
+<li>Move today's notes into it</li>
+<li>Confirm with ls -l</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#9000;&#65039;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Your Turn</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Organize Today's Notes</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">mkdir</span> checkin
+<span class="tk-prompt">$</span> <span class="tk-cmd">mv</span> notes.txt checkin/
+<span class="tk-prompt">$</span> <span class="tk-cmd">cd</span> checkin
+<span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-l</span></div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-2-agenda-3" data-background-color="#ffffff">
+<h2 style="text-align:center;">Search &amp; Getting Help</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Why Search, Not Scroll?</h4>
+<ul>
+<li>Too many files to remember</li>
+<li>Memorizing paths doesn't scale</li>
+<li>Searching is faster &amp; reliable</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#128269;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Search, Don't Scroll</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Getting Help</h4>
+<ul>
+<li>man opens the full manual</li>
+<li>--help gives a quick summary</li>
+<li>q quits the man viewer</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal-ps">$ man ls
+$ ls --help</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Getting Help</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">man</span> ls
+<span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">--help</span></div>
+</section>
+
+<section data-tag="terminology" data-term="man" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Word Origin: "man"</h4>
+</div>
+<div class="col">
+<svg viewBox="0 0 380 186" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="0" y="0" width="380" height="186" rx="10" fill="#1e1e1e"/><line x1="70" y1="16" x2="70" y2="172" stroke="#555" stroke-width="2"/><circle cx="70" cy="42.0" r="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="54" y="46.0" text-anchor="end" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">1971</text><text x="86" y="38.0" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="86" y="38.0">The Unix Programmer's</tspan><tspan x="86" y="53.0">Manual ships, 61 commands</tspan></text><circle cx="70" cy="94.0" r="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="54" y="98.0" text-anchor="end" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">1971</text><text x="86" y="90.0" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="86" y="90.0">Ken Thompson &amp; Dennis</tspan><tspan x="86" y="105.0">Ritchie write it by hand</tspan></text><circle cx="70" cy="146.0" r="7" fill="#FF671D" stroke="#FF671D" stroke-width="1.5"/><text x="54" y="150.0" text-anchor="end" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Today</text><text x="86" y="142.0" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="86" y="142.0">man still opens that same</tspan><tspan x="86" y="157.0">manual, updated daily</tspan></text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Finding a File: find</h4>
+<ul>
+<li>find searches by name</li>
+<li>Starts from a given folder</li>
+<li>* is a wildcard</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal-ps">$ find /home -name "*.txt"
+/home/jdoe/catalog/checkout.txt</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Finding a File: find</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">find</span> <span class="tk-path">/home</span> <span class="tk-flag">-name</span> <span class="tk-str">"*.txt"</span>
+<span class="tk-path">/home/jdoe/catalog/checkout.txt</span></div>
+</section>
+
+<section id="cmd-grep" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Searching Text: grep</h4>
+<ul>
+<li>grep searches inside files</li>
+<li>-r searches every subfolder</li>
+<li>-i ignores upper/lowercase</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal-ps">$ grep "restock" checkout.txt
+Restock mystery section
+
+$ grep -ri "error" /var/log</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Searching Text: grep</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">grep</span> <span class="tk-str">"restock"</span> checkout.txt
+Restock mystery section
+
+<span class="tk-prompt">$</span> <span class="tk-cmd">grep</span> <span class="tk-flag">-ri</span> <span class="tk-str">"error"</span> <span class="tk-path">/var/log</span></div>
+</section>
+
+<section data-tag="terminology" data-term="grep" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Word Origin: "grep"</h4>
+</div>
+<div class="col">
+<svg viewBox="0 0 380 186" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="0" y="0" width="380" height="186" rx="10" fill="#1e1e1e"/><line x1="70" y1="16" x2="70" y2="172" stroke="#555" stroke-width="2"/><circle cx="70" cy="42.0" r="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="54" y="46.0" text-anchor="end" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">1973</text><text x="86" y="38.0" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="86" y="38.0">Ken Thompson pulls the</tspan><tspan x="86" y="53.0">search code out of the ed editor</tspan></text><circle cx="70" cy="94.0" r="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="54" y="98.0" text-anchor="end" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">1973</text><text x="86" y="90.0" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="86" y="90.0">Named for ed's own</tspan><tspan x="86" y="105.0">command: g/re/p</tspan></text><circle cx="70" cy="146.0" r="7" fill="#FF671D" stroke="#FF671D" stroke-width="1.5"/><text x="54" y="150.0" text-anchor="end" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Today</text><text x="86" y="142.0" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="86" y="142.0">Standard on every Linux,</tspan><tspan x="86" y="157.0">macOS &amp; Unix system</tspan></text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Find the Smith Patron</h4>
+<ul>
+<li>Check the manual first</li>
+<li>Locate the patrons file</li>
+<li>Search it for a name</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#9000;&#65039;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Your Turn</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Find the Smith Patron</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">man</span> grep
+<span class="tk-prompt">$</span> <span class="tk-cmd">find</span> <span class="tk-path">/home</span> <span class="tk-flag">-name</span> <span class="tk-str">"patrons*"</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">grep</span> <span class="tk-flag">-i</span> <span class="tk-str">"smith"</span> patrons.txt</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-2-agenda-4" data-background-color="#ffffff">
+<h2 style="text-align:center;">Understanding Permissions</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Who Should Read This?</h4>
+<ul>
+<li>Not all data should be public</li>
+<li>Some scripts must stay locked</li>
+<li>Wrong access causes breaches</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#128272;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Not Everyone</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Owner, Group &amp; Other</h4>
+<ul>
+<li>Every file has one owner</li>
+<li>One group can share access</li>
+<li>Everyone else is "other"</li>
+</ul>
+</div>
+<div class="col">
+<svg viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:400px;display:block;margin:0 auto;"><rect x="140" y="10" width="120" height="40" rx="7" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="200" y="35" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">catalog.txt</text><line x1="200" y1="50" x2="60" y2="90" stroke="#666" stroke-width="1.5"/><line x1="200" y1="50" x2="200" y2="90" stroke="#666" stroke-width="1.5"/><line x1="200" y1="50" x2="340" y2="90" stroke="#666" stroke-width="1.5"/><rect x="10" y="94" width="100" height="56" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="60" y="118" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Owner</text><text x="60" y="136" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#999">jdoe (creator)</text><rect x="150" y="94" width="100" height="56" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="200" y="118" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Group</text><text x="200" y="136" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#999">library (team)</text><rect x="290" y="94" width="100" height="56" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="340" y="118" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Other</text><text x="340" y="136" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#999">everyone else</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Read, Write &amp; <span class="highlight">Execute</span></h4>
+<ul>
+<li>rwx means different things</li>
+<li>on a file vs. a folder</li>
+<li>x on a folder = can enter it</li>
+</ul>
+</div>
+<div class="col">
+<table style="font-size: 0.85rem;">
+<tbody>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Letter</td><td style="padding:6px; border:1px solid #666;">On a File</td><td style="padding:6px; border:1px solid #666;">On a Folder</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">r</td><td style="padding:6px; border:1px solid #666;">Read contents</td><td style="padding:6px; border:1px solid #666;">List contents</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">w</td><td style="padding:6px; border:1px solid #666;">Edit contents</td><td style="padding:6px; border:1px solid #666;">Add/remove files</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">x</td><td style="padding:6px; border:1px solid #666;">Run as a program</td><td style="padding:6px; border:1px solid #666;">Enter with cd</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Who Counts as Each Role?</h4>
+<ul>
+<li>Every file has three roles</li>
+<li>Each gets its own rights</li>
+<li>Meet who's who</li>
+</ul>
+</div>
+<div class="col">
+<table style="font-size: 0.85rem;">
+<tbody>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Role</td><td style="padding:6px; border:1px solid #666;">Who</td><td style="padding:6px; border:1px solid #666;">Example</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Owner</td><td style="padding:6px; border:1px solid #666;">Creates or owns it</td><td style="padding:6px; border:1px solid #666;">jdoe</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Group</td><td style="padding:6px; border:1px solid #666;">Shares team access</td><td style="padding:6px; border:1px solid #666;">library</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Other</td><td style="padding:6px; border:1px solid #666;">Everyone else</td><td style="padding:6px; border:1px solid #666;">a guest</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>The Numeric Version</h4>
+<ul>
+<li>r = 4, w = 2, x = 1</li>
+<li>Add them up per role</li>
+<li>rwx = 4+2+1 = 7</li>
+</ul>
+</div>
+<div class="col">
+<table style="font-size: 0.85rem;">
+<tbody>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Letter</td><td style="padding:6px; border:1px solid #666;">Value</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">r</td><td style="padding:6px; border:1px solid #666;">4</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">w</td><td style="padding:6px; border:1px solid #666;">2</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">x</td><td style="padding:6px; border:1px solid #666;">1</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">-</td><td style="padding:6px; border:1px solid #666;">0</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>What Number Is r--?</h4>
+<ul>
+<li>Read only, nothing else</li>
+<li>w and x are both off</li>
+<li>Add the letter values</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#128290;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Compute It</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4 style="text-align:center;">What Number Is r--?</h4>
+<h2 style="text-align:center; color:#FF671D; font-size:6rem; margin-top:0.5em; font-family:Consolas, monospace;">4</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>What Number Is r-x?</h4>
+<ul>
+<li>Read and execute</li>
+<li>Write is off</li>
+<li>Add the letter values</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#128290;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Compute It</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4 style="text-align:center;">What Number Is r-x?</h4>
+<h2 style="text-align:center; color:#FF671D; font-size:6rem; margin-top:0.5em; font-family:Consolas, monospace;">5</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>What Number Is rwx?</h4>
+<ul>
+<li>All three are on</li>
+<li>Read, write, execute</li>
+<li>Add the letter values</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#128290;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Compute It</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4 style="text-align:center;">What Number Is rwx?</h4>
+<h2 style="text-align:center; color:#FF671D; font-size:6rem; margin-top:0.5em; font-family:Consolas, monospace;">7</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Convert catalog.txt's Mode</h4>
+<ul>
+<li>catalog.txt is rwxr-xr--</li>
+<li>One digit per role</li>
+<li>Owner, group, other</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#128290;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Compute It</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4 style="text-align:center;">Convert catalog.txt's Mode</h4>
+<h2 style="text-align:center; color:#FF671D; font-size:6rem; margin-top:0.5em; font-family:Consolas, monospace;">754</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Reading ls -l Output</h4>
+<ul>
+<li>First char: file or folder</li>
+<li>Next 9: owner, group, other</li>
+<li>Each set is r, w, x or -</li>
+</ul>
+</div>
+<div class="col">
+<svg viewBox="0 0 460 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="10" y="10" width="440" height="34" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="230" y="32" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#eee">-rwxr-xr-- 1 jdoe library 4096 catalog.txt</text><line x1="34" y1="44" x2="34" y2="66" stroke="#888" stroke-width="1.2"/><line x1="70" y1="44" x2="70" y2="66" stroke="#888" stroke-width="1.2"/><line x1="106" y1="44" x2="106" y2="66" stroke="#888" stroke-width="1.2"/><line x1="142" y1="44" x2="142" y2="66" stroke="#888" stroke-width="1.2"/><rect x="10" y="66" width="48" height="34" rx="5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="34" y="87" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">type</text><rect x="58" y="66" width="72" height="34" rx="5" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="94" y="87" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">owner</text><rect x="130" y="66" width="72" height="34" rx="5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="166" y="87" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">group</text><rect x="202" y="66" width="72" height="34" rx="5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="238" y="87" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">other</text><text x="34" y="122" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#666">- = file</text><text x="94" y="122" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#666">rwx</text><text x="166" y="122" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#666">r-x</text><text x="238" y="122" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#666">r--</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>ls -l in Practice</h4>
+<ul>
+<li>-l shows the full listing</li>
+<li>First column is permissions</li>
+<li>Then owner, group, size, name</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal-ps">$ ls -l
+-rwxr-xr-- 1 jdoe library 4096 catalog.txt
+-rw-r--r-- 1 jdoe library  512 overdue.txt</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>ls -l in Practice</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-l</span>
+<span class="tk-flag">-rwxr-xr--</span> <span class="tk-num">1</span> jdoe library <span class="tk-num">4096</span> catalog.txt
+<span class="tk-flag">-rw-r--r--</span> <span class="tk-num">1</span> jdoe library  <span class="tk-num">512</span> overdue.txt</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>List the Library Files</h4>
+<ul>
+<li>See every file's permissions</li>
+<li>Include owner and group</li>
+<li>Type the listing command</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#9000;&#65039;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Your Turn</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>List the Library Files</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-l</span></div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-2-agenda-5" data-background-color="#ffffff">
+<h2 style="text-align:center;">Read &amp; Change Permissions</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Why Not Allow Everything?</h4>
+<ul>
+<li>Least privilege limits damage</li>
+<li>A quick fix can become a habit</li>
+<li>Changing access is risky too</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#128737;&#65039;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Least Privilege</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Symbolic vs. Octal</h4>
+<ul>
+<li>chmod takes either form</li>
+<li>Symbolic: u, g, o + / -</li>
+<li>Octal: one digit per set</li>
+</ul>
+</div>
+<div class="col">
+<table style="font-size: 0.85rem;">
+<tbody>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Symbol</td><td style="padding:6px; border:1px solid #666;">Octal</td><td style="padding:6px; border:1px solid #666;">Meaning</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">rwx</td><td style="padding:6px; border:1px solid #666;">7</td><td style="padding:6px; border:1px solid #666;">read + write + execute</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">rw-</td><td style="padding:6px; border:1px solid #666;">6</td><td style="padding:6px; border:1px solid #666;">read + write</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">r-x</td><td style="padding:6px; border:1px solid #666;">5</td><td style="padding:6px; border:1px solid #666;">read + execute</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">r--</td><td style="padding:6px; border:1px solid #666;">4</td><td style="padding:6px; border:1px solid #666;">read only</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section id="cmd-chmod" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>chmod: Symbolic Form</h4>
+<ul>
+<li>u, g, o pick who changes</li>
+<li>+ adds, - removes a right</li>
+<li>x is often the execute bit</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal-ps">$ chmod u+x backup.sh
+$ chmod g-w catalog.txt
+$ chmod o-rwx patrons.txt</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>chmod: Symbolic Form</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">chmod</span> u+x backup.sh
+<span class="tk-prompt">$</span> <span class="tk-cmd">chmod</span> g-w catalog.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">chmod</span> o-rwx patrons.txt</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>chmod: Octal Form</h4>
+<ul>
+<li>One digit per rwx group</li>
+<li>755 = rwxr-xr-x</li>
+<li>644 = rw-r--r--</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal-ps">$ chmod 755 backup.sh
+$ chmod 644 catalog.txt
+$ chmod 700 patrons.txt</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>chmod: Octal Form</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">chmod</span> <span class="tk-num">755</span> backup.sh
+<span class="tk-prompt">$</span> <span class="tk-cmd">chmod</span> <span class="tk-num">644</span> catalog.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">chmod</span> <span class="tk-num">700</span> patrons.txt</div>
+</section>
+
+<section data-tag="terminology" data-term="chmod" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Word Origin: "chmod"</h4>
+</div>
+<div class="col">
+<svg viewBox="0 0 380 186" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="0" y="0" width="380" height="186" rx="10" fill="#1e1e1e"/><line x1="70" y1="16" x2="70" y2="172" stroke="#555" stroke-width="2"/><circle cx="70" cy="42.0" r="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="54" y="46.0" text-anchor="end" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">1971</text><text x="86" y="38.0" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="86" y="38.0">Ships in AT&amp;T Unix v1,</tspan><tspan x="86" y="53.0">the first Unix release</tspan></text><circle cx="70" cy="94.0" r="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="54" y="98.0" text-anchor="end" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">1971</text><text x="86" y="90.0" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="86" y="90.0">Short for "change mode,"</tspan><tspan x="86" y="105.0">mode meaning permission bits</tspan></text><circle cx="70" cy="146.0" r="7" fill="#FF671D" stroke="#FF671D" stroke-width="1.5"/><text x="54" y="150.0" text-anchor="end" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Today</text><text x="86" y="142.0" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="86" y="142.0">Same command, same bits,</tspan><tspan x="86" y="157.0">on every Linux &amp; macOS box</tspan></text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Set the Right Mode</h4>
+<ul>
+<li>backup.sh: owner run only</li>
+<li>catalog.txt: owner+group edit</li>
+<li>patrons.txt: owner read-only</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#9000;&#65039;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Your Turn</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Set the Right Mode</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">chmod</span> <span class="tk-num">700</span> backup.sh
+<span class="tk-prompt">$</span> <span class="tk-cmd">chmod</span> <span class="tk-num">660</span> catalog.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">chmod</span> <span class="tk-num">400</span> patrons.txt</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-2-agenda-6" data-background-color="#ffffff">
+<h2 style="text-align:center;">Ownership, sudo &amp; Practice</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Why Does Ownership Matter?</h4>
+<ul>
+<li>Ownership decides who can act</li>
+<li>Wrong owner can lock you out</li>
+<li>This is theory meeting your VM</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#127991;&#65039;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Who Owns It?</text></svg>
+</div>
+</div>
+</section>
+
+<section id="cmd-chown" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Changing Ownership</h4>
+<ul>
+<li>chown changes the owner</li>
+<li>chgrp changes the group</li>
+<li>Usually needs sudo</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal-ps">$ sudo chown jdoe catalog.txt
+$ sudo chgrp library catalog.txt
+$ sudo chown jdoe:library catalog.txt</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Changing Ownership</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> chown jdoe catalog.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> chgrp library catalog.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> chown jdoe:library catalog.txt</div>
+</section>
+
+<section data-tag="terminology" data-term="chown" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Word Origin: "chown"</h4>
+</div>
+<div class="col">
+<svg viewBox="0 0 380 186" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="0" y="0" width="380" height="186" rx="10" fill="#1e1e1e"/><line x1="70" y1="16" x2="70" y2="172" stroke="#555" stroke-width="2"/><circle cx="70" cy="42.0" r="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="54" y="46.0" text-anchor="end" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">1971</text><text x="86" y="38.0" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="86" y="38.0">Ships the same day as</tspan><tspan x="86" y="53.0">the first Unix manual</tspan></text><circle cx="70" cy="94.0" r="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="54" y="98.0" text-anchor="end" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">1971</text><text x="86" y="90.0" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="86" y="90.0">Short for change owner,</tspan><tspan x="86" y="105.0">pairs with chmod</tspan></text><circle cx="70" cy="146.0" r="7" fill="#FF671D" stroke="#FF671D" stroke-width="1.5"/><text x="54" y="150.0" text-anchor="end" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Today</text><text x="86" y="142.0" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="86" y="142.0">Still the standard way to</tspan><tspan x="86" y="157.0">hand a file to someone else</tspan></text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Requirements: Team Folder</h4>
+<ul>
+<li>Create /srv/library-team</li>
+<li>Owner: jdoe, group: library</li>
+<li>Team can edit; others can't</li>
+<li>Kali verifies comp175user</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#128193;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Shared Folder</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>The Goal</h4>
+<ul>
+<li>One folder, one team</li>
+<li>jdoe owns it, library shares</li>
+<li>Mode 770 locks out others</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 280 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:280px;display:block;margin:0 auto;"><rect x="20" y="10" width="240" height="56" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="60" y="46" text-anchor="middle" font-size="24">&#128193;</text><text x="165" y="43" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff" font-weight="bold">library-team/</text><rect x="20" y="80" width="240" height="34" rx="6" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="140" y="102" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee">Owner: jdoe</text><rect x="20" y="122" width="240" height="34" rx="6" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="140" y="144" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee">Group: library</text><rect x="20" y="164" width="240" height="34" rx="6" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="140" y="186" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee">Mode: 770 (rwxrwx---)</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Create the Team Folder</h4>
+<ul>
+<li>mkdir makes the folder</li>
+<li>chgrp sets its group</li>
+<li>chmod 770 locks it down</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#9000;&#65039;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Your Turn</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Create the Team Folder</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> mkdir <span class="tk-path">/srv/library-team</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> chgrp library <span class="tk-path">/srv/library-team</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> chmod <span class="tk-num">770</span> <span class="tk-path">/srv/library-team</span></div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>How Do You Check It Worked?</h4>
+<ul>
+<li>ls -l prints the real result</li>
+<li>Compare it to the goal</li>
+<li>rwxrwx--- means team-only</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 300 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:300px;display:block;margin:0 auto;"><rect x="10" y="10" width="280" height="34" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="150" y="32" text-anchor="middle" font-size="12.5" font-family="Consolas, monospace" fill="#eee">drwxrwx--- jdoe library</text><text x="150" y="60" text-anchor="middle" font-size="20">&#8595;</text><rect x="10" y="70" width="280" height="50" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="150" y="92" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">Matches the goal?</text><text x="150" y="110" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">owner + group rwx, others none</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Confirm the Result</h4>
+<ul>
+<li>ls -l confirms the change</li>
+<li>drwxrwx--- is the target</li>
+<li>Group: library, others: none</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#9000;&#65039;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Your Turn</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Confirm the Result</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-l</span> <span class="tk-path">/srv</span></div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>One More Thing First</h4>
+<ul>
+<li>comp175user has no account</li>
+<li>770 means nothing without one</li>
+<li>The admin creates it first</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 300 130" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:300px;display:block;margin:0 auto;"><rect x="10" y="10" width="130" height="60" rx="8" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="75" y="36" text-anchor="middle" font-size="24">&#128100;</text><text x="75" y="58" text-anchor="middle" font-size="9.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee">comp175user</text><line x1="145" y1="40" x2="175" y2="40" stroke="#888" stroke-width="1.5"/><text x="160" y="34" text-anchor="middle" font-size="16" fill="#FF671D">?</text><rect x="180" y="10" width="120" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="240" y="36" text-anchor="middle" font-size="20">&#128274;</text><text x="240" y="58" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">library-team/</text><text x="150" y="105" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#666">No account = no way in</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Add comp175user to Team</h4>
+<ul>
+<li>useradd creates the account</li>
+<li>Password: comp175!!!</li>
+<li>usermod -aG adds to a group</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#9000;&#65039;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Your Turn</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Add comp175user to Team</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> useradd <span class="tk-flag">-m</span> comp175user
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> passwd comp175user
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> usermod <span class="tk-flag">-aG</span> library comp175user</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Can Two VMs Talk?</h4>
+<ul>
+<li>Yes, if they share a network</li>
+<li>Plain NAT isolates each VM</li>
+<li>Test first: ping, then ssh</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 380 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="10" y="10" width="360" height="170" rx="10" fill="none" stroke="#555" stroke-width="1.5" stroke-dasharray="5,4"/><text x="30" y="28" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#666" font-style="italic">One physical host</text><line x1="100" y1="80" x2="160" y2="105" stroke="#666" stroke-width="1.5"/><line x1="280" y1="80" x2="220" y2="105" stroke="#666" stroke-width="1.5"/><rect x="40" y="40" width="120" height="46" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="100" y="68" text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Kali VM</text><rect x="220" y="40" width="120" height="46" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="280" y="61" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Ubuntu VM</text><text x="280" y="76" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#999">lib-web01</text><rect x="140" y="105" width="100" height="40" rx="7" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="129" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">Shared Network</text><text x="190" y="165" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#666">Internal, Host-only, or Bridged</text></svg>
+</div>
+</div>
+</section>
+
+<section data-tag="terminology" data-term="ssh" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Word Origin: "ssh"</h4>
+</div>
+<div class="col">
+<svg viewBox="0 0 380 186" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="0" y="0" width="380" height="186" rx="10" fill="#1e1e1e"/><line x1="70" y1="16" x2="70" y2="172" stroke="#555" stroke-width="2"/><circle cx="70" cy="42.0" r="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="54" y="46.0" text-anchor="end" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">1995</text><text x="86" y="38.0" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="86" y="38.0">Tatu Ylonen writes it at</tspan><tspan x="86" y="53.0">Helsinki University of Tech</tspan></text><circle cx="70" cy="94.0" r="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="54" y="98.0" text-anchor="end" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">1995</text><text x="86" y="90.0" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="86" y="90.0">A response to password</tspan><tspan x="86" y="105.0">sniffing on campus networks</tspan></text><circle cx="70" cy="146.0" r="7" fill="#FF671D" stroke="#FF671D" stroke-width="1.5"/><text x="54" y="150.0" text-anchor="end" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Today</text><text x="86" y="142.0" text-anchor="start" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="86" y="142.0">Replaced telnet &amp; rlogin</tspan><tspan x="86" y="157.0">as the standard remote login</tspan></text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Find lib-web01's IP</h4>
+<ul>
+<li>Every VM gets its own IP</li>
+<li>Yours will differ, that's OK</li>
+<li>Type the hostname command</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#9000;&#65039;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Your Turn</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Find lib-web01's IP</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">hostname</span> <span class="tk-flag">-I</span>
+<span class="tk-num">172.20.145.10</span></div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Confirm comp175user Exists</h4>
+<ul>
+<li>Check before you ssh in</li>
+<li>id shows the account</li>
+<li>Type the id command</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#9000;&#65039;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Your Turn</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Confirm comp175user Exists</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">id</span> comp175user
+uid=<span class="tk-num">1002</span>(comp175user) groups=library</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Test Access: comp175user</h4>
+<ul>
+<li>comp175user is in the group</li>
+<li>Should enter &amp; write files</li>
+<li>Outside users should be denied</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#9000;&#65039;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Your Turn</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Test Access: comp175user</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ssh</span> comp175user@172.20.145.10
+<span class="tk-prompt">$</span> <span class="tk-cmd">cd</span> <span class="tk-path">/srv/library-team</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">touch</span> comp175user-overdue.txt</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Deliverables</h4>
+<ul>
+<li>Screenshot: ls -l /srv output</li>
+<li>Screenshot: comp175user writes</li>
+<li>One line: why 770, not 777</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#128203;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Checklist</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Where We Are: Module 2</h4>
+<ul>
+<li>Module 2 done: CLI, perms</li>
+<li>Next: File Systems &amp; Storage</li>
+</ul>
+</div>
+<div class="col">
+<div class="module-nav" data-current="2"></div>
+</div>
+</div>
+</section>
+</section>
+
       <!-- Deck-wide "Key Terms" word cloud: lives at the end of the deck
            (the last module), not repeated as every module's own last
            slide -- see the GLOBAL RULE in CLAUDE.md. Built automatically
@@ -3318,18 +5021,7 @@ $ VBoxManage modifyvm "lab1-ubuntu" \
         <div class="term-pill-container"></div>
       </section>
 
-      <!-- Modules 2-16 not yet built out for this term; hidden until ready.
-      <section id="module-2">
-        <section>
-          <div class="twocol">
-            <div class="col">
-          <h2>Module 2</h2>
-          <h3>Command-Line &amp; Permissions</h3>
-            </div>
-            <div class="diagram"><div class="module-nav" data-current="2"></div></div>
-          </div>
-        </section>
-      </section>
+      <!-- Modules 3-16 not yet built out for this term; hidden until ready.
       <section id="module-3">
         <section>
           <div class="twocol">
@@ -3520,8 +5212,7 @@ $ VBoxManage modifyvm "lab1-ubuntu" \
       // bare position numbers themselves read as clickable. On non-module
       // slides (title, TOC, syllabus) no link is shown, just the numbers.
       var el = document.createElement('div');
-      el.style.cssText = 'position:fixed; bottom:10px; right:10px; z-index:9999; color:#ccc; ' +
-        'font-size:0.8rem; background:rgba(0,0,0,0.4); padding:4px 10px; border-radius:4px;';
+      el.className = 'deck-counter';
       document.body.appendChild(el);
       function updateCounter() {
         var hSlides = document.querySelectorAll('.reveal > .slides > section');
@@ -3545,6 +5236,28 @@ $ VBoxManage modifyvm "lab1-ubuntu" \
       }
       updateCounter();
       Reveal.on('slidechanged', updateCounter);
+    })();
+    (function () {
+      // Module 2's slides carry data-background-color="#ffffff" for its
+      // white-background theme (see the GLOBAL RULE comment in this
+      // deck's <style> block). The fixed chrome (seal, quick-links
+      // footer, slide counter, "Agenda" link) is page-level, not
+      // per-slide, and its default low-contrast styling (light gray on
+      // a semi-transparent dark pill) was tuned against the deck's dark
+      // background -- on a white slide that pill washes out to
+      // light-gray-on-light-gray. Toggle a body class per current
+      // slide's own background so the chrome's CSS (below) can swap to
+      // a higher-contrast dark-on-light treatment only while a light
+      // slide is showing, and back automatically the moment the viewer
+      // steps onto Module 1's (or Module 2's dark code slides') normal
+      // dark background.
+      function updateChromeContrast() {
+        var cur = Reveal.getCurrentSlide();
+        var bg = cur && cur.getAttribute('data-background-color');
+        document.body.classList.toggle('light-slide', bg === '#ffffff');
+      }
+      updateChromeContrast();
+      Reveal.on('slidechanged', updateChromeContrast);
     })();
     (function () {
       var tagColors = { terminology: '#FF671D' };
