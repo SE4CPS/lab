@@ -309,6 +309,34 @@
         #module-2 table td {
             color: #1a1a1a !important;
         }
+
+        /* Base styling for the bottom-right slide counter (created via
+           JS, see the updateCounter IIFE) -- was inline cssText before,
+           moved to a class so body.light-slide (below) can override it
+           cleanly. Same pattern as comp-175's Module 2. */
+        .deck-counter {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            z-index: 9999;
+            color: #ccc;
+            font-size: 0.8rem;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+        /* Higher-contrast chrome while a light (white-background) slide
+           is showing -- see the "light-slide" comment on the JS IIFE
+           that toggles this class. */
+        body.light-slide .deck-counter,
+        body.light-slide .footer-link {
+            color: #1a1a1a;
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(0, 0, 0, 0.15);
+        }
+        body.light-slide .footer-link:hover {
+            color: #000;
+        }
     </style>
 </head>
 
@@ -319,7 +347,7 @@
 
     <div class="quick-links">
       <a href="./#toc" class="footer-link" target="_self">Schedule</a>
-      <span id="updated-stamp" class="footer-link">Updated: 2026-09-01 13:34 PT</span>
+      <span id="updated-stamp" class="footer-link">Updated: 2026-09-01 13:42 PT</span>
     </div>
 
     <div class="reveal">
@@ -2573,7 +2601,7 @@
 <div style="flex:1 1 0;">
 <pre><code class="language-cpp" style="font-size: 20pt !important">#include &lt;iostream&gt;
 
-std::cout &lt;&lt; pagesInJob &lt;&lt; endl;</code></pre>
+std::cout &lt;&lt; pages &lt;&lt; endl;</code></pre>
 </div>
 </div>
 </section>
@@ -2582,7 +2610,7 @@ std::cout &lt;&lt; pagesInJob &lt;&lt; endl;</code></pre>
 <h4>cout: Printing a Value</h4>
 <pre><code class="language-cpp" style="font-size: 20pt !important">#include &lt;iostream&gt;
 
-std::cout &lt;&lt; pagesInJob &lt;&lt; endl;</code></pre>
+std::cout &lt;&lt; pages &lt;&lt; endl;</code></pre>
 </section>
 
 <section data-background-color="#0a0a0a">
@@ -2598,7 +2626,7 @@ std::cout &lt;&lt; pagesInJob &lt;&lt; endl;</code></pre>
 <div style="flex:1 1 0;">
 <pre><code class="language-cpp" style="font-size: 20pt !important">#include &lt;iostream&gt;
 
-std::cin &gt;&gt; pagesInJob;</code></pre>
+std::cin &gt;&gt; pages;</code></pre>
 </div>
 </div>
 </section>
@@ -2607,7 +2635,7 @@ std::cin &gt;&gt; pagesInJob;</code></pre>
 <h4>cin: Reading a Value</h4>
 <pre><code class="language-cpp" style="font-size: 20pt !important">#include &lt;iostream&gt;
 
-std::cin &gt;&gt; pagesInJob;</code></pre>
+std::cin &gt;&gt; pages;</code></pre>
 </section>
 
 <section data-background-color="#0a0a0a">
@@ -2623,8 +2651,8 @@ std::cin &gt;&gt; pagesInJob;</code></pre>
 <div style="flex:1 1 0;">
 <pre><code class="language-cpp" style="font-size: 20pt !important">#include &lt;iostream&gt;
 
-std::cout &lt;&lt; pagesInJob &lt;&lt; endl;
-std::cout &lt;&lt; pagesInJob &lt;&lt; "\n";</code></pre>
+std::cout &lt;&lt; pages &lt;&lt; endl;
+std::cout &lt;&lt; pages &lt;&lt; "\n";</code></pre>
 </div>
 </div>
 </section>
@@ -2633,8 +2661,8 @@ std::cout &lt;&lt; pagesInJob &lt;&lt; "\n";</code></pre>
 <h4>endl vs. \n</h4>
 <pre><code class="language-cpp" style="font-size: 20pt !important">#include &lt;iostream&gt;
 
-std::cout &lt;&lt; pagesInJob &lt;&lt; endl;
-std::cout &lt;&lt; pagesInJob &lt;&lt; "\n";</code></pre>
+std::cout &lt;&lt; pages &lt;&lt; endl;
+std::cout &lt;&lt; pages &lt;&lt; "\n";</code></pre>
 </section>
 
 <section data-background-color="#0a0a0a">
@@ -2650,7 +2678,7 @@ std::cout &lt;&lt; pagesInJob &lt;&lt; "\n";</code></pre>
 <div style="flex:1 1 0;">
 <pre><code class="language-cpp" style="font-size: 20pt !important">#include &lt;iostream&gt;
 
-std::cin &gt;&gt; pagesInJob &gt;&gt; copiesRequested;</code></pre>
+std::cin &gt;&gt; pages &gt;&gt; copies;</code></pre>
 </div>
 </div>
 </section>
@@ -2659,7 +2687,7 @@ std::cin &gt;&gt; pagesInJob &gt;&gt; copiesRequested;</code></pre>
 <h4>Chaining Several Reads</h4>
 <pre><code class="language-cpp" style="font-size: 20pt !important">#include &lt;iostream&gt;
 
-std::cin &gt;&gt; pagesInJob &gt;&gt; copiesRequested;</code></pre>
+std::cin &gt;&gt; pages &gt;&gt; copies;</code></pre>
 </section>
 
 <section data-background-color="#ffffff">
@@ -2667,7 +2695,7 @@ std::cin &gt;&gt; pagesInJob &gt;&gt; copiesRequested;</code></pre>
 <div style="flex:1 1 0;">
 <h4>Practice: Read &amp; Print a Value</h4>
 <ul>
-<li>Read pagesInJob from input</li>
+<li>Read pages from input</li>
 <li>Print it back with a label</li>
 <li>Use cin, then cout</li>
 </ul>
@@ -2675,7 +2703,7 @@ std::cin &gt;&gt; pagesInJob &gt;&gt; copiesRequested;</code></pre>
 <div style="flex:1 1 0;">
 <pre><code class="language-cpp" style="font-size: 18pt !important">#include &lt;iostream&gt;
 
-// TODO: std::cin &gt;&gt; pagesInJob;
+// TODO: std::cin &gt;&gt; pages;
 // TODO: std::cout with a label</code></pre>
 </div>
 </div>
@@ -2705,7 +2733,7 @@ std::cin &gt;&gt; pagesInJob &gt;&gt; copiesRequested;</code></pre>
 </ul>
 </div>
 <div style="flex:1 1 0;">
-<svg viewBox="0 0 340 268" style="max-width:100%;height:auto;"><line x1="62" y1="14" x2="62" y2="254" stroke="#555" stroke-width="2"/><circle cx="62" cy="38.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="42.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1949</text><text x="76" y="34.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="34.0">EDSAC &ndash; one of the</tspan><tspan x="76" y="48.0">first computers with named memory</tspan></text><circle cx="62" cy="86.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="90.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1957</text><text x="76" y="82.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="82.0">FORTRAN (IBM) &ndash; first</tspan><tspan x="76" y="96.0">high-level language with named variables</tspan></text><circle cx="62" cy="134.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="138.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1958</text><text x="76" y="130.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="130.0">ALGOL 58 adds block-scoped,</tspan><tspan x="76" y="144.0">typed variable declarations</tspan></text><circle cx="62" cy="182.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="186.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1972</text><text x="76" y="178.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="178.0">C (Bell Labs) &ndash; static</tspan><tspan x="76" y="192.0">typing that C++ inherits directly</tspan></text><circle cx="62" cy="230.0" r="6.5" fill="#FF671D" stroke="#FF671D" stroke-width="1.5"/><text x="48" y="234.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Today</text><text x="76" y="226.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="226.0">Every C++ variable has one</tspan><tspan x="76" y="240.0">of a fixed set of native types</tspan></text></svg>
+<svg viewBox="0 0 340 268" style="max-width:100%;height:auto;"><rect x="1" y="1" width="338" height="266" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><line x1="62" y1="14" x2="62" y2="254" stroke="#555" stroke-width="2"/><circle cx="62" cy="38.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="42.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1949</text><text x="76" y="34.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="34.0">EDSAC &ndash; one of the</tspan><tspan x="76" y="48.0">first computers with named memory</tspan></text><circle cx="62" cy="86.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="90.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1957</text><text x="76" y="82.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="82.0">FORTRAN (IBM) &ndash; first</tspan><tspan x="76" y="96.0">high-level language with named variables</tspan></text><circle cx="62" cy="134.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="138.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1958</text><text x="76" y="130.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="130.0">ALGOL 58 adds block-scoped,</tspan><tspan x="76" y="144.0">typed variable declarations</tspan></text><circle cx="62" cy="182.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="186.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1972</text><text x="76" y="178.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="178.0">C (Bell Labs) &ndash; static</tspan><tspan x="76" y="192.0">typing that C++ inherits directly</tspan></text><circle cx="62" cy="230.0" r="6.5" fill="#FF671D" stroke="#FF671D" stroke-width="1.5"/><text x="48" y="234.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Today</text><text x="76" y="226.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="226.0">Every C++ variable has one</tspan><tspan x="76" y="240.0">of a fixed set of native types</tspan></text></svg>
 </div>
 </div>
 </section>
@@ -2722,6 +2750,22 @@ std::cin &gt;&gt; pagesInJob &gt;&gt; copiesRequested;</code></pre>
 </div>
 <div style="flex:1 1 0;">
 <svg viewBox="0 0 260 160" style="max-width:100%;height:auto;"><defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="1" y="1" width="258" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="96" y="70" width="68" height="50" rx="6" fill="#1e1e1e" stroke="#FF671D" stroke-width="1.5"/><text x="130" y="88" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">type</text><text x="130" y="108" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">?</text><text x="130" y="40" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">What shape is the box?</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Why Do We Need Types?</h4>
+<ul>
+<li>Fits data in the right size</li>
+<li>Only legal operations allowed</li>
+<li>Bugs are caught before running</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 380 300" style="max-width:100%;height:auto;"><rect x="1" y="1" width="378" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="125.0" y="22.0" width="130" height="40" rx="6" fill="#1e1e1e" stroke="#FF671D" stroke-width="1.5"/><text x="190.0" y="47.0" text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">Right Size</text><rect x="233.0" y="130.0" width="130" height="40" rx="6" fill="#1e1e1e" stroke="#FF671D" stroke-width="1.5"/><text x="298.0" y="155.0" text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">Right Rules</text><rect x="125.0" y="238.0" width="130" height="40" rx="6" fill="#1e1e1e" stroke="#FF671D" stroke-width="1.5"/><text x="190.0" y="263.0" text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">Catch Bugs</text><rect x="17.0" y="130.0" width="130" height="40" rx="6" fill="#1e1e1e" stroke="#FF671D" stroke-width="1.5"/><text x="82.0" y="155.0" text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">Clear Code</text><circle cx="190" cy="150" r="46" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="145" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">Why</text><text x="190" y="162" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">Types?</text></svg>
 </div>
 </div>
 </section>
@@ -2834,9 +2878,9 @@ std::cin &gt;&gt; pagesInJob &gt;&gt; copiesRequested;</code></pre>
 <div style="flex:1 1 0;">
 <pre><code class="language-cpp" style="font-size: 20pt !important">#include &lt;iostream&gt;
 
-int pagesInJob;
-std::cin &gt;&gt; pagesInJob;
-std::cout &lt;&lt; pagesInJob &lt;&lt; endl;</code></pre>
+int pages;
+std::cin &gt;&gt; pages;
+std::cout &lt;&lt; pages &lt;&lt; endl;</code></pre>
 </div>
 </div>
 </section>
@@ -2845,9 +2889,9 @@ std::cout &lt;&lt; pagesInJob &lt;&lt; endl;</code></pre>
 <h4>int: The Default Choice</h4>
 <pre><code class="language-cpp" style="font-size: 20pt !important">#include &lt;iostream&gt;
 
-int pagesInJob;
-std::cin &gt;&gt; pagesInJob;
-std::cout &lt;&lt; pagesInJob &lt;&lt; endl;</code></pre>
+int pages;
+std::cin &gt;&gt; pages;
+std::cout &lt;&lt; pages &lt;&lt; endl;</code></pre>
 </section>
 
 <section data-background-color="#ffffff">
@@ -3006,13 +3050,13 @@ std::cout &lt;&lt; sizeof(int);
 <div style="flex:1 1 0;">
 <h4>Practice: Read Job Info</h4>
 <ul>
-<li>Read pagesInJob (int)</li>
+<li>Read pages (int)</li>
 <li>Read copiesRequested (short)</li>
 <li>Print both with labels</li>
 </ul>
 </div>
 <div style="flex:1 1 0;">
-<pre><code class="language-cpp" style="font-size: 18pt !important">// TODO: read pagesInJob
+<pre><code class="language-cpp" style="font-size: 18pt !important">// TODO: read pages
 // TODO: read copiesRequested
 // TODO: print both</code></pre>
 </div>
@@ -3105,7 +3149,7 @@ double totalCost = 12.40;</code></pre>
 </ul>
 </div>
 <div style="flex:1 1 0;">
-<pre><code class="language-cpp" style="font-size: 20pt !important">float tonerLevel = 85.5f;
+<pre><code class="language-cpp" style="font-size: 20pt !important">float toner = 85.5f;
 double costPerPage = 0.08;
 // 0.08 alone is a double</code></pre>
 </div>
@@ -3114,7 +3158,7 @@ double costPerPage = 0.08;
 
 <section data-background-color="#0a0a0a">
 <h4>The f Suffix</h4>
-<pre><code class="language-cpp" style="font-size: 20pt !important">float tonerLevel = 85.5f;
+<pre><code class="language-cpp" style="font-size: 20pt !important">float toner = 85.5f;
 double costPerPage = 0.08;
 // 0.08 alone is a double</code></pre>
 </section>
@@ -3132,10 +3176,10 @@ double costPerPage = 0.08;
 <div style="flex:1 1 0;">
 <pre><code class="language-cpp" style="font-size: 20pt !important">#include &lt;iostream&gt;
 
-int totalPages = 100, jobs = 3;
-std::cout &lt;&lt; totalPages / jobs;
+int t = 100, j = 3;
+std::cout &lt;&lt; t / j;
 // prints 33, not 33.3
-std::cout &lt;&lt; totalPages / (double)jobs;</code></pre>
+std::cout &lt;&lt; t / (double)j;</code></pre>
 </div>
 </div>
 </section>
@@ -3144,10 +3188,10 @@ std::cout &lt;&lt; totalPages / (double)jobs;</code></pre>
 <h4>Integer Division Gotcha</h4>
 <pre><code class="language-cpp" style="font-size: 20pt !important">#include &lt;iostream&gt;
 
-int totalPages = 100, jobs = 3;
-std::cout &lt;&lt; totalPages / jobs;
+int t = 100, j = 3;
+std::cout &lt;&lt; t / j;
 // prints 33, not 33.3
-std::cout &lt;&lt; totalPages / (double)jobs;</code></pre>
+std::cout &lt;&lt; t / (double)j;</code></pre>
 </section>
 
 <section data-background-color="#ffffff">
@@ -3155,7 +3199,7 @@ std::cout &lt;&lt; totalPages / (double)jobs;</code></pre>
 <div style="flex:1 1 0;">
 <h4>Practice: Read the Toner Level</h4>
 <ul>
-<li>Read tonerLevel (float)</li>
+<li>Read toner (float)</li>
 <li>Print it back with a label</li>
 <li>Use cin, then cout</li>
 </ul>
@@ -3163,7 +3207,7 @@ std::cout &lt;&lt; totalPages / (double)jobs;</code></pre>
 <div style="flex:1 1 0;">
 <pre><code class="language-cpp" style="font-size: 18pt !important">#include &lt;iostream&gt;
 
-// TODO: std::cin &gt;&gt; tonerLevel;
+// TODO: std::cin &gt;&gt; toner;
 // TODO: std::cout with a label</code></pre>
 </div>
 </div>
@@ -3195,8 +3239,8 @@ std::cout &lt;&lt; totalPages / (double)jobs;</code></pre>
 <div style="flex:1 1 0;">
 <pre><code class="language-cpp" style="font-size: 20pt !important">#include &lt;iostream&gt;
 
-char paperSize;
-std::cin &gt;&gt; paperSize;  // 'A' or 'L'</code></pre>
+char size;
+std::cin &gt;&gt; size;</code></pre>
 </div>
 </div>
 </section>
@@ -3205,8 +3249,8 @@ std::cin &gt;&gt; paperSize;  // 'A' or 'L'</code></pre>
 <h4>char: One Character</h4>
 <pre><code class="language-cpp" style="font-size: 20pt !important">#include &lt;iostream&gt;
 
-char paperSize;
-std::cin &gt;&gt; paperSize;  // 'A' or 'L'</code></pre>
+char size;
+std::cin &gt;&gt; size;</code></pre>
 </section>
 
 <section data-background-color="#0a0a0a">
@@ -3222,8 +3266,8 @@ std::cin &gt;&gt; paperSize;  // 'A' or 'L'</code></pre>
 <div style="flex:1 1 0;">
 <pre><code class="language-cpp" style="font-size: 20pt !important">#include &lt;iostream&gt;
 
-bool isPrinterBusy;
-std::cin &gt;&gt; isPrinterBusy;  // 1 or 0</code></pre>
+bool busy;
+std::cin &gt;&gt; busy;</code></pre>
 </div>
 </div>
 </section>
@@ -3232,8 +3276,8 @@ std::cin &gt;&gt; isPrinterBusy;  // 1 or 0</code></pre>
 <h4>bool: True or False</h4>
 <pre><code class="language-cpp" style="font-size: 20pt !important">#include &lt;iostream&gt;
 
-bool isPrinterBusy;
-std::cin &gt;&gt; isPrinterBusy;  // 1 or 0</code></pre>
+bool busy;
+std::cin &gt;&gt; busy;</code></pre>
 </section>
 
 <section data-background-color="#ffffff">
@@ -3270,7 +3314,7 @@ std::cin &gt;&gt; isPrinterBusy;  // 1 or 0</code></pre>
 </ul>
 </div>
 <div style="flex:1 1 0;">
-<svg viewBox="0 0 260 160" style="max-width:100%;height:auto;"><defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="1" y="1" width="258" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="46" y="70" width="68" height="50" rx="6" fill="#1e1e1e" stroke="#FF671D" stroke-width="1.5"/><text x="80" y="88" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">paperSize (char)</text><text x="80" y="108" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">'A'</text><rect x="166" y="70" width="68" height="50" rx="6" fill="#1e1e1e" stroke="#FF671D" stroke-width="1.5"/><text x="200" y="88" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">busy (bool)</text><text x="200" y="108" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">true</text><text x="140" y="40" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">One char, one true/false</text></svg>
+<svg viewBox="0 0 260 160" style="max-width:100%;height:auto;"><defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="1" y="1" width="258" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="46" y="70" width="68" height="50" rx="6" fill="#1e1e1e" stroke="#FF671D" stroke-width="1.5"/><text x="80" y="88" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">size (char)</text><text x="80" y="108" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">'A'</text><rect x="166" y="70" width="68" height="50" rx="6" fill="#1e1e1e" stroke="#FF671D" stroke-width="1.5"/><text x="200" y="88" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">busy (bool)</text><text x="200" y="108" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">true</text><text x="140" y="40" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">One char, one true/false</text></svg>
 </div>
 </div>
 </section>
@@ -3288,8 +3332,8 @@ std::cin &gt;&gt; isPrinterBusy;  // 1 or 0</code></pre>
 <div style="flex:1 1 0;">
 <pre><code class="language-cpp" style="font-size: 20pt !important">#include &lt;iostream&gt;
 
-std::cout &lt;&lt; sizeof(char);  // 1
-std::cout &lt;&lt; sizeof(bool);  // 1</code></pre>
+std::cout &lt;&lt; sizeof(char);
+std::cout &lt;&lt; sizeof(bool);</code></pre>
 </div>
 </div>
 </section>
@@ -3298,8 +3342,8 @@ std::cout &lt;&lt; sizeof(bool);  // 1</code></pre>
 <h4>How Much Memory?</h4>
 <pre><code class="language-cpp" style="font-size: 20pt !important">#include &lt;iostream&gt;
 
-std::cout &lt;&lt; sizeof(char);  // 1
-std::cout &lt;&lt; sizeof(bool);  // 1</code></pre>
+std::cout &lt;&lt; sizeof(char);
+std::cout &lt;&lt; sizeof(bool);</code></pre>
 </section>
 
 <section data-background-color="#ffffff">
@@ -3307,7 +3351,7 @@ std::cout &lt;&lt; sizeof(bool);  // 1</code></pre>
 <div style="flex:1 1 0;">
 <h4>Practice: Read the Paper Size</h4>
 <ul>
-<li>Read paperSize (char)</li>
+<li>Read size (char)</li>
 <li>Print it back with a label</li>
 <li>Use cin, then cout</li>
 </ul>
@@ -3315,7 +3359,7 @@ std::cout &lt;&lt; sizeof(bool);  // 1</code></pre>
 <div style="flex:1 1 0;">
 <pre><code class="language-cpp" style="font-size: 18pt !important">#include &lt;iostream&gt;
 
-// TODO: std::cin &gt;&gt; paperSize;
+// TODO: std::cin &gt;&gt; size;
 // TODO: std::cout with a label</code></pre>
 </div>
 </div>
@@ -3471,7 +3515,7 @@ std::cout &lt;&lt; pagesLeft;
 <div style="flex:1 1 0;">
 <pre><code class="language-cpp" style="font-size: 20pt !important">int totalPagesPrinted;
 // starts at 0
-// (only true at global scope)</code></pre>
+// only true globally</code></pre>
 </div>
 </div>
 </section>
@@ -3480,7 +3524,7 @@ std::cout &lt;&lt; pagesLeft;
 <h4>Global &amp; static: Zero by Default</h4>
 <pre><code class="language-cpp" style="font-size: 20pt !important">int totalPagesPrinted;
 // starts at 0
-// (only true at global scope)</code></pre>
+// only true globally</code></pre>
 </section>
 
 <section data-background-color="#ffffff">
@@ -14350,8 +14394,7 @@ std::cout &lt;&lt; pagesLeft &lt;&lt; endl;
       // bare position numbers themselves read as clickable. On non-module
       // slides (title, TOC, syllabus) no link is shown, just the numbers.
       var el = document.createElement('div');
-      el.style.cssText = 'position:fixed; bottom:10px; right:10px; z-index:9999; color:#ccc; ' +
-        'font-size:0.8rem; background:rgba(0,0,0,0.4); padding:4px 10px; border-radius:4px;';
+      el.className = 'deck-counter';
       document.body.appendChild(el);
       function updateCounter() {
         var hSlides = document.querySelectorAll('.reveal > .slides > section');
@@ -14375,6 +14418,25 @@ std::cout &lt;&lt; pagesLeft &lt;&lt; endl;
       }
       updateCounter();
       Reveal.on('slidechanged', updateCounter);
+    })();
+    (function () {
+      // Module 2's slides carry data-background-color="#ffffff" for its
+      // white-background theme. The fixed chrome (seal, quick-links
+      // footer, slide counter, "Agenda" link) is page-level, not
+      // per-slide, and its default low-contrast styling (light gray on
+      // a semi-transparent dark pill) was tuned against the deck's dark
+      // background -- on a white slide that pill washes out to
+      // light-gray-on-light-gray. Toggle a body class per current
+      // slide's own background so the chrome's CSS (below) can swap to
+      // a higher-contrast dark-on-light treatment only while a light
+      // slide is showing. Same mechanism as comp-175's Module 2.
+      function updateChromeContrast() {
+        var cur = Reveal.getCurrentSlide();
+        var bg = cur && cur.getAttribute('data-background-color');
+        document.body.classList.toggle('light-slide', bg === '#ffffff');
+      }
+      updateChromeContrast();
+      Reveal.on('slidechanged', updateChromeContrast);
     })();
     (function () {
       var tagColors = { terminology: '#FF671D' };
