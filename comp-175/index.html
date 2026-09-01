@@ -376,7 +376,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-08-31 18:43 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-08-31 18:45 PT</span>
   </div>
 
   <!--
@@ -5561,7 +5561,12 @@ uid=<span class="tk-num">1002</span>(comp175user) groups=library</div>
         btn.setAttribute('aria-label', 'Copy command');
         btn.addEventListener('click', function (e) {
           e.stopPropagation();
-          navigator.clipboard.writeText(extractCommands(box)).then(function () {
+          // Reuse `text`, captured above before the button existed --
+          // re-calling extractCommands(box) here would read box.textContent
+          // *after* the button is a child of box, so it would pick up the
+          // button's own label ("Copy"/"Copied!") appended onto the real
+          // content.
+          navigator.clipboard.writeText(text).then(function () {
             btn.textContent = 'Copied!';
             btn.classList.add('copied');
             setTimeout(function () {
