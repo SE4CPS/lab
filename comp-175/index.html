@@ -376,7 +376,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-02 11:32 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-02 11:39 PT</span>
   </div>
 
   <!--
@@ -5925,35 +5925,47 @@ comp175user <span class="tk-user">L</span> <span class="tk-num">09</span>/<span 
         var cols = Math.min(3, Math.max(1, Math.ceil(rows.length / perCol)));
         var rowsPerCol = Math.ceil(rows.length / cols);
         var fontSize = cols >= 3 ? '0.95rem' : (cols === 2 ? '1.15rem' : '1.4rem');
-        var cellPad = cols >= 3 ? '8px 12px' : (cols === 2 ? '10px 14px' : '14px 18px');
+        var cellPad = cols >= 3 ? '10px 12px' : (cols === 2 ? '12px 14px' : '16px 18px');
+        // Minimum rows per column so a sparse module's table still fills
+        // most of the slide's height instead of shrinking to a small box
+        // with empty space below it -- padded with blank filler rows.
+        var minRowsPerCol = cols >= 3 ? 8 : (cols === 2 ? 8 : 8);
 
         var groups = [];
         for (var c = 0; c < cols; c++) {
           groups.push(rows.slice(c * rowsPerCol, (c + 1) * rowsPerCol));
         }
 
-        var td = 'style="padding:' + cellPad + '; border:1px solid #666;"';
-        var tdh = 'style="padding:' + cellPad + '; border:1px solid #666; font-weight:bold;"';
+        // Colors carry !important because #module-2 table tr/td already
+        // carries color:#1a1a1a !important for the white-bg text-contrast
+        // fix elsewhere in the deck -- a non-important inline color loses
+        // to that regardless of this element being more specific.
+        var tdh = 'style="padding:' + cellPad + '; border:1px solid #666; font-weight:bold; color:#ccc !important;"';
         var mono = 'style="font-family:Consolas, monospace;"';
 
         var html = '<div style="background:#2a2a2a; border:1px solid #555; border-radius:10px; ' +
           'padding:1.6rem 2rem; width:100%; box-sizing:border-box;">';
         html += '<div style="display:flex; gap:24px; align-items:flex-start;">';
         groups.forEach(function (group) {
-          if (!group.length) return;
           html += '<table style="font-size:' + fontSize + '; border-collapse:collapse; width:100%; flex:1;"><tbody>';
-          html += '<tr style="color:#ccc;"><td ' + tdh + '>Command</td><td ' + tdh + '>Example</td><td ' + tdh + '>Purpose</td></tr>';
+          html += '<tr><td ' + tdh + '>Command</td><td ' + tdh + '>Example</td><td ' + tdh + '>Purpose</td></tr>';
           group.forEach(function (row) {
             var hl = row.id === newestId;
-            var rowStyle = hl
-              ? 'color:#fff; background:rgba(255,103,29,0.35); font-weight:bold;'
-              : 'color:#ddd;';
-            html += '<tr style="' + rowStyle + '">';
-            html += '<td ' + td + '><span ' + mono + '>' + row.cmd + '</span></td>';
-            html += '<td ' + td + '><span ' + mono + '>' + row.example + '</span></td>';
-            html += '<td ' + td + '>' + row.purpose + '</td>';
+            var color = hl ? '#fff' : '#eee';
+            var bg = hl ? 'background:rgba(255,103,29,0.4) !important;' : '';
+            var weight = hl ? 'font-weight:bold;' : '';
+            var cellStyle = 'style="padding:' + cellPad + '; border:1px solid #666; ' +
+              'color:' + color + ' !important; ' + bg + ' ' + weight + '"';
+            html += '<tr>';
+            html += '<td ' + cellStyle + '><span ' + mono + '>' + row.cmd + '</span></td>';
+            html += '<td ' + cellStyle + '><span ' + mono + '>' + row.example + '</span></td>';
+            html += '<td ' + cellStyle + '>' + row.purpose + '</td>';
             html += '</tr>';
           });
+          for (var pad = group.length; pad < minRowsPerCol; pad++) {
+            var blankStyle = 'style="padding:' + cellPad + '; border:1px solid #666; color:#555 !important;"';
+            html += '<tr><td ' + blankStyle + '>&nbsp;</td><td ' + blankStyle + '>&nbsp;</td><td ' + blankStyle + '>&nbsp;</td></tr>';
+          }
           html += '</tbody></table>';
         });
         html += '</div></div>';
