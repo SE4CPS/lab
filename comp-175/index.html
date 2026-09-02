@@ -376,7 +376,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-02 12:46 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-02 13:46 PT</span>
   </div>
 
   <!--
@@ -483,11 +483,11 @@
                 <a href="./#/cmd-chmod" target="_self">chmod</a>,
                 <a href="./#/cmd-chown" target="_self">chown</a>,
                 <a href="./#/cmd-git-clone" target="_self">git clone</a>,
+                <a href="./#/cmd-ssh" target="_self">ssh</a>,
                 <a href="./#/cmd-useradd" target="_self">useradd</a>,
                 <a href="./#/cmd-exit" target="_self">exit</a>,
                 <a href="./#/cmd-ping" target="_self">ping</a>,
-                <a href="./#/cmd-ufw" target="_self">ufw</a>,
-                <a href="./#/cmd-ssh" target="_self">ssh</a></td>
+                <a href="./#/cmd-ufw" target="_self">ufw</a></td>
               <td></td>
               <td></td>
             </tr>
@@ -5067,6 +5067,31 @@ $ sudo chown comp175user:library catalog.txt</div>
 </section>
 
 <section data-background-color="#ffffff">
+<div class="cmd-table" data-through="cmd-ssh"></div>
+</section>
+
+<section id="cmd-ssh" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Connect to My Machine</h4>
+<ul>
+<li>Get connected first</li>
+<li>Details come after</li>
+<li>Instructor gives the address</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#9000;&#65039;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Your Turn</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Connect to My Machine</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ssh</span> your-username@class-server</div>
+</section>
+
+<section data-background-color="#ffffff">
 <div class="twocol">
 <div class="col">
 <h4>One More Thing First</h4>
@@ -5467,10 +5492,6 @@ Status: <span class="tk-user">active</span></div>
 </section>
 
 <section data-background-color="#ffffff">
-<div class="cmd-table" data-through="cmd-ssh"></div>
-</section>
-
-<section id="cmd-ssh" data-background-color="#ffffff">
 <div class="twocol">
 <div class="col">
 <h4>Test Access: comp175user</h4>
@@ -5951,11 +5972,11 @@ comp175user <span class="tk-user">L</span> <span class="tk-num">09</span>/<span 
         { id: 'cmd-grep', module: 2, cmd: 'grep', example: 'grep -i "smith" file.txt', purpose: 'Search text in files' },
         { id: 'cmd-chmod', module: 2, cmd: 'chmod', example: 'chmod 660 file.txt', purpose: 'Change file permissions' },
         { id: 'cmd-chown', module: 2, cmd: 'chown', example: 'chown user:group file.txt', purpose: 'Change file owner/group' },
+        { id: 'cmd-ssh', module: 2, cmd: 'ssh', example: 'ssh user@host', purpose: 'Log in to a remote machine' },
         { id: 'cmd-useradd', module: 2, cmd: 'useradd', example: 'useradd -m comp175user', purpose: 'Create a new user account' },
         { id: 'cmd-exit', module: 2, cmd: 'exit', example: 'exit', purpose: 'Leave a su or ssh session' },
         { id: 'cmd-ping', module: 2, cmd: 'ping', example: 'ping -c 1 host', purpose: 'Test basic connectivity' },
-        { id: 'cmd-ufw', module: 2, cmd: 'ufw', example: 'ufw allow 22/tcp', purpose: 'Manage the firewall' },
-        { id: 'cmd-ssh', module: 2, cmd: 'ssh', example: 'ssh user@host', purpose: 'Log in to a remote machine' }
+        { id: 'cmd-ufw', module: 2, cmd: 'ufw', example: 'ufw allow 22/tcp', purpose: 'Manage the firewall' }
       ];
 
       function cmdTableHTML(throughId) {
@@ -5970,64 +5991,57 @@ comp175user <span class="tk-user">L</span> <span class="tk-num">09</span>/<span 
         for (var j = 0; j < moduleRows.length; j++) {
           if (moduleRows[j].id === throughId) { posInModule = j; break; }
         }
-        // A page tops out at 3 columns x 12 rows. Once a module's table
-        // would need a 4th column to keep growing, the command that would
-        // overflow it starts a fresh page instead -- its own table, on its
-        // own placeholder slide, beginning back at 1 row. Older pages don't
+        // Max 10 commands per table. Once a module has taught more than 10,
+        // the 11th command's slide starts a FRESH table (commands 11-20), the
+        // 21st starts another, and so on -- always ONE single-column table per
+        // page, never split into side-by-side mini-tables. Older pages don't
         // reappear on a later slide; each stays exactly as it last rendered.
-        var maxRowsPerPage = 36;
-        var pageStart = Math.floor(posInModule / maxRowsPerPage) * maxRowsPerPage;
+        var perPage = 10;
+        var pageStart = Math.floor(posInModule / perPage) * perPage;
         var rows = moduleRows.slice(pageStart, posInModule + 1);
         var newestId = throughId;
 
-        var perCol = 12;
-        var cols = Math.min(3, Math.max(1, Math.ceil(rows.length / perCol)));
-        var rowsPerCol = Math.ceil(rows.length / cols);
-        var fontSize = cols >= 3 ? '0.95rem' : (cols === 2 ? '1.15rem' : '1.4rem');
-        var cellPad = cols >= 3 ? '10px 12px' : (cols === 2 ? '12px 14px' : '16px 18px');
-        // Minimum rows per column so a sparse module's table still fills
-        // most of the slide's height instead of shrinking to a small box
-        // with empty space below it -- padded with blank filler rows.
-        var minRowsPerCol = cols >= 3 ? 8 : (cols === 2 ? 8 : 8);
-
-        var groups = [];
-        for (var c = 0; c < cols; c++) {
-          groups.push(rows.slice(c * rowsPerCol, (c + 1) * rowsPerCol));
-        }
+        var fontSize = '1.35rem';
+        var cellPad = '13px 16px';
+        // Pad with blank filler rows so a sparse page still fills most of the
+        // slide's height instead of shrinking to a small box.
+        var minRows = 8;
 
         // Colors carry !important because #module-2 table tr/td already
         // carries color:#1a1a1a !important for the white-bg text-contrast
         // fix elsewhere in the deck -- a non-important inline color loses
         // to that regardless of this element being more specific.
         var tdh = 'style="padding:' + cellPad + '; border:1px solid #666; font-weight:bold; color:#ccc !important;"';
+        var numh = 'style="padding:' + cellPad + '; border:1px solid #666; font-weight:bold; color:#ccc !important; text-align:right; width:1%; white-space:nowrap;"';
         var mono = 'style="font-family:Consolas, monospace;"';
 
         var html = '<div style="background:#2a2a2a; border:1px solid #555; border-radius:10px; ' +
           'padding:1.6rem 2rem; width:100%; box-sizing:border-box;">';
-        html += '<div style="display:flex; gap:24px; align-items:flex-start;">';
-        groups.forEach(function (group) {
-          html += '<table style="font-size:' + fontSize + '; border-collapse:collapse; width:100%; flex:1;"><tbody>';
-          html += '<tr><td ' + tdh + '>Command</td><td ' + tdh + '>Example</td><td ' + tdh + '>Purpose</td></tr>';
-          group.forEach(function (row) {
-            var hl = row.id === newestId;
-            var color = hl ? '#fff' : '#eee';
-            var bg = hl ? 'background:rgba(255,103,29,0.4) !important;' : '';
-            var weight = hl ? 'font-weight:bold;' : '';
-            var cellStyle = 'style="padding:' + cellPad + '; border:1px solid #666; ' +
-              'color:' + color + ' !important; ' + bg + ' ' + weight + '"';
-            html += '<tr>';
-            html += '<td ' + cellStyle + '><span ' + mono + '>' + row.cmd + '</span></td>';
-            html += '<td ' + cellStyle + '><span ' + mono + '>' + row.example + '</span></td>';
-            html += '<td ' + cellStyle + '>' + row.purpose + '</td>';
-            html += '</tr>';
-          });
-          for (var pad = group.length; pad < minRowsPerCol; pad++) {
-            var blankStyle = 'style="padding:' + cellPad + '; border:1px solid #666; color:#555 !important;"';
-            html += '<tr><td ' + blankStyle + '>&nbsp;</td><td ' + blankStyle + '>&nbsp;</td><td ' + blankStyle + '>&nbsp;</td></tr>';
-          }
-          html += '</tbody></table>';
+        html += '<table style="font-size:' + fontSize + '; border-collapse:collapse; width:100%;"><tbody>';
+        html += '<tr><td ' + numh + '>#</td><td ' + tdh + '>Command</td><td ' + tdh + '>Example</td><td ' + tdh + '>Purpose</td></tr>';
+        rows.forEach(function (row, k) {
+          var num = pageStart + k + 1;
+          var hl = row.id === newestId;
+          var color = hl ? '#fff' : '#eee';
+          var bg = hl ? 'background:rgba(255,103,29,0.4) !important;' : '';
+          var weight = hl ? 'font-weight:bold;' : '';
+          var cellStyle = 'style="padding:' + cellPad + '; border:1px solid #666; ' +
+            'color:' + color + ' !important; ' + bg + ' ' + weight + '"';
+          var numStyle = 'style="padding:' + cellPad + '; border:1px solid #666; text-align:right; white-space:nowrap; ' +
+            'font-weight:bold; color:' + color + ' !important; ' + bg + '"';
+          html += '<tr>';
+          html += '<td ' + numStyle + '>' + num + '</td>';
+          html += '<td ' + cellStyle + '><span ' + mono + '>' + row.cmd + '</span></td>';
+          html += '<td ' + cellStyle + '><span ' + mono + '>' + row.example + '</span></td>';
+          html += '<td ' + cellStyle + '>' + row.purpose + '</td>';
+          html += '</tr>';
         });
-        html += '</div></div>';
+        for (var pad = rows.length; pad < minRows; pad++) {
+          var blankStyle = 'style="padding:' + cellPad + '; border:1px solid #666; color:#555 !important;"';
+          html += '<tr><td ' + blankStyle + '>&nbsp;</td><td ' + blankStyle + '>&nbsp;</td><td ' + blankStyle + '>&nbsp;</td><td ' + blankStyle + '>&nbsp;</td></tr>';
+        }
+        html += '</tbody></table>';
+        html += '</div>';
         return html;
       }
 
