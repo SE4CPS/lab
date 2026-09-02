@@ -376,7 +376,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-02 09:42 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-02 09:47 PT</span>
   </div>
 
   <!--
@@ -5065,6 +5065,61 @@ $ sudo chown comp175user:library catalog.txt</div>
 <h4>Find lib-web01's IP</h4>
 <div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">hostname</span> <span class="tk-flag">-I</span>
 <span class="tk-num">172.20.145.10</span></div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Same IP on Two VMs?</h4>
+<ul>
+<li>Same IP = a real conflict</li>
+<li>Goes to whichever VM replies</li>
+<li>Flaky ping, wrong host reached</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 380 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="238" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><line x1="90" y1="90" x2="150" y2="150" stroke="#888" stroke-width="1.5"/><line x1="290" y1="90" x2="230" y2="150" stroke="#888" stroke-width="1.5"/><rect x="140" y="150" width="100" height="40" rx="7" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="174" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">Shared Network</text><rect x="20" y="30" width="140" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="90" y="55" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">lib-web01</text><text x="90" y="75" text-anchor="middle" font-size="11.5" font-family="Consolas, monospace" fill="#FF671D">172.20.145.10</text><rect x="220" y="30" width="140" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="290" y="55" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">lib-web02</text><text x="290" y="75" text-anchor="middle" font-size="11.5" font-family="Consolas, monospace" fill="#FF671D">172.20.145.10</text><text x="190" y="60" text-anchor="middle" font-size="26">&#9888;&#65039;</text><text x="190" y="215" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Same IP, two different machines</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>How to Tell Them Apart</h4>
+<ul>
+<li>hostname is unique either way</li>
+<li>Check it, don't trust the IP</li>
+<li>Same commands, run per VM</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#128100;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">hostname</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Fix: Give Each a Unique IP</h4>
+<ul>
+<li>Regenerate its MAC address</li>
+<li>New MAC gets a new DHCP lease</li>
+<li>Or set a static IP per VM</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130" y="110" text-anchor="middle" font-size="64">&#9000;&#65039;</text><text x="130" y="160" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Your Turn</text></svg>
+</div>
+</div>
+<p class="fragment note-below">&#9888;&#65039; <span class="highlight">Power off</span> the VM before regenerating its MAC.</p>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Fix: Give Each a Unique IP</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">VBoxManage</span> modifyvm lib-web02 <span class="tk-flag">--macaddress1</span> auto
+<span class="tk-prompt">$</span> <span class="tk-cmd">hostname</span> <span class="tk-flag">-I</span></div>
 </section>
 
 <section data-background-color="#ffffff">
