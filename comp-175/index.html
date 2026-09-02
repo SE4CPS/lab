@@ -376,7 +376,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-02 11:11 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-02 11:32 PT</span>
   </div>
 
   <!--
@@ -5924,29 +5924,30 @@ comp175user <span class="tk-user">L</span> <span class="tk-num">09</span>/<span 
         var perCol = 12;
         var cols = Math.min(3, Math.max(1, Math.ceil(rows.length / perCol)));
         var rowsPerCol = Math.ceil(rows.length / cols);
-        var fontSize = cols >= 3 ? '0.62rem' : (cols === 2 ? '0.7rem' : '0.85rem');
+        var fontSize = cols >= 3 ? '0.95rem' : (cols === 2 ? '1.15rem' : '1.4rem');
+        var cellPad = cols >= 3 ? '8px 12px' : (cols === 2 ? '10px 14px' : '14px 18px');
 
         var groups = [];
         for (var c = 0; c < cols; c++) {
           groups.push(rows.slice(c * rowsPerCol, (c + 1) * rowsPerCol));
         }
 
-        var td = 'style="padding:5px 8px; border:1px solid #666; white-space:nowrap;"';
-        var tdh = 'style="padding:5px 8px; border:1px solid #666; font-weight:bold;"';
+        var td = 'style="padding:' + cellPad + '; border:1px solid #666;"';
+        var tdh = 'style="padding:' + cellPad + '; border:1px solid #666; font-weight:bold;"';
         var mono = 'style="font-family:Consolas, monospace;"';
 
         var html = '<div style="background:#2a2a2a; border:1px solid #555; border-radius:10px; ' +
-          'padding:1rem 1.2rem; display:inline-block; max-width:100%;">';
-        html += '<div style="display:flex; gap:16px; justify-content:center; align-items:flex-start;">';
+          'padding:1.6rem 2rem; width:100%; box-sizing:border-box;">';
+        html += '<div style="display:flex; gap:24px; align-items:flex-start;">';
         groups.forEach(function (group) {
           if (!group.length) return;
-          html += '<table style="font-size:' + fontSize + '; border-collapse:collapse;"><tbody>';
+          html += '<table style="font-size:' + fontSize + '; border-collapse:collapse; width:100%; flex:1;"><tbody>';
           html += '<tr style="color:#ccc;"><td ' + tdh + '>Command</td><td ' + tdh + '>Example</td><td ' + tdh + '>Purpose</td></tr>';
           group.forEach(function (row) {
             var hl = row.id === newestId;
             var rowStyle = hl
-              ? 'color:#fff; background:rgba(255,103,29,0.3); font-weight:bold;'
-              : 'color:#ccc;';
+              ? 'color:#fff; background:rgba(255,103,29,0.35); font-weight:bold;'
+              : 'color:#ddd;';
             html += '<tr style="' + rowStyle + '">';
             html += '<td ' + td + '><span ' + mono + '>' + row.cmd + '</span></td>';
             html += '<td ' + td + '><span ' + mono + '>' + row.example + '</span></td>';
