@@ -376,7 +376,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-02 11:39 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-02 11:41 PT</span>
   </div>
 
   <!--
@@ -5916,9 +5916,19 @@ comp175user <span class="tk-user">L</span> <span class="tk-num">09</span>/<span 
         }
         if (idx === -1) return '';
         var mod = allCommands[idx].module;
-        var rows = allCommands.filter(function (c, i2) {
-          return c.module === mod && i2 <= idx;
-        });
+        var moduleRows = allCommands.filter(function (c) { return c.module === mod; });
+        var posInModule = -1;
+        for (var j = 0; j < moduleRows.length; j++) {
+          if (moduleRows[j].id === throughId) { posInModule = j; break; }
+        }
+        // A page tops out at 3 columns x 12 rows. Once a module's table
+        // would need a 4th column to keep growing, the command that would
+        // overflow it starts a fresh page instead -- its own table, on its
+        // own placeholder slide, beginning back at 1 row. Older pages don't
+        // reappear on a later slide; each stays exactly as it last rendered.
+        var maxRowsPerPage = 36;
+        var pageStart = Math.floor(posInModule / maxRowsPerPage) * maxRowsPerPage;
+        var rows = moduleRows.slice(pageStart, posInModule + 1);
         var newestId = throughId;
 
         var perCol = 12;
