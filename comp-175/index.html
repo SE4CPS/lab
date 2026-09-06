@@ -401,7 +401,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-06 12:30 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-06 12:33 PT</span>
   </div>
 
   <!--
@@ -6450,6 +6450,18 @@ $ file /dev/sda
 130910 -rw-r--r-- 1 admin admin 21 notes.txt</div>
 </div>
 </div>
+<table style="font-size: 1.1rem; margin-top: 1rem;">
+<tbody>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #555; font-weight:bold;">Field</td><td style="padding:6px; border:1px solid #555; font-weight:bold;">Meaning</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #555;">130910</td><td style="padding:6px; border:1px solid #555;">Inode number (unique ID)</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #555;">-rw-r--r--</td><td style="padding:6px; border:1px solid #555;">Permissions</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #555;">1</td><td style="padding:6px; border:1px solid #555;">Hardlink count</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #555;">admin admin</td><td style="padding:6px; border:1px solid #555;">Owner, then group</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #555;">21</td><td style="padding:6px; border:1px solid #555;">Size in bytes</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #555;">notes.txt</td><td style="padding:6px; border:1px solid #555;">The filename</td></tr>
+</tbody>
+</table>
+<p class="fragment note-below">&#9888;&#65039; On <span class="highlight">/mnt/c</span> paths, WSL2 often shows huge inode numbers and -rwxrwxrwx for everything -- Windows drives don't track real Unix permissions.</p>
 </section>
 
 <section data-background-color="#0a0a0a">
@@ -6498,6 +6510,31 @@ $ file /dev/sda
 </table>
 </div>
 </div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4 style="text-align:center;">Create &amp; Access Both</h4>
+<div class="twocol">
+<div class="col">
+<p style="font-weight:bold;color:#FF671D;text-align:center;">Symlink</p>
+<div class="terminal">$ ln -s notes.txt link-s.txt
+$ ls -l link-s.txt
+lrwxrwxrwx 1 admin admin
+link-s.txt -&gt; notes.txt
+$ cat link-s.txt
+Library opens at 9am</div>
+</div>
+<div class="col">
+<p style="font-weight:bold;color:#FF671D;text-align:center;">Hardlink</p>
+<div class="terminal">$ ln notes.txt link-h.txt
+$ ls -li link-h.txt
+130910 -rw-r--r-- 2 admin admin
+link-h.txt
+$ cat link-h.txt
+Library opens at 9am</div>
+</div>
+</div>
+<p class="fragment note-below">&#9888;&#65039; Same <span class="highlight">inode</span> (130910) for the hardlink; the symlink gets its own.</p>
 </section>
 
 <section id="term-symlink" data-tag="terminology" data-term="Symlink" data-background-color="#ffffff">
