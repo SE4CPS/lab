@@ -401,7 +401,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-06 12:48 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-06 13:02 PT</span>
   </div>
 
   <!--
@@ -531,7 +531,11 @@
                 <a href="./#/cmd-file" target="_self">file</a>,
                 <a href="./#/cmd-stat" target="_self">stat</a>,
                 <a href="./#/cmd-id" target="_self">id</a>,
-                <a href="./#/cmd-groups" target="_self">groups</a></td>
+                <a href="./#/cmd-groups" target="_self">groups</a>,
+                <a href="./#/cmd-mkdir" target="_self">mkdir</a>,
+                <a href="./#/cmd-usermod" target="_self">usermod</a>,
+                <a href="./#/cmd-chgrp" target="_self">chgrp</a>,
+                <a href="./#/cmd-ln" target="_self">ln</a></td>
               <td>Lab/HW 2</td>
               <td></td>
             </tr>
@@ -5917,6 +5921,7 @@ comp175user <span class="tk-user">L</span> <span class="tk-num">09</span>/<span 
 <li><a href="./#/module-3-agenda-2" target="_self">Everything Is a File</a></li>
 <li><a href="./#/module-3-agenda-3" target="_self">Ownership: Owner &amp; Group</a></li>
 <li><a href="./#/module-3-agenda-4" target="_self">Permission Bits: rwx</a></li>
+<li><a href="./#/module-3-agenda-5" target="_self">Practice Lab: File System</a></li>
 </ol>
 </div>
 <div class="col" style="text-align:center;">
@@ -7010,6 +7015,425 @@ Access: (0640/-rw-r-----)</div>
 <h2 style="text-align:center;">Questions?</h2>
 </section>
 
+<section id="module-3-agenda-5" data-background-color="#ffffff">
+<h2 style="text-align:center;">Practice Lab: File System</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="cmd-table" data-through="cmd-groups"></div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Scenario: The Setup</h4>
+<ul>
+<li>You manage the CS dept share</li>
+<li>Everyone in class does this</li>
+<li>Use your own real terminal</li>
+</ul>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#127891;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">University Server</text></svg>
+</div>
+</div>
+</section>
+
+<section id="cmd-mkdir" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 1: Make Dept Folder</h4>
+<ul>
+<li>A new shared folder for CS</li>
+<li>sudo needed for /srv</li>
+<li>-p: no error if it exists</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ sudo mkdir -p /srv/cs-dept</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Step 1: Make Dept Folder</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> mkdir <span class="tk-flag">-p</span> <span class="tk-path">/srv/cs-dept</span></div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 2: Check Who Owns It</h4>
+<ul>
+<li>New folders start as root</li>
+<li>-d: the dir, not contents</li>
+<li>Not usable by you yet</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ ls -ld /srv/cs-dept
+drwxr-xr-x 2 root root 4096 /srv/cs-dept</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Step 2: Check Who Owns It</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-ld</span> <span class="tk-path">/srv/cs-dept</span>
+<span class="tk-user">drwxr-xr-x</span> <span class="tk-num">2</span> root root <span class="tk-num">4096</span> <span class="tk-path">/srv/cs-dept</span></div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 3: Create the Group</h4>
+<ul>
+<li>One group for the whole dept</li>
+<li>Everyone on the team joins it</li>
+<li>groupadd needs sudo</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ sudo groupadd csdept</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Step 3: Create the Group</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> groupadd csdept</div>
+</section>
+
+<section id="cmd-usermod" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 4: Join the Group</h4>
+<ul>
+<li>-aG appends, never replaces</li>
+<li>Log out/in for it to apply</li>
+<li>groups confirms membership</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ sudo usermod -aG csdept $USER
+$ groups
+csdept sudo docker</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Step 4: Join the Group</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> usermod <span class="tk-flag">-aG</span> csdept <span class="tk-user">$USER</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">groups</span>
+csdept sudo docker</div>
+</section>
+
+<section id="cmd-chgrp" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 5: Change Group Owner</h4>
+<ul>
+<li>Recall: chown changes both</li>
+<li>chgrp changes just the group</li>
+<li>Owner (root) stays the same</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ sudo chgrp csdept /srv/cs-dept</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Step 5: Change Group Owner</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> chgrp csdept <span class="tk-path">/srv/cs-dept</span></div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 6: Set Permissions</h4>
+<ul>
+<li>770: owner + group, no other</li>
+<li>You already know this number</li>
+<li>r+w+x = 7 for both roles</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ sudo chmod 770 /srv/cs-dept</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Step 6: Set Permissions</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> chmod <span class="tk-num">770</span> <span class="tk-path">/srv/cs-dept</span></div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 7: Verify With ls -l</h4>
+<ul>
+<li>Confirm before moving on</li>
+<li>Group should now be csdept</li>
+<li>Permissions should read 770</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ ls -ld /srv/cs-dept
+drwxrwx--- 2 root csdept 4096 /srv/cs-dept</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Step 7: Verify With ls -l</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-ld</span> <span class="tk-path">/srv/cs-dept</span>
+drwxrwx--- <span class="tk-num">2</span> root csdept <span class="tk-num">4096</span> <span class="tk-path">/srv/cs-dept</span></div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 8: Create the File</h4>
+<ul>
+<li>A real file inside the share</li>
+<li>touch only creates it, empty</li>
+<li>Everyone in csdept can use it</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ touch /srv/cs-dept/syllabus.txt</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Step 8: Create the File</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">touch</span> <span class="tk-path">/srv/cs-dept/syllabus.txt</span></div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 9: Check Its Metadata</h4>
+<ul>
+<li>Shows owner, inode, and time</li>
+<li>Proves the file truly exists</li>
+<li>More detail than ls -l alone</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ stat /srv/cs-dept/syllabus.txt
+  Inode: 55210   Links: 1
+Access: (0644/-rw-r--r--)</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Step 9: Check Its Metadata</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">stat</span> <span class="tk-path">/srv/cs-dept/syllabus.txt</span>
+  Inode: <span class="tk-num">55210</span>   Links: <span class="tk-num">1</span>
+Access: (0644/-rw-r--r--)</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 10: Identify File Type</h4>
+<ul>
+<li>Confirms it truly has no data</li>
+<li>Not just trusting the name</li>
+<li>Not installed by default</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ sudo apt install -y file
+$ file /srv/cs-dept/syllabus.txt
+syllabus.txt: empty</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Step 10: Identify File Type</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> file
+<span class="tk-prompt">$</span> <span class="tk-cmd">file</span> <span class="tk-path">/srv/cs-dept/syllabus.txt</span>
+syllabus.txt: empty</div>
+</section>
+
+<section id="cmd-ln" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 11: Create a Symlink</h4>
+<ul>
+<li>A shortcut in your own home</li>
+<li>Points at the shared file</li>
+<li>ls -l shows the -&gt; target</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ ln -s /srv/cs-dept/syllabus.txt ~/syllabus-link.txt
+$ ls -l ~/syllabus-link.txt
+lrwxrwxrwx ... syllabus-link.txt -&gt; /srv/cs-dept/syllabus.txt</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Step 11: Create a Symlink</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ln</span> <span class="tk-flag">-s</span> <span class="tk-path">/srv/cs-dept/syllabus.txt</span> <span class="tk-path">~/syllabus-link.txt</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-l</span> <span class="tk-path">~/syllabus-link.txt</span>
+<span class="tk-user">lrwxrwxrwx</span> ... syllabus-link.txt -&gt; <span class="tk-path">/srv/cs-dept/syllabus.txt</span></div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 12: Create a Hardlink</h4>
+<ul>
+<li>A second name, same data</li>
+<li>Survives if original deleted</li>
+<li>Not a shortcut, real data</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ ln /srv/cs-dept/syllabus.txt /srv/cs-dept/syllabus-backup.txt</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Step 12: Create a Hardlink</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ln</span> <span class="tk-path">/srv/cs-dept/syllabus.txt</span> <span class="tk-path">/srv/cs-dept/syllabus-backup.txt</span></div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 13: Compare the Inodes</h4>
+<ul>
+<li>Both list the same number</li>
+<li>Proves they share one file</li>
+<li>The symlink's number differs</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ ls -li /srv/cs-dept/syllabus*
+55210 ... syllabus.txt
+55210 ... syllabus-backup.txt</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Step 13: Compare the Inodes</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-li</span> <span class="tk-path">/srv/cs-dept/syllabus*</span>
+<span class="tk-num">55210</span> ... syllabus.txt
+<span class="tk-num">55210</span> ... syllabus-backup.txt</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 14: Check Mount Point</h4>
+<ul>
+<li>Confirms which disk /srv uses</li>
+<li>Same idea as Module 3, Item 1</li>
+<li>Look at the Mounted on column</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ df -h /srv
+Filesystem  Size  Used  Avail  Use%  Mounted on
+/dev/sda1    20G   13G    6G   69%  /</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Step 14: Check Mount Point</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">df</span> <span class="tk-flag">-h</span> <span class="tk-path">/srv</span>
+Filesystem  Size  Used  Avail  Use%  Mounted on
+<span class="tk-path">/dev/sda1</span>    20G   13G    6G   <span class="tk-num">69</span>%  /</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 15: Diagnose an Error</h4>
+<ul>
+<li>A classmate reports an error</li>
+<li>"Permission denied" error</li>
+<li>Check the folder, not the file</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ ls -ld /srv/cs-dept
+drwx------ 2 root csdept 4096 /srv/cs-dept</div>
+</div>
+</div>
+<p class="fragment note-below">&#9888;&#65039; Group lost its <span class="highlight">rwx</span> bits -- someone ran chmod 700 by mistake.</p>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Step 15: Diagnose an Error</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-ld</span> <span class="tk-path">/srv/cs-dept</span>
+drwx------ <span class="tk-num">2</span> root csdept <span class="tk-num">4096</span> <span class="tk-path">/srv/cs-dept</span></div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 16: Fix Permissions</h4>
+<ul>
+<li>g+rwx adds back group access</li>
+<li>Safer than retyping 770</li>
+<li>Practice with symbolic chmod</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ sudo chmod g+rwx /srv/cs-dept
+$ ls -ld /srv/cs-dept
+drwxrwx--- 2 root csdept 4096 /srv/cs-dept</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Step 16: Fix Permissions</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> chmod g+rwx <span class="tk-path">/srv/cs-dept</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-ld</span> <span class="tk-path">/srv/cs-dept</span>
+drwxrwx--- <span class="tk-num">2</span> root csdept <span class="tk-num">4096</span> <span class="tk-path">/srv/cs-dept</span></div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="cmd-table" data-through="cmd-ln"></div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Deliverables</h4>
+<ul>
+<li>Shared folder, group, 770</li>
+<li>Symlink and hardlink both work</li>
+<li>Ready when instructor checks</li>
+</ul>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#9989;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Lab Complete</text></svg>
+</div>
+</div>
+</section>
+
+<section>
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
       </section>
 
       <!-- Deck-wide "Key Terms" word cloud: lives at the end of the deck
@@ -7422,7 +7846,11 @@ Access: (0640/-rw-r-----)</div>
         { id: 'cmd-file', module: 3, cmd: 'file', example: 'file notes.txt', purpose: "Identify a file's real type" },
         { id: 'cmd-stat', module: 3, cmd: 'stat', example: 'stat config.yml', purpose: 'Show full inode metadata' },
         { id: 'cmd-id', module: 3, cmd: 'id', example: 'id', purpose: 'Show your uid, gid, and groups' },
-        { id: 'cmd-groups', module: 3, cmd: 'groups', example: 'groups', purpose: 'List your group memberships' }
+        { id: 'cmd-groups', module: 3, cmd: 'groups', example: 'groups', purpose: 'List your group memberships' },
+        { id: 'cmd-mkdir', module: 3, cmd: 'mkdir', example: 'mkdir -p /srv/cs-dept', purpose: 'Create a new directory' },
+        { id: 'cmd-usermod', module: 3, cmd: 'usermod', example: 'usermod -aG csdept $USER', purpose: 'Add a user to a group' },
+        { id: 'cmd-chgrp', module: 3, cmd: 'chgrp', example: 'chgrp csdept /srv/cs-dept', purpose: "Change a file's group only" },
+        { id: 'cmd-ln', module: 3, cmd: 'ln', example: 'ln -s target link', purpose: 'Create a symlink or hardlink' }
       ];
 
       function cmdTableHTML(throughId) {
