@@ -401,7 +401,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-06 20:01 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-07 09:55 PT</span>
   </div>
 
   <!--
@@ -655,6 +655,8 @@
           <a href="https://pacific.instructure.com/courses/146243/assignments/syllabus" class="footer-link" target="_blank" rel="noopener">Syllabus: Canvas</a>
           <span class="toc-dot">&middot;</span>
           <a href="https://docs.google.com/document/d/1sw9sHHvghsSUX5Aw0jEosETN64HHG4qOnf6gmiYUD8Q/edit?tab=t.0" class="footer-link" target="_blank" rel="noopener">Notes</a>
+          <span class="toc-dot">&middot;</span>
+          <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" class="footer-link" target="_blank" rel="noopener">FHS 3.0 Reference</a>
         </div>
       </section>
 
@@ -5921,7 +5923,8 @@ comp175user <span class="tk-user">L</span> <span class="tk-num">09</span>/<span 
 <li><a href="./#/module-3-agenda-2" target="_self">Everything Is a File</a></li>
 <li><a href="./#/module-3-agenda-3" target="_self">Ownership: Owner &amp; Group</a></li>
 <li><a href="./#/module-3-agenda-4" target="_self">Permission Bits: rwx</a></li>
-<li><a href="./#/module-3-agenda-5" target="_self">Practice Lab: File System</a></li>
+<li><a href="./#/module-3-agenda-5" target="_self">FHS Directory Standard</a></li>
+<li><a href="./#/module-3-agenda-6" target="_self">Practice Lab: File System</a></li>
 </ol>
 </div>
 <div class="col" style="text-align:center;">
@@ -7016,6 +7019,783 @@ Access: (0640/-rw-r-----)</div>
 </section>
 
 <section id="module-3-agenda-5" data-background-color="#ffffff">
+<h2 style="text-align:center;">FHS Directory Standard</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="cmd-table" data-through="cmd-groups"></div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>History of the FHS</h4>
+<ul>
+<li>How old is this standard?</li>
+<li>See the real dates below</li>
+</ul>
+</div>
+<div class="col">
+<svg viewBox="0 0 340 268" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="266" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><line x1="62" y1="14" x2="62" y2="254" stroke="#555" stroke-width="2"/><circle cx="62" cy="38.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="42.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1993</text><text x="76" y="34.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="34.0">Effort begins to</tspan><tspan x="76" y="48.0">restructure Linux dirs</tspan></text><circle cx="62" cy="102.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="106.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1994</text><text x="76" y="98.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="98.0">FSSTND released,</tspan><tspan x="76" y="112.0">Linux-only standard</tspan></text><circle cx="62" cy="166.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="170.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1995</text><text x="76" y="162.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="162.0">BSD joins; renamed</tspan><tspan x="76" y="176.0">to FHS (broader scope)</tspan></text><circle cx="62" cy="230.0" r="6.5" fill="#FF671D" stroke="#777" stroke-width="1.5"/><text x="48" y="234.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">2015</text><text x="76" y="226.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="226.0">FHS 3.0 published,</tspan><tspan x="76" y="240.0">March 19 (current)</tspan></text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Why a Directory Standard?</h4>
+<ul>
+<li>Software must predict paths</li>
+<li>Users must predict paths too</li>
+<li>Same rules across distros</li>
+</ul>
+<p class="source-line">Read: page 1, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Chapter 1.1, Purpose</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#128193;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Predictable Layout</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Who Actually Uses the FHS?</h4>
+<ul>
+<li>Software vendors build to it</li>
+<li>OS makers: Ubuntu, Fedora</li>
+<li>Sysadmins rely on it daily</li>
+</ul>
+<p class="source-line">Read: page 1, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Chapter 1.1, Purpose</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#128101;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Three Audiences</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>What the FHS Does NOT Cover</h4>
+<ul>
+<li>Local placement is local</li>
+<li>FHS won't override an admin</li>
+</ul>
+<p class="source-line">Read: page 1, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Chapter 1.1, Purpose</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#9940;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Out of Scope</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Reading FHS Notation</h4>
+<ul>
+<li>&lt;name&gt; = a varying part</li>
+<li>[name] = an optional part</li>
+<li>* = any variable substring</li>
+</ul>
+<p class="source-line">Read: page 1, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Chapter 1.2, Conventions</p>
+</div>
+<div class="col">
+<table style="font-size: 1.35rem;">
+<tbody>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Notation</td><td style="padding:6px; border:1px solid #666;">Meaning</td><td style="padding:6px; border:1px solid #666;">Example</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">&lt;pkg&gt;</td><td style="padding:6px; border:1px solid #666;">Fill-in name</td><td style="padding:6px; border:1px solid #666;">/opt/&lt;pkg&gt;</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">[.ext]</td><td style="padding:6px; border:1px solid #666;">Optional piece</td><td style="padding:6px; border:1px solid #666;">file[.ext]</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">*</td><td style="padding:6px; border:1px solid #666;">Any substring</td><td style="padding:6px; border:1px solid #666;">libc.so.*</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Real Distros That Follow It</h4>
+<ul>
+<li>Debian, Ubuntu, Fedora</li>
+<li>RHEL, openSUSE, Arch</li>
+<li>All place files the same way</li>
+</ul>
+<p class="source-line">Read: page 1, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Chapter 1.1, Purpose</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#128230;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">FHS-Compliant</text></svg>
+</div>
+</div>
+</section>
+
+<section>
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section>
+<h2 style="text-align:center;">The Filesystem: Two Splits</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Two Ways to Classify a File</h4>
+<ul>
+<li>Shareable vs. unshareable</li>
+<li>Static vs. variable</li>
+</ul>
+<p class="source-line">Read: page 2, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Chapter 2</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#128203;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">File Classification</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Shareable vs. Unshareable</h4>
+<ul>
+<li>Shareable: OK on many hosts</li>
+<li>Home dirs are shareable</li>
+<li>Unshareable: this host only</li>
+<li>Device lock files aren't</li>
+</ul>
+<p class="source-line">Read: page 2, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Chapter 2</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#128279;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Can It Move Hosts?</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Static vs. Variable</h4>
+<ul>
+<li>Static: binaries, libraries</li>
+<li>Only admin changes them</li>
+<li>Variable: changes on its own</li>
+</ul>
+<p class="source-line">Read: page 2, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Chapter 2</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#9203;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Does It Change?</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>The FHS Example Table</h4>
+<ul>
+<li>Combine both splits</li>
+<li>Four resulting categories</li>
+</ul>
+<p class="source-line">Read: page 2, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Chapter 2</p>
+</div>
+<div class="col">
+<table style="font-size: 1.35rem;">
+<tbody>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;"></td><td style="padding:6px; border:1px solid #666;">Shareable</td><td style="padding:6px; border:1px solid #666;">Unshareable</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Static</td><td style="padding:6px; border:1px solid #666;">/usr, /opt</td><td style="padding:6px; border:1px solid #666;">/etc, /boot</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Variable</td><td style="padding:6px; border:1px solid #666;">/var/mail</td><td style="padding:6px; border:1px solid #666;">/var/run, /var/lock</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Why /var Split From /usr</h4>
+<ul>
+<li>UNIX once mixed both types</li>
+<li>/var now separates them</li>
+<li>This lets /usr stay read-only</li>
+</ul>
+<p class="source-line">Read: page 2, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Chapter 2</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#9997;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Historical Fix</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>What This Buys Admins</h4>
+<ul>
+<li>Back up /var often, not /usr</li>
+<li>Read-only /usr resists attack</li>
+</ul>
+<p class="source-line">Read: page 2, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Chapter 2, Rationale</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#128737;&#65039;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Real Operational Payoff</text></svg>
+</div>
+</div>
+</section>
+
+<section>
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section>
+<h2 style="text-align:center;">The Root Filesystem</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Purpose of the Root FS</h4>
+<ul>
+<li>Boots, restores, repairs it</li>
+<li>/usr, /opt, /var can move</li>
+<li>Root itself must stay put</li>
+</ul>
+<p class="source-line">Read: page 3, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Section 3.1, Purpose</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#127959;&#65039;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">The Foundation</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Required Root Directories</h4>
+<ul>
+<li>14 directories, always there</li>
+<li>Each has one specific job</li>
+</ul>
+<p class="source-line">Read: page 4, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Section 3.2, Requirements</p>
+</div>
+<div class="col">
+<table style="font-size: 1.35rem;">
+<tbody>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Dir</td><td style="padding:6px; border:1px solid #666;">Holds</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">bin</td><td style="padding:6px; border:1px solid #666;">Essential commands</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">etc</td><td style="padding:6px; border:1px solid #666;">Host config</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">dev</td><td style="padding:6px; border:1px solid #666;">Device files</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">srv</td><td style="padding:6px; border:1px solid #666;">Service data</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">tmp</td><td style="padding:6px; border:1px solid #666;">Temp files</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">usr, var</td><td style="padding:6px; border:1px solid #666;">Secondary trees</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>/bin: Commands for Everyone</h4>
+<ul>
+<li>Works in single-user mode</li>
+<li>No subdirectories allowed</li>
+</ul>
+<p class="source-line">Read: page 5, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Section 3.4.1-3.4.2</p>
+</div>
+<div class="col">
+<table style="font-size: 1.35rem;">
+<tbody>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Command</td><td style="padding:6px; border:1px solid #666;">Job</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">ls, cp, mv, rm</td><td style="padding:6px; border:1px solid #666;">File basics</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">chmod, chown</td><td style="padding:6px; border:1px solid #666;">Permissions</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">mount, df</td><td style="padding:6px; border:1px solid #666;">Filesystems</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>/etc: No Binaries Allowed</h4>
+<ul>
+<li>Must be static, plain-text</li>
+<li>No binaries; scripts are OK</li>
+</ul>
+<p class="source-line">Read: page 7, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Section 3.7.1-3.7.2</p>
+</div>
+<div class="col">
+<table style="font-size: 1.35rem;">
+<tbody>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">File</td><td style="padding:6px; border:1px solid #666;">Purpose</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">passwd</td><td style="padding:6px; border:1px solid #666;">User accounts</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">group</td><td style="padding:6px; border:1px solid #666;">Group list</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">fstab</td><td style="padding:6px; border:1px solid #666;">Filesystem info</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">hosts</td><td style="padding:6px; border:1px solid #666;">Hostname map</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>/home vs. /root</h4>
+<ul>
+<li>/home: optional, per-site</li>
+<li>/root: home for root user</li>
+</ul>
+<p class="source-line">Read: page 10, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Sections 3.8.1, 3.14.1</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#127968;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Two Home Dirs</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>What This Means for Users</h4>
+<ul>
+<li>Files survive OS reinstalls</li>
+<li>Dotfiles keep ls output clean</li>
+</ul>
+<p class="source-line">Read: page 10, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Sections 3.8.1-3.8.2</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#128100;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A Stable Home</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>/opt: Add-On Software</h4>
+<ul>
+<li>Big 3rd-party apps live here</li>
+<li>Own tree: /opt/&lt;package&gt;</li>
+<li>Never scattered into /usr</li>
+</ul>
+<p class="source-line">Read: page 13, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Section 3.13.1</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#128230;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Self-Contained Apps</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>/media vs. /mnt</h4>
+<ul>
+<li>/media: removable disks</li>
+<li>/mnt: admin's manual mounts</li>
+</ul>
+<p class="source-line">Read: page 12, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Sections 3.11.1, 3.12.1</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#128191;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Two Mount Spots</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>/run: What's Happening Now</h4>
+<ul>
+<li>Data since the last boot</li>
+<li>Cleared every time it boots</li>
+<li>Replaces old /var/run PIDs</li>
+</ul>
+<p class="source-line">Read: page 14, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Section 3.15.1-3.15.2</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#9889;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Boot-to-Now Data</text></svg>
+</div>
+</div>
+</section>
+
+<section>
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section>
+<h2 style="text-align:center;">The /usr Hierarchy</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>/usr: Shareable, Read-Only</h4>
+<ul>
+<li>Same /usr on many machines</li>
+<li>Must never be written to</li>
+<li>Host data lives elsewhere</li>
+</ul>
+<p class="source-line">Read: page 18, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Section 4.1</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#128274;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Read-Only Tree</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h4>Read-Only /usr: Security</h4>
+<div class="fragment" style="display:flex; gap:16px; margin-top:16px;"><div style="flex:1; background:#2a2a2a; border-radius:8px; padding:0.8rem 1rem; border:2px solid #e03131;"><p style="margin:0; font-size:1.3rem; color:#eee;">&#128308; <strong>Red Team:</strong> A writable /usr lets a compromised process silently replace ls, sudo, or ssh with a backdoored copy.</p></div><div style="flex:1; background:#2a2a2a; border-radius:8px; padding:0.8rem 1rem; border:2px solid #3b82f6;"><p style="margin:0; font-size:1.3rem; color:#eee;">&#128309; <strong>Blue Team:</strong> Mount /usr read-only in production; any change to it becomes a loud, detectable event.</p></div></div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Required /usr Directories</h4>
+<ul>
+<li>5 directories, always there</li>
+</ul>
+<p class="source-line">Read: page 18, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Section 4.2</p>
+</div>
+<div class="col">
+<table style="font-size: 1.35rem;">
+<tbody>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Dir</td><td style="padding:6px; border:1px solid #666;">Holds</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">bin</td><td style="padding:6px; border:1px solid #666;">Most user commands</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">lib</td><td style="padding:6px; border:1px solid #666;">Libraries</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">local</td><td style="padding:6px; border:1px solid #666;">Admin's own installs</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">sbin</td><td style="padding:6px; border:1px solid #666;">Non-vital admin tools</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">share</td><td style="padding:6px; border:1px solid #666;">Arch-independent data</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>/usr/local: Update-Safe</h4>
+<ul>
+<li>For hand-installed software</li>
+<li>Survives every system update</li>
+</ul>
+<p class="source-line">Read: page 21, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Section 4.9.1</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#128736;&#65039;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Admin's Own Space</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>/usr/bin vs. /usr/sbin</h4>
+<ul>
+<li>/usr/bin: everyday commands</li>
+<li>/usr/sbin: admin-only tools</li>
+</ul>
+<p class="source-line">Read: page 18, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Sections 4.4.1, 4.10.1</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#9878;&#65039;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">User vs. Admin</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>/usr/share: Shared Data</h4>
+<ul>
+<li>Shared across one OS release</li>
+<li>Man pages, dicts, timezones</li>
+</ul>
+<p class="source-line">Read: page 22, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Section 4.11.1</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#127760;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Architecture-Free</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Man Pages: 8 Real Sections</h4>
+<ul>
+<li>Every page has a section #</li>
+<li>8 sections total, 1 to 8</li>
+</ul>
+<p class="source-line">Read: page 24, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Section 4.11.6.1</p>
+</div>
+<div class="col">
+<table style="font-size: 1.35rem;">
+<tbody>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">#</td><td style="padding:6px; border:1px solid #666;">Covers</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">1</td><td style="padding:6px; border:1px solid #666;">User programs</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">4</td><td style="padding:6px; border:1px solid #666;">Special/device files</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">5</td><td style="padding:6px; border:1px solid #666;">File formats</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">8</td><td style="padding:6px; border:1px solid #666;">System admin tools</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section>
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section>
+<h2 style="text-align:center;">The /var Hierarchy</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>/var: Where the Changes Go</h4>
+<ul>
+<li>Spool data, logs, temp files</li>
+<li>Lets /usr stay read-only</li>
+</ul>
+<p class="source-line">Read: page 30, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Section 5.1</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#128202;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">The Variable Tree</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Required /var Directories</h4>
+<ul>
+<li>9 directories, always there</li>
+</ul>
+<p class="source-line">Read: page 30, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Section 5.2</p>
+</div>
+<div class="col">
+<table style="font-size: 1.35rem;">
+<tbody>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Dir</td><td style="padding:6px; border:1px solid #666;">Holds</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">cache</td><td style="padding:6px; border:1px solid #666;">Regenerable data</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">lib</td><td style="padding:6px; border:1px solid #666;">App state info</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">lock</td><td style="padding:6px; border:1px solid #666;">Lock files</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">log</td><td style="padding:6px; border:1px solid #666;">Log files</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">spool</td><td style="padding:6px; border:1px solid #666;">Work awaiting later</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>/var/log: What's Recorded</h4>
+<ul>
+<li>Most logs live in /var/log</li>
+<li>Some use a subdirectory</li>
+</ul>
+<p class="source-line">Read: page 36, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Section 5.10.1-5.10.2</p>
+</div>
+<div class="col">
+<table style="font-size: 1.35rem;">
+<tbody>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">File</td><td style="padding:6px; border:1px solid #666;">Records</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">lastlog</td><td style="padding:6px; border:1px solid #666;">Each user's last login</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">wtmp</td><td style="padding:6px; border:1px solid #666;">Every login/logout</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">messages</td><td style="padding:6px; border:1px solid #666;">syslogd output</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>/tmp vs. /var/tmp Revisited</h4>
+<ul>
+<li>/tmp: gone at next reboot</li>
+<li>/var/tmp: survives reboots</li>
+<li>Cleared less often overall</li>
+</ul>
+<p class="source-line">Read: page 38, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Section 5.15.1</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#128465;&#65039;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Two Temp Lifespans</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>/var/spool: Work To Be Done</h4>
+<ul>
+<li>Data waiting on a process</li>
+<li>Deleted once handled</li>
+</ul>
+<p class="source-line">Read: page 37, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Section 5.14.1</p>
+</div>
+<div class="col">
+<table style="font-size: 1.35rem;">
+<tbody>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Dir</td><td style="padding:6px; border:1px solid #666;">Queue for</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">mqueue</td><td style="padding:6px; border:1px solid #666;">Outgoing mail</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">lpd</td><td style="padding:6px; border:1px solid #666;">Print jobs</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">news</td><td style="padding:6px; border:1px solid #666;">Usenet news</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>/var/lib & /var/mail</h4>
+<ul>
+<li>/var/lib: app state data</li>
+<li>/var/mail: one file/user</li>
+</ul>
+<p class="source-line">Read: page 33, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Sections 5.8.1, 5.11.1</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#128231;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">State + Mailboxes</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Backup Strategy: /var First</h4>
+<ul>
+<li>/usr: just reinstall it</li>
+<li>/var: real, unique data</li>
+</ul>
+<p class="source-line">Read: page 30, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Section 5.1, Rationale</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#128190;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Where Backups Matter</text></svg>
+</div>
+</div>
+</section>
+
+<section>
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section>
+<h2 style="text-align:center;">Linux-Specific Rules</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>/proc & /sys: Virtual Trees</h4>
+<ul>
+<li>Not real files on disk</li>
+<li>/proc: process + kernel info</li>
+<li>/sys: devices and drivers</li>
+</ul>
+<p class="source-line">Read: page 40, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Sections 6.1.5, 6.1.7</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#127760;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Kernel Windows</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>3 Devices Every Linux Needs</h4>
+<ul>
+<li>FHS requires these exactly</li>
+</ul>
+<p class="source-line">Read: page 39, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Section 6.1.3</p>
+</div>
+<div class="col">
+<table style="font-size: 1.35rem;">
+<tbody>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Device</td><td style="padding:6px; border:1px solid #666;">Does</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">/dev/null</td><td style="padding:6px; border:1px solid #666;">Discards all writes</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">/dev/zero</td><td style="padding:6px; border:1px solid #666;">Endless zero bytes</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">/dev/tty</td><td style="padding:6px; border:1px solid #666;">Your own terminal</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Linux-Only Extras</h4>
+<ul>
+<li>setserial goes in /bin</li>
+<li>lilo.conf goes in /etc</li>
+<li>Not required on every UNIX</li>
+</ul>
+<p class="source-line">Read: page 39, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Sections 6.1.2, 6.1.4</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#128039;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Linux Annex</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>/sbin Extras: ldconfig</h4>
+<ul>
+<li>Rebuilds the library cache</li>
+<li>Runs after any lib upgrade</li>
+</ul>
+<p class="source-line">Read: page 40, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Section 6.1.6</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#128295;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Library Bookkeeping</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>cron & at: Scheduled Jobs</h4>
+<ul>
+<li>Holds data for cron and at</li>
+<li>All scheduled jobs live here</li>
+</ul>
+<p class="source-line">Read: page 41, <a href="https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.pdf" target="_blank" rel="noopener">FHS 3.0</a> &mdash; Section 6.1.10</p>
+</div>
+<div class="col">
+<svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#9200;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Timed Tasks</text></svg>
+</div>
+</div>
+</section>
+
+<section>
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-3-agenda-6" data-background-color="#ffffff">
 <h2 style="text-align:center;">Practice Lab: File System</h2>
 </section>
 
