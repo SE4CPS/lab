@@ -401,7 +401,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-07 10:34 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-07 10:42 PT</span>
   </div>
 
   <!--
@@ -5920,10 +5920,10 @@ comp175user <span class="tk-user">L</span> <span class="tk-num">09</span>/<span 
 <h4>Agenda</h4>
 <ol style="line-height: 1.8;">
 <li><a href="./#/module-3-agenda-1" target="_self">What Is a File System?</a></li>
-<li><a href="./#/module-3-agenda-2" target="_self">Everything Is a File</a></li>
-<li><a href="./#/module-3-agenda-3" target="_self">Ownership: Owner &amp; Group</a></li>
-<li><a href="./#/module-3-agenda-4" target="_self">Permission Bits: rwx</a></li>
-<li><a href="./#/module-3-agenda-5" target="_self">FHS Directory Standard</a></li>
+<li><a href="./#/module-3-agenda-2" target="_self">FHS Directory Standard</a></li>
+<li><a href="./#/module-3-agenda-3" target="_self">Everything Is a File</a></li>
+<li><a href="./#/module-3-agenda-4" target="_self">Ownership: Owner &amp; Group</a></li>
+<li><a href="./#/module-3-agenda-5" target="_self">Permission Bits: rwx</a></li>
 <li><a href="./#/module-3-agenda-6" target="_self">Practice Lab: File System</a></li>
 </ol>
 </div>
@@ -6303,727 +6303,11 @@ Filesystem  Size  Used  Avail  Use%  Mounted on
 </section>
 
 <section id="module-3-agenda-2" data-background-color="#ffffff">
-<h2 style="text-align:center;">Everything Is a File</h2>
-</section>
-
-<section data-background-color="#ffffff">
-<div class="cmd-table" data-through="cmd-mount"></div>
-</section>
-
-<section data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>Everything Is a File</h4>
-<ul>
-<li>Unix's biggest idea</li>
-<li>Same commands work on all</li>
-<li>Simplifies the whole OS</li>
-</ul>
-</div>
-<div class="col">
-<svg viewBox="0 0 560 520" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:480px;display:block;margin:0 auto;"><rect x="1" y="1" width="558" height="518" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="194.0" y="87.0" width="172" height="56" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="280.0" y="120.0" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Regular File</text><rect x="341.4" y="194.1" width="172" height="56" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="427.4" y="227.1" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Directory</text><rect x="285.1" y="367.4" width="172" height="56" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="371.1" y="400.4" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Device (/dev)</text><rect x="102.9" y="367.4" width="172" height="56" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="188.9" y="400.4" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Pipe</text><rect x="46.6" y="194.1" width="172" height="56" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="132.6" y="227.1" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Socket</text><circle cx="280.0" cy="270.0" r="60" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="280.0" y="276.0" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">File</text></svg>
-</div>
-</div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>A Disk Is a File</h4>
-<ul>
-<li>/dev/sda is your whole disk</li>
-<li>ls -l shows it like any file</li>
-<li>Reading it reads raw bytes</li>
-</ul>
-</div>
-<div class="col">
-<div class="terminal">$ ls -l /dev/sda
-brw-rw---- 1 root disk 8, 0 Sep 8 /dev/sda</div>
-</div>
-</div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<h4>A Disk Is a File</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-l</span> <span class="tk-path">/dev/sda</span>
-<span class="tk-user">brw-rw----</span> 1 root disk <span class="tk-num">8</span>, <span class="tk-num">0</span> Sep 8 <span class="tk-path">/dev/sda</span></div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>Processes Are Files</h4>
-<ul>
-<li>/proc exposes running programs</li>
-<li>Each process gets a folder</li>
-<li>Files inside are readable</li>
-</ul>
-</div>
-<div class="col">
-<div class="terminal">$ cat /proc/version
-Linux version 6.8.0 (gcc 13.2.0)</div>
-</div>
-</div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<h4>Processes Are Files</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">cat</span> <span class="tk-path">/proc/version</span>
-Linux version <span class="tk-num">6.8.0</span> (gcc 13.2.0)</div>
-</section>
-
-<section id="cmd-file" data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>Command: file</h4>
-<ul>
-<li>Not installed by default</li>
-<li>Create the file if missing</li>
-<li>Identifies a file's real type</li>
-</ul>
-</div>
-<div class="col">
-<div class="terminal">$ sudo apt install -y file
-$ echo "Library opens at 9am" &gt; notes.txt
-$ file notes.txt
-notes.txt: ASCII text
-
-$ file /dev/sda
-/dev/sda: block special</div>
-</div>
-</div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<h4>Command: file</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> <span class="tk-str">file</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">echo</span> <span class="tk-str">"Library opens at 9am"</span> &gt; <span class="tk-path">notes.txt</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">file</span> <span class="tk-path">notes.txt</span>
-<span class="tk-path">notes.txt</span>: <span class="tk-user">ASCII text</span>
-
-<span class="tk-prompt">$</span> <span class="tk-cmd">file</span> <span class="tk-path">/dev/sda</span>
-<span class="tk-path">/dev/sda</span>: <span class="tk-user">block special</span></div>
-</section>
-
-<section data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>Special Files at a Glance</h4>
-<ul>
-<li>Each path exposes something</li>
-<li>None are "real" disk files</li>
-<li>The OS generates them live</li>
-</ul>
-</div>
-<div class="col">
-<table style="font-size: 1.35rem;">
-<tbody>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Path</td><td style="padding:6px; border:1px solid #666;">What It Really Is</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">/dev/sda</td><td style="padding:6px; border:1px solid #666;">The physical disk itself</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">/proc/1</td><td style="padding:6px; border:1px solid #666;">Info about process ID 1</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">/dev/null</td><td style="padding:6px; border:1px solid #666;">A file that discards everything</td></tr>
-</tbody>
-</table>
-<p style="font-size:0.95rem;color:#999;margin-top:0.6rem;">dev = device &middot; proc = process &middot; sda = SCSI/SATA disk A (1st disk) &middot; null = the null device</p>
-</div>
-</div>
-</section>
-
-<section id="term-inode" data-tag="terminology" data-term="Inode" data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>Word Origin: &quot;Inode&quot;</h4>
-<ul>
-<li>Short for "index node"</li><li>Holds a file's metadata</li><li>The filename lives elsewhere</li>
-</ul>
-</div>
-<div class="col">
-<svg viewBox="0 0 340 268" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="266" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><line x1="62" y1="14" x2="62" y2="254" stroke="#555" stroke-width="2"/><circle cx="62" cy="38.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="42.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1970s</text><text x="76" y="34.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="34.0">Unix introduces the</tspan><tspan x="76" y="48.0">inode as a metadata record</tspan></text><circle cx="62" cy="134.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="138.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1974</text><text x="76" y="130.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="130.0">Documented in the</tspan><tspan x="76" y="144.0">Unix File System paper</tspan></text><circle cx="62" cy="230.0" r="7.5" fill="#FF671D" stroke="#777" stroke-width="1.5"/><text x="48" y="234.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Today</text><text x="76" y="226.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="226.0">ext4, XFS, and most Linux</tspan><tspan x="76" y="240.0">file systems still use inodes</tspan></text></svg>
-</div>
-</div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>Reading a File's Metadata</h4>
-<ul>
-<li>ls -l already shows some</li>
-<li>-i also prints the inode</li>
-<li>Full detail comes later</li>
-</ul>
-</div>
-<div class="col">
-<div class="terminal">$ ls -li notes.txt
-130910 -rw-r--r-- 1 admin admin 21 notes.txt</div>
-</div>
-</div>
-<table style="font-size: 1.1rem; margin-top: 1rem;">
-<tbody>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #555; font-weight:bold;">Field</td><td style="padding:6px; border:1px solid #555; font-weight:bold;">Meaning</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #555;">130910</td><td style="padding:6px; border:1px solid #555;">Inode number (unique ID)</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #555;">-rw-r--r--</td><td style="padding:6px; border:1px solid #555;">Permissions</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #555;">1</td><td style="padding:6px; border:1px solid #555;">Hardlink count</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #555;">admin admin</td><td style="padding:6px; border:1px solid #555;">Owner, then group</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #555;">21</td><td style="padding:6px; border:1px solid #555;">Size in bytes</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #555;">notes.txt</td><td style="padding:6px; border:1px solid #555;">The filename</td></tr>
-</tbody>
-</table>
-<p class="fragment note-below">&#9888;&#65039; On <span class="highlight">/mnt/c</span> paths, WSL2 often shows huge inode numbers and -rwxrwxrwx for everything -- Windows drives don't track real Unix permissions.</p>
-</section>
-
-<section data-background-color="#0a0a0a">
-<h4>Reading a File's Metadata</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-li</span> <span class="tk-path">notes.txt</span>
-<span class="tk-num">130910</span> <span class="tk-user">-rw-r--r--</span> 1 admin admin <span class="tk-num">21</span> <span class="tk-path">notes.txt</span></div>
-</section>
-
-<section data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>What's Inside an Inode?</h4>
-<ul>
-<li>Size, owner, permissions</li>
-<li>Timestamps (access, modify)</li>
-<li>Pointer to the data blocks</li>
-</ul>
-</div>
-<div class="col">
-<svg viewBox="0 0 380 230" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="228" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="lyArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><line x1="190.0" y1="71" x2="190.0" y2="85" stroke="#888" stroke-width="1.5" marker-end="url(#lyArrow)"/><line x1="190.0" y1="143" x2="190.0" y2="157" stroke="#888" stroke-width="1.5" marker-end="url(#lyArrow)"/><rect x="20" y="15" width="340" height="56" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="190.0" y="48.0" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">Filename (in the directory)</text><rect x="20" y="87" width="340" height="56" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="1.5"/><text x="190.0" y="120.0" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">Inode (owner, size, perms)</text><rect x="20" y="159" width="340" height="56" rx="8" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="190.0" y="192.0" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">Data Blocks (actual bytes)</text></svg>
-</div>
-</div>
-</section>
-
-<section id="module-3-agenda-2-symlink" data-background-color="#ffffff">
-<h2 style="text-align:center;">Symlink vs. Hardlink</h2>
-</section>
-
-<section data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>Symlink vs. Hardlink</h4>
-<ul>
-<li>Symlink: a pointer to a path</li>
-<li>Hardlink: shares the inode</li>
-<li>Table below compares both</li>
-</ul>
-</div>
-<div class="col">
-<table style="font-size: 1.35rem;">
-<tbody>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Type</td><td style="padding:6px; border:1px solid #666;">Own Inode?</td><td style="padding:6px; border:1px solid #666;">Breaks If Target Moves?</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Symlink</td><td style="padding:6px; border:1px solid #666;">Yes (its own)</td><td style="padding:6px; border:1px solid #666;">Yes</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Hardlink</td><td style="padding:6px; border:1px solid #666;">No (shares one)</td><td style="padding:6px; border:1px solid #666;">No</td></tr>
-</tbody>
-</table>
-</div>
-</div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<h4 style="text-align:center;">Create &amp; Access Both</h4>
-<div class="twocol">
-<div class="col">
-<p style="font-weight:bold;color:#FF671D;text-align:center;">Symlink</p>
-<div class="terminal">$ ln -s notes.txt link-s.txt
-$ ls -l link-s.txt
-lrwxrwxrwx 1 admin admin
-link-s.txt -&gt; notes.txt
-$ cat link-s.txt
-Library opens at 9am</div>
-</div>
-<div class="col">
-<p style="font-weight:bold;color:#FF671D;text-align:center;">Hardlink</p>
-<div class="terminal">$ ln notes.txt link-h.txt
-$ ls -li link-h.txt
-130910 -rw-r--r-- 2 admin admin
-link-h.txt
-$ cat link-h.txt
-Library opens at 9am</div>
-</div>
-</div>
-<p class="fragment note-below">&#9888;&#65039; Same <span class="highlight">inode</span> (130910) for the hardlink; the symlink gets its own.</p>
-</section>
-
-<section id="term-symlink" data-tag="terminology" data-term="Symlink" data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>Word Origin: &quot;Symlink&quot;</h4>
-<ul>
-<li>Short for "symbolic link"</li><li>Added to give shortcuts</li><li>Works across file systems</li>
-</ul>
-</div>
-<div class="col">
-<svg viewBox="0 0 340 268" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="266" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><line x1="62" y1="14" x2="62" y2="254" stroke="#555" stroke-width="2"/><circle cx="62" cy="38.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="42.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1978</text><text x="76" y="34.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="34.0">4.2BSD adds the</tspan><tspan x="76" y="48.0">first symbolic links</tspan></text><circle cx="62" cy="134.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="138.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1993</text><text x="76" y="130.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="130.0">Linux adopts them via</tspan><tspan x="76" y="144.0">ext2's link support</tspan></text><circle cx="62" cy="230.0" r="7.5" fill="#FF671D" stroke="#777" stroke-width="1.5"/><text x="48" y="234.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Today</text><text x="76" y="226.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="226.0">Used for versioned installs,</tspan><tspan x="76" y="240.0">shortcuts, and config paths</tspan></text></svg>
-</div>
-</div>
-</section>
-
-<section data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>Why Symlinks &amp; Hardlinks?</h4>
-<ul>
-<li>Names already locate files</li>
-<li>So why need links at all?</li>
-</ul>
-</div>
-<div class="col">
-<ul>
-<li>One file, many paths</li>
-<li>Hardlinks save real space</li>
-<li>Symlinks cross drives/paths</li>
-<li>Swap targets, keep same name</li>
-</ul>
-</div>
-</div>
-</section>
-
-<section data-background-color="#ffffff">
-<div class="cmd-table" data-through="cmd-file"></div>
-</section>
-
-<section data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>Why This Matters</h4>
-<ul>
-<li>Wrong access exposes the disk</li>
-<li>Bad permissions are dangerous</li>
-<li>Restrict device files to root</li>
-</ul>
-<div class="fragment" style="display:flex; gap:16px; margin-top:16px;"><div style="flex:1; background:#2a2a2a; border-radius:8px; padding:0.8rem 1rem; border:2px solid #e03131;"><p style="margin:0; font-size:1.3rem; color:#eee;">&#128308; <strong>Red Team:</strong> A world-writable /dev/sda lets an attacker overwrite the whole disk directly.</p></div><div style="flex:1; background:#2a2a2a; border-radius:8px; padding:0.8rem 1rem; border:2px solid #3b82f6;"><p style="margin:0; font-size:1.3rem; color:#eee;">&#128309; <strong>Blue Team:</strong> Restrict device files to root/disk group; never widen /dev permissions.</p></div></div></div>
-<div class="col">
-
-</div>
-</div>
-</section>
-
-<section>
-<h2 style="text-align:center;">Questions?</h2>
-</section>
-
-<section id="module-3-agenda-3" data-background-color="#ffffff">
-<h2 style="text-align:center;">Ownership: Owner &amp; Group</h2>
-</section>
-
-<section data-background-color="#ffffff">
-<div class="cmd-table" data-through="cmd-file"></div>
-</section>
-
-<section data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>Multi-User History</h4>
-<ul>
-<li>Unix always was multi-user</li>
-<li>Ownership prevents conflicts</li>
-<li>Groups let teams share safely</li>
-</ul>
-</div>
-<div class="col">
-<svg viewBox="0 0 340 268" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="266" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><line x1="62" y1="14" x2="62" y2="254" stroke="#555" stroke-width="2"/><circle cx="62" cy="38.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="42.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1969</text><text x="76" y="34.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="34.0">Unix is born as a</tspan><tspan x="76" y="48.0">time-sharing system</tspan></text><circle cx="62" cy="86.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="90.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1973</text><text x="76" y="82.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="82.0">Owner-based permissions</tspan><tspan x="76" y="96.0">are formalized in Unix</tspan></text><circle cx="62" cy="134.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="138.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1980s</text><text x="76" y="130.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="130.0">Groups added so teams</tspan><tspan x="76" y="144.0">can share without "other"</tspan></text><circle cx="62" cy="182.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="186.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1988</text><text x="76" y="178.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="178.0">POSIX standardizes</tspan><tspan x="76" y="192.0">owner/group/other for all Unix</tspan></text><circle cx="62" cy="230.0" r="6.5" fill="#FF671D" stroke="#FF671D" stroke-width="1.5"/><text x="48" y="234.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Today</text><text x="76" y="226.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="226.0">Every Linux file still</tspan><tspan x="76" y="240.0">uses this exact model</tspan></text></svg>
-</div>
-</div>
-</section>
-
-<section data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>Ownership, Revisited</h4>
-<ul>
-<li>Ownership lives in the inode</li>
-<li>Directory only holds the name</li>
-<li>Metadata travels with the file</li>
-</ul>
-</div>
-<div class="col">
-<svg viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:400px;display:block;margin:0 auto;"><rect x="140" y="10" width="120" height="40" rx="7" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="200" y="35" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">config.yml</text><line x1="200" y1="50" x2="60" y2="90" stroke="#666" stroke-width="1.5"/><line x1="200" y1="50" x2="200" y2="90" stroke="#666" stroke-width="1.5"/><line x1="200" y1="50" x2="340" y2="90" stroke="#666" stroke-width="1.5"/><rect x="10" y="94" width="100" height="56" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="60" y="118" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Owner</text><text x="60" y="136" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#999">admin</text><rect x="150" y="94" width="100" height="56" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="200" y="118" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Group</text><text x="200" y="136" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#999">devteam</text><rect x="290" y="94" width="100" height="56" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="340" y="118" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Other</text><text x="340" y="136" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#999">everyone else</text></svg>
-</div>
-</div>
-</section>
-
-<section data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>Anatomy of ls -l Output</h4>
-<ul>
-<li>Permissions come first</li>
-<li>Then owner, group, size, etc.</li>
-<li>Order never changes</li>
-</ul>
-</div>
-<div class="col">
-<table style="font-size: 1.35rem;">
-<tbody>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Field</td><td style="padding:6px; border:1px solid #666;">Example</td><td style="padding:6px; border:1px solid #666;">Meaning</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Permissions</td><td style="padding:6px; border:1px solid #666;">-rw-r--r--</td><td style="padding:6px; border:1px solid #666;">type + rwx x3</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Links</td><td style="padding:6px; border:1px solid #666;">1</td><td style="padding:6px; border:1px solid #666;">hardlink count</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Owner</td><td style="padding:6px; border:1px solid #666;">admin</td><td style="padding:6px; border:1px solid #666;">who owns it</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Group</td><td style="padding:6px; border:1px solid #666;">devteam</td><td style="padding:6px; border:1px solid #666;">shared group</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Size</td><td style="padding:6px; border:1px solid #666;">482</td><td style="padding:6px; border:1px solid #666;">bytes</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Name</td><td style="padding:6px; border:1px solid #666;">config.yml</td><td style="padding:6px; border:1px solid #666;">the filename</td></tr>
-</tbody>
-</table>
-</div>
-</div>
-</section>
-
-<section id="cmd-stat" data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>Command: stat</h4>
-<ul>
-<li>Create the file if missing</li>
-<li>Shows far more than ls -l</li>
-<li>Includes the inode number</li>
-</ul>
-</div>
-<div class="col">
-<div class="terminal">$ touch config.yml
-$ stat config.yml
-  File: config.yml
-  Inode: 130842   Links: 1
-Access: (0644/-rw-r--r--)
-Uid: (1001/admin) Gid: (1002/devteam)</div>
-</div>
-</div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<h4>Command: stat</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">touch</span> <span class="tk-path">config.yml</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">stat</span> <span class="tk-path">config.yml</span>
-  File: <span class="tk-path">config.yml</span>
-  Inode: <span class="tk-num">130842</span>   Links: <span class="tk-num">1</span>
-Access: (<span class="tk-num">0644</span>/<span class="tk-user">-rw-r--r--</span>)
-Uid: (<span class="tk-num">1001</span>/<span class="tk-user">admin</span>) Gid: (<span class="tk-num">1002</span>/<span class="tk-user">devteam</span>)</div>
-</section>
-
-<section data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>Inode Metadata Revisited</h4>
-<ul>
-<li>stat reads the inode directly</li>
-<li>ls -l only shows a summary</li>
-<li>Same data, more detail</li>
-</ul>
-</div>
-<div class="col">
-<svg viewBox="0 0 380 230" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="228" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="lyArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><line x1="190.0" y1="71" x2="190.0" y2="85" stroke="#888" stroke-width="1.5" marker-end="url(#lyArrow)"/><line x1="190.0" y1="143" x2="190.0" y2="157" stroke="#888" stroke-width="1.5" marker-end="url(#lyArrow)"/><rect x="20" y="15" width="340" height="56" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="190.0" y="48.0" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">ls -l (summary view)</text><rect x="20" y="87" width="340" height="56" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="1.5"/><text x="190.0" y="120.0" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">Inode (owner, perms, times)</text><rect x="20" y="159" width="340" height="56" rx="8" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="190.0" y="192.0" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">stat (full detail view)</text></svg>
-</div>
-</div>
-</section>
-
-<section id="cmd-id" data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>Command: id</h4>
-<ul>
-<li>Shows your numeric identity</li>
-<li>uid = your user number</li>
-<li>gid = primary group number</li>
-</ul>
-</div>
-<div class="col">
-<div class="terminal">$ id
-uid=1001(admin) gid=1002(devteam)
-groups=1002(devteam),27(sudo)</div>
-</div>
-</div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<h4>Command: id</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">id</span>
-uid=<span class="tk-num">1001</span>(<span class="tk-user">admin</span>) gid=<span class="tk-num">1002</span>(<span class="tk-user">devteam</span>)
-groups=<span class="tk-num">1002</span>(devteam),<span class="tk-num">27</span>(sudo)</div>
-</section>
-
-<section id="term-uid" data-tag="terminology" data-term="UID &amp; GID" data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>Word Origin: &quot;UID &amp; GID&quot;</h4>
-<ul>
-<li>Numeric ID behind every name</li><li>root is always UID 0</li><li>Names are just a lookup table</li>
-</ul>
-</div>
-<div class="col">
-<svg viewBox="0 0 340 268" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="266" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><line x1="62" y1="14" x2="62" y2="254" stroke="#555" stroke-width="2"/><circle cx="62" cy="38.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="42.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1970s</text><text x="76" y="34.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="34.0">Unix assigns a number</tspan><tspan x="76" y="48.0">to every user account</tspan></text><circle cx="62" cy="134.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="138.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1988</text><text x="76" y="130.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="130.0">POSIX standardizes</tspan><tspan x="76" y="144.0">uid_t and gid_t types</tspan></text><circle cx="62" cy="230.0" r="7.5" fill="#FF671D" stroke="#777" stroke-width="1.5"/><text x="48" y="234.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Today</text><text x="76" y="226.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="226.0">/etc/passwd still maps</tspan><tspan x="76" y="240.0">names to these numbers</tspan></text></svg>
-</div>
-</div>
-</section>
-
-<section data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>Practice: Who Owns This?</h4>
-<ul>
-<li>-rw-r----- alex staff notes</li>
-<li>Who is the owner?</li>
-<li>Who is the group?</li>
-</ul>
-</div>
-<div class="col" style="text-align:center;">
-<svg viewBox="0 0 340 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="10" y="10" width="320" height="240" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="170.0" y="143.0" text-anchor="middle" font-size="84">&#128100;</text><text x="170.0" y="208.0" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Read the Line</text></svg>
-</div>
-</div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<h4 style="text-align:center;">Owner &amp; Group</h4>
-<h2 style="text-align:center; color:#FF671D; font-size:2.6rem; margin-top:0.5em; font-family:Consolas, monospace;">alex : staff</h2>
-</section>
-
-<section data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>Recall: chown Changes This</h4>
-<ul>
-<li>Module 2 already used chown</li>
-<li>chown user:group file</li>
-<li>Now you know WHY it matters</li>
-</ul>
-</div>
-<div class="col">
-<div class="terminal">$ chown admin:devteam config.yml
-$ stat config.yml | grep Uid
-Uid: (1001/admin) Gid: (1002/devteam)</div>
-</div>
-</div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<h4>Recall: chown Changes This</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">chown</span> <span class="tk-user">admin</span><span class="tk-punct">:</span><span class="tk-user">devteam</span> <span class="tk-path">config.yml</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">stat</span> <span class="tk-path">config.yml</span> <span class="tk-punct">|</span> <span class="tk-cmd">grep</span> <span class="tk-str">Uid</span>
-Uid: (<span class="tk-num">1001</span>/<span class="tk-user">admin</span>) Gid: (<span class="tk-num">1002</span>/<span class="tk-user">devteam</span>)</div>
-</section>
-
-<section id="cmd-groups" data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>Command: groups</h4>
-<ul>
-<li>Lists every group you're in</li>
-<li>First is your primary group</li>
-<li>Others are secondary groups</li>
-</ul>
-</div>
-<div class="col">
-<div class="terminal">$ groups
-admin devteam sudo docker</div>
-</div>
-</div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<h4>Command: groups</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">groups</span>
-<span class="tk-user">admin</span> devteam sudo docker</div>
-</section>
-
-<section data-background-color="#ffffff">
-<div class="cmd-table" data-through="cmd-groups"></div>
-</section>
-
-<section data-background-color="#ffffff">
-<h4>Why Ownership Matters</h4>
-<div class="fragment" style="display:flex; gap:16px; margin-top:16px;"><div style="flex:1; background:#2a2a2a; border-radius:8px; padding:0.8rem 1rem; border:2px solid #e03131;"><p style="margin:0; font-size:1.3rem; color:#eee;">&#128308; <strong>Red Team:</strong> A misconfigured owner can leave secrets readable by any account on the box.</p></div><div style="flex:1; background:#2a2a2a; border-radius:8px; padding:0.8rem 1rem; border:2px solid #3b82f6;"><p style="margin:0; font-size:1.3rem; color:#eee;">&#128309; <strong>Blue Team:</strong> Audit ownership on sensitive files regularly; prefer dedicated service accounts.</p></div></div>
-</section>
-
-<section>
-<h2 style="text-align:center;">Questions?</h2>
-</section>
-
-<section id="module-3-agenda-4" data-background-color="#ffffff">
-<h2 style="text-align:center;">Permission Bits: rwx</h2>
-</section>
-
-<section data-background-color="#ffffff">
-<div class="cmd-table" data-through="cmd-groups"></div>
-</section>
-
-<section data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>Who Should Read This?</h4>
-<ul>
-<li>Not all data should be public</li>
-<li>Some scripts must stay locked</li>
-<li>Wrong access causes breaches</li>
-</ul>
-</div>
-<div class="col">
-<svg viewBox="0 0 340 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="10" y="10" width="320" height="240" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="170.0" y="143.0" text-anchor="middle" font-size="84">&#128272;</text><text x="170.0" y="208.0" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Not Everyone</text></svg>
-</div>
-</div>
-</section>
-
-<section data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>Read, Write &amp; Execute</h4>
-<ul>
-<li>rwx means different things</li>
-<li>on a file vs. a folder</li>
-<li>x on a folder = can enter it</li>
-</ul>
-</div>
-<div class="col">
-<table style="font-size: 1.35rem;">
-<tbody>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666; font-weight:bold;">Letter</td><td style="padding:6px; border:1px solid #666; font-weight:bold;">On a File</td><td style="padding:6px; border:1px solid #666; font-weight:bold;">On a Folder</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">r</td><td style="padding:6px; border:1px solid #666;">Read contents</td><td style="padding:6px; border:1px solid #666;">List contents</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">w</td><td style="padding:6px; border:1px solid #666;">Edit contents</td><td style="padding:6px; border:1px solid #666;">Add/remove files</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">x</td><td style="padding:6px; border:1px solid #666;">Run as a program</td><td style="padding:6px; border:1px solid #666;">Enter with cd</td></tr>
-</tbody>
-</table>
-</div>
-</div>
-</section>
-
-<section data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>The Numeric Version</h4>
-<ul>
-<li>r = 4, w = 2, x = 1</li>
-<li>Add them up per role</li>
-<li>rwx = 4+2+1 = 7</li>
-</ul>
-</div>
-<div class="col">
-<table style="font-size: 1.35rem;">
-<tbody>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666; font-weight:bold;">Letter</td><td style="padding:6px; border:1px solid #666; font-weight:bold;">Value</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">r</td><td style="padding:6px; border:1px solid #666;">4</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">w</td><td style="padding:6px; border:1px solid #666;">2</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">x</td><td style="padding:6px; border:1px solid #666;">1</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">-</td><td style="padding:6px; border:1px solid #666;">0</td></tr>
-</tbody>
-</table>
-</div>
-</div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>What Number Is r--?</h4>
-<ul>
-<li>Read only, nothing else</li>
-<li>w and x are both off</li>
-<li>Add the letter values</li>
-</ul>
-</div>
-<div class="col">
-<h2 style="text-align:center; color:#FF671D; font-size:4rem; margin:0; font-family:Consolas, monospace;">4</h2>
-</div>
-</div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>What Number Is r-x?</h4>
-<ul>
-<li>Read and execute</li>
-<li>Write is off</li>
-<li>Add the letter values</li>
-</ul>
-</div>
-<div class="col">
-<h2 style="text-align:center; color:#FF671D; font-size:4rem; margin:0; font-family:Consolas, monospace;">5</h2>
-</div>
-</div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>What Number Is rw-?</h4>
-<ul>
-<li>Read and write</li>
-<li>Execute is off</li>
-<li>Add the letter values</li>
-</ul>
-</div>
-<div class="col">
-<h2 style="text-align:center; color:#FF671D; font-size:4rem; margin:0; font-family:Consolas, monospace;">6</h2>
-</div>
-</div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>What Number Is rwx?</h4>
-<ul>
-<li>All three are on</li>
-<li>Read, write, execute</li>
-<li>Add the letter values</li>
-</ul>
-</div>
-<div class="col">
-<h2 style="text-align:center; color:#FF671D; font-size:4rem; margin:0; font-family:Consolas, monospace;">7</h2>
-</div>
-</div>
-</section>
-
-<section data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>Symbolic vs. Octal</h4>
-<ul>
-<li>Letters or a digit, same idea</li>
-<li>chmod accepts either form</li>
-<li>Octal is faster to type</li>
-</ul>
-</div>
-<div class="col">
-<table style="font-size: 1.35rem;">
-<tbody>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666; font-weight:bold;">Symbol</td><td style="padding:6px; border:1px solid #666; font-weight:bold;">Octal</td><td style="padding:6px; border:1px solid #666; font-weight:bold;">Meaning</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">rwx</td><td style="padding:6px; border:1px solid #666;">7</td><td style="padding:6px; border:1px solid #666;">read + write + execute</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">rw-</td><td style="padding:6px; border:1px solid #666;">6</td><td style="padding:6px; border:1px solid #666;">read + write</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">r-x</td><td style="padding:6px; border:1px solid #666;">5</td><td style="padding:6px; border:1px solid #666;">read + execute</td></tr>
-<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">r--</td><td style="padding:6px; border:1px solid #666;">4</td><td style="padding:6px; border:1px solid #666;">read only</td></tr>
-</tbody>
-</table>
-</div>
-</div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>Recall: chmod Sets This</h4>
-<ul>
-<li>Module 2 already used chmod</li>
-<li>chmod 770 file sets rwxrwx---</li>
-<li>Now you know why it's 7</li>
-</ul>
-</div>
-<div class="col">
-<div class="terminal">$ chmod 640 config.yml
-$ stat config.yml | grep Access
-Access: (0640/-rw-r-----)</div>
-</div>
-</div>
-</section>
-
-<section>
-<h2 style="text-align:center;">Questions?</h2>
-</section>
-
-<section id="module-3-agenda-5" data-background-color="#ffffff">
 <h2 style="text-align:center;">FHS Directory Standard</h2>
 </section>
 
 <section data-background-color="#ffffff">
-<div class="cmd-table" data-through="cmd-groups"></div>
+<div class="cmd-table" data-through="cmd-mount"></div>
 </section>
 
 <section data-background-color="#ffffff">
@@ -7787,6 +7071,722 @@ Access: (0640/-rw-r-----)</div>
 </div>
 <div class="col">
 <svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="418" height="258" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><line x1="210.0" y1="68.0" x2="61.5" y2="170.0" stroke="#666" stroke-width="2"/><line x1="210.0" y1="68.0" x2="160.5" y2="170.0" stroke="#666" stroke-width="2"/><line x1="210.0" y1="68.0" x2="259.5" y2="170.0" stroke="#666" stroke-width="2"/><line x1="210.0" y1="68.0" x2="358.5" y2="170.0" stroke="#666" stroke-width="2"/><rect x="18.0" y="176" width="87.0" height="40" rx="8" fill="#FF671D" stroke="#FF671D" stroke-width="2"/><text x="61.5" y="201.5" text-anchor="middle" font-size="16.0" font-family="Consolas, monospace" fill="#1a1a1a" font-weight="bold">cron</text><rect x="117.0" y="176" width="87.0" height="40" rx="8" fill="#2a2a2a" stroke="#666" stroke-width="2"/><text x="160.5" y="201.5" text-anchor="middle" font-size="16.0" font-family="Consolas, monospace" fill="#eee" font-weight="bold">lpd</text><rect x="216.0" y="176" width="87.0" height="40" rx="8" fill="#2a2a2a" stroke="#666" stroke-width="2"/><text x="259.5" y="201.5" text-anchor="middle" font-size="16.0" font-family="Consolas, monospace" fill="#eee" font-weight="bold">mqueue</text><rect x="315.0" y="176" width="87.0" height="40" rx="8" fill="#2a2a2a" stroke="#666" stroke-width="2"/><text x="358.5" y="201.5" text-anchor="middle" font-size="16.0" font-family="Consolas, monospace" fill="#eee" font-weight="bold">news</text><rect x="144.0" y="22" width="132" height="40" rx="8" fill="#2a2a2a" stroke="#777" stroke-width="2"/><text x="210.0" y="48.0" text-anchor="middle" font-size="15.2" font-family="Consolas, monospace" fill="#eee" font-weight="bold">/var/spool</text></svg>
+</div>
+</div>
+</section>
+
+<section>
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-3-agenda-3" data-background-color="#ffffff">
+<h2 style="text-align:center;">Everything Is a File</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="cmd-table" data-through="cmd-mount"></div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Everything Is a File</h4>
+<ul>
+<li>Unix's biggest idea</li>
+<li>Same commands work on all</li>
+<li>Simplifies the whole OS</li>
+</ul>
+</div>
+<div class="col">
+<svg viewBox="0 0 560 520" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:480px;display:block;margin:0 auto;"><rect x="1" y="1" width="558" height="518" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="194.0" y="87.0" width="172" height="56" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="280.0" y="120.0" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Regular File</text><rect x="341.4" y="194.1" width="172" height="56" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="427.4" y="227.1" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Directory</text><rect x="285.1" y="367.4" width="172" height="56" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="371.1" y="400.4" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Device (/dev)</text><rect x="102.9" y="367.4" width="172" height="56" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="188.9" y="400.4" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Pipe</text><rect x="46.6" y="194.1" width="172" height="56" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="132.6" y="227.1" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Socket</text><circle cx="280.0" cy="270.0" r="60" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="280.0" y="276.0" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">File</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>A Disk Is a File</h4>
+<ul>
+<li>/dev/sda is your whole disk</li>
+<li>ls -l shows it like any file</li>
+<li>Reading it reads raw bytes</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ ls -l /dev/sda
+brw-rw---- 1 root disk 8, 0 Sep 8 /dev/sda</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>A Disk Is a File</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-l</span> <span class="tk-path">/dev/sda</span>
+<span class="tk-user">brw-rw----</span> 1 root disk <span class="tk-num">8</span>, <span class="tk-num">0</span> Sep 8 <span class="tk-path">/dev/sda</span></div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Processes Are Files</h4>
+<ul>
+<li>/proc exposes running programs</li>
+<li>Each process gets a folder</li>
+<li>Files inside are readable</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ cat /proc/version
+Linux version 6.8.0 (gcc 13.2.0)</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Processes Are Files</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">cat</span> <span class="tk-path">/proc/version</span>
+Linux version <span class="tk-num">6.8.0</span> (gcc 13.2.0)</div>
+</section>
+
+<section id="cmd-file" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Command: file</h4>
+<ul>
+<li>Not installed by default</li>
+<li>Create the file if missing</li>
+<li>Identifies a file's real type</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ sudo apt install -y file
+$ echo "Library opens at 9am" &gt; notes.txt
+$ file notes.txt
+notes.txt: ASCII text
+
+$ file /dev/sda
+/dev/sda: block special</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Command: file</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> <span class="tk-str">file</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">echo</span> <span class="tk-str">"Library opens at 9am"</span> &gt; <span class="tk-path">notes.txt</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">file</span> <span class="tk-path">notes.txt</span>
+<span class="tk-path">notes.txt</span>: <span class="tk-user">ASCII text</span>
+
+<span class="tk-prompt">$</span> <span class="tk-cmd">file</span> <span class="tk-path">/dev/sda</span>
+<span class="tk-path">/dev/sda</span>: <span class="tk-user">block special</span></div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Special Files at a Glance</h4>
+<ul>
+<li>Each path exposes something</li>
+<li>None are "real" disk files</li>
+<li>The OS generates them live</li>
+</ul>
+</div>
+<div class="col">
+<table style="font-size: 1.35rem;">
+<tbody>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Path</td><td style="padding:6px; border:1px solid #666;">What It Really Is</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">/dev/sda</td><td style="padding:6px; border:1px solid #666;">The physical disk itself</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">/proc/1</td><td style="padding:6px; border:1px solid #666;">Info about process ID 1</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">/dev/null</td><td style="padding:6px; border:1px solid #666;">A file that discards everything</td></tr>
+</tbody>
+</table>
+<p style="font-size:0.95rem;color:#999;margin-top:0.6rem;">dev = device &middot; proc = process &middot; sda = SCSI/SATA disk A (1st disk) &middot; null = the null device</p>
+</div>
+</div>
+</section>
+
+<section id="term-inode" data-tag="terminology" data-term="Inode" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Word Origin: &quot;Inode&quot;</h4>
+<ul>
+<li>Short for "index node"</li><li>Holds a file's metadata</li><li>The filename lives elsewhere</li>
+</ul>
+</div>
+<div class="col">
+<svg viewBox="0 0 340 268" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="266" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><line x1="62" y1="14" x2="62" y2="254" stroke="#555" stroke-width="2"/><circle cx="62" cy="38.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="42.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1970s</text><text x="76" y="34.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="34.0">Unix introduces the</tspan><tspan x="76" y="48.0">inode as a metadata record</tspan></text><circle cx="62" cy="134.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="138.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1974</text><text x="76" y="130.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="130.0">Documented in the</tspan><tspan x="76" y="144.0">Unix File System paper</tspan></text><circle cx="62" cy="230.0" r="7.5" fill="#FF671D" stroke="#777" stroke-width="1.5"/><text x="48" y="234.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Today</text><text x="76" y="226.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="226.0">ext4, XFS, and most Linux</tspan><tspan x="76" y="240.0">file systems still use inodes</tspan></text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Reading a File's Metadata</h4>
+<ul>
+<li>ls -l already shows some</li>
+<li>-i also prints the inode</li>
+<li>Full detail comes later</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ ls -li notes.txt
+130910 -rw-r--r-- 1 admin admin 21 notes.txt</div>
+</div>
+</div>
+<table style="font-size: 1.1rem; margin-top: 1rem;">
+<tbody>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #555; font-weight:bold;">Field</td><td style="padding:6px; border:1px solid #555; font-weight:bold;">Meaning</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #555;">130910</td><td style="padding:6px; border:1px solid #555;">Inode number (unique ID)</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #555;">-rw-r--r--</td><td style="padding:6px; border:1px solid #555;">Permissions</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #555;">1</td><td style="padding:6px; border:1px solid #555;">Hardlink count</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #555;">admin admin</td><td style="padding:6px; border:1px solid #555;">Owner, then group</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #555;">21</td><td style="padding:6px; border:1px solid #555;">Size in bytes</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #555;">notes.txt</td><td style="padding:6px; border:1px solid #555;">The filename</td></tr>
+</tbody>
+</table>
+<p class="fragment note-below">&#9888;&#65039; On <span class="highlight">/mnt/c</span> paths, WSL2 often shows huge inode numbers and -rwxrwxrwx for everything -- Windows drives don't track real Unix permissions.</p>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Reading a File's Metadata</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-li</span> <span class="tk-path">notes.txt</span>
+<span class="tk-num">130910</span> <span class="tk-user">-rw-r--r--</span> 1 admin admin <span class="tk-num">21</span> <span class="tk-path">notes.txt</span></div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>What's Inside an Inode?</h4>
+<ul>
+<li>Size, owner, permissions</li>
+<li>Timestamps (access, modify)</li>
+<li>Pointer to the data blocks</li>
+</ul>
+</div>
+<div class="col">
+<svg viewBox="0 0 380 230" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="228" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="lyArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><line x1="190.0" y1="71" x2="190.0" y2="85" stroke="#888" stroke-width="1.5" marker-end="url(#lyArrow)"/><line x1="190.0" y1="143" x2="190.0" y2="157" stroke="#888" stroke-width="1.5" marker-end="url(#lyArrow)"/><rect x="20" y="15" width="340" height="56" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="190.0" y="48.0" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">Filename (in the directory)</text><rect x="20" y="87" width="340" height="56" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="1.5"/><text x="190.0" y="120.0" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">Inode (owner, size, perms)</text><rect x="20" y="159" width="340" height="56" rx="8" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="190.0" y="192.0" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">Data Blocks (actual bytes)</text></svg>
+</div>
+</div>
+</section>
+
+<section id="module-3-agenda-3-symlink" data-background-color="#ffffff">
+<h2 style="text-align:center;">Symlink vs. Hardlink</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Symlink vs. Hardlink</h4>
+<ul>
+<li>Symlink: a pointer to a path</li>
+<li>Hardlink: shares the inode</li>
+<li>Table below compares both</li>
+</ul>
+</div>
+<div class="col">
+<table style="font-size: 1.35rem;">
+<tbody>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Type</td><td style="padding:6px; border:1px solid #666;">Own Inode?</td><td style="padding:6px; border:1px solid #666;">Breaks If Target Moves?</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Symlink</td><td style="padding:6px; border:1px solid #666;">Yes (its own)</td><td style="padding:6px; border:1px solid #666;">Yes</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Hardlink</td><td style="padding:6px; border:1px solid #666;">No (shares one)</td><td style="padding:6px; border:1px solid #666;">No</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4 style="text-align:center;">Create &amp; Access Both</h4>
+<div class="twocol">
+<div class="col">
+<p style="font-weight:bold;color:#FF671D;text-align:center;">Symlink</p>
+<div class="terminal">$ ln -s notes.txt link-s.txt
+$ ls -l link-s.txt
+lrwxrwxrwx 1 admin admin
+link-s.txt -&gt; notes.txt
+$ cat link-s.txt
+Library opens at 9am</div>
+</div>
+<div class="col">
+<p style="font-weight:bold;color:#FF671D;text-align:center;">Hardlink</p>
+<div class="terminal">$ ln notes.txt link-h.txt
+$ ls -li link-h.txt
+130910 -rw-r--r-- 2 admin admin
+link-h.txt
+$ cat link-h.txt
+Library opens at 9am</div>
+</div>
+</div>
+<p class="fragment note-below">&#9888;&#65039; Same <span class="highlight">inode</span> (130910) for the hardlink; the symlink gets its own.</p>
+</section>
+
+<section id="term-symlink" data-tag="terminology" data-term="Symlink" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Word Origin: &quot;Symlink&quot;</h4>
+<ul>
+<li>Short for "symbolic link"</li><li>Added to give shortcuts</li><li>Works across file systems</li>
+</ul>
+</div>
+<div class="col">
+<svg viewBox="0 0 340 268" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="266" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><line x1="62" y1="14" x2="62" y2="254" stroke="#555" stroke-width="2"/><circle cx="62" cy="38.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="42.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1978</text><text x="76" y="34.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="34.0">4.2BSD adds the</tspan><tspan x="76" y="48.0">first symbolic links</tspan></text><circle cx="62" cy="134.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="138.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1993</text><text x="76" y="130.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="130.0">Linux adopts them via</tspan><tspan x="76" y="144.0">ext2's link support</tspan></text><circle cx="62" cy="230.0" r="7.5" fill="#FF671D" stroke="#777" stroke-width="1.5"/><text x="48" y="234.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Today</text><text x="76" y="226.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="226.0">Used for versioned installs,</tspan><tspan x="76" y="240.0">shortcuts, and config paths</tspan></text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Why Symlinks &amp; Hardlinks?</h4>
+<ul>
+<li>Names already locate files</li>
+<li>So why need links at all?</li>
+</ul>
+</div>
+<div class="col">
+<ul>
+<li>One file, many paths</li>
+<li>Hardlinks save real space</li>
+<li>Symlinks cross drives/paths</li>
+<li>Swap targets, keep same name</li>
+</ul>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="cmd-table" data-through="cmd-file"></div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Why This Matters</h4>
+<ul>
+<li>Wrong access exposes the disk</li>
+<li>Bad permissions are dangerous</li>
+<li>Restrict device files to root</li>
+</ul>
+<div class="fragment" style="display:flex; gap:16px; margin-top:16px;"><div style="flex:1; background:#2a2a2a; border-radius:8px; padding:0.8rem 1rem; border:2px solid #e03131;"><p style="margin:0; font-size:1.3rem; color:#eee;">&#128308; <strong>Red Team:</strong> A world-writable /dev/sda lets an attacker overwrite the whole disk directly.</p></div><div style="flex:1; background:#2a2a2a; border-radius:8px; padding:0.8rem 1rem; border:2px solid #3b82f6;"><p style="margin:0; font-size:1.3rem; color:#eee;">&#128309; <strong>Blue Team:</strong> Restrict device files to root/disk group; never widen /dev permissions.</p></div></div></div>
+<div class="col">
+
+</div>
+</div>
+</section>
+
+<section>
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-3-agenda-4" data-background-color="#ffffff">
+<h2 style="text-align:center;">Ownership: Owner &amp; Group</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="cmd-table" data-through="cmd-file"></div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Multi-User History</h4>
+<ul>
+<li>Unix always was multi-user</li>
+<li>Ownership prevents conflicts</li>
+<li>Groups let teams share safely</li>
+</ul>
+</div>
+<div class="col">
+<svg viewBox="0 0 340 268" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="266" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><line x1="62" y1="14" x2="62" y2="254" stroke="#555" stroke-width="2"/><circle cx="62" cy="38.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="42.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1969</text><text x="76" y="34.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="34.0">Unix is born as a</tspan><tspan x="76" y="48.0">time-sharing system</tspan></text><circle cx="62" cy="86.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="90.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1973</text><text x="76" y="82.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="82.0">Owner-based permissions</tspan><tspan x="76" y="96.0">are formalized in Unix</tspan></text><circle cx="62" cy="134.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="138.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1980s</text><text x="76" y="130.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="130.0">Groups added so teams</tspan><tspan x="76" y="144.0">can share without "other"</tspan></text><circle cx="62" cy="182.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="186.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1988</text><text x="76" y="178.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="178.0">POSIX standardizes</tspan><tspan x="76" y="192.0">owner/group/other for all Unix</tspan></text><circle cx="62" cy="230.0" r="6.5" fill="#FF671D" stroke="#FF671D" stroke-width="1.5"/><text x="48" y="234.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Today</text><text x="76" y="226.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="226.0">Every Linux file still</tspan><tspan x="76" y="240.0">uses this exact model</tspan></text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Ownership, Revisited</h4>
+<ul>
+<li>Ownership lives in the inode</li>
+<li>Directory only holds the name</li>
+<li>Metadata travels with the file</li>
+</ul>
+</div>
+<div class="col">
+<svg viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:400px;display:block;margin:0 auto;"><rect x="140" y="10" width="120" height="40" rx="7" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="200" y="35" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">config.yml</text><line x1="200" y1="50" x2="60" y2="90" stroke="#666" stroke-width="1.5"/><line x1="200" y1="50" x2="200" y2="90" stroke="#666" stroke-width="1.5"/><line x1="200" y1="50" x2="340" y2="90" stroke="#666" stroke-width="1.5"/><rect x="10" y="94" width="100" height="56" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="60" y="118" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Owner</text><text x="60" y="136" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#999">admin</text><rect x="150" y="94" width="100" height="56" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="200" y="118" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Group</text><text x="200" y="136" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#999">devteam</text><rect x="290" y="94" width="100" height="56" rx="7" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="340" y="118" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Other</text><text x="340" y="136" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#999">everyone else</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Anatomy of ls -l Output</h4>
+<ul>
+<li>Permissions come first</li>
+<li>Then owner, group, size, etc.</li>
+<li>Order never changes</li>
+</ul>
+</div>
+<div class="col">
+<table style="font-size: 1.35rem;">
+<tbody>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Field</td><td style="padding:6px; border:1px solid #666;">Example</td><td style="padding:6px; border:1px solid #666;">Meaning</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Permissions</td><td style="padding:6px; border:1px solid #666;">-rw-r--r--</td><td style="padding:6px; border:1px solid #666;">type + rwx x3</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Links</td><td style="padding:6px; border:1px solid #666;">1</td><td style="padding:6px; border:1px solid #666;">hardlink count</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Owner</td><td style="padding:6px; border:1px solid #666;">admin</td><td style="padding:6px; border:1px solid #666;">who owns it</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Group</td><td style="padding:6px; border:1px solid #666;">devteam</td><td style="padding:6px; border:1px solid #666;">shared group</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Size</td><td style="padding:6px; border:1px solid #666;">482</td><td style="padding:6px; border:1px solid #666;">bytes</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Name</td><td style="padding:6px; border:1px solid #666;">config.yml</td><td style="padding:6px; border:1px solid #666;">the filename</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section id="cmd-stat" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Command: stat</h4>
+<ul>
+<li>Create the file if missing</li>
+<li>Shows far more than ls -l</li>
+<li>Includes the inode number</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ touch config.yml
+$ stat config.yml
+  File: config.yml
+  Inode: 130842   Links: 1
+Access: (0644/-rw-r--r--)
+Uid: (1001/admin) Gid: (1002/devteam)</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Command: stat</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">touch</span> <span class="tk-path">config.yml</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">stat</span> <span class="tk-path">config.yml</span>
+  File: <span class="tk-path">config.yml</span>
+  Inode: <span class="tk-num">130842</span>   Links: <span class="tk-num">1</span>
+Access: (<span class="tk-num">0644</span>/<span class="tk-user">-rw-r--r--</span>)
+Uid: (<span class="tk-num">1001</span>/<span class="tk-user">admin</span>) Gid: (<span class="tk-num">1002</span>/<span class="tk-user">devteam</span>)</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Inode Metadata Revisited</h4>
+<ul>
+<li>stat reads the inode directly</li>
+<li>ls -l only shows a summary</li>
+<li>Same data, more detail</li>
+</ul>
+</div>
+<div class="col">
+<svg viewBox="0 0 380 230" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="228" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="lyArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><line x1="190.0" y1="71" x2="190.0" y2="85" stroke="#888" stroke-width="1.5" marker-end="url(#lyArrow)"/><line x1="190.0" y1="143" x2="190.0" y2="157" stroke="#888" stroke-width="1.5" marker-end="url(#lyArrow)"/><rect x="20" y="15" width="340" height="56" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="190.0" y="48.0" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">ls -l (summary view)</text><rect x="20" y="87" width="340" height="56" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="1.5"/><text x="190.0" y="120.0" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">Inode (owner, perms, times)</text><rect x="20" y="159" width="340" height="56" rx="8" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="190.0" y="192.0" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">stat (full detail view)</text></svg>
+</div>
+</div>
+</section>
+
+<section id="cmd-id" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Command: id</h4>
+<ul>
+<li>Shows your numeric identity</li>
+<li>uid = your user number</li>
+<li>gid = primary group number</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ id
+uid=1001(admin) gid=1002(devteam)
+groups=1002(devteam),27(sudo)</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Command: id</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">id</span>
+uid=<span class="tk-num">1001</span>(<span class="tk-user">admin</span>) gid=<span class="tk-num">1002</span>(<span class="tk-user">devteam</span>)
+groups=<span class="tk-num">1002</span>(devteam),<span class="tk-num">27</span>(sudo)</div>
+</section>
+
+<section id="term-uid" data-tag="terminology" data-term="UID &amp; GID" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Word Origin: &quot;UID &amp; GID&quot;</h4>
+<ul>
+<li>Numeric ID behind every name</li><li>root is always UID 0</li><li>Names are just a lookup table</li>
+</ul>
+</div>
+<div class="col">
+<svg viewBox="0 0 340 268" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="266" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><line x1="62" y1="14" x2="62" y2="254" stroke="#555" stroke-width="2"/><circle cx="62" cy="38.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="42.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1970s</text><text x="76" y="34.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="34.0">Unix assigns a number</tspan><tspan x="76" y="48.0">to every user account</tspan></text><circle cx="62" cy="134.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="138.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1988</text><text x="76" y="130.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="130.0">POSIX standardizes</tspan><tspan x="76" y="144.0">uid_t and gid_t types</tspan></text><circle cx="62" cy="230.0" r="7.5" fill="#FF671D" stroke="#777" stroke-width="1.5"/><text x="48" y="234.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Today</text><text x="76" y="226.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="226.0">/etc/passwd still maps</tspan><tspan x="76" y="240.0">names to these numbers</tspan></text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Practice: Who Owns This?</h4>
+<ul>
+<li>-rw-r----- alex staff notes</li>
+<li>Who is the owner?</li>
+<li>Who is the group?</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 340 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="10" y="10" width="320" height="240" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="170.0" y="143.0" text-anchor="middle" font-size="84">&#128100;</text><text x="170.0" y="208.0" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Read the Line</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4 style="text-align:center;">Owner &amp; Group</h4>
+<h2 style="text-align:center; color:#FF671D; font-size:2.6rem; margin-top:0.5em; font-family:Consolas, monospace;">alex : staff</h2>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Recall: chown Changes This</h4>
+<ul>
+<li>Module 2 already used chown</li>
+<li>chown user:group file</li>
+<li>Now you know WHY it matters</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ chown admin:devteam config.yml
+$ stat config.yml | grep Uid
+Uid: (1001/admin) Gid: (1002/devteam)</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Recall: chown Changes This</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">chown</span> <span class="tk-user">admin</span><span class="tk-punct">:</span><span class="tk-user">devteam</span> <span class="tk-path">config.yml</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">stat</span> <span class="tk-path">config.yml</span> <span class="tk-punct">|</span> <span class="tk-cmd">grep</span> <span class="tk-str">Uid</span>
+Uid: (<span class="tk-num">1001</span>/<span class="tk-user">admin</span>) Gid: (<span class="tk-num">1002</span>/<span class="tk-user">devteam</span>)</div>
+</section>
+
+<section id="cmd-groups" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Command: groups</h4>
+<ul>
+<li>Lists every group you're in</li>
+<li>First is your primary group</li>
+<li>Others are secondary groups</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ groups
+admin devteam sudo docker</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Command: groups</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">groups</span>
+<span class="tk-user">admin</span> devteam sudo docker</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="cmd-table" data-through="cmd-groups"></div>
+</section>
+
+<section data-background-color="#ffffff">
+<h4>Why Ownership Matters</h4>
+<div class="fragment" style="display:flex; gap:16px; margin-top:16px;"><div style="flex:1; background:#2a2a2a; border-radius:8px; padding:0.8rem 1rem; border:2px solid #e03131;"><p style="margin:0; font-size:1.3rem; color:#eee;">&#128308; <strong>Red Team:</strong> A misconfigured owner can leave secrets readable by any account on the box.</p></div><div style="flex:1; background:#2a2a2a; border-radius:8px; padding:0.8rem 1rem; border:2px solid #3b82f6;"><p style="margin:0; font-size:1.3rem; color:#eee;">&#128309; <strong>Blue Team:</strong> Audit ownership on sensitive files regularly; prefer dedicated service accounts.</p></div></div>
+</section>
+
+<section>
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-3-agenda-5" data-background-color="#ffffff">
+<h2 style="text-align:center;">Permission Bits: rwx</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="cmd-table" data-through="cmd-groups"></div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Who Should Read This?</h4>
+<ul>
+<li>Not all data should be public</li>
+<li>Some scripts must stay locked</li>
+<li>Wrong access causes breaches</li>
+</ul>
+</div>
+<div class="col">
+<svg viewBox="0 0 340 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="10" y="10" width="320" height="240" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="170.0" y="143.0" text-anchor="middle" font-size="84">&#128272;</text><text x="170.0" y="208.0" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Not Everyone</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Read, Write &amp; Execute</h4>
+<ul>
+<li>rwx means different things</li>
+<li>on a file vs. a folder</li>
+<li>x on a folder = can enter it</li>
+</ul>
+</div>
+<div class="col">
+<table style="font-size: 1.35rem;">
+<tbody>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666; font-weight:bold;">Letter</td><td style="padding:6px; border:1px solid #666; font-weight:bold;">On a File</td><td style="padding:6px; border:1px solid #666; font-weight:bold;">On a Folder</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">r</td><td style="padding:6px; border:1px solid #666;">Read contents</td><td style="padding:6px; border:1px solid #666;">List contents</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">w</td><td style="padding:6px; border:1px solid #666;">Edit contents</td><td style="padding:6px; border:1px solid #666;">Add/remove files</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">x</td><td style="padding:6px; border:1px solid #666;">Run as a program</td><td style="padding:6px; border:1px solid #666;">Enter with cd</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>The Numeric Version</h4>
+<ul>
+<li>r = 4, w = 2, x = 1</li>
+<li>Add them up per role</li>
+<li>rwx = 4+2+1 = 7</li>
+</ul>
+</div>
+<div class="col">
+<table style="font-size: 1.35rem;">
+<tbody>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666; font-weight:bold;">Letter</td><td style="padding:6px; border:1px solid #666; font-weight:bold;">Value</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">r</td><td style="padding:6px; border:1px solid #666;">4</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">w</td><td style="padding:6px; border:1px solid #666;">2</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">x</td><td style="padding:6px; border:1px solid #666;">1</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">-</td><td style="padding:6px; border:1px solid #666;">0</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>What Number Is r--?</h4>
+<ul>
+<li>Read only, nothing else</li>
+<li>w and x are both off</li>
+<li>Add the letter values</li>
+</ul>
+</div>
+<div class="col">
+<h2 style="text-align:center; color:#FF671D; font-size:4rem; margin:0; font-family:Consolas, monospace;">4</h2>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>What Number Is r-x?</h4>
+<ul>
+<li>Read and execute</li>
+<li>Write is off</li>
+<li>Add the letter values</li>
+</ul>
+</div>
+<div class="col">
+<h2 style="text-align:center; color:#FF671D; font-size:4rem; margin:0; font-family:Consolas, monospace;">5</h2>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>What Number Is rw-?</h4>
+<ul>
+<li>Read and write</li>
+<li>Execute is off</li>
+<li>Add the letter values</li>
+</ul>
+</div>
+<div class="col">
+<h2 style="text-align:center; color:#FF671D; font-size:4rem; margin:0; font-family:Consolas, monospace;">6</h2>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>What Number Is rwx?</h4>
+<ul>
+<li>All three are on</li>
+<li>Read, write, execute</li>
+<li>Add the letter values</li>
+</ul>
+</div>
+<div class="col">
+<h2 style="text-align:center; color:#FF671D; font-size:4rem; margin:0; font-family:Consolas, monospace;">7</h2>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Symbolic vs. Octal</h4>
+<ul>
+<li>Letters or a digit, same idea</li>
+<li>chmod accepts either form</li>
+<li>Octal is faster to type</li>
+</ul>
+</div>
+<div class="col">
+<table style="font-size: 1.35rem;">
+<tbody>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666; font-weight:bold;">Symbol</td><td style="padding:6px; border:1px solid #666; font-weight:bold;">Octal</td><td style="padding:6px; border:1px solid #666; font-weight:bold;">Meaning</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">rwx</td><td style="padding:6px; border:1px solid #666;">7</td><td style="padding:6px; border:1px solid #666;">read + write + execute</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">rw-</td><td style="padding:6px; border:1px solid #666;">6</td><td style="padding:6px; border:1px solid #666;">read + write</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">r-x</td><td style="padding:6px; border:1px solid #666;">5</td><td style="padding:6px; border:1px solid #666;">read + execute</td></tr>
+<tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">r--</td><td style="padding:6px; border:1px solid #666;">4</td><td style="padding:6px; border:1px solid #666;">read only</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Recall: chmod Sets This</h4>
+<ul>
+<li>Module 2 already used chmod</li>
+<li>chmod 770 file sets rwxrwx---</li>
+<li>Now you know why it's 7</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ chmod 640 config.yml
+$ stat config.yml | grep Access
+Access: (0640/-rw-r-----)</div>
 </div>
 </div>
 </section>
