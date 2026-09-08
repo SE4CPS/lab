@@ -347,7 +347,7 @@
 
     <div class="quick-links">
       <a href="./#toc" class="footer-link" target="_self">Schedule</a>
-      <span id="updated-stamp" class="footer-link">Updated: 2026-09-08 14:50 PT</span>
+      <span id="updated-stamp" class="footer-link">Updated: 2026-09-08 15:40 PT</span>
     </div>
 
     <div class="reveal">
@@ -389,7 +389,7 @@
                                 <td data-module="1"><a href="./#module-1" target="_self">Course Overview, What is a Program?,
                                     First C++ Program</a></td>
                                 <td></td>
-                                <td><a href="./#/lab-1" target="_self">Lab/HW 1</a></td>
+                                <td><a href="./#/lab-1" target="_self">Lab 1</a> / <a href="./#/homework-1" target="_self">HW 1</a></td>
                                 <td>🎓 University</td>
                             </tr>
                             <tr>
@@ -408,7 +408,7 @@
                                 </td>
                                 <td data-module="3"><a href="./#/module-3" target="_self">Branches</a></td>
                                 <td></td>
-                                <td><a href="./#/lab-2" target="_self">Lab/HW 2</a></td>
+                                <td><a href="./#/homework-2" target="_self">HW 2</a> / <a href="./#/lab-2" target="_self">Lab 2</a></td>
                                 <td></td>
                             </tr>
                             <tr>
@@ -4999,8 +4999,7 @@ cout &lt;&lt; <span style="color:#ff8c42;">&quot;No meals left&quot;</span>;</pr
 <li><a href="./#/module-3-agenda-3" target="_self">Real-World Examples</a></li>
 <li><a href="./#/module-3-agenda-4" target="_self">if / else in C++</a></li>
 <li><a href="./#/module-3-agenda-5" target="_self">switch in C++</a></li>
-<li><a href="./#/module-3-agenda-6" target="_self">Cyclomatic Complexity</a></li>
-<li><a href="./#/module-3-agenda-7" target="_self">Practice Lab</a></li>
+<li><a href="./#/module-3-agenda-6" target="_self">Practice Lab</a></li>
 </ol>
 </div>
 <div class="right">
@@ -5697,135 +5696,7 @@ Mode m = COLOR;
 <p class="fragment note-below">The metaphor is literal: an old telephone switchboard physically routed a call down one wire, exactly one path, out of many.</p>
 </section>
 
-<section>
-<h2 style="text-align:center;">Questions?</h2>
-</section>
-
 <section id="module-3-agenda-6">
-<h2 style="text-align:center;">Cyclomatic Complexity</h2>
-</section>
-
-<section>
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>What Is Cyclomatic Complexity?</h4>
-<ul>
-<li>Counts independent paths</li>
-<li>through a function</li>
-<li>More paths = harder to test</li>
-</ul>
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important">// A simple if/else has 2 paths
-<span style="color:#c586c0;">bool</span> ready = <span style="color:#c586c0;">true</span>;
-<span style="color:#c586c0;">if</span> (ready) { cout << "Go"; }
-<span style="color:#c586c0;">else</span> { cout << "Wait"; }</pre>
-</div>
-</div>
-</section>
-
-<section>
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>The Formula</h4>
-<ul>
-<li>M = E &minus; N + 2P</li>
-<li>E = edges, N = nodes</li>
-<li>P = connected parts</li>
-</ul>
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#c586c0;">int</span> maxVal(<span style="color:#c586c0;">int</span> a, <span style="color:#c586c0;">int</span> b) {
-    <span style="color:#c586c0;">if</span> (a > b) <span style="color:#c586c0;">return</span> a;
-    <span style="color:#c586c0;">else</span> <span style="color:#c586c0;">return</span> b;
-}</pre>
-</div>
-</div>
-</section>
-
-<section>
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Printer Example</h4>
-<ul>
-<li>3 conditions checked</li>
-<li>Complexity works out to 4</li>
-</ul>
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#c586c0;">bool</span> paper = <span style="color:#c586c0;">true</span>, toner = <span style="color:#c586c0;">true</span>;
-<span style="color:#c586c0;">bool</span> online = <span style="color:#c586c0;">true</span>;
-<span style="color:#c586c0;">if</span> (paper && toner && online) {
-    cout << "Ready";
-}</pre>
-</div>
-</div>
-</section>
-
-<section>
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Quick Check</h4>
-<ul>
-<li>One if with 3 conditions,</li>
-<li>or 3 nested ifs: worse?</li>
-</ul>
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important">// Nested version
-<span style="color:#c586c0;">if</span> (paper) {
-    <span style="color:#c586c0;">if</span> (toner) {
-        <span style="color:#c586c0;">if</span> (online) { cout << "Ready"; }
-    }
-}</pre>
-</div>
-</div>
-<p class="fragment note-below"><strong>Answer:</strong> Nested ifs, checked separately, add more paths.</p>
-</section>
-
-<section>
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Best Practices</h4>
-<ul>
-<li>Keep complexity 10 or under</li>
-<li>Split large functions up</li>
-</ul>
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#c586c0;">bool</span> readyToPrint(<span style="color:#c586c0;">bool</span> p, <span style="color:#c586c0;">bool</span> t) {
-    <span style="color:#c586c0;">return</span> p && t;
-}</pre>
-</div>
-</div>
-</section>
-
-<section data-tag="terminology" data-term="Cyclomatic">
-<h4>Word Origin: "Cyclomatic"</h4>
-<div class="twocol">
-<div class="col">
-<h5 style="margin-bottom:0.5rem;">Thomas McCabe, 1976</h5>
-<ul>
-<li>Coined the term and</li>
-<li>metric for code testing</li>
-</ul>
-</div>
-<div class="col">
-<h5 style="margin-bottom:0.5rem;">From Graph Theory</h5>
-<ul>
-<li>&quot;Cyclomatic number&quot; already</li>
-<li>meant loops in a graph</li>
-</ul>
-</div>
-</div>
-<p class="fragment note-below">McCabe borrowed a term from graph theory to measure how many independent test cases a function actually needs.</p>
-</section>
-
-<section>
-<h2 style="text-align:center;">Questions?</h2>
-</section>
-
-<section id="module-3-agenda-7">
 <h2 style="text-align:center;">Practice Lab</h2>
 </section>
 
@@ -15040,7 +14911,7 @@ cin >> choice;</pre>
                     Reassign, Type, Data Types, Constants, Operators,
                     <span class="highlight">Assignments</span>, Expressions,
                     <span class="highlight">Conditionals</span>, Branches, If/Else, Switch,
-                    Boolean, Cyclomatic Complexity,
+                    Boolean,
                     <span class="highlight">Loops</span>, For, While, Do-While,
                     <span class="highlight">Arrays</span>, Vectors, Strings,
                     <span class="highlight">Functions</span>, Parameters, Return Values, Scope,
@@ -15079,17 +14950,15 @@ cin >> choice;</pre>
                     <h2 style="text-align:center;">Labs &amp; Homework</h2>
                     <ol style="line-height: 1.8;">
                         <li><a href="./#/lab-1" target="_self">Lab 1: Getting Started</a></li>
+                        <li><a href="./#/homework-1" target="_self">Homework 1: Evolution of C++</a></li>
+                        <li><a href="./#/homework-2" target="_self">Homework 2: Branches</a></li>
                         <li><a href="./#/lab-2" target="_self">Lab 2: Branches</a></li>
                     </ol>
                 </section>
 
                 <section id="lab-1">
                     <h2 style="text-align:center;">Lab 1</h2>
-                </section>
-
-                <section data-background-color="#ffffff">
-                    <p class="fragment note-below"><strong>Points:</strong> TBD. Due: TBD (Pacific time).</p>
-                    <p class="fragment note-below">Submit via Canvas. Groups OK, but by submitting you're confirming you personally understand the work. AI is fine to use, but clearly state which parts used AI and which parts you did without it.</p>
+                    <p style="margin-top:1rem;"><a href="./#/assignments" target="_self" style="color:#8ab4f8; text-decoration:underline; font-size:1rem;">&larr; Labs &amp; Homework</a></p>
                 </section>
 
                 <section data-background-color="#ffffff">
@@ -15102,53 +14971,133 @@ cin >> choice;</pre>
                 </section>
 
                 <section data-background-color="#ffffff">
-                    <h4>Q1</h4>
-                    <p style="font-size:1.4rem;max-width:800px;">What do you think a "computer program" actually is?</p>
+                    <div style="display:flex;align-items:center;gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Q1</h4>
+                            <p style="font-size:1.2rem;">What do you think a "computer program" actually is?</p>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <h5 style="margin-bottom:0.4rem;">One Answer</h5>
+                            <p style="font-size:1.1rem;">Something a computer runs using its internal components, where the code gets read by the hardware.</p>
+                        </div>
+                    </div>
                 </section>
 
                 <section data-background-color="#ffffff">
-                    <h4>Q2</h4>
-                    <p style="font-size:1.4rem;max-width:800px;">Have you ever used an app or website that didn&#39;t work right? What happened?</p>
+                    <div style="display:flex;align-items:center;gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Q2</h4>
+                            <p style="font-size:1.2rem;">Have you ever used an app or website that didn&#39;t work right? What happened?</p>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <h5 style="margin-bottom:0.4rem;">One Answer</h5>
+                            <p style="font-size:1.1rem;">A Minecraft mod turned the screen black. Only one specific, worse-performing setting fixed it, so the mod got removed.</p>
+                        </div>
+                    </div>
                 </section>
 
                 <section data-background-color="#ffffff">
-                    <h4>Q3</h4>
-                    <p style="font-size:1.4rem;max-width:800px;">What&#39;s different about talking to a person versus &quot;talking&quot; to a computer?</p>
+                    <div style="display:flex;align-items:center;gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Q3</h4>
+                            <p style="font-size:1.2rem;">What&#39;s different about talking to a person versus &quot;talking&quot; to a computer?</p>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <h5 style="margin-bottom:0.4rem;">One Answer</h5>
+                            <p style="font-size:1.1rem;">A person shows body language and tone. Talking to a computer is more like talking at it, since you only get text back.</p>
+                        </div>
+                    </div>
                 </section>
 
                 <section data-background-color="#ffffff">
-                    <h4>Q4</h4>
-                    <p style="font-size:1.4rem;max-width:800px;">If you had to tell a computer, step by step, how to make a sandwich, what would you need to say?</p>
+                    <div style="display:flex;align-items:center;gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Q4</h4>
+                            <p style="font-size:1.2rem;">If you had to tell a computer, step by step, how to make a sandwich, what would you need to say?</p>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <h5 style="margin-bottom:0.4rem;">One Answer</h5>
+                            <p style="font-size:1.1rem;">Every step, explicitly: get plates and bread, spread the filling, then place one slice on top so they touch.</p>
+                        </div>
+                    </div>
                 </section>
 
                 <section data-background-color="#ffffff">
-                    <h4>Q5</h4>
-                    <p style="font-size:1.4rem;max-width:800px;">Just from the word itself, what do you think &quot;debugging&quot; means?</p>
+                    <div style="display:flex;align-items:center;gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Q5</h4>
+                            <p style="font-size:1.2rem;">Just from the word itself, what do you think &quot;debugging&quot; means?</p>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <h5 style="margin-bottom:0.4rem;">One Answer</h5>
+                            <p style="font-size:1.1rem;">Removing bugs from a program so it functions correctly.</p>
+                        </div>
+                    </div>
                 </section>
 
                 <section data-background-color="#ffffff">
-                    <h4>Q6</h4>
-                    <p style="font-size:1.4rem;max-width:800px;">Why do you think computers need such exact, precise instructions?</p>
+                    <div style="display:flex;align-items:center;gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Q6</h4>
+                            <p style="font-size:1.2rem;">Why do you think computers need such exact, precise instructions?</p>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <h5 style="margin-bottom:0.4rem;">One Answer</h5>
+                            <p style="font-size:1.1rem;">It&#39;s like how there, their, and they&#39;re sound the same but mean different things. A computer can&#39;t guess which one is meant.</p>
+                        </div>
+                    </div>
                 </section>
 
                 <section data-background-color="#ffffff">
-                    <h4>Q7</h4>
-                    <p style="font-size:1.4rem;max-width:800px;">Have you ever followed confusing instructions or a recipe? What made them hard to follow?</p>
+                    <div style="display:flex;align-items:center;gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Q7</h4>
+                            <p style="font-size:1.2rem;">Have you ever followed confusing instructions or a recipe? What made them hard to follow?</p>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <h5 style="margin-bottom:0.4rem;">One Answer</h5>
+                            <p style="font-size:1.1rem;">Helped build a PC over the summer; ports and wires were named differently across manuals, and some parts had no instructions at all.</p>
+                        </div>
+                    </div>
                 </section>
 
                 <section data-background-color="#ffffff">
-                    <h4>Q8</h4>
-                    <p style="font-size:1.4rem;max-width:800px;">Name one app you use every day. What do you think it&#39;s doing behind the scenes?</p>
+                    <div style="display:flex;align-items:center;gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Q8</h4>
+                            <p style="font-size:1.2rem;">Name one app you use every day. What do you think it&#39;s doing behind the scenes?</p>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <h5 style="margin-bottom:0.4rem;">One Answer</h5>
+                            <p style="font-size:1.1rem;">Reddit: it tracks votes, calculates karma, lets people post, and sorts content by popularity and growth potential.</p>
+                        </div>
+                    </div>
                 </section>
 
                 <section data-background-color="#ffffff">
-                    <h4>Q9</h4>
-                    <p style="font-size:1.4rem;max-width:800px;">If a program you wrote didn&#39;t do what you expected, how would you start figuring out why?</p>
+                    <div style="display:flex;align-items:center;gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Q9</h4>
+                            <p style="font-size:1.2rem;">If a program you wrote didn&#39;t do what you expected, how would you start figuring out why?</p>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <h5 style="margin-bottom:0.4rem;">One Answer</h5>
+                            <p style="font-size:1.1rem;">Read the compiler&#39;s error output line by line, then double-check the logic by testing again.</p>
+                        </div>
+                    </div>
                 </section>
 
                 <section data-background-color="#ffffff">
-                    <h4>Q10</h4>
-                    <p style="font-size:1.4rem;max-width:800px;">What&#39;s one thing you&#39;d like to be able to build by the end of this course?</p>
+                    <div style="display:flex;align-items:center;gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Q10</h4>
+                            <p style="font-size:1.2rem;">What&#39;s one thing you&#39;d like to be able to build by the end of this course?</p>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <h5 style="margin-bottom:0.4rem;">One Answer</h5>
+                            <p style="font-size:1.1rem;">Card games are a hobby, so building a virtual version of one would be fun to try.</p>
+                        </div>
+                    </div>
                 </section>
 
                 <section data-background-color="#ffffff">
@@ -15156,17 +15105,173 @@ cin >> choice;</pre>
                     <p style="font-size:1.4rem;max-width:800px;">Please read the course syllabus and ask any questions; once completed, confirm you have read the syllabus.</p>
                 </section>
 
-                <section id="lab-2">
-                    <h2 style="text-align:center;">Lab 2</h2>
+                <section id="homework-1">
+                    <h2 style="text-align:center;">Homework 1</h2>
+                    <p style="margin-top:1rem;"><a href="./#/assignments" target="_self" style="color:#8ab4f8; text-decoration:underline; font-size:1rem;">&larr; Labs &amp; Homework</a></p>
                 </section>
 
                 <section data-background-color="#ffffff">
-                    <p class="fragment note-below"><strong>Points:</strong> TBD. Due: TBD (Pacific time).</p>
-                    <p class="fragment note-below">Submit via Canvas. Groups OK, but by submitting you're confirming you personally understand the work. AI is fine to use, but clearly state which parts used AI and which parts you did without it.</p>
+                    <h4>Homework 1: Evolution of C++</h4>
+                    <ul>
+                        <li>Part 1: confirm syllabus read</li>
+                        <li>Part 2: read C++ paper, 10 Qs</li>
+                    </ul>
+                    <p class="source-line">Reading: Bjarne Stroustrup, <em>The Evolution of C++: 1985 to 1989</em> (first four pages)</p>
                 </section>
 
                 <section data-background-color="#ffffff">
-                    <h4>Lab 2: Branches</h4>
+                    <div style="display:flex;align-items:center;gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Naming &amp; History</h4>
+                            <ul>
+                                <li>Why the name C++?</li>
+                                <li>Who is Stroustrup?</li>
+                                <li>Why 1985?</li>
+                            </ul>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <p style="font-size:1.1rem;">&quot;++&quot; is the increment operator: one better than C. Stroustrup built it at Bell Labs (AT&amp;T) starting in 1979, released it publicly in 1985.</p>
+                            <p style="font-size:0.9rem;opacity:0.75;margin-top:0.6rem;">Covered in: Module 1</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section data-background-color="#ffffff">
+                    <div style="display:flex;align-items:center;gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Stability vs. Evolution</h4>
+                            <ul>
+                                <li>Stable, but evolving?</li>
+                                <li>Why avoid unportable code?</li>
+                                <li>Why not easier for beginners?</li>
+                            </ul>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <p style="font-size:1.1rem;">Stable means old code keeps compiling as new features are added. Portability and full power mattered more than an easy on-ramp.</p>
+                            <p style="font-size:0.9rem;opacity:0.75;margin-top:0.6rem;">Covered in: Module 1</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section data-background-color="#ffffff">
+                    <div style="display:flex;align-items:center;gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Data Abstraction vs. OOP</h4>
+                            <ul>
+                                <li>Abstraction vs. OOP?</li>
+                                <li>What is a class?</li>
+                            </ul>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <p style="font-size:1.1rem;">Data abstraction hides how a type is built behind a clean interface. OOP adds inheritance and polymorphism on top. A class is C++&#39;s tool for both.</p>
+                            <p style="font-size:0.9rem;opacity:0.75;margin-top:0.6rem;">Covered in: Module 7</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section data-background-color="#ffffff">
+                    <div style="display:flex;align-items:center;gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Safe, Efficient, Convenient</h4>
+                            <ul>
+                                <li>Hardest goal to balance?</li>
+                                <li>What do safe/efficient mean?</li>
+                            </ul>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <p style="font-size:1.1rem;">Safe means hard to misuse; efficient means fast and low-memory. The two often pull against each other, which is why balancing them is hardest.</p>
+                            <p style="font-size:0.9rem;opacity:0.75;margin-top:0.6rem;">Covered in: Module 6&ndash;7</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section data-background-color="#ffffff">
+                    <div style="display:flex;align-items:center;gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Linkage &amp; Overloading</h4>
+                            <ul>
+                                <li>What is type-safe linkage?</li>
+                                <li>What does overloading do?</li>
+                            </ul>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <p style="font-size:1.1rem;">Type-safe linkage lets the compiler catch mismatched calls across separately-compiled files. Overloading lets one function name serve many types.</p>
+                            <p style="font-size:0.9rem;opacity:0.75;margin-top:0.6rem;">Covered in: Module 6</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section data-background-color="#ffffff">
+                    <div style="display:flex;align-items:center;gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Inheritance &amp; Abstract Classes</h4>
+                            <ul>
+                                <li>Why add multiple inheritance?</li>
+                                <li>What&#39;s an abstract class?</li>
+                            </ul>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <p style="font-size:1.1rem;">Single inheritance only extends one parent; some designs need two. An abstract class defines an interface with no full implementation of its own.</p>
+                            <p style="font-size:0.9rem;opacity:0.75;margin-top:0.6rem;">Covered in: Module 8</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section data-background-color="#ffffff">
+                    <div style="display:flex;align-items:center;gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Exceptions &amp; Templates</h4>
+                            <ul>
+                                <li>Why skip these in the paper?</li>
+                                <li>What are they?</li>
+                            </ul>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <p style="font-size:1.1rem;">Both were still being designed in 1989, so the paper only covers shipped C++ 2.0 features. Exceptions handle runtime errors; templates write one type for many kinds of data.</p>
+                            <p style="font-size:0.9rem;opacity:0.75;margin-top:0.6rem;">Covered in: Module 11</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section data-background-color="#ffffff">
+                    <div style="display:flex;align-items:center;gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Static/Const Members &amp; More</h4>
+                            <ul>
+                                <li>What&#39;s a static member?</li>
+                                <li>What does operator-&gt; do?</li>
+                            </ul>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <p style="font-size:1.1rem;">A static member belongs to the class, not to any one object. operator-&gt; lets a custom &quot;smart pointer&quot; type use ordinary pointer syntax.</p>
+                            <p style="font-size:0.9rem;opacity:0.75;margin-top:0.6rem;">Covered in: Module 7&ndash;8</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section data-background-color="#ffffff">
+                    <div style="display:flex;align-items:center;gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>About the Paper Itself</h4>
+                            <ul>
+                                <li>Has C++ changed since 1989?</li>
+                                <li>Why is this so hard to read?</li>
+                            </ul>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <p style="font-size:1.1rem;">Yes, hugely; C++11 through C++23 each added major features. This paper is a design memo for other language experts, not a tutorial. Read it for the &quot;why,&quot; not to fully understand every term yet.</p>
+                            <p style="font-size:0.9rem;opacity:0.75;margin-top:0.6rem;">Covered throughout the course</p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="homework-2">
+                    <h2 style="text-align:center;">Homework 2</h2>
+                    <p style="margin-top:1rem;"><a href="./#/assignments" target="_self" style="color:#8ab4f8; text-decoration:underline; font-size:1rem;">&larr; Labs &amp; Homework</a></p>
+                </section>
+
+                <section data-background-color="#ffffff">
+                    <h4>Homework 2: Branches</h4>
                     <ul>
                         <li>Answer in complete sentences</li>
                     </ul>
@@ -15183,23 +15288,16 @@ cin >> choice;</pre>
                 </section>
 
                 <section data-background-color="#ffffff">
-                    <h4>Q1</h4>
-                    <p style="font-size:1.4rem;max-width:800px;">Briefly describe a situation where if/else or switch is needed to decide an outcome.</p>
-                </section>
-
-                <section data-background-color="#ffffff">
-                    <h4>Q2</h4>
-                    <p style="font-size:1.4rem;max-width:800px;">Why would you prefer switch instead of if/else statements?</p>
-                </section>
-
-                <section data-background-color="#ffffff">
-                    <h4>Q3</h4>
-                    <p style="font-size:1.4rem;max-width:800px;">What does "break" do?</p>
-                </section>
-
-                <section data-background-color="#ffffff">
-                    <h4>Q4</h4>
-                    <p style="font-size:1.4rem;max-width:800px;">What is the "default" statement used for in switches?</p>
+                    <div style="display:flex;align-items:center;gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Q1&ndash;Q4</h4>
+                            <p style="font-size:1.05rem;margin:0.4rem 0;"><strong>Q1.</strong> Briefly describe a situation where if/else or switch is needed to decide an outcome.</p>
+                            <p style="font-size:1.05rem;margin:0.4rem 0;"><strong>Q2.</strong> Why would you prefer switch instead of if/else statements?</p>
+                            <p style="font-size:1.05rem;margin:0.4rem 0;"><strong>Q3.</strong> What does "break" do?</p>
+                            <p style="font-size:1.05rem;margin:0.4rem 0;"><strong>Q4.</strong> What is the "default" statement used for in switches?</p>
+                        </div>
+                        <div style="flex:1 1 0;"></div>
+                    </div>
                 </section>
 
                 <section data-background-color="#0a0a0a">
@@ -15218,8 +15316,20 @@ cin >> choice;</pre>
                     </div>
                 </section>
 
+                <section id="lab-2">
+                    <h2 style="text-align:center;">Lab 2</h2>
+                    <p style="margin-top:1rem;"><a href="./#/assignments" target="_self" style="color:#8ab4f8; text-decoration:underline; font-size:1rem;">&larr; Labs &amp; Homework</a></p>
+                </section>
+
                 <section data-background-color="#ffffff">
-                    <h4>Q6 (25 pts)</h4>
+                    <h4>Lab 2: Branches</h4>
+                    <ul>
+                        <li>Write and test working code</li>
+                    </ul>
+                </section>
+
+                <section data-background-color="#ffffff">
+                    <h4>Q1 (25 pts)</h4>
                     <ul>
                         <li>Ask the user about weather</li>
                         <li>Rain: take an umbrella</li>
@@ -15233,9 +15343,9 @@ cin >> choice;</pre>
                 </section>
 
                 <section data-background-color="#ffffff">
-                    <h4>Q7 (25 pts)</h4>
+                    <h4>Q2 (25 pts)</h4>
                     <ul>
-                        <li>Rebuild Q6 using switch/case</li>
+                        <li>Rebuild Q1 using switch/case</li>
                         <li>1=Rain 2=Cold 3=Hot 4=Other</li>
                         <li>Test 3 conditions, screenshot</li>
                     </ul>
@@ -15245,7 +15355,7 @@ cin >> choice;</pre>
                 <section data-background-color="#0a0a0a">
                     <div style="display:flex;align-items:center;gap:28px;">
                         <div style="flex:1 1 0;">
-                            <h4>Q8 (25 pts)</h4>
+                            <h4>Q3 (25 pts)</h4>
                             <ul>
                                 <li>Score 85 gives wrong output</li>
                                 <li>Explain why, then fix it</li>
