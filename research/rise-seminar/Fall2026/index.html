@@ -2066,6 +2066,88 @@
             </section>
 
             <section data-chapter="11">
+                <h3>Building It: What a Real Deployment Confirmed</h3>
+                <p class="story">The Multi-Agent RAG and Hallucination-Resistant RAG papers'
+                    Rewriter/Retriever/Evaluator ideas, implemented in ReleaseTrain, a production
+                    system tracking ~35 software-ecosystem data sources, not a benchmark. Sept 2026.</p>
+            </section>
+
+            <section data-chapter="11">
+                <svg viewBox="0 -110 920 480" style="width:100%;max-width:840px;height:auto;margin:0 auto;display:block;font-family:system-ui,-apple-system,'Segoe UI',Arial,sans-serif;" role="img"
+                    aria-label="The Rewriter, Retriever, Evaluator, and Orchestrator roles all run inside one backend process, which calls out to a choice of LLM providers (Claude, Groq, Ollama Cloud, plus Gemini for reading web pages) and a MongoDB data lake that ~35 scrapers also write into">
+                    <defs>
+                        <marker id="archArr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7"
+                            orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#777"></path></marker>
+                    </defs>
+
+                    <rect x="300" y="-95" width="170" height="55" rx="8" fill="#fff" stroke="#ccc" stroke-width="1.5" stroke-dasharray="4 3"></rect>
+                    <circle cx="385" cy="-83" r="4" fill="#c4c4c4"></circle>
+                    <path d="M377,-70 Q377,-79 385,-79 Q393,-79 393,-70 Z" fill="#c4c4c4"></path>
+                    <text x="385" y="-52" text-anchor="middle" font-size="12.5" font-weight="700" fill="#767676">User's question</text>
+
+                    <rect x="520" y="-95" width="170" height="55" rx="8" fill="#fbe3d3" stroke="#c2410c" stroke-width="2"></rect>
+                    <text x="605" y="-73" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1a1a1a">Rewriter</text>
+                    <text x="605" y="-55" text-anchor="middle" font-size="10.5" fill="#a8380a">frontend, term preview</text>
+
+                    <rect x="175" y="0" width="730" height="110" rx="8" fill="none" stroke="#999" stroke-width="1.5" stroke-dasharray="6 4"></rect>
+                    <text x="195" y="20" font-size="11.5" font-style="italic" fill="#767676">Backend &mdash; ask.js agent loop (2GB VM)</text>
+
+                    <rect x="245" y="35" width="150" height="55" rx="8" fill="#fbe3d3" stroke="#c2410c" stroke-width="2"></rect>
+                    <text x="320" y="60" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1a1a1a">Retriever</text>
+                    <text x="320" y="79" text-anchor="middle" font-size="10.5" fill="#a8380a">DB + web search</text>
+
+                    <rect x="465" y="35" width="150" height="55" rx="8" fill="#fbe3d3" stroke="#c2410c" stroke-width="2"></rect>
+                    <text x="540" y="60" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1a1a1a">Evaluator</text>
+                    <text x="540" y="79" text-anchor="middle" font-size="10.5" fill="#a8380a">gates, abstain</text>
+
+                    <rect x="685" y="35" width="150" height="55" rx="8" fill="#fbe3d3" stroke="#c2410c" stroke-width="2"></rect>
+                    <text x="760" y="60" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1a1a1a">Orchestrator</text>
+                    <text x="760" y="79" text-anchor="middle" font-size="10.5" fill="#a8380a">tool-use loop</text>
+
+                    <rect x="40" y="180" width="340" height="60" rx="8" fill="#fff" stroke="#767676" stroke-width="1.5" stroke-dasharray="5 3"></rect>
+                    <text x="210" y="207" text-anchor="middle" font-size="14" font-weight="700" fill="#1a1a1a">LLM Providers</text>
+                    <text x="210" y="226" text-anchor="middle" font-size="11" fill="#a8380a">Claude, Groq, Ollama, Gemini</text>
+
+                    <rect x="540" y="180" width="340" height="60" rx="8" fill="#fff" stroke="#333" stroke-width="1.5"></rect>
+                    <text x="710" y="207" text-anchor="middle" font-size="14" font-weight="700" fill="#1a1a1a">MongoDB Atlas</text>
+                    <text x="710" y="226" text-anchor="middle" font-size="11" fill="#555">data lake</text>
+
+                    <rect x="540" y="280" width="340" height="55" rx="8" fill="#fff" stroke="#333" stroke-width="1.5"></rect>
+                    <text x="710" y="304" text-anchor="middle" font-size="14" font-weight="700" fill="#1a1a1a">Bots</text>
+                    <text x="710" y="322" text-anchor="middle" font-size="11" fill="#555">~35 scrapers, cron</text>
+
+                    <g font-size="11" fill="#555">
+                        <text x="605" y="-30" text-anchor="middle">answer</text>
+                        <text x="750" y="163" text-anchor="middle">retrieve</text>
+                    </g>
+                    <g stroke="#777" stroke-width="1.4" fill="none">
+                        <line x1="474" y1="-67.5" x2="516" y2="-67.5" marker-end="url(#archArr)"></line>
+                        <line x1="605" y1="-27" x2="605" y2="-4" marker-start="url(#archArr)" marker-end="url(#archArr)"></line>
+                        <line x1="300" y1="109" x2="220" y2="176" marker-start="url(#archArr)" marker-end="url(#archArr)"></line>
+                        <line x1="780" y1="109" x2="700" y2="176" marker-start="url(#archArr)" marker-end="url(#archArr)"></line>
+                        <line x1="710" y1="276" x2="710" y2="244" marker-end="url(#archArr)"></line>
+                    </g>
+                </svg>
+            </section>
+
+            <section data-chapter="11">
+                <table style="font-size:0.7em;">
+                    <thead><tr><th>Area</th><th>What went wrong</th><th>Fix</th></tr></thead>
+                    <tbody>
+                        <tr><td>Rewriter</td><td>Multi-Agent RAG paper's exact bug, reproduced: rewrite <i>replaced</i> the original search terms</td><td>Union fetch: search both phrasings, always</td></tr>
+                        <tr><td>Evaluator</td><td>Model would answer on zero evidence rather than decline</td><td>Hallucination-Resistant RAG paper's Stage 1/2 abstention, hard-coded, not prompted</td></tr>
+                        <tr><td>Retrieval match</td><td>Keyword OR-match hit generic terms ("update", "version") on every query</td><td>Stoplist generic terms before matching</td></tr>
+                        <tr><td>Retrieval design</td><td>Embeddings blur exact identifiers: <code>8.0.44</code> vs <code>8.0.45</code></td><td>Lexical/metadata match stays primary, not semantic</td></tr>
+                        <tr><td>Runtime</td><td>Node 12.22.9 (EOL 2022) has no native <code>fetch</code>; SDK crashed on first call</td><td>Hand-rolled HTTP via <code>node-fetch</code></td></tr>
+                        <tr><td>Deploy</td><td>New LLM-client dependency added locally; <code>git pull</code> alone left server crash-looping</td><td><code>npm install</code> required after every pull</td></tr>
+                        <tr><td>Compute</td><td>2GB production VM cannot run even a small local LLM</td><td>Hosted API call from server, no local inference</td></tr>
+                        <tr><td>Pricing</td><td>No free tier for testing; every tool-use round-trip re-bills, and comparing 3 presets on one question triples it</td><td>Free tiers (Ollama local, Gemini/Groq) for testing; pay only for real evaluation runs</td></tr>
+                        <tr><td>Vendor gate</td><td>Deterministic pre-check matched only exact tracked product names; a generic category ("SQL", "LLM") resolved to nothing and abstained before any search ran</td><td>Category fallback grounded in the real product-type field, not a guessed synonym list</td></tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section data-chapter="11">
                 <h4>Eleven results, five columns</h4>
                 <table><thead><tr><th>Year</th><th>Result</th><th>User</th><th>Rewriter</th><th>Retriever</th><th>Evaluator</th><th>Orchestrator</th></tr></thead><tbody><tr><td>2020</td><td>Release patterns</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="hit">&#10003;</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td></tr><tr><td>2023</td><td>Ecosystem cost</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="hit">&#10003;</td><td class="hit">&#10003;</td><td class="miss">&ndash;</td></tr><tr><td>2024</td><td>Note classification</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="hit">&#10003;</td><td class="miss">&ndash;</td></tr><tr><td>2024</td><td>Reddit feedback</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="hit">&#10003;</td><td class="hit">&#10003;</td><td class="miss">&ndash;</td></tr><tr><td>2025</td><td>User perspectives</td><td class="hit">&#10003;</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="hit">&#10003;</td><td class="miss">&ndash;</td></tr><tr><td>2025</td><td>UML visualization</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="hit">&#10003;</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td></tr><tr><td>2026</td><td>Evidence-gated RAG</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="hit">&#10003;</td><td class="hit">&#10003;</td></tr><tr><td>2026</td><td>Semantic retrieval</td><td class="miss">&ndash;</td><td class="hit">&#10003;</td><td class="hit">&#10003;</td><td class="miss">&ndash;</td><td class="hit">&#10003;</td></tr><tr><td>2026</td><td>Multi-agent RAG</td><td class="miss">&ndash;</td><td class="hit">&#10003;</td><td class="hit">&#10003;</td><td class="hit">&#10003;</td><td class="hit">&#10003;</td></tr><tr><td>2026</td><td>TPS vs discontent</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="hit">&#10003;</td><td class="miss">&ndash;</td></tr><tr><td>2026</td><td>Update-path risk</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="hit">&#10003;</td><td class="miss">&ndash;</td></tr></tbody></table>
                 <p class="bridge">Retriever and Evaluator carry almost the whole story. Rewriter shows up
