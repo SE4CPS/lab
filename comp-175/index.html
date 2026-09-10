@@ -401,7 +401,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-10 12:45 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-10 13:05 PT</span>
   </div>
 
   <!--
@@ -8786,10 +8786,12 @@ drwxrwx--- <span class="tk-num">2</span> root libstaff <span class="tk-num">4096
 <div class="col">
 <h4>Problem 1: New Staff</h4>
 <ul>
-<li>A new hire is in libstaff</li>
-<li>Still gets Permission denied</li>
-<li>They never logged out</li>
-<li>Task: say why, then fix it</li>
+<li>You joined libstaff earlier</li>
+<li>An old shell still says no</li>
+<li>No new account needed</li>
+<li>Reload libstaff in this shell</li>
+<li>Write a file in /srv/library</li>
+<li>Name why the first try failed</li>
 <li>Hint: newgrp libstaff</li>
 </ul>
 </div>
@@ -8808,7 +8810,9 @@ drwxrwx--- <span class="tk-num">2</span> root libstaff <span class="tk-num">4096
 <li>Cataloging makes records.txt</li>
 <li>Group is staff, not libstaff</li>
 <li>Circulation cannot edit it</li>
-<li>Task: new files join libstaff</li>
+<li>Set setgid on /srv/library</li>
+<li>Fix records.txt group by hand</li>
+<li>New files must join libstaff</li>
 <li>Hint: chmod g+s /srv/library</li>
 </ul>
 </div>
@@ -8827,7 +8831,9 @@ drwxrwx--- <span class="tk-num">2</span> root libstaff <span class="tk-num">4096
 <li>All staff share write access</li>
 <li>Circ deleted Archives files</li>
 <li>Dir write = delete rights</li>
-<li>Task: let them add, not delete</li>
+<li>Add the sticky bit to the dir</li>
+<li>Try deleting a peer's file</li>
+<li>Result should be drwxrws--T</li>
 <li>Hint: chmod +t /srv/library</li>
 </ul>
 </div>
@@ -8846,7 +8852,9 @@ drwxrwx--- <span class="tk-num">2</span> root libstaff <span class="tk-num">4096
 <li>archives is older than setgid</li>
 <li>Its group shows as root</li>
 <li>New files there miss libstaff</li>
-<li>Task: repair the whole subtree</li>
+<li>chgrp -R libstaff on archives</li>
+<li>Re-apply setgid to the dir</li>
+<li>ls -lR: every line libstaff</li>
 <li>Hint: chgrp -R, then g+s</li>
 </ul>
 </div>
@@ -8865,7 +8873,9 @@ drwxrwx--- <span class="tk-num">2</span> root libstaff <span class="tk-num">4096
 <li>~/today.txt is a symlink</li>
 <li>It shows red, No such file</li>
 <li>The target was renamed</li>
-<li>Task: explain and repair it</li>
+<li>Read what the link points to</li>
+<li>Re-point it at the real name</li>
+<li>cat via the link must work</li>
 <li>Hint: ln -sfn TARGET LINK</li>
 </ul>
 </div>
@@ -8884,7 +8894,9 @@ drwxrwx--- <span class="tk-num">2</span> root libstaff <span class="tk-num">4096
 <li>df -h /srv reads 96&#37; full</li>
 <li>Archives made hardlink backups</li>
 <li>They also cp-d the originals</li>
-<li>Task: find the real space use</li>
+<li>du -sh every subdir</li>
+<li>ls -li to spot shared inodes</li>
+<li>Say which files are copies</li>
 <li>Hint: du -sh * ; ls -li</li>
 </ul>
 </div>
@@ -8903,7 +8915,9 @@ drwxrwx--- <span class="tk-num">2</span> root libstaff <span class="tk-num">4096
 <li>/srv/library sits on / (small)</li>
 <li>A big /data disk is mounted</li>
 <li>You want the collection there</li>
-<li>Task: plan the move safely</li>
+<li>Write the ordered move steps</li>
+<li>Handle data, links, and mount</li>
+<li>Old path must still resolve</li>
 <li>Hint: mv dir, ln -s it back</li>
 </ul>
 </div>
@@ -8922,7 +8936,9 @@ drwxrwx--- <span class="tk-num">2</span> root libstaff <span class="tk-num">4096
 <li>circulation is set to 750</li>
 <li>Archives is in libstaff</li>
 <li>Can Archives cd and ls it?</li>
-<li>Task: compute the group bits</li>
+<li>Split 750 into r, w, x bits</li>
+<li>Read only the group column</li>
+<li>Answer: can they cd and ls?</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
@@ -8940,7 +8956,9 @@ drwxrwx--- <span class="tk-num">2</span> root libstaff <span class="tk-num">4096
 <li>policy.txt is -rw-r--r-- root</li>
 <li>Staff must edit it</li>
 <li>Someone suggests chmod 666</li>
-<li>Task: pick the safe fix</li>
+<li>Give the group write access</li>
+<li>Do not use chmod 666</li>
+<li>End state: -rw-rw-r--</li>
 <li>Hint: chgrp then chmod g+w</li>
 </ul>
 </div>
@@ -8959,7 +8977,9 @@ drwxrwx--- <span class="tk-num">2</span> root libstaff <span class="tk-num">4096
 <li>Instructor wants one ls -lR</li>
 <li>Every line must be explained</li>
 <li>Dirs, files, group, world</li>
-<li>Task: state the end state</li>
+<li>Run ls -lR on /srv/library</li>
+<li>Explain every mode string</li>
+<li>State what &quot;other&quot; may do</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
