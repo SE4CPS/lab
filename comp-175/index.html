@@ -401,7 +401,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-10 10:25 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-10 11:10 PT</span>
   </div>
 
   <!--
@@ -8075,14 +8075,16 @@ Access: (0640/-rw-r-----)</div>
 </ul>
 </div>
 <div class="col">
-<div class="terminal">$ sudo mkdir -p /srv/library</div>
+<div class="terminal">$ sudo mkdir -p /srv/library
+# -p also creates missing parent dirs</div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>Step 1: Make Library Dir</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> mkdir <span class="tk-flag">-p</span> <span class="tk-path">/srv/library</span></div>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> mkdir <span class="tk-flag">-p</span> <span class="tk-path">/srv/library</span>
+<span class="tk-comment"># -p also creates missing parent dirs</span></div>
 </section>
 
 <section data-background-color="#0a0a0a">
@@ -8098,8 +8100,9 @@ Access: (0640/-rw-r-----)</div>
 <div class="col">
 <div class="terminal">$ ls -ld /srv/library
 drwxr-xr-x 2 root root 4096 /srv/library
-# 2 = link count, +1 per subdir
-# 4096 = size of the dir's entry list
+# 2 = its name in the parent + its own "."
+# each subdir it holds adds 1 (that subdir's "..")
+# 4096 = the entry list's size (4096 bytes, 4 KiB)
 # x on a folder = you may cd into it</div>
 </div>
 </div>
@@ -8109,8 +8112,9 @@ drwxr-xr-x 2 root root 4096 /srv/library
 <h4>Step 2: Check Who Owns It</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-ld</span> <span class="tk-path">/srv/library</span>
 <span class="tk-user">drwxr-xr-x</span> <span class="tk-num">2</span> root root <span class="tk-num">4096</span> <span class="tk-path">/srv/library</span>
-<span class="tk-comment"># 2 = link count, +1 per subdir</span>
-<span class="tk-comment"># 4096 = size of the dir's entry list</span>
+<span class="tk-comment"># 2 = its name in the parent + its own &quot;.&quot;</span>
+<span class="tk-comment"># each subdir it holds adds 1 (its &quot;..&quot;)</span>
+<span class="tk-comment"># 4096 = the entry list's size (4096 bytes, 4 KiB)</span>
 <span class="tk-comment"># x on a folder = you may cd into it</span></div>
 </section>
 
@@ -8144,14 +8148,16 @@ drwxr-xr-x 2 root root 4096 /srv/library
 </ul>
 </div>
 <div class="col">
-<div class="terminal">$ sudo groupadd libstaff</div>
+<div class="terminal">$ sudo groupadd libstaff
+# groupadd makes the group, adds no members</div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>Step 3: Create the Group</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> groupadd libstaff</div>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> groupadd libstaff
+<span class="tk-comment"># groupadd makes the group, adds no members</span></div>
 </section>
 
 <section id="cmd-usermod" data-background-color="#0a0a0a">
@@ -8167,7 +8173,9 @@ drwxr-xr-x 2 root root 4096 /srv/library
 <div class="col">
 <div class="terminal">$ sudo usermod -aG libstaff $USER
 $ groups
-libstaff sudo docker</div>
+libstaff sudo docker
+# -a appends; -G alone replaces your groups
+# $USER = your username, filled in by the shell</div>
 </div>
 </div>
 </section>
@@ -8176,7 +8184,9 @@ libstaff sudo docker</div>
 <h4>Step 4: Join the Group</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> usermod <span class="tk-flag">-aG</span> libstaff <span class="tk-user">$USER</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">groups</span>
-libstaff sudo docker</div>
+libstaff sudo docker
+<span class="tk-comment"># -a appends; -G alone replaces your groups</span>
+<span class="tk-comment"># $USER = your username, filled in by the shell</span></div>
 </section>
 
 <section data-background-color="#ffffff">
@@ -8249,6 +8259,25 @@ libstaff sudo docker</div>
 </div>
 </section>
 
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Users, Roles, Permissions</h4>
+<ul>
+<li>A user is put into roles</li>
+<li>A role is a Linux group</li>
+<li>Permissions sit on the role</li>
+<li>carol holds two roles</li>
+<li>Never grant a user a file</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 490 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:490px;display:block;margin:0 auto;"><rect x="1" y="1" width="488" height="298" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="72" y="18" text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Users</text><text x="245" y="18" text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Roles (groups)</text><text x="430" y="18" text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Permissions</text><line x1="134" y1="57" x2="171" y2="57" stroke="#888" stroke-width="1.8"/><line x1="319" y1="57" x2="352" y2="57" stroke="#888" stroke-width="1.8"/><line x1="134" y1="145" x2="171" y2="145" stroke="#888" stroke-width="1.8"/><line x1="319" y1="145" x2="352" y2="145" stroke="#888" stroke-width="1.8"/><line x1="134" y1="233" x2="171" y2="233" stroke="#888" stroke-width="1.8"/><line x1="319" y1="233" x2="352" y2="233" stroke="#888" stroke-width="1.8"/><line x1="134" y1="222" x2="171" y2="68" stroke="#888" stroke-width="1.8" stroke-dasharray="4 3"/><rect x="14" y="34" width="116" height="46" rx="8" fill="#2a2a2a" stroke="#666" stroke-width="2"/><text x="72" y="62" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee" font-weight="bold">alice</text><rect x="175" y="34" width="140" height="46" rx="8" fill="#FF671D" stroke="#FF671D" stroke-width="2"/><text x="245" y="55" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#1a1a1a" font-weight="bold">cataloging</text><text x="245" y="71" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#5a2f10">group</text><rect x="356" y="34" width="120" height="46" rx="8" fill="#2a2a2a" stroke="#666" stroke-width="2"/><text x="416" y="55" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee" font-weight="bold">add records</text><text x="416" y="71" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#999">rwx here</text><rect x="14" y="122" width="116" height="46" rx="8" fill="#2a2a2a" stroke="#666" stroke-width="2"/><text x="72" y="150" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee" font-weight="bold">bob</text><rect x="175" y="122" width="140" height="46" rx="8" fill="#FF671D" stroke="#FF671D" stroke-width="2"/><text x="245" y="143" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#1a1a1a" font-weight="bold">circulation</text><text x="245" y="159" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#5a2f10">group</text><rect x="356" y="122" width="120" height="46" rx="8" fill="#2a2a2a" stroke="#666" stroke-width="2"/><text x="416" y="143" text-anchor="middle" font-size="13.3" font-family="Consolas, monospace" fill="#eee" font-weight="bold">check in / out</text><text x="416" y="159" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#999">rwx here</text><rect x="14" y="210" width="116" height="46" rx="8" fill="#2a2a2a" stroke="#666" stroke-width="2"/><text x="72" y="238" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee" font-weight="bold">carol</text><rect x="175" y="210" width="140" height="46" rx="8" fill="#FF671D" stroke="#FF671D" stroke-width="2"/><text x="245" y="231" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#1a1a1a" font-weight="bold">archives</text><text x="245" y="247" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#5a2f10">group</text><rect x="356" y="210" width="120" height="46" rx="8" fill="#2a2a2a" stroke="#666" stroke-width="2"/><text x="416" y="231" text-anchor="middle" font-size="12.4" font-family="Consolas, monospace" fill="#eee" font-weight="bold">long-term store</text><text x="416" y="247" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#999">rwx here</text></svg>
+<p style="text-align:center; font-size:0.95rem; color:#999; margin-top:6px;"><span style="display:inline-block; width:10px; height:10px; background:#FF671D; border-radius:2px; margin-right:4px; vertical-align:middle;"></span>Dashed line: one user can hold more than one role</p>
+</div>
+</div>
+</section>
+
 <section id="cmd-chgrp" data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
@@ -8260,14 +8289,16 @@ libstaff sudo docker</div>
 </ul>
 </div>
 <div class="col">
-<div class="terminal">$ sudo chgrp libstaff /srv/library</div>
+<div class="terminal">$ sudo chgrp libstaff /srv/library
+# chgrp changes the group only (chown does both)</div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>Step 5: Change Group Owner</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> chgrp libstaff <span class="tk-path">/srv/library</span></div>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> chgrp libstaff <span class="tk-path">/srv/library</span>
+<span class="tk-comment"># chgrp changes the group only (chown does both)</span></div>
 </section>
 
 <section data-background-color="#0a0a0a">
@@ -8281,14 +8312,18 @@ libstaff sudo docker</div>
 </ul>
 </div>
 <div class="col">
-<div class="terminal">$ sudo chmod 770 /srv/library</div>
+<div class="terminal">$ sudo chmod 770 /srv/library
+# digits are owner, group, other
+# 7 = rwx, 5 = r-x, 0 = ---</div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>Step 6: Set Permissions</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> chmod <span class="tk-num">770</span> <span class="tk-path">/srv/library</span></div>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> chmod <span class="tk-num">770</span> <span class="tk-path">/srv/library</span>
+<span class="tk-comment"># digits are owner, group, other</span>
+<span class="tk-comment"># 7 = rwx, 5 = r-x, 0 = ---</span></div>
 </section>
 
 <section data-background-color="#ffffff">
@@ -8322,7 +8357,10 @@ libstaff sudo docker</div>
 </div>
 <div class="col">
 <div class="terminal">$ ls -ld /srv/library
-drwxrwx--- 2 root libstaff 4096 /srv/library</div>
+drwxrwx--- 2 root libstaff 4096 /srv/library
+# d = directory
+# then owner rwx, group rwx, other ---
+# root = owner, libstaff = group</div>
 </div>
 </div>
 </section>
@@ -8330,7 +8368,10 @@ drwxrwx--- 2 root libstaff 4096 /srv/library</div>
 <section data-background-color="#0a0a0a">
 <h4>Step 7: Verify With ls -l</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-ld</span> <span class="tk-path">/srv/library</span>
-drwxrwx--- <span class="tk-num">2</span> root libstaff <span class="tk-num">4096</span> <span class="tk-path">/srv/library</span></div>
+drwxrwx--- <span class="tk-num">2</span> root libstaff <span class="tk-num">4096</span> <span class="tk-path">/srv/library</span>
+<span class="tk-comment"># d = directory</span>
+<span class="tk-comment"># then owner rwx, group rwx, other ---</span>
+<span class="tk-comment"># root = owner, libstaff = group</span></div>
 </section>
 
 <section data-background-color="#0a0a0a">
@@ -8344,14 +8385,16 @@ drwxrwx--- <span class="tk-num">2</span> root libstaff <span class="tk-num">4096
 </ul>
 </div>
 <div class="col">
-<div class="terminal">$ touch /srv/library/catalog.txt</div>
+<div class="terminal">$ touch /srv/library/catalog.txt
+# also bumps the timestamp if it exists</div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>Step 8: Create the File</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">touch</span> <span class="tk-path">/srv/library/catalog.txt</span></div>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">touch</span> <span class="tk-path">/srv/library/catalog.txt</span>
+<span class="tk-comment"># also bumps the timestamp if it exists</span></div>
 </section>
 
 <section data-background-color="#ffffff">
@@ -8386,7 +8429,9 @@ drwxrwx--- <span class="tk-num">2</span> root libstaff <span class="tk-num">4096
 <div class="col">
 <div class="terminal">$ stat /srv/library/catalog.txt
   Inode: 55210   Links: 1
-Access: (0644/-rw-r--r--)</div>
+Access: (0644/-rw-r--r--)
+# Links: 1 = just one name for this inode
+# 0644 octal = -rw-r--r-- in symbols</div>
 </div>
 </div>
 </section>
@@ -8395,7 +8440,9 @@ Access: (0644/-rw-r--r--)</div>
 <h4>Step 9: Check Its Metadata</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">stat</span> <span class="tk-path">/srv/library/catalog.txt</span>
   Inode: <span class="tk-num">55210</span>   Links: <span class="tk-num">1</span>
-Access: (0644/-rw-r--r--)</div>
+Access: (0644/-rw-r--r--)
+<span class="tk-comment"># Links: 1 = just one name for this inode</span>
+<span class="tk-comment"># 0644 octal = -rw-r--r-- in symbols</span></div>
 </section>
 
 <section data-background-color="#0a0a0a">
@@ -8411,7 +8458,9 @@ Access: (0644/-rw-r--r--)</div>
 <div class="col">
 <div class="terminal">$ sudo apt install -y file
 $ file /srv/library/catalog.txt
-catalog.txt: empty</div>
+catalog.txt: empty
+# -y = say yes to the install prompt
+# file checks the bytes, not the name</div>
 </div>
 </div>
 </section>
@@ -8420,7 +8469,9 @@ catalog.txt: empty</div>
 <h4>Step 10: Identify File Type</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> file
 <span class="tk-prompt">$</span> <span class="tk-cmd">file</span> <span class="tk-path">/srv/library/catalog.txt</span>
-catalog.txt: empty</div>
+catalog.txt: empty
+<span class="tk-comment"># -y = say yes to the install prompt</span>
+<span class="tk-comment"># file checks the bytes, not the name</span></div>
 </section>
 
 <section data-background-color="#ffffff">
@@ -8455,7 +8506,9 @@ catalog.txt: empty</div>
 <div class="col">
 <div class="terminal">$ ln -s /srv/library/catalog.txt ~/catalog-link.txt
 $ ls -l ~/catalog-link.txt
-lrwxrwxrwx ... catalog-link.txt -&gt; /srv/library/catalog.txt</div>
+lrwxrwxrwx ... catalog-link.txt -&gt; /srv/library/catalog.txt
+# -s = symbolic link: stores a path
+# leading l = it is a symlink</div>
 </div>
 </div>
 </section>
@@ -8464,7 +8517,9 @@ lrwxrwxrwx ... catalog-link.txt -&gt; /srv/library/catalog.txt</div>
 <h4>Step 11: Create a Symlink</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ln</span> <span class="tk-flag">-s</span> <span class="tk-path">/srv/library/catalog.txt</span> <span class="tk-path">~/catalog-link.txt</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-l</span> <span class="tk-path">~/catalog-link.txt</span>
-<span class="tk-user">lrwxrwxrwx</span> ... catalog-link.txt -&gt; <span class="tk-path">/srv/library/catalog.txt</span></div>
+<span class="tk-user">lrwxrwxrwx</span> ... catalog-link.txt -&gt; <span class="tk-path">/srv/library/catalog.txt</span>
+<span class="tk-comment"># -s = symbolic link: stores a path</span>
+<span class="tk-comment"># leading l = it is a symlink</span></div>
 </section>
 
 <section data-background-color="#0a0a0a">
@@ -8478,14 +8533,16 @@ lrwxrwxrwx ... catalog-link.txt -&gt; /srv/library/catalog.txt</div>
 </ul>
 </div>
 <div class="col">
-<div class="terminal">$ ln /srv/library/catalog.txt /srv/library/catalog-backup.txt</div>
+<div class="terminal">$ ln /srv/library/catalog.txt /srv/library/catalog-backup.txt
+# no -s = hardlink: same inode, new name</div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>Step 12: Create a Hardlink</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ln</span> <span class="tk-path">/srv/library/catalog.txt</span> <span class="tk-path">/srv/library/catalog-backup.txt</span></div>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ln</span> <span class="tk-path">/srv/library/catalog.txt</span> <span class="tk-path">/srv/library/catalog-backup.txt</span>
+<span class="tk-comment"># no -s = hardlink: same inode, new name</span></div>
 </section>
 
 <section data-background-color="#ffffff">
@@ -8520,7 +8577,9 @@ lrwxrwxrwx ... catalog-link.txt -&gt; /srv/library/catalog.txt</div>
 <div class="col">
 <div class="terminal">$ ls -li /srv/library/catalog*
 55210 ... catalog.txt
-55210 ... catalog-backup.txt</div>
+55210 ... catalog-backup.txt
+# -i shows the inode number first
+# same number = the same file on disk</div>
 </div>
 </div>
 </section>
@@ -8529,7 +8588,9 @@ lrwxrwxrwx ... catalog-link.txt -&gt; /srv/library/catalog.txt</div>
 <h4>Step 13: Compare the Inodes</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-li</span> <span class="tk-path">/srv/library/catalog*</span>
 <span class="tk-num">55210</span> ... catalog.txt
-<span class="tk-num">55210</span> ... catalog-backup.txt</div>
+<span class="tk-num">55210</span> ... catalog-backup.txt
+<span class="tk-comment"># -i shows the inode number first</span>
+<span class="tk-comment"># same number = the same file on disk</span></div>
 </section>
 
 <section data-background-color="#0a0a0a">
@@ -8545,7 +8606,9 @@ lrwxrwxrwx ... catalog-link.txt -&gt; /srv/library/catalog.txt</div>
 <div class="col">
 <div class="terminal">$ df -h /srv
 Filesystem  Size  Used  Avail  Use%  Mounted on
-/dev/sda1    20G   13G    6G   69%  /</div>
+/dev/sda1    20G   13G    6G   69%  /
+# -h = human sizes (K, M, G)
+# Mounted on / : /srv rides the root disk</div>
 </div>
 </div>
 </section>
@@ -8554,7 +8617,9 @@ Filesystem  Size  Used  Avail  Use%  Mounted on
 <h4>Step 14: Check Mount Point</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">df</span> <span class="tk-flag">-h</span> <span class="tk-path">/srv</span>
 Filesystem  Size  Used  Avail  Use%  Mounted on
-<span class="tk-path">/dev/sda1</span>    20G   13G    6G   <span class="tk-num">69</span>%  /</div>
+<span class="tk-path">/dev/sda1</span>    20G   13G    6G   <span class="tk-num">69</span>%  /
+<span class="tk-comment"># -h = human sizes (K, M, G)</span>
+<span class="tk-comment"># Mounted on / : /srv rides the root disk</span></div>
 </section>
 
 <section data-background-color="#ffffff">
@@ -8588,7 +8653,8 @@ Filesystem  Size  Used  Avail  Use%  Mounted on
 </div>
 <div class="col">
 <div class="terminal">$ ls -ld /srv/library
-drwx------ 2 root libstaff 4096 /srv/library</div>
+drwx------ 2 root libstaff 4096 /srv/library
+# drwx------ : only the owner can touch it</div>
 </div>
 </div>
 <p class="fragment note-below">&#9888;&#65039; Group lost its <span class="highlight">rwx</span> bits -- someone ran chmod 700 by mistake.</p>
@@ -8597,7 +8663,8 @@ drwx------ 2 root libstaff 4096 /srv/library</div>
 <section data-background-color="#0a0a0a">
 <h4>Step 15: Diagnose an Error</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-ld</span> <span class="tk-path">/srv/library</span>
-drwx------ <span class="tk-num">2</span> root libstaff <span class="tk-num">4096</span> <span class="tk-path">/srv/library</span></div>
+drwx------ <span class="tk-num">2</span> root libstaff <span class="tk-num">4096</span> <span class="tk-path">/srv/library</span>
+<span class="tk-comment"># drwx------ : only the owner can touch it</span></div>
 </section>
 
 <section data-background-color="#0a0a0a">
@@ -8613,7 +8680,8 @@ drwx------ <span class="tk-num">2</span> root libstaff <span class="tk-num">4096
 <div class="col">
 <div class="terminal">$ sudo chmod g+rwx /srv/library
 $ ls -ld /srv/library
-drwxrwx--- 2 root libstaff 4096 /srv/library</div>
+drwxrwx--- 2 root libstaff 4096 /srv/library
+# g = group, +rwx = add; owner and other untouched</div>
 </div>
 </div>
 </section>
@@ -8622,7 +8690,8 @@ drwxrwx--- 2 root libstaff 4096 /srv/library</div>
 <h4>Step 16: Fix Permissions</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> chmod g+rwx <span class="tk-path">/srv/library</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-ld</span> <span class="tk-path">/srv/library</span>
-drwxrwx--- <span class="tk-num">2</span> root libstaff <span class="tk-num">4096</span> <span class="tk-path">/srv/library</span></div>
+drwxrwx--- <span class="tk-num">2</span> root libstaff <span class="tk-num">4096</span> <span class="tk-path">/srv/library</span>
+<span class="tk-comment"># g = group, +rwx = add; owner and other untouched</span></div>
 </section>
 
 <section data-background-color="#ffffff">
