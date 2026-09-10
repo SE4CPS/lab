@@ -401,7 +401,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-10 09:15 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-10 10:05 PT</span>
   </div>
 
   <!--
@@ -7410,6 +7410,44 @@ $ file /dev/sda
 <tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Hardlink</td><td style="padding:6px; border:1px solid #666;">No (shares one)</td><td style="padding:6px; border:1px solid #666;">No</td></tr>
 </tbody>
 </table>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>How Links Point</h4>
+<ul>
+<li>Symlink = symbolic link</li>
+<li>It stores a path string</li>
+<li>Not a link to the inode</li>
+<li>Hardlink = a second name</li>
+<li>Same inode, same data</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 480 278" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:480px;display:block;margin:0 auto;"><defs><marker id="lnkArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="1" y="1" width="478" height="276" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="18" y="26" text-anchor="start" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Symlink</text><rect x="14" y="40" width="120" height="48" rx="8" fill="#2a2a2a" stroke="#666" stroke-width="2"/><text x="74" y="69" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee" font-weight="bold">link-s.txt</text><line x1="138" y1="64" x2="168" y2="64" stroke="#888" stroke-width="1.8" marker-end="url(#lnkArrow)"/><rect x="172" y="40" width="152" height="48" rx="8" fill="#2a2a2a" stroke="#666" stroke-width="2"/><text x="248" y="62" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee" font-weight="bold">"notes.txt"</text><text x="248" y="79" text-anchor="middle" font-size="10.4" font-family="Segoe UI, Arial, sans-serif" fill="#999">a path string, no inode</text><line x1="328" y1="64" x2="358" y2="64" stroke="#888" stroke-width="1.8" marker-end="url(#lnkArrow)"/><rect x="362" y="40" width="104" height="48" rx="8" fill="#2a2a2a" stroke="#666" stroke-width="2"/><text x="414" y="62" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee" font-weight="bold">inode</text><text x="414" y="79" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#999">then data</text><text x="18" y="150" text-anchor="start" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Hardlink</text><rect x="14" y="162" width="120" height="40" rx="8" fill="#2a2a2a" stroke="#666" stroke-width="2"/><text x="74" y="187" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee" font-weight="bold">notes.txt</text><rect x="14" y="214" width="120" height="40" rx="8" fill="#2a2a2a" stroke="#666" stroke-width="2"/><text x="74" y="239" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee" font-weight="bold">link-h.txt</text><line x1="138" y1="182" x2="296" y2="205" stroke="#888" stroke-width="1.8" marker-end="url(#lnkArrow)"/><line x1="138" y1="234" x2="296" y2="213" stroke="#888" stroke-width="1.8" marker-end="url(#lnkArrow)"/><rect x="300" y="182" width="166" height="54" rx="8" fill="#FF671D" stroke="#FF671D" stroke-width="2"/><text x="383" y="207" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#1a1a1a" font-weight="bold">inode 130910</text><text x="383" y="224" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#5a2f10">one inode, two names</text></svg>
+<p style="text-align:center; font-size:0.95rem; color:#999; margin-top:6px;"><span style="display:inline-block; width:10px; height:10px; background:#FF671D; border-radius:2px; margin-right:4px; vertical-align:middle;"></span>A symlink points at a name; a hardlink is a name for the inode</p>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Link Count on Delete</h4>
+<ul>
+<li>Inode holds a link count</li>
+<li>rm one name: count drops 1</li>
+<li>Data lives while count &gt; 0</li>
+<li>Last rm: inode + data freed</li>
+<li>Symlink: rm just drops it</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 460 250" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="lnkArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="1" y="1" width="458" height="248" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="14" y="16" width="176" height="54" rx="8" fill="#2a2a2a" stroke="#666" stroke-width="2"/><text x="102" y="48" text-anchor="middle" font-size="12.7" font-family="Consolas, monospace" fill="#eee" font-weight="bold">notes.txt + link-h.txt</text><line x1="194" y1="43" x2="214" y2="43" stroke="#888" stroke-width="1.8" marker-end="url(#lnkArrow)"/><rect x="218" y="16" width="138" height="54" rx="8" fill="#2a2a2a" stroke="#666" stroke-width="2"/><text x="287" y="41" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">inode</text><text x="287" y="58" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#999">links: 2</text><rect x="360" y="16" width="86" height="54" rx="8" fill="#2a2a2a" stroke="#666" stroke-width="2"/><text x="403" y="41" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">data</text><text x="403" y="58" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#999">kept</text><rect x="14" y="94" width="176" height="54" rx="8" fill="#2a2a2a" stroke="#666" stroke-width="2"/><text x="102" y="126" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee" font-weight="bold">link-h.txt</text><line x1="194" y1="121" x2="214" y2="121" stroke="#888" stroke-width="1.8" marker-end="url(#lnkArrow)"/><rect x="218" y="94" width="138" height="54" rx="8" fill="#2a2a2a" stroke="#666" stroke-width="2"/><text x="287" y="119" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">inode</text><text x="287" y="136" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#999">links: 1</text><rect x="360" y="94" width="86" height="54" rx="8" fill="#2a2a2a" stroke="#666" stroke-width="2"/><text x="403" y="119" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">data</text><text x="403" y="136" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#999">kept</text><rect x="14" y="172" width="176" height="54" rx="8" fill="#2a2a2a" stroke="#666" stroke-width="2"/><text x="102" y="204" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">(no names left)</text><line x1="194" y1="199" x2="214" y2="199" stroke="#888" stroke-width="1.8" marker-end="url(#lnkArrow)"/><rect x="218" y="172" width="138" height="54" rx="8" fill="#FF671D" stroke="#FF671D" stroke-width="2"/><text x="287" y="197" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#1a1a1a" font-weight="bold">inode</text><text x="287" y="214" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#5a2f10">links: 0</text><rect x="360" y="172" width="86" height="54" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="403" y="197" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">data</text><text x="403" y="214" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#d99">freed</text><line x1="102" y1="72" x2="102" y2="92" stroke="#888" stroke-width="1.8" marker-end="url(#lnkArrow)"/><text x="150" y="86" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">rm notes.txt</text><line x1="102" y1="150" x2="102" y2="170" stroke="#888" stroke-width="1.8" marker-end="url(#lnkArrow)"/><text x="150" y="164" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">rm link-h.txt</text></svg>
+<p style="text-align:center; font-size:0.95rem; color:#999; margin-top:6px;"><span style="display:inline-block; width:10px; height:10px; background:#FF671D; border-radius:2px; margin-right:4px; vertical-align:middle;"></span>The data is freed only when the last hardlink is removed</p>
 </div>
 </div>
 </section>
