@@ -419,7 +419,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-11 23:40 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-12 00:05 PT</span>
   </div>
 
   <!--
@@ -562,20 +562,23 @@
               <td>Week 4</td>
               <td>Sep 15, Sep 17</td>
               <td data-module="4"><a href="./#/module-4" target="_self">Access Control &amp; Auditing</a></td>
-              <td>Commands: <a href="./#/cmd-whoami" target="_self">whoami</a>,
+              <td>Commands: <a href="./#/cmd-getfacl" target="_self">getfacl</a>,
+                <a href="./#/cmd-setfacl" target="_self">setfacl</a>,
+                <a href="./#/cmd-whoami" target="_self">whoami</a>,
                 <a href="./#/cmd-su" target="_self">su</a>,
                 <a href="./#/cmd-visudo" target="_self">visudo</a>,
                 <a href="./#/cmd-sudo-l" target="_self">sudo -l</a>,
-                <a href="./#/cmd-aa-status" target="_self">aa-status</a>,
-                <a href="./#/cmd-aa-complain" target="_self">aa-complain</a>,
-                <a href="./#/cmd-aa-enforce" target="_self">aa-enforce</a>,
-                <a href="./#/cmd-apparmor-parser" target="_self">apparmor_parser</a>,
+                <a href="./#/cmd-sudo-u" target="_self">sudo -u</a>,
+                <a href="./#/cmd-gpasswd" target="_self">gpasswd</a>,
+                <a href="./#/cmd-last" target="_self">last</a>,
+                <a href="./#/cmd-lastlog" target="_self">lastlog</a>,
                 <a href="./#/cmd-systemctl" target="_self">systemctl</a>,
                 <a href="./#/cmd-auditctl" target="_self">auditctl</a>,
                 <a href="./#/cmd-ausearch" target="_self">ausearch</a>,
                 <a href="./#/cmd-aureport" target="_self">aureport</a>,
                 <a href="./#/cmd-tail" target="_self">tail</a>,
-                <a href="./#/cmd-augenrules" target="_self">augenrules</a></td>
+                <a href="./#/cmd-augenrules" target="_self">augenrules</a>,
+                <a href="./#/cmd-journalctl" target="_self">journalctl</a></td>
               <td></td>
               <td></td>
             </tr>
@@ -10317,10 +10320,9 @@ $ groups</div>
 <ol style="line-height: 1.8;">
 <li><a href="./#/module-4-agenda-1" target="_self">What Is Access Control?</a></li>
 <li><a href="./#/module-4-agenda-2" target="_self">Users, Groups &amp; sudo</a></li>
-<li><a href="./#/module-4-agenda-3" target="_self">Mandatory Access Control</a></li>
-<li><a href="./#/module-4-agenda-4" target="_self">Why Audit?</a></li>
-<li><a href="./#/module-4-agenda-5" target="_self">Auditing with auditd</a></li>
-<li><a href="./#/module-4-agenda-6" target="_self">Practice Lab</a></li>
+<li><a href="./#/module-4-agenda-3" target="_self">Why Audit?</a></li>
+<li><a href="./#/module-4-agenda-4" target="_self">Auditing with auditd</a></li>
+<li><a href="./#/module-4-agenda-5" target="_self">Practice Lab</a></li>
 </ol>
 </div>
 <div class="col" style="text-align:center;">
@@ -10398,6 +10400,78 @@ $ groups</div>
 </div>
 </div>
 </section>
+<section>
+<div class="twocol">
+<div class="col">
+<h4>Not Installed by Default</h4>
+<ul>
+<li>getfacl/setfacl need a pkg</li>
+<li>Debian/Ubuntu: apt install acl</li>
+<li>Kali has it too</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo apt install -y acl</div>
+</div>
+</div>
+</section>
+
+<section id="cmd-getfacl" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>See a File's Full ACL</h4>
+<ul>
+<li>Shows owner, group, extras</li>
+<li>Base three print by default</li>
+<li>Empty means no ACL yet</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ getfacl report.txt
+user::rw-
+group::r--
+other::---</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>See a File's Full ACL</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> report.txt
+user::<span class="tk-user">rw-</span>
+group::r--
+other::---</div>
+</section>
+
+<section id="cmd-setfacl" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Grant One More Person</h4>
+<ul>
+<li>-m modifies the ACL</li>
+<li>u:name:perms adds a rule</li>
+<li>Owner and group untouched</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo setfacl -m u:bob:rw report.txt
+$ getfacl report.txt
+user:bob:rw-</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Grant One More Person</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> u:<span class="tk-user">bob</span>:rw report.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> report.txt
+user:<span class="tk-user">bob</span>:rw-</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="cmd-table" data-through="cmd-setfacl"></div>
+</section>
+
 
 <section>
 <h2 style="text-align:center;">Questions?</h2>
@@ -10405,6 +10479,10 @@ $ groups</div>
 
 <section id="module-4-agenda-2">
 <h2 style="text-align:center;">Users, Groups &amp; sudo</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="cmd-table" data-through="cmd-setfacl"></div>
 </section>
 
 <section>
@@ -10572,9 +10650,61 @@ User alice may run:
 </div>
 </div>
 </section>
+<section id="cmd-sudo-u" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Running as Someone Else</h4>
+<ul>
+<li>-u picks the target user</li>
+<li>Still needs a sudoers rule</li>
+<li>Not always root</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo -u www-data whoami
+www-data</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Running as Someone Else</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-flag">-u</span> www-data <span class="tk-cmd">whoami</span>
+<span class="tk-user">www-data</span></div>
+</section>
+
+<section id="cmd-gpasswd" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Managing Group Membership</h4>
+<ul>
+<li>-a adds, -d removes</li>
+<li>Cleaner than usermod -aG</li>
+<li>Confirm with groups</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo gpasswd -a alice registrar
+$ groups alice
+alice : registrar</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Managing Group Membership</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">gpasswd</span> <span class="tk-flag">-a</span> <span class="tk-user">alice</span> registrar
+<span class="tk-prompt">$</span> <span class="tk-cmd">groups</span> alice
+<span class="tk-user">alice</span> : registrar</div>
+</section>
+
 
 <section data-background-color="#ffffff">
-<div class="cmd-table" data-through="cmd-sudo-l"></div>
+<div class="cmd-table" data-through="cmd-gpasswd"></div>
+</section>
+
+<section>
+<h2 style="text-align:center;">Questions?</h2>
 </section>
 
 <section>
@@ -10582,197 +10712,6 @@ User alice may run:
 </section>
 
 <section id="module-4-agenda-3">
-<h2 style="text-align:center;">Mandatory Access Control</h2>
-</section>
-
-
-<section data-background-color="#ffffff">
-<div class="cmd-table" data-through="cmd-sudo-l"></div>
-</section>
-
-<section>
-<div class="twocol">
-<div class="col">
-<h4>Why AppArmor Here</h4>
-<ul>
-<li>SELinux needs RHEL/Fedora</li>
-<li>Your VM is Ubuntu or Kali</li>
-<li>AppArmor ships on both</li>
-</ul>
-</div>
-<div class="col" style="text-align:center;">
-<svg viewBox="0 0 320 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:400px;display:block;margin:0 auto;"><rect x="1" y="1" width="318" height="148" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="15" width="280" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="160.0" y="44.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">RHEL, Fedora: SELinux</text><rect x="20" y="85" width="280" height="50" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="160.0" y="114.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Ubuntu, Kali: AppArmor</text></svg>
-</div>
-</div>
-</section>
-<svg viewBox="0 0 340 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><line x1="62" y1="14" x2="62" y2="272" stroke="#555" stroke-width="2"/><circle cx="62" cy="40.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="44.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1998</text><text x="76" y="36.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="36.0">SubDomain research project</tspan><tspan x="76" y="50.0">begins at WireX Communications</tspan></text><circle cx="62" cy="94.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="98.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2005</text><text x="76" y="90.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="90.0">Novell renames it AppArmor</tspan><tspan x="76" y="104.0">and adds it to SUSE</tspan></text><circle cx="62" cy="148.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="152.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2010</text><text x="76" y="144.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="144.0">AppArmor is merged</tspan><tspan x="76" y="158.0">into the Linux kernel</tspan></text><circle cx="62" cy="202.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="206.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2011</text><text x="76" y="198.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="198.0">Canonical takes the lead</tspan><tspan x="76" y="212.0">on its development</tspan></text><circle cx="62" cy="256.0" r="6.5" fill="#FF671D" stroke="#FF671D" stroke-width="1.5"/><text x="48" y="260.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Today</text><text x="76" y="252.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="252.0">Default MAC on Ubuntu,</tspan><tspan x="76" y="266.0">Debian, and Kali</tspan></text></svg>
-<section>
-<div class="twocol">
-<div class="col">
-<h4>Profiles, Not Labels</h4>
-<ul>
-<li>Tied to a program's path</li>
-<li>Not every file gets tagged</li>
-<li>Simpler than SELinux contexts</li>
-</ul>
-</div>
-<div class="col" style="text-align:center;">
-<svg viewBox="0 0 340 304" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="302" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m4aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="20" y="16" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170.0" y="44.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">a program starts</text><rect x="20" y="92" width="300" height="48" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="170.0" y="120.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">its AppArmor profile applies</text><rect x="20" y="168" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170.0" y="196.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">only listed paths are allowed</text><line x1="170.0" y1="65" x2="170.0" y2="89" stroke="#888" stroke-width="1.6" marker-end="url(#m4aa)"/><line x1="170.0" y1="141" x2="170.0" y2="165" stroke="#888" stroke-width="1.6" marker-end="url(#m4aa)"/></svg>
-</div>
-</div>
-</section>
-
-<section>
-<div class="twocol">
-<div class="col">
-<h4>Not Always Ready to Use</h4>
-<ul>
-<li>aa-* tools need a package</li>
-<li>apparmor-utils on Debian/Kali</li>
-<li>The kernel part is already on</li>
-</ul>
-</div>
-<div class="col" style="text-align:center;">
-<div class="terminal">$ sudo apt install -y apparmor-utils</div>
-</div>
-</div>
-</section>
-
-<section id="cmd-aa-status" data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>Check the Current State</h4>
-<ul>
-<li>One command, full status</li>
-<li>Lists every loaded profile</li>
-<li>Enforce or complain, per app</li>
-</ul>
-</div>
-<div class="col" style="text-align:center;">
-<div class="terminal">$ aa-status
-apparmor module is loaded.
-5 profiles are in enforce mode.</div>
-</div>
-</div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<h4>Check the Current State</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">aa-status</span>
-apparmor module is loaded.
-<span class="tk-user">5</span> profiles are in enforce mode.</div>
-</section>
-
-<section id="cmd-aa-complain" data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>Log Without Blocking</h4>
-<ul>
-<li>complain mode never blocks</li>
-<li>Logs what it would block</li>
-<li>Great for testing a change</li>
-</ul>
-</div>
-<div class="col" style="text-align:center;">
-<div class="terminal">$ sudo aa-complain /usr/sbin/nginx</div>
-</div>
-</div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<h4>Log Without Blocking</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">aa-complain</span> /usr/sbin/nginx</div>
-</section>
-
-<section id="cmd-aa-enforce" data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>Turn Blocking Back On</h4>
-<ul>
-<li>enforce mode actively blocks</li>
-<li>Denies anything not listed</li>
-<li>Use once you trust a profile</li>
-</ul>
-</div>
-<div class="col" style="text-align:center;">
-<div class="terminal">$ sudo aa-enforce /usr/sbin/nginx</div>
-</div>
-</div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<h4>Turn Blocking Back On</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">aa-enforce</span> /usr/sbin/nginx</div>
-</section>
-
-<section id="cmd-apparmor-parser" data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>Reload After an Edit</h4>
-<ul>
-<li>Edits alone change nothing</li>
-<li>-r reloads the running policy</li>
-<li>Do this after every edit</li>
-</ul>
-</div>
-<div class="col" style="text-align:center;">
-<div class="terminal">$ sudo apparmor_parser -r /etc/apparmor.d/usr.sbin.nginx</div>
-</div>
-</div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<h4>Reload After an Edit</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">apparmor_parser</span> <span class="tk-flag">-r</span> /etc/apparmor.d/usr.sbin.nginx</div>
-</section>
-
-<section id="term-profile" data-tag="terminology" data-term="Profile" data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>Word Origin: &quot;Profile&quot;</h4>
-<h5 style="margin-bottom:0.5rem;">pro-</h5>
-<ul>
-<li>Latin: forward, forth</li>
-</ul>
-</div>
-<div class="col">
-<h5 style="margin-bottom:0.5rem;">filum</h5>
-<ul>
-<li>Latin: a thread, a line</li>
-</ul>
-</div>
-</div>
-<p class="fragment note-below">A profile traces the outline of a shape; an AppArmor profile traces the outline of what a program may do.</p>
-</section>
-
-<section data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>Check: Enforce or Complain?</h4>
-<ul>
-<li>aa-status shows enforce mode</li>
-<li>The app still ran, unblocked</li>
-<li>Which mode explains that?</li>
-</ul>
-</div>
-<div class="col" style="text-align:center;">
-<div class="fragment">
-<svg viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:320px;display:block;margin:0 auto;"><rect x="1" y="1" width="318" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="40" width="280" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="160.0" y="74.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Complain: logs, allows it</text></svg>
-<p style="text-align:center; font-size:0.95rem; color:#999; margin-top:6px;">Answer: complain mode never blocks; enforce would have stopped it</p>
-</div>
-</div>
-</div>
-</section>
-
-<section data-background-color="#ffffff">
-<div class="cmd-table" data-through="cmd-apparmor-parser"></div>
-</section>
-
-<section>
-<h2 style="text-align:center;">Questions?</h2>
-</section>
-
-<section id="module-4-agenda-4">
 <div class="twocol">
 <div class="col">
 <h4>Why Audit?</h4>
@@ -10788,6 +10727,10 @@ apparmor module is loaded.
 </div>
 </div>
 </section>
+<section data-background-color="#ffffff">
+<div class="cmd-table" data-through="cmd-gpasswd"></div>
+</section>
+
 
 <section>
 <div class="twocol">
@@ -10836,6 +10779,60 @@ apparmor module is loaded.
 </div>
 </div>
 </section>
+<section id="cmd-last" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Who Logged In Recently?</h4>
+<ul>
+<li>Reads /var/log/wtmp</li>
+<li>Shows sessions, not actions</li>
+<li>No install needed</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ last -n 3
+alice  pts/0  Wed 14:02  still logged in
+bob    pts/1  Wed 09:15 - 09:40</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Who Logged In Recently?</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">last</span> <span class="tk-flag">-n</span> <span class="tk-num">3</span>
+<span class="tk-user">alice</span>  pts/0  Wed 14:02  still logged in
+bob    pts/1  Wed 09:15 - 09:40</div>
+</section>
+
+<section id="cmd-lastlog" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>When Did They Last Log In?</h4>
+<ul>
+<li>One line per account</li>
+<li>Flags accounts never used</li>
+<li>Good for a quick audit</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ lastlog
+alice   pts/0   Wed Sep 10 14:02:03
+bob     **Never logged in**</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>When Did They Last Log In?</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">lastlog</span>
+<span class="tk-user">alice</span>   pts/0   Wed Sep 10 14:02:03
+bob     **Never logged in**</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="cmd-table" data-through="cmd-lastlog"></div>
+</section>
+
 
 <section id="term-audit" data-tag="terminology" data-term="Audit" data-background-color="#ffffff">
 <div class="twocol">
@@ -10879,12 +10876,12 @@ apparmor module is loaded.
 <h2 style="text-align:center;">Questions?</h2>
 </section>
 
-<section id="module-4-agenda-5">
+<section id="module-4-agenda-4">
 <h2 style="text-align:center;">Auditing with auditd</h2>
 </section>
 
 <section data-background-color="#ffffff">
-<div class="cmd-table" data-through="cmd-apparmor-parser"></div>
+<div class="cmd-table" data-through="cmd-lastlog"></div>
 </section>
 
 <section>
@@ -11065,6 +11062,27 @@ $ sudo augenrules --load</div>
 <span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">augenrules</span> <span class="tk-flag">--load</span></div>
 </section>
 
+
+<section id="cmd-journalctl" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>The System Journal Too</h4>
+<ul>
+<li>journalctl reads systemd logs</li>
+<li>-u filters to one service</li>
+<li>Useful alongside auditd</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ journalctl -u auditd --since today</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>The System Journal Too</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">journalctl</span> <span class="tk-flag">-u</span> auditd <span class="tk-flag">--since</span> today</div>
+</section>
 <section>
 <div class="twocol">
 <div class="col">
@@ -11120,19 +11138,19 @@ $ sudo augenrules --load</div>
 </section>
 
 <section data-background-color="#ffffff">
-<div class="cmd-table" data-through="cmd-tail"></div>
+<div class="cmd-table" data-through="cmd-journalctl"></div>
 </section>
 
 <section>
 <h2 style="text-align:center;">Questions?</h2>
 </section>
 
-<section id="module-4-agenda-6">
+<section id="module-4-agenda-5">
 <h2 style="text-align:center;">Practice Lab</h2>
 </section>
 
 <section data-background-color="#ffffff">
-<div class="cmd-table" data-through="cmd-tail"></div>
+<div class="cmd-table" data-through="cmd-journalctl"></div>
 </section>
 
 <section>
@@ -11280,6 +11298,29 @@ $ sudo ausearch -k registrar_writes</div>
 </div>
 </div>
 </section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 6: Verify with ACLs</h4>
+<ul>
+<li>Confirm the group can write</li>
+<li>getfacl shows every rule</li>
+<li>Compare to your sudoers line</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ getfacl /srv/registrar
+group::rwx</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Step 6: Verify with ACLs</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> /srv/registrar
+group::<span class="tk-user">rwx</span></div>
+</section>
+
 
 <section>
 <div class="twocol">
@@ -11702,20 +11743,23 @@ $ sudo ausearch -k registrar_writes</div>
         { id: 'cmd-usermod', module: 3, cmd: 'usermod', example: 'usermod -aG csdept $USER', purpose: 'Add a user to a group' },
         { id: 'cmd-chgrp', module: 3, cmd: 'chgrp', example: 'chgrp csdept /srv/cs-dept', purpose: "Change a file's group only" },
         { id: 'cmd-ln', module: 3, cmd: 'ln', example: 'ln -s target link', purpose: 'Create a symlink or hardlink' },
+        { id: 'cmd-getfacl', module: 4, cmd: 'getfacl', example: 'getfacl report.txt', purpose: 'Show a file\'s full access list' },
+        { id: 'cmd-setfacl', module: 4, cmd: 'setfacl', example: 'sudo setfacl -m u:bob:rw file', purpose: 'Grant one more user an ACL rule' },
         { id: 'cmd-whoami', module: 4, cmd: 'whoami', example: 'whoami', purpose: 'Print your effective username' },
         { id: 'cmd-su', module: 4, cmd: 'su', example: 'su - alice', purpose: 'Switch to another user\'s shell' },
         { id: 'cmd-visudo', module: 4, cmd: 'visudo', example: 'sudo visudo', purpose: 'Edit /etc/sudoers safely' },
         { id: 'cmd-sudo-l', module: 4, cmd: 'sudo -l', example: 'sudo -l', purpose: 'List your allowed sudo commands' },
-        { id: 'cmd-aa-status', module: 4, cmd: 'aa-status', example: 'aa-status', purpose: 'Show AppArmor status and profiles' },
-        { id: 'cmd-aa-complain', module: 4, cmd: 'aa-complain', example: 'sudo aa-complain /usr/sbin/nginx', purpose: 'Log a profile\'s denials, don\'t block' },
-        { id: 'cmd-aa-enforce', module: 4, cmd: 'aa-enforce', example: 'sudo aa-enforce /usr/sbin/nginx', purpose: 'Actively enforce a profile' },
-        { id: 'cmd-apparmor-parser', module: 4, cmd: 'apparmor_parser', example: 'sudo apparmor_parser -r file', purpose: 'Reload an edited profile' },
+        { id: 'cmd-sudo-u', module: 4, cmd: 'sudo -u', example: 'sudo -u www-data whoami', purpose: 'Run a command as another user' },
+        { id: 'cmd-gpasswd', module: 4, cmd: 'gpasswd', example: 'sudo gpasswd -a alice registrar', purpose: 'Add or remove a group member' },
+        { id: 'cmd-last', module: 4, cmd: 'last', example: 'last -n 3', purpose: 'Show recent login sessions' },
+        { id: 'cmd-lastlog', module: 4, cmd: 'lastlog', example: 'lastlog', purpose: 'Show each account\'s last login' },
         { id: 'cmd-systemctl', module: 4, cmd: 'systemctl', example: 'systemctl status auditd', purpose: 'Check or control a service' },
         { id: 'cmd-auditctl', module: 4, cmd: 'auditctl', example: 'auditctl -w /etc/passwd -p wa', purpose: 'Add or list audit watch rules' },
         { id: 'cmd-ausearch', module: 4, cmd: 'ausearch', example: 'ausearch -k registrar_writes', purpose: 'Search audit logs by key' },
         { id: 'cmd-aureport', module: 4, cmd: 'aureport', example: 'aureport -f -i', purpose: 'Summarize audit logs, readably' },
         { id: 'cmd-tail', module: 4, cmd: 'tail', example: 'tail -f /var/log/audit/audit.log', purpose: 'Follow a growing log file' },
-        { id: 'cmd-augenrules', module: 4, cmd: 'augenrules', example: 'sudo augenrules --load', purpose: 'Load saved audit rule files' }
+        { id: 'cmd-augenrules', module: 4, cmd: 'augenrules', example: 'sudo augenrules --load', purpose: 'Load saved audit rule files' },
+        { id: 'cmd-journalctl', module: 4, cmd: 'journalctl', example: 'journalctl -u auditd --since today', purpose: 'Read the systemd service journal' }
       ];
 
       function cmdTableHTML(throughId) {
