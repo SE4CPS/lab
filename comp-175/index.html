@@ -419,7 +419,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-12 11:45 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-12 11:55 PT</span>
   </div>
 
   <!--
@@ -10516,27 +10516,25 @@ $ groups</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ cd ~
-$ touch report.txt
-$ chmod 640 report.txt
+<div class="terminal">$ touch ~/report.txt
+$ chmod 640 ~/report.txt
 # 640 = rw-r----- (group read, others none)
-$ getfacl report.txt
+$ getfacl ~/report.txt
 # no flags: print the file&#39;s full ACL
 user::rw-
 group::r--
 other::---</div>
 </div>
 </div>
-<p class="fragment note-below">&#9888;&#65039; Work from your Linux home (cd ~): WSL&#39;s Windows-mounted drives (/mnt/c/...) don&#39;t support <span class="highlight">ACLs</span>.</p>
+<p class="fragment note-below">&#9888;&#65039; Uses ~/report.txt on purpose: WSL&#39;s Windows-mounted drives (/mnt/c/...) don&#39;t support <span class="highlight">ACLs</span>, no matter which directory you happen to be in.</p>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>See a File's Full ACL</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">cd</span> ~
-<span class="tk-prompt">$</span> <span class="tk-cmd">touch</span> report.txt
-<span class="tk-prompt">$</span> <span class="tk-cmd">chmod</span> 640 report.txt
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">touch</span> ~/report.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">chmod</span> 640 ~/report.txt
 <span class="tk-comment"># 640 = rw-r----- (group read, others none)</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> report.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> ~/report.txt
 <span class="tk-comment"># no flags: print the file&#39;s full ACL</span>
 user::<span class="tk-user">rw-</span>
 group::r--
@@ -10554,10 +10552,10 @@ other::---</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ setfacl -m u:daemon:rw report.txt
+<div class="terminal">$ setfacl -m u:daemon:rw ~/report.txt
 # -m modifies the ACL; owner needs no sudo
 # daemon: a real account on every Linux box
-$ getfacl report.txt
+$ getfacl ~/report.txt
 user:daemon:rw-</div>
 </div>
 </div>
@@ -10565,10 +10563,10 @@ user:daemon:rw-</div>
 
 <section data-background-color="#0a0a0a">
 <h4>Grant One More Person</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> u:<span class="tk-user">daemon</span>:rw report.txt
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> u:<span class="tk-user">daemon</span>:rw ~/report.txt
 <span class="tk-comment"># -m modifies the ACL; owner needs no sudo</span>
 <span class="tk-comment"># daemon: a real account on every Linux box</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> report.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> ~/report.txt
 user:<span class="tk-user">daemon</span>:rw-</div>
 </section>
 
@@ -11936,7 +11934,7 @@ group::<span class="tk-user">rwx</span></div>
         { id: 'cmd-usermod', module: 3, cmd: 'usermod', example: 'usermod -aG csdept $USER', purpose: 'Add a user to a group' },
         { id: 'cmd-chgrp', module: 3, cmd: 'chgrp', example: 'chgrp csdept /srv/cs-dept', purpose: "Change a file's group only" },
         { id: 'cmd-ln', module: 3, cmd: 'ln', example: 'ln -s target link', purpose: 'Create a symlink or hardlink' },
-        { id: 'cmd-getfacl', module: 4, cmd: 'getfacl', example: 'getfacl report.txt', purpose: 'Show a file\'s full access list' },
+        { id: 'cmd-getfacl', module: 4, cmd: 'getfacl', example: 'getfacl ~/report.txt', purpose: 'Show a file\'s full access list' },
         { id: 'cmd-setfacl', module: 4, cmd: 'setfacl', example: 'setfacl -m u:daemon:rw file', purpose: 'Grant one more user an ACL rule' },
         { id: 'cmd-whoami', module: 4, cmd: 'whoami', example: 'whoami', purpose: 'Print your effective username' },
         { id: 'cmd-su', module: 4, cmd: 'su', example: 'su - alice', purpose: 'Switch to another user\'s shell' },
