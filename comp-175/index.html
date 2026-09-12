@@ -419,7 +419,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-11 23:20 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-11 23:40 PT</span>
   </div>
 
   <!--
@@ -566,10 +566,10 @@
                 <a href="./#/cmd-su" target="_self">su</a>,
                 <a href="./#/cmd-visudo" target="_self">visudo</a>,
                 <a href="./#/cmd-sudo-l" target="_self">sudo -l</a>,
-                <a href="./#/cmd-getenforce" target="_self">getenforce</a>,
-                <a href="./#/cmd-setenforce" target="_self">setenforce</a>,
-                <a href="./#/cmd-sestatus" target="_self">sestatus</a>,
-                <a href="./#/cmd-chcon" target="_self">chcon</a>,
+                <a href="./#/cmd-aa-status" target="_self">aa-status</a>,
+                <a href="./#/cmd-aa-complain" target="_self">aa-complain</a>,
+                <a href="./#/cmd-aa-enforce" target="_self">aa-enforce</a>,
+                <a href="./#/cmd-apparmor-parser" target="_self">apparmor_parser</a>,
                 <a href="./#/cmd-systemctl" target="_self">systemctl</a>,
                 <a href="./#/cmd-auditctl" target="_self">auditctl</a>,
                 <a href="./#/cmd-ausearch" target="_self">ausearch</a>,
@@ -10585,6 +10585,7 @@ User alice may run:
 <h2 style="text-align:center;">Mandatory Access Control</h2>
 </section>
 
+
 <section data-background-color="#ffffff">
 <div class="cmd-table" data-through="cmd-sudo-l"></div>
 </section>
@@ -10592,153 +10593,27 @@ User alice may run:
 <section>
 <div class="twocol">
 <div class="col">
-<h4>History of SELinux</h4>
+<h4>Why AppArmor Here</h4>
 <ul>
-<li>Flask research starts, 1992</li>
-<li>NSA releases it, 2000</li>
-<li>Default on major distros now</li>
+<li>SELinux needs RHEL/Fedora</li>
+<li>Your VM is Ubuntu or Kali</li>
+<li>AppArmor ships on both</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 340 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><line x1="62" y1="14" x2="62" y2="272" stroke="#555" stroke-width="2"/><circle cx="62" cy="40.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="44.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1992</text><text x="76" y="36.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="36.0">NSA &amp; Secure Computing</tspan><tspan x="76" y="50.0">begin the Flask architecture</tspan></text><circle cx="62" cy="94.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="98.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2000</text><text x="76" y="90.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="90.0">NSA publicly releases</tspan><tspan x="76" y="104.0">SELinux for Linux</tspan></text><circle cx="62" cy="148.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="152.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2003</text><text x="76" y="144.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="144.0">SELinux is merged</tspan><tspan x="76" y="158.0">into mainline Linux 2.6</tspan></text><circle cx="62" cy="202.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="206.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2005</text><text x="76" y="198.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="198.0">RHEL 4 ships with</tspan><tspan x="76" y="212.0">SELinux enabled by default</tspan></text><circle cx="62" cy="256.0" r="6.5" fill="#FF671D" stroke="#FF671D" stroke-width="1.5"/><text x="48" y="260.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Today</text><text x="76" y="252.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="252.0">Default on RHEL/Fedora;</tspan><tspan x="76" y="266.0">AppArmor default on Ubuntu</tspan></text></svg>
+<svg viewBox="0 0 320 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:400px;display:block;margin:0 auto;"><rect x="1" y="1" width="318" height="148" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="15" width="280" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="160.0" y="44.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">RHEL, Fedora: SELinux</text><rect x="20" y="85" width="280" height="50" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="160.0" y="114.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Ubuntu, Kali: AppArmor</text></svg>
 </div>
 </div>
 </section>
-
+<svg viewBox="0 0 340 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><line x1="62" y1="14" x2="62" y2="272" stroke="#555" stroke-width="2"/><circle cx="62" cy="40.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="44.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1998</text><text x="76" y="36.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="36.0">SubDomain research project</tspan><tspan x="76" y="50.0">begins at WireX Communications</tspan></text><circle cx="62" cy="94.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="98.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2005</text><text x="76" y="90.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="90.0">Novell renames it AppArmor</tspan><tspan x="76" y="104.0">and adds it to SUSE</tspan></text><circle cx="62" cy="148.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="152.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2010</text><text x="76" y="144.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="144.0">AppArmor is merged</tspan><tspan x="76" y="158.0">into the Linux kernel</tspan></text><circle cx="62" cy="202.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="206.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2011</text><text x="76" y="198.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="198.0">Canonical takes the lead</tspan><tspan x="76" y="212.0">on its development</tspan></text><circle cx="62" cy="256.0" r="6.5" fill="#FF671D" stroke="#FF671D" stroke-width="1.5"/><text x="48" y="260.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Today</text><text x="76" y="252.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="252.0">Default MAC on Ubuntu,</tspan><tspan x="76" y="266.0">Debian, and Kali</tspan></text></svg>
 <section>
 <div class="twocol">
 <div class="col">
-<h4>Labels, Not Just Bits</h4>
+<h4>Profiles, Not Labels</h4>
 <ul>
-<li>Every file gets a label</li>
-<li>user:role:type:level</li>
-<li>Policy compares labels</li>
-</ul>
-</div>
-<div class="col" style="text-align:center;">
-<svg viewBox="0 0 360 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:400px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="10" y="20" width="80" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="50.0" y="54.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">user</text><rect x="96" y="20" width="80" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="136.0" y="54.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">role</text><rect x="182" y="20" width="80" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="222.0" y="54.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">type</text><rect x="268" y="20" width="80" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="308.0" y="54.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">level</text></svg>
-</div>
-</div>
-</section>
-
-<section>
-<div class="twocol">
-<div class="col">
-<h4>Not Installed by Default</h4>
-<ul>
-<li>AppArmor ships by default</li>
-<li>Install the SELinux toolset</li>
-<li>RHEL/Fedora already have it</li>
-</ul>
-</div>
-<div class="col" style="text-align:center;">
-<div class="terminal">$ sudo apt install -y selinux-utils policycoreutils</div>
-</div>
-</div>
-</section>
-
-<section id="cmd-getenforce" data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>Is It On?</h4>
-<ul>
-<li>Enforcing, Permissive, or off</li>
-<li>One word answer</li>
-<li>First command to run</li>
-</ul>
-</div>
-<div class="col" style="text-align:center;">
-<div class="terminal">$ getenforce
-Enforcing</div>
-</div>
-</div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<h4>Is It On?</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">getenforce</span>
-<span class="tk-user">Enforcing</span></div>
-</section>
-
-<section id="cmd-sestatus" data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>The Full Picture</h4>
-<ul>
-<li>Mode, policy name, root dir</li>
-<li>More detail than getenforce</li>
-<li>Good for a first audit</li>
-</ul>
-</div>
-<div class="col" style="text-align:center;">
-<div class="terminal">$ sestatus
-SELinux status:  enabled
-Current mode:    enforcing</div>
-</div>
-</div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<h4>The Full Picture</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sestatus</span>
-<span class="tk-comment">SELinux status:</span>  enabled
-<span class="tk-comment">Current mode:</span>    <span class="tk-user">enforcing</span></div>
-</section>
-
-<section id="cmd-setenforce" data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>Changing Mode for Now</h4>
-<ul>
-<li>0 = Permissive, 1 = Enforcing</li>
-<li>Lasts until next reboot</li>
-<li>Needs root</li>
-</ul>
-</div>
-<div class="col" style="text-align:center;">
-<div class="terminal">$ sudo setenforce 0
-$ getenforce
-Permissive</div>
-</div>
-</div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<h4>Changing Mode for Now</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-flag">setenforce</span> <span class="tk-num">0</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">getenforce</span>
-<span class="tk-user">Permissive</span></div>
-</section>
-
-<section id="cmd-chcon" data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>Relabeling a File</h4>
-<ul>
-<li>-t sets just the type</li>
-<li>Fixes a denied-access file</li>
-<li>Temporary until a full relabel</li>
-</ul>
-</div>
-<div class="col" style="text-align:center;">
-<div class="terminal">$ sudo chcon -t httpd_sys_content_t index.html</div>
-</div>
-</div>
-</section>
-
-<section data-background-color="#0a0a0a">
-<h4>Relabeling a File</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">chcon</span> <span class="tk-flag">-t</span> httpd_sys_content_t index.html</div>
-</section>
-
-<section>
-<div class="twocol">
-<div class="col">
-<h4>AppArmor: Ubuntu's MAC</h4>
-<ul>
-<li>Ubuntu/Debian's default MAC</li>
-<li>Profiles by path, not label</li>
-<li>Simpler, less fine-grained</li>
+<li>Tied to a program's path</li>
+<li>Not every file gets tagged</li>
+<li>Simpler than SELinux contexts</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
@@ -10750,59 +10625,147 @@ Permissive</div>
 <section>
 <div class="twocol">
 <div class="col">
-<h4>RHEL vs. Ubuntu, by Default</h4>
+<h4>Not Always Ready to Use</h4>
 <ul>
-<li>RHEL/Fedora: SELinux, on</li>
-<li>Ubuntu/Debian: AppArmor, on</li>
-<li>Both are real MAC in the wild</li>
+<li>aa-* tools need a package</li>
+<li>apparmor-utils on Debian/Kali</li>
+<li>The kernel part is already on</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<table style="font-size: 1.3rem;"><tbody><tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Distro</td><td style="padding:6px; border:1px solid #666;">Default MAC</td></tr><tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">RHEL, Fedora, CentOS</td><td style="padding:6px; border:1px solid #666;">SELinux</td></tr><tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Ubuntu, Debian</td><td style="padding:6px; border:1px solid #666;">AppArmor</td></tr></tbody></table>
+<div class="terminal">$ sudo apt install -y apparmor-utils</div>
 </div>
 </div>
 </section>
 
-<section id="term-context" data-tag="terminology" data-term="Context" data-background-color="#ffffff">
+<section id="cmd-aa-status" data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>Word Origin: &quot;Context&quot;</h4>
-<h5 style="margin-bottom:0.5rem;">con-</h5>
+<h4>Check the Current State</h4>
 <ul>
-<li>Latin: together, with</li>
+<li>One command, full status</li>
+<li>Lists every loaded profile</li>
+<li>Enforce or complain, per app</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ aa-status
+apparmor module is loaded.
+5 profiles are in enforce mode.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Check the Current State</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">aa-status</span>
+apparmor module is loaded.
+<span class="tk-user">5</span> profiles are in enforce mode.</div>
+</section>
+
+<section id="cmd-aa-complain" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Log Without Blocking</h4>
+<ul>
+<li>complain mode never blocks</li>
+<li>Logs what it would block</li>
+<li>Great for testing a change</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo aa-complain /usr/sbin/nginx</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Log Without Blocking</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">aa-complain</span> /usr/sbin/nginx</div>
+</section>
+
+<section id="cmd-aa-enforce" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Turn Blocking Back On</h4>
+<ul>
+<li>enforce mode actively blocks</li>
+<li>Denies anything not listed</li>
+<li>Use once you trust a profile</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo aa-enforce /usr/sbin/nginx</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Turn Blocking Back On</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">aa-enforce</span> /usr/sbin/nginx</div>
+</section>
+
+<section id="cmd-apparmor-parser" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Reload After an Edit</h4>
+<ul>
+<li>Edits alone change nothing</li>
+<li>-r reloads the running policy</li>
+<li>Do this after every edit</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo apparmor_parser -r /etc/apparmor.d/usr.sbin.nginx</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Reload After an Edit</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">apparmor_parser</span> <span class="tk-flag">-r</span> /etc/apparmor.d/usr.sbin.nginx</div>
+</section>
+
+<section id="term-profile" data-tag="terminology" data-term="Profile" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Word Origin: &quot;Profile&quot;</h4>
+<h5 style="margin-bottom:0.5rem;">pro-</h5>
+<ul>
+<li>Latin: forward, forth</li>
 </ul>
 </div>
 <div class="col">
-<h5 style="margin-bottom:0.5rem;">textus</h5>
+<h5 style="margin-bottom:0.5rem;">filum</h5>
 <ul>
-<li>something woven, a text</li>
+<li>Latin: a thread, a line</li>
 </ul>
 </div>
 </div>
-<p class="fragment note-below">A security context weaves four fields together: who, what role, what type, what level.</p>
+<p class="fragment note-below">A profile traces the outline of a shape; an AppArmor profile traces the outline of what a program may do.</p>
 </section>
 
 <section data-background-color="#ffffff">
 <div class="twocol">
 <div class="col">
-<h4>Check: Enforce or Permit?</h4>
+<h4>Check: Enforce or Complain?</h4>
 <ul>
-<li>getenforce prints Enforcing</li>
-<li>A denied action still runs</li>
+<li>aa-status shows enforce mode</li>
+<li>The app still ran, unblocked</li>
 <li>Which mode explains that?</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
 <div class="fragment">
-<svg viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:320px;display:block;margin:0 auto;"><rect x="1" y="1" width="318" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="40" width="280" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="160.0" y="74.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Permissive: logs, allows it</text></svg>
-<p style="text-align:center; font-size:0.95rem; color:#999; margin-top:6px;">Answer: trick question; Enforcing blocks it, so this must be Permissive logging only</p>
+<svg viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:320px;display:block;margin:0 auto;"><rect x="1" y="1" width="318" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="40" width="280" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="160.0" y="74.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Complain: logs, allows it</text></svg>
+<p style="text-align:center; font-size:0.95rem; color:#999; margin-top:6px;">Answer: complain mode never blocks; enforce would have stopped it</p>
 </div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#ffffff">
-<div class="cmd-table" data-through="cmd-chcon"></div>
+<div class="cmd-table" data-through="cmd-apparmor-parser"></div>
 </section>
 
 <section>
@@ -10921,7 +10884,7 @@ Permissive</div>
 </section>
 
 <section data-background-color="#ffffff">
-<div class="cmd-table" data-through="cmd-chcon"></div>
+<div class="cmd-table" data-through="cmd-apparmor-parser"></div>
 </section>
 
 <section>
@@ -11743,10 +11706,10 @@ $ sudo ausearch -k registrar_writes</div>
         { id: 'cmd-su', module: 4, cmd: 'su', example: 'su - alice', purpose: 'Switch to another user\'s shell' },
         { id: 'cmd-visudo', module: 4, cmd: 'visudo', example: 'sudo visudo', purpose: 'Edit /etc/sudoers safely' },
         { id: 'cmd-sudo-l', module: 4, cmd: 'sudo -l', example: 'sudo -l', purpose: 'List your allowed sudo commands' },
-        { id: 'cmd-getenforce', module: 4, cmd: 'getenforce', example: 'getenforce', purpose: 'Show the current SELinux mode' },
-        { id: 'cmd-setenforce', module: 4, cmd: 'setenforce', example: 'sudo setenforce 0', purpose: 'Switch SELinux mode for now' },
-        { id: 'cmd-sestatus', module: 4, cmd: 'sestatus', example: 'sestatus', purpose: 'Show detailed SELinux status' },
-        { id: 'cmd-chcon', module: 4, cmd: 'chcon', example: 'sudo chcon -t httpd_sys_content_t f', purpose: 'Change a file\'s SELinux type' },
+        { id: 'cmd-aa-status', module: 4, cmd: 'aa-status', example: 'aa-status', purpose: 'Show AppArmor status and profiles' },
+        { id: 'cmd-aa-complain', module: 4, cmd: 'aa-complain', example: 'sudo aa-complain /usr/sbin/nginx', purpose: 'Log a profile\'s denials, don\'t block' },
+        { id: 'cmd-aa-enforce', module: 4, cmd: 'aa-enforce', example: 'sudo aa-enforce /usr/sbin/nginx', purpose: 'Actively enforce a profile' },
+        { id: 'cmd-apparmor-parser', module: 4, cmd: 'apparmor_parser', example: 'sudo apparmor_parser -r file', purpose: 'Reload an edited profile' },
         { id: 'cmd-systemctl', module: 4, cmd: 'systemctl', example: 'systemctl status auditd', purpose: 'Check or control a service' },
         { id: 'cmd-auditctl', module: 4, cmd: 'auditctl', example: 'auditctl -w /etc/passwd -p wa', purpose: 'Add or list audit watch rules' },
         { id: 'cmd-ausearch', module: 4, cmd: 'ausearch', example: 'ausearch -k registrar_writes', purpose: 'Search audit logs by key' },
