@@ -419,7 +419,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-12 10:35 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-12 10:55 PT</span>
   </div>
 
   <!--
@@ -10440,7 +10440,10 @@ $ groups</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ getfacl report.txt
+<div class="terminal">$ touch report.txt
+$ chmod 640 report.txt
+# 640 = rw-r----- (group read, others none)
+$ getfacl report.txt
 # no flags: print the file&#39;s full ACL
 user::rw-
 group::r--
@@ -10451,7 +10454,10 @@ other::---</div>
 
 <section data-background-color="#0a0a0a">
 <h4>See a File's Full ACL</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> report.txt
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">touch</span> report.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">chmod</span> 640 report.txt
+<span class="tk-comment"># 640 = rw-r----- (group read, others none)</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> report.txt
 <span class="tk-comment"># no flags: print the file&#39;s full ACL</span>
 user::<span class="tk-user">rw-</span>
 group::r--
@@ -10469,20 +10475,22 @@ other::---</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ setfacl -m u:bob:rw report.txt
+<div class="terminal">$ setfacl -m u:daemon:rw report.txt
 # -m modifies the ACL; owner needs no sudo
+# daemon: a real account on every Linux box
 $ getfacl report.txt
-user:bob:rw-</div>
+user:daemon:rw-</div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>Grant One More Person</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> u:<span class="tk-user">bob</span>:rw report.txt
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> u:<span class="tk-user">daemon</span>:rw report.txt
 <span class="tk-comment"># -m modifies the ACL; owner needs no sudo</span>
+<span class="tk-comment"># daemon: a real account on every Linux box</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> report.txt
-user:<span class="tk-user">bob</span>:rw-</div>
+user:<span class="tk-user">daemon</span>:rw-</div>
 </section>
 
 <section data-background-color="#ffffff">
@@ -11022,7 +11030,9 @@ Active: active (running)</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ sudo auditctl -w /srv/registrar -p wa -k registrar_writes
+<div class="terminal">$ sudo mkdir -p /srv/registrar
+# creates the watched folder first
+$ sudo auditctl -w /srv/registrar -p wa -k registrar_writes
 # -w watch path, -p wa write+attribute, -k search tag</div>
 </div>
 </div>
@@ -11030,7 +11040,9 @@ Active: active (running)</div>
 
 <section data-background-color="#0a0a0a">
 <h4>Watch a File or Folder</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">auditctl</span> <span class="tk-flag">-w</span> /srv/registrar <span class="tk-flag">-p</span> wa <span class="tk-flag">-k</span> registrar_writes
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">mkdir</span> <span class="tk-flag">-p</span> /srv/registrar
+<span class="tk-comment"># creates the watched folder first</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">auditctl</span> <span class="tk-flag">-w</span> /srv/registrar <span class="tk-flag">-p</span> wa <span class="tk-flag">-k</span> registrar_writes
 <span class="tk-comment"># -w watch path, -p wa write+attribute, -k search tag</span></div>
 </section>
 
@@ -11333,7 +11345,11 @@ $ sudo systemctl enable --now auditd
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ sudo auditctl -w /srv/registrar -p wa -k registrar_writes
+<div class="terminal">$ sudo mkdir -p /srv/registrar
+$ sudo chgrp registrar /srv/registrar
+$ sudo chmod 2770 /srv/registrar
+# 2770 = rwxrws--- (registrar group can write)
+$ sudo auditctl -w /srv/registrar -p wa -k registrar_writes
 # -w watch path, -p wa write+attribute, -k search tag</div>
 </div>
 </div>
@@ -11341,7 +11357,11 @@ $ sudo systemctl enable --now auditd
 
 <section data-background-color="#0a0a0a">
 <h4>Step 4: Watch the Folder</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">auditctl</span> <span class="tk-flag">-w</span> /srv/registrar <span class="tk-flag">-p</span> wa <span class="tk-flag">-k</span> registrar_writes
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">mkdir</span> <span class="tk-flag">-p</span> /srv/registrar
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">chgrp</span> registrar /srv/registrar
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">chmod</span> 2770 /srv/registrar
+<span class="tk-comment"># 2770 = rwxrws--- (registrar group can write)</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">auditctl</span> <span class="tk-flag">-w</span> /srv/registrar <span class="tk-flag">-p</span> wa <span class="tk-flag">-k</span> registrar_writes
 <span class="tk-comment"># -w watch path, -p wa write+attribute, -k search tag</span></div>
 </section>
 
@@ -11838,7 +11858,7 @@ group::<span class="tk-user">rwx</span></div>
         { id: 'cmd-chgrp', module: 3, cmd: 'chgrp', example: 'chgrp csdept /srv/cs-dept', purpose: "Change a file's group only" },
         { id: 'cmd-ln', module: 3, cmd: 'ln', example: 'ln -s target link', purpose: 'Create a symlink or hardlink' },
         { id: 'cmd-getfacl', module: 4, cmd: 'getfacl', example: 'getfacl report.txt', purpose: 'Show a file\'s full access list' },
-        { id: 'cmd-setfacl', module: 4, cmd: 'setfacl', example: 'sudo setfacl -m u:bob:rw file', purpose: 'Grant one more user an ACL rule' },
+        { id: 'cmd-setfacl', module: 4, cmd: 'setfacl', example: 'setfacl -m u:daemon:rw file', purpose: 'Grant one more user an ACL rule' },
         { id: 'cmd-whoami', module: 4, cmd: 'whoami', example: 'whoami', purpose: 'Print your effective username' },
         { id: 'cmd-su', module: 4, cmd: 'su', example: 'su - alice', purpose: 'Switch to another user\'s shell' },
         { id: 'cmd-visudo', module: 4, cmd: 'visudo', example: 'sudo visudo', purpose: 'Edit /etc/sudoers safely' },
