@@ -401,7 +401,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-10 14:10 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-11 22:30 PT</span>
   </div>
 
   <!--
@@ -10292,19 +10292,16 @@ $ groups</div>
 </section>
 
 <section id="module-4-agenda">
-<!-- Intro block only so far. When each agenda item gets its own content
-     slides, wrap these <li> in ./#/module-4-agenda-M links and insert the
-     per-item "Questions?" + divider slides, per the Agenda GLOBAL RULE. -->
 <div class="twocol">
 <div class="col">
 <h4>Agenda</h4>
 <ol style="line-height: 1.8;">
-<li>Why Access Control?</li>
-<li>The Access-Control Matrix</li>
-<li>DAC, MAC, and RBAC</li>
-<li>sudo and Privilege</li>
-<li>Auditing with auditd</li>
-<li>Reading Audit Logs</li>
+<li><a href="./#/module-4-agenda-1" target="_self">What Is Access Control?</a></li>
+<li><a href="./#/module-4-agenda-2" target="_self">Users, Groups &amp; sudo</a></li>
+<li><a href="./#/module-4-agenda-3" target="_self">Mandatory Access Control</a></li>
+<li><a href="./#/module-4-agenda-4" target="_self">Why Audit?</a></li>
+<li><a href="./#/module-4-agenda-5" target="_self">Auditing with auditd</a></li>
+<li><a href="./#/module-4-agenda-6" target="_self">Practice Lab</a></li>
 </ol>
 </div>
 <div class="col" style="text-align:center;">
@@ -10313,19 +10310,56 @@ $ groups</div>
 </div>
 </section>
 
-<section>
+<section id="module-4-agenda-1">
 <div class="twocol">
 <div class="col">
-<h4>Why Access Control?</h4>
+<h4>Subjects, Objects, Monitor</h4>
 <ul>
-<li>One system, many users</li>
-<li>Not everyone sees everything</li>
-<li>Every request is checked</li>
-<li>One gate enforces it all</li>
+<li>A subject wants to act</li>
+<li>An object is the target</li>
+<li>A monitor checks every ask</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 340 304" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="302" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m4why" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="20" y="16" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170" y="45.0" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A user asks for a file</text><rect x="20" y="92" width="300" height="48" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="170" y="121.0" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Check it against the policy</text><rect x="20" y="168" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170" y="197.0" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Allow the action, or deny</text><rect x="20" y="244" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170" y="273.0" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Record it in the audit log</text><line x1="170" y1="65" x2="170" y2="89" stroke="#888" stroke-width="1.6" marker-end="url(#m4why)"/><line x1="170" y1="141" x2="170" y2="165" stroke="#888" stroke-width="1.6" marker-end="url(#m4why)"/><line x1="170" y1="217" x2="170" y2="241" stroke="#888" stroke-width="1.6" marker-end="url(#m4why)"/></svg>
+<svg viewBox="0 0 340 304" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="302" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m4som" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="20" y="16" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170.0" y="44.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">subject: a user or process</text><rect x="20" y="92" width="300" height="48" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="170.0" y="120.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">reference monitor decides</text><rect x="20" y="168" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170.0" y="196.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">object: a file or resource</text><line x1="170.0" y1="65" x2="170.0" y2="89" stroke="#888" stroke-width="1.6" marker-end="url(#m4som)"/><line x1="170.0" y1="141" x2="170.0" y2="165" stroke="#888" stroke-width="1.6" marker-end="url(#m4som)"/></svg>
+</div>
+</div>
+</section>
+
+<section id="term-authorization" data-tag="terminology" data-term="Authorization" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Word Origin: &quot;Authorization&quot;</h4>
+<h5 style="margin-bottom:0.5rem;">auctor-</h5>
+<ul>
+<li>Latin: one who grants</li>
+</ul>
+</div>
+<div class="col">
+<h5 style="margin-bottom:0.5rem;">-ize</h5>
+<ul>
+<li>to put into effect</li>
+</ul>
+</div>
+</div>
+<p class="fragment note-below">Authentication proves who you are; authorization decides what that identity may do.</p>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: DAC or MAC?</h4>
+<ul>
+<li>Owner sets the permission</li>
+<li>Kernel policy overrides it</li>
+<li>Which model is this?</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="fragment">
+<svg viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:320px;display:block;margin:0 auto;"><rect x="1" y="1" width="318" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="40" width="280" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="160.0" y="74.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">MAC: the system decides</text></svg>
+<p style="text-align:center; font-size:0.95rem; color:#999; margin-top:6px;">Answer: MAC; the owner's chmod can't override a denied policy</p>
+</div>
 </div>
 </div>
 </section>
@@ -10333,16 +10367,221 @@ $ groups</div>
 <section>
 <div class="twocol">
 <div class="col">
-<h4>The Access-Control Matrix</h4>
+<h4>Real Software: PAM</h4>
 <ul>
-<li>Rows: users and groups</li>
-<li>Columns: files and folders</li>
-<li>A cell lists r, w, x</li>
-<li>chmod sets one column</li>
+<li>Pluggable Auth Modules</li>
+<li>Plugs auth into login, sudo</li>
+<li>Config lives in /etc/pam.d</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 340 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="208" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="78" y="8" width="80" height="34" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="118.0" y="29.0" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">report.txt</text><rect x="162" y="8" width="80" height="34" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="202.0" y="29.0" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">logs/</text><rect x="246" y="8" width="80" height="34" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="286.0" y="29.0" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">notes.txt</text><text x="12" y="72.0" text-anchor="start" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">alice</text><rect x="78" y="46" width="80" height="44" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="118.0" y="73.0" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">rw-</text><rect x="162" y="46" width="80" height="44" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="202.0" y="73.0" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">r--</text><rect x="246" y="46" width="80" height="44" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="286.0" y="73.0" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">rw-</text><text x="12" y="120.0" text-anchor="start" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">staff</text><rect x="78" y="94" width="80" height="44" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="118.0" y="121.0" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">r--</text><rect x="162" y="94" width="80" height="44" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="202.0" y="121.0" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">rw-</text><rect x="246" y="94" width="80" height="44" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="286.0" y="121.0" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">---</text><text x="12" y="168.0" text-anchor="start" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">other</text><rect x="78" y="142" width="80" height="44" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="118.0" y="169.0" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">---</text><rect x="162" y="142" width="80" height="44" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="202.0" y="169.0" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">r--</text><rect x="246" y="142" width="80" height="44" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="286.0" y="169.0" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">---</text><rect x="76" y="6" width="84" height="182" rx="6" fill="none" stroke="#FF671D" stroke-width="2.5"/></svg>
+<svg viewBox="0 0 340 304" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="302" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m4pam" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="20" y="16" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170.0" y="44.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">login or sudo asks to authenticate</text><rect x="20" y="92" width="300" height="48" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="170.0" y="120.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">PAM runs its configured modules</text><rect x="20" y="168" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170.0" y="196.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">password, fingerprint, or 2FA check</text><line x1="170.0" y1="65" x2="170.0" y2="89" stroke="#888" stroke-width="1.6" marker-end="url(#m4pam)"/><line x1="170.0" y1="141" x2="170.0" y2="165" stroke="#888" stroke-width="1.6" marker-end="url(#m4pam)"/></svg>
+</div>
+</div>
+</section>
+
+<section>
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-4-agenda-2">
+<h2 style="text-align:center;">Users, Groups &amp; sudo</h2>
+</section>
+
+<section>
+<div class="twocol">
+<div class="col">
+<h4>Why Not Log In as root?</h4>
+<ul>
+<li>root can do anything at all</li>
+<li>One mistake, no undo</li>
+<li>sudo logs who did what</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 340 304" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="302" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m4root" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="20" y="16" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170.0" y="44.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">logged in as root, always</text><rect x="20" y="92" width="300" height="48" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="170.0" y="120.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">one typo can wipe the disk</text><rect x="20" y="168" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170.0" y="196.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">no record of which admin</text><line x1="170.0" y1="65" x2="170.0" y2="89" stroke="#888" stroke-width="1.6" marker-end="url(#m4root)"/><line x1="170.0" y1="141" x2="170.0" y2="165" stroke="#888" stroke-width="1.6" marker-end="url(#m4root)"/></svg>
+</div>
+</div>
+</section>
+
+<section id="cmd-whoami" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Who Am I Right Now?</h4>
+<ul>
+<li>Prints your effective user</li>
+<li>Useful inside scripts</li>
+<li>Differs once you sudo</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ whoami
+alice</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Who Am I Right Now?</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">whoami</span>
+<span class="tk-user">alice</span></div>
+</section>
+
+<section id="cmd-su" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Switching Identity: su</h4>
+<ul>
+<li>su alone targets root</li>
+<li>su - name loads their shell</li>
+<li>Needs that user's password</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ su - registrar_admin
+Password:
+$ exit</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Switching Identity: su</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">su</span> <span class="tk-flag">-</span> <span class="tk-user">registrar_admin</span>
+<span class="tk-comment">Password:</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">exit</span></div>
+</section>
+
+<section>
+<div class="twocol">
+<div class="col">
+<h4>Reading a sudoers Line</h4>
+<ul>
+<li>Who: a user or %group</li>
+<li>Where: ALL hosts</li>
+<li>As whom, running what</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:400px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="10" y="20" width="100" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="60.0" y="54.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">%registrar</text><rect x="120" y="20" width="100" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170.0" y="54.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">ALL=(root)</text><rect x="230" y="20" width="120" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="290.0" y="54.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">backup.sh</text></svg>
+</div>
+</div>
+</section>
+
+<section id="cmd-visudo" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Editing sudoers Safely</h4>
+<ul>
+<li>visudo locks the file</li>
+<li>Checks syntax before saving</li>
+<li>Never edit sudoers directly</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo visudo
+%registrar ALL=(root) NOPASSWD: /usr/local/bin/backup.sh</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Editing sudoers Safely</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">visudo</span>
+<span class="tk-user">%registrar</span> ALL=(root) NOPASSWD: /usr/local/bin/backup.sh</div>
+</section>
+
+<section id="cmd-sudo-l" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>What Can I Run?</h4>
+<ul>
+<li>Lists your sudo rules</li>
+<li>Shows allowed commands</li>
+<li>Good first debugging step</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo -l
+User alice may run:
+    (root) /usr/local/bin/backup.sh</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>What Can I Run?</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-flag">-l</span>
+<span class="tk-comment">User alice may run:</span>
+    (root) /usr/local/bin/backup.sh</div>
+</section>
+
+<section id="term-sudo" data-tag="terminology" data-term="Sudo" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Word Origin: &quot;sudo&quot;</h4>
+<h5 style="margin-bottom:0.5rem;">su</h5>
+<ul>
+<li>already meant "switch user"</li>
+</ul>
+</div>
+<div class="col">
+<h5 style="margin-bottom:0.5rem;">do</h5>
+<ul>
+<li>"do" this one thing as them</li>
+</ul>
+</div>
+</div>
+<p class="fragment note-below">Read aloud as "superuser do": run one command with another user's privilege.</p>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: sudo vs. su</h4>
+<ul>
+<li>sudo: one command, logged</li>
+<li>su: a whole new shell</li>
+<li>Which fits a backup script?</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="fragment">
+<svg viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:320px;display:block;margin:0 auto;"><rect x="1" y="1" width="318" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="40" width="280" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="160.0" y="74.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">sudo: one command, logged</text></svg>
+<p style="text-align:center; font-size:0.95rem; color:#999; margin-top:6px;">Answer: sudo; it runs just that script and records who ran it</p>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="cmd-table" data-through="cmd-sudo-l"></div>
+</section>
+
+<section>
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-4-agenda-3">
+<h2 style="text-align:center;">Mandatory Access Control</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="cmd-table" data-through="cmd-sudo-l"></div>
+</section>
+<svg viewBox="0 0 340 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><line x1="62" y1="14" x2="62" y2="272" stroke="#555" stroke-width="2"/><circle cx="62" cy="40.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="44.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1992</text><text x="76" y="36.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="36.0">NSA & Secure Computing</tspan><tspan x="76" y="50.0">begin the Flask architecture</tspan></text><circle cx="62" cy="94.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="98.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2000</text><text x="76" y="90.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="90.0">NSA publicly releases</tspan><tspan x="76" y="104.0">SELinux for Linux</tspan></text><circle cx="62" cy="148.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="152.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2003</text><text x="76" y="144.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="144.0">SELinux is merged</tspan><tspan x="76" y="158.0">into mainline Linux 2.6</tspan></text><circle cx="62" cy="202.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="206.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2005</text><text x="76" y="198.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="198.0">RHEL 4 ships with</tspan><tspan x="76" y="212.0">SELinux enabled by default</tspan></text><circle cx="62" cy="256.0" r="6.5" fill="#FF671D" stroke="#FF671D" stroke-width="1.5"/><text x="48" y="260.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Today</text><text x="76" y="252.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="252.0">Default on RHEL/Fedora;</tspan><tspan x="76" y="266.0">AppArmor default on Ubuntu</tspan></text></svg>
+<section>
+<div class="twocol">
+<div class="col">
+<h4>Labels, Not Just Bits</h4>
+<ul>
+<li>Every file gets a label</li>
+<li>user:role:type:level</li>
+<li>Policy compares labels</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:400px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="10" y="20" width="80" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="50.0" y="54.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">user</text><rect x="96" y="20" width="80" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="136.0" y="54.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">role</text><rect x="182" y="20" width="80" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="222.0" y="54.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">type</text><rect x="268" y="20" width="80" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="308.0" y="54.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">level</text></svg>
 </div>
 </div>
 </section>
@@ -10350,21 +10589,192 @@ $ groups</div>
 <section>
 <div class="twocol">
 <div class="col">
-<h4>DAC, MAC, and RBAC</h4>
+<h4>Not Installed by Default</h4>
 <ul>
-<li>DAC: the owner decides</li>
-<li>MAC: the system decides</li>
-<li>RBAC: your role decides</li>
-<li>A Linux group is a role</li>
+<li>AppArmor ships by default</li>
+<li>Install the SELinux toolset</li>
+<li>RHEL/Fedora already have it</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 340 228" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="226" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="14" width="300" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170" y="40" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">DAC: the owner decides</text><text x="170" y="60" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#bbb" font-weight="normal">chmod, chown</text><rect x="20" y="86" width="300" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170" y="112" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">MAC: the system decides</text><text x="170" y="132" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#bbb" font-weight="normal">SELinux, AppArmor</text><rect x="20" y="158" width="300" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="170" y="184" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">RBAC: your role decides</text><text x="170" y="204" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#bbb" font-weight="normal">a Linux group is a role</text></svg>
+<div class="terminal">$ sudo apt install -y selinux-utils policycoreutils</div>
+</div>
+</div>
+</section>
+
+<section id="cmd-getenforce" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Is It On?</h4>
+<ul>
+<li>Enforcing, Permissive, or off</li>
+<li>One word answer</li>
+<li>First command to run</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ getenforce
+Enforcing</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Is It On?</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">getenforce</span>
+<span class="tk-user">Enforcing</span></div>
+</section>
+
+<section id="cmd-sestatus" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>The Full Picture</h4>
+<ul>
+<li>Mode, policy name, root dir</li>
+<li>More detail than getenforce</li>
+<li>Good for a first audit</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sestatus
+SELinux status:  enabled
+Current mode:    enforcing</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>The Full Picture</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sestatus</span>
+<span class="tk-comment">SELinux status:</span>  enabled
+<span class="tk-comment">Current mode:</span>    <span class="tk-user">enforcing</span></div>
+</section>
+
+<section id="cmd-setenforce" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Changing Mode for Now</h4>
+<ul>
+<li>0 = Permissive, 1 = Enforcing</li>
+<li>Lasts until next reboot</li>
+<li>Needs root</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo setenforce 0
+$ getenforce
+Permissive</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Changing Mode for Now</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-flag">setenforce</span> <span class="tk-num">0</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">getenforce</span>
+<span class="tk-user">Permissive</span></div>
+</section>
+
+<section id="cmd-chcon" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Relabeling a File</h4>
+<ul>
+<li>-t sets just the type</li>
+<li>Fixes a denied-access file</li>
+<li>Temporary until a full relabel</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo chcon -t httpd_sys_content_t index.html</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Relabeling a File</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">chcon</span> <span class="tk-flag">-t</span> httpd_sys_content_t index.html</div>
+</section>
+
+<section>
+<div class="twocol">
+<div class="col">
+<h4>AppArmor: Ubuntu's MAC</h4>
+<ul>
+<li>Ubuntu/Debian's default MAC</li>
+<li>Profiles by path, not label</li>
+<li>Simpler, less fine-grained</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 340 304" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="302" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m4aa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="20" y="16" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170.0" y="44.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">a program starts</text><rect x="20" y="92" width="300" height="48" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="170.0" y="120.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">its AppArmor profile applies</text><rect x="20" y="168" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170.0" y="196.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">only listed paths are allowed</text><line x1="170.0" y1="65" x2="170.0" y2="89" stroke="#888" stroke-width="1.6" marker-end="url(#m4aa)"/><line x1="170.0" y1="141" x2="170.0" y2="165" stroke="#888" stroke-width="1.6" marker-end="url(#m4aa)"/></svg>
 </div>
 </div>
 </section>
 
 <section>
+<div class="twocol">
+<div class="col">
+<h4>RHEL vs. Ubuntu, by Default</h4>
+<ul>
+<li>RHEL/Fedora: SELinux, on</li>
+<li>Ubuntu/Debian: AppArmor, on</li>
+<li>Both are real MAC in the wild</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<table style="font-size: 1.3rem;"><tbody><tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Distro</td><td style="padding:6px; border:1px solid #666;">Default MAC</td></tr><tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">RHEL, Fedora, CentOS</td><td style="padding:6px; border:1px solid #666;">SELinux</td></tr><tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Ubuntu, Debian</td><td style="padding:6px; border:1px solid #666;">AppArmor</td></tr></tbody></table>
+</div>
+</div>
+</section>
+
+<section id="term-context" data-tag="terminology" data-term="Context" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Word Origin: &quot;Context&quot;</h4>
+<h5 style="margin-bottom:0.5rem;">con-</h5>
+<ul>
+<li>Latin: together, with</li>
+</ul>
+</div>
+<div class="col">
+<h5 style="margin-bottom:0.5rem;">textus</h5>
+<ul>
+<li>something woven, a text</li>
+</ul>
+</div>
+</div>
+<p class="fragment note-below">A security context weaves four fields together: who, what role, what type, what level.</p>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Enforce or Permit?</h4>
+<ul>
+<li>getenforce prints Enforcing</li>
+<li>A denied action still runs</li>
+<li>Which mode explains that?</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="fragment">
+<svg viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:320px;display:block;margin:0 auto;"><rect x="1" y="1" width="318" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="40" width="280" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="160.0" y="74.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Permissive: logs, allows it</text></svg>
+<p style="text-align:center; font-size:0.95rem; color:#999; margin-top:6px;">Answer: trick question; Enforcing blocks it, so this must be Permissive logging only</p>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="cmd-table" data-through="cmd-chcon"></div>
+</section>
+
+<section>
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-4-agenda-4">
 <div class="twocol">
 <div class="col">
 <h4>Why Audit?</h4>
@@ -10376,10 +10786,507 @@ $ groups</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 340 304" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="302" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m4audit" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="20" y="16" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170" y="45.0" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Someone changes a file</text><rect x="20" y="92" width="300" height="48" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="170" y="121.0" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">auditd captures the event</text><rect x="20" y="168" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170" y="197.0" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Appended to a locked log</text><rect x="20" y="244" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170" y="273.0" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">You review, alert, report</text><line x1="170" y1="65" x2="170" y2="89" stroke="#888" stroke-width="1.6" marker-end="url(#m4audit)"/><line x1="170" y1="141" x2="170" y2="165" stroke="#888" stroke-width="1.6" marker-end="url(#m4audit)"/><line x1="170" y1="217" x2="170" y2="241" stroke="#888" stroke-width="1.6" marker-end="url(#m4audit)"/></svg>
+<svg viewBox="0 0 340 304" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="302" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m4audit" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="20" y="16" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170.0" y="44.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Someone changes a file</text><rect x="20" y="92" width="300" height="48" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="170.0" y="120.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">auditd captures the event</text><rect x="20" y="168" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170.0" y="196.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Appended to a locked log</text><rect x="20" y="244" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170.0" y="272.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">You review, alert, report</text><line x1="170.0" y1="65" x2="170.0" y2="89" stroke="#888" stroke-width="1.6" marker-end="url(#m4audit)"/><line x1="170.0" y1="141" x2="170.0" y2="165" stroke="#888" stroke-width="1.6" marker-end="url(#m4audit)"/><line x1="170.0" y1="217" x2="170.0" y2="241" stroke="#888" stroke-width="1.6" marker-end="url(#m4audit)"/></svg>
 </div>
 </div>
 </section>
+
+<section>
+<div class="twocol">
+<div class="col">
+<h4>The AAA Model, Revisited</h4>
+<ul>
+<li>Authentication: who you are</li>
+<li>Authorization: what you may do</li>
+<li>Accounting: what you did</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 320 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:320px;display:block;margin:0 auto;"><rect x="1" y="1" width="318" height="208" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="15" width="280" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="160.0" y="44.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Authentication</text><rect x="20" y="80" width="280" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="160.0" y="109.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Authorization</text><rect x="20" y="145" width="280" height="50" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="160.0" y="174.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Accounting (audit)</text></svg>
+</div>
+</div>
+</section>
+
+<section>
+<div class="twocol">
+<div class="col">
+<h4>Who Requires Audit Logs?</h4>
+<ul>
+<li>FERPA: student records</li>
+<li>PCI-DSS: payment data</li>
+<li>NIST 800-53: federal systems</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 340 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:400px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="188" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="10" y="15" width="100" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="60.0" y="44.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">FERPA</text><rect x="120" y="15" width="100" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170.0" y="44.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">PCI-DSS</text><rect x="230" y="15" width="100" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="280.0" y="44.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">NIST 800-53</text><rect x="60" y="90" width="220" height="50" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="170.0" y="119.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">all require: who, what, when</text></svg>
+</div>
+</div>
+</section>
+
+<section>
+<div class="twocol">
+<div class="col">
+<h4>Frameworks That Require It</h4>
+<ul>
+<li>Each names what to log</li>
+<li>None specifies the tool</li>
+<li>auditd can satisfy any of them</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<table style="font-size: 1.15rem;"><tbody><tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">Framework</td><td style="padding:6px; border:1px solid #666;">Protects</td></tr><tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">FERPA</td><td style="padding:6px; border:1px solid #666;">Student education records</td></tr><tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">PCI-DSS</td><td style="padding:6px; border:1px solid #666;">Card payment data</td></tr><tr style="color:#ccc;"><td style="padding:6px; border:1px solid #666;">NIST SP 800-53</td><td style="padding:6px; border:1px solid #666;">Federal information systems</td></tr></tbody></table>
+</div>
+</div>
+</section>
+
+<section id="term-audit" data-tag="terminology" data-term="Audit" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Word Origin: &quot;Audit&quot;</h4>
+<h5 style="margin-bottom:0.5rem;">audire</h5>
+<ul>
+<li>Latin: to hear</li>
+</ul>
+</div>
+<div class="col">
+<h5 style="margin-bottom:0.5rem;">-it</h5>
+<ul>
+<li>one who listens, examines</li>
+</ul>
+</div>
+</div>
+<p class="fragment note-below">An auditor originally "heard" accounts read aloud; auditd listens to the kernel instead.</p>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: What&#39;s in the Log?</h4>
+<ul>
+<li>Who did it</li>
+<li>What they did, and when</li>
+<li>Not: their plaintext password</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="fragment">
+<svg viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:320px;display:block;margin:0 auto;"><rect x="1" y="1" width="318" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="40" width="280" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="160.0" y="74.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">who, what, when: yes</text></svg>
+<p style="text-align:center; font-size:0.95rem; color:#999; margin-top:6px;">Answer: who/what/when belong in the log; secrets like passwords never do</p>
+</div>
+</div>
+</div>
+</section>
+
+<section>
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-4-agenda-5">
+<h2 style="text-align:center;">Auditing with auditd</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="cmd-table" data-through="cmd-chcon"></div>
+</section>
+<svg viewBox="0 0 340 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><line x1="62" y1="14" x2="62" y2="272" stroke="#555" stroke-width="2"/><circle cx="62" cy="40.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="44.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1985</text><text x="76" y="36.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="36.0">DoD's TCSEC "Orange Book"</tspan><tspan x="76" y="50.0">requires audit trails at C2+</tspan></text><circle cx="62" cy="94.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="98.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2004</text><text x="76" y="90.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="90.0">The Linux Audit subsystem</tspan><tspan x="76" y="104.0">is merged into the kernel</tspan></text><circle cx="62" cy="148.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="152.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2005</text><text x="76" y="144.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="144.0">Red Hat's auditd/audit-libs</tspan><tspan x="76" y="158.0">userspace tools mature</tspan></text><circle cx="62" cy="202.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="206.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2013</text><text x="76" y="198.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="198.0">auditd becomes part of</tspan><tspan x="76" y="212.0">Common Criteria baselines</tspan></text><circle cx="62" cy="256.0" r="6.5" fill="#FF671D" stroke="#FF671D" stroke-width="1.5"/><text x="48" y="260.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Today</text><text x="76" y="252.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="252.0">Standard on RHEL/CentOS;</tspan><tspan x="76" y="266.0">installable on Ubuntu</tspan></text></svg>
+<section>
+<div class="twocol">
+<div class="col">
+<h4>What auditd Watches</h4>
+<ul>
+<li>System calls, by rule</li>
+<li>File reads, writes, changes</li>
+<li>Logins and privilege use</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 340 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:400px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="10" y="15" width="100" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="60.0" y="49.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">syscalls</text><rect x="120" y="15" width="100" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="170.0" y="49.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">files</text><rect x="230" y="15" width="100" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="280.0" y="49.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">logins</text></svg>
+</div>
+</div>
+</section>
+
+<section>
+<div class="twocol">
+<div class="col">
+<h4>Installing auditd</h4>
+<ul>
+<li>Not on Ubuntu by default</li>
+<li>One package, one service</li>
+<li>Enable it to start logging</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo apt install -y auditd</div>
+</div>
+</div>
+</section>
+
+<section id="cmd-systemctl" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Is It Running?</h4>
+<ul>
+<li>systemctl checks any service</li>
+<li>Look for active (running)</li>
+<li>Same command, any daemon</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo systemctl status auditd
+Active: active (running)</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Is It Running?</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">systemctl</span> status auditd
+<span class="tk-comment">Active:</span> <span class="tk-user">active (running)</span></div>
+</section>
+
+<section id="cmd-auditctl" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Watch a File or Folder</h4>
+<ul>
+<li>-w picks the path</li>
+<li>-p picks write/attribute</li>
+<li>-k tags it for search</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo auditctl -w /srv/registrar -p wa -k registrar_writes</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Watch a File or Folder</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">auditctl</span> <span class="tk-flag">-w</span> /srv/registrar <span class="tk-flag">-p</span> wa <span class="tk-flag">-k</span> registrar_writes</div>
+</section>
+
+<section id="cmd-ausearch" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Finding an Event</h4>
+<ul>
+<li>-k matches the rule's tag</li>
+<li>Prints every matching event</li>
+<li>Fastest way to check a rule</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo ausearch -k registrar_writes</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Finding an Event</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">ausearch</span> <span class="tk-flag">-k</span> registrar_writes</div>
+</section>
+
+<section id="cmd-aureport" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>A Readable Summary</h4>
+<ul>
+<li>-f: file-access events</li>
+<li>-i: interpret uid/gid names</li>
+<li>Easier to skim than raw logs</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo aureport -f -i</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>A Readable Summary</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">aureport</span> <span class="tk-flag">-f</span> <span class="tk-flag">-i</span></div>
+</section>
+
+<section id="cmd-tail" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Reading the Raw Log</h4>
+<ul>
+<li>-f follows new lines live</li>
+<li>Same log ausearch reads</li>
+<li>Useful while testing a rule</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo tail -f /var/log/audit/audit.log</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Reading the Raw Log</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">tail</span> <span class="tk-flag">-f</span> /var/log/audit/audit.log</div>
+</section>
+
+<section id="cmd-augenrules" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Persisting Rules</h4>
+<ul>
+<li>Plain rules vanish on reboot</li>
+<li>Save them as a .rules file</li>
+<li>augenrules loads them all</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo nano /etc/audit/rules.d/registrar.rules
+$ sudo augenrules --load</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Persisting Rules</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> nano /etc/audit/rules.d/registrar.rules
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">augenrules</span> <span class="tk-flag">--load</span></div>
+</section>
+
+<section>
+<div class="twocol">
+<div class="col">
+<h4>Reading an Audit Line</h4>
+<ul>
+<li>type=PATH: what happened</li>
+<li>name=: which file</li>
+<li>key=: which rule matched</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:440px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="10" y="20" width="100" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="60.0" y="54.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">type=PATH</text><rect x="120" y="20" width="130" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="185.0" y="53.7" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">name=/srv/...</text><rect x="260" y="20" width="90" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="305.0" y="54.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">key=...</text></svg>
+</div>
+</div>
+</section>
+
+<section id="term-audit-trail" data-tag="terminology" data-term="Audit Trail" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Word Origin: &quot;Audit Trail&quot;</h4>
+<h5 style="margin-bottom:0.5rem;">trail</h5>
+<ul>
+<li>a track left behind</li>
+</ul>
+</div>
+<div class="col">
+<h5 style="margin-bottom:0.5rem;">audit</h5>
+<ul>
+<li>the examination, as above</li>
+</ul>
+</div>
+</div>
+<p class="fragment note-below">A trail you can follow after the fact: each event links to the one before it in time.</p>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Add or Search?</h4>
+<ul>
+<li>Add a new watch rule</li>
+<li>Search by that rule's key</li>
+<li>auditctl, or ausearch?</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="fragment">
+<svg viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:320px;display:block;margin:0 auto;"><rect x="1" y="1" width="318" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="40" width="280" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="160.0" y="74.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">auditctl adds; ausearch finds</text></svg>
+<p style="text-align:center; font-size:0.95rem; color:#999; margin-top:6px;">Answer: auditctl -w adds the rule; ausearch -k finds events it logged</p>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="cmd-table" data-through="cmd-tail"></div>
+</section>
+
+<section>
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-4-agenda-6">
+<h2 style="text-align:center;">Practice Lab</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="cmd-table" data-through="cmd-tail"></div>
+</section>
+
+<section>
+<div class="twocol">
+<div class="col">
+<h4>Scenario: Registrar Server</h4>
+<ul>
+<li>/srv/registrar holds records</li>
+<li>Staff need a narrow sudo rule</li>
+<li>Every write must be logged</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 340 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:440px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="10" y="15" width="150" height="50" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="85.0" y="44.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">/srv/registrar</text><rect x="180" y="15" width="150" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="255.0" y="44.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">registrar group</text><rect x="95" y="90" width="150" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170.0" y="119.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">auditd watch</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 1: Make the Group</h4>
+<ul>
+<li>One group for registrar staff</li>
+<li>groupadd needs sudo</li>
+<li>Adds no members yet</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo groupadd registrar</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Step 1: Make the Group</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">groupadd</span> registrar</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 2: Grant One Script</h4>
+<ul>
+<li>Not full root, one script only</li>
+<li>NOPASSWD skips the prompt</li>
+<li>Whole group inherits it</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo visudo
+%registrar ALL=(root) NOPASSWD: /usr/local/bin/backup_registrar.sh</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Step 2: Grant One Script</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">visudo</span>
+<span class="tk-user">%registrar</span> ALL=(root) NOPASSWD: /usr/local/bin/backup_registrar.sh</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 3: Turn On Auditing</h4>
+<ul>
+<li>Install, then enable it</li>
+<li>--now starts it immediately</li>
+<li>Survives the next reboot too</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo apt install -y auditd
+$ sudo systemctl enable --now auditd</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Step 3: Turn On Auditing</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> install <span class="tk-flag">-y</span> auditd
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">systemctl</span> enable <span class="tk-flag">--now</span> auditd</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 4: Watch the Folder</h4>
+<ul>
+<li>-p wa: writes and attributes</li>
+<li>-k names the rule</li>
+<li>Rule applies immediately</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo auditctl -w /srv/registrar -p wa -k registrar_writes</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Step 4: Watch the Folder</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">auditctl</span> <span class="tk-flag">-w</span> /srv/registrar <span class="tk-flag">-p</span> wa <span class="tk-flag">-k</span> registrar_writes</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 5: Trigger and Confirm</h4>
+<ul>
+<li>Create a file to test it</li>
+<li>Search by the rule's key</li>
+<li>You should see the write</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ touch /srv/registrar/test.txt
+$ sudo ausearch -k registrar_writes</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Step 5: Trigger and Confirm</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">touch</span> /srv/registrar/test.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">ausearch</span> <span class="tk-flag">-k</span> registrar_writes</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Who Can Run It?</h4>
+<ul>
+<li>Group registrar has the rule</li>
+<li>bob is not in that group</li>
+<li>Can bob run the script?</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="fragment">
+<svg viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:320px;display:block;margin:0 auto;"><rect x="1" y="1" width="318" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="40" width="280" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="160.0" y="74.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">No: the rule is group-scoped</text></svg>
+<p style="text-align:center; font-size:0.95rem; color:#999; margin-top:6px;">Answer: no; only members of registrar inherit the sudoers rule</p>
+</div>
+</div>
+</div>
+</section>
+
+<section>
+<div class="twocol">
+<div class="col">
+<h4>Deliverables</h4>
+<ul>
+<li>A groupadd + visudo screenshot</li>
+<li>auditctl -l showing your rule</li>
+<li>ausearch output for one write</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 340 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="148" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="10" y="15" width="100" height="55" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="60.0" y="46.8" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">sudoers</text><rect x="120" y="15" width="100" height="55" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="170.0" y="46.8" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">auditctl</text><rect x="230" y="15" width="100" height="55" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="280.0" y="46.8" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">ausearch</text></svg>
+</div>
+</div>
+</section>
+
+<section>
+<h2 style="text-align:center;">Looking Ahead: Module 5</h2>
+</section>
+
       </section>
 
       <!-- Modules 5-16 not yet built out for this term; hidden until ready.
@@ -10780,7 +11687,21 @@ $ groups</div>
         { id: 'cmd-mkdir', module: 3, cmd: 'mkdir', example: 'mkdir -p /srv/cs-dept', purpose: 'Create a new directory' },
         { id: 'cmd-usermod', module: 3, cmd: 'usermod', example: 'usermod -aG csdept $USER', purpose: 'Add a user to a group' },
         { id: 'cmd-chgrp', module: 3, cmd: 'chgrp', example: 'chgrp csdept /srv/cs-dept', purpose: "Change a file's group only" },
-        { id: 'cmd-ln', module: 3, cmd: 'ln', example: 'ln -s target link', purpose: 'Create a symlink or hardlink' }
+        { id: 'cmd-ln', module: 3, cmd: 'ln', example: 'ln -s target link', purpose: 'Create a symlink or hardlink' },
+        { id: 'cmd-whoami', module: 4, cmd: 'whoami', example: 'whoami', purpose: 'Print your effective username' },
+        { id: 'cmd-su', module: 4, cmd: 'su', example: 'su - alice', purpose: 'Switch to another user\'s shell' },
+        { id: 'cmd-visudo', module: 4, cmd: 'visudo', example: 'sudo visudo', purpose: 'Edit /etc/sudoers safely' },
+        { id: 'cmd-sudo-l', module: 4, cmd: 'sudo -l', example: 'sudo -l', purpose: 'List your allowed sudo commands' },
+        { id: 'cmd-getenforce', module: 4, cmd: 'getenforce', example: 'getenforce', purpose: 'Show the current SELinux mode' },
+        { id: 'cmd-setenforce', module: 4, cmd: 'setenforce', example: 'sudo setenforce 0', purpose: 'Switch SELinux mode for now' },
+        { id: 'cmd-sestatus', module: 4, cmd: 'sestatus', example: 'sestatus', purpose: 'Show detailed SELinux status' },
+        { id: 'cmd-chcon', module: 4, cmd: 'chcon', example: 'sudo chcon -t httpd_sys_content_t f', purpose: 'Change a file\'s SELinux type' },
+        { id: 'cmd-systemctl', module: 4, cmd: 'systemctl', example: 'systemctl status auditd', purpose: 'Check or control a service' },
+        { id: 'cmd-auditctl', module: 4, cmd: 'auditctl', example: 'auditctl -w /etc/passwd -p wa', purpose: 'Add or list audit watch rules' },
+        { id: 'cmd-ausearch', module: 4, cmd: 'ausearch', example: 'ausearch -k registrar_writes', purpose: 'Search audit logs by key' },
+        { id: 'cmd-aureport', module: 4, cmd: 'aureport', example: 'aureport -f -i', purpose: 'Summarize audit logs, readably' },
+        { id: 'cmd-tail', module: 4, cmd: 'tail', example: 'tail -f /var/log/audit/audit.log', purpose: 'Follow a growing log file' },
+        { id: 'cmd-augenrules', module: 4, cmd: 'augenrules', example: 'sudo augenrules --load', purpose: 'Load saved audit rule files' }
       ];
 
       function cmdTableHTML(throughId) {
