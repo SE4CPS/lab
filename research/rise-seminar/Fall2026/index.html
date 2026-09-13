@@ -250,6 +250,13 @@
 <rect x="8" y="30" width="150" height="60" rx="8" fill="#fff" stroke="#333" stroke-width="1.5"></rect>
 <circle cx="83" cy="42" r="4" fill="#1a1a1a"></circle>
 <path d="M75,55 Q75,46 83,46 Q91,46 91,55 Z" fill="#1a1a1a"></path>
+<!-- Small speech bubble above the head, kept above the box's own top
+     border (y=30) rather than crossing it, same "no arrow poking
+     through a border" reasoning as a connecting line. This is
+     decorative, not a connector, but the same visual glitch applies. -->
+<rect x="88" y="-4" width="36" height="18" rx="5" fill="#fff" stroke="#1a1a1a" stroke-width="1.3"></rect>
+<path d="M92,14 L86,28 L98,14 Z" fill="#fff" stroke="#1a1a1a" stroke-width="1.3"></path>
+<text x="106" y="9" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1a1a">?</text>
 <text x="83" y="68" text-anchor="middle" font-size="14.5" font-weight="700" fill="#1a1a1a">User</text>
 <text x="83" y="107" text-anchor="middle" font-size="12" fill="#555">has a question</text>
 <text x="83" y="120" text-anchor="middle" font-size="12" fill="#555">about an update</text>
@@ -2158,7 +2165,7 @@
 
             <section data-chapter="11">
                 <svg viewBox="0 -110 920 480" style="width:100%;max-width:840px;height:auto;margin:0 auto;display:block;font-family:system-ui,-apple-system,'Segoe UI',Arial,sans-serif;" role="img"
-                    aria-label="The Rewriter, Retriever, Evaluator, and Orchestrator roles all run inside one backend process, which calls out to a choice of LLM providers (Claude, Groq, Ollama Cloud, plus Gemini for reading web pages) and a MongoDB data lake that ~35 scrapers also write into">
+                    aria-label="The Rewriter, Retriever, Evaluator, and Orchestrator roles all run inside one backend process, which calls out to a choice of LLM providers (Claude, Groq, Ollama Cloud, plus Gemini for reading web pages) and a MongoDB data lake that ~35 scrapers also write into. When the Evaluator finds no internal evidence for a real, web-verified vendor, it escalates from that fact search to a fuller evaluator-driven search of Wikipedia, which then writes the newly-found release back into the same MongoDB data lake">
                     <defs>
                         <marker id="archArr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7"
                             orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#777"></path></marker>
@@ -2200,9 +2207,15 @@
                     <text x="710" y="304" text-anchor="middle" font-size="14" font-weight="700" fill="#1a1a1a">Bots</text>
                     <text x="710" y="322" text-anchor="middle" font-size="11" fill="#555">~35 scrapers, cron</text>
 
+                    <rect x="40" y="280" width="340" height="55" rx="8" fill="#fff" stroke="#333" stroke-width="1.5"></rect>
+                    <text x="210" y="304" text-anchor="middle" font-size="14" font-weight="700" fill="#1a1a1a">Wikipedia</text>
+                    <text x="210" y="322" text-anchor="middle" font-size="11" fill="#555">feedback: closes real vendor gaps</text>
+
                     <g font-size="11" fill="#555">
                         <text x="605" y="-30" text-anchor="middle">answer</text>
                         <text x="750" y="163" text-anchor="middle">retrieve</text>
+                        <text x="560" y="110" text-anchor="middle">escalate</text>
+                        <text x="500" y="210" text-anchor="middle">backfill</text>
                     </g>
                     <g stroke="#777" stroke-width="1.4" fill="none">
                         <line x1="474" y1="-67.5" x2="516" y2="-67.5" marker-end="url(#archArr)"></line>
@@ -2210,8 +2223,14 @@
                         <line x1="300" y1="109" x2="220" y2="176" marker-start="url(#archArr)" marker-end="url(#archArr)"></line>
                         <line x1="780" y1="109" x2="700" y2="176" marker-start="url(#archArr)" marker-end="url(#archArr)"></line>
                         <line x1="710" y1="276" x2="710" y2="244" marker-end="url(#archArr)"></line>
+                        <line x1="490" y1="100" x2="300" y2="270" marker-end="url(#archArr)"></line>
+                        <line x1="390" y1="292" x2="530" y2="232" marker-end="url(#archArr)"></line>
                     </g>
                 </svg>
+                <p class="bridge">Method: pipeline escalation, from fact search to full evaluator
+                    search. A web-verified vendor with no internal evidence escalates past the fast
+                    catalog lookup into a Wikipedia search; a real match backfills the data lake
+                    directly, so the next question about that same vendor resolves the fast way.</p>
             </section>
 
             <section data-chapter="11">
@@ -2226,6 +2245,7 @@
                         <tr><td>Runtime</td><td>Node 12.22.9 (EOL 2022) has no native <code>fetch</code>; SDK crashed on first call</td><td>Hand-rolled HTTP via <code>node-fetch</code></td></tr>
                         <tr><td>Deploy</td><td>New LLM-client dependency added locally; <code>git pull</code> alone left server crash-looping</td><td><code>npm install</code> required after every pull</td></tr>
                         <tr><td>Compute</td><td>2GB production VM cannot run even a small local LLM</td><td>Hosted API call from server, no local inference</td></tr>
+                        <tr><td>Memory</td><td>A new eval-tooling dependency, required eagerly at server startup rather than only where it's used, added ~110MB RSS to every process; on a memory-capped pm2 process this tripped a crash/restart loop every 30s, surfacing only as random request failures with no error-log trace and no OOM message</td><td>Lazy-require the dependency inside the one function that calls it; raise the memory ceiling too, as a margin, not a substitute for the fix</td></tr>
                         <tr><td>Pricing</td><td>No free tier for testing; every tool-use round-trip re-bills, and comparing 3 presets on one question triples it</td><td>Free tiers (Ollama local, Gemini/Groq) for testing; pay only for real evaluation runs</td></tr>
                         <tr><td>Vendor gate</td><td>Deterministic pre-check matched only exact tracked product names; a generic category ("SQL", "LLM") resolved to nothing and abstained before any search ran</td><td>Category fallback grounded in the real product-type field, not a guessed synonym list</td></tr>
                     </tbody>
