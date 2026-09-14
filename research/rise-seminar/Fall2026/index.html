@@ -2265,6 +2265,29 @@
             </section>
 
             <section data-chapter="11">
+                <h4>Retrieval quality: a hosting-location bug</h4>
+                <p class="story">The production server runs in a Frankfurt datacenter.
+                    Neither search engine call passed a language or region parameter,
+                    so both quietly geolocated the server's own IP and defaulted to
+                    German-biased results, mixed straight into an English question's
+                    evidence with nothing distinguishing them.</p>
+                <p class="story">Caught live through the Rewriter eval tool built to
+                    compare retrieval with and without query rewriting: an English
+                    question about Microsoft Teams/Zoom stability came back with
+                    German-language Microsoft marketing pages sitting in the same
+                    evidence list as the real, on-topic English discussion the
+                    Retriever actually needed.</p>
+                <p class="bridge">Fix: pin each engine's own locale parameter instead
+                    of trusting an IP-based default (DuckDuckGo <code>kl=us-en</code>,
+                    Bing <code>mkt=en-US&amp;cc=US</code>). This improves the Retriever
+                    directly, not just the Orchestrator's final wording: the Evaluator
+                    reasons over evidence text to judge sufficiency, and a capped
+                    evidence list means a foreign-language result does not just fail
+                    to help, it occupies a slot a genuinely relevant English source
+                    could otherwise have filled.</p>
+            </section>
+
+            <section data-chapter="11">
                 <h4>Eleven results, five columns</h4>
                 <table><thead><tr><th>Year</th><th>Result</th><th>User</th><th>Rewriter</th><th>Retriever</th><th>Evaluator</th><th>Orchestrator</th></tr></thead><tbody><tr><td>2020</td><td>Release patterns</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="hit">&#10003;</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td></tr><tr><td>2023</td><td>Ecosystem cost</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="hit">&#10003;</td><td class="hit">&#10003;</td><td class="miss">&ndash;</td></tr><tr><td>2024</td><td>Note classification</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="hit">&#10003;</td><td class="miss">&ndash;</td></tr><tr><td>2024</td><td>Reddit feedback</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="hit">&#10003;</td><td class="hit">&#10003;</td><td class="miss">&ndash;</td></tr><tr><td>2025</td><td>User perspectives</td><td class="hit">&#10003;</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="hit">&#10003;</td><td class="miss">&ndash;</td></tr><tr><td>2025</td><td>UML visualization</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="hit">&#10003;</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td></tr><tr><td>2026</td><td>Evidence-gated RAG</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="hit">&#10003;</td><td class="hit">&#10003;</td></tr><tr><td>2026</td><td>Semantic retrieval</td><td class="miss">&ndash;</td><td class="hit">&#10003;</td><td class="hit">&#10003;</td><td class="miss">&ndash;</td><td class="hit">&#10003;</td></tr><tr><td>2026</td><td>Multi-agent RAG</td><td class="miss">&ndash;</td><td class="hit">&#10003;</td><td class="hit">&#10003;</td><td class="hit">&#10003;</td><td class="hit">&#10003;</td></tr><tr><td>2026</td><td>TPS vs discontent</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="hit">&#10003;</td><td class="miss">&ndash;</td></tr><tr><td>2026</td><td>Update-path risk</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="miss">&ndash;</td><td class="hit">&#10003;</td><td class="miss">&ndash;</td></tr></tbody></table>
                 <p class="bridge">Retriever and Evaluator carry almost the whole story. Rewriter shows up
