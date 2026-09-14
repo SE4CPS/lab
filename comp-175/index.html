@@ -419,7 +419,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-14 16:37 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-14 23:55 PT</span>
   </div>
 
   <!--
@@ -10967,32 +10967,35 @@ EOF
 <div class="col">
 <h4>Step 4: Watch the Folder</h4>
 <ul>
+<li>Join registrar group first</li>
+<li>newgrp applies it now</li>
 <li>-e picks event types</li>
-<li>&amp; keeps the shell free</li>
-<li>Watching starts immediately</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ sudo mkdir -p /srv/registrar
+<div class="terminal">$ sudo gpasswd -a $(whoami) registrar
+# adds you to the group so you can watch it
+$ newgrp registrar
+$ sudo mkdir -p /srv/registrar
 $ sudo chgrp registrar /srv/registrar
 $ sudo chmod 2770 /srv/registrar
 # 2770 = rwxrws--- (registrar group can write)
 $ inotifywait -m -e create,modify \
-    /srv/registrar &gt;&gt; /tmp/registrar-watch.log &amp;
-# -m keeps watching; -e picks event types</div>
+    /srv/registrar &gt;&gt; /tmp/registrar-watch.log &amp;</div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>Step 4: Watch the Folder</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">mkdir</span> <span class="tk-flag">-p</span> /srv/registrar
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">gpasswd</span> <span class="tk-flag">-a</span> $(whoami) registrar
+<span class="tk-comment"># adds you to the group so you can watch it</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">newgrp</span> registrar
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">mkdir</span> <span class="tk-flag">-p</span> /srv/registrar
 <span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">chgrp</span> registrar /srv/registrar
 <span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">chmod</span> 2770 /srv/registrar
-<span class="tk-comment"># 2770 = rwxrws--- (registrar group can write)</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">inotifywait</span> <span class="tk-flag">-m</span> <span class="tk-flag">-e</span> create,modify \
-    /srv/registrar &gt;&gt; /tmp/registrar-watch.log &amp;
-<span class="tk-comment"># -m keeps watching; -e picks event types</span></div>
+    /srv/registrar &gt;&gt; /tmp/registrar-watch.log &amp;</div>
 </section>
 
 <section data-background-color="#ffffff">
