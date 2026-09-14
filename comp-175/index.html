@@ -419,7 +419,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-14 12:46 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-14 12:50 PT</span>
   </div>
 
   <!--
@@ -10622,6 +10622,43 @@ group::r--
 user:<span class="tk-user">daemon</span>:rw-
 other::---
 <span class="tk-comment"># daemon now has its own explicit rule</span></div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col" style="text-align:center;">
+<h4>Without ACL</h4>
+<div class="terminal">$ setfacl -x u:daemon ~/report.txt
+# -x removes daemon&#39;s entry, if any
+$ sudo -u daemon test -r ~/report.txt &amp;&amp; echo OK || echo DENIED
+# -u: run it as daemon (more on sudo soon)
+DENIED</div>
+</div>
+<div class="col" style="text-align:center;">
+<h4>With ACL</h4>
+<div class="terminal">$ setfacl -m u:daemon:rw ~/report.txt
+# -m grants daemon read+write
+$ sudo -u daemon test -r ~/report.txt &amp;&amp; echo OK || echo DENIED
+OK</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Without ACL</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-x</span> u:<span class="tk-user">daemon</span> ~/report.txt
+<span class="tk-comment"># -x removes daemon&#39;s entry, if any</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-flag">-u</span> daemon <span class="tk-cmd">test</span> <span class="tk-flag">-r</span> ~/report.txt &amp;&amp; echo OK || echo DENIED
+<span class="tk-comment"># -u: run it as daemon (more on sudo soon)</span>
+<span class="tk-user">DENIED</span></div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>With ACL</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> u:<span class="tk-user">daemon</span>:rw ~/report.txt
+<span class="tk-comment"># -m grants daemon read+write</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-flag">-u</span> daemon <span class="tk-cmd">test</span> <span class="tk-flag">-r</span> ~/report.txt &amp;&amp; echo OK || echo DENIED
+<span class="tk-user">OK</span></div>
 </section>
 
 <section data-background-color="#ffffff">
