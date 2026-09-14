@@ -419,7 +419,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-14 13:15 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-14 13:21 PT</span>
   </div>
 
   <!--
@@ -10522,25 +10522,25 @@ $ groups</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ touch ~/report.txt
-$ chmod 640 ~/report.txt
+<div class="terminal">$ touch /tmp/report.txt
+$ chmod 640 /tmp/report.txt
 # 640 = rw-r----- (group read, others none)
-$ getfacl ~/report.txt
+$ getfacl /tmp/report.txt
 # no flags: print the file&#39;s full ACL
 user::rw-
 group::r--
 other::---</div>
 </div>
 </div>
-<p class="fragment note-below">&#9888;&#65039; Uses ~/report.txt on purpose: WSL&#39;s Windows-mounted drives (/mnt/c/...) don&#39;t support <span class="highlight">ACLs</span>, no matter which directory you happen to be in.</p>
+<p class="fragment note-below">&#9888;&#65039; Uses /tmp on purpose: WSL&#39;s Windows-mounted drives (/mnt/c/...) don&#39;t support <span class="highlight">ACLs</span> at all, wherever else on your system you might try this.</p>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>See a File's Full ACL</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">touch</span> ~/report.txt
-<span class="tk-prompt">$</span> <span class="tk-cmd">chmod</span> 640 ~/report.txt
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">touch</span> /tmp/report.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">chmod</span> 640 /tmp/report.txt
 <span class="tk-comment"># 640 = rw-r----- (group read, others none)</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> ~/report.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> /tmp/report.txt
 <span class="tk-comment"># no flags: print the file&#39;s full ACL</span>
 user::<span class="tk-user">rw-</span>
 group::r--
@@ -10558,10 +10558,10 @@ other::---</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ setfacl -m u:daemon:rw ~/report.txt
+<div class="terminal">$ setfacl -m u:daemon:rw /tmp/report.txt
 # -m modifies the ACL; owner needs no sudo
 # daemon: a real account on every Linux box
-$ getfacl ~/report.txt
+$ getfacl /tmp/report.txt
 user:daemon:rw-</div>
 </div>
 </div>
@@ -10569,10 +10569,10 @@ user:daemon:rw-</div>
 
 <section data-background-color="#0a0a0a">
 <h4>Grant One More Person</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> u:<span class="tk-user">daemon</span>:rw ~/report.txt
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> u:<span class="tk-user">daemon</span>:rw /tmp/report.txt
 <span class="tk-comment"># -m modifies the ACL; owner needs no sudo</span>
 <span class="tk-comment"># daemon: a real account on every Linux box</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> ~/report.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> /tmp/report.txt
 user:<span class="tk-user">daemon</span>:rw-</div>
 </section>
 
@@ -10580,7 +10580,7 @@ user:<span class="tk-user">daemon</span>:rw-</div>
 <div class="twocol">
 <div class="col" style="text-align:center;">
 <h4>Without ACL</h4>
-<div class="terminal">$ getfacl ~/report.txt
+<div class="terminal">$ getfacl /tmp/report.txt
 # no flags: print the file&#39;s full ACL
 user::rw-
 group::r--
@@ -10589,9 +10589,9 @@ other::---
 </div>
 <div class="col" style="text-align:center;">
 <h4>With ACL</h4>
-<div class="terminal">$ setfacl -m u:daemon:rw ~/report.txt
+<div class="terminal">$ setfacl -m u:daemon:rw /tmp/report.txt
 # -m modifies the ACL; owner needs no sudo
-$ getfacl ~/report.txt
+$ getfacl /tmp/report.txt
 user::rw-
 group::r--
 user:daemon:rw-
@@ -10604,7 +10604,7 @@ other::---
 
 <section data-background-color="#0a0a0a">
 <h4>Without ACL</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> ~/report.txt
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> /tmp/report.txt
 <span class="tk-comment"># no flags: print the file&#39;s full ACL</span>
 user::<span class="tk-user">rw-</span>
 group::r--
@@ -10614,9 +10614,9 @@ other::---
 
 <section data-background-color="#0a0a0a">
 <h4>With ACL</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> u:<span class="tk-user">daemon</span>:rw ~/report.txt
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> u:<span class="tk-user">daemon</span>:rw /tmp/report.txt
 <span class="tk-comment"># -m modifies the ACL; owner needs no sudo</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> ~/report.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> /tmp/report.txt
 user::rw-
 group::r--
 user:<span class="tk-user">daemon</span>:rw-
@@ -10628,29 +10628,30 @@ other::---
 <div class="twocol">
 <div class="col" style="text-align:center;">
 <h4>Without ACL</h4>
-<div class="terminal">$ setfacl -x u:daemon ~/report.txt
+<div class="terminal">$ setfacl -x u:daemon /tmp/report.txt
 # -x removes daemon&#39;s entry, if any
-$ sudo -u daemon test -r ~/report.txt \
+$ sudo -u daemon test -r /tmp/report.txt \
     &amp;&amp; echo OK || echo DENIED
 # -u: run it as daemon (more on sudo soon)
 DENIED</div>
 </div>
 <div class="col" style="text-align:center;">
 <h4>With ACL</h4>
-<div class="terminal">$ setfacl -m u:daemon:rw ~/report.txt
+<div class="terminal">$ setfacl -m u:daemon:rw /tmp/report.txt
 # -m grants daemon read+write
-$ sudo -u daemon test -r ~/report.txt \
+$ sudo -u daemon test -r /tmp/report.txt \
     &amp;&amp; echo OK || echo DENIED
 OK</div>
 </div>
 </div>
+<p class="fragment note-below">&#9888;&#65039; Uses /tmp, not your home folder: a private home directory (mode 750) blocks daemon before it ever <span class="highlight">reaches</span> the file&#39;s own ACL.</p>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>Without ACL</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-x</span> u:<span class="tk-user">daemon</span> ~/report.txt
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-x</span> u:<span class="tk-user">daemon</span> /tmp/report.txt
 <span class="tk-comment"># -x removes daemon&#39;s entry, if any</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-flag">-u</span> daemon <span class="tk-cmd">test</span> <span class="tk-flag">-r</span> ~/report.txt \
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-flag">-u</span> daemon <span class="tk-cmd">test</span> <span class="tk-flag">-r</span> /tmp/report.txt \
     &amp;&amp; echo OK || echo DENIED
 <span class="tk-comment"># -u: run it as daemon (more on sudo soon)</span>
 <span class="tk-user">DENIED</span></div>
@@ -10658,9 +10659,9 @@ OK</div>
 
 <section data-background-color="#0a0a0a">
 <h4>With ACL</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> u:<span class="tk-user">daemon</span>:rw ~/report.txt
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> u:<span class="tk-user">daemon</span>:rw /tmp/report.txt
 <span class="tk-comment"># -m grants daemon read+write</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-flag">-u</span> daemon <span class="tk-cmd">test</span> <span class="tk-flag">-r</span> ~/report.txt \
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-flag">-u</span> daemon <span class="tk-cmd">test</span> <span class="tk-flag">-r</span> /tmp/report.txt \
     &amp;&amp; echo OK || echo DENIED
 <span class="tk-user">OK</span></div>
 </section>
@@ -12035,7 +12036,7 @@ group::<span class="tk-user">rwx</span></div>
         { id: 'cmd-usermod', module: 3, cmd: 'usermod', example: 'usermod -aG csdept $USER', purpose: 'Add a user to a group' },
         { id: 'cmd-chgrp', module: 3, cmd: 'chgrp', example: 'chgrp csdept /srv/cs-dept', purpose: "Change a file's group only" },
         { id: 'cmd-ln', module: 3, cmd: 'ln', example: 'ln -s target link', purpose: 'Create a symlink or hardlink' },
-        { id: 'cmd-getfacl', module: 4, cmd: 'getfacl', example: 'getfacl ~/report.txt', purpose: 'Show a file\'s full access list' },
+        { id: 'cmd-getfacl', module: 4, cmd: 'getfacl', example: 'getfacl /tmp/report.txt', purpose: 'Show a file\'s full access list' },
         { id: 'cmd-setfacl', module: 4, cmd: 'setfacl', example: 'setfacl -m u:daemon:rw file', purpose: 'Grant one more user an ACL rule' },
         { id: 'cmd-whoami', module: 4, cmd: 'whoami', example: 'whoami', purpose: 'Print your effective username' },
         { id: 'cmd-su', module: 4, cmd: 'su', example: 'su - alice', purpose: 'Switch to another user\'s shell' },
