@@ -419,7 +419,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-14 16:18 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-14 16:37 PT</span>
   </div>
 
   <!--
@@ -572,13 +572,10 @@
                 <a href="./#/cmd-gpasswd" target="_self">gpasswd</a>,
                 <a href="./#/cmd-who" target="_self">who</a>,
                 <a href="./#/cmd-w" target="_self">w</a>,
-                <a href="./#/cmd-systemctl" target="_self">systemctl</a>,
-                <a href="./#/cmd-auditctl" target="_self">auditctl</a>,
-                <a href="./#/cmd-ausearch" target="_self">ausearch</a>,
-                <a href="./#/cmd-aureport" target="_self">aureport</a>,
+                <a href="./#/cmd-inotifywait" target="_self">inotifywait</a>,
+                <a href="./#/cmd-inotifywatch" target="_self">inotifywatch</a>,
                 <a href="./#/cmd-tail" target="_self">tail</a>,
-                <a href="./#/cmd-augenrules" target="_self">augenrules</a>,
-                <a href="./#/cmd-journalctl" target="_self">journalctl</a></td>
+                <a href="./#/cmd-nohup" target="_self">nohup</a></td>
               <td></td>
               <td></td>
             </tr>
@@ -9493,7 +9490,7 @@ $ cd 2026-COMP-175/modules/module-3</div>
 <li><a href="./#/module-4-agenda-1" target="_self">What Is Access Control?</a></li>
 <li><a href="./#/module-4-agenda-2" target="_self">Users, Groups &amp; sudo</a></li>
 <li><a href="./#/module-4-agenda-3" target="_self">Why Audit?</a></li>
-<li><a href="./#/module-4-agenda-4" target="_self">Auditing with auditd</a></li>
+<li><a href="./#/module-4-agenda-4" target="_self">Watching Files with inotify</a></li>
 <li><a href="./#/module-4-agenda-5" target="_self">Practice Lab</a></li>
 </ol>
 </div>
@@ -9505,13 +9502,13 @@ $ cd 2026-COMP-175/modules/module-3</div>
 
 <section>
 <div style="text-align:center;">
-<svg viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:760px;display:block;margin:0 auto;"><rect x="1" y="1" width="758" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="vmwho" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><text x="380" y="34" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">WHICH VM NEEDS THIS MODULE?</text><rect x="60" y="100" width="260" height="150" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="190" y="128" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Kali Linux</text><text x="190" y="147" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">the operator's seat</text><text x="190" y="176" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">ssh client</text><text x="190" y="198" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">nmap, security tools</text><text x="190" y="220" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">auditor's vantage point</text><line x1="324" y1="175" x2="436" y2="175" stroke="#888" stroke-width="1.8" marker-end="url(#vmwho)"/><text x="380" y="163" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">ssh in</text><rect x="440" y="100" width="260" height="150" rx="9" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="570" y="128" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Ubuntu Server</text><text x="570" y="147" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">the managed system</text><text x="570" y="176" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">sudoers, groups</text><text x="570" y="198" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">ACLs: getfacl / setfacl</text><text x="570" y="220" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">auditd watches this box</text><text x="380" y="302" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Every command in this module configures Ubuntu.</text><text x="380" y="326" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Kali is where you operate and verify from, not where changes happen.</text></svg>
+<svg viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:760px;display:block;margin:0 auto;"><rect x="1" y="1" width="758" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="vmwho" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><text x="380" y="34" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">WHICH VM NEEDS THIS MODULE?</text><rect x="60" y="100" width="260" height="150" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="190" y="128" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Kali Linux</text><text x="190" y="147" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">the operator's seat</text><text x="190" y="176" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">ssh client</text><text x="190" y="198" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">nmap, security tools</text><text x="190" y="220" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">auditor's vantage point</text><line x1="324" y1="175" x2="436" y2="175" stroke="#888" stroke-width="1.8" marker-end="url(#vmwho)"/><text x="380" y="163" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">ssh in</text><rect x="440" y="100" width="260" height="150" rx="9" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="570" y="128" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Ubuntu Server</text><text x="570" y="147" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">the managed system</text><text x="570" y="176" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">sudoers, groups</text><text x="570" y="198" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">ACLs: getfacl / setfacl</text><text x="570" y="220" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">inotify watches this box</text><text x="380" y="302" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Every command in this module configures Ubuntu.</text><text x="380" y="326" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Kali is where you operate and verify from, not where changes happen.</text></svg>
 </div>
 </section>
 
 <section id="module-4-agenda-1">
 <div style="text-align:center;">
-<svg viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:760px;display:block;margin:0 auto;"><rect x="1" y="1" width="758" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="big1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><text x="380.0" y="34" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">ACCESS CONTROL: ONE GATE, THREE MODELS</text><rect x="230" y="56" width="300" height="56" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="380.0" y="89.0" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Access request</text><line x1="380" y1="116" x2="380" y2="130" stroke="#888" stroke-width="1.8" marker-end="url(#big1)"/><rect x="230" y="134" width="300" height="56" rx="9" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="380.0" y="166.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">The Gate (Reference Monitor)</text><line x1="300" y1="190" x2="140" y2="250" stroke="#888" stroke-width="1.8" marker-end="url(#big1)"/><line x1="380" y1="190" x2="380" y2="250" stroke="#888" stroke-width="1.8" marker-end="url(#big1)"/><line x1="460" y1="190" x2="620" y2="250" stroke="#888" stroke-width="1.8" marker-end="url(#big1)"/><rect x="30" y="254" width="220" height="60" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="140.0" y="279.0" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">DAC</text><text x="140.0" y="300.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">owner decides: chmod, chown</text><rect x="270" y="254" width="220" height="60" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="380.0" y="279.0" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">RBAC</text><text x="380.0" y="300.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">role decides: Linux groups</text><rect x="510" y="254" width="220" height="60" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="620.0" y="279.0" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">MAC</text><text x="620.0" y="300.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">system decides: kernel policy</text><text x="380.0" y="360" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">This module builds RBAC (groups, sudo) and adds Accounting (auditd)</text></svg>
+<svg viewBox="0 0 760 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:760px;display:block;margin:0 auto;"><rect x="1" y="1" width="758" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="big1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><text x="380.0" y="34" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">ACCESS CONTROL: ONE GATE, THREE MODELS</text><rect x="230" y="56" width="300" height="56" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="380.0" y="89.0" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Access request</text><line x1="380" y1="116" x2="380" y2="130" stroke="#888" stroke-width="1.8" marker-end="url(#big1)"/><rect x="230" y="134" width="300" height="56" rx="9" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="380.0" y="166.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">The Gate (Reference Monitor)</text><line x1="300" y1="190" x2="140" y2="250" stroke="#888" stroke-width="1.8" marker-end="url(#big1)"/><line x1="380" y1="190" x2="380" y2="250" stroke="#888" stroke-width="1.8" marker-end="url(#big1)"/><line x1="460" y1="190" x2="620" y2="250" stroke="#888" stroke-width="1.8" marker-end="url(#big1)"/><rect x="30" y="254" width="220" height="60" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="140.0" y="279.0" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">DAC</text><text x="140.0" y="300.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">owner decides: chmod, chown</text><rect x="270" y="254" width="220" height="60" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="380.0" y="279.0" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">RBAC</text><text x="380.0" y="300.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">role decides: Linux groups</text><rect x="510" y="254" width="220" height="60" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="620.0" y="279.0" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">MAC</text><text x="620.0" y="300.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">system decides: kernel policy</text><text x="380.0" y="360" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">This module builds RBAC (groups, sudo) and adds Accounting (inotify)</text></svg>
 </div>
 </section>
 
@@ -10303,7 +10300,7 @@ $ sudo gpasswd -d alice registrar
 
 <section id="module-4-agenda-3">
 <div style="text-align:center;">
-<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:700px;display:block;margin:0 auto;"><rect x="1" y="1" width="698" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="350.0" y="34" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">AUTHENTICATION, AUTHORIZATION, ACCOUNTING</text><rect x="60" y="60" width="580" height="70" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="350.0" y="90.0" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Authentication: who you are</text><text x="350.0" y="111.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">whoami, login</text><rect x="60" y="155" width="580" height="70" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="350.0" y="185.0" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Authorization: what you may do</text><text x="350.0" y="206.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">chmod, groups, sudoers</text><rect x="60" y="250" width="580" height="70" rx="9" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="350.0" y="280.0" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Accounting: what you did</text><text x="350.0" y="301.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">last, lastlog, auditd</text><text x="350.0" y="360" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">This item is about Accounting: why a record has to exist at all</text></svg>
+<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:700px;display:block;margin:0 auto;"><rect x="1" y="1" width="698" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="350.0" y="34" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">AUTHENTICATION, AUTHORIZATION, ACCOUNTING</text><rect x="60" y="60" width="580" height="70" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="350.0" y="90.0" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Authentication: who you are</text><text x="350.0" y="111.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">whoami, login</text><rect x="60" y="155" width="580" height="70" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="350.0" y="185.0" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Authorization: what you may do</text><text x="350.0" y="206.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">chmod, groups, sudoers</text><rect x="60" y="250" width="580" height="70" rx="9" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="350.0" y="280.0" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Accounting: what you did</text><text x="350.0" y="301.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">last, lastlog, inotify</text><text x="350.0" y="360" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">This item is about Accounting: why a record has to exist at all</text></svg>
 </div>
 </section>
 
@@ -10319,7 +10316,7 @@ $ sudo gpasswd -d alice registrar
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 340 304" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="302" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m4audit" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="20" y="16" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170.0" y="44.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Someone changes a file</text><rect x="20" y="92" width="300" height="48" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="170.0" y="120.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">auditd captures the event</text><rect x="20" y="168" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170.0" y="196.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Appended to a locked log</text><rect x="20" y="244" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170.0" y="272.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">You review, alert, report</text><line x1="170.0" y1="65" x2="170.0" y2="89" stroke="#888" stroke-width="1.6" marker-end="url(#m4audit)"/><line x1="170.0" y1="141" x2="170.0" y2="165" stroke="#888" stroke-width="1.6" marker-end="url(#m4audit)"/><line x1="170.0" y1="217" x2="170.0" y2="241" stroke="#888" stroke-width="1.6" marker-end="url(#m4audit)"/></svg>
+<svg viewBox="0 0 340 304" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="302" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m4audit" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="20" y="16" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170.0" y="44.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Someone changes a file</text><rect x="20" y="92" width="300" height="48" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="170.0" y="120.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">inotify captures the event</text><rect x="20" y="168" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170.0" y="196.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Appended to a locked log</text><rect x="20" y="244" width="300" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170.0" y="272.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">You review, alert, report</text><line x1="170.0" y1="65" x2="170.0" y2="89" stroke="#888" stroke-width="1.6" marker-end="url(#m4audit)"/><line x1="170.0" y1="141" x2="170.0" y2="165" stroke="#888" stroke-width="1.6" marker-end="url(#m4audit)"/><line x1="170.0" y1="217" x2="170.0" y2="241" stroke="#888" stroke-width="1.6" marker-end="url(#m4audit)"/></svg>
 </div>
 </div>
 </section>
@@ -10367,7 +10364,7 @@ $ sudo gpasswd -d alice registrar
 <ul>
 <li>Each names what to log</li>
 <li>None specifies the tool</li>
-<li>auditd can satisfy any of them</li>
+<li>inotify satisfies file logging</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
@@ -10450,7 +10447,7 @@ USER   TTY   LOGIN@  IDLE  WHAT
 </ul>
 </div>
 </div>
-<p class="fragment note-below">An auditor originally "heard" accounts read aloud; auditd listens to the kernel instead.</p>
+<p class="fragment note-below">An auditor originally "heard" accounts read aloud; inotify listens for file events instead.</p>
 </section>
 
 <section data-background-color="#ffffff">
@@ -10477,12 +10474,12 @@ USER   TTY   LOGIN@  IDLE  WHAT
 </section>
 
 <section id="module-4-agenda-4">
-<h2 style="text-align:center;">Auditing with auditd</h2>
+<h2 style="text-align:center;">Watching Files with inotify</h2>
 </section>
 
 <section data-background-color="#ffffff">
 <div style="text-align:center;">
-<svg viewBox="0 0 700 460" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:700px;display:block;margin:0 auto;"><rect x="1" y="1" width="698" height="458" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="big4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><text x="350.0" y="34" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">HOW auditd CAPTURES AN EVENT</text><rect x="150" y="50" width="400" height="56" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="350.0" y="83.0" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A watched action happens</text><line x1="350" y1="106" x2="350" y2="126" stroke="#888" stroke-width="1.8" marker-end="url(#big4)"/><rect x="150" y="130" width="400" height="56" rx="9" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="350.0" y="163.0" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">The kernel's audit hook fires</text><line x1="350" y1="186" x2="350" y2="206" stroke="#888" stroke-width="1.8" marker-end="url(#big4)"/><rect x="150" y="210" width="400" height="56" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="350.0" y="243.0" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Event is appended to the log</text><line x1="350" y1="266" x2="350" y2="286" stroke="#888" stroke-width="1.8" marker-end="url(#big4)"/><rect x="150" y="290" width="400" height="56" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="350.0" y="323.0" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">ausearch / aureport read it back</text><text x="350.0" y="380" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">auditctl -w sets which actions trigger step two</text></svg>
+<svg viewBox="0 0 700 460" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:700px;display:block;margin:0 auto;"><rect x="1" y="1" width="698" height="458" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="big4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><text x="350.0" y="34" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">HOW inotify CAPTURES AN EVENT</text><rect x="150" y="50" width="400" height="56" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="350.0" y="83.0" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A watched action happens</text><line x1="350" y1="106" x2="350" y2="126" stroke="#888" stroke-width="1.8" marker-end="url(#big4)"/><rect x="150" y="130" width="400" height="56" rx="9" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="350.0" y="163.0" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">The kernel's inotify hook fires</text><line x1="350" y1="186" x2="350" y2="206" stroke="#888" stroke-width="1.8" marker-end="url(#big4)"/><rect x="150" y="210" width="400" height="56" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="350.0" y="243.0" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Event is appended to the log</text><line x1="350" y1="266" x2="350" y2="286" stroke="#888" stroke-width="1.8" marker-end="url(#big4)"/><rect x="150" y="290" width="400" height="56" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="350.0" y="323.0" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">grep / inotifywatch read it back</text><text x="350.0" y="380" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">inotifywait -e sets which actions trigger step two</text></svg>
 </div>
 </section>
 
@@ -10493,15 +10490,15 @@ USER   TTY   LOGIN@  IDLE  WHAT
 <section>
 <div class="twocol">
 <div class="col">
-<h4>History of Linux Auditing</h4>
+<h4>History of inotify</h4>
 <ul>
-<li>Orange Book requires it, 1985</li>
-<li>Kernel merge came in 2004</li>
-<li>Standard on RHEL today</li>
+<li>dnotify arrives, 1998</li>
+<li>inotify merged in 2005</li>
+<li>Now everyone's file watcher</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 340 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><line x1="62" y1="14" x2="62" y2="272" stroke="#555" stroke-width="2"/><circle cx="62" cy="40.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="44.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1985</text><text x="76" y="36.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="36.0">DoD's TCSEC "Orange Book"</tspan><tspan x="76" y="50.0">requires audit trails at C2+</tspan></text><circle cx="62" cy="94.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="98.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2004</text><text x="76" y="90.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="90.0">The Linux Audit subsystem</tspan><tspan x="76" y="104.0">is merged into the kernel</tspan></text><circle cx="62" cy="148.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="152.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2005</text><text x="76" y="144.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="144.0">Red Hat's auditd/audit-libs</tspan><tspan x="76" y="158.0">userspace tools mature</tspan></text><circle cx="62" cy="202.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="206.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2013</text><text x="76" y="198.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="198.0">auditd becomes part of</tspan><tspan x="76" y="212.0">Common Criteria baselines</tspan></text><circle cx="62" cy="256.0" r="6.5" fill="#FF671D" stroke="#FF671D" stroke-width="1.5"/><text x="48" y="260.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Today</text><text x="76" y="252.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="252.0">Standard on RHEL/CentOS;</tspan><tspan x="76" y="266.0">installable on Ubuntu</tspan></text></svg>
+<svg viewBox="0 0 340 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><line x1="62" y1="14" x2="62" y2="272" stroke="#555" stroke-width="2"/><circle cx="62" cy="40.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="44.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1998</text><text x="76" y="36.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="36.0">dnotify added to Linux 2.4:</tspan><tspan x="76" y="50.0">directories only, keeps files open</tspan></text><circle cx="62" cy="94.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="98.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2005</text><text x="76" y="90.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="90.0">inotify merged into kernel</tspan><tspan x="76" y="104.0">2.6.13, a cleaner replacement</tspan></text><circle cx="62" cy="148.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="152.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2006</text><text x="76" y="144.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="144.0">inotify-tools brings it to the</tspan><tspan x="76" y="158.0">shell: inotifywait, inotifywatch</tspan></text><circle cx="62" cy="202.0" r="7.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="206.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2010s</text><text x="76" y="198.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="198.0">Becomes the backbone of</tspan><tspan x="76" y="212.0">systemd, Docker, dev tools</tspan></text><circle cx="62" cy="256.0" r="6.5" fill="#FF671D" stroke="#FF671D" stroke-width="1.5"/><text x="48" y="260.0" text-anchor="end" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">Today</text><text x="76" y="252.0" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="252.0">The standard way Linux</tspan><tspan x="76" y="266.0">watches files, still maintained</tspan></text></svg>
 </div>
 </div>
 </section>
@@ -10509,15 +10506,15 @@ USER   TTY   LOGIN@  IDLE  WHAT
 <section>
 <div class="twocol">
 <div class="col">
-<h4>What auditd Watches</h4>
+<h4>What inotify Watches</h4>
 <ul>
-<li>System calls, by rule</li>
-<li>File reads, writes, changes</li>
-<li>Logins and privilege use</li>
+<li>Files and directories</li>
+<li>Create, modify, delete</li>
+<li>Attribute and rename too</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 340 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:400px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="10" y="15" width="100" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="60.0" y="49.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">syscalls</text><rect x="120" y="15" width="100" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="170.0" y="49.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">files</text><rect x="230" y="15" width="100" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="280.0" y="49.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">logins</text></svg>
+<svg viewBox="0 0 340 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:400px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="10" y="15" width="100" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="60.0" y="49.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">create</text><rect x="120" y="15" width="100" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="170.0" y="49.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">modify</text><rect x="230" y="15" width="100" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="280.0" y="49.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">delete</text></svg>
 </div>
 </div>
 </section>
@@ -10525,67 +10522,67 @@ USER   TTY   LOGIN@  IDLE  WHAT
 <section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>Installing auditd</h4>
+<h4>Installing inotify-tools</h4>
 <ul>
-<li>Not on Ubuntu by default</li>
-<li>One package, one service</li>
-<li>Enable it to start logging</li>
+<li>Not on Ubuntu/Kali by default</li>
+<li>One package, two tools</li>
+<li>No service to enable</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ sudo apt install -y auditd
+<div class="terminal">$ sudo apt install -y inotify-tools
 # -y = auto-confirm install (no interactive prompt)</div>
 </div>
 </div>
-<p class="fragment note-below">&#9888;&#65039; This fails on <span class="highlight">WSL2</span>: the kernel blocks auditd&#39;s netlink control channel (Operation not permitted). Not a mistake -- these commands are correct on a real Linux host.</p>
 </section>
 
 <section data-background-color="#0a0a0a">
-<h4>Installing auditd</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> install <span class="tk-flag">-y</span> auditd
+<h4>Installing inotify-tools</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> install <span class="tk-flag">-y</span> inotify-tools
 <span class="tk-comment"># -y = auto-confirm install (no interactive prompt)</span></div>
 </section>
 
-<section id="cmd-systemctl" data-background-color="#0a0a0a">
+<section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>Is It Running?</h4>
+<h4>Is inotify Available?</h4>
 <ul>
-<li>systemctl checks any service</li>
-<li>Look for active (running)</li>
-<li>Same command, any daemon</li>
+<li>No service to check</li>
+<li>Kernel feature, always on</li>
+<li>Confirm your watch limit</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ sudo systemctl status auditd
-# status query; sudo isn&#39;t required but is harmless here
-Active: active (running)</div>
+<div class="terminal">$ cat /proc/sys/fs/inotify/max_user_watches
+# no flags: prints your watch-count limit
+524288</div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#0a0a0a">
-<h4>Is It Running?</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">systemctl</span> status auditd
-<span class="tk-comment"># status query; sudo isn&#39;t required but is harmless here</span>
-<span class="tk-comment">Active:</span> <span class="tk-user">active (running)</span></div>
+<h4>Is inotify Available?</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">cat</span> /proc/sys/fs/inotify/max_user_watches
+<span class="tk-comment"># no flags: prints your watch-count limit</span>
+<span class="tk-user">524288</span></div>
 </section>
 
-<section id="cmd-auditctl" data-background-color="#0a0a0a">
+<section id="cmd-inotifywait" data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
 <h4>Watch a File or Folder</h4>
 <ul>
-<li>-w picks the path</li>
-<li>-p picks write/attribute</li>
-<li>-k tags it for search</li>
+<li>-m keeps watching (monitor)</li>
+<li>-e picks which events</li>
+<li>&amp; backgrounds it</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ sudo mkdir -p /srv/registrar
 # creates the watched folder first
-$ sudo auditctl -w /srv/registrar -p wa -k registrar_writes
-# -w watch path, -p wa write+attribute, -k search tag</div>
+$ inotifywait -m -e create,modify \
+    /srv/registrar &gt;&gt; /tmp/registrar-watch.log &amp;
+# -m keeps watching; -e picks event types</div>
 </div>
 </div>
 </section>
@@ -10594,54 +10591,61 @@ $ sudo auditctl -w /srv/registrar -p wa -k registrar_writes
 <h4>Watch a File or Folder</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">mkdir</span> <span class="tk-flag">-p</span> /srv/registrar
 <span class="tk-comment"># creates the watched folder first</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">auditctl</span> <span class="tk-flag">-w</span> /srv/registrar <span class="tk-flag">-p</span> wa <span class="tk-flag">-k</span> registrar_writes
-<span class="tk-comment"># -w watch path, -p wa write+attribute, -k search tag</span></div>
+<span class="tk-prompt">$</span> <span class="tk-cmd">inotifywait</span> <span class="tk-flag">-m</span> <span class="tk-flag">-e</span> create,modify \
+    /srv/registrar &gt;&gt; /tmp/registrar-watch.log &amp;
+<span class="tk-comment"># -m keeps watching; -e picks event types</span></div>
 </section>
 
-<section id="cmd-ausearch" data-background-color="#0a0a0a">
+<section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
 <h4>Finding an Event</h4>
 <ul>
-<li>-k matches the rule's tag</li>
-<li>Prints every matching event</li>
-<li>Fastest way to check a rule</li>
+<li>grep filters lines by text</li>
+<li>Search for a filename</li>
+<li>Same tool from Module 2</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ sudo ausearch -k registrar_writes
-# -k filters results by the search tag (key)</div>
+<div class="terminal">$ grep test.txt /tmp/registrar-watch.log
+# reuses grep from earlier: no new command
+/srv/registrar/ CREATE test.txt</div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>Finding an Event</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">ausearch</span> <span class="tk-flag">-k</span> registrar_writes
-<span class="tk-comment"># -k filters results by the search tag (key)</span></div>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">grep</span> test.txt /tmp/registrar-watch.log
+<span class="tk-comment"># reuses grep from earlier: no new command</span>
+/srv/registrar/ <span class="tk-user">CREATE</span> test.txt</div>
 </section>
 
-<section id="cmd-aureport" data-background-color="#0a0a0a">
+<section id="cmd-inotifywatch" data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
 <h4>A Readable Summary</h4>
 <ul>
-<li>-f: file-access events</li>
-<li>-i: interpret uid/gid names</li>
-<li>Easier to skim than raw logs</li>
+<li>Counts events per file</li>
+<li>-e limits which types count</li>
+<li>Runs until you press Ctrl+C</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ sudo aureport -f -i
-# -f file-access report, -i show readable names</div>
+<div class="terminal">$ inotifywatch -e create,modify /srv/registrar
+# runs until Ctrl+C, then prints a table
+total  create  modify  filename
+2      1       1       test.txt</div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>A Readable Summary</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">aureport</span> <span class="tk-flag">-f</span> <span class="tk-flag">-i</span>
-<span class="tk-comment"># -f file-access report, -i show readable names</span></div>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">inotifywatch</span> <span class="tk-flag">-e</span> create,modify /srv/registrar
+<span class="tk-comment"># runs until Ctrl+C, then prints a table</span>
+total  create  modify  filename
+<span class="tk-num">2</span>      <span class="tk-num">1</span>       <span class="tk-num">1</span>       <span class="tk-user">test.txt</span></div>
 </section>
 
 <section id="cmd-tail" data-background-color="#0a0a0a">
@@ -10650,12 +10654,12 @@ $ sudo auditctl -w /srv/registrar -p wa -k registrar_writes
 <h4>Reading the Raw Log</h4>
 <ul>
 <li>-f follows new lines live</li>
-<li>Same log ausearch reads</li>
-<li>Useful while testing a rule</li>
+<li>Same log grep reads</li>
+<li>Useful while testing a watch</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ sudo tail -f /var/log/audit/audit.log
+<div class="terminal">$ tail -f /tmp/registrar-watch.log
 # -f follows the log live as new lines arrive</div>
 </div>
 </div>
@@ -10663,116 +10667,120 @@ $ sudo auditctl -w /srv/registrar -p wa -k registrar_writes
 
 <section data-background-color="#0a0a0a">
 <h4>Reading the Raw Log</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">tail</span> <span class="tk-flag">-f</span> /var/log/audit/audit.log
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">tail</span> <span class="tk-flag">-f</span> /tmp/registrar-watch.log
 <span class="tk-comment"># -f follows the log live as new lines arrive</span></div>
 </section>
 
-<section id="cmd-augenrules" data-background-color="#0a0a0a">
+<section id="cmd-nohup" data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>Persisting Rules</h4>
+<h4>Keeping the Watch Running</h4>
 <ul>
-<li>Plain rules vanish on reboot</li>
-<li>Save them as a .rules file</li>
-<li>augenrules loads them all</li>
+<li>nohup survives a closed shell</li>
+<li>disown detaches the job</li>
+<li>A reboot still kills it</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ sudo nano /etc/audit/rules.d/registrar.rules
-# edit a persistent rule file (survives reboot)
-$ sudo augenrules --load
-# --load merges rules.d/*.rules into the active set</div>
+<div class="terminal">$ nohup inotifywait -m -e create,modify \
+    /srv/registrar &gt;&gt; /tmp/registrar-watch.log &amp;
+$ disown
+# nohup+disown: survives logout, not a reboot</div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#0a0a0a">
-<h4>Persisting Rules</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> nano /etc/audit/rules.d/registrar.rules
-<span class="tk-comment"># edit a persistent rule file (survives reboot)</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">augenrules</span> <span class="tk-flag">--load</span>
-<span class="tk-comment"># --load merges rules.d/*.rules into the active set</span></div>
+<h4>Keeping the Watch Running</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">nohup</span> <span class="tk-cmd">inotifywait</span> <span class="tk-flag">-m</span> <span class="tk-flag">-e</span> create,modify \
+    /srv/registrar &gt;&gt; /tmp/registrar-watch.log &amp;
+<span class="tk-prompt">$</span> <span class="tk-cmd">disown</span>
+<span class="tk-comment"># nohup+disown: survives logout, not a reboot</span></div>
 </section>
 
-
-<section id="cmd-journalctl" data-background-color="#0a0a0a">
+<section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>The System Journal Too</h4>
+<h4>Choosing Which Events</h4>
 <ul>
-<li>journalctl reads systemd logs</li>
-<li>-u filters to one service</li>
-<li>Useful alongside auditd</li>
+<li>create, modify, delete</li>
+<li>attrib: permission changes</li>
+<li>move_to / move_from: renames</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ journalctl -u auditd --since today
-# -u filters by unit; --since limits the time range</div>
+<div class="terminal">$ inotifywait -m \
+    -e create,delete,attrib \
+    /srv/registrar &amp;
+# -e takes a comma list, mix freely</div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#0a0a0a">
-<h4>The System Journal Too</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">journalctl</span> <span class="tk-flag">-u</span> auditd <span class="tk-flag">--since</span> today
-<span class="tk-comment"># -u filters by unit; --since limits the time range</span></div>
+<h4>Choosing Which Events</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">inotifywait</span> <span class="tk-flag">-m</span> \
+    <span class="tk-flag">-e</span> create,delete,attrib \
+    /srv/registrar &amp;
+<span class="tk-comment"># -e takes a comma list, mix freely</span></div>
 </section>
+
 <section>
 <div class="twocol">
 <div class="col">
-<h4>Reading an Audit Line</h4>
+<h4>Reading an inotify Line</h4>
 <ul>
-<li>type=PATH: what happened</li>
-<li>name=: which file</li>
-<li>key=: which rule matched</li>
+<li>Directory: where it happened</li>
+<li>Event: what happened</li>
+<li>Filename: which file</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 360 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:440px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="10" y="20" width="100" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="60.0" y="54.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">type=PATH</text><rect x="120" y="20" width="130" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="185.0" y="53.7" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">name=/srv/...</text><rect x="260" y="20" width="90" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="305.0" y="54.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">key=...</text></svg>
+<svg viewBox="0 0 360 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:440px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="10" y="20" width="130" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="75.0" y="54.0" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">/srv/registrar/</text><rect x="150" y="20" width="100" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="200.0" y="54.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">CREATE</text><rect x="260" y="20" width="90" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="305.0" y="54.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">test.txt</text></svg>
 </div>
 </div>
 </section>
 
-<section id="term-audit-trail" data-tag="terminology" data-term="Audit Trail" data-background-color="#ffffff">
+<section id="term-inotify" data-tag="terminology" data-term="inotify" data-background-color="#ffffff">
 <div class="twocol">
 <div class="col">
-<h4>Word Origin: &quot;Audit Trail&quot;</h4>
-<h5 style="margin-bottom:0.5rem;">trail</h5>
+<h4>Word Origin: &quot;inotify&quot;</h4>
+<h5 style="margin-bottom:0.5rem;">inode</h5>
 <ul>
-<li>a track left behind</li>
+<li>a file's unique record</li>
 </ul>
 </div>
 <div class="col">
-<h5 style="margin-bottom:0.5rem;">audit</h5>
+<h5 style="margin-bottom:0.5rem;">notify</h5>
 <ul>
-<li>the examination, as above</li>
+<li>tell me when it changes</li>
 </ul>
 </div>
 </div>
-<p class="fragment note-below">A trail you can follow after the fact: each event links to the one before it in time.</p>
+<p class="fragment note-below">Get notified the instant an inode -- a file or folder -- changes.</p>
 </section>
 
 <section data-background-color="#ffffff">
 <div class="twocol">
 <div class="col">
-<h4>Check: Add or Search?</h4>
+<h4>Check: Watch or Search?</h4>
 <ul>
-<li>Add a new watch rule</li>
-<li>Search by that rule's key</li>
-<li>auditctl, or ausearch?</li>
+<li>Start watching a folder</li>
+<li>Search what's already logged</li>
+<li>inotifywait, or grep?</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
 <div class="fragment">
-<svg viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:320px;display:block;margin:0 auto;"><rect x="1" y="1" width="318" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="40" width="280" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="160.0" y="74.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">auditctl adds; ausearch finds</text></svg>
-<p style="text-align:center; font-size:0.95rem; color:#999; margin-top:6px;">Answer: auditctl -w adds the rule; ausearch -k finds events it logged</p>
+<svg viewBox="0 0 320 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:320px;display:block;margin:0 auto;"><rect x="1" y="1" width="318" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="40" width="280" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="160.0" y="74.7" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">inotifywait watches; grep searches</text></svg>
+<p style="text-align:center; font-size:0.95rem; color:#999; margin-top:6px;">Answer: inotifywait -m starts watching; grep finds it in the log afterward</p>
 </div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#ffffff">
-<div class="cmd-table" data-through="cmd-journalctl"></div>
+<div class="cmd-table" data-through="cmd-nohup"></div>
 </section>
 
 <section>
@@ -10785,12 +10793,12 @@ $ sudo augenrules --load
 
 <section data-background-color="#ffffff">
 <div style="text-align:center;">
-<svg viewBox="0 0 760 440" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:760px;display:block;margin:0 auto;"><rect x="1" y="1" width="758" height="438" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="big5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><text x="380.0" y="34" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">THE REGISTRAR SERVER, AT A GLANCE</text><rect x="280" y="190" width="200" height="60" rx="9" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="380.0" y="225.3" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">/srv/registrar</text><line x1="380" y1="190" x2="380" y2="100" stroke="#888" stroke-width="1.8" marker-end="url(#big5)"/><rect x="230" y="40" width="300" height="56" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="380.0" y="63.0" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">registrar group</text><text x="380.0" y="84.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">RBAC: who belongs</text><line x1="300" y1="250" x2="150" y2="320" stroke="#888" stroke-width="1.8" marker-end="url(#big5)"/><rect x="20" y="324" width="260" height="56" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="150.0" y="347.0" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">sudoers: one script</text><text x="150.0" y="368.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">privilege, narrow</text><line x1="460" y1="250" x2="600" y2="320" stroke="#888" stroke-width="1.8" marker-end="url(#big5)"/><rect x="480" y="324" width="260" height="56" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="610.0" y="347.0" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">auditctl -w -p wa</text><text x="610.0" y="368.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">accounting: every write</text></svg>
+<svg viewBox="0 0 760 440" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:760px;display:block;margin:0 auto;"><rect x="1" y="1" width="758" height="438" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="big5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><text x="380.0" y="34" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">THE REGISTRAR SERVER, AT A GLANCE</text><rect x="280" y="190" width="200" height="60" rx="9" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="380.0" y="225.3" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">/srv/registrar</text><line x1="380" y1="190" x2="380" y2="100" stroke="#888" stroke-width="1.8" marker-end="url(#big5)"/><rect x="230" y="40" width="300" height="56" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="380.0" y="63.0" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">registrar group</text><text x="380.0" y="84.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">RBAC: who belongs</text><line x1="300" y1="250" x2="150" y2="320" stroke="#888" stroke-width="1.8" marker-end="url(#big5)"/><rect x="20" y="324" width="260" height="56" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="150.0" y="347.0" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">sudoers: one script</text><text x="150.0" y="368.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">privilege, narrow</text><line x1="460" y1="250" x2="600" y2="320" stroke="#888" stroke-width="1.8" marker-end="url(#big5)"/><rect x="480" y="324" width="260" height="56" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="610.0" y="347.0" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">inotifywait -m -e</text><text x="610.0" y="368.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">accounting: every write</text></svg>
 </div>
 </section>
 
 <section data-background-color="#ffffff">
-<div class="cmd-table" data-through="cmd-journalctl"></div>
+<div class="cmd-table" data-through="cmd-nohup"></div>
 </section>
 
 <section>
@@ -10804,7 +10812,7 @@ $ sudo augenrules --load
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 340 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:440px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="10" y="15" width="150" height="50" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="85.0" y="44.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">/srv/registrar</text><rect x="180" y="15" width="150" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="255.0" y="44.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">registrar group</text><rect x="95" y="90" width="150" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170.0" y="119.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">auditd watch</text></svg>
+<svg viewBox="0 0 340 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:440px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="10" y="15" width="150" height="50" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="85.0" y="44.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">/srv/registrar</text><rect x="180" y="15" width="150" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="255.0" y="44.0" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">registrar group</text><rect x="95" y="90" width="150" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170.0" y="119.3" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">inotify watch</text></svg>
 </div>
 </div>
 </section>
@@ -10902,15 +10910,15 @@ EOF
 <section data-background-color="#ffffff">
 <div class="twocol">
 <div class="col">
-<h4>Why Enable Auditing?</h4>
+<h4>Why Watch at All?</h4>
 <ul>
 <li>Actions happen with no witness</li>
-<li>auditd isn&#39;t on by default</li>
-<li>Accounting needs it running</li>
+<li>Nothing is watching by default</li>
+<li>Accounting needs a live watch</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="218" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m5p3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><path d="M 45.0 40.0 L 45.0 90.0 L 135.0 90.0 L 135.0 32.0 L 81.0 32.0 L 75.0 30.0 L 49.0 30.0 Q 45.0 30.0 45.0 40.0 Z" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="90" y="108.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">/srv/registrar</text><line x1="150" y1="60" x2="185" y2="60" stroke="#c0392b" stroke-width="2" stroke-dasharray="4 3"/><text x="255" y="45" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#c0392b">?</text><text x="255" y="75" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#c0392b">no witness (auditd off)</text><line x1="20" y1="115" x2="320" y2="115" stroke="#444" stroke-width="1"/><path d="M 45.0 145.0 L 45.0 195.0 L 135.0 195.0 L 135.0 137.0 L 81.0 137.0 L 75.0 135.0 L 49.0 135.0 Q 45.0 135.0 45.0 145.0 Z" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="90" y="213.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">/srv/registrar</text><line x1="150" y1="165" x2="185" y2="165" stroke="#FF671D" stroke-width="2"/><circle cx="255" cy="160" r="16" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="255" y="165" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee">&#128065;</text><text x="255" y="195" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee">auditd logs it</text></svg>
+<svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="218" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m5p3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><path d="M 45.0 40.0 L 45.0 90.0 L 135.0 90.0 L 135.0 32.0 L 81.0 32.0 L 75.0 30.0 L 49.0 30.0 Q 45.0 30.0 45.0 40.0 Z" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="90" y="108.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">/srv/registrar</text><line x1="150" y1="60" x2="185" y2="60" stroke="#c0392b" stroke-width="2" stroke-dasharray="4 3"/><text x="255" y="45" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#c0392b">?</text><text x="255" y="75" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#c0392b">no witness (not watching)</text><line x1="20" y1="115" x2="320" y2="115" stroke="#444" stroke-width="1"/><path d="M 45.0 145.0 L 45.0 195.0 L 135.0 195.0 L 135.0 137.0 L 81.0 137.0 L 75.0 135.0 L 49.0 135.0 Q 45.0 135.0 45.0 145.0 Z" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="90" y="213.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">/srv/registrar</text><line x1="150" y1="165" x2="185" y2="165" stroke="#FF671D" stroke-width="2"/><circle cx="255" cy="160" r="16" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="255" y="165" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee">&#128065;</text><text x="255" y="195" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee">inotify logs it</text></svg>
 </div>
 </div>
 </section>
@@ -10918,29 +10926,24 @@ EOF
 <section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>Step 3: Turn On Auditing</h4>
+<h4>Step 3: Install the Watcher</h4>
 <ul>
-<li>Install, then enable it</li>
-<li>--now starts it immediately</li>
-<li>Survives the next reboot too</li>
+<li>Not installed by default</li>
+<li>One package, two tools</li>
+<li>No service to enable</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ sudo apt install -y auditd
-# -y = auto-confirm install (no interactive prompt)
-$ sudo systemctl enable --now auditd
-# --now starts it immediately, enable makes it persist</div>
+<div class="terminal">$ sudo apt install -y inotify-tools
+# -y = auto-confirm install (no interactive prompt)</div>
 </div>
 </div>
-<p class="fragment note-below">&#9888;&#65039; Confirmed <span class="highlight">unfixable</span> on WSL2: auditd&#39;s kernel registration is blocked outright (tested an -s nochange override too, same wall). These commands are correct on a real Linux host.</p>
 </section>
 
 <section data-background-color="#0a0a0a">
-<h4>Step 3: Turn On Auditing</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> install <span class="tk-flag">-y</span> auditd
-<span class="tk-comment"># -y = auto-confirm install (no interactive prompt)</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">systemctl</span> enable <span class="tk-flag">--now</span> auditd
-<span class="tk-comment"># --now starts it immediately, enable makes it persist</span></div>
+<h4>Step 3: Install the Watcher</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> install <span class="tk-flag">-y</span> inotify-tools
+<span class="tk-comment"># -y = auto-confirm install (no interactive prompt)</span></div>
 </section>
 
 <section data-background-color="#ffffff">
@@ -10964,9 +10967,9 @@ $ sudo systemctl enable --now auditd
 <div class="col">
 <h4>Step 4: Watch the Folder</h4>
 <ul>
-<li>-p wa: writes and attributes</li>
-<li>-k names the rule</li>
-<li>Rule applies immediately</li>
+<li>-e picks event types</li>
+<li>&amp; keeps the shell free</li>
+<li>Watching starts immediately</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
@@ -10974,8 +10977,9 @@ $ sudo systemctl enable --now auditd
 $ sudo chgrp registrar /srv/registrar
 $ sudo chmod 2770 /srv/registrar
 # 2770 = rwxrws--- (registrar group can write)
-$ sudo auditctl -w /srv/registrar -p wa -k registrar_writes
-# -w watch path, -p wa write+attribute, -k search tag</div>
+$ inotifywait -m -e create,modify \
+    /srv/registrar &gt;&gt; /tmp/registrar-watch.log &amp;
+# -m keeps watching; -e picks event types</div>
 </div>
 </div>
 </section>
@@ -10986,8 +10990,9 @@ $ sudo auditctl -w /srv/registrar -p wa -k registrar_writes
 <span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">chgrp</span> registrar /srv/registrar
 <span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">chmod</span> 2770 /srv/registrar
 <span class="tk-comment"># 2770 = rwxrws--- (registrar group can write)</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">auditctl</span> <span class="tk-flag">-w</span> /srv/registrar <span class="tk-flag">-p</span> wa <span class="tk-flag">-k</span> registrar_writes
-<span class="tk-comment"># -w watch path, -p wa write+attribute, -k search tag</span></div>
+<span class="tk-prompt">$</span> <span class="tk-cmd">inotifywait</span> <span class="tk-flag">-m</span> <span class="tk-flag">-e</span> create,modify \
+    /srv/registrar &gt;&gt; /tmp/registrar-watch.log &amp;
+<span class="tk-comment"># -m keeps watching; -e picks event types</span></div>
 </section>
 
 <section data-background-color="#ffffff">
@@ -11001,7 +11006,7 @@ $ sudo auditctl -w /srv/registrar -p wa -k registrar_writes
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="218" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m5p5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><path d="M 30.0 42.0 L 30.0 88.0 L 110.0 88.0 L 110.0 34.0 L 62.0 34.0 L 56.0 32.0 L 34.0 32.0 Q 30.0 32.0 30.0 42.0 Z" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="70" y="106.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">test.txt</text><line x1="110" y1="60" x2="146" y2="60" stroke="#888" stroke-width="1.8" marker-end="url(#m5p5)"/><rect x="150" y="30" width="150" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="225" y="55" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">audit.log</text><text x="225" y="75" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">a write event lands here</text><line x1="225" y1="90" x2="225" y2="116" stroke="#888" stroke-width="1.8" marker-end="url(#m5p5)"/><circle cx="225" cy="150" r="16" fill="none" stroke="#FF671D" stroke-width="3"/><line x1="236" y1="161" x2="250" y2="175" stroke="#FF671D" stroke-width="3" stroke-linecap="round"/><text x="225" y="200" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee">ausearch -k finds it</text></svg>
+<svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="218" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m5p5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><path d="M 30.0 42.0 L 30.0 88.0 L 110.0 88.0 L 110.0 34.0 L 62.0 34.0 L 56.0 32.0 L 34.0 32.0 Q 30.0 32.0 30.0 42.0 Z" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="70" y="106.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">test.txt</text><line x1="110" y1="60" x2="146" y2="60" stroke="#888" stroke-width="1.8" marker-end="url(#m5p5)"/><rect x="150" y="30" width="150" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="225" y="55" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">watch.log</text><text x="225" y="75" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">a write event lands here</text><line x1="225" y1="90" x2="225" y2="116" stroke="#888" stroke-width="1.8" marker-end="url(#m5p5)"/><circle cx="225" cy="150" r="16" fill="none" stroke="#FF671D" stroke-width="3"/><line x1="236" y1="161" x2="250" y2="175" stroke="#FF671D" stroke-width="3" stroke-linecap="round"/><text x="225" y="200" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee">grep finds it</text></svg>
 </div>
 </div>
 </section>
@@ -11012,15 +11017,15 @@ $ sudo auditctl -w /srv/registrar -p wa -k registrar_writes
 <h4>Step 5: Trigger and Confirm</h4>
 <ul>
 <li>Create a file to test it</li>
-<li>Search by the rule's key</li>
+<li>Search the log for its name</li>
 <li>You should see the write</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ touch /srv/registrar/test.txt
 # creates an empty file to trigger the watch
-$ sudo ausearch -k registrar_writes
-# -k filters results by the search tag (key)</div>
+$ grep test.txt /tmp/registrar-watch.log
+# reuses grep from earlier: no new command</div>
 </div>
 </div>
 </section>
@@ -11029,8 +11034,8 @@ $ sudo ausearch -k registrar_writes
 <h4>Step 5: Trigger and Confirm</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">touch</span> /srv/registrar/test.txt
 <span class="tk-comment"># creates an empty file to trigger the watch</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">ausearch</span> <span class="tk-flag">-k</span> registrar_writes
-<span class="tk-comment"># -k filters results by the search tag (key)</span></div>
+<span class="tk-prompt">$</span> <span class="tk-cmd">grep</span> test.txt /tmp/registrar-watch.log
+<span class="tk-comment"># reuses grep from earlier: no new command</span></div>
 </section>
 
 <section data-background-color="#ffffff">
@@ -11099,12 +11104,12 @@ group::<span class="tk-user">rwx</span></div>
 <h4>Deliverables</h4>
 <ul>
 <li>A groupadd + visudo screenshot</li>
-<li>auditctl -l showing your rule</li>
-<li>ausearch output for one write</li>
+<li>Your watch.log showing a write</li>
+<li>grep output finding that write</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 340 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="148" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="10" y="15" width="100" height="55" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="60.0" y="46.8" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">sudoers</text><rect x="120" y="15" width="100" height="55" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="170.0" y="46.8" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">auditctl</text><rect x="230" y="15" width="100" height="55" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="280.0" y="46.8" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">ausearch</text></svg>
+<svg viewBox="0 0 340 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="148" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="10" y="15" width="100" height="55" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="60.0" y="46.8" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">sudoers</text><rect x="120" y="15" width="100" height="55" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="170.0" y="46.8" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">inotifywait</text><rect x="230" y="15" width="100" height="55" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="280.0" y="46.8" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">grep</text></svg>
 </div>
 </div>
 </section>
@@ -12354,13 +12359,10 @@ $ groups</div>
         { id: 'cmd-gpasswd', module: 4, cmd: 'gpasswd', example: 'sudo gpasswd -a alice registrar', purpose: 'Add or remove a group member' },
         { id: 'cmd-who', module: 4, cmd: 'who', example: 'who', purpose: 'Show who is logged in now' },
         { id: 'cmd-w', module: 4, cmd: 'w', example: 'w', purpose: 'Show who is on, and what they run' },
-        { id: 'cmd-systemctl', module: 4, cmd: 'systemctl', example: 'systemctl status auditd', purpose: 'Check or control a service' },
-        { id: 'cmd-auditctl', module: 4, cmd: 'auditctl', example: 'auditctl -w /etc/passwd -p wa', purpose: 'Add or list audit watch rules' },
-        { id: 'cmd-ausearch', module: 4, cmd: 'ausearch', example: 'ausearch -k registrar_writes', purpose: 'Search audit logs by key' },
-        { id: 'cmd-aureport', module: 4, cmd: 'aureport', example: 'aureport -f -i', purpose: 'Summarize audit logs, readably' },
-        { id: 'cmd-tail', module: 4, cmd: 'tail', example: 'tail -f /var/log/audit/audit.log', purpose: 'Follow a growing log file' },
-        { id: 'cmd-augenrules', module: 4, cmd: 'augenrules', example: 'sudo augenrules --load', purpose: 'Load saved audit rule files' },
-        { id: 'cmd-journalctl', module: 4, cmd: 'journalctl', example: 'journalctl -u auditd --since today', purpose: 'Read the systemd service journal' }
+        { id: 'cmd-inotifywait', module: 4, cmd: 'inotifywait', example: 'inotifywait -m -e create,modify dir', purpose: 'Watch a file or folder live' },
+        { id: 'cmd-inotifywatch', module: 4, cmd: 'inotifywatch', example: 'inotifywatch -e create,modify dir', purpose: 'Summarize watched events, readably' },
+        { id: 'cmd-tail', module: 4, cmd: 'tail', example: 'tail -f /tmp/registrar-watch.log', purpose: 'Follow a growing log file' },
+        { id: 'cmd-nohup', module: 4, cmd: 'nohup', example: 'nohup inotifywait -m dir &', purpose: 'Keep a watch running after logout' }
       ];
 
       function cmdTableHTML(throughId) {
