@@ -419,7 +419,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-14 13:30 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-14 13:59 PT</span>
   </div>
 
   <!--
@@ -10734,6 +10734,46 @@ alice</div>
 <span class="tk-user">alice</span></div>
 </section>
 
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col" style="text-align:center;">
+<h4>Logged In as root</h4>
+<div class="terminal">$ whoami
+root
+# every command now runs as root
+# nothing records who you really are</div>
+</div>
+<div class="col" style="text-align:center;">
+<h4>Using sudo Instead</h4>
+<div class="terminal">$ whoami
+alice
+$ sudo whoami
+root
+# sudo logs this command&#39;s use
+# you&#39;re alice again right after</div>
+</div>
+</div>
+<p class="fragment note-below">&#9888;&#65039; Root leaves no name behind: sudo&#39;s <span class="highlight">log</span> is what proves who ran it.</p>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Logged In as root</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">whoami</span>
+<span class="tk-user">root</span>
+<span class="tk-comment"># every command now runs as root</span>
+<span class="tk-comment"># nothing records who you really are</span></div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Using sudo Instead</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">whoami</span>
+<span class="tk-user">alice</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">whoami</span>
+<span class="tk-user">root</span>
+<span class="tk-comment"># sudo logs this command&#39;s use</span>
+<span class="tk-comment"># you&#39;re alice again right after</span></div>
+</section>
+
 <section id="cmd-su" data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
@@ -10850,6 +10890,47 @@ User alice may run:
 <p class="fragment note-below">Read aloud as "superuser do": run one command with another user's privilege.</p>
 </section>
 
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col" style="text-align:center;">
+<h4>su -</h4>
+<div class="terminal">$ su - registrar_admin
+Password:
+$ whoami
+registrar_admin
+$ exit
+# stays as registrar_admin until exit
+# needs registrar_admin&#39;s password</div>
+</div>
+<div class="col" style="text-align:center;">
+<h4>sudo</h4>
+<div class="terminal">$ sudo whoami
+root
+# runs just this one command
+# needs YOUR OWN password instead</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>su -</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">su</span> <span class="tk-flag">-</span> <span class="tk-user">registrar_admin</span>
+<span class="tk-comment">Password:</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">whoami</span>
+<span class="tk-user">registrar_admin</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">exit</span>
+<span class="tk-comment"># stays as registrar_admin until exit</span>
+<span class="tk-comment"># needs registrar_admin&#39;s password</span></div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>sudo</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">whoami</span>
+<span class="tk-user">root</span>
+<span class="tk-comment"># runs just this one command</span>
+<span class="tk-comment"># needs YOUR OWN password instead</span></div>
+</section>
+
 <section data-background-color="#ffffff">
 <div class="twocol">
 <div class="col">
@@ -10918,6 +10999,40 @@ alice : registrar</div>
 <span class="tk-comment"># -a adds alice to the registrar group</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">groups</span> alice
 <span class="tk-user">alice</span> : registrar</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col" style="text-align:center;">
+<h4>usermod -aG</h4>
+<div class="terminal">$ sudo usermod -aG registrar alice
+# -aG appends; omit -a and it WIPES
+# alice&#39;s other groups if you forget it</div>
+</div>
+<div class="col" style="text-align:center;">
+<h4>gpasswd -a</h4>
+<div class="terminal">$ sudo gpasswd -a alice registrar
+# -a only ever adds this one group
+$ sudo gpasswd -d alice registrar
+# -d removes it just as safely</div>
+</div>
+</div>
+<p class="fragment note-below">&#9888;&#65039; Forgetting -a on usermod -aG can <span class="highlight">wipe</span> every other group alice already had.</p>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>usermod -aG</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">usermod</span> <span class="tk-flag">-aG</span> registrar <span class="tk-user">alice</span>
+<span class="tk-comment"># -aG appends; omit -a and it WIPES</span>
+<span class="tk-comment"># alice&#39;s other groups if you forget it</span></div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>gpasswd -a</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">gpasswd</span> <span class="tk-flag">-a</span> <span class="tk-user">alice</span> registrar
+<span class="tk-comment"># -a only ever adds this one group</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">gpasswd</span> <span class="tk-flag">-d</span> <span class="tk-user">alice</span> registrar
+<span class="tk-comment"># -d removes it just as safely</span></div>
 </section>
 
 
