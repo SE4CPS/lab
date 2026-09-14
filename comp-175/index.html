@@ -419,7 +419,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-14 12:33 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-14 12:46 PT</span>
   </div>
 
   <!--
@@ -10576,18 +10576,52 @@ user:daemon:rw-</div>
 user:<span class="tk-user">daemon</span>:rw-</div>
 </section>
 
-<section data-background-color="#ffffff">
+<section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col" style="text-align:center;">
 <h4>Without ACL</h4>
-<svg viewBox="0 0 280 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:280px;display:block;margin:0 auto;"><rect x="1" y="1" width="278" height="168" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m4nacl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="15" y="14" width="250" height="54" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="140" y="36" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">report.txt</text><text x="140" y="56" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">daemon: no ACL rule</text><line x1="140" y1="72" x2="140" y2="90" stroke="#888" stroke-width="1.6" marker-end="url(#m4nacl)"/><rect x="15" y="94" width="250" height="54" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="140" y="127" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Result: DENIED</text></svg>
+<div class="terminal">$ getfacl ~/report.txt
+# no flags: print the file&#39;s full ACL
+user::rw-
+group::r--
+other::---
+# daemon has no rule: not in the list</div>
 </div>
 <div class="col" style="text-align:center;">
 <h4>With ACL</h4>
-<svg viewBox="0 0 280 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:280px;display:block;margin:0 auto;"><rect x="1" y="1" width="278" height="168" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m4wacl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="15" y="14" width="250" height="54" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="140" y="36" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">report.txt</text><text x="140" y="56" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">+ACL daemon:rw-</text><line x1="140" y1="72" x2="140" y2="90" stroke="#888" stroke-width="1.6" marker-end="url(#m4wacl)"/><rect x="15" y="94" width="250" height="54" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="140" y="127" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">DAC/ACL: ALLOWED</text></svg>
+<div class="terminal">$ setfacl -m u:daemon:rw ~/report.txt
+# -m modifies the ACL; owner needs no sudo
+$ getfacl ~/report.txt
+user::rw-
+group::r--
+user:daemon:rw-
+other::---
+# daemon now has its own explicit rule</div>
 </div>
 </div>
 <p class="fragment note-below">&#9888;&#65039; ALLOWED here isn&#39;t final: <span class="highlight">MAC</span> still checks afterward and can still deny it.</p>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Without ACL</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> ~/report.txt
+<span class="tk-comment"># no flags: print the file&#39;s full ACL</span>
+user::<span class="tk-user">rw-</span>
+group::r--
+other::---
+<span class="tk-comment"># daemon has no rule: not in the list</span></div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>With ACL</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> u:<span class="tk-user">daemon</span>:rw ~/report.txt
+<span class="tk-comment"># -m modifies the ACL; owner needs no sudo</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> ~/report.txt
+user::rw-
+group::r--
+user:<span class="tk-user">daemon</span>:rw-
+other::---
+<span class="tk-comment"># daemon now has its own explicit rule</span></div>
 </section>
 
 <section data-background-color="#ffffff">
