@@ -419,7 +419,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-14 13:59 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-14 14:06 PT</span>
   </div>
 
   <!--
@@ -10785,7 +10785,11 @@ root
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ su - registrar_admin
+<div class="terminal">$ sudo useradd -m registrar_admin
+# -m also creates their home directory
+$ sudo passwd registrar_admin
+# sets their password (prompts interactively)
+$ su - registrar_admin
 # - = login shell (loads registrar_admin&#39;s own env)
 Password:
 $ exit</div>
@@ -10795,7 +10799,11 @@ $ exit</div>
 
 <section data-background-color="#0a0a0a">
 <h4>Switching Identity: su</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">su</span> <span class="tk-flag">-</span> <span class="tk-user">registrar_admin</span>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">useradd</span> <span class="tk-flag">-m</span> <span class="tk-user">registrar_admin</span>
+<span class="tk-comment"># -m also creates their home directory</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">passwd</span> <span class="tk-user">registrar_admin</span>
+<span class="tk-comment"># sets their password (prompts interactively)</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">su</span> <span class="tk-flag">-</span> <span class="tk-user">registrar_admin</span>
 <span class="tk-comment"># - = login shell (loads registrar_admin&#39;s own env)</span>
 <span class="tk-comment">Password:</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">exit</span></div>
@@ -10828,7 +10836,9 @@ $ exit</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ sudo visudo
+<div class="terminal">$ sudo groupadd registrar
+# creates the group this rule targets
+$ sudo visudo
 # opens /etc/sudoers safely with syntax checking
 %registrar ALL=(root) NOPASSWD: /usr/local/bin/backup.sh
 # %group ALL=(role) NOPASSWD: cmd -- no password prompt</div>
@@ -10838,7 +10848,9 @@ $ exit</div>
 
 <section data-background-color="#0a0a0a">
 <h4>Editing sudoers Safely</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">visudo</span>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">groupadd</span> registrar
+<span class="tk-comment"># creates the group this rule targets</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">visudo</span>
 <span class="tk-comment"># opens /etc/sudoers safely with syntax checking</span>
 <span class="tk-user">%registrar</span> ALL=(root) NOPASSWD: /usr/local/bin/backup.sh
 <span class="tk-comment"># %group ALL=(role) NOPASSWD: cmd -- no password prompt</span></div>
