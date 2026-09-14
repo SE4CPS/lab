@@ -419,7 +419,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-14 14:06 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-14 14:09 PT</span>
   </div>
 
   <!--
@@ -10881,6 +10881,73 @@ User alice may run:
 <span class="tk-comment"># -l lists what commands you&#39;re allowed to run</span>
 <span class="tk-comment">User alice may run:</span>
     (root) /usr/local/bin/backup.sh</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Real sudo -l Output</h4>
+<ul>
+<li>Defaults: config, not a grant</li>
+<li>(ALL : ALL) ALL = full access</li>
+<li>Common on your own dev VM</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo -l
+Matching Defaults entries for alice:
+    secure_path=/usr/sbin:/usr/bin:/sbin:/bin
+User alice may run the following commands:
+    (ALL : ALL) ALL
+# any user, any group, any command</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Real sudo -l Output</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-flag">-l</span>
+<span class="tk-comment">Matching Defaults entries for alice:</span>
+    secure_path=/usr/sbin:/usr/bin:/sbin:/bin
+<span class="tk-comment">User alice may run the following commands:</span>
+    <span class="tk-user">(ALL : ALL) ALL</span>
+<span class="tk-comment"># any user, any group, any command</span></div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col" style="text-align:center;">
+<h4>On the Registrar Server</h4>
+<div class="terminal">$ sudo -l
+User alice may run:
+    (root) /usr/local/bin/backup.sh
+# one script, nothing else</div>
+</div>
+<div class="col" style="text-align:center;">
+<h4>On Your Own Dev VM</h4>
+<div class="terminal">$ sudo -l
+User alice may run the following commands:
+    (ALL : ALL) ALL
+# every command, as anyone</div>
+</div>
+</div>
+<p class="fragment note-below">&#9888;&#65039; Scope matters: the same person can hold a <span class="highlight">narrow</span> grant on one box and full access on another.</p>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>On the Registrar Server</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-flag">-l</span>
+<span class="tk-comment">User alice may run:</span>
+    (root) /usr/local/bin/backup.sh
+<span class="tk-comment"># one script, nothing else</span></div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>On Your Own Dev VM</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-flag">-l</span>
+<span class="tk-comment">User alice may run the following commands:</span>
+    <span class="tk-user">(ALL : ALL) ALL</span>
+<span class="tk-comment"># every command, as anyone</span></div>
 </section>
 
 <section id="term-sudo" data-tag="terminology" data-term="Sudo" data-background-color="#ffffff">
