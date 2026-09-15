@@ -419,7 +419,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-15 02:14 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-15 02:27 PT</span>
   </div>
 
   <!--
@@ -9870,6 +9870,120 @@ OK</div>
     &amp;&amp; echo OK || echo DENIED
 <span class="tk-comment"># test -r: exit 0 if readable, nonzero if not</span>
 <span class="tk-user">OK</span></div>
+</section>
+
+<section>
+<div class="twocol">
+<div class="col">
+<h4>What Is the ACL Mask?</h4>
+<ul>
+<li>Caps group + named entries</li>
+<li>Owner and other skip it</li>
+<li>Auto-set by setfacl -m</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="338" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="16" width="220" height="42" rx="7" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="130" y="42" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">user::rw-</text><rect x="20" y="70" width="220" height="42" rx="7" fill="#1e1e1e" stroke="#FF671D" stroke-width="1.5"/><text x="130" y="96" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">user:daemon:rw-</text><rect x="20" y="124" width="220" height="42" rx="7" fill="#1e1e1e" stroke="#FF671D" stroke-width="1.5"/><text x="130" y="150" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">group::r--</text><rect x="20" y="178" width="220" height="42" rx="7" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="130" y="204" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">mask::rw-</text><rect x="20" y="232" width="220" height="42" rx="7" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="130" y="258" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">other::---</text><line x1="250" y1="70" x2="250" y2="220" stroke="#FF671D" stroke-width="2"/><line x1="244" y1="70" x2="250" y2="70" stroke="#FF671D" stroke-width="2"/><line x1="244" y1="220" x2="250" y2="220" stroke="#FF671D" stroke-width="2"/><text x="258" y="149" text-anchor="start" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">masked</text><text x="170" y="300" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Owner (user::) and other:: skip the mask.</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Setting the Mask</h4>
+<ul>
+<li>m:: or mask:: both work</li>
+<li>Caps every named entry</li>
+<li>Recalculates when ACLs change</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ setfacl -m m::rw- /tmp/report.txt
+# m:: sets the mask directly
+$ getfacl /tmp/report.txt
+user::rw-
+user:daemon:rw-
+group::r--
+mask::rw-
+other::---</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Setting the Mask</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> m::rw- /tmp/report.txt
+<span class="tk-comment"># m:: sets the mask directly</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> /tmp/report.txt
+user::rw-
+user:<span class="tk-user">daemon</span>:rw-
+group::r--
+<span class="tk-user">mask::rw-</span>
+other::---</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>When the Mask Contradicts</h4>
+<ul>
+<li>Entry still lists rwx</li>
+<li>Mask caps what's granted</li>
+<li>#effective shows the truth</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ setfacl -m m::r-- /tmp/report.txt
+# narrows the mask; daemon&#39;s entry is unchanged
+$ getfacl /tmp/report.txt
+user:daemon:rw-  #effective:r--
+mask::r--
+# daemon still SAYS rw-, but write is masked out</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>When the Mask Contradicts</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> m::r-- /tmp/report.txt
+<span class="tk-comment"># narrows the mask; daemon&#39;s entry is unchanged</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> /tmp/report.txt
+user:<span class="tk-user">daemon</span>:rw-  <span class="tk-comment">#effective:r--</span>
+<span class="tk-user">mask::r--</span>
+<span class="tk-comment"># daemon still SAYS rw-, but write is masked out</span></div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>chmod Changes the Mask Too</h4>
+<ul>
+<li>chmod g+w hits the mask</li>
+<li>Not the group:: line</li>
+<li>Surprising once ACLs exist</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ chmod g+w /tmp/report.txt
+# looks like it changes the group, but...
+$ getfacl /tmp/report.txt
+group::r--
+mask::rw-
+# mask moved, group:: line did not</div>
+</div>
+</div>
+<p class="fragment note-below">&#9888;&#65039; Once a file has an ACL, plain chmod on the group bits edits the <span class="highlight">mask</span>, not group::.</p>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>chmod Changes the Mask Too</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">chmod</span> g+w /tmp/report.txt
+<span class="tk-comment"># looks like it changes the group, but...</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> /tmp/report.txt
+group::r--
+<span class="tk-user">mask::rw-</span>
+<span class="tk-comment"># mask moved, group:: line did not</span></div>
 </section>
 
 <section data-background-color="#ffffff">
