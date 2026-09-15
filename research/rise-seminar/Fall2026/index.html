@@ -1838,26 +1838,25 @@
                 <h4>What that 17.2% looks like on one real question</h4>
                 <p class="story">Live against ReleaseTrain's own production corpus: "I heard there
                     was a recent MySQL update, did it fix the replication issue everyone was
-                    complaining about?" run twice, once through the Rewriter's own rephrased search
-                    terms, once with the raw question text handed straight to the Retriever.</p>
+                    complaining about?" The first live run surfaced two further real retrieval
+                    bugs, not just a Rewriter-vs-not difference: a stoplist gap, and an OR-matched
+                    keyword letting one generic word alone qualify entirely unrelated subreddits
+                    (see "Retrieval match, round 2" ahead).</p>
                 <table style="font-size:0.82em;">
-                    <thead><tr><th>Metric</th><th>With Rewriter</th><th>Without Rewriter</th></tr></thead>
+                    <thead><tr><th>Metric, after fixing both</th><th>With Rewriter</th><th>Without Rewriter</th></tr></thead>
                     <tbody>
-                        <tr><td>Official/authoritative sources (MySQL's own changelog, bug tracker)</td><td>4 of 8</td><td>0 of 8</td></tr>
-                        <tr><td>Sources actually on topic</td><td>5 of 8</td><td>2 of 8</td></tr>
-                        <tr><td>Off-topic noise (unrelated subreddits: Firefox, Android, Fedora)</td><td>3 of 8</td><td>6 of 8</td></tr>
-                        <tr><td>Cites the real fix by version and bug number</td><td>Yes</td><td>No</td></tr>
+                        <tr><td>Official sources (mysql.com, dev.mysql.com)</td><td>4 of 8</td><td>4 of 8</td></tr>
+                        <tr><td>Real, on-topic r/mysql posts</td><td>4 of 8</td><td>4 of 8</td></tr>
+                        <tr><td>Off-topic noise</td><td>0 of 8</td><td>0 of 8</td></tr>
                     </tbody>
                 </table>
-                <p class="bridge">Without the Rewriter, the raw phrasing's own generic words
-                    ("recent," "update") pulled in whatever else was recently posted, regardless of
-                    product. With it, three targeted rephrasings ("MySQL recent update replication
-                    issue fix," "MySQL replication problem resolved in update") found the actual
-                    8.0.36 changelog entry and two real replication bug reports. Not every
-                    rewrite helps this cleanly: the same test on a genuinely comparison-shaped
-                    question ("Zoom or Teams?") returned identical results either way, since that
-                    question type is deterministically routed around the Rewriter entirely,
-                    architecture, not phrasing, decided the outcome there.</p>
+                <p class="bridge">Once retrieval was actually anchored to the resolved vendor,
+                    both arms converged to the same clean result: the Rewriter's own phrasing
+                    stopped being the deciding factor once the underlying match itself was fixed.
+                    Not every rewrite helps either way: the same test on a comparison-shaped
+                    question ("Zoom or Teams?") returned identical results regardless of the
+                    Rewriter, since that question type is routed around it entirely by
+                    architecture, not by phrasing.</p>
             </section>
 
             <section data-chapter="8">
@@ -2278,6 +2277,7 @@
                         <tr><td>Rewriter</td><td>Multi-Agent RAG paper's exact bug, reproduced: rewrite <i>replaced</i> the original search terms</td><td>Union fetch: search both phrasings, always</td></tr>
                         <tr><td>Evaluator</td><td>Model would answer on zero evidence rather than decline</td><td>Hallucination-Resistant RAG paper's Stage 1/2 abstention, hard-coded, not prompted</td></tr>
                         <tr><td>Retrieval match</td><td>Keyword OR-match hit generic terms ("update", "version") on every query</td><td>Stoplist generic terms before matching</td></tr>
+                        <tr><td>Retrieval match, round 2</td><td>Stoplisting fillers wasn't enough: a real but generic technical word ("replication") isn't exclusive to any one product, so OR-matching it alone pulled in unrelated subreddits (Ubiquiti, PFSense, Home Assistant) that only ever said the same word for something else entirely</td><td>When a vendor is resolved, its name becomes the required title match, not one option among several ORed-in words; the vendor's own subreddit also gets the same guaranteed-inclusion treatment a resolved category already had</td></tr>
                         <tr><td>Retrieval scope</td><td>Every question fanned out to every search tool, so a "latest version" query and a "did the update break X" query pulled the same mix; a broad community-thread match could outrank the one release note that actually answered it</td><td>Classify intent (version / CVE / patch / experiential) before retrieval; each intent maps to only the tools that can answer it, and a version question additionally pins the release-notes lookup to the resolved vendor name rather than the model's own query words</td></tr>
                         <tr><td>Retrieval design</td><td>Embeddings blur exact identifiers: <code>8.0.44</code> vs <code>8.0.45</code></td><td>Lexical/metadata match stays primary, not semantic</td></tr>
                         <tr><td>Runtime</td><td>Node 12.22.9 (EOL 2022) has no native <code>fetch</code>; SDK crashed on first call</td><td>Hand-rolled HTTP via <code>node-fetch</code></td></tr>
