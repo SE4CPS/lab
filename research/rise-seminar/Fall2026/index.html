@@ -1834,6 +1834,32 @@
                     (0.756 &rarr; 0.826), no human feedback.</p>
             </section>
 
+            <section data-chapter="7">
+                <h4>What that 17.2% looks like on one real question</h4>
+                <p class="story">Live against ReleaseTrain's own production corpus: "I heard there
+                    was a recent MySQL update, did it fix the replication issue everyone was
+                    complaining about?" run twice, once through the Rewriter's own rephrased search
+                    terms, once with the raw question text handed straight to the Retriever.</p>
+                <table style="font-size:0.82em;">
+                    <thead><tr><th>Metric</th><th>With Rewriter</th><th>Without Rewriter</th></tr></thead>
+                    <tbody>
+                        <tr><td>Official/authoritative sources (MySQL's own changelog, bug tracker)</td><td>4 of 8</td><td>0 of 8</td></tr>
+                        <tr><td>Sources actually on topic</td><td>5 of 8</td><td>2 of 8</td></tr>
+                        <tr><td>Off-topic noise (unrelated subreddits: Firefox, Android, Fedora)</td><td>3 of 8</td><td>6 of 8</td></tr>
+                        <tr><td>Cites the real fix by version and bug number</td><td>Yes</td><td>No</td></tr>
+                    </tbody>
+                </table>
+                <p class="bridge">Without the Rewriter, the raw phrasing's own generic words
+                    ("recent," "update") pulled in whatever else was recently posted, regardless of
+                    product. With it, three targeted rephrasings ("MySQL recent update replication
+                    issue fix," "MySQL replication problem resolved in update") found the actual
+                    8.0.36 changelog entry and two real replication bug reports. Not every
+                    rewrite helps this cleanly: the same test on a genuinely comparison-shaped
+                    question ("Zoom or Teams?") returned identical results either way, since that
+                    question type is deterministically routed around the Rewriter entirely,
+                    architecture, not phrasing, decided the outcome there.</p>
+            </section>
+
             <section data-chapter="8">
                 <span class="paper-tag">2026 &middot; accepted, unfunded</span>
                 <h3>Distinguishing Technical Problem Solving and General Discontent in Reddit Software Update Discussions</h3>
