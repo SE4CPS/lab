@@ -419,7 +419,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-16 22:33 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-16 22:52 PT</span>
   </div>
 
   <!--
@@ -11433,13 +11433,15 @@ group::<span class="tk-user">rwx</span></div>
 <div class="col">
 <h4>Connect to Clinic Records</h4>
 <ul>
-<li>ssh into the Ubuntu VM</li>
-<li>You're now on clinic-records</li>
+<li>Map the IP from Problem 3</li>
+<li>Then ssh into the VM</li>
 <li>Kali stays your home base</li>
 </ul>
 </div>
 <div class="col">
-<div class="terminal">$ ssh admin@clinic-records
+<div class="terminal">$ echo "10.0.2.15  clinic-records" \
+    | sudo tee -a /etc/hosts
+$ ssh admin@clinic-records
 $ hostname
 clinic-records
 $ ls /srv/patient-records
@@ -11450,8 +11452,13 @@ today  archive  billing  admin</div>
 
 <section data-background-color="#0a0a0a">
 <h4>Connect to Clinic Records</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ssh</span> admin@clinic-records
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> echo <span class="tk-str">"10.0.2.15  clinic-records"</span> \
+    | <span class="tk-cmd">sudo</span> <span class="tk-cmd">tee</span> <span class="tk-flag">-a</span> /etc/hosts
+<span class="tk-comment"># adds this mapping; use YOUR VM's real IP</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">ssh</span> admin@clinic-records
+<span class="tk-comment"># the hostname now resolves correctly</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">hostname</span>
+<span class="tk-comment"># confirm you're really on the VM</span>
 <span class="tk-user">clinic-records</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> /srv/patient-records
 today  archive  billing  admin</div>
@@ -11524,7 +11531,179 @@ $ sudo cp -r sample-data/* /srv/patient-records/</div>
 <section>
 <div class="twocol">
 <div class="col">
-<h4>Problem 1: New Nurse</h4>
+<h4>Problem 1: Who Am I?</h4>
+<ul>
+<li>Freshly logged into the VM</li>
+<li>Get your bearings first</li>
+<li>How would you address this?</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="218" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><circle cx="90" cy="90" r="12" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><path d="M 72 130 Q 72 100 90 100 Q 108 100 108 130 Z" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="90" y="150" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">You</text><line x1="112" y1="95" x2="148" y2="95" stroke="#666" stroke-width="1.5" stroke-dasharray="4 3"/><circle cx="170" cy="95" r="20" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="170" y="103" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">?</text><line x1="192" y1="95" x2="228" y2="95" stroke="#666" stroke-width="1.5" stroke-dasharray="4 3"/><rect x="230" y="70" width="95" height="50" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="277.5" y="100" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">whoami</text></svg>
+</div>
+</div>
+</section>
+
+<section>
+<div class="twocol">
+<div class="col">
+<h4>Options: Who Am I?</h4>
+<ul>
+<li>Pick the one that fixes it</li>
+<li>Some look tempting, but wrong</li>
+<li>Which is safest here?</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="418" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="57" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="63" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="86" y="63" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">whoami</text><rect x="20" y="108" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="145" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="151" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="86" y="151" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">sudo su -</text><rect x="20" y="196" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="233" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="239" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="86" y="239" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">cat /etc/shadow</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>The Fix: Who Am I?</h4>
+<ul>
+<li>A is correct: just one command</li>
+<li>B: full root, not needed here</li>
+<li>C touches a sensitive file</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ whoami</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>The Fix: Who Am I?</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">whoami</span>
+<span class="tk-comment"># prints the currently logged-in user</span>
+<span class="tk-user">admin</span>
+<span class="tk-comment"># confirms which account you&#39;re using</span></div>
+</section>
+
+<section>
+<div class="twocol">
+<div class="col">
+<h4>Problem 2: Who Else Here?</h4>
+<ul>
+<li>Before creating any account</li>
+<li>See who already exists</li>
+<li>How would you address this?</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="218" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><circle cx="90" cy="90" r="12" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><path d="M 72 130 Q 72 100 90 100 Q 108 100 108 130 Z" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="90" y="150" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">You</text><line x1="112" y1="95" x2="148" y2="95" stroke="#666" stroke-width="1.5" stroke-dasharray="4 3"/><circle cx="170" cy="95" r="20" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="170" y="103" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">?</text><line x1="192" y1="95" x2="228" y2="95" stroke="#666" stroke-width="1.5" stroke-dasharray="4 3"/><rect x="230" y="70" width="95" height="50" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="277.5" y="100" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">user list</text></svg>
+</div>
+</div>
+</section>
+
+<section>
+<div class="twocol">
+<div class="col">
+<h4>Options: Who Else Here?</h4>
+<ul>
+<li>Pick the one that fixes it</li>
+<li>Some look tempting, but wrong</li>
+<li>Which is safest here?</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="418" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="57" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="63" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="86" y="63" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">cat /etc/passwd</text><rect x="20" y="108" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="145" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="151" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="86" y="151" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">who</text><rect x="20" y="196" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="233" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="239" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="86" y="239" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">ls /home</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>The Fix: Who Else Here?</h4>
+<ul>
+<li>A is correct: lists everyone</li>
+<li>B shows online users, not all</li>
+<li>C misses some real accounts</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ cat /etc/passwd</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>The Fix: Who Else Here?</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">cat</span> /etc/passwd
+<span class="tk-comment"># one line per account on this VM</span>
+admin:x:1000:1000::/home/admin:/bin/bash
+<span class="tk-comment"># username, uid, gid, home, shell</span></div>
+</section>
+
+<section>
+<div class="twocol">
+<div class="col">
+<h4>Problem 3: Port Open?</h4>
+<ul>
+<li>Before anyone can ssh in</li>
+<li>Confirm sshd is reachable</li>
+<li>How would you address this?</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="218" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><circle cx="90" cy="90" r="12" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><path d="M 72 130 Q 72 100 90 100 Q 108 100 108 130 Z" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="90" y="150" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">You</text><line x1="112" y1="95" x2="148" y2="95" stroke="#666" stroke-width="1.5" stroke-dasharray="4 3"/><circle cx="170" cy="95" r="20" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="170" y="103" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">?</text><line x1="192" y1="95" x2="228" y2="95" stroke="#666" stroke-width="1.5" stroke-dasharray="4 3"/><rect x="230" y="70" width="95" height="50" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="277.5" y="100" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">port 22</text></svg>
+</div>
+</div>
+</section>
+
+<section>
+<div class="twocol">
+<div class="col">
+<h4>Options: Port Open?</h4>
+<ul>
+<li>Pick the one that fixes it</li>
+<li>Some look tempting, but wrong</li>
+<li>Which is safest here?</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="418" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="57" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="63" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="86" y="63" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">ping clinic-records</text><rect x="20" y="108" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="145" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="151" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="86" y="151" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">sudo ss -tlnp | grep :22</text><rect x="20" y="196" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="233" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="239" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="86" y="239" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">sudo ufw disable</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>The Fix: Port Open?</h4>
+<ul>
+<li>B is correct: checks the port</li>
+<li>A only proves the host is up</li>
+<li>C drops protection everywhere</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo ss -tlnp | grep :22
+$ sudo ufw allow 22/tcp
+$ hostname -I</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>The Fix: Port Open?</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">ss</span> <span class="tk-flag">-tlnp</span> | <span class="tk-cmd">grep</span> :22
+<span class="tk-comment"># lists listening ports; empty = not open</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">ufw</span> allow 22/tcp
+<span class="tk-comment"># if it was closed, this opens just port 22</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">hostname</span> <span class="tk-flag">-I</span>
+<span class="tk-comment"># reveals this VM&#39;s own IP address</span></div>
+</section>
+
+<section>
+<div class="twocol">
+<div class="col">
+<h4>Problem 4: New Nurse</h4>
 <ul>
 <li>Dana joins the nursing staff</li>
 <li>Needs today's patients only</li>
@@ -11548,7 +11727,7 @@ $ sudo cp -r sample-data/* /srv/patient-records/</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="258" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="53" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="76" y="58" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">chmod 777 /srv/patient-records/today</text><rect x="20" y="98" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="131" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="136" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="76" y="136" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">gpasswd -a dana nurses</text><rect x="20" y="176" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="209" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="214" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="76" y="214" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">sudo cp -r today /home/dana</text></svg>
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="418" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="57" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="63" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="86" y="63" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">chmod 777 /srv/patient-records/today</text><rect x="20" y="108" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="145" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="151" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="86" y="151" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">gpasswd -a dana nurses</text><rect x="20" y="196" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="233" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="239" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="86" y="239" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">sudo cp -r today /home/dana</text></svg>
 </div>
 </div>
 </section>
@@ -11564,16 +11743,18 @@ $ sudo cp -r sample-data/* /srv/patient-records/</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ gpasswd -a dana nurses</div>
+<div class="terminal">$ sudo useradd -m dana
+$ gpasswd -a dana nurses</div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>The Fix: New Nurse</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">gpasswd</span> <span class="tk-flag">-a</span> dana nurses
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">useradd</span> <span class="tk-flag">-m</span> dana
+<span class="tk-comment"># creates dana&#39;s account first</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">gpasswd</span> <span class="tk-flag">-a</span> dana nurses
 <span class="tk-comment"># -a adds dana to the nurses group</span>
-<span class="tk-comment"># nurses already has today/ access</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">groups</span> dana
 <span class="tk-comment"># confirm the membership took</span></div>
 </section>
@@ -11581,15 +11762,15 @@ $ sudo cp -r sample-data/* /srv/patient-records/</div>
 <section>
 <div class="twocol">
 <div class="col">
-<h4>Problem 2: Billing Access</h4>
+<h4>Problem 5: Billing Access</h4>
 <ul>
 <li>One file, not the whole folder</li>
-<li>Billing shouldn't join nurses</li>
+<li>Morgan shouldn't join nurses</li>
 <li>How would you address this?</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="218" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><circle cx="90" cy="90" r="12" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><path d="M 72 130 Q 72 100 90 100 Q 108 100 108 130 Z" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="90" y="150" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Billing</text><line x1="112" y1="95" x2="148" y2="95" stroke="#666" stroke-width="1.5" stroke-dasharray="4 3"/><circle cx="170" cy="95" r="20" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="170" y="103" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">?</text><line x1="192" y1="95" x2="228" y2="95" stroke="#666" stroke-width="1.5" stroke-dasharray="4 3"/><rect x="230" y="70" width="95" height="50" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="277.5" y="100" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">one file</text></svg>
+<svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="218" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><circle cx="90" cy="90" r="12" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><path d="M 72 130 Q 72 100 90 100 Q 108 100 108 130 Z" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="90" y="150" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Morgan</text><line x1="112" y1="95" x2="148" y2="95" stroke="#666" stroke-width="1.5" stroke-dasharray="4 3"/><circle cx="170" cy="95" r="20" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="170" y="103" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">?</text><line x1="192" y1="95" x2="228" y2="95" stroke="#666" stroke-width="1.5" stroke-dasharray="4 3"/><rect x="230" y="70" width="95" height="50" rx="9" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="277.5" y="100" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">one file</text></svg>
 </div>
 </div>
 </section>
@@ -11605,7 +11786,7 @@ $ sudo cp -r sample-data/* /srv/patient-records/</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="258" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="53" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="76" y="58" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">gpasswd -a billing nurses</text><rect x="20" y="98" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="131" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="136" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="76" y="136" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">chmod -R o+w /srv/patient-records</text><rect x="20" y="176" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="209" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="214" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="76" y="214" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">setfacl -m u:billing:rw file</text></svg>
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="418" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="57" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="63" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="86" y="63" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">gpasswd -a morgan nurses</text><rect x="20" y="108" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="145" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="151" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="86" y="151" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">chmod -R o+w /srv/patient-records</text><rect x="20" y="196" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="233" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="239" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="86" y="239" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">setfacl -m u:morgan:rw file</text></svg>
 </div>
 </div>
 </section>
@@ -11621,16 +11802,18 @@ $ sudo cp -r sample-data/* /srv/patient-records/</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ setfacl -m u:billing:rw invoice.txt</div>
+<div class="terminal">$ sudo useradd -m morgan
+$ setfacl -m u:morgan:rw invoice.txt</div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>The Fix: Billing Access</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> u:<span class="tk-user">billing</span>:rw invoice.txt
-<span class="tk-comment"># -m modifies the ACL; adds billing</span>
-<span class="tk-comment"># only this file, nothing else changes</span>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">useradd</span> <span class="tk-flag">-m</span> morgan
+<span class="tk-comment"># creates morgan&#39;s account first</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> u:<span class="tk-user">morgan</span>:rw invoice.txt
+<span class="tk-comment"># -m modifies the ACL; adds morgan</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> invoice.txt
 <span class="tk-comment"># confirm the new rule is there</span></div>
 </section>
@@ -11638,7 +11821,7 @@ $ sudo cp -r sample-data/* /srv/patient-records/</div>
 <section>
 <div class="twocol">
 <div class="col">
-<h4>Problem 3: After Hours</h4>
+<h4>Problem 6: After Hours</h4>
 <ul>
 <li>Flag any change after hours</li>
 <li>Don't touch the files yourself</li>
@@ -11662,7 +11845,7 @@ $ sudo cp -r sample-data/* /srv/patient-records/</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="258" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="53" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="76" y="58" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">sudo nano today/file.txt</text><rect x="20" y="98" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="131" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="136" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="76" y="136" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">ls -la /srv/patient-records/today</text><rect x="20" y="176" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="209" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="214" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="76" y="214" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">inotifywait -m -e modify dir</text></svg>
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="418" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="57" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="63" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="86" y="63" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">sudo nano today/file.txt</text><rect x="20" y="108" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="145" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="151" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="86" y="151" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">ls -la /srv/patient-records/today</text><rect x="20" y="196" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="233" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="239" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="86" y="239" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">inotifywait -m -e modify dir</text></svg>
 </div>
 </div>
 </section>
@@ -11695,7 +11878,7 @@ $ sudo cp -r sample-data/* /srv/patient-records/</div>
 <section>
 <div class="twocol">
 <div class="col">
-<h4>Problem 4: Last Day</h4>
+<h4>Problem 7: Last Day</h4>
 <ul>
 <li>Their last day is today</li>
 <li>Access must end immediately</li>
@@ -11719,7 +11902,7 @@ $ sudo cp -r sample-data/* /srv/patient-records/</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="258" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="53" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="76" y="58" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">sudo passwd -l name</text><rect x="20" y="98" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="131" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="136" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="76" y="136" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">gpasswd -d name nurses</text><rect x="20" y="176" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="209" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="214" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="76" y="214" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">sudo rm -rf /home/name</text></svg>
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="418" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="57" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="63" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="86" y="63" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">sudo passwd -l name</text><rect x="20" y="108" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="145" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="151" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="86" y="151" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">gpasswd -d name nurses</text><rect x="20" y="196" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="233" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="239" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="86" y="239" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">sudo rm -rf /home/name</text></svg>
 </div>
 </div>
 </section>
@@ -11753,7 +11936,7 @@ $ sudo cp -r sample-data/* /srv/patient-records/</div>
 <section>
 <div class="twocol">
 <div class="col">
-<h4>Problem 5: Who Touched It?</h4>
+<h4>Problem 8: Who Touched It?</h4>
 <ul>
 <li>Audit request: who did this?</li>
 <li>You can only check the log</li>
@@ -11777,7 +11960,7 @@ $ sudo cp -r sample-data/* /srv/patient-records/</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="258" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="53" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="76" y="58" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">sudo auditctl -w file</text><rect x="20" y="98" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="131" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="136" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="76" y="136" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">grep file watch.log</text><rect x="20" y="176" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="209" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="214" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="76" y="214" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">whoami</text></svg>
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="418" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="57" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="63" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="86" y="63" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">sudo auditctl -w file</text><rect x="20" y="108" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="145" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="151" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="86" y="151" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">grep file watch.log</text><rect x="20" y="196" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="233" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="239" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="86" y="239" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">whoami</text></svg>
 </div>
 </div>
 </section>
@@ -11810,7 +11993,7 @@ $ sudo cp -r sample-data/* /srv/patient-records/</div>
 <section>
 <div class="twocol">
 <div class="col">
-<h4>Problem 6: Too Much Access</h4>
+<h4>Problem 9: Too Much Access</h4>
 <ul>
 <li>A doctor got write, not read</li>
 <li>Base permission looks correct</li>
@@ -11834,7 +12017,7 @@ $ sudo cp -r sample-data/* /srv/patient-records/</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="258" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="53" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="76" y="58" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">chmod 640 file</text><rect x="20" y="98" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="131" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="136" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="76" y="136" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">setfacl -m m::r-- file</text><rect x="20" y="176" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="209" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="214" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="76" y="214" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">setfacl -x u:doctor file</text></svg>
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="418" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="57" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="63" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="86" y="63" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">chmod 640 file</text><rect x="20" y="108" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="145" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="151" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="86" y="151" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">setfacl -m m::r-- file</text><rect x="20" y="196" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="233" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="239" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="86" y="239" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">setfacl -x u:doctor file</text></svg>
 </div>
 </div>
 </section>
@@ -11866,7 +12049,7 @@ $ sudo cp -r sample-data/* /srv/patient-records/</div>
 <section>
 <div class="twocol">
 <div class="col">
-<h4>Problem 7: First Day Setup</h4>
+<h4>Problem 10: First Day Setup</h4>
 <ul>
 <li>New hire, no account yet</li>
 <li>Connect, create, confirm IP</li>
@@ -11890,7 +12073,7 @@ $ sudo cp -r sample-data/* /srv/patient-records/</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="258" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="53" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="76" y="58" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">ping clinic-records</text><rect x="20" y="98" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="131" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="136" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="76" y="136" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">ssh + useradd + ip addr</text><rect x="20" y="176" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="209" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="214" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="76" y="214" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">share the admin password</text></svg>
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="418" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="57" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="63" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="86" y="63" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">ping clinic-records</text><rect x="20" y="108" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="145" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="151" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="86" y="151" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">ssh + useradd + ip addr</text><rect x="20" y="196" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="233" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="239" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="86" y="239" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">share the admin password</text></svg>
 </div>
 </div>
 </section>
@@ -11928,7 +12111,7 @@ $ ip addr show</div>
 <section>
 <div class="twocol">
 <div class="col">
-<h4>Problem 8: New Admin</h4>
+<h4>Problem 11: New Admin</h4>
 <ul>
 <li>A new admin needs full setup</li>
 <li>Account, password, right group</li>
@@ -11952,7 +12135,7 @@ $ ip addr show</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="258" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="53" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="76" y="58" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">sudo useradd -m -G admin ravi</text><rect x="20" y="98" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="131" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="136" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="76" y="136" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">gpasswd -a ravi admin</text><rect x="20" y="176" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="209" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="214" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="76" y="214" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">usermod -aG sudo ravi</text></svg>
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="418" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="57" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="63" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="86" y="63" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">sudo useradd -m -G admin ravi</text><rect x="20" y="108" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="145" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="151" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="86" y="151" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">gpasswd -a ravi admin</text><rect x="20" y="196" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="233" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="239" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="86" y="239" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">usermod -aG sudo ravi</text></svg>
 </div>
 </div>
 </section>
@@ -11987,7 +12170,7 @@ $ sudo passwd ravi</div>
 <section>
 <div class="twocol">
 <div class="col">
-<h4>Problem 9: Which Group?</h4>
+<h4>Problem 12: Which Group?</h4>
 <ul>
 <li>A nurse says access is broken</li>
 <li>Don't guess, check first</li>
@@ -12011,7 +12194,7 @@ $ sudo passwd ravi</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="258" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="53" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="76" y="58" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">gpasswd -a nurse nurses</text><rect x="20" y="98" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="131" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="136" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="76" y="136" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">id nurse</text><rect x="20" y="176" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="209" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="214" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="76" y="214" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">chmod 777 today/</text></svg>
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="418" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="57" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="63" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="86" y="63" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">gpasswd -a nurse nurses</text><rect x="20" y="108" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="145" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="151" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="86" y="151" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">id nurse</text><rect x="20" y="196" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="233" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="239" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="86" y="239" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">chmod 777 today/</text></svg>
 </div>
 </div>
 </section>
@@ -12044,7 +12227,7 @@ uid=1002(nurse) groups=1002(nurse)
 <section>
 <div class="twocol">
 <div class="col">
-<h4>Problem 10: Locked Out</h4>
+<h4>Problem 13: Locked Out</h4>
 <ul>
 <li>A nurse forgot their password</li>
 <li>No sudo needed to fix this</li>
@@ -12068,7 +12251,7 @@ uid=1002(nurse) groups=1002(nurse)
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="258" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="53" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="76" y="58" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">sudo usermod -aG sudo nurse</text><rect x="20" y="98" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="131" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="136" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="76" y="136" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">sudo passwd nurse</text><rect x="20" y="176" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="209" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="214" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="76" y="214" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">sudo useradd nurse</text></svg>
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="418" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="57" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="63" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="86" y="63" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">sudo usermod -aG sudo nurse</text><rect x="20" y="108" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="145" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="151" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="86" y="151" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">sudo passwd nurse</text><rect x="20" y="196" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="233" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="239" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="86" y="239" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">sudo useradd nurse</text></svg>
 </div>
 </div>
 </section>
@@ -12100,7 +12283,7 @@ New password:
 <section>
 <div class="twocol">
 <div class="col">
-<h4>Problem 11: Two Roles</h4>
+<h4>Problem 14: Two Roles</h4>
 <ul>
 <li>Alex covers nursing, billing</li>
 <li>Keep both sets of access</li>
@@ -12124,7 +12307,7 @@ New password:
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="258" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="53" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="76" y="58" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">gpasswd -a alex billing</text><rect x="20" y="98" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="131" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="136" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="76" y="136" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">gpasswd -a alex nurses (again)</text><rect x="20" y="176" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="209" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="214" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="76" y="214" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">usermod -G billing alex</text></svg>
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="418" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="57" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="63" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="86" y="63" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">gpasswd -a alex billing</text><rect x="20" y="108" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="145" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="151" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="86" y="151" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">gpasswd -a alex nurses (again)</text><rect x="20" y="196" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="233" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="239" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="86" y="239" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">usermod -G billing alex</text></svg>
 </div>
 </div>
 </section>
@@ -12140,25 +12323,27 @@ New password:
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ gpasswd -a alex billing</div>
+<div class="terminal">$ sudo useradd -m alex
+$ gpasswd -a alex nurses
+$ gpasswd -a alex billing</div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>The Fix: Two Roles</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">gpasswd</span> <span class="tk-flag">-a</span> alex billing
-<span class="tk-comment"># -a only adds; never removes others</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">groups</span> alex
-<span class="tk-comment"># confirms both group memberships</span>
-alex : alex nurses billing
-<span class="tk-comment"># both roles now present, nothing lost</span></div>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">useradd</span> <span class="tk-flag">-m</span> alex
+<span class="tk-comment"># creates alex&#39;s account first</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">gpasswd</span> <span class="tk-flag">-a</span> alex nurses
+<span class="tk-comment"># alex already covers nursing duty</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">gpasswd</span> <span class="tk-flag">-a</span> alex billing
+<span class="tk-comment"># -a only adds; nurses is kept too</span></div>
 </section>
 
 <section>
 <div class="twocol">
 <div class="col">
-<h4>Problem 12: Wrong Owner</h4>
+<h4>Problem 15: Wrong Owner</h4>
 <ul>
 <li>A file was created as root</li>
 <li>Owner should be records-admin</li>
@@ -12182,7 +12367,7 @@ alex : alex nurses billing
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="258" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="53" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="76" y="58" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">sudo chown admin file</text><rect x="20" y="98" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="131" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="136" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="76" y="136" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">sudo chmod 700 file</text><rect x="20" y="176" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="209" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="214" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="76" y="214" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">sudo chgrp admin file</text></svg>
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="418" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="57" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="63" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="86" y="63" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">sudo chown admin file</text><rect x="20" y="108" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="145" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="151" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="86" y="151" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">sudo chmod 700 file</text><rect x="20" y="196" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="233" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="239" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="86" y="239" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">sudo chgrp admin file</text></svg>
 </div>
 </div>
 </section>
@@ -12214,7 +12399,7 @@ alex : alex nurses billing
 <section>
 <div class="twocol">
 <div class="col">
-<h4>Problem 13: Broken Symlink</h4>
+<h4>Problem 16: Broken Symlink</h4>
 <ul>
 <li>A link points outside records</li>
 <li>Trace it before you trust it</li>
@@ -12238,7 +12423,7 @@ alex : alex nurses billing
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="258" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="53" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="76" y="58" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">rm the link, recreate it right</text><rect x="20" y="98" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="131" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="136" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="76" y="136" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">chmod 777 the link</text><rect x="20" y="176" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="209" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="214" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="76" y="214" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">ignore it, links are harmless</text></svg>
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="418" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="57" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="63" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="86" y="63" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">rm the link, recreate it right</text><rect x="20" y="108" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="145" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="151" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="86" y="151" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">chmod 777 the link</text><rect x="20" y="196" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="233" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="239" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="86" y="239" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">ignore it, links are harmless</text></svg>
 </div>
 </div>
 </section>
@@ -12277,7 +12462,7 @@ $ readlink today/shortcut</div>
 <section>
 <div class="twocol">
 <div class="col">
-<h4>Problem 14: All Can Delete</h4>
+<h4>Problem 17: All Can Delete</h4>
 <ul>
 <li>Any group member can delete</li>
 <li>One mistake affects everyone</li>
@@ -12301,7 +12486,7 @@ $ readlink today/shortcut</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="258" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="53" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="76" y="58" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">chmod g-w billing/, ACL per file</text><rect x="20" y="98" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="131" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="136" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="76" y="136" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">chmod 777 billing/</text><rect x="20" y="176" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="209" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="214" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="76" y="214" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">delete the whole folder</text></svg>
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="418" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="57" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="63" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="86" y="63" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">chmod g-w billing/, ACL per file</text><rect x="20" y="108" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="145" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="151" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="86" y="151" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">chmod 777 billing/</text><rect x="20" y="196" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="233" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="239" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="86" y="239" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">delete the whole folder</text></svg>
 </div>
 </div>
 </section>
@@ -12326,14 +12511,14 @@ $ readlink today/shortcut</div>
 <h4>The Fix: All Can Delete</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">chmod</span> g-w /srv/patient-records/billing
 <span class="tk-comment"># group can no longer write by default</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> u:billing:rw invoice.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> u:morgan:rw invoice.txt
 <span class="tk-comment"># write granted per file, not per folder</span></div>
 </section>
 
 <section>
 <div class="twocol">
 <div class="col">
-<h4>Problem 15: Who's Online?</h4>
+<h4>Problem 18: Who's Online?</h4>
 <ul>
 <li>About to make a risky change</li>
 <li>Check who's active first</li>
@@ -12357,7 +12542,7 @@ $ readlink today/shortcut</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="258" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="53" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="76" y="58" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">w</text><rect x="20" y="98" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="131" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="136" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="76" y="136" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">sudo reboot</text><rect x="20" y="176" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="209" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="214" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="76" y="214" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">skip the check, proceed</text></svg>
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="418" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="57" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="63" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="86" y="63" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">w</text><rect x="20" y="108" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="145" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="151" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="86" y="151" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">sudo reboot</text><rect x="20" y="196" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="233" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="239" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="86" y="239" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">skip the check, proceed</text></svg>
 </div>
 </div>
 </section>
@@ -12389,7 +12574,7 @@ nurse    pts/0   editing today/notes.txt
 <section>
 <div class="twocol">
 <div class="col">
-<h4>Problem 16: Weekly Summary</h4>
+<h4>Problem 19: Weekly Summary</h4>
 <ul>
 <li>A week of raw log lines</li>
 <li>You need counts, not raw text</li>
@@ -12413,7 +12598,7 @@ nurse    pts/0   editing today/notes.txt
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="258" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="53" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="76" y="58" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">cat the whole watch.log</text><rect x="20" y="98" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="131" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="136" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="76" y="136" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">inotifywatch -e modify dir</text><rect x="20" y="176" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="209" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="214" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="76" y="214" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">delete old log lines</text></svg>
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="418" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="57" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="63" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="86" y="63" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">cat the whole watch.log</text><rect x="20" y="108" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="145" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="151" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="86" y="151" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">inotifywatch -e modify dir</text><rect x="20" y="196" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="233" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="239" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="86" y="239" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">delete old log lines</text></svg>
 </div>
 </div>
 </section>
@@ -12448,7 +12633,7 @@ total  modify  filename
 <section>
 <div class="twocol">
 <div class="col">
-<h4>Problem 17: Keep Watching</h4>
+<h4>Problem 20: Keep Watching</h4>
 <ul>
 <li>The watch must outlive login</li>
 <li>Your on-call shift is ending</li>
@@ -12472,7 +12657,7 @@ total  modify  filename
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="258" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="53" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="76" y="58" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">just leave the terminal open</text><rect x="20" y="98" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="131" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="136" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="76" y="136" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">nohup inotifywait ... & ; disown</text><rect x="20" y="176" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="209" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="214" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="76" y="214" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">run it again tomorrow</text></svg>
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="418" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="57" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="63" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="86" y="63" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">just leave the terminal open</text><rect x="20" y="108" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="145" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="151" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="86" y="151" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">nohup inotifywait ... & ; disown</text><rect x="20" y="196" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="233" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="239" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="86" y="239" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">run it again tomorrow</text></svg>
 </div>
 </div>
 </section>
@@ -12507,7 +12692,7 @@ $ disown</div>
 <section>
 <div class="twocol">
 <div class="col">
-<h4>Problem 18: Access Report</h4>
+<h4>Problem 21: Access Report</h4>
 <ul>
 <li>Compliance wants a full report</li>
 <li>Every rule, every user</li>
@@ -12531,7 +12716,7 @@ $ disown</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="258" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="53" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="76" y="58" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">sudo -l; getfacl; groups, for each</text><rect x="20" y="98" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="131" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="136" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="76" y="136" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">ls -la /srv/patient-records</text><rect x="20" y="176" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="209" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="214" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="76" y="214" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">ask each user what they can do</text></svg>
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="418" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="57" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="63" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="86" y="63" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">sudo -l; getfacl; groups, for each</text><rect x="20" y="108" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="145" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="151" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="86" y="151" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">ls -la /srv/patient-records</text><rect x="20" y="196" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="233" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="239" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="86" y="239" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">ask each user what they can do</text></svg>
 </div>
 </div>
 </section>
@@ -12547,27 +12732,27 @@ $ disown</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ sudo -l -U billing
+<div class="terminal">$ sudo -l -U morgan
 $ getfacl /srv/patient-records
-$ groups billing nurses admin</div>
+$ groups morgan dana admin</div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>The Fix: Access Report</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-flag">-l</span> <span class="tk-flag">-U</span> billing
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-flag">-l</span> <span class="tk-flag">-U</span> morgan
 <span class="tk-comment"># -U checks another user&#39;s sudo rules</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> /srv/patient-records
 <span class="tk-comment"># every ACL rule on the tree, at once</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">groups</span> billing nurses admin
+<span class="tk-prompt">$</span> <span class="tk-cmd">groups</span> morgan dana admin
 <span class="tk-comment"># group membership for the report</span></div>
 </section>
 
 <section>
 <div class="twocol">
 <div class="col">
-<h4>Problem 19: Root Bypassed</h4>
+<h4>Problem 22: Root Bypassed</h4>
 <ul>
 <li>Root wrote the file directly</li>
 <li>ACLs never stopped it at all</li>
@@ -12591,7 +12776,7 @@ $ groups billing nurses admin</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="258" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="53" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="76" y="58" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">setfacl -m u:root:--- file</text><rect x="20" y="98" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="131" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="136" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="76" y="136" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">this needs MAC, not an ACL</text><rect x="20" y="176" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="209" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="214" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="76" y="214" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">chmod 000 file</text></svg>
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="418" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="57" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="63" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="86" y="63" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">setfacl -m u:root:--- file</text><rect x="20" y="108" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="145" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="151" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="86" y="151" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">this needs MAC, not an ACL</text><rect x="20" y="196" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="233" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="239" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="86" y="239" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">chmod 000 file</text></svg>
 </div>
 </div>
 </section>
@@ -12625,7 +12810,7 @@ $ groups billing nurses admin</div>
 <section>
 <div class="twocol">
 <div class="col">
-<h4>Problem 20: Incident Report</h4>
+<h4>Problem 23: Incident Report</h4>
 <ul>
 <li>Suspicious write, after hours</li>
 <li>Find who, confirm, then act</li>
@@ -12649,7 +12834,7 @@ $ groups billing nurses admin</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:380px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="258" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="53" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="58" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="76" y="58" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">grep the log for a username</text><rect x="20" y="98" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="131" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="136" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="76" y="136" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">cross-check groups + getfacl, revoke</text><rect x="20" y="176" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="50" cy="209" r="14" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="50" y="214" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="76" y="214" text-anchor="start" font-size="11" font-family="Consolas, monospace" fill="#eee">restore backup, move on</text></svg>
+<svg viewBox="0 0 420 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="1" y="1" width="418" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="57" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="63" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A</text><text x="86" y="63" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">grep the log for a username</text><rect x="20" y="108" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="145" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="151" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">B</text><text x="86" y="151" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">cross-check groups + getfacl, revoke</text><rect x="20" y="196" width="380" height="74" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><circle cx="56" cy="233" r="16" fill="#2a2a2a" stroke="#888" stroke-width="1.5"/><text x="56" y="239" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">C</text><text x="86" y="239" text-anchor="start" font-size="12" font-family="Consolas, monospace" fill="#eee">restore backup, move on</text></svg>
 </div>
 </div>
 </section>
@@ -12667,7 +12852,7 @@ $ groups billing nurses admin</div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ grep invoice.txt watch.log
 $ getfacl /srv/patient-records/today
-$ groups billing nurses admin</div>
+$ groups morgan dana admin</div>
 </div>
 </div>
 </section>
@@ -12678,7 +12863,7 @@ $ groups billing nurses admin</div>
 <span class="tk-comment"># confirms WHEN, never WHO</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> /srv/patient-records/today
 <span class="tk-comment"># lists everyone with real access</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">groups</span> billing nurses admin
+<span class="tk-prompt">$</span> <span class="tk-cmd">groups</span> morgan dana admin
 <span class="tk-comment"># cross-check who is in each group</span>
 <span class="tk-comment"># narrow the suspects, then revoke</span></div>
 </section>
