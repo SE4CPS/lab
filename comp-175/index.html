@@ -419,7 +419,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-16 19:28 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-16 19:42 PT</span>
   </div>
 
   <!--
@@ -11875,6 +11875,8 @@ $ setfacl -m u:morgan:rw \
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ inotifywait -m -r -e modify \
+    --timefmt '%Y-%m-%d %H:%M:%S' \
+    --format '%T %w%f %e' \
     /srv/patient-records >> /tmp/watch.log &</div>
 </div>
 </div>
@@ -11883,8 +11885,11 @@ $ setfacl -m u:morgan:rw \
 <section data-background-color="#0a0a0a">
 <h4>The Fix: After Hours</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">inotifywait</span> <span class="tk-flag">-m</span> <span class="tk-flag">-r</span> <span class="tk-flag">-e</span> modify \
+    <span class="tk-flag">--timefmt</span> <span class="tk-str">'%Y-%m-%d %H:%M:%S'</span> \
+    <span class="tk-flag">--format</span> <span class="tk-str">'%T %w%f %e'</span> \
     /srv/patient-records &gt;&gt; <span class="tk-path">/tmp/watch.log</span> &amp;
 <span class="tk-comment"># -m keeps watching; -r covers subfolders</span>
+<span class="tk-comment"># --format adds a real timestamp per line</span>
 <span class="tk-comment"># log lives outside the watched folder</span></div>
 </section>
 
@@ -12059,6 +12064,30 @@ $ setfacl -x u:dana \
 <span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-x</span> u:dana \
     <span class="tk-path">/srv/patient-records/today/invoice.txt</span>
 <span class="tk-comment"># also revoke any personal ACL rule</span></div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>A Suspicious Write</h4>
+<ul>
+<li>Someone wrote after hours</li>
+<li>No editor, straight to disk</li>
+<li>The log should catch this</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ echo "TOTAL: 9450.00" >> \
+    /srv/patient-records/today/invoice.txt</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>A Suspicious Write</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> echo <span class="tk-str">"TOTAL: 9450.00"</span> &gt;&gt; \
+    <span class="tk-path">/srv/patient-records/today/invoice.txt</span>
+<span class="tk-comment"># simulates the unauthorized after-hours write</span></div>
 </section>
 
 <section>
@@ -12687,6 +12716,8 @@ $ setfacl -m u:morgan:rw \
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ nohup inotifywait -m -r -e modify \
+    --timefmt '%Y-%m-%d %H:%M:%S' \
+    --format '%T %w%f %e' \
     /srv/patient-records >> /tmp/watch.log &
 $ disown</div>
 </div>
@@ -12696,6 +12727,8 @@ $ disown</div>
 <section data-background-color="#0a0a0a">
 <h4>The Fix: Keep Watching</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">nohup</span> inotifywait <span class="tk-flag">-m</span> <span class="tk-flag">-r</span> <span class="tk-flag">-e</span> modify \
+    <span class="tk-flag">--timefmt</span> <span class="tk-str">'%Y-%m-%d %H:%M:%S'</span> \
+    <span class="tk-flag">--format</span> <span class="tk-str">'%T %w%f %e'</span> \
     /srv/patient-records &gt;&gt; <span class="tk-path">/tmp/watch.log</span> &amp;
 <span class="tk-comment"># nohup: ignore the hangup on logout</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">disown</span>
