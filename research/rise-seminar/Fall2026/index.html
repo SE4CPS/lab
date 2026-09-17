@@ -1579,6 +1579,42 @@
                 </div>
             </section>
 
+            <section data-chapter="5">
+                <h4>A guardrail can be silently defeated upstream of itself</h4>
+                <div class="twocol">
+                    <div>
+                        <p class="story">A live user question, "latest vscode updte?" (a typo for
+                            "update"), classified as a plain general question, not a version
+                            question. versionCorrectionRewrite is gated on exactly that
+                            classification, so it never ran at all: not disabled, not overridden,
+                            simply never reached. The model answered entirely from its own stale
+                            pretrained knowledge, "VS Code 1.94, published September 2024", while the
+                            real tracked release (1.138.0, today) sat unused in the same feed right
+                            next to the answer.</p>
+                        <p class="bridge" style="margin-top:0.6em;"><b>Root cause, once traced:</b>
+                            "update" was never a version-intent keyword at all, correctly spelled or
+                            not, despite being one of the single most natural ways to ask about the
+                            latest release. The fix is not a new guardrail; it is closing the
+                            keyword gap that silently starves an existing one of the classification
+                            it depends on. The same miss also explained a second, seemingly unrelated
+                            symptom: the answer's own version number was never highlighted, since
+                            that too is gated on the identical classification.</p>
+                    </div>
+                    <div>
+                        <table>
+                            <thead><tr><th>Question</th><th>Classified as</th><th>Guardrail ran?</th></tr></thead>
+                            <tbody>
+                                <tr><td>"latest vscode updte?"</td><td>General (before fix)</td><td>No</td></tr>
+                                <tr><td>"latest vscode updte?"</td><td>Version (after fix)</td><td>Yes, verified 1.138.0</td></tr>
+                            </tbody>
+                        </table>
+                        <p class="bridge" style="margin-top:0.6em;">A guardrail's own correctness is
+                            necessary but not sufficient; whatever decides IF it runs is just as
+                            load-bearing as what it does once it runs.</p>
+                    </div>
+                </div>
+            </section>
+
             <section data-chapter="6">
                 <div class="divhead">
                     <span class="paper-tag">Apr 2026 &middot; OkIP CAIF</span>
