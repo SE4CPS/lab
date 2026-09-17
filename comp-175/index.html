@@ -419,7 +419,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-16 18:19 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-16 18:41 PT</span>
   </div>
 
   <!--
@@ -11481,29 +11481,59 @@ $ getent group nurses</div>
 <section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>Get the Sample Data</h4>
+<h4>Create the Sample Files</h4>
 <ul>
-<li>Synthetic data, not real PHI</li>
-<li>Pulled from our course repo</li>
+<li>Synthetic files, not real PHI</li>
+<li>You own the whole tree</li>
 <li>One-time setup step</li>
 </ul>
 </div>
 <div class="col">
-<div class="terminal">$ sudo apt install -y git
-$ git clone https://github.com/SE4CPS/2026-COMP-175.git
-$ cd 2026-COMP-175/modules/module-4-lab2
-$ sudo cp -r sample-data/* /srv/patient-records/</div>
+<div class="terminal">$ sudo mkdir -p /srv/patient-records/today \
+    /srv/patient-records/billing
+$ sudo touch /srv/patient-records/record.txt \
+    /srv/patient-records/today/invoice.txt \
+    /srv/patient-records/today/notes.txt
+$ sudo chown -R $(whoami) /srv/patient-records</div>
 </div>
 </div>
-<p class="source-line">Repo: <a href="https://github.com/SE4CPS/2026-COMP-175" target="_blank" rel="noopener">github.com/SE4CPS/2026-COMP-175</a></p>
 </section>
 
 <section data-background-color="#0a0a0a">
-<h4>Get the Sample Data</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> git
-<span class="tk-prompt">$</span> <span class="tk-cmd">git</span> clone <span class="tk-path">https://github.com/SE4CPS/2026-COMP-175.git</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">cd</span> <span class="tk-path">2026-COMP-175/modules/module-4-lab2</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">cp</span> <span class="tk-flag">-r</span> sample-data/* <span class="tk-path">/srv/patient-records/</span></div>
+<h4>Create the Sample Files</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">mkdir</span> <span class="tk-flag">-p</span> <span class="tk-path">/srv/patient-records/today</span> \
+    <span class="tk-path">/srv/patient-records/billing</span>
+<span class="tk-comment"># the two subfolders the problems reference</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">touch</span> <span class="tk-path">/srv/patient-records/record.txt</span> \
+    <span class="tk-path">/srv/patient-records/today/invoice.txt</span> \
+    <span class="tk-path">/srv/patient-records/today/notes.txt</span>
+<span class="tk-comment"># every file the problems below reference</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">chown</span> <span class="tk-flag">-R</span> $(whoami) <span class="tk-path">/srv/patient-records</span>
+<span class="tk-comment"># you own it now; setfacl below needs no sudo</span></div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Seed a Broken Link</h4>
+<ul>
+<li>A link already exists</li>
+<li>Its target is outside records</li>
+<li>Problem 13 traces + fixes it</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">$ sudo ln -s /etc/hostname \
+    /srv/patient-records/today/shortcut</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Seed a Broken Link</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">ln</span> <span class="tk-flag">-s</span> /etc/hostname \
+    <span class="tk-path">/srv/patient-records/today/shortcut</span>
+<span class="tk-comment"># pretend IT made this link; wrong target</span></div>
 </section>
 
 <section>
@@ -11680,7 +11710,7 @@ $ sudo cp -r sample-data/* /srv/patient-records/</div>
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ sudo useradd -m dana
-$ gpasswd -a dana nurses</div>
+$ sudo gpasswd -a dana nurses</div>
 </div>
 </div>
 </section>
@@ -11739,7 +11769,8 @@ $ gpasswd -a dana nurses</div>
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ sudo useradd -m morgan
-$ setfacl -m u:morgan:rw invoice.txt</div>
+$ setfacl -m u:morgan:rw \
+    /srv/patient-records/today/invoice.txt</div>
 </div>
 </div>
 </section>
@@ -11748,9 +11779,10 @@ $ setfacl -m u:morgan:rw invoice.txt</div>
 <h4>The Fix: Billing Access</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">useradd</span> <span class="tk-flag">-m</span> morgan
 <span class="tk-comment"># creates morgan&#39;s account first</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> u:<span class="tk-user">morgan</span>:rw invoice.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> u:<span class="tk-user">morgan</span>:rw \
+    <span class="tk-path">/srv/patient-records/today/invoice.txt</span>
 <span class="tk-comment"># -m modifies the ACL; adds morgan</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> invoice.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> <span class="tk-path">/srv/patient-records/today/invoice.txt</span>
 <span class="tk-comment"># confirm the new rule is there</span></div>
 </section>
 
@@ -11797,18 +11829,18 @@ $ setfacl -m u:morgan:rw invoice.txt</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ inotifywait -m -e modify \
-    /srv/patient-records</div>
+<div class="terminal">$ inotifywait -m -r -e modify \
+    /srv/patient-records >> /tmp/watch.log &</div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>The Fix: After Hours</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">inotifywait</span> <span class="tk-flag">-m</span> <span class="tk-flag">-e</span> modify \
-    /srv/patient-records &gt;&gt; watch.log &amp;
-<span class="tk-comment"># -m keeps watching; -e modify only</span>
-<span class="tk-comment"># runs in the background with &amp;</span></div>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">inotifywait</span> <span class="tk-flag">-m</span> <span class="tk-flag">-r</span> <span class="tk-flag">-e</span> modify \
+    /srv/patient-records &gt;&gt; <span class="tk-path">/tmp/watch.log</span> &amp;
+<span class="tk-comment"># -m keeps watching; -r covers subfolders</span>
+<span class="tk-comment"># log lives outside the watched folder</span></div>
 </section>
 
 <section>
@@ -11854,18 +11886,22 @@ $ setfacl -m u:morgan:rw invoice.txt</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ gpasswd -d dana nurses</div>
+<div class="terminal">$ sudo gpasswd -d dana nurses
+$ groups dana
+$ setfacl -x u:dana \
+    /srv/patient-records/today/invoice.txt</div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>The Fix: Last Day</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">gpasswd</span> <span class="tk-flag">-d</span> dana nurses
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">gpasswd</span> <span class="tk-flag">-d</span> dana nurses
 <span class="tk-comment"># -d removes dana from nurses</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">groups</span> dana
 <span class="tk-comment"># confirm the group is gone</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-x</span> u:dana invoice.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-x</span> u:dana \
+    <span class="tk-path">/srv/patient-records/today/invoice.txt</span>
 <span class="tk-comment"># also revoke any personal ACL rule</span></div>
 </section>
 
@@ -11912,14 +11948,14 @@ $ setfacl -m u:morgan:rw invoice.txt</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ grep invoice.txt watch.log</div>
+<div class="terminal">$ grep invoice.txt /tmp/watch.log</div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>The Fix: Who Touched It?</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">grep</span> invoice.txt watch.log
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">grep</span> invoice.txt <span class="tk-path">/tmp/watch.log</span>
 <span class="tk-comment"># searches for that filename</span>
 <span class="tk-comment"># shows WHAT and WHEN, never WHO</span>
 <span class="tk-comment"># inotify can&#39;t answer that part</span></div>
@@ -11968,16 +12004,18 @@ $ setfacl -m u:morgan:rw invoice.txt</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ setfacl -m m::r-- record.txt</div>
+<div class="terminal">$ setfacl -m m::r-- \
+    /srv/patient-records/record.txt</div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>The Fix: Too Much Access</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> m::r-- record.txt
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> m::r-- \
+    <span class="tk-path">/srv/patient-records/record.txt</span>
 <span class="tk-comment"># caps every named/group entry at r--</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> record.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> <span class="tk-path">/srv/patient-records/record.txt</span>
 <span class="tk-comment"># doctor&#39;s entry now shows #effective:r--</span></div>
 </section>
 
@@ -12135,8 +12173,8 @@ $ setfacl -m u:morgan:rw invoice.txt</div>
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ sudo useradd -m alex
-$ gpasswd -a alex nurses
-$ gpasswd -a alex billing</div>
+$ sudo gpasswd -a alex nurses
+$ sudo gpasswd -a alex billing</div>
 </div>
 </div>
 </section>
@@ -12145,9 +12183,9 @@ $ gpasswd -a alex billing</div>
 <h4>The Fix: Two Roles</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">useradd</span> <span class="tk-flag">-m</span> alex
 <span class="tk-comment"># creates alex&#39;s account first</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">gpasswd</span> <span class="tk-flag">-a</span> alex nurses
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">gpasswd</span> <span class="tk-flag">-a</span> alex nurses
 <span class="tk-comment"># alex already covers nursing duty</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">gpasswd</span> <span class="tk-flag">-a</span> alex billing
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">gpasswd</span> <span class="tk-flag">-a</span> alex billing
 <span class="tk-comment"># -a only adds; nurses is kept too</span></div>
 </section>
 
@@ -12194,16 +12232,18 @@ $ gpasswd -a alex billing</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ sudo chown alex record.txt</div>
+<div class="terminal">$ sudo chown alex \
+    /srv/patient-records/record.txt</div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>The Fix: Wrong Owner</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">chown</span> alex record.txt
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">chown</span> alex \
+    <span class="tk-path">/srv/patient-records/record.txt</span>
 <span class="tk-comment"># chown changes the owner field only</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-l</span> record.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-l</span> <span class="tk-path">/srv/patient-records/record.txt</span>
 <span class="tk-comment"># confirm alex now owns the file</span></div>
 </section>
 
@@ -12250,22 +12290,26 @@ $ gpasswd -a alex billing</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ ls -l today/shortcut
-$ readlink today/shortcut</div>
+<div class="terminal">$ ls -l /srv/patient-records/today/shortcut
+$ readlink /srv/patient-records/today/shortcut
+$ rm /srv/patient-records/today/shortcut
+$ ln -s /srv/patient-records/today/notes.txt \
+    /srv/patient-records/today/shortcut</div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>The Fix: Broken Symlink</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-l</span> today/shortcut
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-l</span> <span class="tk-path">/srv/patient-records/today/shortcut</span>
 <span class="tk-comment"># l at the start means it&#39;s a symlink</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">readlink</span> today/shortcut
+<span class="tk-prompt">$</span> <span class="tk-cmd">readlink</span> <span class="tk-path">/srv/patient-records/today/shortcut</span>
 <span class="tk-comment"># shows exactly where the link points</span>
 <span class="tk-comment"># outside patient-records: needs fixing</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">rm</span> today/shortcut
+<span class="tk-prompt">$</span> <span class="tk-cmd">rm</span> <span class="tk-path">/srv/patient-records/today/shortcut</span>
 <span class="tk-comment"># removes only the broken link itself</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">ln</span> <span class="tk-flag">-s</span> today/notes.txt today/shortcut
+<span class="tk-prompt">$</span> <span class="tk-cmd">ln</span> <span class="tk-flag">-s</span> <span class="tk-path">/srv/patient-records/today/notes.txt</span> \
+    <span class="tk-path">/srv/patient-records/today/shortcut</span>
 <span class="tk-comment"># relinks it to a real file inside</span></div>
 </section>
 
@@ -12312,7 +12356,9 @@ $ readlink today/shortcut</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ chmod g-w /srv/patient-records/billing</div>
+<div class="terminal">$ chmod g-w /srv/patient-records/billing
+$ setfacl -m u:morgan:rw \
+    /srv/patient-records/today/invoice.txt</div>
 </div>
 </div>
 </section>
@@ -12321,7 +12367,8 @@ $ readlink today/shortcut</div>
 <h4>The Fix: All Can Delete</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">chmod</span> g-w /srv/patient-records/billing
 <span class="tk-comment"># group can no longer write by default</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> u:morgan:rw invoice.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> u:morgan:rw \
+    <span class="tk-path">/srv/patient-records/today/invoice.txt</span>
 <span class="tk-comment"># write granted per file, not per folder</span></div>
 </section>
 
@@ -12423,7 +12470,7 @@ $ readlink today/shortcut</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ inotifywatch -e modify \
+<div class="terminal">$ inotifywatch -r -e modify \
     /srv/patient-records</div>
 </div>
 </div>
@@ -12431,7 +12478,7 @@ $ readlink today/shortcut</div>
 
 <section data-background-color="#0a0a0a">
 <h4>The Fix: Weekly Summary</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">inotifywatch</span> <span class="tk-flag">-e</span> modify \
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">inotifywatch</span> <span class="tk-flag">-r</span> <span class="tk-flag">-e</span> modify \
     /srv/patient-records
 <span class="tk-comment"># runs until Ctrl+C, then prints a table</span>
 <span class="tk-comment"># counts, not a wall of raw log lines</span></div>
@@ -12480,8 +12527,8 @@ $ readlink today/shortcut</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ nohup inotifywait -m -e modify \
-    dir >> watch.log &
+<div class="terminal">$ nohup inotifywait -m -r -e modify \
+    /srv/patient-records >> /tmp/watch.log &
 $ disown</div>
 </div>
 </div>
@@ -12489,8 +12536,8 @@ $ disown</div>
 
 <section data-background-color="#0a0a0a">
 <h4>The Fix: Keep Watching</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">nohup</span> inotifywait <span class="tk-flag">-m</span> <span class="tk-flag">-e</span> modify \
-    /srv/patient-records &gt;&gt; watch.log &amp;
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">nohup</span> inotifywait <span class="tk-flag">-m</span> <span class="tk-flag">-r</span> <span class="tk-flag">-e</span> modify \
+    /srv/patient-records &gt;&gt; <span class="tk-path">/tmp/watch.log</span> &amp;
 <span class="tk-comment"># nohup: ignore the hangup on logout</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">disown</span>
 <span class="tk-comment"># detaches it from this shell fully</span></div>
@@ -12837,16 +12884,16 @@ $ groups morgan dana alex</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ stat record.txt</div>
+<div class="terminal">$ stat /srv/patient-records/record.txt</div>
 </div>
 </div>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>The Fix: Root Bypassed</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">stat</span> record.txt
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">stat</span> <span class="tk-path">/srv/patient-records/record.txt</span>
 <span class="tk-comment"># Modify: shows it really did change</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-l</span> record.txt
+<span class="tk-prompt">$</span> <span class="tk-cmd">ls</span> <span class="tk-flag">-l</span> <span class="tk-path">/srv/patient-records/record.txt</span>
 <span class="tk-comment"># owner unchanged; root wrote through it</span>
 <span class="tk-comment"># DAC (chmod/ACL) never governs root</span>
 <span class="tk-comment"># MAC is the only real answer here</span></div>
@@ -12895,7 +12942,7 @@ $ groups morgan dana alex</div>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ grep invoice.txt watch.log
+<div class="terminal">$ grep invoice.txt /tmp/watch.log
 $ getfacl /srv/patient-records/today
 $ groups morgan dana alex</div>
 </div>
@@ -12904,7 +12951,7 @@ $ groups morgan dana alex</div>
 
 <section data-background-color="#0a0a0a">
 <h4>The Fix: Incident Report</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">grep</span> invoice.txt watch.log
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">grep</span> invoice.txt <span class="tk-path">/tmp/watch.log</span>
 <span class="tk-comment"># confirms WHEN, never WHO</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">getfacl</span> /srv/patient-records/today
 <span class="tk-comment"># lists everyone with real access</span>
