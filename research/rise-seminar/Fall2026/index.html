@@ -2528,6 +2528,22 @@
             </section>
 
             <section data-chapter="11">
+                <h4>Bugs found and fixed: a comparison answer stating the wrong facts</h4>
+                <table style="font-size:0.75em;">
+                    <thead><tr><th>Area</th><th>What went wrong</th><th>Fix</th></tr></thead>
+                    <tbody>
+                        <tr><td>Comparison counts</td><td>An 8-document evidence cap (sized for the LLM prompt) had its array length read as the real count; 23 real CVEs showed as 8</td><td>Added a true <code>countDocuments()</code> query matching each search's own logic, used for what the answer states as fact</td></tr>
+                        <tr><td>Risk score</td><td>Feeding that same unbounded count into the risk formula would let a common-word name (e.g. "Teams") swamp a real CVE with volume alone</td><td>Kept that one weight's own input capped at 8, its original calibration; only the stated fact is uncapped</td></tr>
+                        <tr><td>Stated window</td><td>Given the real window twice in its prompt, the model still stated a 90-day window since June 19 when the real one was 3 days since Sep 14</td><td>Told not to state the day count or date itself; the real window is appended deterministically after generation</td></tr>
+                    </tbody>
+                </table>
+                <p class="bridge" style="margin-top:0.6em;"><b>Lesson:</b> a model told the exact
+                    number can still restate it wrong, the same failure versionCorrectionRewrite
+                    already fixed for a version number. A fix that makes an answer more truthful
+                    can also break something calibrated around the old, capped number.</p>
+            </section>
+
+            <section data-chapter="11">
                 <h4>Retrieval quality: a hosting-location bug</h4>
                 <p class="story">The production server runs in a Frankfurt datacenter.
                     Neither search engine call passed a language or region parameter,
