@@ -419,7 +419,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-16 18:41 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-16 18:55 PT</span>
   </div>
 
   <!--
@@ -11489,25 +11489,26 @@ $ getent group nurses</div>
 </ul>
 </div>
 <div class="col">
-<div class="terminal">$ sudo mkdir -p /srv/patient-records/today \
-    /srv/patient-records/billing
-$ sudo touch /srv/patient-records/record.txt \
-    /srv/patient-records/today/invoice.txt \
-    /srv/patient-records/today/notes.txt
+<div class="terminal">$ sudo apt install -y git
+$ git clone https://github.com/SE4CPS/2026-COMP-175.git
+$ cd 2026-COMP-175/modules/module-4/lab2
+$ sudo cp -r sample-data/* /srv/patient-records/
 $ sudo chown -R $(whoami) /srv/patient-records</div>
 </div>
 </div>
+<p class="source-line">Sample data: <a href="https://github.com/SE4CPS/2026-COMP-175/tree/main/modules/module-4/lab2" target="_blank" rel="noopener">github.com/SE4CPS/2026-COMP-175</a></p>
 </section>
 
 <section data-background-color="#0a0a0a">
 <h4>Create the Sample Files</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">mkdir</span> <span class="tk-flag">-p</span> <span class="tk-path">/srv/patient-records/today</span> \
-    <span class="tk-path">/srv/patient-records/billing</span>
-<span class="tk-comment"># the two subfolders the problems reference</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">touch</span> <span class="tk-path">/srv/patient-records/record.txt</span> \
-    <span class="tk-path">/srv/patient-records/today/invoice.txt</span> \
-    <span class="tk-path">/srv/patient-records/today/notes.txt</span>
-<span class="tk-comment"># every file the problems below reference</span>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> git
+<span class="tk-comment"># not installed on every minimal image</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">git</span> clone <span class="tk-path">https://github.com/SE4CPS/2026-COMP-175.git</span>
+<span class="tk-comment"># pulls the real, synthetic sample files</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">cd</span> <span class="tk-path">2026-COMP-175/modules/module-4/lab2</span>
+<span class="tk-comment"># the folder holding this lab&#39;s data</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">cp</span> <span class="tk-flag">-r</span> sample-data/* <span class="tk-path">/srv/patient-records/</span>
+<span class="tk-comment"># record.txt, today/invoice.txt, notes.txt</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">chown</span> <span class="tk-flag">-R</span> $(whoami) <span class="tk-path">/srv/patient-records</span>
 <span class="tk-comment"># you own it now; setfacl below needs no sudo</span></div>
 </section>
@@ -12356,7 +12357,8 @@ $ ln -s /srv/patient-records/today/notes.txt \
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ chmod g-w /srv/patient-records/billing
+<div class="terminal">$ sudo mkdir -p /srv/patient-records/billing
+$ chmod g-w /srv/patient-records/billing
 $ setfacl -m u:morgan:rw \
     /srv/patient-records/today/invoice.txt</div>
 </div>
@@ -12365,7 +12367,9 @@ $ setfacl -m u:morgan:rw \
 
 <section data-background-color="#0a0a0a">
 <h4>The Fix: All Can Delete</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">chmod</span> g-w /srv/patient-records/billing
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">mkdir</span> <span class="tk-flag">-p</span> <span class="tk-path">/srv/patient-records/billing</span>
+<span class="tk-comment"># the shared billing folder itself</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">chmod</span> g-w /srv/patient-records/billing
 <span class="tk-comment"># group can no longer write by default</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">setfacl</span> <span class="tk-flag">-m</span> u:morgan:rw \
     <span class="tk-path">/srv/patient-records/today/invoice.txt</span>
