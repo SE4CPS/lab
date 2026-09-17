@@ -2040,6 +2040,24 @@
                 </div>
             </section>
 
+            <section data-chapter="7">
+                <h4>Second follow-up: the retry loop, generalized to every role</h4>
+                <table style="font-size:0.78em;">
+                    <thead><tr><th>Role</th><th>Before</th><th>After</th></tr></thead>
+                    <tbody>
+                        <tr><td>Rewriter</td><td>No retry, ever</td><td>Optional: regenerate search terms; a signed-in user can opt in</td></tr>
+                        <tr><td>Retriever</td><td>Exactly one hardcoded retry</td><td>Admin-configurable ceiling; same default reproduces the old behavior</td></tr>
+                        <tr><td>Evaluator</td><td>A malformed response silently read as a real "insufficient" verdict</td><td>Retried up to a ceiling before being accepted</td></tr>
+                        <tr><td>Orchestrator</td><td>Hedge rescue existed only in the single continuous-loop architecture</td><td>Same named, ceilinged check now applies to both</td></tr>
+                    </tbody>
+                </table>
+                <p class="bridge" style="margin-top:0.6em;"><b>Lesson:</b> the previous slide's seam
+                    was one boundary, Retriever meets Evaluator. A framework with four named roles
+                    turns out to have four such boundaries, not one; naming each role already told
+                    us exactly where every checkpoint belonged, before a single line of retry logic
+                    was written.</p>
+            </section>
+
             <section data-chapter="8">
                 <span class="paper-tag">2026 &middot; accepted, unfunded</span>
                 <h3>Distinguishing Technical Problem Solving and General Discontent in Reddit Software Update Discussions</h3>
