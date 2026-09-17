@@ -106,11 +106,45 @@ def est_block_height(inner_html, width_px):
     if li_count:
         notes.append("%d li" % li_count)
 
-    tr_count = len(re.findall(r'<tr\b', body_no_svg))
-    if tr_count:
-        row_h = BASE_FONT * 0.62 * 1.35 + 11  # table font is 0.62em, plus row padding
-        total += tr_count * row_h
-        notes.append("%d tr~%dpx" % (tr_count, tr_count * row_h))
+    # Tables: per-row height, not a flat per-row constant. A cell with a
+    # long sentence (a real shape in this deck's own "bugs found and
+    # fixed" tables) wraps to several lines, and a row's real height is
+    # driven by its tallest cell, not a fixed single-line assumption -
+    # missing this produced a real false negative (a 13-row table with
+    # several paragraph-length cells, never flagged at all).
+    for table in re.finditer(r'<table\b([^>]*)>(.*?)</table>', body_no_svg, re.S):
+        tattrs, tbody = table.group(1), table.group(2)
+        fs_m = re.search(r'font-size:\s*([\d.]+)em', tattrs)
+        table_font = BASE_FONT * (float(fs_m.group(1)) if fs_m else 0.62)
+        table_line_px = table_font * 1.35
+        rows = re.findall(r'<tr\b[^>]*>(.*?)</tr>', tbody, re.S)
+        first_row_cols = len(re.findall(r'<t[dh]\b', rows[0])) if rows else 0
+        if first_row_cols > 5:
+            # A wide matrix table (many narrow columns: a year/checkmark
+            # grid, say) rather than a 2-3 column "area / explanation /
+            # fix" table. Equal-width-per-column is a reasonable estimate
+            # for the latter but badly wrong for the former: most columns
+            # here hold a single digit or checkmark, so one column (often
+            # "Result"/"Area") gets far more real width than an equal
+            # share, and treating it as equal-width forces short labels
+            # into a wrongly-narrow column, wrapping text that would
+            # never actually wrap. Treated as fixed compact rows instead.
+            table_h = len(rows) * (table_line_px + 11)
+            total += table_h
+            notes.append("table(%d rows, wide matrix, fixed-row est)~%dpx" % (len(rows), table_h))
+        else:
+            table_h = 0
+            for row in rows:
+                cells = re.findall(r'<t[dh]\b[^>]*>(.*?)</t[dh]>', row, re.S)
+                n = max(1, len(cells))
+                col_w = width_px / n
+                max_lines = 1
+                for c in cells:
+                    txt = strip_tags(c)
+                    max_lines = max(max_lines, est_text_lines(txt, col_w))
+                table_h += max_lines * table_line_px + 11  # + row padding
+            total += table_h
+            notes.append("table(%d rows)~%dpx" % (len(rows), table_h))
 
     return total, notes
 

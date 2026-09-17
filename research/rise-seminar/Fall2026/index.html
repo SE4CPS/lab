@@ -2415,23 +2415,79 @@
             </section>
 
             <section data-chapter="11">
-                <table style="font-size:0.7em;">
+                <h4>Bugs found and fixed: reproducing the literature's own failures</h4>
+                <table style="font-size:0.75em;">
                     <thead><tr><th>Area</th><th>What went wrong</th><th>Fix</th></tr></thead>
                     <tbody>
                         <tr><td>Rewriter</td><td>Multi-Agent RAG paper's exact bug, reproduced: rewrite <i>replaced</i> the original search terms</td><td>Union fetch: search both phrasings, always</td></tr>
                         <tr><td>Evaluator</td><td>Model would answer on zero evidence rather than decline</td><td>Hallucination-Resistant RAG paper's Stage 1/2 abstention, hard-coded, not prompted</td></tr>
+                    </tbody>
+                </table>
+                <p class="bridge" style="margin-top:0.6em;"><b>Lesson:</b> a paper's own documented
+                    failure mode isn't hypothetical; it recurs in exactly the same shape the moment
+                    you actually build the thing. Both fixes are what each paper's own follow-up
+                    already said, not a novel fix re-derived from scratch.</p>
+            </section>
+
+            <section data-chapter="11">
+                <h4>Bugs found and fixed: getting retrieval to match, round 1</h4>
+                <table style="font-size:0.7em;">
+                    <thead><tr><th>Area</th><th>What went wrong</th><th>Fix</th></tr></thead>
+                    <tbody>
                         <tr><td>Retrieval match</td><td>Keyword OR-match hit generic terms ("update", "version") on every query</td><td>Stoplist generic terms before matching</td></tr>
-                        <tr><td>Retrieval match, round 2</td><td>Stoplisting fillers wasn't enough: a real but generic technical word ("replication") isn't exclusive to any one product, so OR-matching it alone pulled in unrelated subreddits (Ubiquiti, PFSense, Home Assistant) that only ever said the same word for something else entirely</td><td>When a vendor is resolved, its name becomes the required title match, not one option among several ORed-in words; the vendor's own subreddit also gets the same guaranteed-inclusion treatment a resolved category already had</td></tr>
-                        <tr><td>Retrieval scope</td><td>Every question fanned out to every search tool, so a "latest version" query and a "did the update break X" query pulled the same mix; a broad community-thread match could outrank the one release note that actually answered it</td><td>Classify intent (version / CVE / patch / experiential) before retrieval; each intent maps to only the tools that can answer it, and a version question additionally pins the release-notes lookup to the resolved vendor name rather than the model's own query words</td></tr>
+                        <tr><td>Retrieval match, round 2</td><td>Stoplisting fillers wasn't enough: a real but generic technical word ("replication") isn't exclusive to any one product, so OR-matching it alone pulled in unrelated subreddits (Ubiquiti, PFSense, Home Assistant) that only ever said the same word for something else entirely</td><td>A resolved vendor's name becomes the required title match, not one option among several ORed-in words; its subreddit gets the same guaranteed-inclusion treatment a resolved category already had</td></tr>
+                    </tbody>
+                </table>
+                <p class="bridge" style="margin-top:0.6em;"><b>Already a pattern:</b> the "round 2"
+                    fix didn't replace the stoplist, it narrowed what "a match" is even allowed to
+                    mean, from any OR-ed word to the resolved vendor's own name specifically.</p>
+            </section>
+
+            <section data-chapter="11">
+                <h4>Bugs found and fixed: getting retrieval to match, round 2</h4>
+                <table style="font-size:0.68em;">
+                    <thead><tr><th>Area</th><th>What went wrong</th><th>Fix</th></tr></thead>
+                    <tbody>
+                        <tr><td>Retrieval scope</td><td>Every question fanned out to every search tool, so a "latest version" query and a "did the update break X" query pulled the same mix; a broad community-thread match could outrank the one release note that actually answered it</td><td>Classify intent before retrieval; each intent maps to only the tools that can answer it, and a version question pins the release-notes lookup to the resolved vendor name</td></tr>
                         <tr><td>Retrieval design</td><td>Embeddings blur exact identifiers: <code>8.0.44</code> vs <code>8.0.45</code></td><td>Lexical/metadata match stays primary, not semantic</td></tr>
-                        <tr><td>Runtime</td><td>Node 12.22.9 (EOL 2022) has no native <code>fetch</code>; SDK crashed on first call</td><td>Hand-rolled HTTP via <code>node-fetch</code></td></tr>
-                        <tr><td>Deploy</td><td>New LLM-client dependency added locally; <code>git pull</code> alone left server crash-looping</td><td><code>npm install</code> required after every pull</td></tr>
-                        <tr><td>Compute</td><td>2GB production VM cannot run even a small local LLM</td><td>Hosted API call from server, no local inference</td></tr>
-                        <tr><td>Memory</td><td>A new eval-tooling dependency, required eagerly at server startup rather than only where it's used, added ~110MB RSS to every process; on a memory-capped pm2 process this tripped a crash/restart loop every 30s, surfacing only as random request failures with no error-log trace and no OOM message</td><td>Lazy-require the dependency inside the one function that calls it; raise the memory ceiling too, as a margin, not a substitute for the fix</td></tr>
-                        <tr><td>Pricing</td><td>No free tier for testing; every tool-use round-trip re-bills, and comparing 3 presets on one question triples it</td><td>Free tiers (Ollama local, Gemini/Groq) for testing; pay only for real evaluation runs</td></tr>
                         <tr><td>Vendor gate</td><td>Deterministic pre-check matched only exact tracked product names; a generic category ("SQL", "LLM") resolved to nothing and abstained before any search ran</td><td>Category fallback grounded in the real product-type field, not a guessed synonym list</td></tr>
                     </tbody>
                 </table>
+                <p class="bridge" style="margin-top:0.6em;"><b>Lesson:</b> a precision bug rarely gets
+                    fixed once. Each fix narrows the false-positive space, and the next bug is
+                    usually one level more specific than the last: a real word that's still not
+                    exclusive enough, a real vendor that's still not the only word searched, a tool
+                    that's still offered when it can't possibly answer the question.</p>
+            </section>
+
+            <section data-chapter="11">
+                <h4>Bugs found and fixed: running it for real, the runtime</h4>
+                <table style="font-size:0.75em;">
+                    <thead><tr><th>Area</th><th>What went wrong</th><th>Fix</th></tr></thead>
+                    <tbody>
+                        <tr><td>Runtime</td><td>Node 12.22.9 (EOL 2022) has no native <code>fetch</code>; SDK crashed on first call</td><td>Hand-rolled HTTP via <code>node-fetch</code></td></tr>
+                        <tr><td>Deploy</td><td>New LLM-client dependency added locally; <code>git pull</code> alone left server crash-looping</td><td><code>npm install</code> required after every pull</td></tr>
+                        <tr><td>Compute</td><td>2GB production VM cannot run even a small local LLM</td><td>Hosted API call from server, no local inference</td></tr>
+                    </tbody>
+                </table>
+                <p class="bridge" style="margin-top:0.6em;">None of these are model or architecture
+                    bugs. They're the actual deploy pipeline: an old runtime, a pull with no install
+                    step, hardware too small for the naive approach.</p>
+            </section>
+
+            <section data-chapter="11">
+                <h4>Bugs found and fixed: running it for real, the cost of it</h4>
+                <table style="font-size:0.75em;">
+                    <thead><tr><th>Area</th><th>What went wrong</th><th>Fix</th></tr></thead>
+                    <tbody>
+                        <tr><td>Memory</td><td>A new eval-tooling dependency, required eagerly at server startup rather than only where it's used, added ~110MB RSS to every process; on a memory-capped pm2 process this tripped a crash/restart loop every 30s, with no error-log trace and no OOM message</td><td>Lazy-require the dependency inside the one function that calls it; raise the memory ceiling too, as a margin, not a substitute for the fix</td></tr>
+                        <tr><td>Pricing</td><td>No free tier for testing; every tool-use round-trip re-bills, and comparing 3 presets on one question triples it</td><td>Free tiers (Ollama local, Gemini/Groq) for testing; pay only for real evaluation runs</td></tr>
+                    </tbody>
+                </table>
+                <p class="bridge" style="margin-top:0.6em;"><b>Lesson:</b> getting the algorithm
+                    right and getting it to stay up, affordably, are different failure surfaces.
+                    Neither one implies the other: a correct answer from a crashed server, or a
+                    running server nobody can afford to test against, both fail the same demo.</p>
             </section>
 
             <section data-chapter="11">
