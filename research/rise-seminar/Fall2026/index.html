@@ -305,7 +305,7 @@
                 </div>
                 <h3>Software Release Patterns: when is it a good time to update a component?</h3>
                 <p class="venue">S. Berhe, M. Maynard, F. Khomh &middot; Procedia Computer Science 170:618&ndash;625 &middot; EDI40 2020, Warsaw</p>
-                <p class="story"><b>Retriever:</b> changelogs, from human to bots<br>
+                <p class="story"><b>Retriever:</b> changelogs, from human to static bots<br>
                 <b>Evaluator:</b> aggregate risk, from any time to a stable time</p>
             </section>
 
@@ -351,7 +351,7 @@
 <rect x="900.5" y="127" width="6.5" height="6.5" fill="#fff"></rect>
 <rect x="913" y="127" width="6.5" height="6.5" fill="#fff"></rect>
 <text x="910" y="180" text-anchor="middle" font-size="27" font-weight="700" fill="#1a1a1a">Evaluator</text>
-<text x="910" y="226" text-anchor="middle" font-size="17" fill="#565656">Automated · static</text>
+<text x="910" y="226" text-anchor="middle" font-size="17" fill="#565656">Automated</text>
 <text x="910" y="259" text-anchor="middle" font-size="19" fill="#1a1a1a">aggregate risk (2020)</text>
 <rect x="1065" y="92" width="220" height="110" rx="10" fill="#fff" stroke="#ccc" stroke-width="2.2" stroke-dasharray="6 4"></rect>
 <circle cx="1175" cy="119" r="9.5" fill="#c4c4c4"></circle>
@@ -371,16 +371,22 @@
                 <h4>Method</h4>
                 <div class="twocol">
                     <div>
+                        <p class="accent" style="margin:0 0 0.15em; font-size:0.8em;">Retriever</p>
                         <ul class="tight">
-                            <li>Sources: GitHub, NIST NVD, Wikipedia + more</li>
-                            <li>~20 bots automatically query software updates</li>
-                            <li>3,742 components, 8,537 versions, 2018&ndash;2019</li>
-                            <li>Group by day, week, month, quarter</li>
+                            <li>GitHub, NIST NVD, Wikipedia</li>
+                            <li>~20 bots query updates</li>
+                            <li>3,742 components, 2018&ndash;2019</li>
+                        </ul>
+                        <p class="accent" style="margin:0.7em 0 0.15em; font-size:0.8em;">Evaluator</p>
+                        <ul class="tight">
+                            <li>Aggregate, not one component</li>
+                            <li>By date: day to quarter</li>
+                            <li>By type: beta, prod, CVE</li>
                         </ul>
                     </div>
                     <div>
                         <svg viewBox="0 0 420 210" style="width:100%;max-width:480px;height:auto;" role="img"
-                            aria-label="Method: feeds to versions to time-buckets to a low-risk window">
+                            aria-label="Method: feeds to versions to date and update-type buckets to a low-risk window">
                             <defs><marker id="m1Arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7"
                                 orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#777"></path></marker></defs>
                             <g font-size="11" text-anchor="middle">
@@ -389,7 +395,7 @@
                                 <rect x="8" y="90" width="130" height="40" rx="5" fill="#fff" stroke="#333"></rect>
                                 <text x="73" y="107">8,537 versions</text><text x="73" y="122" font-size="10" fill="#555">3,742 components</text>
                                 <rect x="8" y="160" width="130" height="40" rx="5" fill="#fff" stroke="#333"></rect>
-                                <text x="73" y="177">bucket by</text><text x="73" y="191" font-size="10" fill="#555">day / month</text>
+                                <text x="73" y="177">bucket by</text><text x="73" y="191" font-size="10" fill="#555">date + update type</text>
                                 <rect x="230" y="60" width="180" height="90" rx="6" fill="#fafafa" stroke="#ccc"></rect>
                                 <text x="320" y="80" font-size="10" fill="#555">release-rate curve</text>
                                 <polyline points="245,120 265,105 285,95 305,110 325,132 345,128 365,118 385,124"
@@ -449,6 +455,27 @@
                             </g>
                         </svg>
                         <figcaption>By weekday &middot; peak Wed&ndash;Thu</figcaption></figure>
+                </div>
+            </section>
+
+            <section data-chapter="1" data-background-color="#ffffff">
+                <h4>Result: update type</h4>
+                <div class="twocol">
+                    <div>
+                        <ul class="tight">
+                            <li>First versions ship as beta</li>
+                            <li>One CVE hits many majors</li>
+                            <li>OS release cadence is reliable</li>
+                            <li>Databases: hard to forecast</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <svg viewBox="0 0 440 175" style="width:100%;max-width:520px;height:auto;" role="img"
+                            aria-label="Releases by channel in the 2018 to 2019 data set: CVE 6,956, Prod 1,202, Beta 375">
+                            <text x="44" y="48" text-anchor="end" font-size="14" fill="#1a1a1a">CVE</text><rect x="54" y="30" width="290" height="26" rx="4" fill="#767676"></rect><text x="352" y="48" font-size="14" fill="#1a1a1a">6,956</text><text x="44" y="94" text-anchor="end" font-size="14" fill="#1a1a1a">Prod</text><rect x="54" y="76" width="50" height="26" rx="4" fill="#767676"></rect><text x="112" y="94" font-size="14" fill="#1a1a1a">1,202</text><text x="44" y="140" text-anchor="end" font-size="14" fill="#1a1a1a">Beta</text><rect x="54" y="122" width="16" height="26" rx="4" fill="#767676"></rect><text x="78" y="140" font-size="14" fill="#1a1a1a">375</text>
+                        </svg>
+                        <p class="src">Releases by channel, Jan 2018 to Jul 2019 (Berhe et al., 2020, Sec. 2.3)</p>
+                    </div>
                 </div>
             </section>
 
