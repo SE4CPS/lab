@@ -156,7 +156,7 @@
 
   <div class="quick-links">
     <a href="./#/module-toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-21 12:52 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-21 12:59 PT</span>
   </div>
 
   <div class="reveal">
@@ -4916,19 +4916,21 @@ INSERT INTO rentals(rider_id, bike_id, pickup_station_id, pickup_ts, dropoff_sta
           <div class="split">
             <div class="left">
               <ul>
-                <li><code>JOIN</code> without a keyword means <strong>INNER JOIN</strong></li>
-                <li>Always include <code>ON</code> with the key match</li>
-                <li>Use table aliases for readability</li>
+                <li><code>JOIN</code> alone means <strong>INNER JOIN</strong></li>
+                <li><code>ON</code> keeps only matching pairs</li>
+                <li>No <code>ON</code>: error, or all pairs</li>
+                <li>Always add <code>ON</code>: the key match</li>
+                <li>Use table aliases for clarity</li>
               </ul>
             </div>
             <div class="right">
-              <pre><code class="language-sql">SELECT
+              <pre><code class="language-sql" style="font-size: 13pt;">SELECT
   r.rental_id,
   rd.name AS rider_name,
   r.pickup_ts
 FROM rentals r
 JOIN riders rd
-  ON r.rider_id = rd.rider_id
+  ON r.rider_id = rd.rider_id  -- keep matches
 ORDER BY r.rental_id;</code></pre>
             </div>
           </div>
