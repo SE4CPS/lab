@@ -419,7 +419,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-21 14:25 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-21 15:02 PT</span>
   </div>
 
   <!--
@@ -15813,7 +15813,7 @@ $ pkill -f &quot;http.server|ssh -N&quot;
 <ol style="line-height: 1.8;">
 <li><a href="./#/hw1-q1" target="_self">Homework 1</a> &amp; <a href="./#/lab1-q1" target="_self">Lab 1</a></li>
 <li><a href="./#/hw2-q1" target="_self">Homework 2</a> &amp; <a href="./#/lab2-setup" target="_self">Lab 2</a></li>
-<li><a href="./#/hw3-policy" target="_self">Homework 3</a></li>
+<li><a href="./#/hw3-policy" target="_self">Homework 3</a> &amp; <a href="./#/lab3-setup" target="_self">Lab 3</a></li>
 </ol>
 </div>
 <div class="col" style="text-align:center;">
@@ -16994,6 +16994,378 @@ AI used: Yes, asked how
 </div>
 <div class="col">
 <svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:260px;display:block;margin:0 auto;"><rect x="10" y="10" width="240" height="180" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="130.0" y="110.00000000000001" text-anchor="middle" font-size="64">&#10067;</text><text x="130.0" y="160.0" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Your Answer</text></svg>
+</div>
+</div>
+</section>
+
+
+<section id="lab3-setup" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Lab 3: Registrar Server Setup</h4>
+<ul>
+<li>Kali = admin workstation</li>
+<li>Ubuntu VM = registrar server</li>
+<li>Roles: CLERK, LEAD, AUDITOR</li>
+<li>Groups: registrars/auditors</li>
+<li>No CLI editor: use cat to edit</li>
+<li>Show your prompt in each shot</li>
+<li>State AI use on each answer</li>
+</ul>
+</div>
+<div class="col">
+<svg viewBox="0 0 430 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:520px;display:block;margin:0 auto;" role="img" aria-label="Kali admin workstation connects over ssh to the Ubuntu registrar server, which holds the /srv/registrar folders">
+<rect x="10" y="80" width="120" height="100" rx="10" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/>
+<text x="70" y="122" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" font-weight="bold" fill="#eee">Kali</text>
+<text x="70" y="148" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">admin</text>
+<line x1="138" y1="130" x2="184" y2="130" stroke="#777" stroke-width="3"/>
+<polygon points="184,123 194,130 184,137" fill="#777"/>
+<text x="166" y="116" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" font-weight="bold" fill="#333">ssh</text>
+<rect x="200" y="10" width="220" height="240" rx="10" fill="#2a2a2a" stroke="#FF671D" stroke-width="2.5"/>
+<text x="310" y="42" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" font-weight="bold" fill="#eee">Ubuntu: /srv/registrar</text>
+<text x="222" y="80" font-size="14" font-family="Consolas, monospace" fill="#eee">grades.csv</text>
+<text x="222" y="108" font-size="14" font-family="Consolas, monospace" fill="#eee">archive/</text>
+<text x="222" y="136" font-size="14" font-family="Consolas, monospace" fill="#eee">reports/</text>
+<text x="222" y="164" font-size="14" font-family="Consolas, monospace" fill="#eee">shared/</text>
+<text x="222" y="192" font-size="14" font-family="Consolas, monospace" fill="#eee">dropbox/</text>
+<text x="222" y="220" font-size="14" font-family="Consolas, monospace" fill="#eee">public/</text>
+</svg>
+</div>
+</div>
+</section>
+
+<section id="lab3-q1" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Lab 3, Q1: Get the Lab Setup</h4>
+<ul>
+<li>Clone or pull the course repo</li>
+<li>Run lab3/setup.sh with sudo</li>
+<li>Find CLERK, LEAD, AUDITOR</li>
+</ul>
+<div class="terminal" style="font-size:0.85rem;">$ sudo apt install -y git
+$ git clone \
+  https://github.com/SE4CPS/2026-COMP-175.git \
+  ~/2026-COMP-175
+$ git -C ~/2026-COMP-175 pull
+$ sudo bash \
+  ~/2026-COMP-175/modules/module-5/lab3/setup.sh
+$ getent group registrars auditors
+$ ls -l /srv/registrar</div>
+</div>
+<div class="col">
+<h4>Evidence</h4>
+<ul>
+<li>SETUP OK line and Ubuntu IP</li>
+<li>getent group: the 3 accounts</li>
+<li>ls -l /srv/registrar</li>
+</ul>
+<p class="source-line">Screenshot from: Ubuntu VM</p>
+</div>
+</div>
+</section>
+
+<section id="lab3-q2" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Lab 3, Q2: Find Stale Files</h4>
+<ul>
+<li>Find files older than 180 days</li>
+<li>Regular files, all subfolders</li>
+<li>Save list, count, add sizes</li>
+</ul>
+<div class="terminal" style="font-size:0.85rem;">$ sudo find /srv/registrar/archive \
+  -type f -mtime +180 \
+  -printf '%s %TY-%Tm-%Td %p\n' \
+  &gt; ~/stale.txt
+$ cat ~/stale.txt
+$ wc -l &lt; ~/stale.txt
+$ awk '{s+=$1} END {print s}' ~/stale.txt</div>
+</div>
+<div class="col">
+<h4>Evidence</h4>
+<ul>
+<li>stale.txt: size, date, path</li>
+<li>The file count</li>
+<li>Total bytes of those files</li>
+<li>A # comment explaining it</li>
+</ul>
+<p class="source-line">Screenshot from: Ubuntu VM</p>
+</div>
+</div>
+</section>
+
+<section id="lab3-q3" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Lab 3, Q3: Links and Inodes</h4>
+<ul>
+<li>Symlink + hard link as CLERK</li>
+<li>Compare inodes and link counts</li>
+<li>Delete original, cat both</li>
+</ul>
+<div class="terminal" style="font-size:0.85rem;">$ cd /srv/registrar/reports
+$ sudo -u CLERK ln -s summary.txt summary-sym.txt
+$ sudo -u CLERK ln summary.txt summary-hard.txt
+$ ls -li
+$ sudo -u CLERK rm summary.txt
+$ ls -li
+$ cat summary-hard.txt summary-sym.txt</div>
+</div>
+<div class="col">
+<h4>Evidence</h4>
+<ul>
+<li>ls -li before the delete</li>
+<li>ls -li and cat after</li>
+<li>A # comment explaining it</li>
+</ul>
+<p class="source-line">Screenshot from: Ubuntu VM</p>
+</div>
+</div>
+</section>
+
+<section id="lab3-q4" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Lab 3, Q4: Shared and Drop Folders</h4>
+<ul>
+<li>shared/: test, then set 2770</li>
+<li>dropbox/: sticky bit, 1777</li>
+<li>CLERK can't rm LEAD's file</li>
+</ul>
+<div class="terminal" style="font-size:0.85rem;">$ sudo -u CLERK touch /srv/registrar/shared/before.txt
+$ sudo chmod 2770 /srv/registrar/shared
+$ sudo -u CLERK touch /srv/registrar/shared/after.txt
+$ sudo ls -l /srv/registrar/shared
+$ sudo chmod 1777 /srv/registrar/dropbox
+$ sudo -u LEAD touch /srv/registrar/dropbox/lead.txt
+$ sudo -u CLERK rm /srv/registrar/dropbox/lead.txt
+$ ls -ld /srv/registrar/shared /srv/registrar/dropbox</div>
+</div>
+<div class="col">
+<h4>Evidence</h4>
+<ul>
+<li>Group before and after 2770</li>
+<li>The rm error message</li>
+<li>ls -ld on both folders</li>
+<li>A # comment explaining it</li>
+</ul>
+<p class="source-line">Screenshot from: Ubuntu VM</p>
+</div>
+</div>
+</section>
+
+<section id="lab3-q5" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Lab 3, Q5: ACL and the Mask</h4>
+<ul>
+<li>AUDITOR denied, then granted</li>
+<li>Owner, group, mode unchanged</li>
+<li>Mask --- cancels the grant</li>
+</ul>
+<div class="terminal" style="font-size:0.85rem;">$ sudo -u AUDITOR cat /srv/registrar/grades.csv
+$ sudo setfacl -m u:AUDITOR:r-- \
+  /srv/registrar/grades.csv
+$ sudo -u AUDITOR cat /srv/registrar/grades.csv
+$ getfacl /srv/registrar/grades.csv
+$ ls -l /srv/registrar/grades.csv
+$ sudo setfacl -m m::--- /srv/registrar/grades.csv
+$ getfacl /srv/registrar/grades.csv
+$ sudo -u AUDITOR cat /srv/registrar/grades.csv
+$ sudo setfacl -m m::r-- /srv/registrar/grades.csv
+$ sudo -u AUDITOR cat /srv/registrar/grades.csv</div>
+</div>
+<div class="col">
+<h4>Evidence</h4>
+<ul>
+<li>cat result at each step</li>
+<li>getfacl with #effective</li>
+<li>ls -l showing the +</li>
+<li>A # comment explaining it</li>
+</ul>
+<p class="source-line">Screenshot from: Ubuntu VM</p>
+</div>
+</div>
+</section>
+
+<section id="lab3-q6" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Lab 3, Q6: One-Script sudo</h4>
+<ul>
+<li>Group registrars: one script</li>
+<li>Write with cat, check, install</li>
+<li>CLERK: script ok, cat denied</li>
+</ul>
+<div class="terminal" style="font-size:0.85rem;">$ cat &gt; /tmp/90-registrar-backup
+# type this line, then Enter and Ctrl+D:
+# %registrars ALL=(root) /usr/local/bin/backup-grades.sh
+$ sudo visudo -cf /tmp/90-registrar-backup
+$ sudo install -m 0440 \
+  /tmp/90-registrar-backup \
+  /etc/sudoers.d/90-registrar-backup
+$ sudo cat /etc/sudoers.d/90-registrar-backup
+$ sudo visudo -c
+$ su - CLERK
+$ sudo -l
+$ sudo /usr/local/bin/backup-grades.sh
+$ sudo cat /etc/shadow
+$ exit</div>
+</div>
+<div class="col">
+<h4>Evidence</h4>
+<ul>
+<li>The sudoers.d file contents</li>
+<li>visudo -c says parsed OK</li>
+<li>sudo -l, run, and the denial</li>
+<li>A # comment explaining it</li>
+</ul>
+<p class="source-line">Screenshot from: Ubuntu VM</p>
+</div>
+</div>
+</section>
+
+<section id="lab3-q7" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Lab 3, Q7: Watch and Log</h4>
+<ul>
+<li>Watch the tree, log with time</li>
+<li>Keep it running after logout</li>
+<li>Cause 3 events as 2 users</li>
+</ul>
+<div class="terminal" style="font-size:0.85rem;">$ sudo nohup inotifywait -m -r \
+  -e create,modify,delete \
+  --timefmt '%F %T' \
+  --format '%T %w%f %e' \
+  /srv/registrar \
+  &gt;&gt; /tmp/registrar-watch.log 2&gt;&amp;1 &amp;
+$ sudo -u LEAD sh -c \
+  'cat &gt;&gt; /srv/registrar/grades.csv'
+# type 1006,COMP-175,A then Enter, Ctrl+D
+$ sudo -u CLERK touch /srv/registrar/reports/tmp.txt
+$ sudo -u CLERK rm /srv/registrar/reports/tmp.txt
+$ cat /tmp/registrar-watch.log
+$ pgrep -a inotifywait</div>
+</div>
+<div class="col">
+<h4>Evidence</h4>
+<ul>
+<li>Log lines with time stamps</li>
+<li>CREATE, MODIFY, DELETE shown</li>
+<li>pgrep shows the watcher</li>
+<li>A # comment explaining it</li>
+</ul>
+<p class="source-line">Screenshot from: Ubuntu VM</p>
+</div>
+</div>
+</section>
+
+<section id="lab3-q8" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Lab 3, Q8: Runaway Process</h4>
+<ul>
+<li>CLERK runs the report job</li>
+<li>Find it, renice it to 19</li>
+<li>AUDITOR can't kill; CLERK can</li>
+</ul>
+<div class="terminal" style="font-size:0.85rem;">$ sudo -u CLERK nohup \
+  /opt/registrar/report-job.sh \
+  &gt; /dev/null 2&gt;&amp;1 &amp;
+$ ps -o pid,ni,pcpu,user,cmd -u CLERK
+$ sudo renice -n 19 -p PID
+$ ps -o pid,ni,pcpu,user,cmd -p PID
+$ sudo -u AUDITOR kill PID
+$ sudo -u CLERK kill PID
+$ pgrep -af report-job.sh</div>
+</div>
+<div class="col">
+<h4>Evidence</h4>
+<ul>
+<li>ps before and after renice</li>
+<li>The kill denied message</li>
+<li>pgrep shows it is gone</li>
+<li>A # comment explaining it</li>
+</ul>
+<p class="source-line">Screenshot from: Ubuntu VM</p>
+</div>
+</div>
+</section>
+
+<section id="lab3-q9" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Lab 3, Q9: SSH Keys From Kali</h4>
+<ul>
+<li>Kali: key, copy, log in</li>
+<li>Ubuntu: passwords off</li>
+<li>Kali: password login fails</li>
+</ul>
+<div class="terminal" style="font-size:0.85rem;"># Kali
+$ ssh-keygen -t ed25519
+$ ssh-copy-id LEAD@UBUNTU_IP
+$ eval "$(ssh-agent -s)"
+$ ssh-add
+$ ssh LEAD@UBUNTU_IP 'hostname; whoami'
+# Ubuntu (keep a 2nd session open)
+$ cat &gt; /tmp/10-lab.conf
+# type 2 lines, Enter after each, Ctrl+D:
+# PasswordAuthentication no
+# PermitRootLogin no
+$ sudo install -m 0644 /tmp/10-lab.conf \
+  /etc/ssh/sshd_config.d/10-lab.conf
+$ sudo sshd -t
+$ sudo systemctl reload ssh
+$ sudo sshd -T | grep -Ei '^(password|permitroot)'
+# Kali again
+$ ssh -o PubkeyAuthentication=no \
+  LEAD@UBUNTU_IP</div>
+</div>
+<div class="col">
+<h4>Evidence</h4>
+<ul>
+<li>Kali: key login, hostname</li>
+<li>Kali: Permission denied line</li>
+<li>Ubuntu: sshd -T settings</li>
+<li>A # comment explaining it</li>
+</ul>
+<p class="source-line">Screenshot from: Kali and Ubuntu</p>
+</div>
+</div>
+</section>
+
+<section id="lab3-q10" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Lab 3, Q10: Tunnel to a Local Page</h4>
+<ul>
+<li>Ubuntu: serve public/ on 8000</li>
+<li>Kali: direct curl must fail</li>
+<li>Kali: tunnel, then curl 9000</li>
+</ul>
+<div class="terminal" style="font-size:0.85rem;"># Ubuntu
+$ python3 -m http.server 8000 \
+  --bind 127.0.0.1 \
+  --directory /srv/registrar/public &amp;
+$ sudo ss -tlnp | grep 8000
+# Kali
+$ curl -m 5 http://UBUNTU_IP:8000
+$ ssh -N -L 9000:localhost:8000 \
+  LEAD@UBUNTU_IP
+# a 2nd Kali terminal
+$ curl http://localhost:9000</div>
+</div>
+<div class="col">
+<h4>Evidence</h4>
+<ul>
+<li>Ubuntu: ss shows 127.0.0.1</li>
+<li>Kali: failed direct curl</li>
+<li>Kali: page text via tunnel</li>
+<li>A # comment explaining it</li>
+</ul>
+<p class="source-line">Screenshot from: Kali and Ubuntu</p>
 </div>
 </div>
 </section>
