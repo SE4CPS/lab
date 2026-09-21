@@ -156,7 +156,7 @@
 
   <div class="quick-links">
     <a href="./#/module-toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-04 12:03 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-21 12:52 PT</span>
   </div>
 
   <div class="reveal">
@@ -5343,13 +5343,15 @@ WHERE rd.rider_id IS NULL;</code></pre>
           <div class="split">
             <div class="left">
               <ul>
-                <li>If the join condition is missing or incorrect, rows multiply</li>
-                <li>This is how dashboards get “too many rows”</li>
-                <li>Good habit: sanity check counts</li>
+                <li>Missing ON: error or all pairs</li>
+                <li>A wrong ON returns wrong rows</li>
+                <li>Sanity check the row counts</li>
               </ul>
             </div>
             <div class="right">
-              <pre><code class="language-sql">-- Bad idea (cross join effect):
+              <pre><code class="language-sql">-- No ON condition:
+--   PostgreSQL: syntax error
+--   SQLite: runs as a cross join
 -- SELECT ... FROM rentals r JOIN riders rd;
 
 -- Good:
@@ -5359,6 +5361,203 @@ SELECT COUNT(*) FROM rentals r JOIN riders rd
             </div>
           </div>
         </section>
+
+        <!-- JOIN without ON: what the DBMS does conceptually -->
+        <section>
+          <h3>JOIN without ON: what the DBMS does</h3>
+          <svg width="100%" height="330" viewBox="0 0 1200 330" role="img"
+            aria-label="Conceptual join steps: pair all rows, filter with ON, return survivors">
+            <rect x="40" y="60" width="330" height="130" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="205" y="105" text-anchor="middle" font-size="22" fill="rgba(255,255,255,0.92)">1. Pair every row</text>
+            <text x="205" y="140" text-anchor="middle" font-size="18" fill="rgba(255,255,255,0.75)">of A with every row of B</text>
+            <text x="205" y="170" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.6)">(Cartesian product, A x B)</text>
+            <line x1="374" y1="125" x2="422" y2="125" stroke="rgba(255,255,255,0.4)" stroke-width="4" />
+            <polygon points="426,125 411,117 411,133" fill="rgba(255,255,255,0.4)" />
+            <rect x="430" y="60" width="330" height="130" rx="16" fill="rgba(255,103,29,0.12)"
+              stroke="#FF671D" stroke-width="3" />
+            <text x="595" y="105" text-anchor="middle" font-size="22" fill="rgba(255,255,255,0.92)">2. Keep pairs where</text>
+            <text x="595" y="140" text-anchor="middle" font-size="22" fill="rgba(255,255,255,0.92)">ON is true</text>
+            <text x="595" y="170" text-anchor="middle" font-size="16" fill="rgba(255,255,255,0.6)">(the filter)</text>
+            <line x1="764" y1="125" x2="812" y2="125" stroke="rgba(255,255,255,0.4)" stroke-width="4" />
+            <polygon points="816,125 801,117 801,133" fill="rgba(255,255,255,0.4)" />
+            <rect x="820" y="60" width="330" height="130" rx="16" fill="rgba(255,255,255,0.06)"
+              stroke="rgba(255,255,255,0.25)" stroke-width="2" />
+            <text x="985" y="105" text-anchor="middle" font-size="22" fill="rgba(255,255,255,0.92)">3. Return the</text>
+            <text x="985" y="140" text-anchor="middle" font-size="22" fill="rgba(255,255,255,0.92)">surviving pairs</text>
+            <text x="600" y="250" text-anchor="middle" font-size="22" fill="#FF671D">No ON means step 2 never happens.</text>
+            <text x="600" y="285" text-anchor="middle" font-size="19" fill="rgba(255,255,255,0.8)">Every pair survives, so rows = rows in A x rows in B.</text>
+          </svg>
+        </section>
+
+        <section>
+          <h3>Cartesian product: row counts</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>rentals has 3 rows</li>
+                <li>riders has 4 rows</li>
+                <li>No ON: 3 x 4 = 12 rows</li>
+                <li>With ON: 3 rows</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size: 13pt;">SELECT COUNT(*) FROM rentals;   -- 3
+SELECT COUNT(*) FROM riders;    -- 4
+
+SELECT COUNT(*)
+FROM rentals CROSS JOIN riders; -- 12
+
+SELECT COUNT(*)
+FROM rentals r
+JOIN riders rd
+  ON r.rider_id = rd.rider_id;  -- 3</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3>JOIN without ON: by database</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>PostgreSQL wants a condition</li>
+                <li>SQLite quietly cross joins</li>
+                <li>CROSS JOIN says it on purpose</li>
+                <li>A loud error is the better one</li>
+              </ul>
+            </div>
+            <div class="right">
+              <table class="table"><thead><tr><th>Query</th><th>PostgreSQL</th><th>SQLite</th></tr></thead><tbody><tr><td><code>JOIN</code>, no ON</td><td>Syntax error</td><td>All pairs</td></tr><tr><td><code>CROSS JOIN</code></td><td>All pairs</td><td>All pairs</td></tr><tr><td><code>FROM a, b</code></td><td>All pairs</td><td>All pairs</td></tr><tr><td><code>JOIN ... ON</code></td><td>Matching</td><td>Matching</td></tr></tbody></table>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3>What the extra rows look like</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Every rental appears 4 times</li>
+                <li>Only 1 of 4 rows is true</li>
+                <li>COUNT(*) reports 12, not 3</li>
+                <li>Rental 2 and 3 repeat too</li>
+              </ul>
+            </div>
+            <div class="right">
+              <table class="table"><thead><tr><th>rental_id</th><th>rider shown</th><th>true?</th></tr></thead><tbody><tr><td>1</td><td>Ava</td><td>yes</td></tr><tr><td>1</td><td>Tom</td><td>no</td></tr><tr><td>1</td><td>Mia</td><td>no</td></tr><tr><td>1</td><td>Liam</td><td>no</td></tr><tr><td>...</td><td>...</td><td>...</td></tr></tbody></table>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3>Small mistake, big cost</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Rows multiply: A x B</li>
+                <li>Slow queries, full memory</li>
+                <li>Counts and sums are inflated</li>
+                <li>Dashboards show wrong totals</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size: 13pt;">-- rows returned with no join condition
+       3 x       4 =             12
+   1,000 x   1,000 =      1,000,000
+ 100,000 x 100,000 = 10,000,000,000</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3>JOIN on the right columns</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>SQL only checks the types</li>
+                <li>It never checks the meaning</li>
+                <li>A wrong key raises no error</li>
+                <li>Join the FK to the PK it names</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size: 13pt;">-- Right: foreign key = primary key
+ON r.rider_id = rd.rider_id
+
+-- Wrong: same type, no relationship
+ON r.rider_id = b.bike_id
+
+-- Wrong: a value that repeats
+ON a.city = b.city</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3>Wrong key: rider_id = bike_id</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>3 rows: the count looks right</li>
+                <li>2 rows are right by luck</li>
+                <li>Rental 3 gets the wrong bike</li>
+                <li>No error is raised</li>
+              </ul>
+            </div>
+            <div class="right">
+              <table class="table"><thead><tr><th>rental_id</th><th>real bike</th><th>joined bike</th><th>right?</th></tr></thead><tbody><tr><td>1</td><td>1 (city)</td><td>1 (city)</td><td>luck</td></tr><tr><td>2</td><td>2 (road)</td><td>2 (road)</td><td>luck</td></tr><tr><td>3</td><td>2 (road)</td><td>1 (city)</td><td><strong>no</strong></td></tr></tbody></table>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3>Wrong key: city</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>city repeats: it is not a key</li>
+                <li>Stockton matches 2 riders</li>
+                <li>4 riders become 6 rows</li>
+                <li>Same bug if rentals had city</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size: 13pt;">SELECT a.name, b.name
+FROM riders a
+JOIN riders b ON a.city = b.city;
+
+-- Ava  Ava     Mia  Mia
+-- Ava  Mia     Tom  Tom
+-- Mia  Ava     Liam Liam
+-- 6 rows, and Ava is paired with Mia</code></pre>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3>Catch a bad join early</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Compare counts before, after</li>
+                <li>Check the FK to PK pair</li>
+                <li>Look for repeated rental_id</li>
+                <li>Spot-check a few known rows</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size: 13pt;">-- Does any rental appear twice?
+SELECT r.rental_id, COUNT(*)
+FROM rentals r
+JOIN riders rd
+  ON r.rider_id = rd.rider_id
+GROUP BY r.rental_id
+HAVING COUNT(*) &gt; 1;  -- expect 0 rows</code></pre>
+            </div>
+          </div>
+        </section>
+
 
         <!-- 29 — Split (join count sanity checks) -->
         <section>
@@ -5476,6 +5675,29 @@ ORDER BY r.rental_id;</code></pre>
           </div>
         </section>
 
+        <section>
+          <h3>Practice 5: spot the bad join</h3>
+          <div class="split">
+            <div class="left">
+              <ul>
+                <li>Which query is safe?</li>
+                <li>Check the ON condition</li>
+                <li>Predict the row count</li>
+              </ul>
+            </div>
+            <div class="right">
+              <pre><code class="language-sql" style="font-size: 13pt;">-- A
+FROM rentals r JOIN riders rd
+  ON r.rider_id = rd.rider_id
+-- B
+FROM rentals r JOIN riders rd
+-- C
+FROM rentals r JOIN riders rd
+  ON r.rider_id = rd.city</code></pre>
+            </div>
+          </div>
+        </section>
+
         <!-- 34 — Diagram (join choice ladder) -->
         <section>
           <h3>Join choice ladder</h3>
@@ -5540,7 +5762,8 @@ ORDER BY r.rental_id;</code></pre>
                 <li><strong>LEFT</strong>: keep all left rows (right may be NULL)</li>
                 <li><strong>RIGHT</strong>: keep all right rows (left may be NULL)</li>
                 <li><strong>FULL OUTER</strong>: keep all rows from both tables</li>
-                <li>Wrong or missing <code>ON</code> can multiply rows</li>
+                <li>Missing <code>ON</code>: error or all pairs</li>
+                <li>Wrong <code>ON</code>: silent bad rows</li>
               </ul>
             </div>
             <div class="right">
