@@ -419,7 +419,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-23 13:45 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-23 14:15 PT</span>
   </div>
 
   <!--
@@ -17029,7 +17029,61 @@ kali</div>
 <section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>Step 3: Name the Medical Unit</h4>
+<h4>Step 3: Ping the Unit</h4>
+<ul>
+<li>Still on Kali, using the raw IP</li>
+<li>Confirms basic reachability</li>
+<li>Do this before trying SSH at all</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ ping -c 3 10.0.2.15
+64 bytes from 10.0.2.15: icmp_seq=1
+64 bytes from 10.0.2.15: icmp_seq=2
+64 bytes from 10.0.2.15: icmp_seq=3
+0% packet loss</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Step 3: Ping the Unit</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> ping <span class="tk-flag">-c</span> <span class="tk-num">3</span> <span class="tk-num">10.0.2.15</span>
+<span class="tk-num">64</span> bytes from 10.0.2.15: icmp_seq=1
+<span class="tk-num">64</span> bytes from 10.0.2.15: icmp_seq=2
+<span class="tk-num">64</span> bytes from 10.0.2.15: icmp_seq=3
+0% packet loss</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 4: Verify Your Sudo Account</h4>
+<ul>
+<li>On the medical unit's own console</li>
+<li>sudo -l: what you are allowed to run</li>
+<li>Confirm this before Step 6 needs it</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo -l
+User ubuntu may run:
+    (ALL : ALL) ALL</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<h4>Step 4: Verify Your Sudo Account</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-flag">-l</span>
+User ubuntu may run:
+    (ALL : ALL) ALL</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 5: Name the Medical Unit</h4>
 <ul>
 <li>Back on Kali now</li>
 <li>Map a friendly name to that IP</li>
@@ -17044,7 +17098,7 @@ kali</div>
 </section>
 
 <section data-background-color="#0a0a0a">
-<h4>Step 3: Name the Medical Unit</h4>
+<h4>Step 5: Name the Medical Unit</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">echo</span> "10.0.2.15  medical-unit" \
     | sudo tee -a /etc/hosts</div>
 </section>
@@ -17052,7 +17106,7 @@ kali</div>
 <section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>Step 4: Make Your SSH Key</h4>
+<h4>Step 6: Make Your SSH Key</h4>
 <ul>
 <li>Generate a keypair on Kali</li>
 <li>ed25519: modern, short, fast</li>
@@ -17068,7 +17122,7 @@ Enter passphrase: (press Enter)</div>
 </section>
 
 <section data-background-color="#0a0a0a">
-<h4>Step 4: Make Your SSH Key</h4>
+<h4>Step 6: Make Your SSH Key</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ssh-keygen</span> <span class="tk-flag">-t</span> ed25519
 Enter file: (press Enter)
 Enter passphrase: (press Enter)</div>
@@ -17077,7 +17131,7 @@ Enter passphrase: (press Enter)</div>
 <section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>Step 5: Set a Password Once</h4>
+<h4>Step 7: Set a Password Once</h4>
 <ul>
 <li>On the medical unit, one time only</li>
 <li>ssh-copy-id needs a first login</li>
@@ -17092,7 +17146,7 @@ New password: ********</div>
 </section>
 
 <section data-background-color="#0a0a0a">
-<h4>Step 5: Set a Password Once</h4>
+<h4>Step 7: Set a Password Once</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">passwd</span> $(whoami)
 New password: ********</div>
 </section>
@@ -17100,7 +17154,7 @@ New password: ********</div>
 <section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>Step 6: Copy Your Public Key</h4>
+<h4>Step 8: Copy Your Public Key</h4>
 <ul>
 <li>Back on Kali</li>
 <li>ssh-copy-id sends the public half</li>
@@ -17116,7 +17170,7 @@ Number of key(s) added: 1</div>
 </section>
 
 <section data-background-color="#0a0a0a">
-<h4>Step 6: Copy Your Public Key</h4>
+<h4>Step 8: Copy Your Public Key</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ssh-copy-id</span> $(whoami)@medical-unit
 Password: ********
 Number of key(s) added: <span class="tk-num">1</span></div>
@@ -17125,7 +17179,7 @@ Number of key(s) added: <span class="tk-num">1</span></div>
 <section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>Step 7: Connect With Your Key</h4>
+<h4>Step 9: Connect With Your Key</h4>
 <ul>
 <li>Same command as always: ssh</li>
 <li>No password prompt this time</li>
@@ -17140,7 +17194,7 @@ Welcome to Ubuntu 24.04 LTS</div>
 </section>
 
 <section data-background-color="#0a0a0a">
-<h4>Step 7: Connect With Your Key</h4>
+<h4>Step 9: Connect With Your Key</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ssh</span> $(whoami)@medical-unit
 Welcome to Ubuntu <span class="tk-num">24.04</span> LTS</div>
 </section>
@@ -17160,7 +17214,7 @@ Welcome to Ubuntu <span class="tk-num">24.04</span> LTS</div>
 <section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>Step 8: Get the Lab From GitHub</h4>
+<h4>Step 10: Get the Lab From GitHub</h4>
 <ul>
 <li>Still connected to the unit</li>
 <li>Clone the class repository</li>
@@ -17175,7 +17229,7 @@ Welcome to Ubuntu <span class="tk-num">24.04</span> LTS</div>
 </section>
 
 <section data-background-color="#0a0a0a">
-<h4>Step 8: Get the Lab From GitHub</h4>
+<h4>Step 10: Get the Lab From GitHub</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">git</span> <span class="tk-cmd">clone</span> https://github.com/
     SE4CPS/2026-COMP-175</div>
 </section>
@@ -17183,7 +17237,7 @@ Welcome to Ubuntu <span class="tk-num">24.04</span> LTS</div>
 <section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>Step 9: Go to This Lab's Folder</h4>
+<h4>Step 11: Go to This Lab's Folder</h4>
 <ul>
 <li>cd into module 5's practice lab</li>
 <li>ls shows the scripts inside</li>
@@ -17200,7 +17254,7 @@ spawn.sh  vitals-logger.sh ...</div>
 </section>
 
 <section data-background-color="#0a0a0a">
-<h4>Step 9: Go to This Lab's Folder</h4>
+<h4>Step 11: Go to This Lab's Folder</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">cd</span> 2026-COMP-175/modules/
     module-5/practicelab3
 <span class="tk-prompt">$</span> ls
@@ -17210,7 +17264,7 @@ spawn.sh  vitals-logger.sh <span class="tk-num">...</span></div>
 <section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>Step 10: Start the Unit's Processes</h4>
+<h4>Step 12: Start the Unit's Processes</h4>
 <ul>
 <li>Runs 4 background jobs at once</li>
 <li>nohup + disown: survive logout</li>
@@ -17225,7 +17279,7 @@ Started 4 background processes.</div>
 </section>
 
 <section data-background-color="#0a0a0a">
-<h4>Step 10: Start the Unit's Processes</h4>
+<h4>Step 12: Start the Unit's Processes</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">bash</span> spawn.sh
 Started <span class="tk-num">4</span> background processes.</div>
 </section>
@@ -17245,7 +17299,7 @@ Started <span class="tk-num">4</span> background processes.</div>
 <section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>Step 11: List Every Process</h4>
+<h4>Step 13: List Every Process</h4>
 <ul>
 <li>ps aux: every process, every user</li>
 <li>A busy list, hard to scan</li>
@@ -17261,7 +17315,7 @@ USER  PID %CPU  COMMAND
 </section>
 
 <section data-background-color="#0a0a0a">
-<h4>Step 11: List Every Process</h4>
+<h4>Step 13: List Every Process</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ps</span> aux
 USER  PID %CPU  COMMAND
 <span class="tk-num">...</span></div>
@@ -17270,7 +17324,7 @@ USER  PID %CPU  COMMAND
 <section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>Step 12: Narrow to This Lab's Jobs</h4>
+<h4>Step 14: Narrow to This Lab's Jobs</h4>
 <ul>
 <li>pgrep -a: match by name pattern</li>
 <li>Only the 4 processes we started</li>
@@ -17288,7 +17342,7 @@ USER  PID %CPU  COMMAND
 </section>
 
 <section data-background-color="#0a0a0a">
-<h4>Step 12: Narrow to This Lab's Jobs</h4>
+<h4>Step 14: Narrow to This Lab's Jobs</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">pgrep</span> <span class="tk-flag">-a</span> <span class="tk-flag">-f</span> "logger|sync|job|nightly"
 <span class="tk-num">2201</span> vitals-logger.sh
 <span class="tk-num">2202</span> labsync.sh
@@ -17311,7 +17365,7 @@ USER  PID %CPU  COMMAND
 <section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>Step 13: Watch Live Usage</h4>
+<h4>Step 15: Watch Live Usage</h4>
 <ul>
 <li>top: a live, sorted view</li>
 <li>Sorted by CPU, highest first</li>
@@ -17329,7 +17383,7 @@ PID  %CPU  COMMAND
 </section>
 
 <section data-background-color="#0a0a0a">
-<h4>Step 13: Watch Live Usage</h4>
+<h4>Step 15: Watch Live Usage</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">top</span>
 PID  %CPU  COMMAND
 <span class="tk-num">2203</span>  <span class="tk-num">98.7</span>  stuck-job.sh
@@ -17352,7 +17406,7 @@ PID  %CPU  COMMAND
 <section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>Step 14: Check the Schedule, Not Just Load</h4>
+<h4>Step 16: Check the Schedule, Not Just Load</h4>
 <ul>
 <li>backup-nightly is meant for overnight</li>
 <li>It is running right now, mid-shift</li>
@@ -17367,7 +17421,7 @@ Mon Sep 23 02:14:00 PM PDT 2026</div>
 </section>
 
 <section data-background-color="#0a0a0a">
-<h4>Step 14: Check the Schedule, Not Just Load</h4>
+<h4>Step 16: Check the Schedule, Not Just Load</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> date
 Mon Sep <span class="tk-num">23</span> 02:14:00 PM PDT <span class="tk-num">2026</span></div>
 </section>
@@ -17376,7 +17430,7 @@ Mon Sep <span class="tk-num">23</span> 02:14:00 PM PDT <span class="tk-num">2026
 <div class="twocol">
 <div class="col">
 <h4>Check: Why Flag backup-nightly Too?</h4>
-<p style="text-align:left; font-size:1.3rem; line-height:1.5;">backup-nightly.sh only used about 4% CPU in Step 13, far below stuck-job.sh. Why does it still belong on your list?</p>
+<p style="text-align:left; font-size:1.3rem; line-height:1.5;">backup-nightly.sh only used about 4% CPU in Step 15, far below stuck-job.sh. Why does it still belong on your list?</p>
 </div>
 <div class="col" style="text-align:left;">
 <p class="fragment" style="font-size:1.3rem; line-height:1.5;">A process can be "needed" in general but wrong right now: backup-nightly.sh is only supposed to run overnight, so seeing it mid-afternoon is the actual problem, not how much CPU it happens to be using.</p>
@@ -17387,7 +17441,7 @@ Mon Sep <span class="tk-num">23</span> 02:14:00 PM PDT <span class="tk-num">2026
 <section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>Step 15: End the Runaway Job</h4>
+<h4>Step 17: End the Runaway Job</h4>
 <ul>
 <li>kill takes a PID, not a name</li>
 <li>Use the PID pgrep found earlier</li>
@@ -17401,7 +17455,7 @@ Mon Sep <span class="tk-num">23</span> 02:14:00 PM PDT <span class="tk-num">2026
 </section>
 
 <section data-background-color="#0a0a0a">
-<h4>Step 15: End the Runaway Job</h4>
+<h4>Step 17: End the Runaway Job</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">kill</span> <span class="tk-num">2203</span></div>
 </section>
 
@@ -17420,7 +17474,7 @@ Mon Sep <span class="tk-num">23</span> 02:14:00 PM PDT <span class="tk-num">2026
 <section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>Step 16: End the Mistimed Job</h4>
+<h4>Step 18: End the Mistimed Job</h4>
 <ul>
 <li>Same idea, different PID</li>
 <li>backup-nightly can run tonight</li>
@@ -17434,16 +17488,16 @@ Mon Sep <span class="tk-num">23</span> 02:14:00 PM PDT <span class="tk-num">2026
 </section>
 
 <section data-background-color="#0a0a0a">
-<h4>Step 16: End the Mistimed Job</h4>
+<h4>Step 18: End the Mistimed Job</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">kill</span> <span class="tk-num">2204</span></div>
 </section>
 
 <section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>Step 17: Confirm the Cleanup</h4>
+<h4>Step 19: Confirm the Cleanup</h4>
 <ul>
-<li>Re-run the same pgrep as Step 12</li>
+<li>Re-run the same pgrep as Step 14</li>
 <li>Only 2 processes should remain</li>
 <li>Both are ones the unit needs</li>
 </ul>
@@ -17457,7 +17511,7 @@ Mon Sep <span class="tk-num">23</span> 02:14:00 PM PDT <span class="tk-num">2026
 </section>
 
 <section data-background-color="#0a0a0a">
-<h4>Step 17: Confirm the Cleanup</h4>
+<h4>Step 19: Confirm the Cleanup</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">pgrep</span> <span class="tk-flag">-a</span> <span class="tk-flag">-f</span> "logger|sync|job|nightly"
 <span class="tk-num">2201</span> vitals-logger.sh
 <span class="tk-num">2202</span> labsync.sh</div>
