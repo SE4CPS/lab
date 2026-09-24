@@ -1949,10 +1949,34 @@ fetch_releases("mozilla-firefox/firefox")
                     </ul>
                 </aside>
             </section>
+<section data-chapter="7">
+                <div class="divhead">
+                    <span class="paper-tag">In production &middot; releasetrain.io, Sept 23 2026</span>
+                </div>
+                <div class="twocol" style="gap:2em; align-items:center; text-align:left;">
+<div style="flex:1; min-width:0;"><h3>The Paper's Idea, Shipped</h3>
+                <p class="venue">ReleaseTrain's own Ask pipeline picker</p>
+                <p class="story"><b>Before:</b> Auto picked from five presets named for what changed under the hood (<i>multi_agent_fixed</i>, <i>multi_agent_buggy</i>, <i>multi_agent_feedback</i>...); a question like <i>&ldquo;Is there a known CVE in the latest Zoom update?&rdquo;</i> ran a one-loop pipeline with capability flags, not real delegation.<br>
+                <b>After:</b> Two presets that match this paper directly: <i style="color:#15803d;">orchestrator_single</i> does everything itself, <i style="color:#15803d;">orchestrator_delegated</i> spawns a real Rewriter, Retriever, and Evaluator. Auto now routes by the question's own classified intent, so that same CVE question gets real role delegation.</p></div>
+<div style="flex:1; min-width:0;">
+<div class="qbox-row" style="margin-top:0;">
+<div class="qbox risk" style="font-size:0.85em;"><span class="cat">Before</span><p>Auto: 5 preset names, only cve/patch got union-search-and-rerank</p></div>
+<div class="qbox compat" style="font-size:0.85em;"><span class="cat">After</span><p>Auto: 2 presets, comparison/cve/patch/general all get real delegation</p></div>
+</div>
+<p class="story" style="margin-top:1em;"><b>One limit this shipped without fixing:</b> a comparison question (<i>&ldquo;Which is more stable right now, Zoom or Teams?&rdquo;</i>) still bypasses both presets entirely and always runs one fixed model call, same as before, since that path was never architecture-dependent.</p>
+</div>
+                </div>
+                <aside class="notes">
+                    <ul>
+                        <li>This is the same Orchestrator-delegates idea from this paper, now live in ReleaseTrain's own Ask pipeline, not just in an evaluation run.</li>
+                        <li>A live tester picked the multi-agent option on a comparison question and still saw "1 agent" in the badge, which is exactly this limit surfacing in practice.</li>
+                    </ul>
+                </aside>
+            </section>
 
-                        
 
-            
+
+
             
             
             
