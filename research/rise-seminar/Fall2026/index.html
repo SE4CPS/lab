@@ -44,6 +44,15 @@
         .reveal section img { border: 1px solid var(--line); border-radius: 6px; background: #fff; box-shadow: none; }
 
         .pacific-logo { position: fixed; top: 16px; right: 16px; width: 96px; height: auto; z-index: 10; opacity: 0.9; }
+        /* .code-light: a syntax-highlighted <pre><code> block with no dark
+           box behind it, for a slide where the code sits next to plain
+           white-background prose rather than its own dark card. Overrides
+           RevealHighlight's monokai theme (loaded for this deck's default
+           dark-on-dark code blocks) back to dark text on transparent, since
+           monokai's own near-white base text and light string color are
+           built for its dark background and go unreadable without it. */
+        .code-light, .code-light .hljs { background: transparent !important; color: var(--ink) !important; }
+        .code-light .hljs-string { color: #1e7a34 !important; }
 
         .reveal .controls { color: var(--accent); }
         .reveal .controls .navigate-up .controls-arrow,
@@ -756,24 +765,30 @@
 <ul class="tight" style="font-size:1.05em;">
 <li>Extract changelogs and posts</li>
 <li>Enrich changelogs by component</li>
-<li>Classify security, major</li>
+<li>Classify security, breaking, major</li>
 <li>Compare before and after</li>
 </ul>
+<pre class="code-light" style="margin-top:0.6em; width:100%; box-sizing:border-box; overflow:visible;"><code class="language-python" data-trim style="font-size:0.85em; line-height:1.4; white-space:pre-wrap; word-break:break-word;">breaking = [
+    "400", "401", "402", "403", "404", ..., "511",
+    "broken", "breaking", "error", "exception",
+    "privacy", "legal", "terms", "conditions",
+    "hipaa", "password", "bluetooth",
+    "authentication", "authorization",
+    "compliance", "breach", "leak",
+    "confidentiality", "integrity", "availability",
+    "audit", "gdpr", "ccpa", "sox", "pci",
+    "performance", "slow", "wifi", "restart",
+    "sign in", "glitch", "weird", "stutter",
+    "system crash", "app keeps crashing",
+    "login failed", "update failed",
+    "reset required", "freezing", "hanging", ...
+]</code></pre>
                     </div>
                     <div style="flex:1; display:flex; flex-direction:column;">
 <h4 style="margin-top:0;">Result: Teams or Zoom?</h4>
-<div style="font-size:1.05em; margin-top:1.3em;"><table class="dep-tbl" style="font-size:0.56em;"><thead><tr><th>Component</th><th>Changelogs</th><th>Posts</th><th>On an update</th><th>With a version</th></tr></thead><tbody><tr><td>Zoom</td><td>2</td><td>14</td><td>5</td><td>2</td></tr><tr><td>Teams</td><td>1</td><td>4</td><td>0</td><td>1</td></tr><tr><td>Safari</td><td>1</td><td>0</td><td>0</td><td>0</td></tr><tr style="background:#e6f4e6;"><td>macOS</td><td>1</td><td>27</td><td>18</td><td>21</td></tr></tbody></table><p class="src" style="font-size:0.5em; margin-top:0.3em;">Source: Reddit, 2026-09-20</p></div>
+<div style="font-size:1.05em; margin-top:5.5em;"><table class="dep-tbl" style="font-size:0.56em;"><thead><tr><th>Component</th><th>Changelogs</th><th>Posts</th><th>On an update</th><th>With a version</th></tr></thead><tbody><tr><td>Zoom</td><td>2</td><td>14</td><td>5</td><td>2</td></tr><tr><td>Teams</td><td>1</td><td>4</td><td>0</td><td>1</td></tr><tr><td>Safari</td><td>1</td><td>0</td><td>0</td><td>0</td></tr><tr style="background:#e6f4e6;"><td>macOS</td><td>1</td><td>27</td><td>18</td><td>21</td></tr></tbody></table><p class="src" style="font-size:0.5em; margin-top:0.3em;">Source: Reddit, 2026-09-20</p></div>
                     </div>
                 </div>
-<pre style="margin-top:1em; width:100%; box-sizing:border-box;"><code class="language-python" data-trim style="font-size:0.85em; line-height:1.4;">breaking = [
-    "400", "401", "402", "403", "404", ..., "511", "broken", "breaking",
-    "error", "exception", "privacy", "legal", "terms", "conditions", "hipaa",
-    "password", "bluetooth", "authentication", "authorization", "compliance",
-    "breach", "leak", "confidentiality", "integrity", "availability", "audit",
-    "gdpr", "ccpa", "sox", "pci", "performance", "slow", "wifi", "restart",
-    "sign in", "glitch", "weird", "stutter", "system crash", "app keeps crashing",
-    "login failed", "update failed", "reset required", "freezing", "hanging", ...
-]</code></pre>
             </section>
 <section data-chapter="3b">
                 <svg viewBox="0 -80 1290 402" style="width:100%;height:auto;display:block;" role="img"
@@ -820,7 +835,7 @@
 <rect x="900.5" y="127" width="6.5" height="6.5" fill="#fff"></rect>
 <rect x="913" y="127" width="6.5" height="6.5" fill="#fff"></rect>
 <text x="910" y="180" text-anchor="middle" font-size="27" font-weight="700" fill="#1a1a1a">Evaluator</text>
-<text x="910" y="233" text-anchor="middle" font-size="19" fill="#1a1a1a">major flag (2024)</text>
+<text x="910" y="233" text-anchor="middle" font-size="19" fill="#1a1a1a">breaking flag (2024)</text>
 <text x="910" y="258" text-anchor="middle" font-size="19" fill="#a6a6a6">changelog classifier (2024)</text>
 <text x="910" y="283" text-anchor="middle" font-size="19" fill="#a6a6a6">cost score (2023)</text>
 <text x="910" y="308" text-anchor="middle" font-size="19" fill="#a6a6a6">aggregate risk (2020)</text>
@@ -959,7 +974,7 @@
 <path d="M891,147 Q891,129 910,129 Q929,129 929,147 Z" fill="#1a1a1a"></path>
 <text x="910" y="180" text-anchor="middle" font-size="27" font-weight="700" fill="#1a1a1a">Evaluator</text>
 <text x="910" y="233" text-anchor="middle" font-size="19" fill="#1a1a1a">user criteria (2025)</text>
-<text x="910" y="258" text-anchor="middle" font-size="19" fill="#a6a6a6">major flag (2024)</text>
+<text x="910" y="258" text-anchor="middle" font-size="19" fill="#a6a6a6">breaking flag (2024)</text>
 <text x="910" y="283" text-anchor="middle" font-size="19" fill="#a6a6a6">changelog classifier (2024)</text>
 <text x="910" y="308" text-anchor="middle" font-size="19" fill="#a6a6a6">cost score (2023)</text>
 <text x="910" y="333" text-anchor="middle" font-size="19" fill="#a6a6a6">aggregate risk (2020)</text>
@@ -1087,7 +1102,7 @@
 <path d="M891,147 Q891,129 910,129 Q929,129 929,147 Z" fill="#c4c4c4"></path>
 <text x="910" y="180" text-anchor="middle" font-size="27" fill="#767676">Evaluator</text>
 <text x="910" y="233" text-anchor="middle" font-size="19" fill="#a6a6a6">user criteria (2025)</text>
-<text x="910" y="258" text-anchor="middle" font-size="19" fill="#a6a6a6">major flag (2024)</text>
+<text x="910" y="258" text-anchor="middle" font-size="19" fill="#a6a6a6">breaking flag (2024)</text>
 <text x="910" y="283" text-anchor="middle" font-size="19" fill="#a6a6a6">changelog classifier (2024)</text>
 <text x="910" y="308" text-anchor="middle" font-size="19" fill="#a6a6a6">cost score (2023)</text>
 <text x="910" y="333" text-anchor="middle" font-size="19" fill="#a6a6a6">aggregate risk (2020)</text>
@@ -1233,7 +1248,7 @@
 <text x="910" y="180" text-anchor="middle" font-size="27" font-weight="700" fill="#1a1a1a">Evaluator</text>
 <text x="910" y="233" text-anchor="middle" font-size="19" fill="#a8380a">filter by vendor (2026)</text>
 <text x="910" y="258" text-anchor="middle" font-size="19" fill="#a6a6a6">user criteria (2025)</text>
-<text x="910" y="283" text-anchor="middle" font-size="19" fill="#a6a6a6">major flag (2024)</text>
+<text x="910" y="283" text-anchor="middle" font-size="19" fill="#a6a6a6">breaking flag (2024)</text>
 <text x="910" y="308" text-anchor="middle" font-size="19" fill="#a6a6a6">changelog classifier (2024)</text>
 <text x="910" y="333" text-anchor="middle" font-size="19" fill="#a6a6a6">cost score (2023)</text>
 <text x="910" y="358" text-anchor="middle" font-size="19" fill="#a6a6a6">aggregate risk (2020)</text>
@@ -1412,7 +1427,7 @@ fetch_releases("mozilla-firefox/firefox")
 <text x="910" y="233" text-anchor="middle" font-size="19" fill="#a8380a">live-first merge (2026)</text>
 <text x="910" y="258" text-anchor="middle" font-size="19" fill="#a6a6a6">filter by vendor (2026)</text>
 <text x="910" y="283" text-anchor="middle" font-size="19" fill="#a6a6a6">user criteria (2025)</text>
-<text x="910" y="308" text-anchor="middle" font-size="19" fill="#a6a6a6">major flag (2024)</text>
+<text x="910" y="308" text-anchor="middle" font-size="19" fill="#a6a6a6">breaking flag (2024)</text>
 <text x="910" y="333" text-anchor="middle" font-size="19" fill="#a6a6a6">changelog classifier (2024)</text>
 <text x="910" y="358" text-anchor="middle" font-size="19" fill="#a6a6a6">cost score (2023)</text>
 <text x="910" y="383" text-anchor="middle" font-size="19" fill="#a6a6a6">aggregate risk (2020)</text>
@@ -1565,7 +1580,7 @@ fetch_releases("mozilla-firefox/firefox")
 <text x="910" y="233" text-anchor="middle" font-size="19" fill="#a6a6a6">live-first merge (2026)</text>
 <text x="910" y="258" text-anchor="middle" font-size="19" fill="#a6a6a6">filter by vendor (2026)</text>
 <text x="910" y="283" text-anchor="middle" font-size="19" fill="#a6a6a6">user criteria (2025)</text>
-<text x="910" y="308" text-anchor="middle" font-size="19" fill="#a6a6a6">major flag (2024)</text>
+<text x="910" y="308" text-anchor="middle" font-size="19" fill="#a6a6a6">breaking flag (2024)</text>
 <text x="910" y="333" text-anchor="middle" font-size="19" fill="#a6a6a6">changelog classifier (2024)</text>
 <text x="910" y="358" text-anchor="middle" font-size="19" fill="#a6a6a6">cost score (2023)</text>
 <text x="910" y="383" text-anchor="middle" font-size="19" fill="#a6a6a6">aggregate risk (2020)</text>
@@ -1716,7 +1731,7 @@ fetch_releases("mozilla-firefox/firefox")
 <text x="910" y="233" text-anchor="middle" font-size="19" fill="#a6a6a6">live-first merge (2026)</text>
 <text x="910" y="258" text-anchor="middle" font-size="19" fill="#a6a6a6">filter by vendor (2026)</text>
 <text x="910" y="283" text-anchor="middle" font-size="19" fill="#a6a6a6">user criteria (2025)</text>
-<text x="910" y="308" text-anchor="middle" font-size="19" fill="#a6a6a6">major flag (2024)</text>
+<text x="910" y="308" text-anchor="middle" font-size="19" fill="#a6a6a6">breaking flag (2024)</text>
 <text x="910" y="333" text-anchor="middle" font-size="19" fill="#a6a6a6">changelog classifier (2024)</text>
 <text x="910" y="358" text-anchor="middle" font-size="19" fill="#a6a6a6">cost score (2023)</text>
 <text x="910" y="383" text-anchor="middle" font-size="19" fill="#a6a6a6">aggregate risk (2020)</text>
@@ -1896,7 +1911,7 @@ fetch_releases("mozilla-firefox/firefox")
 <text x="910" y="258" text-anchor="middle" font-size="19" fill="#a6a6a6">live-first merge (2026)</text>
 <text x="910" y="283" text-anchor="middle" font-size="19" fill="#a6a6a6">filter by vendor (2026)</text>
 <text x="910" y="308" text-anchor="middle" font-size="19" fill="#a6a6a6">user criteria (2025)</text>
-<text x="910" y="333" text-anchor="middle" font-size="19" fill="#a6a6a6">major flag (2024)</text>
+<text x="910" y="333" text-anchor="middle" font-size="19" fill="#a6a6a6">breaking flag (2024)</text>
 <text x="910" y="358" text-anchor="middle" font-size="19" fill="#a6a6a6">changelog classifier (2024)</text>
 <text x="910" y="383" text-anchor="middle" font-size="19" fill="#a6a6a6">cost score (2023)</text>
 <text x="910" y="408" text-anchor="middle" font-size="19" fill="#a6a6a6">aggregate risk (2020)</text>
