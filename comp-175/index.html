@@ -419,7 +419,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-24 06:50 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-09-24 07:08 PT</span>
   </div>
 
   <!--
@@ -16988,8 +16988,10 @@ $ pkill -f &quot;http.server|ssh -N&quot;
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ whoami
+# confirms which account you are using
 kali
 $ hostname
+# confirms which machine you are on
 kali</div>
 </div>
 </div>
@@ -16998,8 +17000,10 @@ kali</div>
 <section data-tag="kali" data-background-color="#0a0a0a">
 <h4>Step 1: Confirm You're on Kali</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">whoami</span>
+<span class="tk-comment"># confirms which account you are using</span>
 kali
 <span class="tk-prompt">$</span> <span class="tk-cmd">hostname</span>
+<span class="tk-comment"># confirms which machine you are on</span>
 kali</div>
 </section>
 
@@ -17015,6 +17019,7 @@ kali</div>
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ hostname -I
+# -I: this machine's own IP address
 10.0.2.15</div>
 </div>
 </div>
@@ -17023,6 +17028,7 @@ kali</div>
 <section data-tag="ubuntu" data-background-color="#0a0a0a">
 <h4>Step 2: Find the Unit's Real IP</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">hostname</span> <span class="tk-flag">-I</span>
+<span class="tk-comment"># -I: this machine's own IP address</span>
 <span class="tk-num">10.0.2.15</span></div>
 </section>
 
@@ -17038,6 +17044,7 @@ kali</div>
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ ping -c 3 10.0.2.15
+# -c 3: send exactly 3 pings, then stop
 64 bytes from 10.0.2.15: icmp_seq=1
 64 bytes from 10.0.2.15: icmp_seq=2
 64 bytes from 10.0.2.15: icmp_seq=3
@@ -17049,6 +17056,7 @@ kali</div>
 <section data-tag="kali" data-background-color="#0a0a0a">
 <h4>Step 3: Ping the Unit</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> ping <span class="tk-flag">-c</span> <span class="tk-num">3</span> <span class="tk-num">10.0.2.15</span>
+<span class="tk-comment"># -c 3: send exactly 3 pings, then stop</span>
 <span class="tk-num">64</span> bytes from 10.0.2.15: icmp_seq=1
 <span class="tk-num">64</span> bytes from 10.0.2.15: icmp_seq=2
 <span class="tk-num">64</span> bytes from 10.0.2.15: icmp_seq=3
@@ -17067,6 +17075,7 @@ kali</div>
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ sudo -l
+# -l: list what you are allowed to run
 User ubuntu may run:
     (ALL : ALL) ALL</div>
 </div>
@@ -17076,6 +17085,7 @@ User ubuntu may run:
 <section data-tag="ubuntu" data-background-color="#0a0a0a">
 <h4>Step 4: Verify Your Sudo Account</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-flag">-l</span>
+<span class="tk-comment"># -l: list what you are allowed to run</span>
 User ubuntu may run:
     (ALL : ALL) ALL</div>
 </section>
@@ -17092,7 +17102,11 @@ User ubuntu may run:
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ echo "10.0.2.15  medical-unit" \
-    | sudo tee -a /etc/hosts</div>
+    | sudo tee -a /etc/hosts
+# tee -a: appends to /etc/hosts as root
+$ getent hosts medical-unit
+# confirms the mapping now resolves
+10.0.2.15       medical-unit</div>
 </div>
 </div>
 </section>
@@ -17100,7 +17114,11 @@ User ubuntu may run:
 <section data-tag="kali" data-background-color="#0a0a0a">
 <h4>Step 5: Name the Medical Unit</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">echo</span> "10.0.2.15  medical-unit" \
-    | sudo tee -a /etc/hosts</div>
+    | sudo tee -a /etc/hosts
+<span class="tk-comment"># tee -a: appends to /etc/hosts as root</span>
+<span class="tk-prompt">$</span> getent hosts medical-unit
+<span class="tk-comment"># confirms the mapping now resolves</span>
+<span class="tk-num">10.0.2.15</span>       medical-unit</div>
 </section>
 
 <section data-tag="kali" data-background-color="#0a0a0a">
@@ -17115,8 +17133,12 @@ User ubuntu may run:
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ ssh-keygen -t ed25519
+# -t ed25519: modern, compact key type
 Enter file: (press Enter)
-Enter passphrase: (press Enter)</div>
+Enter passphrase: (press Enter)
+$ ls ~/.ssh/id_ed25519.pub
+# confirms the public key was created
+/home/kali/.ssh/id_ed25519.pub</div>
 </div>
 </div>
 </section>
@@ -17124,8 +17146,12 @@ Enter passphrase: (press Enter)</div>
 <section data-tag="kali" data-background-color="#0a0a0a">
 <h4>Step 6: Make Your SSH Key</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ssh-keygen</span> <span class="tk-flag">-t</span> ed25519
+<span class="tk-comment"># -t ed25519: modern, compact key type</span>
 Enter file: (press Enter)
-Enter passphrase: (press Enter)</div>
+Enter passphrase: (press Enter)
+<span class="tk-prompt">$</span> ls <span class="tk-path">~/.ssh/id_ed25519.pub</span>
+<span class="tk-comment"># confirms the public key was created</span>
+<span class="tk-path">/home/kali/.ssh/id_ed25519.pub</span></div>
 </section>
 
 <section data-tag="ubuntu" data-background-color="#0a0a0a">
@@ -17140,7 +17166,11 @@ Enter passphrase: (press Enter)</div>
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ sudo passwd $(whoami)
-New password: ********</div>
+# sets a login password for this account
+New password: ********
+$ passwd -S $(whoami)
+# -S: shows the account's password status
+ubuntu P 09/24/2026 0 99999 7 -1</div>
 </div>
 </div>
 </section>
@@ -17148,7 +17178,11 @@ New password: ********</div>
 <section data-tag="ubuntu" data-background-color="#0a0a0a">
 <h4>Step 7: Set a Password Once</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">passwd</span> $(whoami)
-New password: ********</div>
+<span class="tk-comment"># sets a login password for this account</span>
+New password: ********
+<span class="tk-prompt">$</span> <span class="tk-cmd">passwd</span> <span class="tk-flag">-S</span> $(whoami)
+<span class="tk-comment"># -S: shows the account's password status</span>
+ubuntu P 09/24/2026 <span class="tk-num">0</span> <span class="tk-num">99999</span> <span class="tk-num">7</span> -1</div>
 </section>
 
 <section data-tag="kali" data-background-color="#0a0a0a">
@@ -17163,8 +17197,12 @@ New password: ********</div>
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ ssh-copy-id $(whoami)@medical-unit
+# sends only your *.pub file to the unit
 Password: ********
-Number of key(s) added: 1</div>
+Number of key(s) added: 1
+$ ssh-copy-id $(whoami)@medical-unit
+# re-run: 0 added means it is already there
+Number of key(s) added: 0</div>
 </div>
 </div>
 </section>
@@ -17172,8 +17210,12 @@ Number of key(s) added: 1</div>
 <section data-tag="kali" data-background-color="#0a0a0a">
 <h4>Step 8: Copy Your Public Key</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ssh-copy-id</span> $(whoami)@medical-unit
+<span class="tk-comment"># sends only your *.pub file to the unit</span>
 Password: ********
-Number of key(s) added: <span class="tk-num">1</span></div>
+Number of key(s) added: <span class="tk-num">1</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">ssh-copy-id</span> $(whoami)@medical-unit
+<span class="tk-comment"># re-run: 0 added means it is already there</span>
+Number of key(s) added: <span class="tk-num">0</span></div>
 </section>
 
 <section data-tag="kali" data-background-color="#0a0a0a">
@@ -17188,6 +17230,7 @@ Number of key(s) added: <span class="tk-num">1</span></div>
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ ssh $(whoami)@medical-unit
+# no -i needed: ssh-agent offers it for you
 Welcome to Ubuntu 24.04 LTS</div>
 </div>
 </div>
@@ -17196,6 +17239,7 @@ Welcome to Ubuntu 24.04 LTS</div>
 <section data-tag="kali" data-background-color="#0a0a0a">
 <h4>Step 9: Connect With Your Key</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ssh</span> $(whoami)@medical-unit
+<span class="tk-comment"># no -i needed: ssh-agent offers it for you</span>
 Welcome to Ubuntu <span class="tk-num">24.04</span> LTS</div>
 </section>
 
@@ -17223,7 +17267,11 @@ Welcome to Ubuntu <span class="tk-num">24.04</span> LTS</div>
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ git clone https://github.com/
-    SE4CPS/2026-COMP-175</div>
+    SE4CPS/2026-COMP-175
+# clones the whole class repo, once
+$ ls 2026-COMP-175
+# confirms the clone actually landed
+modules  README.md</div>
 </div>
 </div>
 </section>
@@ -17231,7 +17279,11 @@ Welcome to Ubuntu <span class="tk-num">24.04</span> LTS</div>
 <section data-tag="ubuntu" data-background-color="#0a0a0a">
 <h4>Step 10: Get the Lab From GitHub</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">git</span> <span class="tk-cmd">clone</span> https://github.com/
-    SE4CPS/2026-COMP-175</div>
+    SE4CPS/2026-COMP-175
+<span class="tk-comment"># clones the whole class repo, once</span>
+<span class="tk-prompt">$</span> ls 2026-COMP-175
+<span class="tk-comment"># confirms the clone actually landed</span>
+modules  README.md</div>
 </section>
 
 <section data-tag="ubuntu" data-background-color="#0a0a0a">
@@ -17247,7 +17299,9 @@ Welcome to Ubuntu <span class="tk-num">24.04</span> LTS</div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ cd 2026-COMP-175/modules/
     module-5/practicelab3
+# this lab's own folder
 $ ls
+# spawn.sh is what starts everything
 spawn.sh  vitals-logger.sh ...</div>
 </div>
 </div>
@@ -17257,7 +17311,9 @@ spawn.sh  vitals-logger.sh ...</div>
 <h4>Step 11: Go to This Lab's Folder</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">cd</span> 2026-COMP-175/modules/
     module-5/practicelab3
+<span class="tk-comment"># this lab's own folder</span>
 <span class="tk-prompt">$</span> ls
+<span class="tk-comment"># spawn.sh is what starts everything</span>
 spawn.sh  vitals-logger.sh <span class="tk-num">...</span></div>
 </section>
 
@@ -17273,7 +17329,11 @@ spawn.sh  vitals-logger.sh <span class="tk-num">...</span></div>
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ bash spawn.sh
-Started 4 background processes.</div>
+# launches all 4 jobs, nohup'd + disowned
+Started 4 background processes.
+$ pgrep -c -f "logger|sync|job|nightly"
+# -c: just count the matches
+4</div>
 </div>
 </div>
 </section>
@@ -17281,7 +17341,11 @@ Started 4 background processes.</div>
 <section data-tag="ubuntu" data-background-color="#0a0a0a">
 <h4>Step 12: Start the Unit's Processes</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">bash</span> spawn.sh
-Started <span class="tk-num">4</span> background processes.</div>
+<span class="tk-comment"># launches all 4 jobs, nohup'd + disowned</span>
+Started <span class="tk-num">4</span> background processes.
+<span class="tk-prompt">$</span> <span class="tk-cmd">pgrep</span> <span class="tk-flag">-c</span> <span class="tk-flag">-f</span> "logger|sync|job|nightly"
+<span class="tk-comment"># -c: just count the matches</span>
+<span class="tk-num">4</span></div>
 </section>
 
 <section data-background-color="#0a0a0a">
@@ -17308,6 +17372,7 @@ Started <span class="tk-num">4</span> background processes.</div>
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ ps aux
+# aux: every process, every user, full cmd
 USER  PID %CPU  COMMAND
 ...</div>
 </div>
@@ -17317,6 +17382,7 @@ USER  PID %CPU  COMMAND
 <section data-tag="ubuntu" data-background-color="#0a0a0a">
 <h4>Step 13: List Every Process</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ps</span> aux
+<span class="tk-comment"># aux: every process, every user, full cmd</span>
 USER  PID %CPU  COMMAND
 <span class="tk-num">...</span></div>
 </section>
@@ -17333,6 +17399,7 @@ USER  PID %CPU  COMMAND
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ pgrep -a -f "logger|sync|job|nightly"
+# -a: also show each match's full command
 2201 vitals-logger.sh
 2202 labsync.sh
 2203 stuck-job.sh
@@ -17344,6 +17411,7 @@ USER  PID %CPU  COMMAND
 <section data-tag="ubuntu" data-background-color="#0a0a0a">
 <h4>Step 14: Narrow to This Lab's Jobs</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">pgrep</span> <span class="tk-flag">-a</span> <span class="tk-flag">-f</span> "logger|sync|job|nightly"
+<span class="tk-comment"># -a: also show each match's full command</span>
 <span class="tk-num">2201</span> vitals-logger.sh
 <span class="tk-num">2202</span> labsync.sh
 <span class="tk-num">2203</span> stuck-job.sh
@@ -17374,6 +17442,7 @@ USER  PID %CPU  COMMAND
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ top
+# live view, sorted by CPU by default
 PID  %CPU  COMMAND
 2203  98.7  stuck-job.sh
 2204   4.1  backup-nightly.sh
@@ -17385,6 +17454,7 @@ PID  %CPU  COMMAND
 <section data-tag="ubuntu" data-background-color="#0a0a0a">
 <h4>Step 15: Watch Live Usage</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">top</span>
+<span class="tk-comment"># live view, sorted by CPU by default</span>
 PID  %CPU  COMMAND
 <span class="tk-num">2203</span>  <span class="tk-num">98.7</span>  stuck-job.sh
 <span class="tk-num">2204</span>   <span class="tk-num">4.1</span>  backup-nightly.sh
@@ -17415,6 +17485,7 @@ PID  %CPU  COMMAND
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ date
+# confirms the unit's own current time
 Mon Sep 23 02:14:00 PM PDT 2026</div>
 </div>
 </div>
@@ -17423,6 +17494,7 @@ Mon Sep 23 02:14:00 PM PDT 2026</div>
 <section data-tag="ubuntu" data-background-color="#0a0a0a">
 <h4>Step 16: Check the Schedule, Not Just Load</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> date
+<span class="tk-comment"># confirms the unit's own current time</span>
 Mon Sep <span class="tk-num">23</span> 02:14:00 PM PDT <span class="tk-num">2026</span></div>
 </section>
 
@@ -17449,14 +17521,22 @@ Mon Sep <span class="tk-num">23</span> 02:14:00 PM PDT <span class="tk-num">2026
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ kill 2203</div>
+<div class="terminal">$ kill 2203
+# default signal: SIGTERM, ask nicely first
+$ pgrep -f stuck-job; echo $?
+# exit 1 = no match = the process is gone
+1</div>
 </div>
 </div>
 </section>
 
 <section data-tag="ubuntu" data-background-color="#0a0a0a">
 <h4>Step 17: End the Runaway Job</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">kill</span> <span class="tk-num">2203</span></div>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">kill</span> <span class="tk-num">2203</span>
+<span class="tk-comment"># default signal: SIGTERM, ask nicely first</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">pgrep</span> <span class="tk-flag">-f</span> stuck-job; <span class="tk-cmd">echo</span> $?
+<span class="tk-comment"># exit 1 = no match = the process is gone</span>
+<span class="tk-num">1</span></div>
 </section>
 
 <section data-background-color="#0a0a0a">
@@ -17482,14 +17562,22 @@ Mon Sep <span class="tk-num">23</span> 02:14:00 PM PDT <span class="tk-num">2026
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ kill 2204</div>
+<div class="terminal">$ kill 2204
+# same signal, different PID this time
+$ pgrep -f backup-nightly; echo $?
+# exit 1 confirms it is no longer running
+1</div>
 </div>
 </div>
 </section>
 
 <section data-tag="ubuntu" data-background-color="#0a0a0a">
 <h4>Step 18: End the Mistimed Job</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">kill</span> <span class="tk-num">2204</span></div>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">kill</span> <span class="tk-num">2204</span>
+<span class="tk-comment"># same signal, different PID this time</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">pgrep</span> <span class="tk-flag">-f</span> backup-nightly; <span class="tk-cmd">echo</span> $?
+<span class="tk-comment"># exit 1 confirms it is no longer running</span>
+<span class="tk-num">1</span></div>
 </section>
 
 <section data-tag="ubuntu" data-background-color="#0a0a0a">
@@ -17504,6 +17592,7 @@ Mon Sep <span class="tk-num">23</span> 02:14:00 PM PDT <span class="tk-num">2026
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ pgrep -a -f "logger|sync|job|nightly"
+# same command as Step 14, run again
 2201 vitals-logger.sh
 2202 labsync.sh</div>
 </div>
@@ -17513,6 +17602,7 @@ Mon Sep <span class="tk-num">23</span> 02:14:00 PM PDT <span class="tk-num">2026
 <section data-tag="ubuntu" data-background-color="#0a0a0a">
 <h4>Step 19: Confirm the Cleanup</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">pgrep</span> <span class="tk-flag">-a</span> <span class="tk-flag">-f</span> "logger|sync|job|nightly"
+<span class="tk-comment"># same command as Step 14, run again</span>
 <span class="tk-num">2201</span> vitals-logger.sh
 <span class="tk-num">2202</span> labsync.sh</div>
 </section>
