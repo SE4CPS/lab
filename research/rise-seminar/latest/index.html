@@ -2089,6 +2089,29 @@ fetch_releases("mozilla-firefox/firefox")
                     <span class="paper-tag">In production &middot; releasetrain.io, Sept 28 2026</span>
                 </div>
                 <div class="twocol" style="gap:2em; align-items:center; text-align:left;">
+<div style="flex:1; min-width:0;"><h3>Vendor Matching: Substring Fallback</h3>
+                <p class="venue">Retriever's own catalog lookup</p>
+                <p class="story"><b>Before:</b> a compound subreddit name (r/applehelp, r/AndroidQuestions) matched itself in the vendor catalog before the real product inside it was ever considered, resolving to an unhelpful "vendor" with no tracked data.<br>
+                <b>After:</b> a three-pass lookup: exact match against a real product first, then a guarded substring match (both sides 4+ characters, real products only) that resolves r/applehelp to <i style="color:#15803d;">apple</i>, then exact match against any catalog entry as a last resort so a question still resolves to something.</p></div>
+<div style="flex:1; min-width:0;">
+<div class="qbox-row" style="margin-top:0;">
+<div class="qbox risk" style="font-size:0.85em;"><span class="cat">Before</span><p>"r/applehelp" &rarr; vendor "applehelp" (no tracked data)</p></div>
+<div class="qbox compat" style="font-size:0.85em;"><span class="cat">After</span><p>"r/applehelp" &rarr; vendor "apple" (real product, has tracked data)</p></div>
+</div>
+<p class="story" style="margin-top:1em;"><b>Disclosed limit:</b> the 4-character minimum is deliberate, so a short subreddit name never risks a false-positive substring match.</p>
+</div>
+                </div>
+                <aside class="notes">
+                    <ul>
+                        <li>A deterministic, rule-based fix, not a model change: the same "prefer a real signal over a guess" pattern as Classify on the following slide.</li>
+                    </ul>
+                </aside>
+            </section>
+<section data-chapter="7">
+                <div class="divhead">
+                    <span class="paper-tag">In production &middot; releasetrain.io, Sept 28 2026</span>
+                </div>
+                <div class="twocol" style="gap:2em; align-items:center; text-align:left;">
 <div style="flex:1; min-width:0;"><h3>A New Agent: Classify</h3>
                 <p class="venue">Source trust + CVE patch artifacts</p>
                 <p class="story"><b>Before:</b> every source read with equal weight, and a CVE citation always linked to NVD's description page, never the fix.<br>
@@ -2105,6 +2128,27 @@ fetch_releases("mozilla-firefox/firefox")
                     <ul>
                         <li>Directly answers "attach the url and classify how trustworthy the source is": deterministic, not model-judged, matching this deck's own Model vs Rules framing.</li>
                         <li>"CVE patch artifacts are hard to find" was the specific reported gap; mitre.py now tags a real fix/advisory link (Patch &gt; Vendor Advisory &gt; Release Notes preference) instead of only the NVD description page.</li>
+                    </ul>
+                </aside>
+            </section>
+<section data-chapter="7">
+                <div class="divhead">
+                    <span class="paper-tag">In production &middot; releasetrain.io, Sept 28 2026</span>
+                </div>
+                <div class="twocol" style="gap:2em; align-items:center; text-align:left;">
+<div style="flex:1; min-width:0;"><h3>Sources Tab: A Real Example</h3>
+                <p class="venue">"Any known CVEs in the latest Linux update?"</p>
+<img src="sources-tab-example.png" alt="Sources tab: chips read vendor linux, intent cve, since 2026-06-30; a Documented group of four release/CVE entries with a red dot; a Discussion group of four Amazon Linux advisory pages with a blue globe icon" style="width:100%; height:auto; max-height:230px; object-fit:contain; display:block; border:1px solid #ddd; border-radius:6px;">
+<p class="src" style="margin:0.2em 0 0;">Live screenshot, releasetrain.io</p></div>
+<div style="flex:1; min-width:0;">
+<p class="story"><b>Documented</b> (red dot): this system's own tracked release/CVE data (<i>kind === "cve"</i> or <i>"release"</i>).<br>
+<b>Discussion</b> (blue globe): community/web evidence (Reddit, Stack Overflow, a live web search) the model also drew on.</p>
+<p class="story" style="margin-top:1em;"><b>Not shown yet:</b> Classify's own <i>trustTier</i>/<i>urlVerified</i> (previous slide) already ride along in the API response for every source above, but this view doesn't badge them visually yet, by design (scoped to API-only for now, before adding UI for it).</p>
+</div>
+                </div>
+                <aside class="notes">
+                    <ul>
+                        <li>Documented/Discussion is a pre-existing split (ask-workflow.js), separate from and older than Classify's own trustTier; the two aren't merged into one signal yet.</li>
                     </ul>
                 </aside>
             </section>
