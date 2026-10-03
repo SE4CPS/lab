@@ -478,7 +478,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-10-03 15:22 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-10-03 15:32 PT</span>
   </div>
 
   <!--
@@ -676,7 +676,7 @@
               <td>Week 14</td>
               <td>Nov 24, <s>Nov 26</s></td>
               <td data-module="14">Containerization</td>
-              <td>No class Nov 26 (Thanksgiving)</td>
+              <td>No class Nov 26 (Thanksgiving)<br>Commands: <a href="./#/cmd-docker" target="_self">docker</a></td>
               <td></td>
               <td></td>
             </tr>
@@ -24246,6 +24246,420 @@ cd ~/app &amp;&amp; git pull
 <section><h2 style="text-align:center;">Questions?</h2></section>
             </section>
 
+
+
+<section id="module-14">
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h2>Module 14</h2>
+<h3>Containerization</h3>
+</div>
+<div class="diagram"><div class="module-nav" data-current="14"></div></div>
+</div>
+</section>
+
+
+<section id="module-14-agenda" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Agenda</h4>
+<ol style="line-height: 1.8;">
+<li><a href="./#/module-14-agenda-1" target="_self">Why Containers?</a></li>
+<li><a href="./#/module-14-agenda-2" target="_self">Containers vs. VMs</a></li>
+<li><a href="./#/module-14-agenda-3" target="_self">Images &amp; the Dockerfile</a></li>
+<li><a href="./#/module-14-agenda-4" target="_self">Running Containers</a></li>
+<li><a href="./#/module-14-agenda-5" target="_self">Building an Image</a></li>
+<li><a href="./#/module-14-agenda-6" target="_self">Practice Lab</a></li>
+</ol>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m14agenda" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Dockerfile: the recipe</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m14agenda)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">docker build: makes an image</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m14agenda)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">docker run: starts a container</text></svg>
+</div>
+</div>
+</section>
+
+
+<section id="module-14-all-commands" data-background-color="#ffffff">
+<h4>All Commands: Module 14</h4>
+<div class="cmd-table-module" style="width:100%;" data-module="14"></div>
+</section>
+
+<section id="module-14-agenda-1"><h2 style="text-align:center;">Why Containers?</h2></section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h2>Module 14</h2>
+<h3>Containerization</h3>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 340 268" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><line x1="62" y1="14" x2="62" y2="254" stroke="#555" stroke-width="2"/>
+<circle cx="62" cy="38" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="42" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1979</text><text x="76" y="34" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="34">chroot (Unix v7): the first</tspan><tspan x="76" y="48">process-isolation idea</tspan></text>
+<circle cx="62" cy="92.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="96.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2008</text><text x="76" y="88.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="88.0">LXC: real Linux containers,</tspan><tspan x="76" y="102.0">using kernel cgroups/namespaces</tspan></text>
+<circle cx="62" cy="146.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="150.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2013</text><text x="76" y="142.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="142.0">Docker (Solomon Hykes)</tspan><tspan x="76" y="156.0">makes containers mainstream</tspan></text>
+<circle cx="62" cy="200.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="204.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2015</text><text x="76" y="196.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="196.0">OCI standard forms: images</tspan><tspan x="76" y="210.0">and runtimes become portable</tspan></text>
+<circle cx="62" cy="254.0" r="6.5" fill="#9cdcfe" stroke="#9cdcfe" stroke-width="1.5"/><text x="48" y="258.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">Today</text><text x="76" y="250.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="250.0">Containers are the default way</tspan><tspan x="76" y="264.0">most new apps are shipped</tspan></text>
+</svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: What Problem Fixed?</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">"It works on my machine" is a classic developer complaint. What does a container actually fix about that?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">A container packages the app with its exact dependencies, so the same image runs identically anywhere it's run.</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Containers vs. VMs</h2></section>
+<section id="module-14-agenda-2"><h2 style="text-align:center;">Containers vs. VMs</h2></section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>No Guest OS, No Hypervisor</h4>
+<ul>
+<li>Module 1: VM has guest OS</li>
+<li>A container shares host kernel</li>
+<li>Lighter, faster to start</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m14vmcmp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">VM: Hardware + Hypervisor + Guest OS</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m14vmcmp)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Container: Hardware + Host OS kernel</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m14vmcmp)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Isolation: from the kernel itself</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Why Faster to Start?</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">A container starts in under a second; a VM takes much longer to boot. What's the real reason for the gap?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">A VM boots an entire guest OS kernel; a container just starts a process, reusing the host kernel already running.</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Images &amp; the Dockerfile</h2></section>
+<section id="module-14-agenda-3"><h2 style="text-align:center;">Images &amp; the Dockerfile</h2></section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>A Dockerfile Is a Recipe</h4>
+<ul>
+<li>FROM: the base image to use</li>
+<li>COPY: add your own files in</li>
+<li>CMD: what runs when it starts</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m14dockerfile" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">FROM ubuntu:24.04</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m14dockerfile)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">COPY app.py /app/</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m14dockerfile)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">CMD ["python3", "/app/app.py"]</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Image vs. Container</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">This module keeps saying both "image" and "container". Are they the same thing?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">No: an image is the packaged recipe/template; a container is a running instance actually started from that image.</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Running Containers</h2></section>
+<section id="module-14-agenda-4"><h2 style="text-align:center;">Running Containers</h2></section>
+<section id="cmd-docker" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>docker run: Start One</h4>
+<ul>
+<li>-d: detached, background run</li>
+<li>-p: map a host port to it</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">docker</span> run -d -p 8080:80 nginx</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>docker run: Start One</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">docker</span> run -d -p 8080:80 nginx
+<span class="tk-comment"># Host port 8080 forwards to container port 80</span></div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>docker ps: What&#39;s Running</h4>
+<ul>
+<li>Lists containers and ports</li>
+<li>-a also shows stopped ones</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">docker</span> ps
+CONTAINER ID   IMAGE   PORTS
+a1b2c3d4e5f6   nginx   0.0.0.0:8080->80/tcp</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>docker ps: What&#39;s Running</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">docker</span> ps
+<span class="tk-comment"># Shows every currently-running container</span>
+CONTAINER ID   IMAGE   PORTS
+a1b2c3d4e5f6   nginx   0.0.0.0:8080->80/tcp</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>docker exec &amp; stop</h4>
+<ul>
+<li>exec: run a command inside it</li>
+<li>stop: shut it down cleanly</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">docker</span> exec -it a1b2c3d4 bash
+<span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">docker</span> stop a1b2c3d4</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>docker exec &amp; stop</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">docker</span> exec -it a1b2c3d4 bash
+<span class="tk-comment"># -it: interactive, with a real terminal</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">docker</span> stop a1b2c3d4</div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: ID Shortcuts</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">The container ID is a1b2c3d4e5f6, but Step 3 typed only a1b2c3d4. Why does that still work?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">Docker accepts any unique prefix of the full ID, so a few characters are usually enough to identify it.</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Building an Image</h2></section>
+<section id="module-14-agenda-5"><h2 style="text-align:center;">Building an Image</h2></section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>docker build: Make an Image</h4>
+<ul>
+<li>-t names (tags) the image</li>
+<li>. means build from this dir</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">docker</span> build -t myapp:1.0 .</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>docker build: Make an Image</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">docker</span> build -t myapp:1.0 .
+<span class="tk-comment"># Reads ./Dockerfile; -t sets name and version</span></div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>docker images: What Exists</h4>
+<ul>
+<li>Lists every image on this host</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">docker</span> images
+REPOSITORY   TAG   IMAGE ID
+myapp        1.0   7f8e9d0c1b2a</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>docker images: What Exists</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">docker</span> images
+<span class="tk-comment"># Confirms the build actually produced an image</span>
+REPOSITORY   TAG   IMAGE ID
+myapp        1.0   7f8e9d0c1b2a</div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Rebuild on Change?</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">app.py changes, but the Dockerfile itself doesn't. Does the image update automatically?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">No: an image is a fixed snapshot; docker build must run again to bake the new code into a new image.</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Practice Lab</h2></section>
+<section id="module-14-agenda-6"><h2 style="text-align:center;">Practice Lab</h2></section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Scenario: Containerize It</h4>
+<ul>
+<li>A small Python app (Module 11)</li>
+<li>Write a Dockerfile for it</li>
+<li>Build, run, confirm it works</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m14lab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Dockerfile: FROM, COPY, CMD</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m14lab)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">docker build: makes the image</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m14lab)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">docker run: starts it, verify output</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 1: Install Docker</h4>
+<ul>
+<li>Not installed by default</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> install -y docker.io</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 1: Install Docker</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> install -y docker.io
+<span class="tk-comment"># docker.io: the package name on Ubuntu</span></div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 2: The Dockerfile</h4>
+<ul>
+<li>Base image, copy the script in</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal">FROM python:3.12-slim
+COPY app.py /app.py
+CMD ["python3", "/app.py"]</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 2: The Dockerfile</h4>
+<div class="terminal terminal-slide">FROM python:3.12-slim
+<span class="tk-comment"># slim: a smaller, minimal base image</span>
+COPY app.py /app.py
+CMD ["python3", "/app.py"]</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 3: Build It</h4>
+<ul>
+<li>Tag it with a real name</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">docker</span> build -t my-script:1.0 .</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 3: Build It</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">docker</span> build -t my-script:1.0 .
+<span class="tk-comment"># Reads the Dockerfile in this directory</span></div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 4: Run and Verify</h4>
+<ul>
+<li>Confirm it actually ran</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">docker</span> run my-script:1.0
+Hello from inside a container</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 4: Run and Verify</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">docker</span> run my-script:1.0
+<span class="tk-comment"># No -d here: runs in the foreground, prints output</span>
+Hello from inside a container</div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Why the Slim Image?</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">The Dockerfile could have used a full ubuntu:24.04 base instead. Why reach for a slim Python image here?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">A smaller base means a smaller, faster-to-build image, and it already includes exactly what a Python app needs.</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Deliverable</h4>
+<ul>
+<li>A working Dockerfile</li>
+<li>An image built and tagged</li>
+<li>A running, verified container</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal">Hello from inside a container</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Questions?</h2></section>
+            </section>
+
 <!-- Deck-wide "Key Terms" word cloud: lives at the end of the deck
            (the last module), not repeated as every module's own last
            slide -- see the GLOBAL RULE in CLAUDE.md. Built automatically
@@ -26408,19 +26822,8 @@ $ crontab -r</div>
 
 </section>
 
-<!-- Modules 14-16 not yet built out for this term; hidden until ready.
-            <section id="module-14">
-        <section>
-          <div class="twocol">
-            <div class="col">
-          <h2>Module 14</h2>
-          <h3>Containerization</h3>
-            </div>
-            <div class="diagram"><div class="module-nav" data-current="14"></div></div>
-          </div>
-        </section>
-      </section>
-      <section id="module-15">
+<!-- Modules 15-16 not yet built out for this term; hidden until ready.
+            <section id="module-15">
         <section>
           <div class="twocol">
             <div class="col">
@@ -26795,6 +27198,7 @@ $ crontab -r</div>
         { id: 'cmd-iptables', module: 12, cmd: 'iptables', example: 'sudo iptables -L -v', purpose: 'View, add, or remove kernel firewall rules' },
         { id: 'cmd-nft', module: 12, cmd: 'nft', example: 'sudo nft list ruleset', purpose: 'View or edit nftables firewall rules' },
         { id: 'cmd-ipcalc', module: 13, cmd: 'ipcalc', example: 'ipcalc 192.168.1.0/24', purpose: 'Compute a subnet\'s network, host range, broadcast' },
+        { id: 'cmd-docker', module: 14, cmd: 'docker', example: 'sudo docker run -d -p 8080:80 nginx', purpose: 'Build, run, and manage containers' },
       ];
 
       function cmdTableHTML(throughId) {
