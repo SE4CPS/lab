@@ -478,7 +478,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-10-03 14:36 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-10-03 15:03 PT</span>
   </div>
 
   <!--
@@ -652,7 +652,7 @@
               <td>Week 11</td>
               <td>Nov 3, Nov 5</td>
               <td data-module="11">Automation Scripting</td>
-              <td></td>
+              <td>Commands: <a href="./#/cmd-read" target="_self">read</a>, <a href="./#/cmd-shellcheck" target="_self">shellcheck</a></td>
               <td><a href="./#/assignment-overview" target="_self">Lab/HW 6</a></td>
               <td>🏥 Hospital</td>
             </tr>
@@ -22817,6 +22817,627 @@ System time     : 0.000031 seconds fast</div>
 <section><h2 style="text-align:center;">Questions?</h2></section>
             </section>
 
+
+
+<section id="module-11">
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h2>Module 11</h2>
+<h3>Automation Scripting</h3>
+</div>
+<div class="diagram"><div class="module-nav" data-current="11"></div></div>
+</div>
+</section>
+
+
+<section id="module-11-agenda" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Agenda</h4>
+<ol style="line-height: 1.8;">
+<li><a href="./#/module-11-agenda-1" target="_self">Why Automate?</a></li>
+<li><a href="./#/module-11-agenda-2" target="_self">Your First Script</a></li>
+<li><a href="./#/module-11-agenda-3" target="_self">Variables &amp; Arguments</a></li>
+<li><a href="./#/module-11-agenda-4" target="_self">Conditionals in Bash</a></li>
+<li><a href="./#/module-11-agenda-5" target="_self">Loops in Bash</a></li>
+<li><a href="./#/module-11-agenda-6" target="_self">Functions &amp; Exit Codes</a></li>
+<li><a href="./#/module-11-agenda-7" target="_self">Practice Lab</a></li>
+</ol>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m11agenda" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">#!/bin/bash + chmod +x</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m11agenda)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Variables, if, for, functions</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m11agenda)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Scheduled with cron</text></svg>
+</div>
+</div>
+</section>
+
+
+<section id="module-11-all-commands" data-background-color="#ffffff">
+<h4>All Commands: Module 11</h4>
+<div class="cmd-table-module" style="width:100%;" data-module="11"></div>
+</section>
+
+<section id="module-11-agenda-1"><h2 style="text-align:center;">Why Automate?</h2></section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h2>Module 11</h2>
+<h3>Automation Scripting</h3>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 340 268" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><line x1="62" y1="14" x2="62" y2="254" stroke="#555" stroke-width="2"/>
+<circle cx="62" cy="38" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="42" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1971</text><text x="76" y="34" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="34">Unix v1 Thompson shell: the</tspan><tspan x="76" y="48">first real scripting shell</tspan></text>
+<circle cx="62" cy="92.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="96.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1977</text><text x="76" y="88.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="88.0">Bourne shell (Stephen Bourne,</tspan><tspan x="76" y="102.0">Bell Labs): real control flow</tspan></text>
+<circle cx="62" cy="146.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="150.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1989</text><text x="76" y="142.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="142.0">Bash 1.0 (Brian Fox, GNU):</tspan><tspan x="76" y="156.0">today's default Linux shell</tspan></text>
+<circle cx="62" cy="200.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="204.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2012</text><text x="76" y="196.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="196.0">ShellCheck released: static</tspan><tspan x="76" y="210.0">analysis for shell scripts</tspan></text>
+<circle cx="62" cy="254.0" r="6.5" fill="#9cdcfe" stroke="#9cdcfe" stroke-width="1.5"/><text x="48" y="258.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">Today</text><text x="76" y="250.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="250.0">A script replaces every manual,</tspan><tspan x="76" y="264.0">repeated command sequence</tspan></text>
+</svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">EVERY MODULE SO FAR, ONE SCRIPT</text><rect x="385" y="66" width="380" height="78" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="575" y="104" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Repeating the Same Commands</text><text x="575" y="128" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">by hand, every single time</text><rect x="262.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="412.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Typos Happen</text><text x="412.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">a script never mistypes a flag</text><rect x="587.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="737.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">cron Runs It for You</text><text x="737.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">Module 6: already scheduled</text><text x="575" y="368" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Every command this course has taught can be chained into one script.</text><text x="575" y="392" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">This module is the glue: variables, conditions, loops, and functions.</text></svg>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Not Just History?</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">Every command run so far is already saved in bash history. Why write a separate script instead of just re-running history?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">History is a record of what you typed, not a reusable tool: a script takes arguments, branches, and runs unattended.</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Your First Script</h2></section>
+<section id="module-11-agenda-2"><h2 style="text-align:center;">Your First Script</h2></section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>The Shebang Line</h4>
+<ul>
+<li>Must be the very first line</li>
+<li>Tells the OS which interpreter</li>
+<li>Without it, the default varies</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 244" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m11shebang" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">#!/bin/bash</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m11shebang)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">echo "Hello, sysadmin"</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Make It Executable</h4>
+<ul>
+<li>chmod +x grants run permission</li>
+<li>./ runs a script in this dir</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">chmod</span> <span class="tk-flag">+x</span> <span class="tk-path">hello.sh</span>
+<span class="tk-prompt">$ </span><span class="tk-path">./hello.sh</span>
+Hello, sysadmin</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Make It Executable</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">chmod</span> <span class="tk-flag">+x</span> <span class="tk-path">hello.sh</span>
+<span class="tk-comment"># Without +x, this fails: Permission denied</span>
+<span class="tk-prompt">$ </span><span class="tk-path">./hello.sh</span>
+Hello, sysadmin</div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Not bash hello.sh?</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">bash hello.sh also runs the script, no chmod needed. Why does this module teach chmod +x instead?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">bash hello.sh forces one interpreter; ./hello.sh trusts the shebang line, which matters once scripts call each other.</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Variables &amp; Arguments</h2></section>
+<section id="module-11-agenda-3"><h2 style="text-align:center;">Variables &amp; Arguments</h2></section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Declaring a Variable</h4>
+<ul>
+<li>No spaces around the equals</li>
+<li>Reads it back with $name</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal">name=<span class="tk-str">"backup.sh"</span>
+<span class="tk-cmd">echo</span> "Running $name"</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Declaring a Variable</h4>
+<div class="terminal terminal-slide">name=<span class="tk-str">"backup.sh"</span>
+<span class="tk-comment"># No spaces: name = "x" would fail</span>
+<span class="tk-cmd">echo</span> "Running $name"</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Arguments: $1, $2, $#</h4>
+<ul>
+<li>$1 is the first argument</li>
+<li>$# is the argument count</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-path">./backup.sh</span> <span class="tk-str">/srv/data</span>
+<span class="tk-cmd">echo</span> "Backing up $1"
+<span class="tk-cmd">echo</span> "Got $# argument(s)"</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Arguments: $1, $2, $#</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-path">./backup.sh</span> <span class="tk-str">/srv/data</span>
+<span class="tk-comment"># $1 = /srv/data, the first argument</span>
+<span class="tk-cmd">echo</span> "Backing up $1"
+<span class="tk-comment"># $# counts how many were given</span>
+<span class="tk-cmd">echo</span> "Got $# argument(s)"</div>
+</section>
+<section id="cmd-read" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>read: Ask the User</h4>
+<ul>
+<li>Pauses, waits for typed input</li>
+<li>Stores it in a named variable</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-cmd">read</span> -p <span class="tk-str">"Target dir: "</span> target
+<span class="tk-cmd">echo</span> "You chose $target"</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>read: Ask the User</h4>
+<div class="terminal terminal-slide"><span class="tk-cmd">read</span> -p <span class="tk-str">"Target dir: "</span> target
+<span class="tk-comment"># -p shows a prompt before reading</span>
+<span class="tk-cmd">echo</span> "You chose $target"</div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Quoting $1</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">echo "Backing up $1" uses quotes around the variable. Why does that matter if the path has a space in it?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">Without quotes, a space in $1 splits it into two separate words; quoting keeps the whole path as one value.</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Conditionals in Bash</h2></section>
+<section id="module-11-agenda-4"><h2 style="text-align:center;">Conditionals in Bash</h2></section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>if, Spaces Matter</h4>
+<ul>
+<li>[[ ... ]] needs spaces inside</li>
+<li>-d tests &quot;is a directory&quot;</li>
+<li>then/fi, not curly braces</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m11if" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">if [[ -d "$1" ]]; then</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m11if)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">echo "Directory exists"</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m11if)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">fi</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Testing a Path</h4>
+<ul>
+<li>-d: is a directory</li>
+<li>-f: is a regular file</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-cmd">if</span> [[ -d <span class="tk-str">"$1"</span> ]]; <span class="tk-cmd">then</span>
+  <span class="tk-cmd">echo</span> "Found it"
+<span class="tk-cmd">else</span>
+  <span class="tk-cmd">echo</span> "No such directory"
+<span class="tk-cmd">fi</span></div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Testing a Path</h4>
+<div class="terminal terminal-slide"><span class="tk-cmd">if</span> [[ -d <span class="tk-str">"$1"</span> ]]; <span class="tk-cmd">then</span>
+<span class="tk-comment"># -d tests: does this path exist as a dir?</span>
+  <span class="tk-cmd">echo</span> "Found it"
+<span class="tk-cmd">else</span>
+  <span class="tk-cmd">echo</span> "No such directory"
+<span class="tk-cmd">fi</span></div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: [[ vs [ ]</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">Older scripts use a single [ ] instead of [[ ]]. Why does this course teach [[ ]] instead?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">[[ ]] is a bash keyword: safer with unquoted variables and supports && / || directly, unlike the older [ ] form.</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Loops in Bash</h2></section>
+<section id="module-11-agenda-5"><h2 style="text-align:center;">Loops in Bash</h2></section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>for: Loop Over a List</h4>
+<ul>
+<li>Walks each item one at a time</li>
+<li>A glob, a list, or a range</li>
+<li>do/done, not curly braces</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m11for" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">for f in *.log; do</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m11for)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">echo "$f"</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m11for)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">done</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>for Over Real Files</h4>
+<ul>
+<li>*.log expands to every match</li>
+<li>$f holds the current filename</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-cmd">for</span> f in <span class="tk-str">*.log</span>; <span class="tk-cmd">do</span>
+  <span class="tk-cmd">echo</span> "Rotating $f"
+<span class="tk-cmd">done</span></div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>for Over Real Files</h4>
+<div class="terminal terminal-slide"><span class="tk-cmd">for</span> f in <span class="tk-str">*.log</span>; <span class="tk-cmd">do</span>
+<span class="tk-comment"># *.log expands before the loop starts</span>
+  <span class="tk-cmd">echo</span> "Rotating $f"
+<span class="tk-cmd">done</span></div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>while: Loop on a Condition</h4>
+<ul>
+<li>Repeats as long as it's true</li>
+<li>read inside the loop, per line</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-cmd">while</span> read -r line; <span class="tk-cmd">do</span>
+  <span class="tk-cmd">echo</span> "Line: $line"
+<span class="tk-cmd">done</span> &lt; <span class="tk-path">servers.txt</span></div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>while: Loop on a Condition</h4>
+<div class="terminal terminal-slide"><span class="tk-cmd">while</span> read -r line; <span class="tk-cmd">do</span>
+<span class="tk-comment"># Reads one line per loop pass</span>
+  <span class="tk-cmd">echo</span> "Line: $line"
+<span class="tk-cmd">done</span> &lt; <span class="tk-path">servers.txt</span></div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: for vs. while Here</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">Both loops could process a list of servers. When would while read be the better choice over for?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">for splits on whitespace from a glob/list; while read handles one line at a time, safer for filenames with spaces.</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Functions &amp; Exit Codes</h2></section>
+<section id="module-11-agenda-6"><h2 style="text-align:center;">Functions &amp; Exit Codes</h2></section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>A Function Groups Steps</h4>
+<ul>
+<li>Defined once, called by name</li>
+<li>Keeps a script&#39;s parts named</li>
+<li>No special keyword required</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m11func" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">backup_dir() {</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m11func)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">  cp -r "$1" /backups/</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m11func)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">}</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Defining and Calling It</h4>
+<ul>
+<li>Define before first use</li>
+<li>Call it like any command</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-cmd">backup_dir</span>() {
+  <span class="tk-cmd">cp</span> -r <span class="tk-str">"$1"</span> /backups/
+}
+<span class="tk-cmd">backup_dir</span> /srv/data</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Defining and Calling It</h4>
+<div class="terminal terminal-slide"><span class="tk-cmd">backup_dir</span>() {
+<span class="tk-comment"># $1 inside a function is its own argument</span>
+  <span class="tk-cmd">cp</span> -r <span class="tk-str">"$1"</span> /backups/
+}
+<span class="tk-cmd">backup_dir</span> /srv/data</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>exit Codes: 0 Means OK</h4>
+<ul>
+<li>0 means success, else failed</li>
+<li>$? holds the last exit code</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-cmd">backup_dir</span> /srv/data
+<span class="tk-cmd">if</span> [[ $? -ne 0 ]]; <span class="tk-cmd">then</span>
+  <span class="tk-cmd">echo</span> "Backup failed"
+<span class="tk-cmd">fi</span></div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>exit Codes: 0 Means OK</h4>
+<div class="terminal terminal-slide"><span class="tk-cmd">backup_dir</span> /srv/data
+<span class="tk-comment"># $? is the PREVIOUS command's exit code</span>
+<span class="tk-cmd">if</span> [[ $? -ne 0 ]]; <span class="tk-cmd">then</span>
+  <span class="tk-cmd">echo</span> "Backup failed"
+<span class="tk-cmd">fi</span></div>
+</section>
+<section id="cmd-shellcheck" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>shellcheck: Catch Mistakes</h4>
+<ul>
+<li>A linter for real scripts</li>
+<li>Flags unquoted vars, typos</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> <span class="tk-flag">install</span> <span class="tk-flag">-y</span> <span class="tk-str">shellcheck</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">shellcheck</span> <span class="tk-path">backup.sh</span></div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>shellcheck: Catch Mistakes</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> <span class="tk-flag">install</span> <span class="tk-flag">-y</span> <span class="tk-str">shellcheck</span>
+<span class="tk-comment"># Not installed by default</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">shellcheck</span> <span class="tk-path">backup.sh</span>
+<span class="tk-comment"># Warns about real, common mistakes</span></div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: What $? Really Means</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">The script runs TWO commands before checking $? once at the end. Which command's exit code does $? report?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">Only the most recent one: $? is overwritten after every command, so it never reports anything further back.</div>
+
+</div>
+</div>
+</section>
+<section id="module-11-cmdtable-end6" data-background-color="#ffffff"><div class="cmd-table" data-through="cmd-shellcheck"></div></section>
+<section><h2 style="text-align:center;">Practice Lab</h2></section>
+<section id="module-11-agenda-7"><h2 style="text-align:center;">Practice Lab</h2></section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Scenario: Nightly Backup</h4>
+<ul>
+<li>Back up /srv/registrar nightly</li>
+<li>Skip it if the folder&#39;s gone</li>
+<li>Scheduled via cron (Module 6)</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m11lab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">backup.sh: check, copy, log</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m11lab)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">chmod +x, test it by hand</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m11lab)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">crontab -e: run it nightly</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 1: Write the Script</h4>
+<ul>
+<li>Shebang, then the check</li>
+<li>Exits early if missing</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal">#!/bin/bash
+<span class="tk-cmd">if</span> [[ ! -d <span class="tk-str">/srv/registrar</span> ]]; <span class="tk-cmd">then</span>
+  <span class="tk-cmd">echo</span> "Source missing, exiting"
+  <span class="tk-cmd">exit</span> 1
+<span class="tk-cmd">fi</span></div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 1: Write the Script</h4>
+<div class="terminal terminal-slide">#!/bin/bash
+<span class="tk-cmd">if</span> [[ ! -d <span class="tk-str">/srv/registrar</span> ]]; <span class="tk-cmd">then</span>
+<span class="tk-comment"># ! negates the test: true if NOT a dir</span>
+  <span class="tk-cmd">echo</span> "Source missing, exiting"
+  <span class="tk-cmd">exit</span> 1
+<span class="tk-cmd">fi</span></div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 2: Copy and Log It</h4>
+<ul>
+<li>cp runs the real backup</li>
+<li>date stamps the log line</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-cmd">cp</span> -r /srv/registrar /backups/
+<span class="tk-cmd">echo</span> "Backed up on $(<span class="tk-cmd">date</span>)" &gt;&gt; backup.log</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 2: Copy and Log It</h4>
+<div class="terminal terminal-slide"><span class="tk-cmd">cp</span> -r /srv/registrar /backups/
+<span class="tk-comment"># $(date) runs date, inserts its output</span>
+<span class="tk-cmd">echo</span> "Backed up on $(<span class="tk-cmd">date</span>)" &gt;&gt; backup.log</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 3: Make It Executable</h4>
+<ul>
+<li>Grant run permission</li>
+<li>Test it once by hand first</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">chmod</span> <span class="tk-flag">+x</span> <span class="tk-path">backup.sh</span>
+<span class="tk-prompt">$ </span><span class="tk-path">./backup.sh</span></div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 3: Make It Executable</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">chmod</span> <span class="tk-flag">+x</span> <span class="tk-path">backup.sh</span>
+<span class="tk-comment"># Always test by hand before scheduling</span>
+<span class="tk-prompt">$ </span><span class="tk-path">./backup.sh</span></div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 4: Schedule with cron</h4>
+<ul>
+<li>Reuses Module 6's own crontab</li>
+<li>Runs every night at 2 AM</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">crontab</span> -e
+0 2 * * * /home/user/backup.sh</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 4: Schedule with cron</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">crontab</span> -e
+<span class="tk-comment"># minute hour day month weekday, then the path</span>
+0 2 * * * /home/user/backup.sh</div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Test by Hand First?</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">Step 3 runs ./backup.sh manually before Step 4 schedules it. Why not go straight to crontab?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">cron runs silently in the background; a manual run surfaces errors immediately, before they fail unseen overnight.</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Deliverable</h4>
+<ul>
+<li>A working, executable script</li>
+<li>One manual test run, confirmed</li>
+<li>A real crontab entry for it</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-cmd">echo</span> "Backed up on Fri Oct 16 02:00:01" &gt;&gt; backup.log</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Questions?</h2></section>
+            </section>
+
 <!-- Deck-wide "Key Terms" word cloud: lives at the end of the deck
            (the last module), not repeated as every module's own last
            slide -- see the GLOBAL RULE in CLAUDE.md. Built automatically
@@ -24979,19 +25600,8 @@ $ crontab -r</div>
 
 </section>
 
-<!-- Modules 11-16 not yet built out for this term; hidden until ready.
-            <section id="module-11">
-        <section>
-          <div class="twocol">
-            <div class="col">
-          <h2>Module 11</h2>
-          <h3>Automation Scripting</h3>
-            </div>
-            <div class="diagram"><div class="module-nav" data-current="11"></div></div>
-          </div>
-        </section>
-      </section>
-      <section id="module-12">
+<!-- Modules 12-16 not yet built out for this term; hidden until ready.
+            <section id="module-12">
         <section>
           <div class="twocol">
             <div class="col">
@@ -25394,6 +26004,8 @@ $ crontab -r</div>
         { id: 'cmd-timedatectl', module: 10, cmd: 'timedatectl', example: 'timedatectl set-timezone America/Los_Angeles', purpose: 'Show or set the clock, zone, and NTP status' },
         { id: 'cmd-chronyc', module: 10, cmd: 'chronyc', example: 'chronyc tracking', purpose: 'Check chrony sync offset and trusted source' },
         { id: 'cmd-hwclock', module: 10, cmd: 'hwclock', example: 'sudo hwclock --systohc', purpose: 'Read or write the battery-backed hardware clock' },
+        { id: 'cmd-read', module: 11, cmd: 'read', example: 'read -p "Target dir: " target', purpose: 'Pause a script and read typed input' },
+        { id: 'cmd-shellcheck', module: 11, cmd: 'shellcheck', example: 'shellcheck backup.sh', purpose: 'Lint a shell script for common mistakes' },
       ];
 
       function cmdTableHTML(throughId) {
