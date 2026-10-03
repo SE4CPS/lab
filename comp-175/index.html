@@ -478,7 +478,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-09-30 16:03 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-10-03 11:51 PT</span>
   </div>
 
   <!--
@@ -619,8 +619,8 @@
             <tr>
               <td>Week 7</td>
               <td>Oct 6, Oct 8</td>
-              <td data-module="7">Network Configuration</td>
-              <td></td>
+              <td data-module="7"><a href="./#/module-7" target="_self">Network Configuration</a></td>
+              <td>Commands: <a href="./#/cmd-ip-addr" target="_self">ip addr</a>, <a href="./#/cmd-ip-link" target="_self">ip link</a>, <a href="./#/module-7-all-commands" target="_self" style="white-space:nowrap;">+14 more &rarr;</a></td>
               <td><a href="./#/assignment-overview" target="_self">Lab/HW 4</a></td>
               <td></td>
             </tr>
@@ -19742,6 +19742,1090 @@ no crontab for you</div>
 
       </section>
 
+      <!-- MODULE 7 -->
+      <section id="module-7">
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h2>Module 7</h2>
+<h3>Network Configuration</h3>
+</div>
+<div class="diagram"><div class="module-nav" data-current="7"></div></div>
+</div>
+</section>
+
+
+<section id="module-7-agenda" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Agenda</h4>
+<ol style="line-height: 1.8;">
+<li><a href="./#/module-7-agenda-1" target="_self">What Is Network Config?</a></li>
+<li><a href="./#/module-7-agenda-2" target="_self">Viewing Interfaces</a></li>
+<li><a href="./#/module-7-agenda-3" target="_self">IP Addresses &amp; Subnets</a></li>
+<li><a href="./#/module-7-agenda-4" target="_self">Static vs DHCP</a></li>
+<li><a href="./#/module-7-agenda-5" target="_self">Routing &amp; Gateway</a></li>
+<li><a href="./#/module-7-agenda-6" target="_self">Checking DNS</a></li>
+<li><a href="./#/module-7-agenda-7" target="_self">Troubleshooting</a></li>
+<li><a href="./#/module-7-agenda-8" target="_self">Hostname &amp; /etc/hosts</a></li>
+<li><a href="./#/module-7-agenda-9" target="_self">Practice Lab</a></li>
+<li><a href="./#/module-7-agenda-10" target="_self">Practice Lab 2</a></li>
+</ol>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 340 308" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:520px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="306" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m7a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="25" y="16" width="290" height="54" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170" y="39.3" text-anchor="middle" font-size="16.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Interfaces (ip)</text><text x="170" y="61.6" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">what the machine sees</text><line x1="170" y1="74" x2="170" y2="86" stroke="#888" stroke-width="1.8" marker-end="url(#m7a1)"/><rect x="25" y="90" width="290" height="54" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170" y="113.3" text-anchor="middle" font-size="16.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Config (netplan)</text><text x="170" y="135.6" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">static or DHCP</text><line x1="170" y1="148" x2="170" y2="160" stroke="#888" stroke-width="1.8" marker-end="url(#m7a1)"/><rect x="25" y="164" width="290" height="54" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170" y="187.3" text-anchor="middle" font-size="16.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Routing &amp; DNS</text><text x="170" y="209.6" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">where traffic goes</text><line x1="170" y1="222" x2="170" y2="234" stroke="#888" stroke-width="1.8" marker-end="url(#m7a1)"/><rect x="25" y="238" width="290" height="54" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="170" y="261.3" text-anchor="middle" font-size="16.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Troubleshooting</text><text x="170" y="283.6" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">prove it, don&#39;t guess</text></svg>
+</div>
+</div>
+</section>
+
+
+<section id="module-7-all-commands" data-background-color="#ffffff">
+<h4>All Commands: Module 7</h4>
+<div class="cmd-table-module" style="width:100%;" data-module="7"></div>
+</section>
+
+
+<section id="module-7-agenda-1" data-background-color="#ffffff">
+<h2 style="text-align:center;">What Is Network Config?</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h2>Module 7</h2>
+<h3>Network Configuration</h3>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 340 268" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><line x1="62" y1="14" x2="62" y2="254" stroke="#555" stroke-width="2"/><circle cx="62" cy="38" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="42" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">1969</text><text x="76" y="34" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="34">ARPANET: the first packet-</tspan><tspan x="76" y="48">switched network link</tspan></text><circle cx="62" cy="81.2" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="85.2" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">1983</text><text x="76" y="77.2" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="77.2">TCP/IP becomes the standard</tspan><tspan x="76" y="91.2">(the ARPANET &quot;flag day&quot;)</tspan></text><circle cx="62" cy="124.4" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="128.4" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">1993</text><text x="76" y="120.4" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="120.4">DHCP defined (RFC 1531),</tspan><tspan x="76" y="134.4">automatic IP assignment</tspan></text><circle cx="62" cy="167.60000000000002" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="171.60000000000002" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">Late 1990s</text><text x="76" y="163.60000000000002" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="163.60000000000002">iproute2 (the ip command)</tspan><tspan x="76" y="177.60000000000002">replaces old net-tools</tspan></text><circle cx="62" cy="210.8" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="214.8" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">2017</text><text x="76" y="206.8" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="206.8">Netplan ships in Ubuntu</tspan><tspan x="76" y="220.8">17.10: YAML network config</tspan></text><circle cx="62" cy="254.0" r="6.5" fill="#9cdcfe" stroke="#9cdcfe" stroke-width="1.5"/><text x="48" y="258.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">Today</text><text x="76" y="250.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="250.0">Most machines configure</tspan><tspan x="76" y="264.0">networking declaratively</tspan></text></svg>
+</div>
+</div>
+</section>
+
+<section id="concept-agenda1-scope" data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">WHAT EVERY MACHINE NEEDS</text><rect x="385" y="66" width="380" height="78" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="575" y="104" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A Working Connection</text><text x="575" y="128" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">three things, one goal</text><rect x="100.0" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="250.0" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">An Address</text><text x="250.0" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">ip addr: who am I</text><rect x="425.0" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="575.0" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A Route</text><text x="575.0" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">ip route: how do I leave</text><rect x="750.0" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="900.0" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A Resolver</text><text x="900.0" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">DNS: names to addresses</text><text x="575" y="368" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Three pieces, configured together, not one at a time.</text><text x="575" y="392" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">Miss any one and the network looks "broken" with no obvious cause.</text></svg>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Three Things, One Connection</h4>
+<ul>
+<li>An address: who you are</li>
+<li>A route: how to leave</li>
+<li>A resolver: names to IPs</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="258" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="15" font-family="Consolas, monospace" fill="#9cdcfe">192.168.1.50/24</text><text x="180" y="66" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#999">the address</text><rect x="20" y="96" width="320" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="122" text-anchor="middle" font-size="15" font-family="Consolas, monospace" fill="#9cdcfe">via 192.168.1.1</text><text x="180" y="142" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#999">the route (gateway)</text><rect x="20" y="172" width="320" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="198" text-anchor="middle" font-size="15" font-family="Consolas, monospace" fill="#9cdcfe">8.8.8.8</text><text x="180" y="218" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#999">the resolver (DNS)</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Existing Software</h4>
+<ul>
+<li>iproute2: the ip command suite</li>
+<li>Netplan: Ubuntu&#39;s config tool</li>
+<li>NetworkManager: desktops</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="258" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="30" y="30" width="300" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="65" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#eee" font-weight="bold">ip</text><rect x="30" y="100" width="300" height="60" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="135" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#eee" font-weight="bold">netplan</text><rect x="30" y="170" width="300" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="205" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#eee" font-weight="bold">NetworkManager</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Which Piece?</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">A machine can reach 192.168.1.1 but not google.com. Which of the three pieces is most likely missing?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>The resolver. Reaching the gateway proves the address and route work; only DNS resolution is failing.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-7-agenda-2" data-background-color="#ffffff">
+<h2 style="text-align:center;">Viewing Interfaces</h2>
+</section>
+
+<section id="concept-agenda2-scope" data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">VIEWING INTERFACES: WHAT TO REACH FOR</text><rect x="385" y="66" width="380" height="78" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="575" y="104" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">What Do I See?</text><text x="575" y="128" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">two angles</text><rect x="262.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="412.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Addresses</text><text x="412.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">ip addr: every interface</text><rect x="587.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="737.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Up or Down</text><text x="737.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">ip link: the on/off switch</text><text x="575" y="368" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Before changing anything, see what is already there.</text><text x="575" y="392" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">Both commands are read-only unless you add set.</text></svg>
+</div>
+</section>
+
+<section id="cmd-ip-addr" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>See Every Interface: ip addr</h4>
+<ul>
+<li>Lists every network interface</li>
+<li>Shows each one&#39;s IP address</li>
+<li>No sudo needed to just look</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ ip addr show
+# every interface on this machine
+1: lo: &lt;LOOPBACK,UP&gt;
+    inet 127.0.0.1/8 scope host lo
+2: eth0: &lt;BROADCAST,UP&gt;
+    inet 192.168.1.50/24 ...</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>See Every Interface: ip addr</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ip</span> addr show
+<span class="tk-comment"># every interface on this machine</span>
+1: lo: &lt;LOOPBACK,UP&gt;
+    inet 127.0.0.1/8 scope host lo
+2: eth0: &lt;BROADCAST,UP&gt;
+    inet 192.168.1.50/24 ...</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Reading ip addr</h4>
+<ul>
+<li>lo: the loopback, always there</li>
+<li>eth0: a real network interface</li>
+<li>inet: the IPv4 address itself</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 340 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="178" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="14" y="14" width="100" height="40" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="64" y="39" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee" font-weight="bold">lo</text><rect x="120" y="14" width="206" height="40" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="223" y="39" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">loopback, 127.0.0.1</text><rect x="14" y="62" width="100" height="40" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="64" y="87" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee" font-weight="bold">eth0</text><rect x="120" y="62" width="206" height="40" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="223" y="87" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">the real NIC</text><rect x="14" y="110" width="100" height="40" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="64" y="135" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee" font-weight="bold">inet</text><rect x="120" y="110" width="206" height="40" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="223" y="135" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">the IPv4 address</text></svg>
+</div>
+</div>
+</section>
+
+<section id="cmd-ip-link" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Bring an Interface Up: ip link</h4>
+<ul>
+<li>link shows/sets up or down</li>
+<li>sudo needed to change it</li>
+<li>Down means no traffic</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ ip link show eth0
+# state is UP or DOWN
+$ sudo ip link set eth0 up
+# turn the interface on</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Bring an Interface Up: ip link</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ip</span> link show eth0
+<span class="tk-comment"># state is UP or DOWN</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> ip link set eth0 up
+<span class="tk-comment"># turn the interface on</span></div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Address vs Link?</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">eth0 shows state UP but ip addr shows no inet line for it. What does that tell you?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>The interface itself is active, but it has no IP address assigned yet: a configuration step is still missing.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-7-agenda-3" data-background-color="#ffffff">
+<h2 style="text-align:center;">IP Addresses &amp; Subnets</h2>
+</section>
+
+<section id="concept-agenda3-scope" data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">IP ADDRESSES &amp; SUBNETS</text><rect x="385" y="66" width="380" height="78" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="575" y="104" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Who Can Talk to Whom</text><text x="575" y="128" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">one idea, two parts</text><rect x="262.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="412.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">The Address</text><text x="412.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">192.168.1.50</text><rect x="587.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="737.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">The Mask (CIDR)</text><text x="737.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">/24: how much is network</text><text x="575" y="368" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">An address alone is not enough.</text><text x="575" y="392" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">The mask says which part is "this network" and which is "this host".</text></svg>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>CIDR Notation</h4>
+<ul>
+<li>/24 means 24 network bits</li>
+<li>Fewer host bits, fewer hosts</li>
+<li>/24 = 256 addrs, 254 usable</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="218" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="180" y="34" text-anchor="middle" font-size="18" font-family="Consolas, monospace" fill="#9cdcfe" font-weight="bold">192.168.1.50/24</text><rect x="30" y="54" width="220" height="50" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="140" y="84" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">192.168.1 : network</text><rect x="250" y="54" width="80" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="290" y="84" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">.50 : host</text><text x="180" y="138" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">/24 = mask 255.255.255.0</text><text x="180" y="162" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">/16 = mask 255.255.0.0</text><text x="180" y="186" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">/8 = mask 255.0.0.0</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Private Address Ranges</h4>
+<ul>
+<li>Reserved, never public</li>
+<li>Free to reuse on any LAN</li>
+<li>A router/NAT bridges out</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="178" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#9cdcfe">10.0.0.0/8</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="96" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#9cdcfe">172.16.0.0/12</text><rect x="20" y="120" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="146" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#9cdcfe">192.168.0.0/16</text></svg>
+</div>
+</div>
+</section>
+
+<section data-tag="terminology" data-term="CIDR" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h5 style="margin-bottom:0.5rem;">CIDR</h5>
+<ul>
+<li>Classless Inter-Domain</li>
+<li>Routing</li>
+</ul>
+</div>
+<div class="col">
+<h5 style="margin-bottom:0.5rem;">1993</h5>
+<ul>
+<li>RFC 1519, replacing fixed</li>
+<li>Class A/B/C sizes</li>
+</ul>
+</div>
+</div>
+<p class="fragment note-below">&#9888;&#65039; Before CIDR, every network was a fixed <span class="highlight">Class</span> A/B/C size: wasteful and inflexible.</p>
+<p class="source-line">Source: <a href="https://www.rfc-editor.org/rfc/rfc1519" target="_blank" rel="noopener">RFC 1519: Classless Inter-Domain Routing</a></p>
+</section>
+
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Same Network?</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">Are 192.168.1.50/24 and 192.168.1.90/24 on the same network?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>Yes. Both share the same first 24 bits (192.168.1), which is all /24 checks.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-7-agenda-4" data-background-color="#ffffff">
+<h2 style="text-align:center;">Static vs DHCP</h2>
+</section>
+
+<section id="concept-agenda4-scope" data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">STATIC VS DHCP</text><rect x="385" y="66" width="380" height="78" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="575" y="104" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Who Picks the Address?</text><text x="575" y="128" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">two answers</text><rect x="262.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="412.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Static: You Decide</text><text x="412.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">fixed, written in a file</text><rect x="587.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="737.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">DHCP: Asked For</text><text x="737.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">a server hands one out</text><text x="575" y="368" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">A server usually wants static; a laptop usually wants DHCP.</text><text x="575" y="392" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">Netplan configures either, in the same file format.</text></svg>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Static vs DHCP</h4>
+<ul>
+<li>Static: same address always</li>
+<li>DHCP: address can change</li>
+<li>Servers usually run static</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="218" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="150" height="80" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="95" y="56" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Static</text><text x="95" y="80" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">fixed, in netplan</text><rect x="190" y="20" width="150" height="80" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="265" y="56" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">DHCP</text><text x="265" y="80" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">leased from a server</text><text x="180" y="140" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Servers: static. Laptops: DHCP.</text><text x="180" y="164" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Netplan configures either one.</text></svg>
+</div>
+</div>
+</section>
+
+<section id="cmd-netplan-dhcp" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Netplan: DHCP</h4>
+<ul>
+<li>dhcp4: true is the whole file</li>
+<li>Written with tee, not nano</li>
+<li>Simplest working config</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo tee /etc/netplan/01-dhcp.yaml &lt;&lt; &#39;EOF&#39;
+network:
+  version: 2
+  ethernets:
+    eth0:
+      dhcp4: true
+EOF
+$ sudo netplan apply</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Netplan: DHCP</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> tee <span class="tk-path">/etc/netplan/01-dhcp.yaml</span> &lt;&lt; &#39;EOF&#39;
+network:
+  version: 2
+  ethernets:
+    eth0:
+      dhcp4: true
+EOF
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> netplan apply</div>
+</section>
+
+<section id="cmd-netplan-static" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Netplan: Static IP</h4>
+<ul>
+<li>addresses: a list, CIDR form</li>
+<li>gateway4: the default route</li>
+<li>nameservers: DNS to use</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo tee /etc/netplan/01-static.yaml &lt;&lt; &#39;EOF&#39;
+network:
+  version: 2
+  ethernets:
+    eth0:
+      addresses: [192.168.1.50/24]
+      gateway4: 192.168.1.1
+      nameservers: {addresses: [8.8.8.8]}
+EOF
+$ sudo netplan apply</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Netplan: Static IP</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> tee <span class="tk-path">/etc/netplan/01-static.yaml</span> &lt;&lt; &#39;EOF&#39;
+network:
+  version: 2
+  ethernets:
+    eth0:
+      addresses: [192.168.1.50/24]
+      gateway4: 192.168.1.1
+      nameservers: {addresses: [8.8.8.8]}
+EOF
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> netplan apply</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Try Before Apply?</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">netplan try previews a config and auto-reverts if you never confirm it. Why is that useful over netplan apply?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>A bad static config over SSH can lock you out immediately. try rolls back automatically if you lose the connection.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-7-agenda-5" data-background-color="#ffffff">
+<h2 style="text-align:center;">Routing &amp; Gateway</h2>
+</section>
+
+<section id="concept-agenda5-scope" data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">ROUTING &amp; THE DEFAULT GATEWAY</text><rect x="385" y="66" width="380" height="78" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="575" y="104" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">How Traffic Leaves</text><text x="575" y="128" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">one key line</text><rect x="262.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="412.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">On This Network</text><text x="412.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">direct, no gateway needed</text><rect x="587.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="737.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Everywhere Else</text><text x="737.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">sent via the gateway</text><text x="575" y="368" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">The routing table decides, packet by packet, which path to take.</text><text x="575" y="392" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">A missing default route means "local only, nothing beyond it."</text></svg>
+</div>
+</section>
+
+<section id="cmd-ip-route" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>See the Routing Table: ip route</h4>
+<ul>
+<li>default via ...: the gateway</li>
+<li>Local networks need no gateway</li>
+<li>No sudo needed to just look</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ ip route show
+# the routing table
+default via 192.168.1.1 dev eth0
+192.168.1.0/24 dev eth0 ...</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>See the Routing Table: ip route</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ip</span> route show
+<span class="tk-comment"># the routing table</span>
+default via 192.168.1.1 dev eth0
+192.168.1.0/24 dev eth0 ...</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Reading the Routing Table</h4>
+<ul>
+<li>default: the catch-all route</li>
+<li>via: the next hop (gateway)</li>
+<li>dev: which interface to use</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="178" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="14" y="14" width="100" height="40" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="64" y="39" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#eee" font-weight="bold">default</text><rect x="120" y="14" width="206" height="40" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="223" y="39" text-anchor="middle" font-size="13.5" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">catch-all route</text><rect x="14" y="62" width="100" height="40" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="64" y="87" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#eee" font-weight="bold">via</text><rect x="120" y="62" width="206" height="40" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="223" y="87" text-anchor="middle" font-size="13.5" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">the next hop</text><rect x="14" y="110" width="100" height="40" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="64" y="135" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#eee" font-weight="bold">dev</text><rect x="120" y="110" width="206" height="40" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="223" y="135" text-anchor="middle" font-size="13.5" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">which interface</text></svg>
+</div>
+</div>
+</section>
+
+<section data-tag="terminology" data-term="Gateway" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h5 style="margin-bottom:0.5rem;">geat</h5>
+<ul>
+<li>Old English: an opening, gap</li>
+</ul>
+</div>
+<div class="col">
+<h5 style="margin-bottom:0.5rem;">gateway</h5>
+<ul>
+<li>the passage through it</li>
+</ul>
+</div>
+</div>
+<p class="fragment note-below">&#9888;&#65039; No gateway means no path <span class="highlight">out</span>: only the local network is reachable.</p>
+<p class="source-line">Source: <a href="https://www.etymonline.com/word/gateway" target="_blank" rel="noopener">etymonline: gateway</a></p>
+</section>
+
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: No Default Route?</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">ip route show lists only 192.168.1.0/24, no default line. What can this machine reach?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>Only other devices on its own local network. Nothing outside it: no gateway means no path out.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-7-agenda-6" data-background-color="#ffffff">
+<h2 style="text-align:center;">Checking DNS</h2>
+</section>
+
+<section id="concept-agenda6-scope" data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">CHECKING DNS: IS THE RESOLVER WORKING?</text><rect x="385" y="66" width="380" height="78" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="575" y="104" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Names to Addresses</text><text x="575" y="128" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">one more piece</text><rect x="262.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="412.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Who Am I Asking?</text><text x="412.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">resolvectl status</text><rect x="587.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="737.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Did It Work?</text><text x="737.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">dig, from Module 1</text><text x="575" y="368" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Module 1&#39;s dig proved lookups work from anywhere.</text><text x="575" y="392" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">This item checks THIS machine&#39;s own resolver configuration.</text></svg>
+</div>
+</section>
+
+<section id="cmd-resolvectl" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Resolver Status: resolvectl</h4>
+<ul>
+<li>Shows which DNS server is used</li>
+<li>Per interface, not just global</li>
+<li>Comes from systemd-resolved</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ resolvectl status
+# which DNS server, per interface
+Link 2 (eth0)
+    Current DNS Server: 8.8.8.8
+      DNS Servers: 8.8.8.8</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Resolver Status: resolvectl</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">resolvectl</span> status
+<span class="tk-comment"># which DNS server, per interface</span>
+Link 2 (eth0)
+    Current DNS Server: 8.8.8.8
+      DNS Servers: 8.8.8.8</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>/etc/resolv.conf</h4>
+<ul>
+<li>The traditional resolver file</li>
+<li>Often a symlink, not static</li>
+<li>netplan writes it indirectly</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="30" y="30" width="300" height="46" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="58" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#9cdcfe">/etc/resolv.conf</text><rect x="30" y="90" width="300" height="46" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="118" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee">symlink to systemd-resolved</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Right Tool?</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">You want to confirm a domain actually resolves to an IP, end to end. resolvectl or dig?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>dig. resolvectl shows which server THIS machine would ask; dig actually performs the lookup and shows the answer.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-7-agenda-7" data-background-color="#ffffff">
+<h2 style="text-align:center;">Troubleshooting</h2>
+</section>
+
+<section id="concept-agenda7-scope" data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">TROUBLESHOOTING: PROVE IT, DON&#39;T GUESS</text><rect x="385" y="66" width="380" height="78" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="575" y="104" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Work Outward</text><text x="575" y="128" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">one layer at a time</text><rect x="262.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="412.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Can I Reach It? (ping)</text><text x="412.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">already known, Module 2</text><rect x="587.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="737.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Where Does It Stop?</text><text x="737.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">traceroute: the hop that fails</text><text x="575" y="368" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Check the closest layer first: gateway, then DNS, then the host.</text><text x="575" y="392" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">Jumping straight to "the internet is down" skips real evidence.</text></svg>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Start With ping</h4>
+<ul>
+<li>ping already taught, Module 2</li>
+<li>Test gateway, then the host</li>
+<li>No reply: look closer here</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="178" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#9cdcfe">ping -c 1 192.168.1.1</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="96" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#9cdcfe">ping -c 1 8.8.8.8</text><rect x="20" y="120" width="320" height="42" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="146" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#9cdcfe">ping -c 1 google.com</text></svg>
+</div>
+</div>
+</section>
+
+<section id="cmd-traceroute" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Find the Broken Hop: traceroute</h4>
+<ul>
+<li>Shows every hop along the way</li>
+<li>The hop that stops answering</li>
+<li>Not installed by default</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo apt install -y traceroute
+$ traceroute 8.8.8.8
+# each line: one hop, its time
+ 1  192.168.1.1  0.4 ms
+ 2  10.20.0.1    3.1 ms
+ 3  * * *</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Find the Broken Hop: traceroute</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> traceroute
+<span class="tk-prompt">$</span> <span class="tk-cmd">traceroute</span> 8.8.8.8
+<span class="tk-comment"># each line: one hop, its time</span>
+ 1  192.168.1.1  0.4 ms
+ 2  10.20.0.1    3.1 ms
+ 3  * * *</div>
+</section>
+
+<section id="cmd-ss" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>See Open Ports: ss</h4>
+<ul>
+<li>Replaces the older netstat</li>
+<li>-t TCP, -u UDP, -l listening</li>
+<li>-n: numbers, not slow lookups</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ ss -tuln
+# listening TCP/UDP ports
+tcp   LISTEN  0.0.0.0:22
+tcp   LISTEN  0.0.0.0:80</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>See Open Ports: ss</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ss</span> <span class="tk-flag">-tuln</span>
+<span class="tk-comment"># listening TCP/UDP ports</span>
+tcp   LISTEN  0.0.0.0:22
+tcp   LISTEN  0.0.0.0:80</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Which Hop?</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">traceroute shows hops 1-3 answering, then 4 onward all show *. What failed?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>Hop 4, or the link just past hop 3: everything up to hop 3 is proven reachable.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-7-agenda-8" data-background-color="#ffffff">
+<h2 style="text-align:center;">Hostname &amp; /etc/hosts</h2>
+</section>
+
+<section id="concept-agenda8-scope" data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">HOSTNAME &amp; /etc/hosts</text><rect x="385" y="66" width="380" height="78" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="575" y="104" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Naming This Machine</text><text x="575" y="128" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">two different jobs</text><rect x="262.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="412.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">My Own Name</text><text x="412.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">hostnamectl</text><rect x="587.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="737.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Names I Resolve Myself</text><text x="737.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">/etc/hosts</text><text x="575" y="368" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">A hostname names THIS machine; /etc/hosts maps OTHER names.</text><text x="575" y="392" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">Module 4&#39;s own DNS-collision lesson used exactly this file.</text></svg>
+</div>
+</section>
+
+<section id="cmd-hostnamectl" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Set the Hostname: hostnamectl</h4>
+<ul>
+<li>Shows or sets the hostname</li>
+<li>set-hostname needs sudo</li>
+<li>Takes effect without a reboot</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ hostnamectl
+# current hostname and OS info
+   Static hostname: ubuntu-server
+$ sudo hostnamectl set-hostname web01</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Set the Hostname: hostnamectl</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">hostnamectl</span>
+<span class="tk-comment"># current hostname and OS info</span>
+   Static hostname: ubuntu-server
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> hostnamectl set-hostname web01</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>/etc/hosts: Local Overrides</h4>
+<ul>
+<li>Checked before real DNS</li>
+<li>For a name with no DNS entry</li>
+<li>Can cause a silent collision</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="40" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="45" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#9cdcfe">10.0.2.15  clinic-records</text><text x="180" y="100" text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#999">one line: an IP, then a name</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Which Wins?</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">/etc/hosts has an entry for api.example.com, and real DNS has a different one. Which wins?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>/etc/hosts. It is checked first, so its entry overrides whatever real DNS would have returned.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-7-agenda-9" data-background-color="#ffffff">
+<h2 style="text-align:center;">Practice Lab</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Scenario: Configure the Server</h4>
+<ul>
+<li>Kali: your admin workstation</li>
+<li>Ubuntu: the diagnostics server</li>
+<li>Give it a working static IP</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="178" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="30" width="140" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="90" y="65" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Kali</text><rect x="200" y="30" width="140" height="60" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="270" y="65" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Ubuntu</text><text x="180" y="130" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Configure Ubuntu&#39;s network from Kali, over SSH</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Requirements</h4>
+<ul>
+<li>A real static IP via netplan</li>
+<li>A working default route</li>
+<li>A working DNS resolver</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="178" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Static address</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="96" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Default route</text><rect x="20" y="120" width="320" height="42" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="146" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Working DNS</text></svg>
+</div>
+</div>
+</section>
+
+<section id="cmd-pl1-check-before" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 1: Check the Starting Point</h4>
+<ul>
+<li>See what interface exists now</li>
+<li>Note any current address</li>
+<li>This is your before picture</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ ssh user@ubuntu-ip
+$ ip addr show
+# note the interface name, e.g. eth0</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 1: Check the Starting Point</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ssh</span> user@ubuntu-ip
+<span class="tk-prompt">$</span> <span class="tk-cmd">ip</span> addr show
+<span class="tk-comment"># note the interface name, e.g. eth0</span></div>
+</section>
+
+<section id="cmd-pl1-write" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 2: Write the Netplan File</h4>
+<ul>
+<li>One config, written once</li>
+<li>tee, never nano</li>
+<li>Pick an address on your subnet</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo tee /etc/netplan/01-lab.yaml &lt;&lt; &#39;EOF&#39;
+network:
+  version: 2
+  ethernets:
+    eth0:
+      addresses: [192.168.1.80/24]
+      gateway4: 192.168.1.1
+      nameservers:
+        addresses: [8.8.8.8]
+EOF</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 2: Write the Netplan File</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> tee <span class="tk-path">/etc/netplan/01-lab.yaml</span> &lt;&lt; &#39;EOF&#39;
+network:
+  version: 2
+  ethernets:
+    eth0:
+      addresses: [192.168.1.80/24]
+      gateway4: 192.168.1.1
+      nameservers:
+        addresses: [8.8.8.8]
+EOF</div>
+</section>
+
+<section id="cmd-pl1-apply" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 3: Apply It</h4>
+<ul>
+<li>netplan apply: live, no reboot</li>
+<li>A typo here can drop your SSH</li>
+<li>try is the safer choice</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo netplan try
+# previews, auto-reverts if unconfirmed
+$ sudo netplan apply</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 3: Apply It</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> netplan try
+<span class="tk-comment"># previews, auto-reverts if unconfirmed</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> netplan apply</div>
+</section>
+
+<section id="cmd-pl1-verify" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 4: Verify All Three</h4>
+<ul>
+<li>Address: ip addr</li>
+<li>Route: ip route</li>
+<li>Resolver: resolvectl</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ ip addr show eth0
+$ ip route show
+$ resolvectl status</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 4: Verify All Three</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ip</span> addr show eth0
+<span class="tk-prompt">$</span> <span class="tk-cmd">ip</span> route show
+<span class="tk-prompt">$</span> <span class="tk-cmd">resolvectl</span> status</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Confirm, Not Assume</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">netplan apply returned with no error. Does that prove the new address is really active?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>No. Re-run ip addr/ip route/resolvectl and read the actual values; "no error" only means the file parsed.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Deliverable</h4>
+<ul>
+<li>Screenshot: ip addr output</li>
+<li>Screenshot: ip route output</li>
+<li>Screenshot: resolvectl status</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="178" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Write the config</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="96" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Apply it</text><rect x="20" y="120" width="320" height="42" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="146" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Verify all three pieces</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-7-agenda-10" data-background-color="#ffffff">
+<h2 style="text-align:center;">Practice Lab 2</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Scenario: Diagnose the Break</h4>
+<ul>
+<li>A classmate&#39;s config is broken</li>
+<li>Symptom only: &quot;no internet&quot;</li>
+<li>Find which layer failed</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="178" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Could be: address</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="96" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Could be: route</text><rect x="20" y="120" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="146" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Could be: DNS</text></svg>
+</div>
+</div>
+</section>
+
+<section id="cmd-pl2-step1" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 1: Ping the Gateway</h4>
+<ul>
+<li>Closest layer first</li>
+<li>No reply: address/route bad</li>
+<li>Reply: move one layer out</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ ip route show
+# find the default gateway first
+$ ping -c 2 192.168.1.1</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 1: Ping the Gateway</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ip</span> route show
+<span class="tk-comment"># find the default gateway first</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">ping</span> <span class="tk-flag">-c</span> 2 192.168.1.1</div>
+</section>
+
+<section id="cmd-pl2-step2" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 2: Ping an External IP</h4>
+<ul>
+<li>Gateway replied: try further</li>
+<li>A raw IP skips DNS entirely</li>
+<li>No reply: routing is at fault</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ ping -c 2 8.8.8.8
+# raw IP, no DNS involved</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 2: Ping an External IP</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ping</span> <span class="tk-flag">-c</span> 2 8.8.8.8
+<span class="tk-comment"># raw IP, no DNS involved</span></div>
+</section>
+
+<section id="cmd-pl2-step3" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 3: Ping a Domain Name</h4>
+<ul>
+<li>The IP replied, so DNS is next</li>
+<li>A domain name needs resolution</li>
+<li>No reply: DNS is at fault</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ ping -c 2 google.com
+# needs DNS to even start</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 3: Ping a Domain Name</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ping</span> <span class="tk-flag">-c</span> 2 google.com
+<span class="tk-comment"># needs DNS to even start</span></div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Step 4: Localize the Fault</h4>
+<ul>
+<li>Gateway fails: address/route</li>
+<li>IP works, name fails: DNS</li>
+<li>Fix only that one piece</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="198" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="50" text-anchor="middle" font-size="13.5" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Gateway fails -&gt; address/route</text><rect x="20" y="80" width="320" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="110" text-anchor="middle" font-size="13.5" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">IP OK, name fails -&gt; DNS</text><rect x="20" y="140" width="320" height="50" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="170" text-anchor="middle" font-size="13.5" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Fix the one piece, re-test</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Step 5: Fix and Re-Verify</h4>
+<ul>
+<li>Correct just the broken field</li>
+<li>Re-apply with netplan apply</li>
+<li>Repeat Steps 1-3 to confirm</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Edit, apply, re-test</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="96" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">All three pings succeed</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Fix the Right Field</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">Only the domain-name ping fails; the raw IP ping succeeds. What should you NOT touch?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>The address and gateway: they already proved they work. Only the DNS nameserver entry needs fixing.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Deliverable</h4>
+<ul>
+<li>Screenshots: all 3 pings</li>
+<li>One sentence: the broken layer</li>
+<li>Screenshot: all 3, now fixed</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Diagnose, 3 pings</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="96" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Fix it, prove it</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Looking Ahead: Module 8</h2>
+</section>
+</section>
+
+      
+
+      
+
       <!-- Deck-wide "Key Terms" word cloud: lives at the end of the deck
            (the last module), not repeated as every module's own last
            slide -- see the GLOBAL RULE in CLAUDE.md. Built automatically
@@ -21904,18 +22988,7 @@ $ crontab -r</div>
 
 </section>
 
-      <!-- Modules 7-16 not yet built out for this term; hidden until ready.
-      <section id="module-7">
-        <section>
-          <div class="twocol">
-            <div class="col">
-          <h2>Module 7</h2>
-          <h3>Network Configuration</h3>
-            </div>
-            <div class="diagram"><div class="module-nav" data-current="7"></div></div>
-          </div>
-        </section>
-      </section>
+      <!-- Modules 8-16 not yet built out for this term; hidden until ready.
       <section id="module-8">
         <section>
           <div class="twocol">
@@ -22324,7 +23397,23 @@ $ crontab -r</div>
         { id: 'cmd-systemctl-daemon-reload', module: 6, cmd: 'systemctl daemon-reload', example: 'sudo systemctl daemon-reload', purpose: 'Reread unit files' },
         { id: 'cmd-systemctl-mask', module: 6, cmd: 'systemctl mask', example: 'sudo systemctl mask cups', purpose: 'Forbid a unit from starting' },
         { id: 'cmd-systemctl-list-timers', module: 6, cmd: 'systemctl list-timers', example: 'systemctl list-timers', purpose: 'List scheduled timers' },
-        { id: 'cmd-crontab', module: 6, cmd: 'crontab', example: 'crontab -e', purpose: 'Edit your scheduled jobs' }
+        { id: 'cmd-crontab', module: 6, cmd: 'crontab', example: 'crontab -e', purpose: 'Edit your scheduled jobs' },
+        { id: 'cmd-ip-addr', module: 7, cmd: 'ip addr', example: 'ip addr show', purpose: 'List every interface and its IP' },
+        { id: 'cmd-ip-link', module: 7, cmd: 'ip link', example: 'ip link set eth0 up', purpose: 'Bring a network interface up/down' },
+        { id: 'cmd-netplan-dhcp', module: 7, cmd: 'netplan', example: 'sudo netplan apply', purpose: 'Apply a netplan config file' },
+        { id: 'cmd-netplan-static', module: 7, cmd: 'netplan', example: 'sudo netplan apply', purpose: 'Apply a static netplan config' },
+        { id: 'cmd-ip-route', module: 7, cmd: 'ip route', example: 'ip route show', purpose: 'Show the routing table' },
+        { id: 'cmd-resolvectl', module: 7, cmd: 'resolvectl', example: 'resolvectl status', purpose: 'Show the active DNS resolver' },
+        { id: 'cmd-traceroute', module: 7, cmd: 'traceroute', example: 'traceroute 8.8.8.8', purpose: 'Show the path, hop by hop' },
+        { id: 'cmd-ss', module: 7, cmd: 'ss', example: 'ss -tuln', purpose: 'List listening network ports' },
+        { id: 'cmd-hostnamectl', module: 7, cmd: 'hostnamectl', example: 'hostnamectl set-hostname web01', purpose: 'View or set this machine\'s hostname' },
+        { id: 'cmd-pl1-check-before', module: 7, cmd: 'ip addr', example: 'ip addr show', purpose: 'List every interface and its IP' },
+        { id: 'cmd-pl1-write', module: 7, cmd: 'tee', example: 'sudo tee /etc/netplan/01-lab.yaml', purpose: 'Write a netplan config file' },
+        { id: 'cmd-pl1-apply', module: 7, cmd: 'netplan', example: 'sudo netplan apply', purpose: 'Apply a netplan config file' },
+        { id: 'cmd-pl1-verify', module: 7, cmd: 'ip addr', example: 'ip addr show eth0', purpose: 'Confirm the new address took effect' },
+        { id: 'cmd-pl2-step1', module: 7, cmd: 'ping', example: 'ping -c 2 192.168.1.1', purpose: 'Test reachability to the gateway' },
+        { id: 'cmd-pl2-step2', module: 7, cmd: 'ping', example: 'ping -c 2 8.8.8.8', purpose: 'Test reachability past the gateway' },
+        { id: 'cmd-pl2-step3', module: 7, cmd: 'ping', example: 'ping -c 2 google.com', purpose: 'Test reachability using a domain name' }
       ];
 
       function cmdTableHTML(throughId) {
