@@ -1,0 +1,143 @@
+Lab 6: Automated Monitoring Setup (Ubuntu)   100 pts
+
+Ten practical tasks. Every task ends with a screenshot as evidence.
+
+Rules for every question:
+- No command-line editor (nano, vim, vi, or visudo in edit mode). The only way to write or change a file is cat, with the text in a here-document: a line such as cat > file <<'EOF', then the text, then a line containing only EOF. Output redirection like > and >> is fine.
+- The terminal prompt (username and hostname) must be visible.
+- Where a question says "Explain", type one sentence as a # comment line in the same terminal, then take the screenshot.
+- End the terminal with a comment line: # AI used: No   or   # AI used: Yes, (what you asked it and what you changed)
+- Do not assume account/IP values that are specific to your own VM; substitute your real ones (USER, UBUNTU_IP).
+- Paste commands in blocks, but run any command that asks you a question on its own, answer it, then continue.
+- This lab reuses Lab 5's Ubuntu VM directly: no new SSH setup is needed.
+- All of Questions 2-10 run on the same Ubuntu VM used in Lab 5.
+
+
+Question 1 (10 pts)
+Confirm the Server
+
+Done from Kali, into the same Ubuntu VM used in Lab 5. No new setup is needed, just confirm you are on the right machine before starting.
+
+ssh USER@UBUNTU_IP
+hostnamectl
+
+Explain (type it as a # comment line in the terminal): why this lab needs no separate setup step.
+
+Screenshot: the Kali prompt, the ssh command, and hostnamectl output.
+
+
+Question 2 (10 pts)
+Install fail2ban
+
+Install the tool this lab is built around, and confirm the package actually landed.
+
+Package: fail2ban, not installed by default.
+
+sudo apt install -y fail2ban
+dpkg -l | grep fail2ban
+
+Explain (type it as a # comment line in the terminal): what fail2ban is for, in one sentence.
+
+Screenshot: the install finishing and dpkg confirming it is present.
+
+
+Question 3 (10 pts)
+Check the sshd Jail
+
+Confirm the service itself is running, then check the specific jail that watches SSH logins.
+
+sudo systemctl status fail2ban
+sudo fail2ban-client status sshd
+
+Explain (type it as a # comment line in the terminal): what "jail" means in fail2ban's own terms.
+
+Screenshot: systemctl showing active (running), and the sshd jail status.
+
+
+Question 4 (10 pts)
+Preview Log Rotation
+
+Preview what logrotate would do, without actually rotating anything yet.
+
+sudo logrotate -d /etc/logrotate.conf
+
+Explain (type it as a # comment line in the terminal): why -d matters here, versus running it for real.
+
+Screenshot: the full preview output.
+
+
+Question 5 (10 pts)
+Search auth.log
+
+Search the real authentication log for failed login attempts.
+
+sudo grep "Failed password" /var/log/auth.log
+
+Explain (type it as a # comment line in the terminal): what it would mean if this came back completely empty.
+
+Screenshot: the matching lines, or the empty result if there are none.
+
+
+Question 6 (10 pts)
+Check the Current Time
+
+Check the system clock two ways: the short form, then the full status.
+
+date
+timedatectl
+
+Explain (type it as a # comment line in the terminal): what timedatectl tells you that plain date does not.
+
+Screenshot: the output of both commands.
+
+
+Question 7 (10 pts)
+Confirm chrony Is Synced
+
+Install the time-sync daemon if it is missing, then confirm this server's clock is actually synced.
+
+Package: chrony, not installed by default.
+
+sudo apt install -y chrony
+chronyc tracking
+
+Explain (type it as a # comment line in the terminal): what the System time line is telling you.
+
+Screenshot: the chronyc tracking output with the offset visible.
+
+
+Question 8 (10 pts)
+Check the Trusted Source
+
+Confirm which time server this machine actually trusts right now.
+
+chronyc sources
+
+Explain (type it as a # comment line in the terminal): what the * next to one line means.
+
+Screenshot: the sources output with the trusted line visible.
+
+
+Question 9 (10 pts)
+Read the Hardware Clock
+
+Read the battery-backed clock directly, separate from the system clock.
+
+sudo hwclock --show
+
+Explain (type it as a # comment line in the terminal): why this clock can differ from the system clock after a long shutdown.
+
+Screenshot: the hwclock output.
+
+
+Question 10 (10 pts)
+Write the Summary Report
+
+Combine today's date, the sync status, and the fail2ban jail status into one report file.
+
+{ date; chronyc tracking; sudo fail2ban-client status sshd; } > monitor-report.txt
+cat monitor-report.txt
+
+Explain (type it as a # comment line in the terminal): why a sysadmin would want all three in one file, not three screenshots.
+
+Screenshot: the full contents of monitor-report.txt.

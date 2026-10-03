@@ -1,0 +1,144 @@
+Lab 5: Network & Secure Transport Audit (Kali + Ubuntu)   100 pts
+
+Ten practical tasks. Every task ends with a screenshot as evidence.
+
+Rules for every question:
+- No command-line editor (nano, vim, vi, or visudo in edit mode). The only way to write or change a file is cat, with the text in a here-document: a line such as cat > file <<'EOF', then the text, then a line containing only EOF. Output redirection like > and >> is fine.
+- The terminal prompt (username and hostname) must be visible.
+- Where a question says "Explain", type one sentence as a # comment line in the same terminal, then take the screenshot.
+- End the terminal with a comment line: # AI used: No   or   # AI used: Yes, (what you asked it and what you changed)
+- Do not assume account/IP values that are specific to your own VM; substitute your real ones (USER, UBUNTU_IP).
+- Paste commands in blocks, but run any command that asks you a question on its own, answer it, then continue.
+- All of Questions 2-10 run on the Ubuntu VM, reached by SSH from Kali in Question 1.
+- Setup files: https://github.com/SE4CPS/2026-COMP-175.git (clone to the Ubuntu VM)
+
+
+Question 1 (10 pts)
+SSH In & Get the Files
+
+Done from Kali, into the Ubuntu VM used all semester. Clone the course repo so the rest of the lab's files are on the server, then confirm you landed in the right place.
+
+Package: git, not installed by default on a fresh image, install first.
+
+# from Kali
+ssh USER@UBUNTU_IP
+# now on Ubuntu:
+sudo apt install -y git
+git clone https://github.com/SE4CPS/2026-COMP-175.git
+cd 2026-COMP-175/modules/lab5
+
+Explain (type it as a # comment line in the terminal): why you run the rest of this lab on Ubuntu, not Kali.
+
+Screenshot: the Kali prompt, the ssh command, and the Ubuntu prompt after login.
+
+
+Question 2 (10 pts)
+Confirm the Current IP
+
+Before changing anything about this server's network identity, confirm what it currently is.
+
+ip addr
+
+Explain (type it as a # comment line in the terminal): which interface and IPv4 address are the real, active ones.
+
+Screenshot: the full ip addr output with the active interface and IPv4 address visible.
+
+
+Question 3 (10 pts)
+Find the Default Gateway
+
+Every packet leaving this subnet goes through one specific address first. Find it.
+
+ip route
+
+Explain (type it as a # comment line in the terminal): which line is the default route, and what that address actually is.
+
+Screenshot: the full ip route output with the default line visible.
+
+
+Question 4 (10 pts)
+Trace the Path Out
+
+Trace the real path packets take from this VM out to a public host, and see how many hops it takes.
+
+traceroute 8.8.8.8
+
+Explain (type it as a # comment line in the terminal): roughly how many hops you saw, and why that number can vary.
+
+Screenshot: the full traceroute output with the hop count visible.
+
+
+Question 5 (10 pts)
+Look Up an A Record
+
+Look up a real domain's A record directly with dig, not just a browser.
+
+dig pacific.edu
+
+Explain (type it as a # comment line in the terminal): what the ANSWER section actually contains.
+
+Screenshot: the full dig output with the ANSWER section visible.
+
+
+Question 6 (10 pts)
+Look Up a CNAME
+
+Pick a domain known to use a CNAME, and compare its record type to Question 5's plain A record.
+
+dig www.github.com
+
+Explain (type it as a # comment line in the terminal): how this record differs from the A record in Question 5.
+
+Screenshot: the CNAME record and the A record, side by side or in sequence.
+
+
+Question 7 (10 pts)
+Start a Test HTTPS Service
+
+Install a real web server and confirm it is actually listening on the HTTPS port before testing it.
+
+Package: nginx, not installed by default.
+
+sudo apt install -y nginx
+ss -tlnp | grep 443
+
+Explain (type it as a # comment line in the terminal): what state you expect port 443 to be in if nginx started correctly.
+
+Screenshot: the nginx install finishing, and ss showing port 443 open.
+
+
+Question 8 (10 pts)
+Inspect the Certificate
+
+Connect to the running service with openssl directly and read the certificate it presents.
+
+openssl s_client -connect localhost:443
+
+Explain (type it as a # comment line in the terminal): what the certificate subject line tells you about this cert.
+
+Screenshot: the full openssl output with the certificate subject line visible.
+
+
+Question 9 (10 pts)
+Verify with curl -v
+
+Confirm the same handshake from curl's point of view, with verbose output on.
+
+curl -vk https://localhost
+
+Explain (type it as a # comment line in the terminal): what curl -v shows that a plain curl would not.
+
+Screenshot: the full curl -v output with the TLS handshake lines visible.
+
+
+Question 10 (10 pts)
+Summarize the Audit
+
+Combine everything this lab checked into one file, proving the server's network and TLS state in one place.
+
+{ ip addr; ip route; } > audit.txt
+cat audit.txt
+
+Explain (type it as a # comment line in the terminal): why a combined file is more useful here than three separate screenshots.
+
+Screenshot: the full contents of audit.txt with both sections present.
