@@ -478,7 +478,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-10-03 15:32 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-10-03 15:41 PT</span>
   </div>
 
   <!--
@@ -684,7 +684,7 @@
               <td>Week 15</td>
               <td>Dec 1, Dec 3</td>
               <td data-module="15">Infrastructure as Code</td>
-              <td>Project Showcase: Fri, Dec 4, 2&ndash;3:15 PM, Makerspace</td>
+              <td>Project Showcase: Fri, Dec 4, 2&ndash;3:15 PM, Makerspace<br>Commands: <a href="./#/cmd-ansible" target="_self">ansible</a>, <a href="./#/cmd-ansible-playbook" target="_self">ansible-playbook</a></td>
               <td></td>
               <td></td>
             </tr>
@@ -24660,6 +24660,394 @@ Hello from inside a container</div>
 <section><h2 style="text-align:center;">Questions?</h2></section>
             </section>
 
+
+
+<section id="module-15">
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h2>Module 15</h2>
+<h3>Infrastructure as Code</h3>
+</div>
+<div class="diagram"><div class="module-nav" data-current="15"></div></div>
+</div>
+</section>
+
+
+<section id="module-15-agenda" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Agenda</h4>
+<ol style="line-height: 1.8;">
+<li><a href="./#/module-15-agenda-1" target="_self">Why Infrastructure as Code?</a></li>
+<li><a href="./#/module-15-agenda-2" target="_self">Declarative vs. Imperative</a></li>
+<li><a href="./#/module-15-agenda-3" target="_self">Ansible: Inventory &amp; Playbooks</a></li>
+<li><a href="./#/module-15-agenda-4" target="_self">Running a Playbook</a></li>
+<li><a href="./#/module-15-agenda-5" target="_self">Idempotency</a></li>
+<li><a href="./#/module-15-agenda-6" target="_self">Practice Lab</a></li>
+</ol>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m15agenda" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">inventory.ini: which hosts</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m15agenda)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">playbook.yml: desired state</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m15agenda)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">ansible-playbook: make it so</text></svg>
+</div>
+</div>
+</section>
+
+
+<section id="module-15-all-commands" data-background-color="#ffffff">
+<h4>All Commands: Module 15</h4>
+<div class="cmd-table-module" style="width:100%;" data-module="15"></div>
+</section>
+
+<section id="module-15-agenda-1"><h2 style="text-align:center;">Why Infrastructure as Code?</h2></section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h2>Module 15</h2>
+<h3>Infrastructure as Code</h3>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 340 268" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><line x1="62" y1="14" x2="62" y2="254" stroke="#555" stroke-width="2"/>
+<circle cx="62" cy="38" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="42" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1993</text><text x="76" y="34" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="34">CFEngine: the first real</tspan><tspan x="76" y="48">config management tool</tspan></text>
+<circle cx="62" cy="92.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="96.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2005</text><text x="76" y="88.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="88.0">Puppet: declarative config,</tspan><tspan x="76" y="102.0">widely adopted</tspan></text>
+<circle cx="62" cy="146.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="150.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2012</text><text x="76" y="142.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="142.0">Ansible (Michael DeHaan):</tspan><tspan x="76" y="156.0">agentless, just needs SSH</tspan></text>
+<circle cx="62" cy="200.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="204.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2014</text><text x="76" y="196.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="196.0">Terraform: IaC for whole</tspan><tspan x="76" y="210.0">cloud infrastructure, not just config</tspan></text>
+<circle cx="62" cy="254.0" r="6.5" fill="#9cdcfe" stroke="#9cdcfe" stroke-width="1.5"/><text x="48" y="258.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">Today</text><text x="76" y="250.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="250.0">Config lives in version control,</tspan><tspan x="76" y="264.0">same as application code</tspan></text>
+</svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: What &quot;As Code&quot; Adds</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">The phrase is "infrastructure AS code," not just "infrastructure automation." What does that distinction add?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">The config itself is a tracked file: version-controlled, reviewable, and reusable, not just a one-off script run.</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Declarative vs. Imperative</h2></section>
+<section id="module-15-agenda-2"><h2 style="text-align:center;">Declarative vs. Imperative</h2></section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Say What, Not How</h4>
+<ul>
+<li>Imperative: a script, steps</li>
+<li>Declarative: end state wanted</li>
+<li>Playbooks are declarative</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m15decl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Imperative: apt install, then start</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m15decl)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Declarative: nginx present</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m15decl)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">The tool figures out the steps</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Was Module 11 This?</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">Module 11's backup.sh gave exact steps: cp, then echo. Is that imperative or declarative?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">Imperative: it is a literal sequence of commands to run, not a description of the end state that is wanted.</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Ansible: Inventory &amp; Playbooks</h2></section>
+<section id="module-15-agenda-3"><h2 style="text-align:center;">Ansible: Inventory &amp; Playbooks</h2></section>
+<section id="cmd-ansible" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>inventory.ini: Which Hosts</h4>
+<ul>
+<li>Lists the real hosts to manage</li>
+<li>Groups can organize them</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal">[webservers]
+192.168.1.10
+192.168.1.11</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>inventory.ini: Which Hosts</h4>
+<div class="terminal terminal-slide">[webservers]
+<span class="tk-comment"># A group name in brackets</span>
+192.168.1.10
+192.168.1.11</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>playbook.yml: Desired State</h4>
+<ul>
+<li>YAML: structured, readable</li>
+<li>Each task is one outcome</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal">- hosts: webservers
+  tasks:
+    - name: Ensure nginx is installed
+      apt:
+        name: nginx
+        state: present</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>playbook.yml: Desired State</h4>
+<div class="terminal terminal-slide">- hosts: webservers
+  tasks:
+<span class="tk-comment"># Each task has a name and a module</span>
+    - name: Ensure nginx is installed
+      apt:
+        name: nginx
+        state: present</div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Why YAML, Not Bash?</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">A playbook could have just been a bash script instead. Why does Ansible use YAML to describe tasks?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">YAML describes the desired end state in structured data; a shell script would describe imperative steps instead.</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Running a Playbook</h2></section>
+<section id="module-15-agenda-4"><h2 style="text-align:center;">Running a Playbook</h2></section>
+<section id="cmd-ansible-playbook" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>ansible-playbook: Run It</h4>
+<ul>
+<li>-i points at the inventory</li>
+<li>Connects via SSH, applies it</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">ansible-playbook</span> -i inventory.ini playbook.yml
+TASK [Ensure nginx is installed]
+changed: [192.168.1.10]</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>ansible-playbook: Run It</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">ansible-playbook</span> -i inventory.ini playbook.yml
+<span class="tk-comment"># Reuses Module 5/8's own SSH connection</span>
+TASK [Ensure nginx is installed]
+changed: [192.168.1.10]</div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: &quot;changed&quot;?</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">The task output says "changed", not "ok". What does that specific word tell you?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">It means this run actually DID something (installed nginx); "ok" would mean it was already in that state.</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Idempotency</h2></section>
+<section id="module-15-agenda-5"><h2 style="text-align:center;">Idempotency</h2></section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Run It Twice, Same Result</h4>
+<ul>
+<li>First run: installs it</li>
+<li>Second run: matches, no-op</li>
+<li>Safe to run it again</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m15idem" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Run 1: nginx missing, installs it</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m15idem)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Run 2: nginx present, does nothing</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m15idem)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Result: always the same end state</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Why This Matters</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">A bash script run twice in a row could install nginx twice, or error the second time. Why doesn't a playbook have that problem?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">Each Ansible task checks the current state first and only acts if it needs to, instead of blindly re-running steps.</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Practice Lab</h2></section>
+<section id="module-15-agenda-6"><h2 style="text-align:center;">Practice Lab</h2></section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Scenario: Automate Setup</h4>
+<ul>
+<li>Install nginx via playbook</li>
+<li>Run it twice, confirm no-op</li>
+<li>Verify against live service</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m15lab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">inventory.ini: the Ubuntu VM</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m15lab)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">playbook.yml: nginx present, running</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m15lab)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Run twice: changed, then ok</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 1: Install Ansible</h4>
+<ul>
+<li>Runs from Kali, targets Ubuntu</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> install -y ansible</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 1: Install Ansible</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> install -y ansible
+<span class="tk-comment"># Installed on the controller (Kali), not the target</span></div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 2: Write the Inventory</h4>
+<ul>
+<li>Point it at the real VM</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal">[target]
+&lt;VM-IP&gt; ansible_user=&lt;your-user&gt;</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 2: Write the Inventory</h4>
+<div class="terminal terminal-slide">[target]
+<span class="tk-comment"># Reuses the same username this course has used</span>
+&lt;VM-IP&gt; ansible_user=&lt;your-user&gt;</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 3: Write the Playbook</h4>
+<ul>
+<li>One task: nginx present</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal">- hosts: target
+  become: yes
+  tasks:
+    - name: Install and start nginx
+      apt: name=nginx state=present</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 3: Write the Playbook</h4>
+<div class="terminal terminal-slide">- hosts: target
+<span class="tk-comment"># become: yes, same idea as sudo</span>
+  become: yes
+  tasks:
+    - name: Install and start nginx
+      apt: name=nginx state=present</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 4: Run It Twice</h4>
+<ul>
+<li>Confirm the second run: no-op</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">ansible-playbook</span> -i inventory.ini playbook.yml
+<span class="tk-prompt">$ </span><span class="tk-cmd">ansible-playbook</span> -i inventory.ini playbook.yml</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 4: Run It Twice</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">ansible-playbook</span> -i inventory.ini playbook.yml
+<span class="tk-comment"># First run: changed=1</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">ansible-playbook</span> -i inventory.ini playbook.yml
+<span class="tk-comment"># Second run: changed=0, already matches</span></div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Proving Idempotency</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">The second run reports changed=0. What does that actually prove about the playbook?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">It proves the playbook is idempotent: re-running it is safe and doesn't redo work already in the desired state.</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Deliverable</h4>
+<ul>
+<li>A working inventory, playbook</li>
+<li>nginx installed and running</li>
+<li>Second run proving idempotency</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal">changed=0    unreachable=0    failed=0</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Questions?</h2></section>
+            </section>
+
 <!-- Deck-wide "Key Terms" word cloud: lives at the end of the deck
            (the last module), not repeated as every module's own last
            slide -- see the GLOBAL RULE in CLAUDE.md. Built automatically
@@ -26822,19 +27210,8 @@ $ crontab -r</div>
 
 </section>
 
-<!-- Modules 15-16 not yet built out for this term; hidden until ready.
-            <section id="module-15">
-        <section>
-          <div class="twocol">
-            <div class="col">
-          <h2>Module 15</h2>
-          <h3>Infrastructure as Code</h3>
-            </div>
-            <div class="diagram"><div class="module-nav" data-current="15"></div></div>
-          </div>
-        </section>
-      </section>
-      <section id="module-16">
+<!-- Module 16 not yet built out for this term; hidden until ready.
+            <section id="module-16">
         <section>
           <div class="twocol">
             <div class="col">
@@ -27199,6 +27576,8 @@ $ crontab -r</div>
         { id: 'cmd-nft', module: 12, cmd: 'nft', example: 'sudo nft list ruleset', purpose: 'View or edit nftables firewall rules' },
         { id: 'cmd-ipcalc', module: 13, cmd: 'ipcalc', example: 'ipcalc 192.168.1.0/24', purpose: 'Compute a subnet\'s network, host range, broadcast' },
         { id: 'cmd-docker', module: 14, cmd: 'docker', example: 'sudo docker run -d -p 8080:80 nginx', purpose: 'Build, run, and manage containers' },
+        { id: 'cmd-ansible', module: 15, cmd: 'ansible', example: 'ansible all -i inventory.ini -m ping', purpose: 'Define hosts and their desired state' },
+        { id: 'cmd-ansible-playbook', module: 15, cmd: 'ansible-playbook', example: 'ansible-playbook -i inventory.ini playbook.yml', purpose: 'Apply a playbook\'s tasks to real hosts' },
       ];
 
       function cmdTableHTML(throughId) {
