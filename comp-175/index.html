@@ -478,7 +478,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-10-03 15:03 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-10-03 15:13 PT</span>
   </div>
 
   <!--
@@ -660,7 +660,7 @@
               <td>Week 12</td>
               <td>Nov 10, Nov 12</td>
               <td data-module="12">Firewalls &amp; Network Security</td>
-              <td>Project Part 2 Presentation</td>
+              <td>Project Part 2 Presentation<br>Commands: <a href="./#/cmd-iptables" target="_self">iptables</a>, <a href="./#/cmd-nft" target="_self">nft</a></td>
               <td></td>
               <td></td>
             </tr>
@@ -23438,6 +23438,440 @@ Hello, sysadmin</div>
 <section><h2 style="text-align:center;">Questions?</h2></section>
             </section>
 
+
+
+<section id="module-12">
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h2>Module 12</h2>
+<h3>Firewalls &amp; Network Security</h3>
+</div>
+<div class="diagram"><div class="module-nav" data-current="12"></div></div>
+</div>
+</section>
+
+
+<section id="module-12-agenda" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Agenda</h4>
+<ol style="line-height: 1.8;">
+<li><a href="./#/module-12-agenda-1" target="_self">Why a Firewall?</a></li>
+<li><a href="./#/module-12-agenda-2" target="_self">Chains &amp; Packet Filtering</a></li>
+<li><a href="./#/module-12-agenda-3" target="_self">iptables: Rules</a></li>
+<li><a href="./#/module-12-agenda-4" target="_self">nftables: The Replacement</a></li>
+<li><a href="./#/module-12-agenda-5" target="_self">Network Zones</a></li>
+<li><a href="./#/module-12-agenda-6" target="_self">Practice Lab</a></li>
+</ol>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m12agenda" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">ufw (Module 2): the simple layer</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m12agenda)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">iptables: the real rules</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m12agenda)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">nftables: the modern engine</text></svg>
+</div>
+</div>
+</section>
+
+
+<section id="module-12-all-commands" data-background-color="#ffffff">
+<h4>All Commands: Module 12</h4>
+<div class="cmd-table-module" style="width:100%;" data-module="12"></div>
+</section>
+
+<section id="module-12-agenda-1"><h2 style="text-align:center;">Why a Firewall?</h2></section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h2>Module 12</h2>
+<h3>Firewalls &amp; Network Security</h3>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 340 268" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><line x1="62" y1="14" x2="62" y2="254" stroke="#555" stroke-width="2"/>
+<circle cx="62" cy="38" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="42" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1993</text><text x="76" y="34" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="34">ipfwadm: Linux&#39;s first real</tspan><tspan x="76" y="48">kernel packet filter</tspan></text>
+<circle cx="62" cy="92.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="96.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1998</text><text x="76" y="88.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="88.0">iptables (Rusty Russell):</tspan><tspan x="76" y="102.0">today&#39;s classic Linux firewall</tspan></text>
+<circle cx="62" cy="146.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="150.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2009</text><text x="76" y="142.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="142.0">ufw released: a simple</tspan><tspan x="76" y="156.0">front end over iptables</tspan></text>
+<circle cx="62" cy="200.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="204.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2014</text><text x="76" y="196.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="196.0">nftables replaces iptables</tspan><tspan x="76" y="210.0">as the kernel&#39;s own engine</tspan></text>
+<circle cx="62" cy="254.0" r="6.5" fill="#9cdcfe" stroke="#9cdcfe" stroke-width="1.5"/><text x="48" y="258.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">Today</text><text x="76" y="250.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="250.0">ufw still calls iptables under</tspan><tspan x="76" y="264.0">the hood on most installs</tspan></text>
+</svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">ufw IS A FRONT END, NOT THE ENGINE</text><rect x="385" y="66" width="380" height="78" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="575" y="104" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">ufw allow 22/tcp</text><text x="575" y="128" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">Module 2: one simple line</text><rect x="262.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="412.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Real iptables Rules</text><text x="412.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">generated underneath it</text><rect x="587.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="737.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">The Kernel Enforces It</text><text x="737.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">every packet, checked live</text><text x="575" y="368" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">This module opens up what ufw was already doing underneath.</text><text x="575" y="392" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">Knowing the real rules matters when ufw alone isn&#39;t precise enough.</text></svg>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Why Go Deeper?</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">ufw already handles allow/deny in one simple command. Why does this module go further, into iptables itself?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">ufw cannot express every rule (rate-limiting, specific interfaces, NAT); iptables is the full tool it sits on top of.</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Chains &amp; Packet Filtering</h2></section>
+<section id="module-12-agenda-2"><h2 style="text-align:center;">Chains &amp; Packet Filtering</h2></section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Three Built-In Chains</h4>
+<ul>
+<li>INPUT: traffic to this machine</li>
+<li>OUTPUT: traffic leaving it</li>
+<li>FORWARD: passing through it</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m12chains" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">INPUT: incoming to this host</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m12chains)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">OUTPUT: outgoing from this host</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m12chains)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">FORWARD: routed through it</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Stateful: Remembers Flows</h4>
+<ul>
+<li>ESTABLISHED: a known flow</li>
+<li>NEW: the first packet</li>
+<li>Replies skip needing own rule</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m12state" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">You send a request (NEW)</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m12state)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Firewall remembers it</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m12state)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Reply allowed (ESTABLISHED)</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Why Track State?</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">A stateless firewall checks every packet alone, with no memory. What problem does that create for replies?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">Every reply would need its own explicit allow rule; stateful tracking lets a reply through automatically.</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">iptables: Rules</h2></section>
+<section id="module-12-agenda-3"><h2 style="text-align:center;">iptables: Rules</h2></section>
+<section id="cmd-iptables" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Viewing the Current Rules</h4>
+<ul>
+<li>-L lists rules in each chain</li>
+<li>-v shows packet/byte counts</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">iptables</span> <span class="tk-flag">-L</span> <span class="tk-flag">-v</span>
+Chain INPUT (policy ACCEPT)
+ACCEPT  tcp  --  anywhere  anywhere  tcp dpt:ssh</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Viewing the Current Rules</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">iptables</span> <span class="tk-flag">-L</span> <span class="tk-flag">-v</span>
+<span class="tk-comment"># -v adds packet and byte counters</span>
+Chain INPUT (policy ACCEPT)
+ACCEPT  tcp  --  anywhere  anywhere  tcp dpt:ssh</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Adding a Rule</h4>
+<ul>
+<li>-A appends to the end</li>
+<li>-p, --dport: protocol, port</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">iptables</span> <span class="tk-flag">-A</span> INPUT -p tcp --dport 8080 -j ACCEPT</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Adding a Rule</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">iptables</span> <span class="tk-flag">-A</span> INPUT -p tcp --dport 8080 -j ACCEPT
+<span class="tk-comment"># -j ACCEPT: the target action for a match</span></div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Not Saved by Default</h4>
+<ul>
+<li>A reboot wipes them</li>
+<li>iptables-persistent saves them</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> <span class="tk-flag">install</span> <span class="tk-flag">-y</span> <span class="tk-str">iptables-persistent</span></div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Not Saved by Default</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> <span class="tk-flag">install</span> <span class="tk-flag">-y</span> <span class="tk-str">iptables-persistent</span>
+<span class="tk-comment"># Prompts to save current rules on install</span></div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Rule Order Matters</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">Two rules both match port 8080: one ACCEPTs, one DROPs, in that order. Which one actually wins?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">The first match wins: iptables checks rules top to bottom and stops at the first one that matches.</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">nftables: The Replacement</h2></section>
+<section id="module-12-agenda-4"><h2 style="text-align:center;">nftables: The Replacement</h2></section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>One Tool, Both Families</h4>
+<ul>
+<li>Replaces iptables itself</li>
+<li>Handles IPv4 and IPv6 together</li>
+<li>Ubuntu ships it by default now</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 244" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m12nft" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">iptables: separate v4/v6 tools</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m12nft)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">nftables: one unified tool</text></svg>
+</div>
+</div>
+</section>
+<section id="cmd-nft" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Listing nftables Rules</h4>
+<ul>
+<li>Uses tables and chains</li>
+<li>Its own, newer syntax</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">nft</span> list ruleset
+table inet filter {
+  chain input { ... }
+}</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Listing nftables Rules</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">nft</span> list ruleset
+<span class="tk-comment"># inet: one table covers IPv4 and IPv6</span>
+table inet filter {
+  chain input { ... }
+}</div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Teach Both Tools?</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">nftables is the modern replacement for iptables. Why does this module still teach the older tool too?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">Most existing servers and documentation still use iptables; reading it is still a real, common sysadmin skill.</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Network Zones</h2></section>
+<section id="module-12-agenda-5"><h2 style="text-align:center;">Network Zones</h2></section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>DMZ: A Buffer Zone</h4>
+<ul>
+<li>Public servers, isolated</li>
+<li>Internal net stays protected</li>
+<li>A breach there stays contained</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m12dmz" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Internet: untrusted</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m12dmz)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">DMZ: web server, exposed</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m12dmz)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Internal network: protected</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Not Inside?</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">The internal network is already firewalled from the internet. Why not just put the web server there directly?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">A public-facing server is the most likely to be attacked; a DMZ keeps that risk out of the trusted internal network.</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Practice Lab</h2></section>
+<section id="module-12-agenda-6"><h2 style="text-align:center;">Practice Lab</h2></section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Scenario: Block and Verify</h4>
+<ul>
+<li>Block a port with iptables</li>
+<li>Confirm it from Kali with nmap</li>
+<li>Then remove the rule again</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m12lab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">iptables: DROP port 8080</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m12lab)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">nmap from Kali: port filtered</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m12lab)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">iptables: remove the rule</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 1: Port Is Open?</h4>
+<ul>
+<li>Baseline check before blocking</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">nmap</span> -p 8080 &lt;VM-IP&gt;
+PORT     STATE SERVICE
+8080/tcp open</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 1: Port Is Open?</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">nmap</span> -p 8080 &lt;VM-IP&gt;
+<span class="tk-comment"># Run from Kali, against the Ubuntu VM</span>
+PORT     STATE SERVICE
+8080/tcp open</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 2: Drop the Port</h4>
+<ul>
+<li>DROP: silently discard it</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">iptables</span> -A INPUT -p tcp --dport 8080 -j DROP</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 2: Drop the Port</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">iptables</span> -A INPUT -p tcp --dport 8080 -j DROP
+<span class="tk-comment"># DROP gives no response at all</span></div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 3: Verify from Kali</h4>
+<ul>
+<li>Re-run the same scan</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">nmap</span> -p 8080 &lt;VM-IP&gt;
+PORT     STATE    SERVICE
+8080/tcp filtered</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 3: Verify from Kali</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">nmap</span> -p 8080 &lt;VM-IP&gt;
+<span class="tk-comment"># filtered: nmap got no response at all</span>
+PORT     STATE    SERVICE
+8080/tcp filtered</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 4: Remove the Rule</h4>
+<ul>
+<li>-D deletes a matching rule</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">iptables</span> -D INPUT -p tcp --dport 8080 -j DROP</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 4: Remove the Rule</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">iptables</span> -D INPUT -p tcp --dport 8080 -j DROP
+<span class="tk-comment"># -D removes one rule, matched exactly</span></div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: open vs. filtered</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">Step 1 showed "open", Step 3 showed "filtered" after the DROP rule. What does "filtered" actually tell nmap?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">nmap got no response at all and can't tell if the port is open or closed, only that something is blocking it.</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Deliverable</h4>
+<ul>
+<li>A port opened, then dropped</li>
+<li>An nmap scan proving filtered</li>
+<li>The rule cleanly removed after</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal">8080/tcp filtered</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Questions?</h2></section>
+            </section>
+
 <!-- Deck-wide "Key Terms" word cloud: lives at the end of the deck
            (the last module), not repeated as every module's own last
            slide -- see the GLOBAL RULE in CLAUDE.md. Built automatically
@@ -25600,19 +26034,8 @@ $ crontab -r</div>
 
 </section>
 
-<!-- Modules 12-16 not yet built out for this term; hidden until ready.
-            <section id="module-12">
-        <section>
-          <div class="twocol">
-            <div class="col">
-          <h2>Module 12</h2>
-          <h3>Firewalls &amp; Network Security</h3>
-            </div>
-            <div class="diagram"><div class="module-nav" data-current="12"></div></div>
-          </div>
-        </section>
-      </section>
-      <section id="module-13">
+<!-- Modules 13-16 not yet built out for this term; hidden until ready.
+            <section id="module-13">
         <section>
           <div class="twocol">
             <div class="col">
@@ -26006,6 +26429,8 @@ $ crontab -r</div>
         { id: 'cmd-hwclock', module: 10, cmd: 'hwclock', example: 'sudo hwclock --systohc', purpose: 'Read or write the battery-backed hardware clock' },
         { id: 'cmd-read', module: 11, cmd: 'read', example: 'read -p "Target dir: " target', purpose: 'Pause a script and read typed input' },
         { id: 'cmd-shellcheck', module: 11, cmd: 'shellcheck', example: 'shellcheck backup.sh', purpose: 'Lint a shell script for common mistakes' },
+        { id: 'cmd-iptables', module: 12, cmd: 'iptables', example: 'sudo iptables -L -v', purpose: 'View, add, or remove kernel firewall rules' },
+        { id: 'cmd-nft', module: 12, cmd: 'nft', example: 'sudo nft list ruleset', purpose: 'View or edit nftables firewall rules' },
       ];
 
       function cmdTableHTML(throughId) {
