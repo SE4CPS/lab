@@ -478,7 +478,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-10-03 13:48 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-10-03 14:02 PT</span>
   </div>
 
   <!--
@@ -635,8 +635,8 @@
             <tr>
               <td>Week 9</td>
               <td>Oct 20, Oct 22</td>
-              <td data-module="9">Logging &amp; Security Monitoring</td>
-              <td>Project Part 1 Presentation</td>
+              <td data-module="9"><a href="./#/module-9" target="_self">Logging &amp; Security Monitoring</a></td>
+              <td>Project Part 1 Presentation<br>Commands: <a href="./#/cmd-logrotate" target="_self">logrotate</a>, <a href="./#/cmd-fail2ban-status" target="_self">fail2ban-client</a>, <a href="./#/module-9-all-commands" target="_self" style="white-space:nowrap;">+6 more &rarr;</a></td>
               <td><a href="./#/assignment-overview" target="_self">Lab/HW 5, Project Part 2 (Team)</a></td>
               <td></td>
             </tr>
@@ -23763,18 +23763,635 @@ HTTP/2 200
 </section>
 </section>
 
-      <!-- Modules 9-16 not yet built out for this term; hidden until ready.
+      <!-- MODULE 9 -->
       <section id="module-9">
-        <section>
-          <div class="twocol">
-            <div class="col">
-          <h2>Module 9</h2>
-          <h3>Logging &amp; Security Monitoring</h3>
-            </div>
-            <div class="diagram"><div class="module-nav" data-current="9"></div></div>
-          </div>
-        </section>
-      </section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h2>Module 9</h2>
+<h3>Logging &amp; Security Monitoring</h3>
+</div>
+<div class="diagram"><div class="module-nav" data-current="9"></div></div>
+</div>
+</section>
+
+
+<section id="module-9-agenda" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Agenda</h4>
+<ol style="line-height: 1.8;">
+<li><a href="./#/module-9-agenda-1" target="_self">Logging &amp; Monitoring</a></li>
+<li><a href="./#/module-9-agenda-2" target="_self">Log Rotation</a></li>
+<li><a href="./#/module-9-agenda-3" target="_self">Centralized Logging</a></li>
+<li><a href="./#/module-9-agenda-4" target="_self">Reading Auth Logs</a></li>
+<li><a href="./#/module-9-agenda-5" target="_self">Why fail2ban?</a></li>
+<li><a href="./#/module-9-agenda-6" target="_self">Configuring fail2ban</a></li>
+<li><a href="./#/module-9-agenda-7" target="_self">Practice Lab</a></li>
+<li><a href="./#/module-9-agenda-8" target="_self">Practice Lab 2</a></li>
+</ol>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 340 308" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:520px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="306" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m9a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="25" y="16" width="290" height="54" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170" y="39.3" text-anchor="middle" font-size="16.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Log Lifecycle</text><text x="170" y="61.6" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">rotation, not forever</text><line x1="170" y1="74" x2="170" y2="86" stroke="#888" stroke-width="1.8" marker-end="url(#m9a1)"/><rect x="25" y="90" width="290" height="54" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170" y="113.3" text-anchor="middle" font-size="16.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Centralize It</text><text x="170" y="135.6" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">send logs elsewhere too</text><line x1="170" y1="148" x2="170" y2="160" stroke="#888" stroke-width="1.8" marker-end="url(#m9a1)"/><rect x="25" y="164" width="290" height="54" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170" y="187.3" text-anchor="middle" font-size="16.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Watch Auth Logs</text><text x="170" y="209.6" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">who tried, and failed</text><line x1="170" y1="222" x2="170" y2="234" stroke="#888" stroke-width="1.8" marker-end="url(#m9a1)"/><rect x="25" y="238" width="290" height="54" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="170" y="261.3" text-anchor="middle" font-size="16.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Auto-Block: fail2ban</text><text x="170" y="283.6" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">react, not just watch</text></svg>
+</div>
+</div>
+</section>
+
+
+<section id="module-9-all-commands" data-background-color="#ffffff">
+<h4>All Commands: Module 9</h4>
+<div class="cmd-table-module" style="width:100%;" data-module="9"></div>
+</section>
+
+
+<section id="module-9-agenda-1" data-background-color="#ffffff">
+<h2 style="text-align:center;">Logging &amp; Monitoring</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h2>Module 9</h2>
+<h3>Logging &amp; Security Monitoring</h3>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 340 268" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><line x1="62" y1="14" x2="62" y2="254" stroke="#555" stroke-width="2"/><circle cx="62" cy="38" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="42" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">1980</text><text x="76" y="34" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="34">syslog created (Eric Allman,</tspan><tspan x="76" y="48">BSD sendmail project)</tspan></text><circle cx="62" cy="92.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="96.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">2001</text><text x="76" y="88.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="88.0">RFC 3164 formalizes syslog</tspan><tspan x="76" y="102.0">as a real standard</tspan></text><circle cx="62" cy="146.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="150.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">2004</text><text x="76" y="142.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="142.0">fail2ban created (Cyril</tspan><tspan x="76" y="156.0">Jaquier): auto-ban attackers</tspan></text><circle cx="62" cy="200.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="204.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">2009</text><text x="76" y="196.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="196.0">RFC 5424: a modern,</tspan><tspan x="76" y="210.0">structured syslog format</tspan></text><circle cx="62" cy="254.0" r="6.5" fill="#9cdcfe" stroke="#9cdcfe" stroke-width="1.5"/><text x="48" y="258.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">Today</text><text x="76" y="250.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="250.0">Centralized logging plus</tspan><tspan x="76" y="264.0">automated response is standard</tspan></text></svg>
+</div>
+</div>
+</section>
+
+<section id="concept-agenda1-scope" data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">LOGGING &amp; SECURITY MONITORING</text><rect x="385" y="66" width="380" height="78" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="575" y="104" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">From Watching to Acting</text><text x="575" y="128" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">three steps</text><rect x="262.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="412.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Keep the Logs</text><text x="412.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">rotate, do not lose them</text><rect x="587.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="737.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">React Automatically</text><text x="737.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">fail2ban watches and blocks</text><text x="575" y="368" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Module 6 taught journalctl; Module 4 taught auditd.</text><text x="575" y="392" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">This module asks: what do you DO with everything those tools already capture?</text></svg>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Watching Is Not Enough</h4>
+<ul>
+<li>A log must be read in time</li>
+<li>Logs grow forever, fill disk</li>
+<li>fail2ban reacts automatically</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="178" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Collect (journald, auditd)</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="96" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Keep (rotation)</text><rect x="20" y="120" width="320" height="42" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="146" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">React (fail2ban)</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Collect vs React</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">journald collecting a failed login is one thing. fail2ban blocking the attacker&#39;s IP is another. Which is which?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>journald collects; fail2ban reacts. Collecting alone never stops a second attempt from the same attacker.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-9-agenda-2" data-background-color="#ffffff">
+<h2 style="text-align:center;">Log Rotation</h2>
+</section>
+
+<section id="concept-agenda2-scope" data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">LOG ROTATION</text><rect x="385" y="66" width="380" height="78" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="575" y="104" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Logs Grow Forever Otherwise</text><text x="575" y="128" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">one fix, many files</text><rect x="262.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="412.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Rotate</text><text x="412.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">rename, compress, start fresh</text><rect x="587.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="737.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Expire</text><text x="737.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">delete the oldest, after N days</text><text x="575" y="368" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">A log file left alone can eventually fill the whole disk.</text><text x="575" y="392" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">logrotate runs on a schedule and handles both steps automatically.</text></svg>
+</div>
+</section>
+
+<section id="cmd-logrotate" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Rotate Logs: logrotate</h4>
+<ul>
+<li>-d: dry run, no real action</li>
+<li>Reads /etc/logrotate.d/ rules</li>
+<li>Usually run daily, automated</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo logrotate -d /etc/logrotate.conf
+# dry run: shows planned actions only
+rotating pattern /var/log/syslog
+  log needs rotating</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Rotate Logs: logrotate</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> logrotate <span class="tk-flag">-d</span> <span class="tk-path">/etc/logrotate.conf</span>
+<span class="tk-comment"># dry run: shows planned actions only</span>
+rotating pattern /var/log/syslog
+  log needs rotating</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>A Rotation Rule</h4>
+<ul>
+<li>One block per log file</li>
+<li>weekly, rotate 4: keep a month</li>
+<li>compress: save disk space</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#9cdcfe">weekly</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="96" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#9cdcfe">rotate 4</text><rect x="20" y="120" width="320" height="42" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="146" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#9cdcfe">compress</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: What Happens at Rotation 5?</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">rotate 4 keeps 4 old copies. On the 5th rotation, what happens to the oldest one?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>It gets deleted. rotate 4 caps the history at 4 old copies, so the oldest is dropped to make room.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-9-agenda-3" data-background-color="#ffffff">
+<h2 style="text-align:center;">Centralized Logging</h2>
+</section>
+
+<section id="concept-agenda3-scope" data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">CENTRALIZED LOGGING</text><rect x="385" y="66" width="380" height="78" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="575" y="104" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">One Place for Every Machine</text><text x="575" y="128" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">the real reason</text><rect x="262.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="412.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A Compromised Host Lies</text><text x="412.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">local logs can be deleted</text><rect x="587.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="737.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A Remote Copy Survives</text><text x="737.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">forwarded before the attack</text><text x="575" y="368" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">If an attacker gets root, they can erase the local log.</text><text x="575" y="392" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">A copy already sent elsewhere survives even if the original is wiped.</text></svg>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Why Forward Logs at All</h4>
+<ul>
+<li>One dashboard for many servers</li>
+<li>Survives a local compromise</li>
+<li>Easier to correlate events</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="178" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="90" height="46" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="65" y="48" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Host A</text><rect x="135" y="20" width="90" height="46" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="48" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Host B</text><rect x="250" y="20" width="90" height="46" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="295" y="48" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Host C</text><rect x="90" y="110" width="180" height="50" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="140" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Central log server</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Why Not Just Local Logs?</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">An attacker gains root and deletes /var/log entirely. What survives if logs were also forwarded?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>The forwarded copy on the central server. It was already sent before the attacker deleted the local file.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-9-agenda-4" data-background-color="#ffffff">
+<h2 style="text-align:center;">Reading Auth Logs</h2>
+</section>
+
+<section id="concept-agenda4-scope" data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">READING AUTH LOGS</text><rect x="385" y="66" width="380" height="78" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="575" y="104" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Every Login Attempt, Logged</text><text x="575" y="128" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">success or failure</text><rect x="262.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="412.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">/var/log/auth.log</text><text x="412.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">Debian/Ubuntu</text><rect x="587.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="737.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Failed password</text><text x="737.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">the line fail2ban watches for</text><text x="575" y="368" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">grep already taught in Module 2 is the right tool here too.</text><text x="575" y="392" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">A burst of Failed password lines from one IP is a brute-force attempt.</text></svg>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>grep, Revisited</h4>
+<ul>
+<li>Same tool from Module 2</li>
+<li>Search for &quot;Failed password&quot;</li>
+<li>Reveals repeated attempts fast</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="12.5" font-family="Consolas, monospace" fill="#9cdcfe">grep &quot;Failed password&quot; auth.log</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="96" text-anchor="middle" font-size="12.5" font-family="Consolas, monospace" fill="#9cdcfe">grep -c &quot;Failed&quot; auth.log</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: One Attempt, or an Attack?</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">auth.log shows 40 Failed password lines from the same IP in one minute. What does that suggest?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>A brute-force attempt, not a typo. A real user does not mistype their password 40 times in 60 seconds.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-9-agenda-5" data-background-color="#ffffff">
+<h2 style="text-align:center;">Why fail2ban?</h2>
+</section>
+
+<section id="concept-agenda5-scope" data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">WHY FAIL2BAN?</text><rect x="385" y="66" width="380" height="78" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="575" y="104" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Watching Alone Does Not Stop It</text><text x="575" y="128" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">the gap fail2ban fills</text><rect x="262.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="412.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">It Reads the Logs</text><text x="412.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">same auth.log you just grepped</text><rect x="587.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="737.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">It Calls ufw</text><text x="737.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">Module 2&#39;s firewall, automatically</text><text x="575" y="368" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">You already know how to spot an attack by hand.</text><text x="575" y="392" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">fail2ban does that same check, continuously, and blocks automatically.</text></svg>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>The Loop fail2ban Runs</h4>
+<ul>
+<li>Watch auth.log for failures</li>
+<li>Count failures per IP</li>
+<li>Past the limit: ban via ufw</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="178" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Watch auth.log</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="96" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Count failures per IP</text><rect x="20" y="120" width="320" height="42" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="146" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Ban it with ufw</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: What Does fail2ban Actually Call?</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">fail2ban decides to ban an IP. What Module 2 tool does it use to actually block that IP?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>ufw. fail2ban does not reinvent firewalling; it drives the same firewall tool already taught in Module 2.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-9-agenda-6" data-background-color="#ffffff">
+<h2 style="text-align:center;">Configuring fail2ban</h2>
+</section>
+
+<section id="concept-agenda6-scope" data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">CONFIGURING FAIL2BAN</text><rect x="385" y="66" width="380" height="78" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="575" y="104" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">One Jail per Service</text><text x="575" y="128" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">sshd, nginx, and more</text><rect x="262.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="412.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">maxretry</text><text x="412.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">how many failures allowed</text><rect x="587.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="737.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">bantime</text><text x="737.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">how long the ban lasts</text><text x="575" y="368" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">A jail watches one service&#39;s own log for failures.</text><text x="575" y="392" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">The sshd jail is the one most relevant to everything taught so far.</text></svg>
+</div>
+</section>
+
+<section id="cmd-fail2ban-status" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Check fail2ban: fail2ban-client</h4>
+<ul>
+<li>Not installed by default</li>
+<li>status: which jails are active</li>
+<li>status sshd: who is banned</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo apt install -y fail2ban
+$ sudo fail2ban-client status
+# lists every active jail
+$ sudo fail2ban-client status sshd
+# shows banned IPs for sshd</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Check fail2ban: fail2ban-client</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> fail2ban
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> fail2ban-client status
+<span class="tk-comment"># lists every active jail</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> fail2ban-client status sshd
+<span class="tk-comment"># shows banned IPs for sshd</span></div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>The sshd Jail</h4>
+<ul>
+<li>enabled = true turns it on</li>
+<li>maxretry = 5: 5 tries allowed</li>
+<li>bantime = 1h: an hour ban</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#9cdcfe">[sshd] enabled = true</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="96" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#9cdcfe">maxretry = 5</text><rect x="20" y="120" width="320" height="42" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="146" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#9cdcfe">bantime = 1h</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Fifth or Sixth Try?</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">maxretry = 5. On which attempt does fail2ban actually ban the IP: the 5th or the 6th?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>The 6th. maxretry = 5 means 5 failures are allowed before the ban triggers on the next one.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-9-agenda-7" data-background-color="#ffffff">
+<h2 style="text-align:center;">Practice Lab</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Scenario: Install and Confirm</h4>
+<ul>
+<li>Install fail2ban on Ubuntu</li>
+<li>Confirm the sshd jail works</li>
+<li>Check it with fail2ban-client</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Install fail2ban</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="96" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Confirm the sshd jail</text></svg>
+</div>
+</div>
+</section>
+
+<section id="cmd-pl1-install" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 1: Install fail2ban</h4>
+<ul>
+<li>Not on the machine by default</li>
+<li>Starts automatically</li>
+<li>Default config includes sshd</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo apt install -y fail2ban
+$ sudo systemctl status fail2ban
+# confirm it is active</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 1: Install fail2ban</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> fail2ban
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> systemctl status fail2ban
+<span class="tk-comment"># confirm it is active</span></div>
+</section>
+
+<section id="cmd-pl1-jailstatus" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 2: Confirm the Jail</h4>
+<ul>
+<li>status: every active jail</li>
+<li>status sshd: just this jail</li>
+<li>Currently banned: likely empty</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo fail2ban-client status
+$ sudo fail2ban-client status sshd
+# Currently banned: 0 (so far)</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 2: Confirm the Jail</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> fail2ban-client status
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> fail2ban-client status sshd
+<span class="tk-comment"># Currently banned: 0 (so far)</span></div>
+</section>
+
+<section id="cmd-pl1-logtest" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 3: Trigger a Real Failure</h4>
+<ul>
+<li>Try SSH with a bad password</li>
+<li>Writes a real failure line</li>
+<li>Confirm with grep (Module 2)</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ ssh wronguser@localhost
+# enter any wrong password
+$ sudo grep "Failed password" \
+    /var/log/auth.log | tail -1</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 3: Trigger a Real Failure</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ssh</span> wronguser@localhost
+<span class="tk-comment"># enter any wrong password</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> grep <span class="tk-str">"Failed</span> password" \
+    /var/log/auth.log | tail -1</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Why localhost?</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">Step 3 SSHes to localhost itself to fail on purpose. Why is that a safe way to test this?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>It only affects your own machine: no real external attacker involved, and the failure is still logged for real.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Deliverable</h4>
+<ul>
+<li>Screenshot: fail2ban status</li>
+<li>Screenshot: sshd jail status</li>
+<li>Screenshot: the failed login</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Install and confirm the jail</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="96" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Trigger and log a failure</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-9-agenda-8" data-background-color="#ffffff">
+<h2 style="text-align:center;">Practice Lab 2</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Scenario: Lower the Threshold and Ban</h4>
+<ul>
+<li>Set maxretry to a small number</li>
+<li>Fail that many times, on cue</li>
+<li>Watch fail2ban ban you</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">maxretry = 2</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="96" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Fail 3 times: get banned</text></svg>
+</div>
+</div>
+</section>
+
+<section id="cmd-pl2-config" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 1: Lower maxretry</h4>
+<ul>
+<li>Edit the jail&#39;s local override</li>
+<li>Written with tee, not nano</li>
+<li>System config stays untouched</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo tee /etc/fail2ban/jail.d/
+    test.local &lt;&lt; &#39;EOF&#39;
+[sshd]
+maxretry = 2
+EOF
+$ sudo systemctl restart fail2ban</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 1: Lower maxretry</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> tee <span class="tk-path">/etc/fail2ban/jail.d/</span>
+    test.local &lt;&lt; &#39;EOF&#39;
+[sshd]
+maxretry = 2
+EOF
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> systemctl restart fail2ban</div>
+</section>
+
+<section id="cmd-pl2-trigger" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 2: Trigger the Ban</h4>
+<ul>
+<li>Three bad logins on purpose</li>
+<li>Third attempt may be refused</li>
+<li>Checked the same way as Lab 1</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ ssh wronguser@localhost
+$ ssh wronguser@localhost
+$ ssh wronguser@localhost
+# the third attempt may be refused</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 2: Trigger the Ban</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ssh</span> wronguser@localhost
+<span class="tk-prompt">$</span> <span class="tk-cmd">ssh</span> wronguser@localhost
+<span class="tk-prompt">$</span> <span class="tk-cmd">ssh</span> wronguser@localhost
+<span class="tk-comment"># the third attempt may be refused</span></div>
+</section>
+
+<section id="cmd-pl2-confirm" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 3: Confirm the Ban</h4>
+<ul>
+<li>Banned count should now be 1</li>
+<li>Proves fail2ban actually acted</li>
+<li>Really blocks, not just logs</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo fail2ban-client status sshd
+# Currently banned: 1</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 3: Confirm the Ban</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> fail2ban-client status sshd
+<span class="tk-comment"># Currently banned: 1</span></div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Undo the Ban</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">Your own testing IP is now banned and you need back in. What fail2ban-client command undoes a ban?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>fail2ban-client set sshd unbanip &lt;ip&gt; removes a specific IP from that jail&#39;s ban list immediately.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Deliverable</h4>
+<ul>
+<li>Screenshot: lowered maxretry</li>
+<li>Screenshot: 3 failed logins</li>
+<li>Screenshot: ban count is 1</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Lower the threshold</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="96" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Trigger it, prove the ban</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Looking Ahead: Module 10</h2>
+</section>
+</section>
+
+      <!-- Modules 10-16 not yet built out for this term; hidden until ready.
       <section id="module-10">
         <section>
           <div class="twocol">
@@ -24188,6 +24805,14 @@ HTTP/2 200
         { id: 'cmd-pl2-dig', module: 8, cmd: 'dig', example: 'dig +short expired.badssl.com', purpose: 'Confirm the name resolves at all' },
         { id: 'cmd-pl2-openssl', module: 8, cmd: 'openssl', example: 'openssl s_client -connect host:443', purpose: 'Check whether the certificate expired' },
         { id: 'cmd-pl2-curl', module: 8, cmd: 'curl', example: 'curl -I https://expired.badssl.com', purpose: 'See curl refuse an invalid certificate' },
+        { id: 'cmd-logrotate', module: 9, cmd: 'logrotate', example: 'logrotate -d /etc/logrotate.conf', purpose: 'Preview or run log rotation rules' },
+        { id: 'cmd-fail2ban-status', module: 9, cmd: 'fail2ban-client', example: 'fail2ban-client status sshd', purpose: 'Check which IPs fail2ban has banned' },
+        { id: 'cmd-pl1-install', module: 9, cmd: 'apt', example: 'sudo apt install -y fail2ban', purpose: 'Install fail2ban for the first time' },
+        { id: 'cmd-pl1-jailstatus', module: 9, cmd: 'fail2ban-client', example: 'fail2ban-client status sshd', purpose: 'Confirm the sshd jail works' },
+        { id: 'cmd-pl1-logtest', module: 9, cmd: 'grep', example: 'grep "Failed password" /var/log/auth.log', purpose: 'Confirm a failed login was logged' },
+        { id: 'cmd-pl2-config', module: 9, cmd: 'systemctl', example: 'sudo systemctl restart fail2ban', purpose: 'Apply a lower retry threshold' },
+        { id: 'cmd-pl2-trigger', module: 9, cmd: 'ssh', example: 'ssh wronguser@localhost', purpose: 'Deliberately fail logins to trigger a ban' },
+        { id: 'cmd-pl2-confirm', module: 9, cmd: 'fail2ban-client', example: 'fail2ban-client status sshd', purpose: 'Confirm the IP was actually banned' },
       ];
 
       function cmdTableHTML(throughId) {
