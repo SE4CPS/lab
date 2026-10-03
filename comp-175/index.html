@@ -478,7 +478,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-10-03 11:51 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-10-03 13:48 PT</span>
   </div>
 
   <!--
@@ -627,8 +627,8 @@
             <tr>
               <td>Week 8</td>
               <td>Oct 13, Oct 15</td>
-              <td data-module="8">Name Resolution &amp; Secure Transport</td>
-              <td></td>
+              <td data-module="8"><a href="./#/module-8" target="_self">Name Resolution &amp; Secure Transport</a></td>
+              <td>Commands: <a href="./#/cmd-nslookup" target="_self">nslookup</a>, <a href="./#/cmd-openssl" target="_self">openssl</a>, <a href="./#/module-8-all-commands" target="_self" style="white-space:nowrap;">+8 more &rarr;</a></td>
               <td><span class="highlight">Midterm: Oct 15 (in class)</span></td>
               <td></td>
             </tr>
@@ -22988,18 +22988,782 @@ $ crontab -r</div>
 
 </section>
 
-      <!-- Modules 8-16 not yet built out for this term; hidden until ready.
+      <!-- MODULE 8 -->
       <section id="module-8">
-        <section>
-          <div class="twocol">
-            <div class="col">
-          <h2>Module 8</h2>
-          <h3>Name Resolution &amp; Secure Transport</h3>
-            </div>
-            <div class="diagram"><div class="module-nav" data-current="8"></div></div>
-          </div>
-        </section>
-      </section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h2>Module 8</h2>
+<h3>Name Resolution &amp; Secure Transport</h3>
+</div>
+<div class="diagram"><div class="module-nav" data-current="8"></div></div>
+</div>
+</section>
+
+
+<section id="module-8-agenda" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Agenda</h4>
+<ol style="line-height: 1.8;">
+<li><a href="./#/module-8-agenda-1" target="_self">What Is Name Resolution?</a></li>
+<li><a href="./#/module-8-agenda-2" target="_self">The DNS Hierarchy</a></li>
+<li><a href="./#/module-8-agenda-3" target="_self">Querying DNS</a></li>
+<li><a href="./#/module-8-agenda-4" target="_self">DNS Record Types</a></li>
+<li><a href="./#/module-8-agenda-5" target="_self">Why Secure Transport?</a></li>
+<li><a href="./#/module-8-agenda-6" target="_self">TLS &amp; Certificates</a></li>
+<li><a href="./#/module-8-agenda-7" target="_self">Inspecting Certificates</a></li>
+<li><a href="./#/module-8-agenda-8" target="_self">HTTPS in Practice</a></li>
+<li><a href="./#/module-8-agenda-9" target="_self">Practice Lab</a></li>
+<li><a href="./#/module-8-agenda-10" target="_self">Practice Lab 2</a></li>
+</ol>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 340 308" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:520px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="306" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m8a1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="25" y="16" width="290" height="54" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170" y="39.3" text-anchor="middle" font-size="16.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">DNS Hierarchy</text><text x="170" y="61.6" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">how a name resolves</text><line x1="170" y1="74" x2="170" y2="86" stroke="#888" stroke-width="1.8" marker-end="url(#m8a1)"/><rect x="25" y="90" width="290" height="54" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170" y="113.3" text-anchor="middle" font-size="16.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Querying DNS</text><text x="170" y="135.6" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">dig, nslookup</text><line x1="170" y1="148" x2="170" y2="160" stroke="#888" stroke-width="1.8" marker-end="url(#m8a1)"/><rect x="25" y="164" width="290" height="54" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="170" y="187.3" text-anchor="middle" font-size="16.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">TLS &amp; Certificates</text><text x="170" y="209.6" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">who do you trust</text><line x1="170" y1="222" x2="170" y2="234" stroke="#888" stroke-width="1.8" marker-end="url(#m8a1)"/><rect x="25" y="238" width="290" height="54" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="170" y="261.3" text-anchor="middle" font-size="16.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">HTTPS in Practice</text><text x="170" y="283.6" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">prove it, don&#39;t guess</text></svg>
+</div>
+</div>
+</section>
+
+
+<section id="module-8-all-commands" data-background-color="#ffffff">
+<h4>All Commands: Module 8</h4>
+<div class="cmd-table-module" style="width:100%;" data-module="8"></div>
+</section>
+
+
+<section id="module-8-agenda-1" data-background-color="#ffffff">
+<h2 style="text-align:center;">What Is Name Resolution?</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h2>Module 8</h2>
+<h3>Name Resolution &amp; Secure Transport</h3>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 340 268" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><line x1="62" y1="14" x2="62" y2="254" stroke="#555" stroke-width="2"/><circle cx="62" cy="38" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="42" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">1983</text><text x="76" y="34" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="34">DNS invented (Paul Mockapetris,</tspan><tspan x="76" y="48">RFC 882/883): names, not numbers</tspan></text><circle cx="62" cy="92.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="96.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">1994</text><text x="76" y="88.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="88.0">SSL and HTTPS introduced</tspan><tspan x="76" y="102.0">(Netscape), encrypting the web</tspan></text><circle cx="62" cy="146.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="150.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">1999</text><text x="76" y="142.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="142.0">TLS 1.0 standardized (IETF),</tspan><tspan x="76" y="156.0">SSL&#39;s open successor</tspan></text><circle cx="62" cy="200.0" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="204.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa" font-weight="normal">2015</text><text x="76" y="196.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="196.0">Let&#39;s Encrypt launches:</tspan><tspan x="76" y="210.0">free certificates for everyone</tspan></text><circle cx="62" cy="254.0" r="6.5" fill="#9cdcfe" stroke="#9cdcfe" stroke-width="1.5"/><text x="48" y="258.0" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">Today</text><text x="76" y="250.0" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="250.0">Most of the web runs over</tspan><tspan x="76" y="264.0">HTTPS by default</tspan></text></svg>
+</div>
+</div>
+</section>
+
+<section id="concept-agenda1-scope" data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">WHAT IS NAME RESOLUTION?</text><rect x="385" y="66" width="380" height="78" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="575" y="104" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Names, Not Numbers</text><text x="575" y="128" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">one idea, two halves</text><rect x="262.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="412.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Resolve the Name</text><text x="412.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">DNS: domain to IP</text><rect x="587.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="737.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Trust the Connection</text><text x="737.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">TLS: prove it is really them</text><text x="575" y="368" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Module 1 already used dig and whois for a quick lookup.</text><text x="575" y="392" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">This module asks: how does that lookup actually work, and can you trust it?</text></svg>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Two Different Questions</h4>
+<ul>
+<li>DNS: where do I send this?</li>
+<li>TLS: am I talking to them?</li>
+<li>Both must work for HTTPS</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="178" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#9cdcfe">example.com -&gt; 93.184.216.34</text><text x="180" y="68" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#999">DNS: where to send it</text><rect x="20" y="96" width="320" height="60" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="122" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#9cdcfe">Certificate: verified</text><text x="180" y="144" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">TLS: who you are really talking to</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Which One Failed?</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">A browser shows &quot;cannot find server&quot; versus &quot;certificate not trusted&quot;. Which failed: DNS or TLS?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>&quot;Cannot find server&quot; is a DNS failure (the name never resolved). &quot;Certificate not trusted&quot; is a TLS failure.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-8-agenda-2" data-background-color="#ffffff">
+<h2 style="text-align:center;">The DNS Hierarchy</h2>
+</section>
+
+<section id="concept-agenda2-scope" data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">THE DNS HIERARCHY</text><rect x="385" y="66" width="380" height="78" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="575" y="104" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Nobody Knows Everything</text><text x="575" y="128" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">the lookup is a chain</text><rect x="262.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="412.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Root Servers</text><text x="412.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">point to .com, .edu, ...</text><rect x="587.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="737.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Authoritative Servers</text><text x="737.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">the real, final answer</text><text x="575" y="368" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Your resolver asks root, then the TLD, then the real owner.</text><text x="575" y="392" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">Each server only knows where to look next, not the final answer itself.</text></svg>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Root, TLD, Authoritative</h4>
+<ul>
+<li>Root: 13 servers, worldwide</li>
+<li>TLD: runs .com, .edu, ...</li>
+<li>Authoritative: its real DNS</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="218" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="30" y="20" width="300" height="46" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="48" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Root ( . )</text><rect x="30" y="86" width="300" height="46" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="114" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">TLD (.edu)</text><rect x="30" y="152" width="300" height="46" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="180" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Authoritative (pacific.edu)</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Who Answers First?</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">Resolving www.pacific.edu for the first time. Which server does your resolver ask first?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>A root server. It does not know the final answer, only which TLD server to ask next for .edu.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-8-agenda-3" data-background-color="#ffffff">
+<h2 style="text-align:center;">Querying DNS</h2>
+</section>
+
+<section id="concept-agenda3-scope" data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">QUERYING DNS: TWO TOOLS</text><rect x="385" y="66" width="380" height="78" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="575" y="104" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Ask Directly</text><text x="575" y="128" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">skip the guesswork</text><rect x="262.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="412.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">dig</text><text x="412.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">detailed, already used, Module 1</text><rect x="587.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="737.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">nslookup</text><text x="737.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">simpler, interactive-friendly</text><text x="575" y="368" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">dig already proved a name resolves; nslookup is a lighter alternative.</text><text x="575" y="392" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">Both ask the same question. dig shows far more of the real answer.</text></svg>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>dig, Revisited</h4>
+<ul>
+<li>dig +short: just the answer</li>
+<li>dig MX: another record type</li>
+<li>The same tool, more uses</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="13.5" font-family="Consolas, monospace" fill="#9cdcfe">dig +short scanme.nmap.org</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="96" text-anchor="middle" font-size="13.5" font-family="Consolas, monospace" fill="#9cdcfe">dig MX pacific.edu</text></svg>
+</div>
+</div>
+</section>
+
+<section id="cmd-nslookup" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>A Simpler Tool: nslookup</h4>
+<ul>
+<li>Asks the same basic question</li>
+<li>Shorter output than dig</li>
+<li>Good for a quick sanity check</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ nslookup scanme.nmap.org
+# a quick name-to-address check
+Name:    scanme.nmap.org
+Address: 45.33.32.156</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>A Simpler Tool: nslookup</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">nslookup</span> scanme.nmap.org
+<span class="tk-comment"># a quick name-to-address check</span>
+Name:    scanme.nmap.org
+Address: 45.33.32.156</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: dig or nslookup?</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">You need the full DNS response, including the TTL and the authoritative server. Which tool?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>dig. It shows the full response by default; nslookup only shows a short summary.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-8-agenda-4" data-background-color="#ffffff">
+<h2 style="text-align:center;">DNS Record Types</h2>
+</section>
+
+<section id="concept-agenda4-scope" data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">DNS RECORD TYPES</text><rect x="385" y="66" width="380" height="78" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="575" y="104" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">One Name, Many Answers</text><text x="575" y="128" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">depends what you ask</text><rect x="262.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="412.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">A / AAAA</text><text x="412.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">the IPv4 / IPv6 address</text><rect x="587.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="737.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">MX / TXT</text><text x="737.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">mail server, verification text</text><text x="575" y="368" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Different record types answer different questions.</text><text x="575" y="392" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">A name has an A record for its address, an MX record for its mail, and so on.</text></svg>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>The Common Record Types</h4>
+<ul>
+<li>A: the IPv4 address</li>
+<li>CNAME: an alias to a name</li>
+<li>MX: where mail gets delivered</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="178" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="14" y="14" width="80" height="40" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="54" y="39" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#eee" font-weight="bold">A</text><rect x="100" y="14" width="246" height="40" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="223" y="39" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">IPv4 address</text><rect x="14" y="62" width="80" height="40" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="54" y="87" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#eee" font-weight="bold">CNAME</text><rect x="100" y="62" width="246" height="40" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="223" y="87" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">alias to another name</text><rect x="14" y="110" width="80" height="40" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="54" y="135" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#eee" font-weight="bold">MX</text><rect x="100" y="110" width="246" height="40" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="223" y="135" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">mail delivery target</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Which Record?</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">You want to know which server handles email for pacific.edu. Which DNS record type answers that?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>MX. The mail exchange record names the server responsible for accepting mail for that domain.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-8-agenda-5" data-background-color="#ffffff">
+<h2 style="text-align:center;">Why Secure Transport?</h2>
+</section>
+
+<section id="concept-agenda5-scope" data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">WHY SECURE TRANSPORT?</text><rect x="385" y="66" width="380" height="78" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="575" y="104" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Plaintext Is Readable</text><text x="575" y="128" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">by anyone on the path</text><rect x="262.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="412.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">HTTP</text><text x="412.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">passwords, cookies, in the clear</text><rect x="587.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="737.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">HTTPS</text><text x="737.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">encrypted, tamper-evident</text><text x="575" y="368" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Anyone between you and the server can read plain HTTP.</text><text x="575" y="392" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">TLS turns that same connection into something only the two endpoints can read.</text></svg>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>What a Snooper Sees</h4>
+<ul>
+<li>HTTP: the whole page, readable</li>
+<li>HTTPS: scrambled bytes</li>
+<li>Same network, different risk</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="178" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="50" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#e06c75">password=hunter2</text><text x="180" y="70" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#999">HTTP: plainly readable</text><rect x="20" y="96" width="320" height="60" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="126" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#b5cea8">a8f3...e91c (encrypted)</text><text x="180" y="146" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">HTTPS: unreadable in transit</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: What Does a Snooper Learn?</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">You log into a site over plain HTTP on public Wi-Fi. What can someone else on that Wi-Fi see?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>Everything sent in plain text, including the password itself, since nothing on HTTP is encrypted.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-8-agenda-6" data-background-color="#ffffff">
+<h2 style="text-align:center;">TLS &amp; Certificates</h2>
+</section>
+
+<section id="concept-agenda6-scope" data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">TLS &amp; CERTIFICATES</text><rect x="385" y="66" width="380" height="78" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="575" y="104" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Encrypt, and Prove Identity</text><text x="575" y="128" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">two jobs, one handshake</text><rect x="262.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="412.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">The Certificate</text><text x="412.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">signed proof of who you are</text><rect x="587.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="737.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">The Certificate Authority</text><text x="737.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">the one who signs it</text><text x="575" y="368" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">A certificate is only trusted if a trusted authority signed it.</text><text x="575" y="392" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">Your browser already trusts a built-in list of these authorities.</text></svg>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>The Handshake, Simplified</h4>
+<ul>
+<li>Server shows its certificate</li>
+<li>Browser checks who signed it</li>
+<li>Trusted: session starts</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="16" width="320" height="38" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="40" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Server shows its certificate</text><rect x="20" y="62" width="320" height="38" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="86" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Browser checks the signer</text><rect x="20" y="108" width="320" height="38" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="132" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Trusted: encrypted session begins</text></svg>
+</div>
+</div>
+</section>
+
+<section data-tag="terminology" data-term="Certificate" data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h5 style="margin-bottom:0.5rem;">certus</h5>
+<ul>
+<li>Latin: settled, sure</li>
+</ul>
+</div>
+<div class="col">
+<h5 style="margin-bottom:0.5rem;">certificate</h5>
+<ul>
+<li>a document proving a fact</li>
+</ul>
+</div>
+</div>
+<p class="fragment note-below">&#9888;&#65039; A certificate only proves <span class="highlight">identity</span>, not that the site is safe or honest.</p>
+<p class="source-line">Source: <a href="https://www.etymonline.com/word/certificate" target="_blank" rel="noopener">etymonline: certificate</a></p>
+</section>
+
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Trusted by Whom?</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">A browser trusts a certificate signed by a Certificate Authority it already knows. Who decides that initial list?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>The browser/OS vendor. They ship a built-in list of trusted Certificate Authorities.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-8-agenda-7" data-background-color="#ffffff">
+<h2 style="text-align:center;">Inspecting Certificates</h2>
+</section>
+
+<section id="concept-agenda7-scope" data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">INSPECTING CERTIFICATES</text><rect x="385" y="66" width="380" height="78" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="575" y="104" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Do Not Just Trust the Lock Icon</text><text x="575" y="128" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">check it yourself</text><rect x="262.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="412.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">openssl</text><text x="412.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">reads a cert directly</text><rect x="587.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="737.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Expiration, Issuer, Domain</text><text x="737.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">what to check</text><text x="575" y="368" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">A valid-looking padlock can still be close to expiring.</text><text x="575" y="392" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">openssl shows the real certificate, not just a browser icon.</text></svg>
+</div>
+</section>
+
+<section id="cmd-openssl" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Read a Live Certificate: openssl</h4>
+<ul>
+<li>Connects, shows the real cert</li>
+<li>Not installed by default</li>
+<li>Check the dates and issuer</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo apt install -y openssl
+$ openssl s_client -connect
+    pacific.edu:443 -servername
+    pacific.edu &lt; /dev/null
+# scroll up: issuer, dates, subject</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Read a Live Certificate: openssl</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> openssl
+<span class="tk-prompt">$</span> <span class="tk-cmd">openssl</span> s_client <span class="tk-flag">-connect</span>
+    pacific.edu:443 -servername
+    pacific.edu &lt; /dev/null
+<span class="tk-comment"># scroll up: issuer, dates, subject</span></div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>What to Check</h4>
+<ul>
+<li>notAfter: has it expired?</li>
+<li>Issuer: a trusted authority?</li>
+<li>Subject: matches the domain?</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="178" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">notAfter: not expired</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="96" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Issuer: a trusted CA</text><rect x="20" y="120" width="320" height="42" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="146" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Subject: matches the domain</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Subject Mismatch</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">A certificate&#39;s Subject says mail.example.com, but you connected to www.example.com. Should your browser trust it?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>No. A mismatched subject means the certificate was not issued for the domain you are actually visiting.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-8-agenda-8" data-background-color="#ffffff">
+<h2 style="text-align:center;">HTTPS in Practice</h2>
+</section>
+
+<section id="concept-agenda8-scope" data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="418" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">HTTPS IN PRACTICE</text><rect x="385" y="66" width="380" height="78" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="575" y="104" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">See It From the Command Line</text><text x="575" y="128" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">not just the browser</text><rect x="262.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="412.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">curl -I</text><text x="412.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">headers, status, no body</text><rect x="587.5" y="230" width="300" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="737.5" y="267" text-anchor="middle" font-size="17" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">curl -v</text><text x="737.5" y="291" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">the full TLS handshake</text><text x="575" y="368" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">A browser hides most of this behind a padlock icon.</text><text x="575" y="392" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">curl shows the real HTTP response and the real TLS handshake.</text></svg>
+</div>
+</section>
+
+<section id="cmd-curl" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Check HTTPS from the CLI: curl</h4>
+<ul>
+<li>-I: headers only, fast check</li>
+<li>-v: verbose, shows handshake</li>
+<li>Already proves HTTPS works</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ curl -I https://pacific.edu
+# status code and response headers
+HTTP/2 200
+$ curl -v https://pacific.edu
+# -v: see the TLS handshake itself</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Check HTTPS from the CLI: curl</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">curl</span> <span class="tk-flag">-I</span> https://pacific.edu
+<span class="tk-comment"># status code and response headers</span>
+HTTP/2 200
+<span class="tk-prompt">$</span> <span class="tk-cmd">curl</span> <span class="tk-flag">-v</span> https://pacific.edu
+<span class="tk-comment"># -v: see the TLS handshake itself</span></div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: -I vs -v?</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">You just want to confirm a site returns 200 OK over HTTPS, nothing more. Which flag: -I or -v?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>-I. It fetches only the headers quickly; -v dumps the entire handshake and is slower to read.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-8-agenda-9" data-background-color="#ffffff">
+<h2 style="text-align:center;">Practice Lab</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Scenario: Verify a Real Site</h4>
+<ul>
+<li>Pick a real, public domain</li>
+<li>Trace its name, then its cert</li>
+<li>Prove both pieces work</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="178" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Resolve the name (DNS)</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="96" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Check the cert (TLS)</text><rect x="20" y="120" width="320" height="42" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="146" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Confirm HTTPS works</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Requirements</h4>
+<ul>
+<li>Resolve the domain with dig</li>
+<li>Confirm the same with nslookup</li>
+<li>Verify the cert with openssl</li>
+<li>Confirm HTTPS works with curl</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="198" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="16" width="320" height="38" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="40" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">dig + nslookup agree</text><rect x="20" y="62" width="320" height="38" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="86" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">openssl shows a valid cert</text><rect x="20" y="108" width="320" height="38" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="132" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">curl -I returns 200</text></svg>
+</div>
+</div>
+</section>
+
+<section id="cmd-pl1-dig" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 1: Resolve with dig</h4>
+<ul>
+<li>The A record: the real address</li>
+<li>Note the TTL too</li>
+<li>This is your baseline answer</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ dig +short pacific.edu
+# the IPv4 address, nothing else</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 1: Resolve with dig</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">dig</span> +short pacific.edu
+<span class="tk-comment"># the IPv4 address, nothing else</span></div>
+</section>
+
+<section id="cmd-pl1-nslookup" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 2: Confirm with nslookup</h4>
+<ul>
+<li>A second, independent tool</li>
+<li>Should agree with dig&#39;s answer</li>
+<li>A mismatch is a real problem</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ nslookup pacific.edu
+# compare this address to dig's</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 2: Confirm with nslookup</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">nslookup</span> pacific.edu
+<span class="tk-comment"># compare this address to dig's</span></div>
+</section>
+
+<section id="cmd-pl1-openssl" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 3: Check the Certificate</h4>
+<ul>
+<li>Connect on port 443 directly</li>
+<li>Read the issuer and expiration</li>
+<li>No browser involved at all</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ openssl s_client -connect
+    pacific.edu:443 -servername
+    pacific.edu &lt; /dev/null 2&gt;&amp;1
+    | grep -A2 &quot;Validity&quot;</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 3: Check the Certificate</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">openssl</span> s_client <span class="tk-flag">-connect</span>
+    pacific.edu:443 -servername
+    pacific.edu &lt; /dev/null 2&gt;&amp;1
+    | grep -A2 &quot;Validity&quot;</div>
+</section>
+
+<section id="cmd-pl1-curl" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 4: Confirm HTTPS Works</h4>
+<ul>
+<li>A real request, from the CLI</li>
+<li>HTTP/2 200 means it all worked</li>
+<li>DNS, TLS, or the server</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ curl -I https://pacific.edu
+# status 200 proves the whole chain</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 4: Confirm HTTPS Works</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">curl</span> <span class="tk-flag">-I</span> https://pacific.edu
+<span class="tk-comment"># status 200 proves the whole chain</span></div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Which Layer, If It Fails?</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">curl times out completely, no response at all. Is that more likely DNS, TLS, or the server itself?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>Check DNS first: if dig never resolved a real address, curl never even had anywhere to connect.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Deliverable</h4>
+<ul>
+<li>Screenshots: dig and nslookup</li>
+<li>Screenshot: openssl cert dates</li>
+<li>Screenshot: curl -I, 200</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Resolve it, two ways</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="96" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Verify the cert, then HTTPS</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-8-agenda-10" data-background-color="#ffffff">
+<h2 style="text-align:center;">Practice Lab 2</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Scenario: Something Is Wrong</h4>
+<ul>
+<li>A site&#39;s HTTPS is misbehaving</li>
+<li>Could be DNS, cert, or server</li>
+<li>Work outward, prove each layer</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="16" width="320" height="38" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="40" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Does it even resolve?</text><rect x="20" y="62" width="320" height="38" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="86" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Is the cert valid?</text><rect x="20" y="108" width="320" height="38" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="132" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Does curl get 200?</text></svg>
+</div>
+</div>
+</section>
+
+<section id="cmd-pl2-dig" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 1: Does It Resolve?</h4>
+<ul>
+<li>Start at the DNS layer</li>
+<li>No answer: it is DNS</li>
+<li>An answer: check next layer</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ dig +short expired.badssl.com
+# confirm a real address comes back</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 1: Does It Resolve?</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">dig</span> +short expired.badssl.com
+<span class="tk-comment"># confirm a real address comes back</span></div>
+</section>
+
+<section id="cmd-pl2-openssl" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 2: Is the Cert Valid?</h4>
+<ul>
+<li>DNS worked, check TLS next</li>
+<li>Look at notAfter specifically</li>
+<li>A past date means it expired</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ openssl s_client -connect
+    expired.badssl.com:443
+    -servername expired.badssl.com
+    &lt; /dev/null 2&gt;&amp;1 | grep notAfter</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 2: Is the Cert Valid?</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">openssl</span> s_client <span class="tk-flag">-connect</span>
+    expired.badssl.com:443
+    -servername expired.badssl.com
+    &lt; /dev/null 2&gt;&amp;1 | grep notAfter</div>
+</section>
+
+<section id="cmd-pl2-curl" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 3: Confirm with curl</h4>
+<ul>
+<li>curl refuses an invalid cert</li>
+<li>The error names the reason</li>
+<li>Matches what openssl showed</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ curl -I https://expired.badssl.com
+# curl: certificate has expired</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 3: Confirm with curl</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">curl</span> <span class="tk-flag">-I</span> https://expired.badssl.com
+<span class="tk-comment"># curl: certificate has expired</span></div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Localize the Fault</h4>
+<p style="text-align:left; font-size:1.6rem; line-height:1.4;">dig resolves fine. openssl shows a notAfter date in the past. Where is the actual problem?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>TLS, specifically an expired certificate. DNS already proved fine, so there is no reason to touch it.</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Deliverable</h4>
+<ul>
+<li>Screenshot: dig resolves it</li>
+<li>Screenshot: notAfter date</li>
+<li>One sentence: the real cause</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Check each layer in order</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="96" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Name the real cause</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Looking Ahead: Module 9</h2>
+</section>
+</section>
+
+      <!-- Modules 9-16 not yet built out for this term; hidden until ready.
       <section id="module-9">
         <section>
           <div class="twocol">
@@ -23413,7 +24177,17 @@ $ crontab -r</div>
         { id: 'cmd-pl1-verify', module: 7, cmd: 'ip addr', example: 'ip addr show eth0', purpose: 'Confirm the new address took effect' },
         { id: 'cmd-pl2-step1', module: 7, cmd: 'ping', example: 'ping -c 2 192.168.1.1', purpose: 'Test reachability to the gateway' },
         { id: 'cmd-pl2-step2', module: 7, cmd: 'ping', example: 'ping -c 2 8.8.8.8', purpose: 'Test reachability past the gateway' },
-        { id: 'cmd-pl2-step3', module: 7, cmd: 'ping', example: 'ping -c 2 google.com', purpose: 'Test reachability using a domain name' }
+        { id: 'cmd-pl2-step3', module: 7, cmd: 'ping', example: 'ping -c 2 google.com', purpose: 'Test reachability using a domain name' },
+        { id: 'cmd-nslookup', module: 8, cmd: 'nslookup', example: 'nslookup scanme.nmap.org', purpose: 'Quick DNS lookup, simpler than dig' },
+        { id: 'cmd-openssl', module: 8, cmd: 'openssl', example: 'openssl s_client -connect host:443', purpose: 'Inspect a live TLS certificate' },
+        { id: 'cmd-curl', module: 8, cmd: 'curl', example: 'curl -I https://pacific.edu', purpose: 'Check HTTPS headers and handshake' },
+        { id: 'cmd-pl1-dig', module: 8, cmd: 'dig', example: 'dig +short pacific.edu', purpose: 'Quickly resolve a domain to its IP' },
+        { id: 'cmd-pl1-nslookup', module: 8, cmd: 'nslookup', example: 'nslookup pacific.edu', purpose: 'Confirm the same lookup a second way' },
+        { id: 'cmd-pl1-openssl', module: 8, cmd: 'openssl', example: 'openssl s_client -connect pacific.edu:443', purpose: 'Inspect the live certificate dates' },
+        { id: 'cmd-pl1-curl', module: 8, cmd: 'curl', example: 'curl -I https://pacific.edu', purpose: 'Confirm HTTPS end to end' },
+        { id: 'cmd-pl2-dig', module: 8, cmd: 'dig', example: 'dig +short expired.badssl.com', purpose: 'Confirm the name resolves at all' },
+        { id: 'cmd-pl2-openssl', module: 8, cmd: 'openssl', example: 'openssl s_client -connect host:443', purpose: 'Check whether the certificate expired' },
+        { id: 'cmd-pl2-curl', module: 8, cmd: 'curl', example: 'curl -I https://expired.badssl.com', purpose: 'See curl refuse an invalid certificate' },
       ];
 
       function cmdTableHTML(throughId) {
