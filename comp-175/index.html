@@ -494,7 +494,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-10-04 15:19 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-10-04 15:25 PT</span>
   </div>
 
   <!--
@@ -20630,6 +20630,33 @@ $ sudo systemctl restart ssh
 <span class="tk-comment"># on Ubuntu: sudo systemctl enable --now ssh</span></div>
 </section>
 
+<section data-tag="kali" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Clear Any Stale Host Key</h4>
+<ul>
+<li>Rebuilt VM? Old key remains</li>
+<li>ssh refuses to connect</li>
+<li>Remove it before sshing in</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ IP=&lt;ubuntu-ip&gt;
+$ ssh-keygen -f ~/.ssh/known_hosts -R $IP
+# safe to run even if nothing's stale</div>
+
+</div>
+</div>
+<p class="fragment note-below">&#9888;&#65039; Skipping this is fine until the VM gets rebuilt; then ssh refuses with <span class="highlight">&quot;Host key verification failed&quot;</span> instead of connecting.</p>
+</section>
+<section data-tag="kali" data-background-color="#0a0a0a">
+<h4>Clear Any Stale Host Key</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> IP=&lt;ubuntu-ip&gt;
+<span class="tk-prompt">$</span> <span class="tk-cmd">ssh-keygen</span> <span class="tk-flag">-f</span> <span class="tk-path">~/.ssh/known_hosts</span> <span class="tk-flag">-R</span> $IP
+<span class="tk-comment"># safe to run even if nothing's stale</span>
+<span class="tk-comment"># removes any old entry for this IP</span></div>
+</section>
+
 <section id="cmd-pl1-check-before" data-tag="kali" data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
@@ -20641,20 +20668,17 @@ $ sudo systemctl restart ssh
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ IP=&lt;ubuntu-ip&gt;
-$ ssh &lt;username&gt;@$IP
+<div class="terminal">$ ssh &lt;username&gt;@$IP
 # "username" is literal text, not a $var
 $ ip addr show
 # note the interface name, e.g. eth0</div>
 
 </div>
 </div>
-<p class="fragment note-below">&#9888;&#65039; Rebuilt or re-imported the VM? ssh refuses with &quot;Host key verification failed&quot; since the same IP now has a new key. Fix: <span class="highlight">ssh-keygen</span> -R &lt;ip&gt;, then ssh again and accept it.</p>
 </section>
 <section data-tag="kali" data-background-color="#0a0a0a">
 <h4>Step 1: Check the Starting Point</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> IP=&lt;ubuntu-ip&gt;
-<span class="tk-prompt">$</span> <span class="tk-cmd">ssh</span> &lt;username&gt;@$IP
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ssh</span> &lt;username&gt;@$IP
 <span class="tk-comment"># "username" is literal text, not a $var</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">ip</span> addr show
 <span class="tk-comment"># note the interface name, e.g. eth0</span></div>
