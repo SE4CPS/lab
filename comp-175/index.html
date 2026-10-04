@@ -494,7 +494,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-10-04 14:39 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-10-04 14:44 PT</span>
   </div>
 
   <!--
@@ -20566,6 +20566,35 @@ $ sudo hostnamectl set-hostname web01</div>
 </div>
 </section>
 
+<section data-tag="kali" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Kali &amp; Ubuntu Share One IP</h4>
+<ul>
+<li>Both WSL2 distros, one IP</li>
+<li>sshd picks up port 22 first</li>
+<li>Give Kali its own port</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ echo 'Port 2222' | \
+  sudo tee -a /etc/ssh/sshd_config
+$ sudo systemctl restart ssh</div>
+
+</div>
+</div>
+<p class="fragment note-below">&#9888;&#65039; Skip this and ssh may land on Kali's <span class="highlight">own</span> banner instead of Ubuntu's: both answer the same IP.</p>
+</section>
+<section data-tag="kali" data-background-color="#0a0a0a">
+<h4>Kali &amp; Ubuntu Share One IP</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> echo &#39;Port 2222&#39; | \
+  <span class="tk-cmd">sudo</span> tee <span class="tk-flag">-a</span> <span class="tk-path">/etc/ssh/sshd_config</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> systemctl restart ssh
+<span class="tk-comment"># run this on Kali only, once</span>
+<span class="tk-comment"># Ubuntu keeps the default port 22</span>
+<span class="tk-comment"># Kali answers on 2222 instead</span></div>
+</section>
+
 <section id="cmd-pl1-check-before" data-tag="kali" data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
@@ -20580,10 +20609,6 @@ $ sudo hostnamectl set-hostname web01</div>
 <div class="terminal">$ IP=&lt;ubuntu-ip&gt;
 $ ssh &lt;username&gt;@$IP
 # "username" is literal text, not a $var
-# landed on Kali's own banner, not Ubuntu's?
-# both share one IP; give Kali its own port:
-# echo 'Port 2222' | sudo tee -a /etc/ssh/sshd_config
-# sudo systemctl restart ssh   (on Kali, once)
 $ ip addr show
 # note the interface name, e.g. eth0</div>
 
@@ -20596,10 +20621,6 @@ $ ip addr show
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> IP=&lt;ubuntu-ip&gt;
 <span class="tk-prompt">$</span> <span class="tk-cmd">ssh</span> &lt;username&gt;@$IP
 <span class="tk-comment"># "username" is literal text, not a $var</span>
-<span class="tk-comment"># landed on Kali's own banner, not Ubuntu's?</span>
-<span class="tk-comment"># both share one IP; give Kali its own port:</span>
-<span class="tk-comment"># echo 'Port 2222' | sudo tee -a /etc/ssh/sshd_config</span>
-<span class="tk-comment"># sudo systemctl restart ssh   (on Kali, once)</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">ip</span> addr show
 <span class="tk-comment"># note the interface name, e.g. eth0</span></div>
 </section>
