@@ -401,21 +401,14 @@
     .module-back-link { color: #9cdcfe; }
     .tag-terminology { background: #9cdcfe; color: #1a1a1a; }
 
-    /* TOC/Schedule table, ported from comp-175: full slide width (the
-       shared assets/deck-chrome.css width:100% rule already does this),
-       a larger font than the shared 0.85rem default, and an overflow
-       safety net so the table scrolls inside itself rather than
-       spilling past the slide if it ever grows taller than the canvas.
-       Column widths come from the table's own <colgroup> (sized off
-       each column's real longest cell) -- table-layout:fixed is
-       required for a <colgroup> to actually be honored. max-width
-       clears the seal (120px wide + 18px offset from the right edge);
-       this deck's canvas is reveal.js's default 960x700 (no explicit
-       width/height set), narrower than comp-175's configured 1280x720,
-       so the clearance value differs from comp-175's own -- confirmed
-       live via a headless screenshot at 960x700 (no letterboxing). */
+    /* Safety net for slide content taller than the deck's configured
+       720px canvas height (see width:1280/height:720 in
+       Reveal.initialize below). Content should always fit on its own
+       -- this only catches a slide that still overflows despite that,
+       so it scrolls inside itself instead of visibly spilling into/
+       behind neighboring slides. */
     #toc {
-      max-height: 700px;
+      max-height: 720px;
       overflow-y: auto;
       overflow-x: hidden;
     }
@@ -426,8 +419,21 @@
       background: rgba(255, 255, 255, 0.25);
       border-radius: 4px;
     }
-    #toc .toc-table { font-size: 0.95rem; table-layout: fixed; max-width: calc(100% - 115px); }
-    #toc .toc-table th, #toc .toc-table td { padding: 1px 8px; }
+    /* Per instructor request, the TOC table uses the slide's full width
+       (the shared assets/deck-chrome.css width:100% rule already does
+       this) and a larger font than the shared 0.85rem default. Column
+       widths come from assets/deck-chrome.css's own .toc-table
+       th/td:nth-child rules (table-layout:fixed is required for those
+       percentages to be honored instead of the browser falling back to
+       auto layout and sizing columns by content). Kept identical to
+       comp-175's own #toc block (same font-size/max-width/padding, now
+       that this deck's canvas matches comp-175's 1280x720) rather than
+       a separately-tuned override, per the instructor's "apply the same
+       rules to both" request -- a per-deck .toc-table override is only
+       warranted when a deck's actual canvas size or font differs, not
+       just because its content happens to run longer. */
+    #toc .toc-table { font-size: 1.05rem; table-layout: fixed; max-width: calc(100% - 90px); }
+    #toc .toc-table th, #toc .toc-table td { padding: 1px 10px; }
     </style>
 </head>
 
@@ -438,7 +444,7 @@
 
     <div class="quick-links">
       <a href="./#toc" class="footer-link" target="_self">Schedule</a>
-      <span id="updated-stamp" class="footer-link">Updated: 2026-10-03 17:49 PT</span>
+      <span id="updated-stamp" class="footer-link">Updated: 2026-10-03 18:18 PT</span>
     </div>
 
     <div class="reveal">
@@ -462,14 +468,6 @@
 
                 <section id="toc">
                     <table class="toc-table">
-                        <colgroup>
-                            <col style="width:6%">
-                            <col style="width:12%">
-                            <col style="width:23%">
-                            <col style="width:27%">
-                            <col style="width:21%">
-                            <col style="width:11%">
-                        </colgroup>
                         <thead>
                             <tr>
                                 <th>Week</th>
@@ -21778,6 +21776,9 @@ cout &lt;&lt; x;</pre>
                 progress: true,
                 center: true,
                 hash: true,
+                width: 1280,
+                height: 720,
+                margin: 0.1,
                 slideNumber: false,
                 plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom]
             }).then(function () {
