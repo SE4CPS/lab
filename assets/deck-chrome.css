@@ -9,9 +9,17 @@
  * e.g. <link rel="stylesheet" href="../assets/deck-chrome.css">
  */
 
-.slides {
-    width: 90% !important;
-}
+/* Previously ".slides { width: 90% !important; }" -- forcing a CSS width
+   on reveal.js's own .slides element fights its internal `zoom`-based
+   fit-to-viewport sizing (reveal.js sets its own inline width/height/zoom
+   on this same element), and produced an inconsistent, sometimes
+   asymmetric margin depending on window shape (confirmed live: centered
+   at some window sizes, a large one-sided gap at others). The margin
+   this was meant to provide (room for the seal/footer chrome to sit
+   outside slide content) now comes from reveal.js's own `margin` config
+   option instead, set per-deck in each deck's own Reveal.initialize()
+   call -- that goes through reveal.js's own centering math, so it can't
+   drift off-center the way a competing CSS width override could. */
 
 /* Push reveal.js's own bottom-right prev/next/up/down arrow cluster up out
    of the way of the module-counter/Agenda-link chrome, which sits at the
@@ -92,13 +100,33 @@
 /* TOC / schedule table, used inside <section id="toc"> (or "module-toc"). A
    deck may still add its own per-column inline styles on top (fixed
    widths, ellipsis truncation) for content-specific layout needs. */
+/* table-layout: fixed is deliberate, not a stylistic choice -- auto layout
+   (the default) lets Chrome and Firefox independently decide each column's
+   intrinsic width from its content, and they disagree once a cell holds a
+   long unbroken run of comma-separated links (the Notes column's "Commands:
+   git clone, ls, +15 more ->"). Chrome happily shrinks columns to fit;
+   Firefox lets the table grow past its container's 100% instead, spilling
+   the whole table sideways with a scrollbar -- reported live, Chrome fine,
+   Firefox overflowing. Fixed layout forces both browsers to size columns
+   from the percentages below instead of guessing from content, which is
+   what makes the result identical across browsers. Needs the nth-child
+   percentages immediately below AND overflow-wrap on every cell (a fixed
+   column cannot grow for a long word the way an auto one can) to avoid
+   trading the overflow bug for a text-clipping one. */
 .toc-table {
     margin: 0 auto;
     width: 100%;
+    table-layout: fixed;
     border-collapse: collapse;
     font-size: 0.85rem;
     border: 1px solid #666;
 }
+.toc-table th:nth-child(1), .toc-table td:nth-child(1) { width: 8%; }
+.toc-table th:nth-child(2), .toc-table td:nth-child(2) { width: 11%; }
+.toc-table th:nth-child(3), .toc-table td:nth-child(3) { width: 18%; }
+.toc-table th:nth-child(4), .toc-table td:nth-child(4) { width: 32%; }
+.toc-table th:nth-child(5), .toc-table td:nth-child(5) { width: 19%; }
+.toc-table th:nth-child(6), .toc-table td:nth-child(6) { width: 12%; }
 
 .toc-table thead tr {
     background-color: #444;
@@ -148,6 +176,7 @@
 .reveal .toc-table td {
     padding: 8px 8px;
     border: 1px solid #666;
+    overflow-wrap: break-word;
 }
 
 /* Row of quick-links shown directly below the TOC/Schedule table itself,
