@@ -434,6 +434,17 @@
        just because its content happens to run longer. */
     #toc .toc-table { font-size: 1.05rem; table-layout: fixed; max-width: calc(100% - 90px); }
     #toc .toc-table th, #toc .toc-table td { padding: 1px 10px; }
+    /* Current-week row highlight, computed live from the viewer's real
+       clock (Pacific time) against the Dates column's own visible text --
+       see the IIFE next to the "Updated: Today" one in the footer script.
+       Deliberately subtle: a faint tint of this deck's own accent color
+       plus a left-edge accent bar, not a loud background change. */
+    #toc .toc-table tr.current-week td {
+      background: rgba(156, 220, 254, 0.08);
+    }
+    #toc .toc-table tr.current-week td:first-child {
+      box-shadow: inset 3px 0 0 #9cdcfe;
+    }
     </style>
 </head>
 
@@ -444,7 +455,7 @@
 
     <div class="quick-links">
       <a href="./#toc" class="footer-link" target="_self">Schedule</a>
-      <span id="updated-stamp" class="footer-link">Updated: 2026-10-03 18:26 PT</span>
+      <span id="updated-stamp" class="footer-link">Updated: 2026-10-03 19:25 PT</span>
     </div>
 
     <div class="reveal">
@@ -22001,6 +22012,51 @@ cout &lt;&lt; x;</pre>
       if (stampDate >= todayPT) {
         el.textContent = 'Updated: Today ' + rest;
       }
+    })();
+    (function () {
+      // Subtle current-week row highlight on the Schedule/TOC table,
+      // computed live from the viewer's real clock (Pacific time) against
+      // the Dates column's own visible text -- not a hand-maintained "this
+      // is week N" value, which would go stale the moment a session runs
+      // past one week without the deck being touched. Each row's
+      // highlighted window is the full Monday-Sunday calendar week
+      // containing its visible date(s), not just the literal Tue/Thu class
+      // days, so the highlight doesn't drop out on the days between them.
+      var rows = document.querySelectorAll('#toc .toc-table tbody tr');
+      if (!rows.length) return;
+      var months = { Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5, Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11 };
+      var YEAR = 2026; // Fall 2026 semester -- update alongside this file's other hardcoded semester dates
+      function pad(n) { return (n < 10 ? '0' : '') + n; }
+      function iso(y, m, d) { return y + '-' + pad(m + 1) + '-' + pad(d); }
+      function mondayOf(y, m, d) {
+        var dt = new Date(y, m, d);
+        var dow = (dt.getDay() + 6) % 7; // 0=Mon .. 6=Sun
+        dt.setDate(dt.getDate() - dow);
+        return dt;
+      }
+      var todayPT2 = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit'
+      }).format(new Date());
+      rows.forEach(function (row) {
+        var cell = row.children[1]; // Dates column
+        if (!cell) return;
+        var text = cell.textContent.replace(/\s+/g, ' ').trim();
+        var m2 = text.match(/^([A-Za-z]{3})\s+(\d{1,2})(?:,?\s*(?:([A-Za-z]{3})\s+)?(\d{1,2}))?/);
+        if (!m2 || !(m2[1] in months)) return;
+        var mon1 = months[m2[1]], day1 = parseInt(m2[2], 10);
+        var mon2 = m2[3] ? months[m2[3]] : mon1;
+        var day2 = m2[4] ? parseInt(m2[4], 10) : day1;
+        var d1 = new Date(YEAR, mon1, day1), d2 = new Date(YEAR, mon2, day2);
+        var first = d1 <= d2 ? d1 : d2, last = d1 <= d2 ? d2 : d1;
+        var weekStart = mondayOf(YEAR, first.getMonth(), first.getDate());
+        var weekEnd = mondayOf(YEAR, last.getMonth(), last.getDate());
+        weekEnd.setDate(weekEnd.getDate() + 6);
+        var startISO = iso(weekStart.getFullYear(), weekStart.getMonth(), weekStart.getDate());
+        var endISO = iso(weekEnd.getFullYear(), weekEnd.getMonth(), weekEnd.getDate());
+        if (todayPT2 >= startISO && todayPT2 <= endISO) {
+          row.classList.add('current-week');
+        }
+      });
     })();
     });
         </script>
