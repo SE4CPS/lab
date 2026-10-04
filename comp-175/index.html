@@ -494,7 +494,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-10-04 13:03 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-10-04 13:13 PT</span>
   </div>
 
   <!--
@@ -19907,7 +19907,10 @@ no crontab for you</div>
 1: lo: &lt;LOOPBACK,UP&gt;
     inet 127.0.0.1/8 scope host lo
 2: eth0: &lt;BROADCAST,UP&gt;
-    inet 192.168.1.50/24 ...</div>
+    inet 192.168.1.50/24 ...
+<span class="tk-comment"># ip -br addr show: compact, one line per interface</span>
+<span class="tk-comment"># ip addr show eth0: just that one interface</span>
+<span class="tk-comment"># ip -4 addr show: IPv4 addresses only</span></div>
 </section>
 
 <section data-background-color="#ffffff">
@@ -19950,7 +19953,10 @@ $ sudo ip link set eth0 up
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ip</span> link show eth0
 <span class="tk-comment"># state is UP or DOWN</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> ip link set eth0 up
-<span class="tk-comment"># turn the interface on</span></div>
+<span class="tk-comment"># turn the interface on</span>
+<span class="tk-comment"># ip link show: every interface, not just one</span>
+<span class="tk-comment"># sudo ip link set eth0 down: turn it off instead</span>
+<span class="tk-comment"># ip -s link show eth0: adds packet/error counts</span></div>
 </section>
 
 <section data-background-color="#ffffff">
@@ -20107,7 +20113,9 @@ network:
     eth0:
       dhcp4: true
 EOF
-<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> netplan apply</div>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> netplan apply
+<span class="tk-comment"># netplan status: show what's active now</span>
+<span class="tk-comment"># netplan generate: build config, don't apply it</span></div>
 </section>
 
 <section id="cmd-netplan-static" data-background-color="#0a0a0a">
@@ -20199,7 +20207,10 @@ default via 192.168.1.1 dev eth0
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ip</span> route show
 <span class="tk-comment"># the routing table</span>
 default via 192.168.1.1 dev eth0
-192.168.1.0/24 dev eth0 ...</div>
+192.168.1.0/24 dev eth0 ...
+<span class="tk-comment"># ip route get 8.8.8.8: which route wins</span>
+<span class="tk-comment"># ip -4 route show: IPv4 routes only</span>
+<span class="tk-comment"># ip route show table all: every table</span></div>
 </section>
 
 <section data-background-color="#ffffff">
@@ -20290,7 +20301,9 @@ Link 2 (eth0)
 <span class="tk-comment"># which DNS server, per interface</span>
 Link 2 (eth0)
     Current DNS Server: 8.8.8.8
-      DNS Servers: 8.8.8.8</div>
+      DNS Servers: 8.8.8.8
+<span class="tk-comment"># resolvectl query example.com: resolve one name</span>
+<span class="tk-comment"># resolvectl dns eth0: just that interface's server</span></div>
 </section>
 
 <section data-background-color="#ffffff">
@@ -20379,7 +20392,9 @@ $ traceroute 8.8.8.8
 <span class="tk-comment"># each line: one hop, its time</span>
  1  192.168.1.1  0.4 ms
  2  10.20.0.1    3.1 ms
- 3  * * *</div>
+ 3  * * *
+<span class="tk-comment"># hop #, IP, round-trip time; *** = no reply</span>
+<span class="tk-comment"># traceroute -n 8.8.8.8: skip slow DNS lookups</span></div>
 </section>
 
 <section id="cmd-ss" data-background-color="#0a0a0a">
@@ -20406,7 +20421,9 @@ tcp   LISTEN  0.0.0.0:80</div>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ss</span> <span class="tk-flag">-tuln</span>
 <span class="tk-comment"># listening TCP/UDP ports</span>
 tcp   LISTEN  0.0.0.0:22
-tcp   LISTEN  0.0.0.0:80</div>
+tcp   LISTEN  0.0.0.0:80
+<span class="tk-comment"># ss -tulnp: also show which process owns it</span>
+<span class="tk-comment"># ss -s: just a summary count, no rows</span></div>
 </section>
 
 <section data-background-color="#ffffff">
@@ -20459,7 +20476,9 @@ $ sudo hostnamectl set-hostname web01</div>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">hostnamectl</span>
 <span class="tk-comment"># current hostname and OS info</span>
    Static hostname: ubuntu-server
-<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> hostnamectl set-hostname web01</div>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> hostnamectl set-hostname web01
+<span class="tk-comment"># --pretty "Web Server 1": a display name only</span>
+<span class="tk-comment"># hostnamectl status: same as the bare command</span></div>
 </section>
 
 <section data-background-color="#ffffff">
