@@ -1,0 +1,154 @@
+Lab 7: Script It, Then Firewall It (Ubuntu)   100 pts
+
+Ten practical tasks. Every task ends with a screenshot as evidence.
+
+Rules for every question:
+- No command-line editor (nano, vim, vi, or visudo in edit mode). The only way to write or change a file is cat, with the text in a here-document: a line such as cat > file <<'EOF', then the text, then a line containing only EOF. Output redirection like > and >> is fine.
+- The terminal prompt (username and hostname) must be visible.
+- Where a question says "Explain", type one sentence as a # comment line in the same terminal, then take the screenshot.
+- End the terminal with a comment line: # AI used: No   or   # AI used: Yes, (what you asked it and what you changed)
+- Do not assume account/IP values that are specific to your own VM; substitute your real ones (USER, UBUNTU_IP).
+- Paste commands in blocks, but run any command that asks you a question on its own, answer it, then continue.
+- This lab reuses Lab 6's Ubuntu VM directly: no new SSH setup is needed.
+- All of Questions 2-10 run on the same Ubuntu VM used in Lab 6.
+
+
+Question 1 (10 pts)
+SSH In, Confirm the Server
+
+Done from Kali, into the same Ubuntu VM used in Lab 6. No new setup is needed, just confirm you are on the right machine before starting.
+
+ssh USER@UBUNTU_IP
+hostnamectl
+
+Explain (type it as a # comment line in the terminal): why this lab needs no separate setup step.
+
+Screenshot: the Kali prompt, the ssh command, and hostnamectl output.
+
+
+Question 2 (10 pts)
+Write the Backup Script
+
+Write a script that backs up /srv/registrar and exits early if the folder is missing. No editor: write it with cat and a here-document.
+
+cat > backup.sh <<'EOF'
+#!/bin/bash
+if [[ ! -d /srv/registrar ]]; then
+  echo "Source missing, exiting"
+  exit 1
+fi
+cp -r /srv/registrar /backups/
+echo "Backed up on $(date)" >> backup.log
+EOF
+cat backup.sh
+
+Explain (type it as a # comment line in the terminal): what the exit 1 line actually does if the source folder is missing.
+
+Screenshot: the heredoc command and cat showing the saved file.
+
+
+Question 3 (10 pts)
+Make It Executable and Test
+
+Grant run permission, then test the script once by hand before scheduling it.
+
+chmod +x backup.sh
+./backup.sh
+cat backup.log
+
+Explain (type it as a # comment line in the terminal): why you should always run a script by hand once before putting it in cron.
+
+Screenshot: the chmod and run, and backup.log's new line.
+
+
+Question 4 (10 pts)
+Schedule With cron
+
+Add a crontab entry that runs backup.sh every night at 2 AM, without erasing any existing entries.
+
+crontab -l
+(crontab -l; echo "0 2 * * * $(pwd)/backup.sh") | crontab -
+crontab -l
+
+Explain (type it as a # comment line in the terminal): what each of the five time fields in the crontab line means.
+
+Screenshot: crontab -l before and after, with your new line visible.
+
+
+Question 5 (10 pts)
+Lint It With shellcheck
+
+Install shellcheck if it is missing, then run it against backup.sh and confirm it comes back clean.
+
+Package: shellcheck, not installed by default.
+
+sudo apt install -y shellcheck
+shellcheck backup.sh
+
+Explain (type it as a # comment line in the terminal): what kind of mistake shellcheck is designed to catch.
+
+Screenshot: the install output and shellcheck's real result.
+
+
+Question 6 (10 pts)
+View Current iptables Rules
+
+List the current firewall rules with packet and byte counts.
+
+sudo iptables -L -v
+
+Explain (type it as a # comment line in the terminal): what the policy shown for the INPUT chain means.
+
+Screenshot: the full -L -v output.
+
+
+Question 7 (10 pts)
+Add a Rule for Port 8080
+
+Append a rule that accepts incoming TCP traffic on port 8080, then confirm it landed.
+
+sudo iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
+sudo iptables -L -v
+
+Explain (type it as a # comment line in the terminal): what -A does differently from -I.
+
+Screenshot: the new rule, visible in the list.
+
+
+Question 8 (10 pts)
+Make Rules Survive Reboot
+
+Install the package that saves the current ruleset so it survives a reboot.
+
+Package: iptables-persistent, not installed by default.
+
+sudo apt install -y iptables-persistent
+
+Explain (type it as a # comment line in the terminal): what happens to your iptables rules on reboot without this package.
+
+Screenshot: the install and save-rules prompt.
+
+
+Question 9 (10 pts)
+List the Same Rules via nftables
+
+Confirm the same port 8080 rule is visible through nftables, the engine iptables itself now runs on.
+
+sudo nft list ruleset
+
+Explain (type it as a # comment line in the terminal): why the rule shows up here even though you added it with iptables, not nft.
+
+Screenshot: the full ruleset output.
+
+
+Question 10 (10 pts)
+Write the Summary Report
+
+Combine the backup log and the current firewall rules into one report file.
+
+{ cat backup.log; sudo iptables -L -v; } > lab7-report.txt
+cat lab7-report.txt
+
+Explain (type it as a # comment line in the terminal): why a sysadmin would want both pieces of evidence in one file.
+
+Screenshot: the full contents of lab7-report.txt.
