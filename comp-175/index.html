@@ -494,7 +494,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-10-04 15:55 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-10-04 16:00 PT</span>
   </div>
 
   <!--
@@ -20168,7 +20168,7 @@ network:
   ethernets:
     eth0:
       addresses: [192.168.1.50/24]
-      gateway4: 192.168.1.1
+      routes: [{to: default, via: 192.168.1.1}]
       nameservers: {addresses: [8.8.8.8]}
 EOF
 <span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> netplan apply</div>
@@ -20694,6 +20694,7 @@ $ ssh-keygen -f ~/.ssh/known_hosts -R $IP
 <ul>
 <li>See what interface exists now</li>
 <li>Note any current address</li>
+<li>Note the gateway (ip route)</li>
 <li>This is your before picture</li>
 </ul>
 </div>
@@ -20701,7 +20702,9 @@ $ ssh-keygen -f ~/.ssh/known_hosts -R $IP
 <div class="terminal">$ ssh &lt;username&gt;@$IP
 # "username" is literal text, not a $var
 $ ip addr show
-# note the interface name, e.g. eth0</div>
+# note your subnet, e.g. 10.0.0.0/24
+$ ip route show
+# note "default via X.X.X.X": your gateway</div>
 
 </div>
 </div>
@@ -20711,7 +20714,9 @@ $ ip addr show
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ssh</span> &lt;username&gt;@$IP
 <span class="tk-comment"># "username" is literal text, not a $var</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">ip</span> addr show
-<span class="tk-comment"># note the interface name, e.g. eth0</span></div>
+<span class="tk-comment"># note your subnet, e.g. 10.0.0.0/24</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">ip</span> route show
+<span class="tk-comment"># note "default via X.X.X.X": your gateway</span></div>
 </section>
 
 <section id="cmd-pl1-write" data-tag="ubuntu" data-background-color="#0a0a0a">
@@ -20719,9 +20724,9 @@ $ ip addr show
 <div class="col">
 <h4>Step 2: Write the Netplan File</h4>
 <ul>
-<li>One config, written once</li>
-<li>tee, never nano</li>
-<li>Pick an address on your subnet</li>
+<li>Use YOUR subnet &amp; gateway</li>
+<li>From Step 1's ip addr/route</li>
+<li>Pick an unused host number</li>
 <li>Still on Ubuntu, via SSH</li>
 </ul>
 </div>
@@ -20731,15 +20736,15 @@ network:
   version: 2
   ethernets:
     eth0:
-      addresses: [192.168.1.80/24]
-      gateway4: 192.168.1.1
-      nameservers:
-        addresses: [8.8.8.8]
-EOF</div>
+      addresses: [&lt;new-ip&gt;/24]
+      routes: [{to: default, via: &lt;gateway&gt;}]
+      nameservers: {addresses: [8.8.8.8]}
+EOF
+$ sudo chmod 600 /etc/netplan/01-lab.yaml</div>
 
 </div>
 </div>
-<p class="fragment note-below">&#9888;&#65039; &quot;command not found&quot; usually means you&#39;re back on <span class="highlight">Kali</span>, not Ubuntu: ssh back into Step 1&#39;s session first.</p>
+<p class="fragment note-below">&#9888;&#65039; &lt;new-ip&gt;/&lt;gateway&gt; must match YOUR real subnet from Step 1, not a guess: a different subnet can <span class="highlight">disconnect</span> the VM entirely once applied.</p>
 </section>
 <section data-tag="ubuntu" data-background-color="#0a0a0a">
 <h4>Step 2: Write the Netplan File</h4>
@@ -20748,11 +20753,11 @@ network:
   version: 2
   ethernets:
     eth0:
-      addresses: [192.168.1.80/24]
-      gateway4: 192.168.1.1
-      nameservers:
-        addresses: [8.8.8.8]
-EOF</div>
+      addresses: [&lt;new-ip&gt;/24]
+      routes: [{to: default, via: &lt;gateway&gt;}]
+      nameservers: {addresses: [8.8.8.8]}
+EOF
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> chmod <span class="tk-flag">600</span> <span class="tk-path">/etc/netplan/01-lab.yaml</span></div>
 </section>
 
 <section id="cmd-pl1-apply" data-tag="ubuntu" data-background-color="#0a0a0a">
@@ -20898,8 +20903,9 @@ $ sudo apt install -y iproute2 iputils-ping
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ ip route show
-# find the default gateway first
-$ ping -c 2 192.168.1.1</div>
+# find "default via X.X.X.X" first
+$ ping -c 2 &lt;gateway&gt;
+# use the address you just found</div>
 
 </div>
 </div>
@@ -20907,8 +20913,9 @@ $ ping -c 2 192.168.1.1</div>
 <section data-tag="ubuntu" data-background-color="#0a0a0a">
 <h4>Step 1: Ping the Gateway</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ip</span> route show
-<span class="tk-comment"># find the default gateway first</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">ping</span> <span class="tk-flag">-c</span> 2 192.168.1.1</div>
+<span class="tk-comment"># find "default via X.X.X.X" first</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">ping</span> <span class="tk-flag">-c</span> 2 &lt;gateway&gt;
+<span class="tk-comment"># use the address you just found</span></div>
 </section>
 
 <section id="cmd-pl2-step2" data-tag="ubuntu" data-background-color="#0a0a0a">
