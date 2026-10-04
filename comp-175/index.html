@@ -494,7 +494,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-10-04 15:25 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-10-04 15:55 PT</span>
   </div>
 
   <!--
@@ -20141,7 +20141,7 @@ EOF
 <h4>Netplan: Static IP</h4>
 <ul>
 <li>addresses: a list, CIDR form</li>
-<li>gateway4: the default route</li>
+<li>routes: the default route</li>
 <li>nameservers: DNS to use</li>
 </ul>
 </div>
@@ -20152,7 +20152,7 @@ network:
   ethernets:
     eth0:
       addresses: [192.168.1.50/24]
-      gateway4: 192.168.1.1
+      routes: [{to: default, via: 192.168.1.1}]
       nameservers: {addresses: [8.8.8.8]}
 EOF
 $ sudo netplan apply</div>
@@ -20582,7 +20582,9 @@ $ sudo hostnamectl set-hostname web01</div>
 $ sudo apt install -y openssh-server netplan.io
 # safe to re-run even if already installed
 $ sudo systemctl enable --now ssh
-# installs, enables, and starts sshd now</div>
+# installs, enables, and starts sshd now
+$ sudo ss -tlnp | grep :22
+# confirms sshd is actually listening</div>
 
 </div>
 </div>
@@ -20594,7 +20596,9 @@ $ sudo systemctl enable --now ssh
 <span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> openssh-server netplan.io
 <span class="tk-comment"># safe to re-run even if already installed</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> systemctl enable <span class="tk-flag">--now</span> ssh
-<span class="tk-comment"># installs, enables, and starts sshd now</span></div>
+<span class="tk-comment"># installs, enables, and starts sshd now</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> ss <span class="tk-flag">-tlnp</span> | <span class="tk-cmd">grep</span> :22
+<span class="tk-comment"># confirms sshd is actually listening</span></div>
 </section>
 
 <section data-tag="kali" data-background-color="#0a0a0a">
@@ -20655,6 +20659,32 @@ $ ssh-keygen -f ~/.ssh/known_hosts -R $IP
 <span class="tk-prompt">$</span> <span class="tk-cmd">ssh-keygen</span> <span class="tk-flag">-f</span> <span class="tk-path">~/.ssh/known_hosts</span> <span class="tk-flag">-R</span> $IP
 <span class="tk-comment"># safe to run even if nothing's stale</span>
 <span class="tk-comment"># removes any old entry for this IP</span></div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Still Stuck? Reset WSL</h4>
+<ul>
+<li>Last resort, not routine</li>
+<li>Resets the shared network</li>
+<li>Run on Windows, not in WSL</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal-ps">$ wsl --shutdown
+# wait ~10 seconds, then reopen both tabs</div>
+
+</div>
+</div>
+<p class="fragment note-below">&#9888;&#65039; ssh hanging (not refusing) after everything else checks out usually means the <span class="highlight">shared</span> WSL2 network state itself is stuck, not a service.</p>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Still Stuck? Reset WSL</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">wsl</span> <span class="tk-flag">--shutdown</span>
+<span class="tk-comment"># wait ~10 seconds, then reopen both tabs</span>
+<span class="tk-comment"># resets the whole shared network stack,</span>
+<span class="tk-comment"># not just one distro</span></div>
 </section>
 
 <section id="cmd-pl1-check-before" data-tag="kali" data-background-color="#0a0a0a">
