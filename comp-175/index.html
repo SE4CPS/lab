@@ -494,7 +494,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-10-04 17:54 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-10-04 18:09 PT</span>
   </div>
 
   <!--
@@ -19768,16 +19768,16 @@ no crontab for you</div>
 <div class="col">
 <h4>Agenda</h4>
 <ol style="line-height: 1.8;">
-<li><a href="./#/module-7-agenda-1" target="_self">What Is Network Config?</a> [Availability]</li>
-<li><a href="./#/module-7-agenda-2" target="_self">Viewing Interfaces</a> [Availability]</li>
-<li><a href="./#/module-7-agenda-3" target="_self">IP Addresses &amp; Subnets</a> [Confidentiality]</li>
-<li><a href="./#/module-7-agenda-4" target="_self">Static vs DHCP</a> [Availability]</li>
-<li><a href="./#/module-7-agenda-5" target="_self">Routing &amp; Gateway</a> [Availability]</li>
-<li><a href="./#/module-7-agenda-6" target="_self">Checking DNS</a> [Integrity]</li>
-<li><a href="./#/module-7-agenda-7" target="_self">Troubleshooting</a> [Availability]</li>
-<li><a href="./#/module-7-agenda-8" target="_self">Hostname &amp; /etc/hosts</a> [Availability]</li>
-<li><a href="./#/module-7-agenda-9" target="_self">Practice Lab</a> [Availability]</li>
-<li><a href="./#/module-7-agenda-10" target="_self">Practice Lab 2</a> [Availability]</li>
+<li><a href="./#/module-7-agenda-1" target="_self">What Is Network Config?</a></li>
+<li><a href="./#/module-7-agenda-2" target="_self">Viewing Interfaces</a></li>
+<li><a href="./#/module-7-agenda-3" target="_self">IP Addresses &amp; Subnets</a></li>
+<li><a href="./#/module-7-agenda-4" target="_self">Static vs DHCP</a></li>
+<li><a href="./#/module-7-agenda-5" target="_self">Routing &amp; Gateway</a></li>
+<li><a href="./#/module-7-agenda-6" target="_self">Checking DNS</a></li>
+<li><a href="./#/module-7-agenda-7" target="_self">Troubleshooting</a></li>
+<li><a href="./#/module-7-agenda-8" target="_self">Hostname &amp; /etc/hosts</a></li>
+<li><a href="./#/module-7-agenda-9" target="_self">Practice Lab</a></li>
+<li><a href="./#/module-7-agenda-10" target="_self">Practice Lab 2</a></li>
 </ol>
 </div>
 <div class="col" style="text-align:center;">
@@ -20393,13 +20393,14 @@ default via 192.168.1.1 dev eth0
 <div class="col">
 <h4>Resolver Status: resolvectl</h4>
 <ul>
+<li>Not installed by default</li>
 <li>Shows which DNS server is used</li>
 <li>Per interface, not just global</li>
-<li>Comes from systemd-resolved</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ resolvectl status
+<div class="terminal">$ sudo apt install -y systemd-resolved
+$ resolvectl status
 # which DNS server, per interface
 Link 2 (eth0)
     Current DNS Server: 8.8.8.8
@@ -20410,7 +20411,8 @@ Link 2 (eth0)
 </section>
 <section data-background-color="#0a0a0a">
 <h4>Resolver Status: resolvectl</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">resolvectl</span> status
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> systemd-resolved
+<span class="tk-prompt">$</span> <span class="tk-cmd">resolvectl</span> status
 <span class="tk-comment"># which DNS server, per interface</span>
 Link 2 (eth0)
     Current DNS Server: 8.8.8.8
@@ -20700,17 +20702,18 @@ $ sudo hostnamectl set-hostname web01</div>
 <h4>Verify Ubuntu's Packages</h4>
 <ul>
 <li>Confirm ssh server exists</li>
-<li>Confirm netplan exists</li>
+<li>Confirm netplan &amp; DNS exist</li>
 <li>Install/start if missing</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ dpkg -l openssh-server netplan.io
+<div class="terminal">$ dpkg -l openssh-server netplan.io \
+  systemd-resolved
 # "ii" means installed; "no packages" means missing
-$ sudo apt install -y openssh-server netplan.io
+$ sudo apt install -y openssh-server \
+  netplan.io systemd-resolved
 # safe to re-run even if already installed
 $ sudo systemctl enable --now ssh
-# installs, enables, and starts sshd now
 $ sudo ss -tlnp | grep :22
 # confirms sshd is actually listening</div>
 
@@ -20719,12 +20722,13 @@ $ sudo ss -tlnp | grep :22
 </section>
 <section data-tag="ubuntu" data-background-color="#0a0a0a">
 <h4>Verify Ubuntu's Packages</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">dpkg</span> <span class="tk-flag">-l</span> openssh-server netplan.io
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">dpkg</span> <span class="tk-flag">-l</span> openssh-server netplan.io \
+  systemd-resolved
 <span class="tk-comment"># "ii" means installed; "no packages" means missing</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> openssh-server netplan.io
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> openssh-server \
+  netplan.io systemd-resolved
 <span class="tk-comment"># safe to re-run even if already installed</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> systemctl enable <span class="tk-flag">--now</span> ssh
-<span class="tk-comment"># installs, enables, and starts sshd now</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> ss <span class="tk-flag">-tlnp</span> | <span class="tk-cmd">grep</span> :22
 <span class="tk-comment"># confirms sshd is actually listening</span></div>
 </section>
