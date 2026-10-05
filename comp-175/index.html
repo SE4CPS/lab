@@ -494,7 +494,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-10-05 10:28 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-10-05 10:38 PT</span>
   </div>
 
   <!--
@@ -19778,8 +19778,10 @@ no crontab for you</div>
 <li><a href="./#/module-7-agenda-8" target="_self">L7: Checking DNS</a></li>
 <li><a href="./#/module-7-agenda-9" target="_self">L7: Hostname &amp; /etc/hosts</a></li>
 <li><a href="./#/module-7-agenda-10" target="_self">Troubleshooting</a></li>
-<li><a href="./#/module-7-agenda-11" target="_self">Practice Lab</a></li>
-<li><a href="./#/module-7-agenda-12" target="_self">Practice Lab 2</a></li>
+<li><a href="./#/module-7-agenda-11" target="_self">Lab: L2/L3 Config</a></li>
+<li><a href="./#/module-7-agenda-12" target="_self">Lab: L4 Ports</a></li>
+<li><a href="./#/module-7-agenda-13" target="_self">Lab: L7 Names</a></li>
+<li><a href="./#/module-7-agenda-14" target="_self">Lab: Full Stack Check</a></li>
 </ol>
 </div>
 <div class="col" style="text-align:center;">
@@ -20695,9 +20697,8 @@ $ sudo hostnamectl set-hostname web01</div>
 <h2 style="text-align:center;">Questions?</h2>
 </section>
 <section id="module-7-agenda-11" data-background-color="#ffffff">
-<h2 style="text-align:center;">Practice Lab</h2>
+<h2 style="text-align:center;">Lab: L2/L3 Config</h2>
 </section>
-
 
 <section data-background-color="#ffffff">
 <div class="twocol">
@@ -20714,7 +20715,6 @@ $ sudo hostnamectl set-hostname web01</div>
 </div>
 </div>
 </section>
-
 <section data-background-color="#ffffff">
 <div class="twocol">
 <div class="col">
@@ -20730,7 +20730,6 @@ $ sudo hostnamectl set-hostname web01</div>
 </div>
 </div>
 </section>
-
 <section data-tag="ubuntu" data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
@@ -20749,8 +20748,7 @@ $ sudo apt install -y openssh-server \
   netplan.io systemd-resolved
 # safe to re-run even if already installed
 $ sudo systemctl enable --now ssh
-$ sudo ss -tlnp | grep :22
-# confirms sshd is actually listening</div>
+# starts sshd now, and on every boot</div>
 
 </div>
 </div>
@@ -20764,10 +20762,8 @@ $ sudo ss -tlnp | grep :22
   netplan.io systemd-resolved
 <span class="tk-comment"># safe to re-run even if already installed</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> systemctl enable <span class="tk-flag">--now</span> ssh
-<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> ss <span class="tk-flag">-tlnp</span> | <span class="tk-cmd">grep</span> :22
-<span class="tk-comment"># confirms sshd is actually listening</span></div>
+<span class="tk-comment"># starts sshd now, and on every boot</span></div>
 </section>
-
 <section data-tag="kali" data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
@@ -20800,7 +20796,6 @@ $ sudo systemctl restart ssh
 <span class="tk-comment"># still "connection refused" on 22?</span>
 <span class="tk-comment"># on Ubuntu: sudo systemctl enable --now ssh</span></div>
 </section>
-
 <section data-tag="kali" data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
@@ -20827,7 +20822,6 @@ $ ssh-keygen -f ~/.ssh/known_hosts -R $IP
 <span class="tk-comment"># safe to run even if nothing's stale</span>
 <span class="tk-comment"># removes any old entry for this IP</span></div>
 </section>
-
 <section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
@@ -20853,7 +20847,6 @@ $ ssh-keygen -f ~/.ssh/known_hosts -R $IP
 <span class="tk-comment"># resets the whole shared network stack,</span>
 <span class="tk-comment"># not just one distro</span></div>
 </section>
-
 <section id="cmd-pl1-check-before" data-tag="kali" data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
@@ -20885,7 +20878,6 @@ $ ip route show
 <span class="tk-prompt">$</span> <span class="tk-cmd">ip</span> route show
 <span class="tk-comment"># note "default via X.X.X.X": your gateway</span></div>
 </section>
-
 <section id="cmd-pl1-write" data-tag="ubuntu" data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
@@ -20926,7 +20918,6 @@ network:
 EOF
 <span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> chmod <span class="tk-flag">600</span> <span class="tk-path">/etc/netplan/01-lab.yaml</span></div>
 </section>
-
 <section id="cmd-pl1-apply" data-tag="ubuntu" data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
@@ -20954,31 +20945,92 @@ $ sudo netplan apply</div>
 <span class="tk-comment"># press ENTER to confirm, or it reverts in 120s</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> netplan apply</div>
 </section>
-
 <section id="cmd-pl1-verify" data-tag="ubuntu" data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>Step 4: Verify All Three</h4>
+<h4>Step 4: Verify the Config</h4>
 <ul>
 <li>Address: ip addr</li>
 <li>Route: ip route</li>
-<li>Resolver: resolvectl</li>
 <li>Still inside Ubuntu&#39;s shell</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ ip addr show eth0
-$ ip route show
-$ resolvectl status</div>
+$ ip route show</div>
 
 </div>
 </div>
 </section>
 <section data-tag="ubuntu" data-background-color="#0a0a0a">
-<h4>Step 4: Verify All Three</h4>
+<h4>Step 4: Verify the Config</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ip</span> addr show eth0
-<span class="tk-prompt">$</span> <span class="tk-cmd">ip</span> route show
-<span class="tk-prompt">$</span> <span class="tk-cmd">resolvectl</span> status</div>
+<span class="tk-prompt">$</span> <span class="tk-cmd">ip</span> route show</div>
+</section>
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-7-agenda-12" data-background-color="#ffffff">
+<h2 style="text-align:center;">Lab: L4 Ports</h2>
+</section>
+
+<section id="cmd-pl1-ss" data-tag="ubuntu" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Verify sshd Is Listening</h4>
+<ul>
+<li>Confirms port 22 is open</li>
+<li>ss -tlnp lists listeners</li>
+<li>Run this before you ssh in</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo ss -tlnp | grep :22
+# confirms sshd is actually listening</div>
+
+</div>
+</div>
+</section>
+<section data-tag="ubuntu" data-background-color="#0a0a0a">
+<h4>Verify sshd Is Listening</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> ss <span class="tk-flag">-tlnp</span> | <span class="tk-cmd">grep</span> :22
+<span class="tk-comment"># confirms sshd is actually listening</span></div>
+</section>
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-7-agenda-13" data-background-color="#ffffff">
+<h2 style="text-align:center;">Lab: L7 Names</h2>
+</section>
+
+<section id="cmd-pl1-dns" data-tag="ubuntu" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Verify DNS Resolution</h4>
+<ul>
+<li>Resolver: resolvectl status</li>
+<li>Confirms the DNS piece works</li>
+<li>Still inside Ubuntu&#39;s shell</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ resolvectl status</div>
+
+</div>
+</div>
+</section>
+<section data-tag="ubuntu" data-background-color="#0a0a0a">
+<h4>Verify DNS Resolution</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">resolvectl</span> status</div>
+</section>
+<section data-background-color="#ffffff">
+<h2 style="text-align:center;">Questions?</h2>
+</section>
+
+<section id="module-7-agenda-14" data-background-color="#ffffff">
+<h2 style="text-align:center;">Lab: Full Stack Check</h2>
 </section>
 
 <section data-background-color="#ffffff">
@@ -20992,7 +21044,6 @@ $ resolvectl status</div>
 </div>
 </div>
 </section>
-
 <section data-background-color="#ffffff">
 <div class="twocol">
 <div class="col">
@@ -21008,15 +21059,6 @@ $ resolvectl status</div>
 </div>
 </div>
 </section>
-
-<section data-background-color="#ffffff">
-<h2 style="text-align:center;">Questions?</h2>
-</section>
-<section id="module-7-agenda-12" data-background-color="#ffffff">
-<h2 style="text-align:center;">Practice Lab 2</h2>
-</section>
-
-
 <section data-background-color="#ffffff">
 <div class="twocol">
 <div class="col">
@@ -21032,7 +21074,6 @@ $ resolvectl status</div>
 </div>
 </div>
 </section>
-
 <section data-tag="ubuntu" data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
@@ -21059,7 +21100,6 @@ $ sudo apt install -y iproute2 iputils-ping
 <span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> iproute2 iputils-ping
 <span class="tk-comment"># safe to re-run even if already installed</span></div>
 </section>
-
 <section id="cmd-pl2-step1" data-tag="ubuntu" data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
@@ -21086,7 +21126,6 @@ $ ping -c 2 &lt;gateway&gt;
 <span class="tk-prompt">$</span> <span class="tk-cmd">ping</span> <span class="tk-flag">-c</span> 2 &lt;gateway&gt;
 <span class="tk-comment"># use the address you just found</span></div>
 </section>
-
 <section id="cmd-pl2-step2" data-tag="ubuntu" data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
@@ -21109,7 +21148,6 @@ $ ping -c 2 &lt;gateway&gt;
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ping</span> <span class="tk-flag">-c</span> 2 8.8.8.8
 <span class="tk-comment"># raw IP, no DNS involved</span></div>
 </section>
-
 <section id="cmd-pl2-step3" data-tag="ubuntu" data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
@@ -21132,7 +21170,6 @@ $ ping -c 2 &lt;gateway&gt;
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ping</span> <span class="tk-flag">-c</span> 2 google.com
 <span class="tk-comment"># needs DNS to even start</span></div>
 </section>
-
 <section data-background-color="#ffffff">
 <div class="twocol">
 <div class="col">
@@ -21148,7 +21185,6 @@ $ ping -c 2 &lt;gateway&gt;
 </div>
 </div>
 </section>
-
 <section data-background-color="#ffffff">
 <div class="twocol">
 <div class="col">
@@ -21164,7 +21200,6 @@ $ ping -c 2 &lt;gateway&gt;
 </div>
 </div>
 </section>
-
 <section data-background-color="#ffffff">
 <div class="twocol">
 <div class="col">
@@ -21176,7 +21211,6 @@ $ ping -c 2 &lt;gateway&gt;
 </div>
 </div>
 </section>
-
 <section data-background-color="#ffffff">
 <div class="twocol">
 <div class="col">
@@ -21192,7 +21226,6 @@ $ ping -c 2 &lt;gateway&gt;
 </div>
 </div>
 </section>
-
 <section data-background-color="#ffffff">
 <h2 style="text-align:center;">Questions?</h2>
 </section>
