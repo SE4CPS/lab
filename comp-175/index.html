@@ -494,7 +494,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-10-05 13:44 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-10-06 06:14 PT</span>
   </div>
 
   <!--
@@ -21190,6 +21190,46 @@ $ ip route show</div>
 <section data-tag="ubuntu" data-background-color="#0a0a0a">
 <h4>Verify DNS Resolution</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">resolvectl</span> status</div>
+</section>
+<section data-tag="ubuntu" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Change the DNS Server</h4>
+<ul>
+<li>Edit nameservers, reapply</li>
+<li>8.8.8.8: Google's public DNS</li>
+<li>resolvectl status confirms it</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ sudo tee /etc/netplan/01-lab.yaml &lt;&lt; &#39;EOF&#39;
+network:
+  version: 2
+  ethernets:
+    eth0:
+      addresses: [&lt;new-ip&gt;/24]
+      routes: [{to: default, via: &lt;gateway&gt;}]
+      nameservers: {addresses: [8.8.8.8]}
+EOF
+$ sudo netplan apply
+$ resolvectl status</div>
+</div>
+</div>
+<p class="fragment note-below">&#9888;&#65039; If the new DNS server is unreachable, <span class="highlight">resolution</span> breaks until you revert it. Test connectivity to it first.</p>
+</section>
+<section data-tag="ubuntu" data-background-color="#0a0a0a">
+<h4>Change the DNS Server</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> tee <span class="tk-path">/etc/netplan/01-lab.yaml</span> &lt;&lt; &#39;EOF&#39;
+network:
+  version: 2
+  ethernets:
+    eth0:
+      addresses: [&lt;new-ip&gt;/24]
+      routes: [{to: default, via: &lt;gateway&gt;}]
+      nameservers: {addresses: [8.8.8.8]}
+EOF
+<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> netplan apply
+<span class="tk-prompt">$</span> <span class="tk-cmd">resolvectl</span> status</div>
 </section>
 <section data-background-color="#ffffff">
 <h2 style="text-align:center;">Questions?</h2>
