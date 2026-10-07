@@ -494,7 +494,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-10-07 10:02 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-10-07 10:46 PT</span>
   </div>
 
   <!--
@@ -628,7 +628,7 @@
               <td>Week 7</td>
               <td>Oct 6, 8</td>
               <td data-module="7"><a href="./#/module-7" target="_self">Network Configuration</a></td>
-              <td><a href="./#/cmd-ip-addr" target="_self">ip addr</a>, <a href="./#/module-7-all-commands" target="_self" style="white-space:nowrap;">+17 more &rarr;</a></td>
+              <td><a href="./#/cmd-ip-addr" target="_self">ip addr</a>, <a href="./#/module-7-all-commands" target="_self" style="white-space:nowrap;">+14 more &rarr;</a></td>
               <td><a href="./#/assignment-overview" target="_self">Lab/HW 4</a></td>
               <td></td>
             </tr>
@@ -19781,7 +19781,7 @@ no crontab for you</div>
 <li><a href="./#/module-7-agenda-11" target="_self">Lab: L2/L3 Config</a></li>
 <li><a href="./#/module-7-agenda-12" target="_self">Lab: L4 Ports</a></li>
 <li><a href="./#/module-7-agenda-13" target="_self">Lab: L7 Names</a></li>
-<li><a href="./#/module-7-agenda-14" target="_self">Lab: Full Stack Check</a></li>
+<li><a href="./#/module-7-agenda-14" target="_self">Lab: Mirrored Network</a></li>
 </ol>
 </div>
 <div class="col" style="text-align:center;">
@@ -21236,199 +21236,277 @@ EOF
 </section>
 
 <section id="module-7-agenda-14" data-background-color="#ffffff">
-<h2 style="text-align:center;">Lab: Full Stack Check</h2>
+<h2 style="text-align:center;">Lab: Mirrored Network</h2>
 </section>
-
 <section data-background-color="#ffffff">
 <div class="twocol">
 <div class="col">
-<h4>Check: Confirm, Not Assume</h4>
-<p style="text-align:left; font-size:1.6rem; line-height:1.4;">netplan apply returned with no error. Does that prove the new address is really active?</p>
+<h4>Scenario: Mirrored Network</h4>
+<ul>
+<li>Pair up with a lab partner</li>
+<li>Each laptop: own WSL2, NAT</li>
+<li>WSL instances can&#39;t reach</li>
+<li>Cable links the two laptops</li>
+</ul>
 </div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 380 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="198" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="100" y="42" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">Partner A</text><rect x="30" y="50" width="140" height="70" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="100" y="82" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Laptop</text><text x="100" y="102" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">WSL2 inside</text><text x="280" y="42" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">Partner B</text><rect x="210" y="50" width="140" height="70" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="280" y="82" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Laptop</text><text x="280" y="102" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">WSL2 inside</text><line x1="170" y1="85" x2="210" y2="85" stroke="#9cdcfe" stroke-width="3"/><text x="190" y="75" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">cable</text><text x="190" y="155" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#999" font-style="italic">By default: still can&#39;t reach</text><text x="190" y="175" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#999" font-style="italic">each other over this cable</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 700 460" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:700px;display:block;margin:0 auto;"><rect x="1" y="1" width="698" height="458" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="350" y="34" text-anchor="middle" font-size="19" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">WSL2: DEFAULT VS MIRRORED MODE</text><text x="175" y="70" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#999">DEFAULT MODE</text><text x="525" y="70" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#999">MIRRORED MODE</text><line x1="350" y1="80" x2="350" y2="350" stroke="#555" stroke-width="1.5" stroke-dasharray="4 4"/><rect x="40" y="86" width="270" height="230" rx="10" fill="#1a1a1a" stroke="#666" stroke-width="1.5"/><text x="175" y="108" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Windows Host</text><rect x="65" y="124" width="220" height="170" rx="8" fill="#222222" stroke="#666" stroke-width="1.5" stroke-dasharray="3 3"/><text x="175" y="146" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#999">Private NAT</text><rect x="95" y="170" width="160" height="80" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2"/><text x="175" y="205" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">WSL2</text><text x="175" y="225" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">own private IP</text><text x="175" y="340" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#777" font-style="italic">Unreachable from other hosts</text><rect x="390" y="86" width="270" height="230" rx="10" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="525" y="118" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Windows Host</text><text x="525" y="142" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe">= WSL2 (mirrored)</text><text x="525" y="170" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">shares host&#39;s real IP</text><text x="525" y="340" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#1e8e3e" font-weight="bold">&#10003; Reachable from other hosts</text><text x="350" y="400" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Impact: the WSL instance now answers</text><text x="350" y="422" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">at the host&#39;s own real LAN address. No port-forwarding needed.</text></svg>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
 <div class="col">
-<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>No. Re-run ip addr/ip route/resolvectl and read the actual values; "no error" only means the file parsed.</div>
+<h4>Prerequisites Check</h4>
+<ul>
+<li>Need a lab partner</li>
+<li>Laptop needs Ethernet port</li>
+<li>Or a USB-Ethernet adapter</li>
+<li>Mirrored needs recent WSL</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal-ps">$ wsl --version
+# confirms the installed WSL version
+$ wsl --update
+# updates WSL if it's too old</div>
+
 </div>
 </div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Prerequisites Check</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">wsl</span> <span class="tk-flag">--version</span>
+<span class="tk-comment"># confirms the installed WSL version</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">wsl</span> <span class="tk-flag">--update</span>
+<span class="tk-comment"># updates WSL if it's too old</span></div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Get the Setup Scripts</h4>
+<ul>
+<li>Pulled from course GitHub</li>
+<li>Not hand-typed by students</li>
+<li>Needs git on Windows too</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal-ps">$ cd ~
+$ git clone https://github.com/SE4CPS/2026-COMP-175
+$ cd 2026-COMP-175
+$ cd modules\module-7\mirrored-networking</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Get the Setup Scripts</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">cd</span> ~
+<span class="tk-prompt">$</span> <span class="tk-cmd">git</span> clone <span class="tk-path">https://github.com/SE4CPS/2026-COMP-175</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">cd</span> <span class="tk-path">2026-COMP-175</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">cd</span> <span class="tk-path">modules\module-7\mirrored-networking</span></div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Turn On Mirrored Mode</h4>
+<ul>
+<li>Writes .wslconfig for you</li>
+<li>Then restarts WSL to apply</li>
+<li>No editor opened, ever</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal-ps">$ .\enable-mirrored.ps1
+# writes .wslconfig, then restarts WSL</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Turn On Mirrored Mode</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-shell">.\enable-mirrored.ps1</span>
+<span class="tk-comment"># writes .wslconfig, then restarts WSL</span></div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Verify: Host&#39;s Real IP</h4>
+<ul>
+<li>Find the host&#39;s real IP</li>
+<li>WSL will come to share it</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal-ps">$ ipconfig
+# find "IPv4 Address" under your
+# real Ethernet adapter</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Verify: Host&#39;s Real IP</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ipconfig</span>
+<span class="tk-comment"># find "IPv4 Address" under your</span>
+<span class="tk-comment"># real Ethernet adapter</span></div>
+</section>
+<section data-tag="kali" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Verify: WSL&#39;s New IP</h4>
+<ul>
+<li>Same IP now inside WSL</li>
+<li>Mirrored mode is active</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ ip addr show
+# the host's IP now appears here too</div>
+
+</div>
+</div>
+</section>
+<section data-tag="kali" data-background-color="#0a0a0a">
+<h4>Verify: WSL&#39;s New IP</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ip</span> addr show
+<span class="tk-comment"># the host's IP now appears here too</span></div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Connect the Cable</h4>
+<ul>
+<li>Plug cable into both laptops</li>
+<li>Find the adapter&#39;s real name</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal-ps">$ Get-NetAdapter
+# lists every adapter and its real name</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Connect the Cable</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">Get-NetAdapter</span>
+<span class="tk-comment"># lists every adapter and its real name</span></div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Assign Static IPs</h4>
+<ul>
+<li>Same subnet, different host</li>
+<li>Partner A: .77.1, B: .77.2</li>
+<li>Use your own adapter name</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal-ps">$ .\set-static-ip.ps1 "Ethernet" "192.168.77.1" 24
+# Partner A runs this
+$ .\set-static-ip.ps1 "Ethernet" "192.168.77.2" 24
+# Partner B runs this; same script, own IP</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Assign Static IPs</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-shell">.\set-static-ip.ps1</span> <span class="tk-str">"Ethernet"</span> <span class="tk-str">"192.168.77.1"</span> <span class="tk-num">24</span>
+<span class="tk-comment"># Partner A runs this</span>
+<span class="tk-prompt">$</span> <span class="tk-shell">.\set-static-ip.ps1</span> <span class="tk-str">"Ethernet"</span> <span class="tk-str">"192.168.77.2"</span> <span class="tk-num">24</span>
+<span class="tk-comment"># Partner B runs this; same script, own IP</span></div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Confirm the New IP</h4>
+<ul>
+<li>Re-check with ipconfig</li>
+<li>New static IP now showing</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal-ps">$ ipconfig
+# your Ethernet adapter now shows
+# 192.168.77.x, not the old address</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Confirm the New IP</h4>
+<div class="terminal-ps terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ipconfig</span>
+<span class="tk-comment"># your Ethernet adapter now shows</span>
+<span class="tk-comment"># 192.168.77.x, not the old address</span></div>
+</section>
+<section data-tag="kali" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Ping Across, WSL to WSL</h4>
+<ul>
+<li>From Partner A&#39;s WSL shell</li>
+<li>Target: Partner B&#39;s new IP</li>
+<li>Works: real, shared IP now</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<div class="terminal">$ ping 192.168.77.2
+# from Partner A, targeting Partner B
+$ ping 192.168.77.1
+# from Partner B, targeting Partner A</div>
+
+</div>
+</div>
+</section>
+<section data-tag="kali" data-background-color="#0a0a0a">
+<h4>Ping Across, WSL to WSL</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ping</span> 192.168.77.2
+<span class="tk-comment"># from Partner A, targeting Partner B</span>
+<span class="tk-prompt">$</span> <span class="tk-cmd">ping</span> 192.168.77.1
+<span class="tk-comment"># from Partner B, targeting Partner A</span></div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Why This Worked</h4>
+<ul>
+<li>As introduced earlier: NAT</li>
+<li>Mirrored: shares host&#39;s IP</li>
+<li>That&#39;s why the ping worked</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 360 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Default: blocked by NAT</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="96" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Mirrored: ping succeeds</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Heads Up: Mirrored Mode</h4>
+<p class="note-below" style="margin-top:2.5rem;">&#9888;&#65039; If the ping still fails, confirm the static IP really landed on the
+  <span class="highlight">Ethernet</span> adapter the cable is plugged into, not Wi-Fi or a different port;
+  Get-NetAdapter's own Status column shows which one is really Up.</p>
 </section>
 <section data-background-color="#ffffff">
 <div class="twocol">
 <div class="col">
 <h4>Deliverable</h4>
 <ul>
-<li>Screenshot: ip addr output</li>
-<li>Screenshot: ip route output</li>
-<li>Screenshot: resolvectl status</li>
+<li>Screenshot: ipconfig output</li>
+<li>Screenshot: ip addr (WSL)</li>
+<li>Screenshot: ping, both ways</li>
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="178" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Write the config</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="96" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Apply it</text><rect x="20" y="120" width="320" height="42" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="146" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Verify all three pieces</text></svg>
-</div>
-</div>
-</section>
-<section data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>Scenario: Diagnose the Break</h4>
-<ul>
-<li>A classmate&#39;s config is broken</li>
-<li>Symptom only: &quot;no internet&quot;</li>
-<li>Find which layer failed</li>
-</ul>
-</div>
-<div class="col" style="text-align:center;">
-<svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="178" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Could be: address</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="96" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Could be: route</text><rect x="20" y="120" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="146" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Could be: DNS</text></svg>
-</div>
-</div>
-</section>
-<section data-tag="ubuntu" data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>Verify Diagnostic Tools</h4>
-<ul>
-<li>Confirm ip and ping exist</li>
-<li>Both ship with base Ubuntu</li>
-<li>Install only if missing</li>
-</ul>
-</div>
-<div class="col" style="text-align:center;">
-<div class="terminal">$ dpkg -l iproute2 iputils-ping
-# "ii" means installed; "no packages" means missing
-$ sudo apt install -y iproute2 iputils-ping
-# safe to re-run even if already installed</div>
-
-</div>
-</div>
-</section>
-<section data-tag="ubuntu" data-background-color="#0a0a0a">
-<h4>Verify Diagnostic Tools</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">dpkg</span> <span class="tk-flag">-l</span> iproute2 iputils-ping
-<span class="tk-comment"># "ii" means installed; "no packages" means missing</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> apt install <span class="tk-flag">-y</span> iproute2 iputils-ping
-<span class="tk-comment"># safe to re-run even if already installed</span></div>
-</section>
-<section id="cmd-pl2-step1" data-tag="ubuntu" data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>Step 1: Ping the Gateway</h4>
-<ul>
-<li>Closest layer first</li>
-<li>No reply: address/route bad</li>
-<li>Reply: move one layer out</li>
-</ul>
-</div>
-<div class="col" style="text-align:center;">
-<div class="terminal">$ ip route show
-# find "default via X.X.X.X" first
-$ ping -c 2 &lt;gateway&gt;
-# use the address you just found</div>
-
-</div>
-</div>
-</section>
-<section data-tag="ubuntu" data-background-color="#0a0a0a">
-<h4>Step 1: Ping the Gateway</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ip</span> route show
-<span class="tk-comment"># find "default via X.X.X.X" first</span>
-<span class="tk-prompt">$</span> <span class="tk-cmd">ping</span> <span class="tk-flag">-c</span> 2 &lt;gateway&gt;
-<span class="tk-comment"># use the address you just found</span></div>
-</section>
-<section id="cmd-pl2-step2" data-tag="ubuntu" data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>Step 2: Ping an External IP</h4>
-<ul>
-<li>Gateway replied: try further</li>
-<li>A raw IP skips DNS entirely</li>
-<li>No reply: routing is at fault</li>
-</ul>
-</div>
-<div class="col" style="text-align:center;">
-<div class="terminal">$ ping -c 2 8.8.8.8
-# raw IP, no DNS involved</div>
-
-</div>
-</div>
-</section>
-<section data-tag="ubuntu" data-background-color="#0a0a0a">
-<h4>Step 2: Ping an External IP</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ping</span> <span class="tk-flag">-c</span> 2 8.8.8.8
-<span class="tk-comment"># raw IP, no DNS involved</span></div>
-</section>
-<section id="cmd-pl2-step3" data-tag="ubuntu" data-background-color="#0a0a0a">
-<div class="twocol">
-<div class="col">
-<h4>Step 3: Ping a Domain Name</h4>
-<ul>
-<li>The IP replied, so DNS is next</li>
-<li>A domain name needs resolution</li>
-<li>No reply: DNS is at fault</li>
-</ul>
-</div>
-<div class="col" style="text-align:center;">
-<div class="terminal">$ ping -c 2 google.com
-# needs DNS to even start</div>
-
-</div>
-</div>
-</section>
-<section data-tag="ubuntu" data-background-color="#0a0a0a">
-<h4>Step 3: Ping a Domain Name</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ping</span> <span class="tk-flag">-c</span> 2 google.com
-<span class="tk-comment"># needs DNS to even start</span></div>
-</section>
-<section data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>Step 4: Localize the Fault</h4>
-<ul>
-<li>Gateway fails: address/route</li>
-<li>IP works, name fails: DNS</li>
-<li>Fix only that one piece</li>
-</ul>
-</div>
-<div class="col" style="text-align:center;">
-<svg viewBox="0 0 360 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="198" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="50" text-anchor="middle" font-size="13.5" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Gateway fails -&gt; address/route</text><rect x="20" y="80" width="320" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="110" text-anchor="middle" font-size="13.5" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">IP OK, name fails -&gt; DNS</text><rect x="20" y="140" width="320" height="50" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="170" text-anchor="middle" font-size="13.5" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Fix the one piece, re-test</text></svg>
-</div>
-</div>
-</section>
-<section data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>Step 5: Fix and Re-Verify</h4>
-<ul>
-<li>Correct just the broken field</li>
-<li>Re-apply with netplan apply</li>
-<li>Repeat Steps 1-3 to confirm</li>
-</ul>
-</div>
-<div class="col" style="text-align:center;">
-<svg viewBox="0 0 360 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Edit, apply, re-test</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="96" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">All three pings succeed</text></svg>
-</div>
-</div>
-</section>
-<section data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>Check: Fix the Right Field</h4>
-<p style="text-align:left; font-size:1.6rem; line-height:1.4;">Only the domain-name ping fails; the raw IP ping succeeds. What should you NOT touch?</p>
-</div>
-<div class="col">
-<div class="fragment" style="background:#2a2a2a; color:#fff; border:2px solid #9cdcfe; border-radius:12px; padding:1rem 1.3rem; font-size:1.7rem; line-height:1.4; text-align:left;"><div style="font-size:0.85rem; color:#9cdcfe; letter-spacing:0.1em; text-transform:uppercase; font-weight:bold; margin-bottom:0.4rem;">Answer</div>The address and gateway: they already proved they work. Only the DNS nameserver entry needs fixing.</div>
-</div>
-</div>
-</section>
-<section data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
-<h4>Deliverable</h4>
-<ul>
-<li>Screenshots: all 3 pings</li>
-<li>One sentence: the broken layer</li>
-<li>Screenshot: all 3, now fixed</li>
-</ul>
-</div>
-<div class="col" style="text-align:center;">
-<svg viewBox="0 0 360 140" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="138" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Diagnose, 3 pings</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="96" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Fix it, prove it</text></svg>
+<svg viewBox="0 0 360 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="178" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="46" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Turn on mirrored mode</text><rect x="20" y="70" width="320" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="180" y="96" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Cable + static IPs</text><rect x="20" y="120" width="320" height="42" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="180" y="146" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">Ping both directions</text></svg>
 </div>
 </div>
 </section>
@@ -29965,9 +30043,6 @@ ip route get other-team-vm-ip</div>
         { id: 'cmd-pl1-write', module: 7, cmd: 'tee', example: 'sudo tee /etc/netplan/01-lab.yaml', purpose: 'Write a netplan config file' },
         { id: 'cmd-pl1-apply', module: 7, cmd: 'netplan', example: 'sudo netplan apply', purpose: 'Apply a netplan config file' },
         { id: 'cmd-pl1-verify', module: 7, cmd: 'ip addr', example: 'ip addr show eth0', purpose: 'Confirm the new address took effect' },
-        { id: 'cmd-pl2-step1', module: 7, cmd: 'ping', example: 'ping -c 2 192.168.1.1', purpose: 'Test reachability to the gateway' },
-        { id: 'cmd-pl2-step2', module: 7, cmd: 'ping', example: 'ping -c 2 8.8.8.8', purpose: 'Test reachability past the gateway' },
-        { id: 'cmd-pl2-step3', module: 7, cmd: 'ping', example: 'ping -c 2 google.com', purpose: 'Test reachability using a domain name' },
         { id: 'cmd-nslookup', module: 8, cmd: 'nslookup', example: 'nslookup scanme.nmap.org', purpose: 'Quick DNS lookup, simpler than dig' },
         { id: 'cmd-openssl', module: 8, cmd: 'openssl', example: 'openssl s_client -connect host:443', purpose: 'Inspect a live TLS certificate' },
         { id: 'cmd-curl', module: 8, cmd: 'curl', example: 'curl -I https://pacific.edu', purpose: 'Check HTTPS headers and handshake' },
