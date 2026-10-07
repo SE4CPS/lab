@@ -1,0 +1,58 @@
+COMP-175: Mock Midterm 2 -- Modules 1-6
+
+Matches: Midterm2-Modules1-6.docx (questions), 5 points each, 100 total.
+
+================================================================
+PART 1: MULTIPLE CHOICE ANSWERS
+================================================================
+
+1.  C          10. C
+2.  D          11. D
+3.  A          12. B
+4.  B          13. C
+5.  C          14. A
+6.  A          15. D
+7.  D          16. B
+8.  B          17. C
+9.  A          18. A
+
+================================================================
+PART 2: DIAGRAM QUESTION (19) -- GRADING GUIDE
+================================================================
+
+Full credit needs:
+- Kali VM and Ubuntu VM shown as distinct boxes
+- Their host/hypervisor shown as a distinct box underneath both
+- The connection between Kali and Ubuntu labeled SCP (over SSH)
+- The log file's location shown on the Ubuntu side before transfer
+
+Partial credit: diagram shows the two VMs and the connection but
+omits the host/hypervisor box, or doesn't label the connection.
+
+No credit: diagram shows only one machine, or doesn't involve SSH
+at all (e.g. shows a USB drive or a generic "network" cloud).
+
+================================================================
+PART 3: WRITTEN RECOMMENDATION (20) -- GRADING GUIDE
+================================================================
+
+Strong answer identifies:
+- Standard owner/group permission bits as the base: put all service
+  writers in one group with rw on the directory, everyone else gets
+  no bits (e.g. 770, group = service-writers).
+- An ACL entry to grant the parts-counter group read-only access
+  without adding them to the service-writers group (e.g.
+  setfacl -m g:parts-counter:r-- on the directory).
+- For the audit-trail follow-up: inotify-based monitoring (or, where
+  available, a real audit daemon) watching the directory so that any
+  access -- including a sysadmin's -- is logged outside of DAC, since
+  DAC alone can't stop an administrator from simply re-granting
+  themselves access.
+
+Partial credit: gets the permission/ACL split right but misses the
+audit-trail follow-up, or proposes a workable but less precise
+mechanism (e.g. a single shared group for everyone, explained
+correctly as a trade-off).
+
+No credit: recommends world-readable/writable access, or doesn't
+distinguish the three access levels requested in the scenario.
