@@ -2133,6 +2133,30 @@ fetch_releases("mozilla-firefox/firefox")
                     </ul>
                 </aside>
             </section>
+<section data-chapter="7">
+                <div class="divhead">
+                    <span class="paper-tag">In production &middot; releasetrain.io, Oct 12 2026</span>
+                </div>
+                <div class="twocol" style="gap:2em; align-items:center; text-align:left;">
+<div style="flex:1; min-width:0;"><h3>Which CVE Belongs to Which Product?</h3>
+                <p class="venue">A rule, checked against labeled ground truth</p>
+                <p class="story"><b>Before:</b> a CVE was filed under any tracked product its text mentioned. Redis showed stability 0.35 for CVE-2026-5759, a bug in FalkorDB, a Redis module; none of the 15 CVEs filed under &ldquo;redis&rdquo; was about Redis.<br>
+                <b>After:</b> a CVE counts only if its text names the product as the vulnerable software (&ldquo;Redis before 8.2.3&rdquo;, not &ldquo;Redis module&rdquo; or &ldquo;Chrome on Android&rdquo;) and its stated version bounds cover this release. The ten lowest-scoring components now get a daily, neutral pipeline summary written server-side.</p></div>
+<div style="flex:1; min-width:0;">
+<div class="qbox-row" style="margin-top:0;">
+<div class="qbox risk" style="font-size:0.85em;"><span class="cat">Ground truth</span><p>Only 23 of 125 and 14 of 80 filed CVEs were about their product (2 independent labelers + tiebreak)</p></div>
+<div class="qbox compat" style="font-size:0.85em;"><span class="cat">Rule</span><p>Held-out: precision 0.71, recall 0.86 before tuning on its errors; 1.00 / 0.86 after</p></div>
+</div>
+<p class="story" style="margin-top:1em;"><b>Disclosed limits:</b> OpenSSL&rsquo;s own advisories never name OpenSSL, so the text rule misses them; the 1.00 held-out precision is no longer independent once that set informed a fix.</p>
+</div>
+                </div>
+                <aside class="notes">
+                    <ul>
+                        <li>The base rate is the finding: most CVEs the system filed under a product were someone else's bug, so every downstream score and answer inherited the error.</li>
+                        <li>Model vs Rules again: attribution is a deterministic rule measured against model-labeled ground truth; the LLM writes the explanation, never the score. The summary question was made neutral after a first version rationalized a stale score.</li>
+                    </ul>
+                </aside>
+            </section>
 
 
 
