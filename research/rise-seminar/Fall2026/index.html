@@ -2108,6 +2108,31 @@ fetch_releases("mozilla-firefox/firefox")
                     </ul>
                 </aside>
             </section>
+<section data-chapter="7">
+                <div class="divhead">
+                    <span class="paper-tag">In production &middot; releasetrain.io, Oct 11 2026</span>
+                </div>
+                <div class="twocol" style="gap:2em; align-items:center; text-align:left;">
+<div style="flex:1; min-width:0;"><h3>A Stability Score per Version</h3>
+                <p class="venue">Rule-computed, then shown to the triage model</p>
+                <p class="story"><b>Before:</b> a stability-optimized Update Triage gave the model only bump size and component type, and the model judged &ldquo;how stable is this release&rdquo; itself, with no number stored anywhere.<br>
+                <b>After:</b> every release doc carries <i style="color:#15803d;">stability</i> (0&ndash;1) and a <i style="color:#15803d;">stabilityReasoning</i> sentence, computed by a rule: bump prior, capped by a known CVE (0.35) or KEV entry (0.15), lowered by flagged community posts with small-sample damping. The triage prompt shows it only when optimizing for stability or both.</p></div>
+<div style="flex:1; min-width:0;">
+<div class="qbox-row" style="margin-top:0;">
+<div class="qbox risk" style="font-size:0.85em;"><span class="cat">Before</span><p>Patch release, 1 of 1 posts flagged: the model saw only &ldquo;patch update&rdquo; and guessed</p></div>
+<div class="qbox compat" style="font-size:0.85em;"><span class="cat">After</span><p>Same inputs: <b>0.83</b>; 25 of 25 flagged: <b>0.53</b>; known CVE: <b>0.35</b>; KEV-listed: <b>0.15</b></p></div>
+</div>
+<p class="story" style="margin-top:1em;"><b>Disclosed limits:</b> the numbers above are the shipped formula's output for those inputs, not stored live scores yet; the community counts inherit the name-match noise (&ldquo;Go&rdquo; matches ordinary English).</p>
+</div>
+                </div>
+                <aside class="notes">
+                    <ul>
+                        <li>Owner's ask: "an attribute called stability (0-1) based on known context: version type, reddit feedback, cve", plus the reasoning text and a query API (GET /api/v/by-stability).</li>
+                        <li>Same Model vs Rules split as Classify: the rule computes the score, the model only weighs it when ordering updates. Security and NIST modes never see it, since those orderings are strict-tier-driven.</li>
+                        <li>Damping weight is n/(n+5): one flagged post on a sample of one moves a 0.90 patch prior only to 0.83.</li>
+                    </ul>
+                </aside>
+            </section>
 
 
 
