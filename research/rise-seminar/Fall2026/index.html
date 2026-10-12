@@ -2157,6 +2157,31 @@ fetch_releases("mozilla-firefox/firefox")
                     </ul>
                 </aside>
             </section>
+<section data-chapter="7">
+                <div class="divhead">
+                    <span class="paper-tag">In production &middot; releasetrain.io, Oct 12 2026</span>
+                </div>
+                <div class="twocol" style="gap:2em; align-items:center; text-align:left;">
+<div style="flex:1; min-width:0;"><h3>Only Evidence After the Release</h3>
+                <p class="venue">The score window starts at the release date</p>
+                <p class="story"><b>Before:</b> Home Assistant core 2026.10.1, released Oct 12, scored 0.15, capped by CVE-2026-87902. That CVE entered CISA&rsquo;s KEV catalog on Sep 25, before the release existed. The backfill never loaded release dates, so every backfilled score counted posts from a 90-day window.<br>
+                <b>After:</b> a CVE counts only if NVD published it on or after the release day, and a post only if it was written then. A KEV entry is dated by its NVD publication, not by the day CISA added it.</p></div>
+<div style="flex:1; min-width:0;">
+<div class="qbox-row" style="margin-top:0;">
+<div class="qbox risk" style="font-size:0.85em;"><span class="cat">Before</span><p>core 2026.10.1: <b>0.15</b>, &ldquo;CVE-2026-87902 is in CISA&rsquo;s KEV catalog, 1 of 46 community posts since 2026-07-14 flagged risky&rdquo;</p></div>
+<div class="qbox compat" style="font-size:0.85em;"><span class="cat">After</span><p>Same release: starts at the <b>0.90</b> patch prior; a CVE published or post written since Oct 12 can still lower it</p></div>
+</div>
+<p class="story" style="margin-top:1em;"><b>Disclosed limits:</b> stored scores change only after the backfill reruns; a same-day CVE counts only when its version bounds cover the release; a release with no valid date still falls back to 90 days.</p>
+</div>
+                </div>
+                <aside class="notes">
+                    <ul>
+                        <li>Owner's correction: "only consider CVE after the release or reddit posts after the release."</li>
+                        <li>A three-lens adversarial review of the first fix found the KEV date trap: cisa_kev.py stores dateAdded on purpose, so an old CVE added to KEV after a release would still have counted.</li>
+                        <li>Update Triage now scores the latest release with the same windowed rule instead of all-time counts.</li>
+                    </ul>
+                </aside>
+            </section>
 
 
 
