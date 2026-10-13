@@ -1,0 +1,55 @@
+COMP-175: Mock Midterm 4, Modules 1-6
+
+Matches: Midterm4-Modules1-6.docx (questions), 5 points each, 100 total.
+
+================================================================
+PART 1: MULTIPLE CHOICE ANSWERS
+================================================================
+
+1.  A          10. B
+2.  B          11. C
+3.  C          12. D
+4.  D          13. A
+5.  A          14. B
+6.  B          15. C
+7.  C          16. D
+8.  D          17. A
+9.  A          18. B
+
+================================================================
+PART 2: WRITTEN QUESTIONS, GRADING GUIDE
+================================================================
+
+Question 19 (Scheduled Backup, Group-Restricted Access)
+
+Full credit needs:
+- A real crontab entry (crontab -e) scheduling the backup script on
+  weekdays at 6 AM, e.g. 0 6 * * 1-5 /path/to/backup.sh
+- Restricting read access to the reports group, e.g. chgrp reports
+  /srv/reports plus chmod 750 (or 640 on the files) so only owner and
+  group can read, not everyone else
+
+Partial credit: gets the cron schedule right but doesn't address
+group-only read access, or restricts permissions without a real
+schedule.
+
+No credit: proposes running the backup manually, or opens the folder
+to all users instead of restricting it.
+
+Question 20 (Diagnosing a Runaway Process)
+
+Full credit needs three real steps, in a sensible order:
+- Identify: ps aux or top to find the process using the most CPU
+- Confirm: watch it over a short period (top refreshing, or pgrep
+  to confirm the same PID keeps reappearing) rather than assuming a
+  one-time spike is the cause
+- Stop it safely: kill (a plain, catchable signal) on that specific
+  PID, not a blind kill -9 or a reboot, so other services are not
+  disrupted
+
+Partial credit: identifies the process correctly but skips
+confirming it is the real cause, or jumps straight to a forceful
+kill without trying a normal signal first.
+
+No credit: restarts the whole server, or kills processes at random
+without identifying the actual one first.
