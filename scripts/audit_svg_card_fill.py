@@ -8,9 +8,14 @@ viewBox -- this is what distinguishes it from a small decorative or
 satellite box inside a hub-style diagram, which would otherwise produce
 false positives. For each real card found:
 
-  - OVERFLOW: some <text>/<tspan> sits past the card's own bottom edge
-    (a hardcoded viewBox/card height picked without checking whether the
-    last entry's content actually fits inside it).
+  - OVERFLOW: some <text>/<tspan> OR some other <rect> (a stacked box,
+    not just its label) sits past the card's own bottom edge (a
+    hardcoded viewBox/card height picked without checking whether the
+    last entry's content actually fits inside it). A box can overflow
+    with its own label text still sitting safely inside it, so box
+    bottoms and text positions are checked independently -- checking
+    only text position missed two real instances in comp-175 Module 9
+    (2026-10) where the box itself, not its label, clipped the card.
   - UNDERFLOW: the card is much taller than its content needs (a
     hardcoded height copied from a different diagram's math, or picked
     up front and never revisited once the diagram's real content was
@@ -59,11 +64,25 @@ def audit_svg(svg, offset, label="svg"):
 
     card_bottom = cardy + cardh
     ys_text = [float(y) for y in re.findall(r'<(?:text|tspan)[^>]*\sy="([\-\d.]+)"', svg)]
-    if not ys_text:
+    max_text_y = max(ys_text) if ys_text else cardy
+
+    # other rects (stacked boxes, not just their labels) -- a box can
+    # overflow the card while its own label text still sits safely
+    # inside it, so this has to be checked independently of text position
+    rect_bottoms = [float(ry) + float(rh) for _, ry, _, rh, _ in rects[1:]]
+    max_rect_y = max(rect_bottoms) if rect_bottoms else cardy
+
+    content_bottom = max(max_text_y, max_rect_y)
+    if not ys_text and not rect_bottoms:
         return issues
 
-    max_text_y = max(ys_text)
-    if max_text_y > card_bottom + 1:
+    if max_rect_y > card_bottom + 1:
+        issues.append(
+            f"{label} (offset {offset}): OVERFLOW -- viewBox {vw:.0f}x{vh:.0f}, "
+            f"card bottom={card_bottom:.1f}, a box extends to y={max_rect_y:.1f} "
+            f"({max_rect_y - card_bottom:.1f}px past the card)"
+        )
+    elif max_text_y > card_bottom + 1:
         issues.append(
             f"{label} (offset {offset}): OVERFLOW -- viewBox {vw:.0f}x{vh:.0f}, "
             f"card bottom={card_bottom:.1f}, text extends to y={max_text_y:.1f} "
@@ -72,10 +91,6 @@ def audit_svg(svg, offset, label="svg"):
 
     # underflow: how far does content (any other rect, plus every text/tspan)
     # actually reach, versus how far the card goes
-    content_bottom = cardy
-    for _, ry, _, rh, _ in rects[1:]:
-        content_bottom = max(content_bottom, float(ry) + float(rh))
-    content_bottom = max(content_bottom, max_text_y)
     gap = card_bottom - content_bottom
     if cardh > 0 and gap > UNDERFLOW_ABS_THRESHOLD and gap / cardh > UNDERFLOW_REL_THRESHOLD:
         issues.append(
