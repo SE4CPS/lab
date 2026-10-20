@@ -455,7 +455,7 @@
 
     <div class="quick-links">
       <a href="./#toc" class="footer-link" target="_self">Schedule</a>
-      <span id="updated-stamp" class="footer-link">Updated: 2026-10-20 14:56 PT</span>
+      <span id="updated-stamp" class="footer-link">Updated: 2026-10-20 15:03 PT</span>
     </div>
 
     <div class="reveal">
@@ -624,7 +624,7 @@
                                 </td>
                                 <td data-module="15"><a href="./#module-15" target="_self">Final Review</a></td>
                                 <td>Project Showcase: Fri, Dec 4, 2&ndash;3:15 PM, Makerspace</td>
-                                <td>Final project presentations or quiz</td>
+                                <td><a href="./#/final-project" target="_self">Final project presentations or quiz</a></td>
                                 <td></td>
                             </tr>
                             <tr>
@@ -22802,6 +22802,184 @@ cout &lt;&lt; x;</pre>
                 <p class="qa-q" style="max-width:850px;">Write isPalindrome(str), recursively checking a VIN-like code.</p>
                 <p class="source-line">Run it: <a href="https://www.onlinegdb.com/online_c%2B%2B_compiler" target="_blank" rel="noopener">OnlineGDB C++ Compiler</a></p>
                 </section>
+
+<section id="final-project">
+<h2 style="text-align:center;">Final Project</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Final Project: Roster Manager</h4>
+<ul>
+<li>Classes and inheritance</li><li>Polymorphism, vectors, streams</li><li>Starter code is a foundation</li><li>Extend it, don't start over</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<h4>Minimum Requirements</h4>
+<ul>
+<li>Add your own derived class</li><li>A meaningfully new field</li><li>Add a working loadFromFile()</li><li>A short README of your own</li>
+</ul>
+</div>
+</div>
+<p class="fragment note-below">&#9888;&#65039; The starter code already <span class="highlight">compiles</span> and runs -- your job is to extend it, not to rebuild it from scratch.</p>
+</section>
+
+<section data-background-color="#ffffff">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Get the Code: Online</h4>
+<ul>
+<li>No install needed</li><li>One file, pastes in cleanly</li><li>Open OnlineGDB (C++)</li><li>Paste, then click Run</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<p class="source-line">Single file: <a href="https://raw.githubusercontent.com/SE4CPS/2026-COMP-051/main/final-project/single-file/roster_manager.cpp" target="_blank" rel="noopener">roster_manager.cpp</a></p>
+<p class="source-line">Paste it into: <a href="https://www.onlinegdb.com/online_c%2B%2B_compiler" target="_blank" rel="noopener">OnlineGDB C++ Compiler</a></p>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Get the Code: Local</h4>
+<ul>
+<li>Needs Git + a C++ compiler</li><li>Clone the class repo</li><li>make builds it in one step</li><li>./roster runs it</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 16pt !important">$ git clone https://github.com/SE4CPS/2026-COMP-051.git
+$ cd 2026-COMP-051/final-project/starter
+$ make
+$ ./roster</pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Base Class: Person</h4>
+<ul>
+<li>Shared name/id for everyone</li><li>virtual lets a child override</li><li>getRole() names the subclass</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 18pt !important">class Person {
+protected:
+  string name;
+  int id;
+public:
+  virtual void display() const;
+  virtual string getRole() const;
+};</pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Inheritance: Student, Instructor</h4>
+<ul>
+<li>Student adds just a GPA</li><li>public Person reuses name/id</li><li>override marks the intent</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 18pt !important">class Student : public Person {
+private:
+  double gpa;
+public:
+  Student(string n, int i, double g);
+  void display() const override;
+};</pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Polymorphism: One Call, Many Forms</h4>
+<ul>
+<li>Person* can point to a Student</li><li>display() picks the real type</li><li>Decided at runtime, not build</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 18pt !important">Person* p = new Student("Maya", 1, 3.9);
+p->display();  // runs Student's version
+delete p;</pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Roster: A Vector of Base Pointers</h4>
+<ul>
+<li>Holds any Person subtype</li><li>add() works for any subtype</li><li>One list, many real types</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 18pt !important">class Roster {
+private:
+  vector&lt;Person*&gt; people;
+public:
+  void add(Person* p);
+  void displayAll() const;
+};</pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Saving to a File</h4>
+<ul>
+<li>ofstream opens a file to write</li><li>Loops through every Person*</li><li>getRole() still picks right</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 18pt !important">void Roster::saveToFile(string file) const {
+  ofstream out(file);
+  for (Person* p : people) {
+    out << p->getRole() << endl;
+  }
+}</pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Putting It Together: main.cpp</h4>
+<ul>
+<li>Build a roster with new</li><li>Add Students and Instructors</li><li>One displayAll(), many results</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 18pt !important">Roster roster;
+roster.add(new Student("Maya", 1, 3.9));
+roster.add(new Instructor("Dr. B", 2, "CS"));
+roster.displayAll();
+roster.saveToFile("roster.txt");</pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<h4>Final Project: Submission</h4>
+<ul>
+<li>Your extended starter code</li><li>A short README of your own</li><li>Points: TBD. Due: TBD (PT)</li>
+</ul>
+<p class="fragment note-below">Submit via Canvas. Groups OK, but by submitting you&#39;re confirming you personally understand the work. AI is fine to use, but clearly state which parts used AI and which parts you did without it.</p>
+</section>
+
+
             </section>
 
         </div>
