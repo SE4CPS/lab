@@ -455,7 +455,7 @@
 
     <div class="quick-links">
       <a href="./#toc" class="footer-link" target="_self">Schedule</a>
-      <span id="updated-stamp" class="footer-link">Updated: 2026-10-13 17:07 PT</span>
+      <span id="updated-stamp" class="footer-link">Updated: 2026-10-20 14:43 PT</span>
     </div>
 
     <div class="reveal">
@@ -568,7 +568,7 @@
                                 <td>Week 9</td>
                                 <td>Oct 20, 22
                                 </td>
-                                <td data-module="9"><a href="./#module-9" target="_self">Polymorphism &amp; Virtual Functions</a></td>
+                                <td data-module="9"><a href="./#module-9" target="_self">Data Streams</a></td>
                                 <td></td>
                                 <td><a href="./#/homework-5" target="_self">Lab/HW 5</a></td>
                                 <td></td>
@@ -577,7 +577,7 @@
                                 <td>Week 10</td>
                                 <td>Oct 27, 29
                                 </td>
-                                <td data-module="10"><a href="./#module-10" target="_self">Data Streams</a></td>
+                                <td data-module="10"><a href="./#module-10" target="_self">Polymorphism &amp; Virtual Functions</a></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -16732,20 +16732,967 @@ t.make = <span style="color:#ce9178;">&quot;Ford&quot;</span>; t.towCapacity = <
 </section>
 
 <section id="module-9">
+                <section>
+                    <div style="display:flex; flex-direction:row; align-items:center; gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h2>Module 9</h2>
+                            <h3>Data Streams</h3>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;">
+                                <line x1="40" y1="20" x2="40" y2="200" stroke="#555" stroke-width="2"/>
+                                <circle cx="40" cy="30" r="6" fill="#888"/>
+                                <text x="56" y="26" font-size="12" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">1964: Multics stream-based I/O</text>
+                                <circle cx="40" cy="90" r="6" fill="#888"/>
+                                <text x="56" y="80" font-size="12" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">1973: Unix pipes (Doug McIlroy,</text>
+                                <text x="56" y="96" font-size="12" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">Bell Labs): chain streams together</text>
+                                <circle cx="40" cy="150" r="6" fill="#888"/>
+                                <text x="56" y="146" font-size="12" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">1985: C++ iostream, cin/cout</text>
+                                <circle cx="40" cy="200" r="7" fill="#FF671D"/>
+                                <text x="56" y="196" font-size="12" fill="#FF671D" font-family="Segoe UI, Arial, sans-serif" font-weight="bold">Today: files and console share</text>
+                                <text x="56" y="212" font-size="12" fill="#FF671D" font-family="Segoe UI, Arial, sans-serif" font-weight="bold">the same stream interface</text>
+                            </svg>
+                        </div>
+                    </div>
+                </section>
+
 <section data-background-color="#ffffff">
 <div style="display:flex;align-items:center;gap:28px;">
 <div style="flex:1 1 0;">
 <h2>Module 9</h2>
-<h3>Polymorphism &amp; Virtual Functions</h3>
+<h3>Data Streams</h3>
 <ol style="line-height: 1.8;">
-<li><a href="./#/module-9-agenda-1" target="_self">What Is Polymorphism?</a></li>
-<li><a href="./#/module-9-agenda-2" target="_self">Virtual Functions</a></li>
-<li><a href="./#/module-9-agenda-3" target="_self">Pointers to the Base Class</a></li>
-<li><a href="./#/module-9-agenda-4" target="_self">Calling Through a Pointer</a></li>
-<li><a href="./#/module-9-agenda-5" target="_self">Abstract Classes</a></li>
-<li><a href="./#/module-9-agenda-6" target="_self">Arrays of Base Pointers</a></li>
+<li><a href="./#/module-9-agenda-1" target="_self">What Are Streams?</a></li>
+<li><a href="./#/module-9-agenda-2" target="_self">cin and cout, Revisited</a></li>
+<li><a href="./#/module-9-agenda-3" target="_self">Writing to a File</a></li>
+<li><a href="./#/module-9-agenda-4" target="_self">Reading from a File</a></li>
+<li><a href="./#/module-9-agenda-5" target="_self">Formatting Output</a></li>
+<li><a href="./#/module-9-agenda-6" target="_self">Parsing with stringstream</a></li>
 <li><a href="./#/module-9-agenda-7" target="_self">Practice Lab</a></li>
 <li><a href="./#/module-9-agenda-8" target="_self">Practice Lab Part 2</a></li>
+</ol>
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;">
+<rect x="1" y="1" width="378" height="258" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+<rect x="30" y="90" width="110" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+<text x="85" y="126" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#eee">inventory.txt</text>
+<line x1="140" y1="120" x2="180" y2="120" stroke="#999" stroke-width="2" marker-end="url(#m051arr)"/>
+<defs><marker id="m051arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs>
+<rect x="135" y="92" width="110" height="56" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2"/>
+<text x="190" y="124" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#eee">ifstream</text>
+<line x1="245" y1="120" x2="280" y2="120" stroke="#999" stroke-width="2" marker-end="url(#m051arr)"/>
+<rect x="240" y="90" width="110" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+<text x="295" y="126" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#eee">your program</text>
+<text x="190" y="220" text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">A stream connects a file to your code.</text>
+</svg></div>
+</div>
+</section>
+
+<section id="module-9-agenda-1">
+<h2 style="text-align:center;">What Are Streams?</h2>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>What Are Streams?</h4>
+<ul>
+<li>Flows in order, like water</li>
+<li>Source: keyboard, file, text</li>
+<li>Same &lt;&lt; and &gt;&gt; for all of them</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 440 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:520px;display:block;margin:0 auto;"><rect x="1" y="1" width="438" height="278" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="30" y="20" width="110" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="85" y="56" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#ddd">cin</text><rect x="165" y="20" width="110" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="220" y="56" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#ddd">ifstream</text><rect x="300" y="20" width="110" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="355" y="56" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#ddd">stringstream</text><defs><marker id="m10s1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><line x1="85" y1="80" x2="190" y2="130" stroke="#999" stroke-width="1.5" marker-end="url(#m10s1)"/><line x1="220" y1="80" x2="220" y2="130" stroke="#999" stroke-width="1.5" marker-end="url(#m10s1)"/><line x1="355" y1="80" x2="250" y2="130" stroke="#999" stroke-width="1.5" marker-end="url(#m10s1)"/><rect x="120" y="134" width="200" height="60" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="220" y="170" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee" font-weight="bold">&gt;&gt; and &lt;&lt;</text><text x="220" y="230" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">The same operators work on every kind of stream.</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Check: What Changes?</h4>
+<p style="font-size:2rem;line-height:1.35;text-align:left;">cin >> x; reads from the keyboard. file >> x; reads from a file. What actually changed?</p>
+
+</div>
+<div style="flex:1 1 0;">
+<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">Only the stream object, cin vs file. The &gt;&gt; operator and the rest of the code stay identical.</div>
+
+</div>
+</div>
+</section>
+<section id="module-9-agenda-2">
+<h2 style="text-align:center;">cin and cout, Revisited</h2>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Already Streams All Along</h4>
+<ul>
+<li>cout: the console output</li>
+<li>cin: the console input stream</li>
+<li>From iostream, Module 2</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 380 310" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:520px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="308" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m10cio" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="18" width="300" height="78" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#9000;&#65039;</text><text x="190" y="80" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">cin: keyboard in</text><line x1="190" y1="96" x2="190" y2="114" stroke="#999" stroke-width="2.2" marker-end="url(#m10cio)"/><rect x="40" y="116" width="300" height="78" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="150" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128421;&#65039;</text><text x="190" y="178" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">cout: screen out</text><line x1="190" y1="194" x2="190" y2="212" stroke="#999" stroke-width="2.2" marker-end="url(#m10cio)"/><rect x="40" y="214" width="300" height="78" rx="10" fill="#333333" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="248" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#9989;</text><text x="190" y="276" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">Both real streams</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Step 1: Reading Multiple Values</h4>
+<ul>
+<li>Two &gt;&gt; in one line</li>
+<li>Reads make, then mileage</li>
+<li>Whitespace separates each read</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">string</span> make;
+<span style="color:#c586c0;">double</span> mileage;
+<span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cin</span> &gt;&gt; make &gt;&gt; mileage;</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Check: What If Input Has a Space?</h4>
+<p style="font-size:2rem;line-height:1.35;text-align:left;">cin >> make expects one word. Typing "Honda Civic" as the make, what happens?</p>
+
+</div>
+<div style="flex:1 1 0;">
+<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">cin only reads up to the space: make becomes "Honda", and "Civic" is left waiting for the next read.</div>
+
+</div>
+</div>
+</section>
+<section id="module-9-agenda-3">
+<h2 style="text-align:center;">Writing to a File</h2>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>ofstream: Output to a File</h4>
+<ul>
+<li>o for output, like ostream</li>
+<li>Opens, or creates, the file</li>
+<li>Same &lt;&lt; syntax as cout</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 360 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="150" height="50" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="95" y="50" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#eee">ofstream out</text><defs><marker id="m10of" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><line x1="95" y1="70" x2="95" y2="112" stroke="#999" stroke-width="1.8" marker-end="url(#m10of)"/><rect x="20" y="116" width="150" height="34" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="95" y="138" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#ddd">inventory.txt</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Step 2: Open and Write</h4>
+<ul>
+<li>Constructor takes the filename</li>
+<li>&lt;&lt; writes just like cout</li>
+<li>File closes automatically</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">ofstream</span> out(<span style="color:#ce9178;">&quot;inventory.txt&quot;</span>);
+out &lt;&lt; <span style="color:#ce9178;">&quot;Honda&quot;</span> &lt;&lt; <span style="color:#ce9178;">&quot; &quot;</span> &lt;&lt; <span style="color:#b5cea8;">12000</span>;</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Check: What If the File Exists?</h4>
+<p style="font-size:2rem;line-height:1.35;text-align:left;">inventory.txt already has old data. Opening it with ofstream the normal way, what happens to that data?</p>
+
+</div>
+<div style="flex:1 1 0;">
+<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">It is overwritten by default. ofstream truncates an existing file unless told to append instead.</div>
+
+</div>
+</div>
+</section>
+<section id="module-9-agenda-4">
+<h2 style="text-align:center;">Reading from a File</h2>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>ifstream: Input from a File</h4>
+<ul>
+<li>i for input, like istream</li>
+<li>Opens an existing file</li>
+<li>Same &gt;&gt; syntax as cin</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 360 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="150" height="34" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="95" y="42" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#ddd">inventory.txt</text><defs><marker id="m10if" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><line x1="95" y1="54" x2="95" y2="96" stroke="#999" stroke-width="1.8" marker-end="url(#m10if)"/><rect x="20" y="100" width="150" height="50" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="95" y="130" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#eee">ifstream in</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Step 1: Open and Check</h4>
+<ul>
+<li>Constructor opens the file</li>
+<li>if(!in) catches a bad open</li>
+<li>Guards against a missing file</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">ifstream</span> in(<span style="color:#ce9178;">&quot;inventory.txt&quot;</span>);
+<span style="color:#c586c0;">if</span> (!in) {
+  <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; <span style="color:#ce9178;">&quot;Missing file&quot;</span>;
+}</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Step 2: Read Values Back</h4>
+<ul>
+<li>Same &gt;&gt; pattern as cin</li>
+<li>Reads one make, one mileage</li>
+<li>Order must match the write</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">string</span> make;
+<span style="color:#c586c0;">double</span> mileage;
+in &gt;&gt; make &gt;&gt; mileage;</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Step 3: Loop Until Done</h4>
+<ul>
+<li>while(in &gt;&gt; x) reads each row</li>
+<li>Loop ends at end of file</li>
+<li>A clean way to read every row</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#c586c0;">while</span> (in &gt;&gt; make &gt;&gt; mileage) {
+  <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; make &lt;&lt; <span style="color:#ce9178;">&quot;\\n&quot;</span>;
+}</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Check: Why while(in &gt;&gt; make)?</h4>
+<p style="font-size:2rem;line-height:1.35;text-align:left;">The loop condition reads a value AND checks it worked. Why combine both in one expression?</p>
+
+</div>
+<div style="flex:1 1 0;">
+<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">The read itself returns the stream, which is false once input runs out: one expression reads and tests.</div>
+
+</div>
+</div>
+</section>
+<section id="module-9-agenda-5">
+<h2 style="text-align:center;">Formatting Output</h2>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Manipulators Shape the Output</h4>
+<ul>
+<li>fixed: no scientific notation</li>
+<li>setprecision(2): two decimals</li>
+<li>Both live in &lt;iomanip&gt;</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 380 310" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:520px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="308" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m10fmt" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="18" width="300" height="78" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128290;</text><text x="190" y="80" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">raw double: 23500</text><line x1="190" y1="96" x2="190" y2="114" stroke="#999" stroke-width="2.2" marker-end="url(#m10fmt)"/><rect x="40" y="116" width="300" height="78" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="150" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#9881;&#65039;</text><text x="190" y="178" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">fixed + setprecision(2)</text><line x1="190" y1="194" x2="190" y2="212" stroke="#999" stroke-width="2.2" marker-end="url(#m10fmt)"/><rect x="40" y="214" width="300" height="78" rx="10" fill="#333333" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="248" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128181;</text><text x="190" y="276" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">printed: 23500.00</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Step 1: Fixed Decimal Places</h4>
+<ul>
+<li>#include &lt;iomanip&gt;</li>
+<li>fixed locks decimal format</li>
+<li>setprecision picks the count</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">fixed</span>
+  &lt;&lt; <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">setprecision</span>(<span style="color:#b5cea8;">2</span>);
+<span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; price;</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Step 2: Column Width</h4>
+<ul>
+<li>setw(10) pads the next field</li>
+<li>Right-aligns by default</li>
+<li>Applies to one field only</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">setw</span>(<span style="color:#b5cea8;">10</span>)
+  &lt;&lt; price;</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Check: setw Resets Each Time?</h4>
+<p style="font-size:2rem;line-height:1.35;text-align:left;">setw(10) is used once, then a plain cout << next_value; follows. Is next_value also padded to 10?</p>
+
+</div>
+<div style="flex:1 1 0;">
+<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">No: setw only affects the very next inserted value, so it must be repeated before each field that needs it.</div>
+
+</div>
+</div>
+</section>
+<section id="module-9-agenda-6">
+<h2 style="text-align:center;">Parsing with stringstream</h2>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>stringstream: A String You Can Read</h4>
+<ul>
+<li>Wraps a string like a stream</li>
+<li>Same &gt;&gt; pulls out pieces</li>
+<li>From &lt;sstream&gt;</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 400 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:500px;display:block;margin:0 auto;"><rect x="1" y="1" width="398" height="188" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="360" height="40" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="200" y="45" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#ddd">"Honda 23500"</text><defs><marker id="m10ss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><line x1="200" y1="60" x2="200" y2="96" stroke="#999" stroke-width="1.8" marker-end="url(#m10ss)"/><rect x="100" y="100" width="200" height="40" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="200" y="125" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#eee">stringstream ss</text><line x1="200" y1="140" x2="200" y2="156" stroke="#999" stroke-width="1.5" marker-end="url(#m10ss)"/><text x="200" y="176" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">ss &gt;&gt; make &gt;&gt; mileage;</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Step 1: Build and Read</h4>
+<ul>
+<li>#include &lt;sstream&gt;</li>
+<li>Constructor takes the string</li>
+<li>Pull fields out with &gt;&gt;</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">stringstream</span> ss(line);
+<span style="color:#4ec9b0;">string</span> make;
+<span style="color:#c586c0;">double</span> mileage;
+ss &gt;&gt; make &gt;&gt; mileage;</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Check: Why Parse This Way?</h4>
+<p style="font-size:2rem;line-height:1.35;text-align:left;">A line "Honda 23500" needs splitting into a make and a mileage. Why use stringstream instead of substr?</p>
+
+</div>
+<div style="flex:1 1 0;">
+<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">stringstream reuses the same reliable >> parsing already trusted for cin and files, no manual index math.</div>
+
+</div>
+</div>
+</section>
+<section id="module-9-agenda-7">
+<h2 style="text-align:center;">Practice Lab</h2>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Scenario: Save the Lot</h4>
+<ul>
+<li>Dealership tracks cars</li>
+<li>Save each car to a real file</li>
+<li>Read it back to check it</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 380 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:480px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="198" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="30" y="30" width="140" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="100" y="65" text-anchor="middle" font-size="26" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128196;</text><defs><marker id="m10lab1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><line x1="170" y1="60" x2="220" y2="60" stroke="#999" stroke-width="1.8" marker-end="url(#m10lab1)"/><rect x="220" y="30" width="140" height="60" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="290" y="65" text-anchor="middle" font-size="26" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128190;</text><text x="195" y="140" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Program state becomes a real file on disk.</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Step 1: Declare the Fields</h4>
+<ul>
+<li>make, model, mileage, price</li>
+<li>Four values describe one car</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">string</span> make = <span style="color:#ce9178;">&quot;Honda&quot;</span>, model = <span style="color:#ce9178;">&quot;Civic&quot;</span>;
+<span style="color:#c586c0;">int</span> mileage = <span style="color:#b5cea8;">23000</span>;
+<span style="color:#c586c0;">double</span> price = <span style="color:#b5cea8;">18500.0</span>;</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Step 2: Open the File</h4>
+<ul>
+<li>ofstream opens for writing</li>
+<li>Check it opened correctly</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">ofstream</span> out(<span style="color:#ce9178;">&quot;lot.txt&quot;</span>);
+<span style="color:#c586c0;">if</span> (!out) {
+  <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; <span style="color:#ce9178;">&quot;Open failed&quot;</span>;
+}</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Step 3: Write the Car</h4>
+<ul>
+<li>Space-separate each field</li>
+<li>One row per car</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important">out &lt;&lt; make &lt;&lt; <span style="color:#ce9178;">&quot; &quot;</span> &lt;&lt; model &lt;&lt; <span style="color:#ce9178;">&quot; &quot;</span>
+    &lt;&lt; mileage &lt;&lt; <span style="color:#ce9178;">&quot; &quot;</span> &lt;&lt; price &lt;&lt; <span style="color:#ce9178;">&quot;\\n&quot;</span>;</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Step 4: Close and Reopen</h4>
+<ul>
+<li>out.close() flushes the file</li>
+<li>ifstream opens it for reading</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important">out.close();
+<span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">ifstream</span> in(<span style="color:#ce9178;">&quot;lot.txt&quot;</span>);</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Step 5: Read It Back</h4>
+<ul>
+<li>Same four variables</li>
+<li>Order matches write order</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">string</span> m2, mo2;
+<span style="color:#c586c0;">int</span> mi2;
+<span style="color:#c586c0;">double</span> p2;
+in &gt;&gt; m2 &gt;&gt; mo2 &gt;&gt; mi2 &gt;&gt; p2;</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Step 6: Print to Confirm</h4>
+<ul>
+<li>Prove the round trip worked</li>
+<li>Values should match originals</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; m2 &lt;&lt; <span style="color:#ce9178;">&quot; &quot;</span> &lt;&lt; mo2
+     &lt;&lt; <span style="color:#ce9178;">&quot; &quot;</span> &lt;&lt; mi2 &lt;&lt; <span style="color:#ce9178;">&quot; &quot;</span> &lt;&lt; p2;</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Check: Reading Order</h4>
+<p style="font-size:2rem;line-height:1.35;text-align:left;">The file was written make, model, mileage, price. What happens if the read order is swapped?</p>
+
+</div>
+<div style="flex:1 1 0;">
+<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">Each >> just grabs the next token: swapping the order reads price into make, mileage into model, and so on.</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Deliverable</h4>
+<ul>
+<li>A real lot.txt file written</li>
+<li>Printed proof it read back</li>
+<li>Submit source and screenshot</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 18pt !important">Honda Civic 23000 18500.00</pre>
+</div>
+</div>
+</section>
+<section id="module-9-agenda-8">
+<h2 style="text-align:center;">Practice Lab Part 2</h2>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Scenario: The Lot Report</h4>
+<ul>
+<li>lot.txt now holds many cars</li>
+<li>Read every row in a loop</li>
+<li>Print a formatted total value</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 380 310" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:520px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="308" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m10lab2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="18" width="300" height="78" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128190;</text><text x="190" y="80" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">lot.txt: many rows</text><line x1="190" y1="96" x2="190" y2="114" stroke="#999" stroke-width="2.2" marker-end="url(#m10lab2)"/><rect x="40" y="116" width="300" height="78" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="150" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128260;</text><text x="190" y="178" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">Loop: read each row</text><line x1="190" y1="194" x2="190" y2="212" stroke="#999" stroke-width="2.2" marker-end="url(#m10lab2)"/><rect x="40" y="214" width="300" height="78" rx="10" fill="#333333" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="248" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128181;</text><text x="190" y="276" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">Formatted total</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Step 1: Open for Reading</h4>
+<ul>
+<li>ifstream opens lot.txt</li>
+<li>double total starts at zero</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">ifstream</span> in(<span style="color:#ce9178;">&quot;lot.txt&quot;</span>);
+<span style="color:#c586c0;">double</span> total = <span style="color:#b5cea8;">0.0</span>;</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Step 2: Loop Over Every Row</h4>
+<ul>
+<li>while reads to end of file</li>
+<li>Four fields match write order</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">string</span> make, model;
+<span style="color:#c586c0;">int</span> mileage;
+<span style="color:#c586c0;">double</span> price;
+<span style="color:#c586c0;">while</span> (in &gt;&gt; make &gt;&gt; model
+       &gt;&gt; mileage &gt;&gt; price) {</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Step 3: Add to the Running Total</h4>
+<ul>
+<li>total += price each pass</li>
+<li>Closes the while loop</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important">  total += price;
+}</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Step 4: Format the Total</h4>
+<ul>
+<li>fixed and setprecision(2)</li>
+<li>Reads like real currency</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">fixed</span>
+  &lt;&lt; <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">setprecision</span>(<span style="color:#b5cea8;">2</span>);
+<span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; <span style="color:#ce9178;">&quot;Total: $&quot;</span> &lt;&lt; total;</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Check: Precision Before the Loop</h4>
+<p style="font-size:2rem;line-height:1.35;text-align:left;">setprecision(2) is set once, before the loop runs. Does every cout inside the loop stay affected?</p>
+
+</div>
+<div style="flex:1 1 0;">
+<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">Yes: fixed and setprecision are sticky settings on the stream, they stay until explicitly changed again.</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Step 5: Parsing a Mixed Line</h4>
+<ul>
+<li>A pasted line of fields</li>
+<li>stringstream splits fields</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 18pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">stringstream</span> ss(<span style="color:#ce9178;">&quot;Honda 23000 18500&quot;</span>);
+<span style="color:#4ec9b0;">string</span> mk; <span style="color:#c586c0;">int</span> mi; <span style="color:#c586c0;">double</span> pr;
+ss &gt;&gt; mk &gt;&gt; mi &gt;&gt; pr;</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Check: Reusing >></h4>
+<p style="font-size:2rem;line-height:1.35;text-align:left;">stringstream, ifstream, and cin all support >>. Why does learning one stream type teach you all three?</p>
+
+</div>
+<div style="flex:1 1 0;">
+<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">They all inherit the same istream interface, so >> behaves identically regardless of where data comes from.</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Deliverable</h4>
+<ul>
+<li>A loop that totals every row</li>
+<li>Total printed as real currency</li>
+<li>One line parsed via ss</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 18pt !important">Total: $42000.00</pre>
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Questions?</h2></section>
+<section><h2 style="text-align:center;">More Stream Tools</h2></section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>getline() Reads a Full Line</h4>
+<ul>
+<li>getline stops at the newline</li>
+<li>&gt;&gt; alone would stop at a space</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">string</span> line;
+<span style="color:#dcdcaa;">getline</span>(in, line);</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>ios::app: Append, Don&#39;t Erase</h4>
+<ul>
+<li>Second argument picks the mode</li>
+<li>New writes go after old data</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">ofstream</span> out(<span style="color:#ce9178;">&quot;lot.txt&quot;</span>, <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">ios</span>::<span style="color:#dcdcaa;">app</span>);</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>eof(): Did the File Run Out?</h4>
+<ul>
+<li>True once reading hits the end</li>
+<li>Common loop-ending check</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#c586c0;">while</span> (!in.<span style="color:#dcdcaa;">eof</span>()) { ... }</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>clear(): Reset a Bad Read</h4>
+<ul>
+<li>A failed read sets a flag</li>
+<li>clear() lets reading continue</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important">in.<span style="color:#dcdcaa;">clear</span>();</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>ignore(): Skip Ahead</h4>
+<ul>
+<li>Skips a count of characters</li>
+<li>Clears a leftover newline</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important">in.<span style="color:#dcdcaa;">ignore</span>(<span style="color:#b5cea8;">100</span>, <span style="color:#ce9178;">&#39;\\n&#39;</span>);</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>peek(): Look, Don&#39;t Take</h4>
+<ul>
+<li>Shows the next character</li>
+<li>Leaves it in the stream</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#c586c0;">char</span> c = in.<span style="color:#dcdcaa;">peek</span>();</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>get(): One Character at a Time</h4>
+<ul>
+<li>Reads one char, even a space</li>
+<li>&gt;&gt; would skip the space</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#c586c0;">char</span> c;
+in.<span style="color:#dcdcaa;">get</span>(c);</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>boolalpha: Print true, Not 1</h4>
+<ul>
+<li>Spells out true and false</li>
+<li>Without it, bools print 0/1</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">boolalpha</span>;
+<span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; sold;</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>setfill(): Pick the Pad Character</h4>
+<ul>
+<li>Pairs with setw() for padding</li>
+<li>Default pad is a plain space</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">setfill</span>(<span style="color:#ce9178;">&#39;0&#39;</span>)
+  &lt;&lt; <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">setw</span>(<span style="color:#b5cea8;">5</span>) &lt;&lt; id;</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>left: Align Text to the Left</h4>
+<ul>
+<li>setw() right-aligns by default</li>
+<li>left flips that alignment</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">left</span>
+  &lt;&lt; <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">setw</span>(<span style="color:#b5cea8;">10</span>) &lt;&lt; make;</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>hex: Print Integers in Hex</h4>
+<ul>
+<li>Switches the base for integers</li>
+<li>dec switches it back</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">hex</span> &lt;&lt; id;</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>cerr: A Separate Error Stream</h4>
+<ul>
+<li>Same syntax as cout</li>
+<li>Meant for error messages only</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cerr</span> &lt;&lt; <span style="color:#ce9178;">&quot;Price can&#39;t be negative&quot;</span>;</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>endl vs &quot;\\n&quot;</h4>
+<ul>
+<li>endl also flushes the buffer</li>
+<li>&quot;\\n&quot; alone is faster</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; <span style="color:#ce9178;">&quot;Done&quot;</span> &lt;&lt; <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">endl</span>;</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>is_open(): Did It Really Open?</h4>
+<ul>
+<li>Checks the file opened</li>
+<li>A safer check than just !in</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#c586c0;">if</span> (!in.<span style="color:#dcdcaa;">is_open</span>()) { ... }</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>close(): Release the File</h4>
+<ul>
+<li>Frees the file for others</li>
+<li>Auto-called at scope end</li>
+</ul>
+
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important">in.<span style="color:#dcdcaa;">close</span>();</pre>
+</div>
+</div>
+</section>
+                <section data-tag="terminology" data-term="Stream">
+                    <div style="display:flex; flex-direction:row; align-items:center; gap:28px;">
+                        <div style="flex:1 1 0;">
+                            <h4>Word Origin: &quot;Stream&quot;</h4>
+                            <ul>
+                                <li>Old English: a course of water</li>
+                                <li>Borrowed as a computing metaphor</li>
+                                <li>Continuous, ordered data flow</li>
+                            </ul>
+                        </div>
+                        <div style="flex:1 1 0;">
+                            <svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:360px;display:block;margin:0 auto;">
+                                <rect x="1" y="1" width="298" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+                                <path d="M20,80 Q75,40 150,80 T280,80" stroke="#9cdcfe" stroke-width="4" fill="none"/>
+                                <text x="150" y="130" text-anchor="middle" font-size="13" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">Data flows, in order, like water</text>
+                            </svg>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 style="text-align:center;">Looking Ahead: Module 10</h2>
+                </section>
+
+            </section>
+
+<section id="module-10">
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h2>Module 10</h2>
+<h3>Polymorphism &amp; Virtual Functions</h3>
+<ol style="line-height: 1.8;">
+<li><a href="./#/module-10-agenda-1" target="_self">What Is Polymorphism?</a></li>
+<li><a href="./#/module-10-agenda-2" target="_self">Virtual Functions</a></li>
+<li><a href="./#/module-10-agenda-3" target="_self">Pointers to the Base Class</a></li>
+<li><a href="./#/module-10-agenda-4" target="_self">Calling Through a Pointer</a></li>
+<li><a href="./#/module-10-agenda-5" target="_self">Abstract Classes</a></li>
+<li><a href="./#/module-10-agenda-6" target="_self">Arrays of Base Pointers</a></li>
+<li><a href="./#/module-10-agenda-7" target="_self">Practice Lab</a></li>
+<li><a href="./#/module-10-agenda-8" target="_self">Practice Lab Part 2</a></li>
 </ol>
 </div>
 <div style="flex:1 1 0;">
@@ -16768,7 +17715,7 @@ t.make = <span style="color:#ce9178;">&quot;Ford&quot;</span>; t.towCapacity = <
 </section>
 
 
-<section id="module-9-agenda-1">
+<section id="module-10-agenda-1">
 <h2 style="text-align:center;">What Is Polymorphism?</h2>
 </section>
 
@@ -16803,7 +17750,7 @@ t.make = <span style="color:#ce9178;">&quot;Ford&quot;</span>; t.towCapacity = <
 </div>
 </section>
 
-<section id="module-9-agenda-2">
+<section id="module-10-agenda-2">
 <h2 style="text-align:center;">Virtual Functions</h2>
 </section>
 
@@ -17887,7 +18834,7 @@ t.make = <span style="color:#ce9178;">&quot;Ford&quot;</span>; t.towCapacity = <
 </section>
 
 
-<section id="module-9-agenda-3">
+<section id="module-10-agenda-3">
 <h2 style="text-align:center;">Pointers to the Base Class</h2>
 </section>
 
@@ -17940,7 +18887,7 @@ t.make = <span style="color:#ce9178;">&quot;Ford&quot;</span>; t.towCapacity = <
 </div>
 </section>
 
-<section id="module-9-agenda-4">
+<section id="module-10-agenda-4">
 <h2 style="text-align:center;">Calling Through a Pointer</h2>
 </section>
 
@@ -17994,7 +18941,7 @@ t.make = <span style="color:#ce9178;">&quot;Ford&quot;</span>; t.towCapacity = <
 </div>
 </section>
 
-<section id="module-9-agenda-5">
+<section id="module-10-agenda-5">
 <h2 style="text-align:center;">Abstract Classes</h2>
 </section>
 
@@ -18049,7 +18996,7 @@ t.make = <span style="color:#ce9178;">&quot;Ford&quot;</span>; t.towCapacity = <
 </div>
 </section>
 
-<section id="module-9-agenda-6">
+<section id="module-10-agenda-6">
 <h2 style="text-align:center;">Arrays of Base Pointers</h2>
 </section>
 
@@ -18123,7 +19070,7 @@ t.make = <span style="color:#ce9178;">&quot;Ford&quot;</span>; t.towCapacity = <
 </div>
 </section>
 
-<section id="module-9-agenda-7">
+<section id="module-10-agenda-7">
 <h2 style="text-align:center;">Practice Lab</h2>
 </section>
 
@@ -18219,7 +19166,7 @@ v = &amp;t;
 </div>
 </section>
 
-<section id="module-9-agenda-8">
+<section id="module-10-agenda-8">
 <h2 style="text-align:center;">Practice Lab Part 2</h2>
 </section>
 
@@ -18350,957 +19297,10 @@ v = &amp;t;
 </section>
 
 <section>
-<h2 style="text-align:center;">Looking Ahead: Module 10</h2>
+<h2 style="text-align:center;">Looking Ahead: Module 11</h2>
 </section>
 
 </section>
-
-<section id="module-10">
-                <section>
-                    <div style="display:flex; flex-direction:row; align-items:center; gap:28px;">
-                        <div style="flex:1 1 0;">
-                            <h2>Module 10</h2>
-                            <h3>Data Streams</h3>
-                        </div>
-                        <div style="flex:1 1 0;">
-                            <svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;">
-                                <line x1="40" y1="20" x2="40" y2="200" stroke="#555" stroke-width="2"/>
-                                <circle cx="40" cy="30" r="6" fill="#888"/>
-                                <text x="56" y="26" font-size="12" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">1964: Multics stream-based I/O</text>
-                                <circle cx="40" cy="90" r="6" fill="#888"/>
-                                <text x="56" y="80" font-size="12" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">1973: Unix pipes (Doug McIlroy,</text>
-                                <text x="56" y="96" font-size="12" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">Bell Labs): chain streams together</text>
-                                <circle cx="40" cy="150" r="6" fill="#888"/>
-                                <text x="56" y="146" font-size="12" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">1985: C++ iostream, cin/cout</text>
-                                <circle cx="40" cy="200" r="7" fill="#FF671D"/>
-                                <text x="56" y="196" font-size="12" fill="#FF671D" font-family="Segoe UI, Arial, sans-serif" font-weight="bold">Today: files and console share</text>
-                                <text x="56" y="212" font-size="12" fill="#FF671D" font-family="Segoe UI, Arial, sans-serif" font-weight="bold">the same stream interface</text>
-                            </svg>
-                        </div>
-                    </div>
-                </section>
-
-<section data-background-color="#ffffff">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h2>Module 10</h2>
-<h3>Data Streams</h3>
-<ol style="line-height: 1.8;">
-<li><a href="./#/module-10-agenda-1" target="_self">What Are Streams?</a></li>
-<li><a href="./#/module-10-agenda-2" target="_self">cin and cout, Revisited</a></li>
-<li><a href="./#/module-10-agenda-3" target="_self">Writing to a File</a></li>
-<li><a href="./#/module-10-agenda-4" target="_self">Reading from a File</a></li>
-<li><a href="./#/module-10-agenda-5" target="_self">Formatting Output</a></li>
-<li><a href="./#/module-10-agenda-6" target="_self">Parsing with stringstream</a></li>
-<li><a href="./#/module-10-agenda-7" target="_self">Practice Lab</a></li>
-<li><a href="./#/module-10-agenda-8" target="_self">Practice Lab Part 2</a></li>
-</ol>
-</div>
-<div style="flex:1 1 0;">
-<svg viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;">
-<rect x="1" y="1" width="378" height="258" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
-<rect x="30" y="90" width="110" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
-<text x="85" y="126" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#eee">inventory.txt</text>
-<line x1="140" y1="120" x2="180" y2="120" stroke="#999" stroke-width="2" marker-end="url(#m051arr)"/>
-<defs><marker id="m051arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs>
-<rect x="135" y="92" width="110" height="56" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2"/>
-<text x="190" y="124" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#eee">ifstream</text>
-<line x1="245" y1="120" x2="280" y2="120" stroke="#999" stroke-width="2" marker-end="url(#m051arr)"/>
-<rect x="240" y="90" width="110" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
-<text x="295" y="126" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#eee">your program</text>
-<text x="190" y="220" text-anchor="middle" font-size="12.5" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">A stream connects a file to your code.</text>
-</svg></div>
-</div>
-</section>
-
-<section id="module-10-agenda-1">
-<h2 style="text-align:center;">What Are Streams?</h2>
-</section>
-<section data-background-color="#ffffff">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>What Are Streams?</h4>
-<ul>
-<li>Flows in order, like water</li>
-<li>Source: keyboard, file, text</li>
-<li>Same &lt;&lt; and &gt;&gt; for all of them</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<svg viewBox="0 0 440 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:520px;display:block;margin:0 auto;"><rect x="1" y="1" width="438" height="278" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="30" y="20" width="110" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="85" y="56" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#ddd">cin</text><rect x="165" y="20" width="110" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="220" y="56" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#ddd">ifstream</text><rect x="300" y="20" width="110" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="355" y="56" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#ddd">stringstream</text><defs><marker id="m10s1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><line x1="85" y1="80" x2="190" y2="130" stroke="#999" stroke-width="1.5" marker-end="url(#m10s1)"/><line x1="220" y1="80" x2="220" y2="130" stroke="#999" stroke-width="1.5" marker-end="url(#m10s1)"/><line x1="355" y1="80" x2="250" y2="130" stroke="#999" stroke-width="1.5" marker-end="url(#m10s1)"/><rect x="120" y="134" width="200" height="60" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="220" y="170" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee" font-weight="bold">&gt;&gt; and &lt;&lt;</text><text x="220" y="230" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">The same operators work on every kind of stream.</text></svg>
-</div>
-</div>
-</section>
-<section data-background-color="#ffffff">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Check: What Changes?</h4>
-<p style="font-size:2rem;line-height:1.35;text-align:left;">cin >> x; reads from the keyboard. file >> x; reads from a file. What actually changed?</p>
-
-</div>
-<div style="flex:1 1 0;">
-<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">Only the stream object, cin vs file. The &gt;&gt; operator and the rest of the code stay identical.</div>
-
-</div>
-</div>
-</section>
-<section id="module-10-agenda-2">
-<h2 style="text-align:center;">cin and cout, Revisited</h2>
-</section>
-<section data-background-color="#ffffff">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Already Streams All Along</h4>
-<ul>
-<li>cout: the console output</li>
-<li>cin: the console input stream</li>
-<li>From iostream, Module 2</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<svg viewBox="0 0 380 310" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:520px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="308" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m10cio" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="18" width="300" height="78" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#9000;&#65039;</text><text x="190" y="80" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">cin: keyboard in</text><line x1="190" y1="96" x2="190" y2="114" stroke="#999" stroke-width="2.2" marker-end="url(#m10cio)"/><rect x="40" y="116" width="300" height="78" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="150" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128421;&#65039;</text><text x="190" y="178" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">cout: screen out</text><line x1="190" y1="194" x2="190" y2="212" stroke="#999" stroke-width="2.2" marker-end="url(#m10cio)"/><rect x="40" y="214" width="300" height="78" rx="10" fill="#333333" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="248" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#9989;</text><text x="190" y="276" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">Both real streams</text></svg>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Step 1: Reading Multiple Values</h4>
-<ul>
-<li>Two &gt;&gt; in one line</li>
-<li>Reads make, then mileage</li>
-<li>Whitespace separates each read</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">string</span> make;
-<span style="color:#c586c0;">double</span> mileage;
-<span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cin</span> &gt;&gt; make &gt;&gt; mileage;</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#ffffff">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Check: What If Input Has a Space?</h4>
-<p style="font-size:2rem;line-height:1.35;text-align:left;">cin >> make expects one word. Typing "Honda Civic" as the make, what happens?</p>
-
-</div>
-<div style="flex:1 1 0;">
-<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">cin only reads up to the space: make becomes "Honda", and "Civic" is left waiting for the next read.</div>
-
-</div>
-</div>
-</section>
-<section id="module-10-agenda-3">
-<h2 style="text-align:center;">Writing to a File</h2>
-</section>
-<section data-background-color="#ffffff">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>ofstream: Output to a File</h4>
-<ul>
-<li>o for output, like ostream</li>
-<li>Opens, or creates, the file</li>
-<li>Same &lt;&lt; syntax as cout</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<svg viewBox="0 0 360 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="150" height="50" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="95" y="50" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#eee">ofstream out</text><defs><marker id="m10of" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><line x1="95" y1="70" x2="95" y2="112" stroke="#999" stroke-width="1.8" marker-end="url(#m10of)"/><rect x="20" y="116" width="150" height="34" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="95" y="138" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#ddd">inventory.txt</text></svg>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Step 2: Open and Write</h4>
-<ul>
-<li>Constructor takes the filename</li>
-<li>&lt;&lt; writes just like cout</li>
-<li>File closes automatically</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">ofstream</span> out(<span style="color:#ce9178;">&quot;inventory.txt&quot;</span>);
-out &lt;&lt; <span style="color:#ce9178;">&quot;Honda&quot;</span> &lt;&lt; <span style="color:#ce9178;">&quot; &quot;</span> &lt;&lt; <span style="color:#b5cea8;">12000</span>;</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#ffffff">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Check: What If the File Exists?</h4>
-<p style="font-size:2rem;line-height:1.35;text-align:left;">inventory.txt already has old data. Opening it with ofstream the normal way, what happens to that data?</p>
-
-</div>
-<div style="flex:1 1 0;">
-<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">It is overwritten by default. ofstream truncates an existing file unless told to append instead.</div>
-
-</div>
-</div>
-</section>
-<section id="module-10-agenda-4">
-<h2 style="text-align:center;">Reading from a File</h2>
-</section>
-<section data-background-color="#ffffff">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>ifstream: Input from a File</h4>
-<ul>
-<li>i for input, like istream</li>
-<li>Opens an existing file</li>
-<li>Same &gt;&gt; syntax as cin</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<svg viewBox="0 0 360 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="1" y="1" width="358" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="150" height="34" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="95" y="42" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#ddd">inventory.txt</text><defs><marker id="m10if" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><line x1="95" y1="54" x2="95" y2="96" stroke="#999" stroke-width="1.8" marker-end="url(#m10if)"/><rect x="20" y="100" width="150" height="50" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="95" y="130" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#eee">ifstream in</text></svg>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Step 1: Open and Check</h4>
-<ul>
-<li>Constructor opens the file</li>
-<li>if(!in) catches a bad open</li>
-<li>Guards against a missing file</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">ifstream</span> in(<span style="color:#ce9178;">&quot;inventory.txt&quot;</span>);
-<span style="color:#c586c0;">if</span> (!in) {
-  <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; <span style="color:#ce9178;">&quot;Missing file&quot;</span>;
-}</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Step 2: Read Values Back</h4>
-<ul>
-<li>Same &gt;&gt; pattern as cin</li>
-<li>Reads one make, one mileage</li>
-<li>Order must match the write</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">string</span> make;
-<span style="color:#c586c0;">double</span> mileage;
-in &gt;&gt; make &gt;&gt; mileage;</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Step 3: Loop Until Done</h4>
-<ul>
-<li>while(in &gt;&gt; x) reads each row</li>
-<li>Loop ends at end of file</li>
-<li>A clean way to read every row</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#c586c0;">while</span> (in &gt;&gt; make &gt;&gt; mileage) {
-  <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; make &lt;&lt; <span style="color:#ce9178;">&quot;\\n&quot;</span>;
-}</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#ffffff">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Check: Why while(in &gt;&gt; make)?</h4>
-<p style="font-size:2rem;line-height:1.35;text-align:left;">The loop condition reads a value AND checks it worked. Why combine both in one expression?</p>
-
-</div>
-<div style="flex:1 1 0;">
-<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">The read itself returns the stream, which is false once input runs out: one expression reads and tests.</div>
-
-</div>
-</div>
-</section>
-<section id="module-10-agenda-5">
-<h2 style="text-align:center;">Formatting Output</h2>
-</section>
-<section data-background-color="#ffffff">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Manipulators Shape the Output</h4>
-<ul>
-<li>fixed: no scientific notation</li>
-<li>setprecision(2): two decimals</li>
-<li>Both live in &lt;iomanip&gt;</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<svg viewBox="0 0 380 310" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:520px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="308" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m10fmt" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="18" width="300" height="78" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128290;</text><text x="190" y="80" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">raw double: 23500</text><line x1="190" y1="96" x2="190" y2="114" stroke="#999" stroke-width="2.2" marker-end="url(#m10fmt)"/><rect x="40" y="116" width="300" height="78" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="150" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#9881;&#65039;</text><text x="190" y="178" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">fixed + setprecision(2)</text><line x1="190" y1="194" x2="190" y2="212" stroke="#999" stroke-width="2.2" marker-end="url(#m10fmt)"/><rect x="40" y="214" width="300" height="78" rx="10" fill="#333333" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="248" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128181;</text><text x="190" y="276" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">printed: 23500.00</text></svg>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Step 1: Fixed Decimal Places</h4>
-<ul>
-<li>#include &lt;iomanip&gt;</li>
-<li>fixed locks decimal format</li>
-<li>setprecision picks the count</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">fixed</span>
-  &lt;&lt; <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">setprecision</span>(<span style="color:#b5cea8;">2</span>);
-<span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; price;</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Step 2: Column Width</h4>
-<ul>
-<li>setw(10) pads the next field</li>
-<li>Right-aligns by default</li>
-<li>Applies to one field only</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">setw</span>(<span style="color:#b5cea8;">10</span>)
-  &lt;&lt; price;</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#ffffff">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Check: setw Resets Each Time?</h4>
-<p style="font-size:2rem;line-height:1.35;text-align:left;">setw(10) is used once, then a plain cout << next_value; follows. Is next_value also padded to 10?</p>
-
-</div>
-<div style="flex:1 1 0;">
-<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">No: setw only affects the very next inserted value, so it must be repeated before each field that needs it.</div>
-
-</div>
-</div>
-</section>
-<section id="module-10-agenda-6">
-<h2 style="text-align:center;">Parsing with stringstream</h2>
-</section>
-<section data-background-color="#ffffff">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>stringstream: A String You Can Read</h4>
-<ul>
-<li>Wraps a string like a stream</li>
-<li>Same &gt;&gt; pulls out pieces</li>
-<li>From &lt;sstream&gt;</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<svg viewBox="0 0 400 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:500px;display:block;margin:0 auto;"><rect x="1" y="1" width="398" height="188" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="20" y="20" width="360" height="40" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="200" y="45" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#ddd">"Honda 23500"</text><defs><marker id="m10ss" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><line x1="200" y1="60" x2="200" y2="96" stroke="#999" stroke-width="1.8" marker-end="url(#m10ss)"/><rect x="100" y="100" width="200" height="40" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="200" y="125" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#eee">stringstream ss</text><line x1="200" y1="140" x2="200" y2="156" stroke="#999" stroke-width="1.5" marker-end="url(#m10ss)"/><text x="200" y="176" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">ss &gt;&gt; make &gt;&gt; mileage;</text></svg>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Step 1: Build and Read</h4>
-<ul>
-<li>#include &lt;sstream&gt;</li>
-<li>Constructor takes the string</li>
-<li>Pull fields out with &gt;&gt;</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">stringstream</span> ss(line);
-<span style="color:#4ec9b0;">string</span> make;
-<span style="color:#c586c0;">double</span> mileage;
-ss &gt;&gt; make &gt;&gt; mileage;</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#ffffff">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Check: Why Parse This Way?</h4>
-<p style="font-size:2rem;line-height:1.35;text-align:left;">A line "Honda 23500" needs splitting into a make and a mileage. Why use stringstream instead of substr?</p>
-
-</div>
-<div style="flex:1 1 0;">
-<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">stringstream reuses the same reliable >> parsing already trusted for cin and files, no manual index math.</div>
-
-</div>
-</div>
-</section>
-<section id="module-10-agenda-7">
-<h2 style="text-align:center;">Practice Lab</h2>
-</section>
-<section data-background-color="#ffffff">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Scenario: Save the Lot</h4>
-<ul>
-<li>Dealership tracks cars</li>
-<li>Save each car to a real file</li>
-<li>Read it back to check it</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<svg viewBox="0 0 380 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:480px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="198" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="30" y="30" width="140" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="100" y="65" text-anchor="middle" font-size="26" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128196;</text><defs><marker id="m10lab1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><line x1="170" y1="60" x2="220" y2="60" stroke="#999" stroke-width="1.8" marker-end="url(#m10lab1)"/><rect x="220" y="30" width="140" height="60" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/><text x="290" y="65" text-anchor="middle" font-size="26" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128190;</text><text x="195" y="140" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Program state becomes a real file on disk.</text></svg>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Step 1: Declare the Fields</h4>
-<ul>
-<li>make, model, mileage, price</li>
-<li>Four values describe one car</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">string</span> make = <span style="color:#ce9178;">&quot;Honda&quot;</span>, model = <span style="color:#ce9178;">&quot;Civic&quot;</span>;
-<span style="color:#c586c0;">int</span> mileage = <span style="color:#b5cea8;">23000</span>;
-<span style="color:#c586c0;">double</span> price = <span style="color:#b5cea8;">18500.0</span>;</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Step 2: Open the File</h4>
-<ul>
-<li>ofstream opens for writing</li>
-<li>Check it opened correctly</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">ofstream</span> out(<span style="color:#ce9178;">&quot;lot.txt&quot;</span>);
-<span style="color:#c586c0;">if</span> (!out) {
-  <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; <span style="color:#ce9178;">&quot;Open failed&quot;</span>;
-}</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Step 3: Write the Car</h4>
-<ul>
-<li>Space-separate each field</li>
-<li>One row per car</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important">out &lt;&lt; make &lt;&lt; <span style="color:#ce9178;">&quot; &quot;</span> &lt;&lt; model &lt;&lt; <span style="color:#ce9178;">&quot; &quot;</span>
-    &lt;&lt; mileage &lt;&lt; <span style="color:#ce9178;">&quot; &quot;</span> &lt;&lt; price &lt;&lt; <span style="color:#ce9178;">&quot;\\n&quot;</span>;</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Step 4: Close and Reopen</h4>
-<ul>
-<li>out.close() flushes the file</li>
-<li>ifstream opens it for reading</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important">out.close();
-<span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">ifstream</span> in(<span style="color:#ce9178;">&quot;lot.txt&quot;</span>);</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Step 5: Read It Back</h4>
-<ul>
-<li>Same four variables</li>
-<li>Order matches write order</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">string</span> m2, mo2;
-<span style="color:#c586c0;">int</span> mi2;
-<span style="color:#c586c0;">double</span> p2;
-in &gt;&gt; m2 &gt;&gt; mo2 &gt;&gt; mi2 &gt;&gt; p2;</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Step 6: Print to Confirm</h4>
-<ul>
-<li>Prove the round trip worked</li>
-<li>Values should match originals</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; m2 &lt;&lt; <span style="color:#ce9178;">&quot; &quot;</span> &lt;&lt; mo2
-     &lt;&lt; <span style="color:#ce9178;">&quot; &quot;</span> &lt;&lt; mi2 &lt;&lt; <span style="color:#ce9178;">&quot; &quot;</span> &lt;&lt; p2;</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#ffffff">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Check: Reading Order</h4>
-<p style="font-size:2rem;line-height:1.35;text-align:left;">The file was written make, model, mileage, price. What happens if the read order is swapped?</p>
-
-</div>
-<div style="flex:1 1 0;">
-<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">Each >> just grabs the next token: swapping the order reads price into make, mileage into model, and so on.</div>
-
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Deliverable</h4>
-<ul>
-<li>A real lot.txt file written</li>
-<li>Printed proof it read back</li>
-<li>Submit source and screenshot</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 18pt !important">Honda Civic 23000 18500.00</pre>
-</div>
-</div>
-</section>
-<section id="module-10-agenda-8">
-<h2 style="text-align:center;">Practice Lab Part 2</h2>
-</section>
-<section data-background-color="#ffffff">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Scenario: The Lot Report</h4>
-<ul>
-<li>lot.txt now holds many cars</li>
-<li>Read every row in a loop</li>
-<li>Print a formatted total value</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<svg viewBox="0 0 380 310" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:520px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="308" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m10lab2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="18" width="300" height="78" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128190;</text><text x="190" y="80" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">lot.txt: many rows</text><line x1="190" y1="96" x2="190" y2="114" stroke="#999" stroke-width="2.2" marker-end="url(#m10lab2)"/><rect x="40" y="116" width="300" height="78" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="150" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128260;</text><text x="190" y="178" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">Loop: read each row</text><line x1="190" y1="194" x2="190" y2="212" stroke="#999" stroke-width="2.2" marker-end="url(#m10lab2)"/><rect x="40" y="214" width="300" height="78" rx="10" fill="#333333" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="248" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128181;</text><text x="190" y="276" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">Formatted total</text></svg>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Step 1: Open for Reading</h4>
-<ul>
-<li>ifstream opens lot.txt</li>
-<li>double total starts at zero</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">ifstream</span> in(<span style="color:#ce9178;">&quot;lot.txt&quot;</span>);
-<span style="color:#c586c0;">double</span> total = <span style="color:#b5cea8;">0.0</span>;</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Step 2: Loop Over Every Row</h4>
-<ul>
-<li>while reads to end of file</li>
-<li>Four fields match write order</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">string</span> make, model;
-<span style="color:#c586c0;">int</span> mileage;
-<span style="color:#c586c0;">double</span> price;
-<span style="color:#c586c0;">while</span> (in &gt;&gt; make &gt;&gt; model
-       &gt;&gt; mileage &gt;&gt; price) {</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Step 3: Add to the Running Total</h4>
-<ul>
-<li>total += price each pass</li>
-<li>Closes the while loop</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important">  total += price;
-}</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Step 4: Format the Total</h4>
-<ul>
-<li>fixed and setprecision(2)</li>
-<li>Reads like real currency</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">fixed</span>
-  &lt;&lt; <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">setprecision</span>(<span style="color:#b5cea8;">2</span>);
-<span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; <span style="color:#ce9178;">&quot;Total: $&quot;</span> &lt;&lt; total;</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#ffffff">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Check: Precision Before the Loop</h4>
-<p style="font-size:2rem;line-height:1.35;text-align:left;">setprecision(2) is set once, before the loop runs. Does every cout inside the loop stay affected?</p>
-
-</div>
-<div style="flex:1 1 0;">
-<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">Yes: fixed and setprecision are sticky settings on the stream, they stay until explicitly changed again.</div>
-
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Step 5: Parsing a Mixed Line</h4>
-<ul>
-<li>A pasted line of fields</li>
-<li>stringstream splits fields</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 18pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">stringstream</span> ss(<span style="color:#ce9178;">&quot;Honda 23000 18500&quot;</span>);
-<span style="color:#4ec9b0;">string</span> mk; <span style="color:#c586c0;">int</span> mi; <span style="color:#c586c0;">double</span> pr;
-ss &gt;&gt; mk &gt;&gt; mi &gt;&gt; pr;</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#ffffff">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Check: Reusing >></h4>
-<p style="font-size:2rem;line-height:1.35;text-align:left;">stringstream, ifstream, and cin all support >>. Why does learning one stream type teach you all three?</p>
-
-</div>
-<div style="flex:1 1 0;">
-<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">They all inherit the same istream interface, so >> behaves identically regardless of where data comes from.</div>
-
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>Deliverable</h4>
-<ul>
-<li>A loop that totals every row</li>
-<li>Total printed as real currency</li>
-<li>One line parsed via ss</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 18pt !important">Total: $42000.00</pre>
-</div>
-</div>
-</section>
-<section><h2 style="text-align:center;">Questions?</h2></section>
-<section><h2 style="text-align:center;">More Stream Tools</h2></section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>getline() Reads a Full Line</h4>
-<ul>
-<li>getline stops at the newline</li>
-<li>&gt;&gt; alone would stop at a space</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">string</span> line;
-<span style="color:#dcdcaa;">getline</span>(in, line);</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>ios::app: Append, Don&#39;t Erase</h4>
-<ul>
-<li>Second argument picks the mode</li>
-<li>New writes go after old data</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">ofstream</span> out(<span style="color:#ce9178;">&quot;lot.txt&quot;</span>, <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">ios</span>::<span style="color:#dcdcaa;">app</span>);</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>eof(): Did the File Run Out?</h4>
-<ul>
-<li>True once reading hits the end</li>
-<li>Common loop-ending check</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#c586c0;">while</span> (!in.<span style="color:#dcdcaa;">eof</span>()) { ... }</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>clear(): Reset a Bad Read</h4>
-<ul>
-<li>A failed read sets a flag</li>
-<li>clear() lets reading continue</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important">in.<span style="color:#dcdcaa;">clear</span>();</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>ignore(): Skip Ahead</h4>
-<ul>
-<li>Skips a count of characters</li>
-<li>Clears a leftover newline</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important">in.<span style="color:#dcdcaa;">ignore</span>(<span style="color:#b5cea8;">100</span>, <span style="color:#ce9178;">&#39;\\n&#39;</span>);</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>peek(): Look, Don&#39;t Take</h4>
-<ul>
-<li>Shows the next character</li>
-<li>Leaves it in the stream</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#c586c0;">char</span> c = in.<span style="color:#dcdcaa;">peek</span>();</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>get(): One Character at a Time</h4>
-<ul>
-<li>Reads one char, even a space</li>
-<li>&gt;&gt; would skip the space</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#c586c0;">char</span> c;
-in.<span style="color:#dcdcaa;">get</span>(c);</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>boolalpha: Print true, Not 1</h4>
-<ul>
-<li>Spells out true and false</li>
-<li>Without it, bools print 0/1</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">boolalpha</span>;
-<span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; sold;</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>setfill(): Pick the Pad Character</h4>
-<ul>
-<li>Pairs with setw() for padding</li>
-<li>Default pad is a plain space</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">setfill</span>(<span style="color:#ce9178;">&#39;0&#39;</span>)
-  &lt;&lt; <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">setw</span>(<span style="color:#b5cea8;">5</span>) &lt;&lt; id;</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>left: Align Text to the Left</h4>
-<ul>
-<li>setw() right-aligns by default</li>
-<li>left flips that alignment</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">left</span>
-  &lt;&lt; <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">setw</span>(<span style="color:#b5cea8;">10</span>) &lt;&lt; make;</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>hex: Print Integers in Hex</h4>
-<ul>
-<li>Switches the base for integers</li>
-<li>dec switches it back</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">hex</span> &lt;&lt; id;</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>cerr: A Separate Error Stream</h4>
-<ul>
-<li>Same syntax as cout</li>
-<li>Meant for error messages only</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cerr</span> &lt;&lt; <span style="color:#ce9178;">&quot;Price can&#39;t be negative&quot;</span>;</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>endl vs &quot;\\n&quot;</h4>
-<ul>
-<li>endl also flushes the buffer</li>
-<li>&quot;\\n&quot; alone is faster</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; <span style="color:#ce9178;">&quot;Done&quot;</span> &lt;&lt; <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">endl</span>;</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>is_open(): Did It Really Open?</h4>
-<ul>
-<li>Checks the file opened</li>
-<li>A safer check than just !in</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important"><span style="color:#c586c0;">if</span> (!in.<span style="color:#dcdcaa;">is_open</span>()) { ... }</pre>
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<div style="display:flex;align-items:center;gap:28px;">
-<div style="flex:1 1 0;">
-<h4>close(): Release the File</h4>
-<ul>
-<li>Frees the file for others</li>
-<li>Auto-called at scope end</li>
-</ul>
-
-</div>
-<div style="flex:1 1 0;">
-<pre style="font-size: 20pt !important">in.<span style="color:#dcdcaa;">close</span>();</pre>
-</div>
-</div>
-</section>
-                <section data-tag="terminology" data-term="Stream">
-                    <div style="display:flex; flex-direction:row; align-items:center; gap:28px;">
-                        <div style="flex:1 1 0;">
-                            <h4>Word Origin: &quot;Stream&quot;</h4>
-                            <ul>
-                                <li>Old English: a course of water</li>
-                                <li>Borrowed as a computing metaphor</li>
-                                <li>Continuous, ordered data flow</li>
-                            </ul>
-                        </div>
-                        <div style="flex:1 1 0;">
-                            <svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:360px;display:block;margin:0 auto;">
-                                <rect x="1" y="1" width="298" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
-                                <path d="M20,80 Q75,40 150,80 T280,80" stroke="#9cdcfe" stroke-width="4" fill="none"/>
-                                <text x="150" y="130" text-anchor="middle" font-size="13" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">Data flows, in order, like water</text>
-                            </svg>
-                        </div>
-                    </div>
-                </section>
-
-                <section>
-                    <h2 style="text-align:center;">Looking Ahead: Module 11</h2>
-                </section>
-
-            </section>
 
 <section id="module-11">
                 <section>
@@ -22625,8 +22625,8 @@ cout &lt;&lt; x;</pre>
         6: { full: 'User Defined Functions' },
         7: { full: 'Objects and Classes' },
         8: { full: 'Inheritance' },
-        9: { full: 'Polymorphism & Virtual Functions' },
-        10: { full: 'Data Streams' },
+        9: { full: 'Data Streams' },
+        10: { full: 'Polymorphism & Virtual Functions' },
         11: { full: 'Exceptions' },
         12: { full: 'Recursion and Module Review' },
         13: { full: 'Semester Review' },
