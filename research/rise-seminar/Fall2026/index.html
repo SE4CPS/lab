@@ -2182,11 +2182,36 @@ fetch_releases("mozilla-firefox/firefox")
                     </ul>
                 </aside>
             </section>
+<section data-chapter="7">
+                <div class="divhead">
+                    <span class="paper-tag">In production &middot; releasetrain.io, Oct 21 2026</span>
+                </div>
+                <div class="twocol" style="gap:2em; align-items:center; text-align:left;">
+<div style="flex:1; min-width:0;"><h3>A CVE Resolves via Its Registry</h3>
+                <p class="venue">Vendor from the CVE record; fix versions as the artifact</p>
+                <p class="story"><b>Before:</b> &ldquo;Where can i find the fix CVE-2026-109618&rdquo; (a PHP RCE) answered as <i>Fortra GoAnywhere MFT</i>: the word &ldquo;where&rdquo; substring-matched &ldquo;goanywhere&rdquo;, and the artifact section denied a fix the evidence named.<br>
+                <b>After:</b> a CVE id resolves through its registry (tracked doc &rarr; KEV &rarr; NVD CPE). Fix versions come from advisory text and NVD bounds; the vendor&rsquo;s own download page, HTTP-verified, is the artifact. A retry tells the model the facts it missed; code writes the sentence if it still fails.</p></div>
+<div style="flex:1; min-width:0;">
+<div class="qbox-row" style="margin-top:0;">
+<div class="qbox risk" style="font-size:0.85em;"><span class="cat">Before</span><p>vendor: Fortra GoAnywhere MFT; &ldquo;No verified artifact link &hellip; only a general reference page&rdquo;</p></div>
+<div class="qbox compat" style="font-size:0.85em;"><span class="cat">After</span><p>vendor: <b>php</b> (registry); fix <b>8.5.12 / 8.4.27 / 8.3.36 / 8.2.35</b> + php.net downloads as the artifact</p></div>
+</div>
+<p class="story" style="margin-top:1em;"><b>Also new:</b> each incident becomes a regression row: offline asserts gate every commit, promptfoo-style live asserts run post-deploy (Regression view).</p>
+</div>
+                </div>
+                <aside class="notes">
+                    <ul>
+                        <li>Owner's ask: "fix my artifact answer and use guardrails and feedback loops to better guide the agent pipeline", then generalize beyond PHP.</li>
+                        <li>Three generalized principles: registry-defined ids resolve via their registry; "official artifact" is structural (vendor domain + download-page shape), never an allowlist; the model may not deny what deterministic extraction proved, and the feedback loop feeds it the exact contradiction before code wins.</li>
+                        <li>Guardrails registered as cveVendorResolution and cveFixVersionArtifact (mandatory tier); "where/which/find" also joined the substring stoplist so this bug class dies for non-CVE questions too.</li>
+                    </ul>
+                </aside>
+            </section>
 
 
 
 
-            
+
             
             
             
