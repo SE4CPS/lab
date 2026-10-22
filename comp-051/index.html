@@ -455,7 +455,7 @@
 
     <div class="quick-links">
       <a href="./#toc" class="footer-link" target="_self">Schedule</a>
-      <span id="updated-stamp" class="footer-link">Updated: 2026-10-21 12:56 PT</span>
+      <span id="updated-stamp" class="footer-link">Updated: 2026-10-22 13:10 PT</span>
     </div>
 
     <div class="reveal">
@@ -23235,7 +23235,7 @@ cout &lt;&lt; x;</pre>
 <section data-background-color="#ffffff">
 <div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
 <div style="flex:1 1 0;">
-<h4>Final Project: Roster Manager</h4>
+<h4>Final Project: CampusNav</h4>
 <ul>
 <li>Classes and inheritance</li><li>Polymorphism, vectors, streams</li><li>Starter code is a foundation</li><li>Extend it, don't start over</li>
 </ul>
@@ -23259,7 +23259,7 @@ cout &lt;&lt; x;</pre>
 </ul>
 </div>
 <div style="flex:1 1 0;">
-<p class="source-line">Single file: <a href="https://raw.githubusercontent.com/SE4CPS/2026-COMP-051/main/final-project/single-file/roster_manager.cpp" target="_blank" rel="noopener">roster_manager.cpp</a></p>
+<p class="source-line">Single file: <a href="https://raw.githubusercontent.com/SE4CPS/2026-COMP-051/main/final-project/single-file/campusnav.cpp" target="_blank" rel="noopener">campusnav.cpp</a></p>
 <p class="source-line">Paste it into: <a href="https://www.onlinegdb.com/online_c%2B%2B_compiler" target="_blank" rel="noopener">OnlineGDB C++ Compiler</a></p>
 </div>
 </div>
@@ -23270,14 +23270,14 @@ cout &lt;&lt; x;</pre>
 <div style="flex:1 1 0;">
 <h4>Get the Code: Local</h4>
 <ul>
-<li>Needs Git + a C++ compiler</li><li>Clone the class repo</li><li>make builds it in one step</li><li>./roster runs it</li>
+<li>Needs Git + a C++ compiler</li><li>Clone the class repo</li><li>make builds it in one step</li><li>./campusnav runs it</li>
 </ul>
 </div>
 <div style="flex:1 1 0;">
 <pre style="font-size: 16pt !important">$ git clone https://github.com/SE4CPS/2026-COMP-051.git
 $ cd 2026-COMP-051/final-project/starter
 $ make
-$ ./roster</pre>
+$ ./campusnav</pre>
 </div>
 </div>
 </section>
@@ -23285,19 +23285,19 @@ $ ./roster</pre>
 <section data-background-color="#0a0a0a">
 <div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
 <div style="flex:1 1 0;">
-<h4>Base Class: Person</h4>
+<h4>Base Class: Stop</h4>
 <ul>
-<li>Shared name/id for everyone</li><li>virtual lets a child override</li><li>getRole() names the subclass</li>
+<li>Shared name/distance fields</li><li>virtual lets a child override</li><li>getType() names the kind</li>
 </ul>
 </div>
 <div style="flex:1 1 0;">
-<pre style="font-size: 18pt !important">class Person {
+<pre style="font-size: 18pt !important">class Stop {
 protected:
   string name;
-  int id;
+  double distance;
 public:
   virtual void display() const;
-  virtual string getRole() const;
+  virtual string getType() const;
 };</pre>
 </div>
 </div>
@@ -23306,17 +23306,17 @@ public:
 <section data-background-color="#0a0a0a">
 <div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
 <div style="flex:1 1 0;">
-<h4>Inheritance: Student, Instructor</h4>
+<h4>Inheritance: Bus &amp; Train Stops</h4>
 <ul>
-<li>Student adds just a GPA</li><li>public Person reuses name/id</li><li>override marks the intent</li>
+<li>BusStop adds just a bay #</li><li>public Stop reuses fields</li><li>override marks the intent</li>
 </ul>
 </div>
 <div style="flex:1 1 0;">
-<pre style="font-size: 18pt !important">class Student : public Person {
+<pre style="font-size: 18pt !important">class BusStop : public Stop {
 private:
-  double gpa;
+  int bay;
 public:
-  Student(string n, int i, double g);
+  BusStop(string n, double d, int b);
   void display() const override;
 };</pre>
 </div>
@@ -23328,13 +23328,13 @@ public:
 <div style="flex:1 1 0;">
 <h4>Polymorphism: One Call, Many Forms</h4>
 <ul>
-<li>Person* can point to a Student</li><li>display() picks the real type</li><li>Decided at runtime, not build</li>
+<li>Stop* can point to a BusStop</li><li>display() picks the real type</li><li>Decided at runtime, not build</li>
 </ul>
 </div>
 <div style="flex:1 1 0;">
-<pre style="font-size: 18pt !important">Person* p = new Student("Maya", 1, 3.9);
-p->display();  // runs Student's version
-delete p;</pre>
+<pre style="font-size: 18pt !important">Stop* s = new BusStop("Lib", 1.5, 1);
+s->display();  // runs BusStop's version
+delete s;</pre>
 </div>
 </div>
 </section>
@@ -23342,17 +23342,17 @@ delete p;</pre>
 <section data-background-color="#0a0a0a">
 <div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
 <div style="flex:1 1 0;">
-<h4>Roster: A Vector of Base Pointers</h4>
+<h4>Route: Holds the Stop List</h4>
 <ul>
-<li>Holds any Person subtype</li><li>add() works for any subtype</li><li>One list, many real types</li>
+<li>Holds any Stop subtype</li><li>addStop() works for any type</li><li>One list, many real types</li>
 </ul>
 </div>
 <div style="flex:1 1 0;">
-<pre style="font-size: 18pt !important">class Roster {
+<pre style="font-size: 18pt !important">class Route {
 private:
-  vector&lt;Person*&gt; people;
+  vector&lt;Stop*&gt; stops;
 public:
-  void add(Person* p);
+  void addStop(Stop* s);
   void displayAll() const;
 };</pre>
 </div>
@@ -23362,17 +23362,15 @@ public:
 <section data-background-color="#0a0a0a">
 <div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
 <div style="flex:1 1 0;">
-<h4>Saving to a File</h4>
+<h4>Load the Route: Your Job</h4>
 <ul>
-<li>ofstream opens a file to write</li><li>Loops through every Person*</li><li>getRole() still picks right</li>
+<li>loadFromFile() is a stub</li><li>Returns false until you fix it</li><li>You add the real logic</li>
 </ul>
 </div>
 <div style="flex:1 1 0;">
-<pre style="font-size: 18pt !important">void Roster::saveToFile(string file) const {
-  ofstream out(file);
-  for (Person* p : people) {
-    out << p->getRole() << endl;
-  }
+<pre style="font-size: 18pt !important">bool Route::loadFromFile(string f) {
+  // TODO: read f, addStop() each line
+  return false;
 }</pre>
 </div>
 </div>
@@ -23383,15 +23381,14 @@ public:
 <div style="flex:1 1 0;">
 <h4>Putting It Together: main.cpp</h4>
 <ul>
-<li>Build a roster with new</li><li>Add Students and Instructors</li><li>One displayAll(), many results</li>
+<li>Build a route with new</li><li>Add Bus and Train stops</li><li>One displayAll(), many results</li>
 </ul>
 </div>
 <div style="flex:1 1 0;">
-<pre style="font-size: 18pt !important">Roster roster;
-roster.add(new Student("Maya", 1, 3.9));
-roster.add(new Instructor("Dr. B", 2, "CS"));
-roster.displayAll();
-roster.saveToFile("roster.txt");</pre>
+<pre style="font-size: 18pt !important">Route route;
+route.addStop(new BusStop("Lib", 1.5, 1));
+route.addStop(new TrainStop("Hub", 2.9, 2));
+route.displayAll();</pre>
 </div>
 </div>
 </section>
