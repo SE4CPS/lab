@@ -462,7 +462,7 @@
 
     <div class="quick-links">
       <a href="./#toc" class="footer-link" target="_self">Schedule</a>
-      <span id="updated-stamp" class="footer-link">Updated: 2026-10-22 15:01 PT</span>
+      <span id="updated-stamp" class="footer-link">Updated: 2026-10-22 15:10 PT</span>
     </div>
 
     <div class="reveal">
@@ -18108,16 +18108,20 @@ weather.json</code></pre>
 <section data-background-color="#0a0a0a">
 <div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
 <div style="flex:1 1 0;">
-<h4>WeatherDay: One Record</h4>
+<h4>WeatherDay: Now an Object</h4>
 <ul>
-<li>Holds one day's data</li><li>A string date and condition</li><li>Two double temperatures</li>
+<li>A class, not a bare struct</li><li>The constructor builds one</li><li>Each day is its own object</li>
 </ul>
 </div>
 <div style="flex:1 1 0;">
-<pre><code class="language-cpp code-16">struct WeatherDay {
+<pre><code class="language-cpp code-14">class WeatherDay {
+public:
   string date;
   double high, low;
   string condition;
+  WeatherDay(string d, double h, double l,
+             string c) : date(d), high(h),
+             low(l), condition(c) {}
 };</code></pre>
 </div>
 </div>
@@ -18145,20 +18149,19 @@ weather.json</code></pre>
 <section data-background-color="#0a0a0a">
 <div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
 <div style="flex:1 1 0;">
-<h4>parseLine(): Build One Record</h4>
+<h4>parseLine(): Build One Object</h4>
 <ul>
-<li>Calls field() four times</li><li>Converts numbers with stod()</li><li>Returns a filled WeatherDay</li>
+<li>Calls field() four times</li><li>Converts numbers with stod()</li><li>Returns a new WeatherDay</li>
 </ul>
 </div>
 <div style="flex:1 1 0;">
 <pre><code class="language-cpp code-14">WeatherDay parseLine(string line) {
-  WeatherDay d;
-  d.date = field(line, &quot;\&quot;date\&quot;: &quot;);
-  d.high = stod(field(line, &quot;\&quot;high\&quot;: &quot;));
-  d.low = stod(field(line, &quot;\&quot;low\&quot;: &quot;));
   string ck = &quot;\&quot;condition\&quot;: &quot;;
-  d.condition = field(line, ck);
-  return d;
+  return WeatherDay(
+    field(line, &quot;\&quot;date\&quot;: &quot;),
+    stod(field(line, &quot;\&quot;high\&quot;: &quot;)),
+    stod(field(line, &quot;\&quot;low\&quot;: &quot;)),
+    field(line, ck));
 }</code></pre>
 </div>
 </div>
@@ -18182,6 +18185,26 @@ weather.json</code></pre>
     days.push_back(parseLine(line));
   }
   return days;
+}</code></pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>main.cpp: Loading the File</h4>
+<ul>
+<li>One call loads every day</li><li>days.size() confirms it read</li><li>Now ready for Q1-Q10</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre><code class="language-cpp code-14">int main() {
+  vector&lt;WeatherDay&gt; days =
+    loadWeather(&quot;weather.json&quot;);
+  cout &lt;&lt; &quot;Loaded &quot; &lt;&lt; days.size()
+       &lt;&lt; &quot; days&quot; &lt;&lt; endl;
+  // ... then answer each question
 }</code></pre>
 </div>
 </div>
