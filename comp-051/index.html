@@ -37,6 +37,7 @@
         /* Per-block code font-size overrides, as classes instead
            of a repeated inline style (going forward; existing
            inline overrides elsewhere stay as-is until touched). */
+        code.code-14 { font-size: 14pt !important; }
         code.code-16 { font-size: 16pt !important; }
         code.code-18 { font-size: 18pt !important; }
 
@@ -461,7 +462,7 @@
 
     <div class="quick-links">
       <a href="./#toc" class="footer-link" target="_self">Schedule</a>
-      <span id="updated-stamp" class="footer-link">Updated: 2026-10-22 14:32 PT</span>
+      <span id="updated-stamp" class="footer-link">Updated: 2026-10-22 14:43 PT</span>
     </div>
 
     <div class="reveal">
@@ -16757,7 +16758,8 @@ t.make = <span style="color:#ce9178;">&quot;Ford&quot;</span>; t.towCapacity = <
 <li><a href="./#/module-9-agenda-6" target="_self">Parsing with stringstream</a></li>
 <li><a href="./#/module-9-agenda-7" target="_self">Practice Lab</a></li>
 <li><a href="./#/module-9-agenda-8" target="_self">Practice Lab Part 2</a></li>
-<li><a href="./#/module-9-agenda-9" target="_self">Header Files Used</a></li>
+<li><a href="./#/module-9-agenda-9" target="_self">Practice Lab Part 3</a></li>
+<li><a href="./#/module-9-agenda-10" target="_self">Header Files Used</a></li>
 </ol>
 </div>
 <div style="flex:1 1 0;">
@@ -18054,6 +18056,496 @@ oss &lt;&lt; make &lt;&lt; <span style="color:#ce9178;">&quot;: &quot;</span> &l
 <section><h2 style="text-align:center;">Questions?</h2></section>
 
 <section id="module-9-agenda-9">
+<h2 style="text-align:center;">Practice Lab Part 3</h2>
+</section>
+
+<section data-background-color="#ffffff">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Scenario: Stockton Weather</h4>
+<ul>
+<li>A real JSON file, 31 days</li><li>Parse it, don't just read it</li><li>Answer 10 real questions</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 360 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="30" y="10" width="300" height="50" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><text x="180.0" y="40.2" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">weather.json</text><text x="180" y="100" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#555">31 days of real-looking data,</text><text x="180" y="120" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#555">made up for this lab</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Get the Data</h4>
+<ul>
+<li>No install needed</li><li>One JSON file on GitHub</li><li>Save it next to your .cpp</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre><code class="language-bash code-14">$ git clone https://github.com/SE4CPS/\
+2026-COMP-051.git
+$ cd 2026-COMP-051/practice-lab-weather
+$ ls
+weather.json</code></pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>The Data Format</h4>
+<ul>
+<li>One object per line</li><li>date, high, low, condition</li><li>Still valid JSON overall</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 380 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="20" y="10" width="340" height="46" rx="8" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="190.0" y="37.2" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="normal">{&quot;date&quot;: &quot;2026-07-11&quot;,</text><rect x="20" y="64" width="340" height="46" rx="8" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="190.0" y="91.2" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#ffcb6b" font-weight="normal">&quot;high&quot;: 104.9, &quot;low&quot;: 72.0,</text><rect x="20" y="118" width="340" height="46" rx="8" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="190.0" y="145.2" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="normal">&quot;condition&quot;: &quot;Sunny&quot;}</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>WeatherDay: One Record</h4>
+<ul>
+<li>Holds one day's data</li><li>A string date and condition</li><li>Two double temperatures</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre><code class="language-cpp code-16">struct WeatherDay {
+  string date;
+  double high, low;
+  string condition;
+};</code></pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>field(): Pulling Out a Value</h4>
+<ul>
+<li>Finds text after a key</li><li>Stops at a comma or brace</li><li>Skips the opening quote</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre><code class="language-cpp code-16">string field(string line, string key) {
+  int p = line.find(key) + key.length();
+  if (line[p] == '&quot;') p++;
+  int q = line.find_first_of(&quot;\&quot;,}&quot;, p);
+  return line.substr(p, q - p);
+}</code></pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>parseLine(): Build One Record</h4>
+<ul>
+<li>Calls field() four times</li><li>Converts numbers with stod()</li><li>Returns a filled WeatherDay</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre><code class="language-cpp code-14">WeatherDay parseLine(string line) {
+  WeatherDay d;
+  d.date = field(line, &quot;\&quot;date\&quot;: &quot;);
+  d.high = stod(field(line, &quot;\&quot;high\&quot;: &quot;));
+  d.low = stod(field(line, &quot;\&quot;low\&quot;: &quot;));
+  string ck = &quot;\&quot;condition\&quot;: &quot;;
+  d.condition = field(line, ck);
+  return d;
+}</code></pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>loadWeather(): Read Every Line</h4>
+<ul>
+<li>getline() reads one row</li><li>Skip the [ and ] lines</li><li>parseLine() does the work</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre><code class="language-cpp code-14">vector&lt;WeatherDay&gt; loadWeather(string file) {
+  vector&lt;WeatherDay&gt; days;
+  ifstream in(file);
+  string line;
+  while (getline(in, line)) {
+    if (line.size() < 20) continue;
+    days.push_back(parseLine(line));
+  }
+  return days;
+}</code></pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Q1: Hottest Day</h4>
+<ul>
+<li>Scan every day's high</li><li>Keep the largest so far</li><li>Report that day's date</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 380 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><text x="190.0" y="22" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#555" font-weight="bold">Which bar is tallest?</text><rect x="35.0" y="80.0" width="6.0" height="80.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="51.0" y="70.0" width="6.0" height="90.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="67.0" y="65.0" width="6.0" height="95.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="83.0" y="75.0" width="6.0" height="85.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="99.0" y="85.0" width="6.0" height="75.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="115.0" y="70.0" width="6.0" height="90.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="131.0" y="60.0" width="6.0" height="100.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="147.0" y="55.0" width="6.0" height="105.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="163.0" y="45.0" width="6.0" height="115.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="179.0" y="40.0" width="6.0" height="120.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="195.0" y="40.0" width="6.0" height="120.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="211.0" y="50.0" width="6.0" height="110.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="227.0" y="60.0" width="6.0" height="100.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="243.0" y="70.0" width="6.0" height="90.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="259.0" y="90.0" width="6.0" height="70.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="275.0" y="100.0" width="6.0" height="60.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="291.0" y="120.0" width="6.0" height="40.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="307.0" y="95.0" width="6.0" height="65.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="323.0" y="80.0" width="6.0" height="80.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="339.0" y="70.0" width="6.0" height="90.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><line x1="30" y1="160" x2="350" y2="160" stroke="#555" stroke-width="2"/><text x="190.0" y="186" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#555">31 days, one bar each</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Answer: Hottest Day</h4>
+<ul>
+<li>Output: 2026-07-11: 104.9</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre><code class="language-cpp code-16">int best = 0;
+for (int i = 1; i &lt; days.size(); i++) {
+  if (days[i].high &gt; days[best].high) {
+    best = i;
+  }
+}
+cout &lt;&lt; days[best].date &lt;&lt; &quot;: &quot;
+     &lt;&lt; days[best].high;</code></pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Q2: Coldest Night</h4>
+<ul>
+<li>Scan every day's low</li><li>Keep the smallest so far</li><li>Report that day's date</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 380 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><text x="190.0" y="22" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#555" font-weight="bold">Which bar is shortest?</text><rect x="35.0" y="80.0" width="6.0" height="80.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="51.0" y="75.0" width="6.0" height="85.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="67.0" y="70.0" width="6.0" height="90.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="83.0" y="80.0" width="6.0" height="80.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="99.0" y="90.0" width="6.0" height="70.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="115.0" y="75.0" width="6.0" height="85.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="131.0" y="65.0" width="6.0" height="95.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="147.0" y="60.0" width="6.0" height="100.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="163.0" y="50.0" width="6.0" height="110.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="179.0" y="45.0" width="6.0" height="115.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="195.0" y="40.0" width="6.0" height="120.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="211.0" y="48.0" width="6.0" height="112.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="227.0" y="58.0" width="6.0" height="102.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="243.0" y="70.0" width="6.0" height="90.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="259.0" y="90.0" width="6.0" height="70.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="275.0" y="105.0" width="6.0" height="55.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="291.0" y="125.0" width="6.0" height="35.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="307.0" y="100.0" width="6.0" height="60.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="323.0" y="85.0" width="6.0" height="75.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="339.0" y="75.0" width="6.0" height="85.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><line x1="30" y1="160" x2="350" y2="160" stroke="#555" stroke-width="2"/><text x="190.0" y="186" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#555">31 days, one bar each</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Answer: Coldest Night</h4>
+<ul>
+<li>Output: 2026-07-27: 57.9</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre><code class="language-cpp code-16">int best = 0;
+for (int i = 1; i &lt; days.size(); i++) {
+  if (days[i].low &lt; days[best].low) {
+    best = i;
+  }
+}
+cout &lt;&lt; days[best].date &lt;&lt; &quot;: &quot;
+     &lt;&lt; days[best].low;</code></pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Q3: Average High for the Month</h4>
+<ul>
+<li>Add up every high</li><li>Divide by the day count</li><li>sum / days.size()</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 380 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="72.0" y="51.0" width="100" height="48" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><text x="122.0" y="79.9" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">sum</text><text x="190.0" y="80.0" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#555">+</text><rect x="208.0" y="51.0" width="100" height="48" rx="8" fill="#1e1e1e" stroke="#ffcb6b" stroke-width="1.5"/><text x="258.0" y="79.9" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ffcb6b" font-weight="bold">count</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Answer: Average High</h4>
+<ul>
+<li>Output: Avg high: 93.47</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre><code class="language-cpp code-16">double sum = 0;
+for (WeatherDay d : days) {
+  sum += d.high;
+}
+cout &lt;&lt; &quot;Avg high: &quot;
+     &lt;&lt; sum / days.size();</code></pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Q4: Average Low for the Month</h4>
+<ul>
+<li>Same pattern as average high</li><li>Add up every low</li><li>Divide by the day count</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 380 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="72.0" y="51.0" width="100" height="48" rx="8" fill="#1e1e1e" stroke="#ffcb6b" stroke-width="1.5"/><text x="122.0" y="79.9" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ffcb6b" font-weight="bold">sum</text><text x="190.0" y="80.0" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#555">+</text><rect x="208.0" y="51.0" width="100" height="48" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><text x="258.0" y="79.9" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">count</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Answer: Average Low</h4>
+<ul>
+<li>Output: Avg low: 63.94</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre><code class="language-cpp code-16">double sum = 0;
+for (WeatherDay d : days) {
+  sum += d.low;
+}
+cout &lt;&lt; &quot;Avg low: &quot;
+     &lt;&lt; sum / days.size();</code></pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Q5: How Many Sunny Days?</h4>
+<ul>
+<li>Check each day's condition</li><li>Count only &quot;Sunny&quot;</li><li>Report the total</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 380 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="41.0" y="20.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="79.0" y="20.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="117.0" y="20.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="155.0" y="20.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="193.0" y="20.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="231.0" y="20.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="269.0" y="20.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="307.0" y="20.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="41.0" y="58.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="79.0" y="58.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="117.0" y="58.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="155.0" y="58.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="193.0" y="58.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="231.0" y="58.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="269.0" y="58.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="307.0" y="58.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="41.0" y="96.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="79.0" y="96.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="117.0" y="96.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="155.0" y="96.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="193.0" y="96.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="231.0" y="96.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="269.0" y="96.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="307.0" y="96.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="41.0" y="134.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="79.0" y="134.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="117.0" y="134.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="155.0" y="134.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="193.0" y="134.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="231.0" y="134.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="269.0" y="134.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="190.0" y="186" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#555">Count the Sunny squares</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Answer: Sunny Day Count</h4>
+<ul>
+<li>Output: Sunny days: 23</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre><code class="language-cpp code-16">int count = 0;
+for (WeatherDay d : days) {
+  if (d.condition == &quot;Sunny&quot;) {
+    count++;
+  }
+}
+cout &lt;&lt; &quot;Sunny days: &quot; &lt;&lt; count;</code></pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Q6: How Many Days Over 95°F?</h4>
+<ul>
+<li>Check each day's high</li><li>Count ones above 95</li><li>A simple threshold check</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 380 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><rect x="41.0" y="20.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="79.0" y="20.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="117.0" y="20.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="155.0" y="20.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="193.0" y="20.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="231.0" y="20.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="269.0" y="20.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="307.0" y="20.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="41.0" y="58.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="79.0" y="58.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="117.0" y="58.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="155.0" y="58.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="193.0" y="58.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="231.0" y="58.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="269.0" y="58.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="307.0" y="58.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="41.0" y="96.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="79.0" y="96.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="117.0" y="96.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="155.0" y="96.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="193.0" y="96.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="231.0" y="96.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="269.0" y="96.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="307.0" y="96.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="41.0" y="134.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="79.0" y="134.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="117.0" y="134.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="155.0" y="134.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="193.0" y="134.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="231.0" y="134.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><rect x="269.0" y="134.0" width="32" height="32" rx="4" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="190.0" y="186" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#555">Count squares over 95°F</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Answer: Hot Day Count</h4>
+<ul>
+<li>Output: Hot days: 10</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre><code class="language-cpp code-16">int count = 0;
+for (WeatherDay d : days) {
+  if (d.high &gt; 95.0) {
+    count++;
+  }
+}
+cout &lt;&lt; &quot;Hot days: &quot; &lt;&lt; count;</code></pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Q7: Biggest Day/Night Swing</h4>
+<ul>
+<li>swing = high minus low</li><li>Keep the largest swing</li><li>Report that day's date</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 380 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><text x="190.0" y="22" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#555" font-weight="bold">Which gap is widest?</text><rect x="35.0" y="90.0" width="6.0" height="70.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="51.0" y="80.0" width="6.0" height="80.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="67.0" y="85.0" width="6.0" height="75.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="83.0" y="90.0" width="6.0" height="70.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="99.0" y="95.0" width="6.0" height="65.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="115.0" y="85.0" width="6.0" height="75.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="131.0" y="80.0" width="6.0" height="80.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="147.0" y="75.0" width="6.0" height="85.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="163.0" y="60.0" width="6.0" height="100.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="179.0" y="55.0" width="6.0" height="105.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="195.0" y="40.0" width="6.0" height="120.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="211.0" y="50.0" width="6.0" height="110.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="227.0" y="60.0" width="6.0" height="100.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="243.0" y="80.0" width="6.0" height="80.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="259.0" y="100.0" width="6.0" height="60.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="275.0" y="105.0" width="6.0" height="55.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="291.0" y="120.0" width="6.0" height="40.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="307.0" y="100.0" width="6.0" height="60.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="323.0" y="90.0" width="6.0" height="70.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="339.0" y="85.0" width="6.0" height="75.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><line x1="30" y1="160" x2="350" y2="160" stroke="#555" stroke-width="2"/><text x="190.0" y="186" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#555">31 days, one bar each</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Answer: Biggest Swing</h4>
+<ul>
+<li>Output: 2026-07-11: 32.9</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre><code class="language-cpp code-16">int best = 0;
+double bestSwing = 0;
+for (int i = 0; i &lt; days.size(); i++) {
+  double s = days[i].high - days[i].low;
+  if (s &gt; bestSwing) {
+    bestSwing = s;
+    best = i;
+  }
+}
+cout &lt;&lt; days[best].date &lt;&lt; &quot;: &quot; &lt;&lt; bestSwing;</code></pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Q8: Mildest Daytime High</h4>
+<ul>
+<li>Scan every day's high</li><li>Keep the smallest so far</li><li>The opposite of Question 1</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 380 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><text x="190.0" y="22" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#555" font-weight="bold">Which bar is shortest?</text><rect x="35.0" y="70.0" width="6.0" height="90.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="51.0" y="65.0" width="6.0" height="95.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="67.0" y="60.0" width="6.0" height="100.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="83.0" y="72.0" width="6.0" height="88.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="99.0" y="82.0" width="6.0" height="78.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="115.0" y="68.0" width="6.0" height="92.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="131.0" y="58.0" width="6.0" height="102.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="147.0" y="52.0" width="6.0" height="108.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="163.0" y="45.0" width="6.0" height="115.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="179.0" y="40.0" width="6.0" height="120.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="195.0" y="40.0" width="6.0" height="120.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="211.0" y="48.0" width="6.0" height="112.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="227.0" y="56.0" width="6.0" height="104.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="243.0" y="66.0" width="6.0" height="94.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="259.0" y="88.0" width="6.0" height="72.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="275.0" y="98.0" width="6.0" height="62.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="291.0" y="122.0" width="6.0" height="38.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="307.0" y="94.0" width="6.0" height="66.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="323.0" y="78.0" width="6.0" height="82.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><rect x="339.0" y="68.0" width="6.0" height="92.0" rx="3" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.5"/><line x1="30" y1="160" x2="350" y2="160" stroke="#555" stroke-width="2"/><text x="190.0" y="186" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#555">31 days, one bar each</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Answer: Mildest Daytime High</h4>
+<ul>
+<li>Output: 2026-07-17: 83.5</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre><code class="language-cpp code-16">int best = 0;
+for (int i = 1; i &lt; days.size(); i++) {
+  if (days[i].high &lt; days[best].high) {
+    best = i;
+  }
+}
+cout &lt;&lt; days[best].date &lt;&lt; &quot;: &quot;
+     &lt;&lt; days[best].high;</code></pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Q9: How Many Distinct Conditions?</h4>
+<ul>
+<li>Collect every condition seen</li><li>A set keeps only</li><li>one copy of each</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 380 190" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><circle cx="40" cy="35" r="18" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="40" y="39" text-anchor="middle" font-size="9" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe">Sun</text><line x1="40" y1="53" x2="190.0" y2="100" stroke="#555" stroke-width="1.5"/><circle cx="90" cy="35" r="18" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="90" y="39" text-anchor="middle" font-size="9" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe">Sun</text><line x1="90" y1="53" x2="190.0" y2="100" stroke="#555" stroke-width="1.5"/><circle cx="140" cy="35" r="18" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="140" y="39" text-anchor="middle" font-size="9" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe">Clo</text><line x1="140" y1="53" x2="190.0" y2="100" stroke="#555" stroke-width="1.5"/><circle cx="190" cy="35" r="18" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="190" y="39" text-anchor="middle" font-size="9" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe">Sun</text><line x1="190" y1="53" x2="190.0" y2="100" stroke="#555" stroke-width="1.5"/><circle cx="240" cy="35" r="18" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="240" y="39" text-anchor="middle" font-size="9" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe">Sto</text><line x1="240" y1="53" x2="190.0" y2="100" stroke="#555" stroke-width="1.5"/><circle cx="290" cy="35" r="18" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="290" y="39" text-anchor="middle" font-size="9" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe">Clo</text><line x1="290" y1="53" x2="190.0" y2="100" stroke="#555" stroke-width="1.5"/><rect x="100.0" y="100" width="180" height="50" rx="8" fill="#1e1e1e" stroke="#ffcb6b" stroke-width="1.5"/><text x="190.0" y="129.9" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ffcb6b" font-weight="bold">Unique Values Only</text><text x="190.0" y="172" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#555">Duplicates collapse into one</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Answer: Distinct Conditions</h4>
+<ul>
+<li>Output: Conditions: 3</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre><code class="language-cpp code-16">set&lt;string&gt; seen;
+for (WeatherDay d : days) {
+  seen.insert(d.condition);
+}
+cout &lt;&lt; &quot;Conditions: &quot; &lt;&lt; seen.size();</code></pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Q10: The Month's Full Range</h4>
+<ul>
+<li>Hottest high minus coldest low</li><li>Combines Q1 and Q2</li><li>One pass finds both</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 380 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:0 auto;"><line x1="40" y1="80" x2="340" y2="80" stroke="#555" stroke-width="2"/><circle cx="40" cy="80" r="9" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2.5"/><text x="40" y="60" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">Coldest Low</text><circle cx="340" cy="80" r="9" fill="#1e1e1e" stroke="#ffcb6b" stroke-width="2.5"/><text x="340" y="60" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ffcb6b" font-weight="bold">Hottest High</text><text x="190.0" y="114" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#555">? degrees apart</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Answer: Month's Full Range</h4>
+<ul>
+<li>Output: Range: 47.0</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre><code class="language-cpp code-16">double hi = days[0].high, lo = days[0].low;
+for (WeatherDay d : days) {
+  hi = max(hi, d.high);
+  lo = min(lo, d.low);
+}
+cout &lt;&lt; &quot;Range: &quot; &lt;&lt; hi - lo;</code></pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex; flex-direction:row; align-items:flex-start; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Deliverable</h4>
+<ul>
+<li>Your 10 answers, with code</li><li>weather.json, not hardcoded</li><li>Submit source and output</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre><code class="language-cpp code-16">2026-07-11: 104.9
+2026-07-27: 57.9
+Avg high: 93.47
+...</code></pre>
+</div>
+</div>
+</section>
+
+<section id="module-9-agenda-10">
 <h2 style="text-align:center;">Header Files Used</h2>
 </section>
 
@@ -23264,7 +23756,7 @@ cout &lt;&lt; x;</pre>
 
 <section data-background-color="#ffffff">
 <h4 style="text-align:center;">The Route, Stop by Stop</h4>
-<svg viewBox="0 0 820 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:760px;display:block;margin:0 auto;"><defs><marker id="navArrowGame" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#777"/></marker></defs><line x1="60" y1="90" x2="760" y2="90" stroke="#555" stroke-width="2.5"/><circle cx="60.0" cy="90" r="10" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2.5"/><text x="60.0" y="40" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">University</text><text x="60.0" y="56" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Transit Center</text><text x="60.0" y="120" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">0.0 mi</text><text x="60.0" y="140" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Bus Stop</text><circle cx="200.0" cy="90" r="10" fill="#1e1e1e" stroke="#ffcb6b" stroke-width="2.5"/><text x="200.0" y="40" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">North Quad</text><text x="200.0" y="56" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Station</text><text x="200.0" y="120" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ffcb6b" font-weight="bold">0.8 mi</text><text x="200.0" y="140" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Train Stop</text><circle cx="340.0" cy="90" r="10" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2.5"/><text x="340.0" y="40" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Library</text><text x="340.0" y="56" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Plaza</text><text x="340.0" y="120" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">1.5 mi</text><text x="340.0" y="140" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Bus Stop</text><circle cx="480.0" cy="90" r="10" fill="#1e1e1e" stroke="#ffcb6b" stroke-width="2.5"/><text x="480.0" y="40" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Downtown</text><text x="480.0" y="56" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Junction</text><text x="480.0" y="120" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ffcb6b" font-weight="bold">2.9 mi</text><text x="480.0" y="140" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Train Stop</text><circle cx="620.0" cy="90" r="10" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2.5"/><text x="620.0" y="40" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Riverside</text><text x="620.0" y="56" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Mall</text><text x="620.0" y="120" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">4.1 mi</text><text x="620.0" y="140" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Bus Stop</text><circle cx="760.0" cy="90" r="10" fill="#1e1e1e" stroke="#ffcb6b" stroke-width="2.5"/><text x="760.0" y="40" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">East Hills</text><text x="760.0" y="56" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Terminal</text><text x="760.0" y="120" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ffcb6b" font-weight="bold">5.6 mi</text><text x="760.0" y="140" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Train Stop</text><text x="410.0" y="260" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">Distance is measured from the first stop</text></svg>
+<svg viewBox="0 0 820 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:760px;display:block;margin:0 auto;"><defs><marker id="navArrowGame" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#777"/></marker></defs><line x1="60" y1="90" x2="760" y2="90" stroke="#555" stroke-width="2.5"/><circle cx="60.0" cy="90" r="10" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2.5"/><text x="60.0" y="40" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#555">University</text><text x="60.0" y="56" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#555">Transit Center</text><text x="60.0" y="120" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">0.0 mi</text><text x="60.0" y="140" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Bus Stop</text><circle cx="200.0" cy="90" r="10" fill="#1e1e1e" stroke="#ffcb6b" stroke-width="2.5"/><text x="200.0" y="40" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#555">North Quad</text><text x="200.0" y="56" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#555">Station</text><text x="200.0" y="120" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ffcb6b" font-weight="bold">0.8 mi</text><text x="200.0" y="140" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Train Stop</text><circle cx="340.0" cy="90" r="10" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2.5"/><text x="340.0" y="40" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#555">Library</text><text x="340.0" y="56" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#555">Plaza</text><text x="340.0" y="120" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">1.5 mi</text><text x="340.0" y="140" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Bus Stop</text><circle cx="480.0" cy="90" r="10" fill="#1e1e1e" stroke="#ffcb6b" stroke-width="2.5"/><text x="480.0" y="40" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#555">Downtown</text><text x="480.0" y="56" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#555">Junction</text><text x="480.0" y="120" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ffcb6b" font-weight="bold">2.9 mi</text><text x="480.0" y="140" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Train Stop</text><circle cx="620.0" cy="90" r="10" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2.5"/><text x="620.0" y="40" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#555">Riverside</text><text x="620.0" y="56" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#555">Mall</text><text x="620.0" y="120" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">4.1 mi</text><text x="620.0" y="140" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Bus Stop</text><circle cx="760.0" cy="90" r="10" fill="#1e1e1e" stroke="#ffcb6b" stroke-width="2.5"/><text x="760.0" y="40" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#555">East Hills</text><text x="760.0" y="56" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#555">Terminal</text><text x="760.0" y="120" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ffcb6b" font-weight="bold">5.6 mi</text><text x="760.0" y="140" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Train Stop</text><text x="410.0" y="260" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#555">Distance is measured from the first stop</text></svg>
 </section>
 
 <section data-background-color="#ffffff">
