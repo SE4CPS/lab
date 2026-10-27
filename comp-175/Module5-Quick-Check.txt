@@ -1,0 +1,115 @@
+COMP-175: Module 5 Quick Check (Process Mgmt & Remote Access)
+Fill in the command that does what each question asks.
+
+1. How do you list every process, showing the full command each one is
+   running?
+   _________________________________
+
+2. How do you find the process using the most memory, without
+   scrolling through a full list?
+   _________________________________
+   Hint: ps takes a --sort flag; a - before the field name sorts
+   highest first.
+
+3. You started a job in the foreground by mistake. How do you pause it
+   and move it to the background?
+   _________________________________
+   Hint: two steps -- one keyboard shortcut, one shell builtin.
+
+4. How do you end a process that isn't responding to a normal kill
+   signal?
+   _________________________________
+   Hint: kill takes a signal number or name; the "force" one is 9.
+
+5. How do you lower a background job's CPU scheduling priority so it
+   doesn't slow down your interactive work?
+   _________________________________
+   Hint: a command that takes a niceness value from -20 to 19.
+
+6. How do you generate a new SSH keypair using the modern, recommended
+   key type?
+   _________________________________
+
+7. How do you copy your SSH public key to a remote server so you can
+   log in without typing a password?
+   _________________________________
+
+8. You just typed your SSH key's passphrase once. How do you keep it
+   unlocked in memory for the rest of your session?
+   _________________________________
+
+9. How do you forward a remote server's database port to your own
+   machine over SSH, so a local tool can connect to it as if it were
+   local?
+   _________________________________
+   Hint: ssh takes a flag that maps localPort:host:remotePort.
+
+10. How do you copy a folder to a remote server, sending only the
+    files that changed since last time?
+    _________________________________
+    Hint: not scp -- a tool built for efficient, repeatable syncs.
+
+11. How do you check whether a specific process is running, matching
+    it by name, without scrolling through the full process list?
+    _________________________________
+    Hint: takes a -a flag to also show the full command line.
+
+12. How do you see a live, auto-refreshing view of which processes are
+    using the most CPU right now?
+    _________________________________
+
+13. How do you list the jobs currently running or stopped in your
+    current shell session?
+    _________________________________
+
+14. How do you make a background job survive after you log out of
+    your SSH session?
+    _________________________________
+    Hint: one command wraps the job at launch; one shell builtin
+    detaches it afterward.
+
+15. How do you list every SSH key currently loaded in your agent?
+    _________________________________
+
+16. How do you test your SSH server's configuration file for syntax
+    errors before restarting it?
+    _________________________________
+
+17. How do you open a persistent terminal session that keeps running
+    even if your connection drops?
+    _________________________________
+
+18. How do you check whether a specific host is reachable on the
+    network before trying to SSH into it?
+    _________________________________
+
+19. How do you confirm your own account actually has sudo privileges
+    before relying on it in a script?
+    _________________________________
+
+20. How do you map a friendly hostname to a server's IP address
+    without using a real DNS entry?
+    _________________________________
+    Hint: edit one file, as root.
+
+Answer Key (instructor copy -- remove before handing out to students)
+1. ps aux
+2. ps aux --sort=-%mem   (or -%mem via `ps aux --sort=-%mem | head`)
+3. Ctrl+Z, then bg
+4. kill -9 <PID>   (or kill -KILL <PID>)
+5. nice -n <value> <command>   (or renice for an already-running job)
+6. ssh-keygen -t ed25519
+7. ssh-copy-id user@host
+8. eval "$(ssh-agent -s)" then ssh-add ~/.ssh/id_ed25519
+9. ssh -L localPort:host:remotePort user@host
+10. rsync -av src/ user@host:dst/
+11. pgrep -a <name>
+12. top
+13. jobs
+14. nohup command & then disown
+15. ssh-add -l
+16. sudo sshd -t
+17. tmux
+18. ping -c 3 <host>
+19. sudo -l
+20. echo "IP  name" | sudo tee -a /etc/hosts

@@ -1,0 +1,157 @@
+PROJECT PART 2: ER HOSPITAL SYSTEM
+COMP-175: Fall 2026
+================================================================
+
+SCENARIO
+The class builds a shared network modeling an ER hospital's
+records system. One VM holds real (synthetic) clinical data;
+every other team watches it, protects it, tests it, or builds
+on top of it: safely, and only on this class network.
+
+Teams: 5     Assigned: Week 9     Demo: Week 14 (Tue, Nov 24)
+
+ARCHITECTURE
+- 5 laptops, 5 teams, 1 team per laptop (5-port switch)
+- Every laptop: 1 Ubuntu VM + 1 Kali VM
+- Every Ubuntu VM starts identical: same seeded synthetic
+  dataset, same 4 persona accounts (Guest, Nurse, Physician,
+  Patient)
+- Every Kali VM hosts a web dashboard whose buttons trigger
+  REAL admin commands and show REAL output: not canned
+  status text
+
+DASHBOARD IMPLEMENTATION
+Build the web dashboard with Python Flask. Each button click
+runs a real Linux command on the backend (via subprocess, not a
+canned string) and shows the actual output on the page: if the
+command fails, the page shows the real failure, not a fake
+success message. At least 3 buttons per team is the suggested
+minimum, tied to your role's own dashboard triggers (listed
+below), but every team is required to ship 5 buttons total. The
+extra 2 beyond the suggested 3 can be your own idea, as long as
+each one runs something real.
+
+THE 5 TEAMS
+
+Monitor Read [Joshua, Eivan, Darrel] (read-only, enforced)
+  Watch the whole network. Owns the network/physical-layer
+  setup (IP scheme, shared hosts file, link checks before
+  each integration test). Assembles the project poster from
+  each team's contributed section.
+  Dashboard triggers: nmap sweeps, live log tailing
+
+Monitor Write [Anh, Andy, Andrew] (write-capable)
+  Back up Clinical Data on a schedule, verify restores work,
+  take corrective action when Read or Attacker flag something.
+  Dashboard triggers: rsync backup/restore, remediation
+
+Attacker [Charlie, Angadpaul, Joe] (probe-only, by signed agreement)
+  Find a real vulnerability in Clinical Data's VM and the Web
+  Interface app. Target the data and the user accounts: weak
+  permissions, exposed files, the persona-login logic. NOT the
+  operating system itself: no OS-level or kernel exploits, no
+  attempts to gain root or a shell. No destructive payloads.
+  Signed ethical-use agreement required before touching anything.
+  Dashboard triggers: nmap recon, real exploit attempts, logged
+
+Clinical Data & Access Control [Toan, Kaung, Shomario] (write-capable, most privileged)
+  Secure their own starting-point Ubuntu (RBAC via groups,
+  chmod/chgrp): becomes the real hardened target everyone
+  else works against.
+  Dashboard triggers: permission changes, live RBAC + access log
+
+Clinical Web Interface [Gionni, Hernan, Gabriel, Elvin] (write-capable, scoped to its own app)
+  Build a "log in as a persona" web app that reads Clinical
+  Data's real permissions over the network. No direct write
+  access to Clinical Data's records.
+  Dashboard triggers: deploy/restart their own app
+
+LEAST PRIVILEGE: ENFORCED, NOT JUST STATED
+Monitor Read's account is technically restricted to read-only
+commands. Attacker's restriction is by signed agreement, not
+the system: a real pentest has to be capable of writing to
+mean anything.
+
+NETWORK SETUP (decided in advance, not negotiated live)
+- Bridged mode on every VM: NAT is never reachable cross-laptop
+- Static IPs, pre-assigned: 10.0.0.1x = Laptop 1 (.10 Ubuntu,
+  .11 Kali), 10.0.0.2x = Laptop 2, and so on
+- A shared /etc/hosts snippet, distributed ahead of time
+- The switch/cabling is shared infrastructure, not any one
+  team's job: each team just plugs in and configures its own
+
+PHASE 1: COMPONENT TESTING (not on the shared network)
+Each team verifies its own Ubuntu+Kali pair in isolation.
+Proves your own config is right: NOT that anyone else can
+reach you yet.
+
+PHASE 2: INTEGRATION TESTING (on the shared network)
+  Physical check         every laptop's link is actually up
+  Integration Test 1      Week 10, Tue: pure reachability
+  Integration Test 2      Week 12, Tue: real attacks, backups,
+                           monitoring, and logs, cross-team
+  Final Integration        Week 13, Thu: full dress rehearsal
+  Demo / Presentations     Week 14, Tue, Nov 24 (only class day
+                           that week: Thu Nov 26 is Thanksgiving)
+
+Monitor Read runs the physical check and the first nmap sweep
+at the start of each integration test.
+
+WEEKLY RHYTHM (Weeks 10 through 13)
+Tuesday: work time in class, build and debug.
+Thursday: demo time in class. Every team gives its own short
+status update: what's done, what's blocked, what's next. Keeps
+problems visible early instead of surfacing for the first time
+at an integration test.
+
+DELIVERABLES (every team)
+- Working Ubuntu + Kali pair, demo-ready
+- Live Kali-hosted web dashboard, real commands only
+- Weekly status update, Weeks 10-13
+- Short write-up: what your role did, one real problem you
+  hit, how you fixed it, a screenshot of it working
+- One section contributed to the team poster (Monitor Read
+  assembles it)
+- Week 14 demo + Dec 4 Project Showcase
+- AI use is allowed: clearly state which parts used AI and
+  which parts you did without it
+
+GITHUB SUBMISSION
+Push your team's Kali-side dashboard code and role scripts to:
+https://github.com/SE4CPS/2026-COMP-175/tree/main/project/part-2
+
+  team1  Monitor Read (Joshua, Eivan, Darrel)
+  team2  Monitor Write (Anh, Andy, Andrew)
+  team3  Attacker (Charlie, Angadpaul, Joe)
+  team4  Clinical Data & Access Control (Toan, Kaung, Shomario)
+  team5  Clinical Web Interface (Gionni, Hernan, Gabriel, Elvin)
+
+Submit to your own team folder: your code, your presentation
+slides (.pptx), and every other artifact (screenshots, the
+write-up, anything referenced in your status updates). If it's
+part of your deliverable, it belongs in your folder, not just
+attached to Canvas.
+
+Team 4 starts each Ubuntu VM from the shared clinical-data
+baseline pulled from project/part-2 (same synthetic dataset,
+same 4 persona accounts for every team: setup instructions
+coming soon in that folder).
+
+GOOGLE DRIVE: SLIDE DECKS
+Upload your team's presentation slides here, one deck per team:
+https://drive.google.com/drive/folders/1bYLzEUmtl1ImQ5SG3p47Vp3M8Pkqh1AD?usp=drive_link
+Name the file team-1, team-2, team-3, team-4, or team-5, matching
+your team number. This is in addition to pushing the .pptx to
+your own GitHub team folder, not instead of it.
+
+DISCORD
+Join the class Discord: https://discord.gg/2wuVZu6Fm
+Use your own team's channel (team1 through team5) for all
+day-to-day coordination: questions, blockers, status-update
+drafts. Keeps each team's discussion in one place instead of
+scattered across DMs.
+
+LOGISTICS
+- 5 laptops, 5-port switch: a 6th laptop or a second switch
+  could re-add a dropped role (e.g. a dedicated Auditor) later
+- Synthetic clinical data only: no real patient information

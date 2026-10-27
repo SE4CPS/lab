@@ -1,0 +1,80 @@
+COMP-175 Module 6 Story: Keeping the Shop's Diagnostics Running
+(Service Management, told through one running example: a campus auto shop)
+
+1. What Is a Service?
+Alex is the new hire at the campus auto shop. The diagnostic laptop wired
+into every bay keeps losing its sensor readings the moment someone closes
+the terminal window by accident. The shop manager wants something that
+just keeps running on its own, the way the lift and the compressor do,
+not something a person has to remember to restart by hand. That is the
+idea behind a service: a program systemd itself owns and keeps alive,
+instead of one a person launches and babysits.
+
+2. Checking Services
+Before changing anything, Alex checks what is already running. Is the
+shop's existing sensor feed active right now? [systemctl status
+dyno-monitor] And what is the full list of everything systemd is
+currently managing? [systemctl list-units --type=service] dyno-monitor
+turns out to already be running, set up by whoever had this job before.
+
+3. Starting & Stopping
+It needs a quick restart after a firmware update, so Alex stops it for
+the update [systemctl stop dyno-monitor], then brings it back up once
+the update is done [systemctl start dyno-monitor]. When a sensor glitches
+mid-shift, a full restart clears it in one line [systemctl restart
+dyno-monitor], no need to stop and start separately.
+
+4. Boot & Enable
+The shop loses power most afternoons when the compressor kicks on, and
+dyno-monitor needs to come back on its own every time, not wait for
+someone to notice it is down. Alex enables it so it survives a reboot
+[systemctl enable dyno-monitor], then checks why the boot itself feels
+slow after a power blip [systemd-analyze blame].
+
+5. Reading Logs
+A mechanic swears the monitor "just stopped working" overnight. Instead
+of guessing, Alex reads what actually happened [journalctl -u
+dyno-monitor]. The log shows the exact minute a sensor cable was
+unplugged, and that the service caught the failure on its own. This is
+the real payoff of a service over a plain script: there is an actual
+trail to read back later.
+
+6. Writing a Unit File
+Next the shop wants oil-pressure monitoring too, using a new script,
+oil-check.sh. A raw script is not enough here: without a unit file,
+systemd has no idea oil-check.sh exists, cannot restart it, and cannot
+report whether it is healthy. A unit file is not the program itself; it
+is the plain-text description that tells systemd how to run it. Alex
+writes one, points ExecStart at the real script, reviews it before
+trusting it [systemctl cat oil-monitor], then reloads so systemd notices
+the new file [systemctl daemon-reload]. When a different sensor turns
+out to be miswired and should never start again, Alex blocks it outright
+[systemctl mask bad-sensor].
+
+7. Timers & Cron
+Oil pressure does not need watching every second, just checked
+periodically, which raises a different question: a systemd timer, or
+plain old cron? Alex checks what is already scheduled the timer way
+[systemctl list-timers]. For something this simple, cron wins: the
+schedule gets added directly [crontab -e], then confirmed [crontab -l].
+
+8. Practice Lab
+With all the pieces in hand, Alex runs the shop's own drill end to end:
+write a unit file, enable it, break it on purpose, then read the journal
+to find out why, the exact sequence from items 4 through 6, on a service
+of Alex's own.
+
+9. Practice Lab 2: A Simple Cron Job
+The real oil-check job first goes on a two-minute test schedule so it
+can be verified in the same shift instead of waiting until morning
+[*/2 * * * * /home/alex/oil-check.sh], and the log confirms it is
+actually firing on time.
+
+10. Practice Lab 3: Scheduling
+Finally, Alex gets the shop's full weekly list: appointment reminders,
+nightly backups, shift-handoff reports, and has to decide which belong
+on a timer and which are fine as plain cron lines, cleaning up any test
+entries that are no longer needed [crontab -r]. By now the shop's whole
+diagnostics stack runs the same way everything else on the machine does:
+checked, started, enabled, logged, and scheduled, the same reliable way
+every time.

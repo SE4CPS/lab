@@ -1,0 +1,254 @@
+Lab 3: Registrar Server (Kali + Ubuntu)   100 pts
+
+Ten practical tasks across Modules 3, 4 and 5. Every task ends with a screenshot as evidence.
+
+Rules for every question:
+- No command-line editor (nano, vim, vi, or visudo in edit mode; visudo -c and -cf only check a file, so they are fine). The only way to write or change a file is cat, with the text in a here-document: a line such as cat > file <<'EOF', then the text, then a line containing only EOF. Output redirection like > and >> is fine.
+- The terminal prompt (username and hostname) must be visible.
+- Where a question says "Explain", type one sentence as a # comment line in the same terminal, then take the screenshot.
+- End the terminal with a comment line: # AI used: No   or   # AI used: Yes, (what you asked it and what you changed)
+- Do not assume account names. Question 1 shows you how to find them; after that, wherever a command says CLERK, LEAD or AUDITOR, type the real account name (and UBUNTU_IP is the server address, PID a process number).
+- Paste commands in blocks, but run any command that asks you a question (a password prompt from setup.sh or su) on its own, answer it, then continue.
+- Questions 1 to 8 run on the Ubuntu VM. Questions 9 and 10 run from Kali to Ubuntu (you need the Ubuntu IP that setup.sh prints).
+- Setup files: https://github.com/SE4CPS/2026-COMP-175/tree/main/modules/module-5/lab3
+
+Question 1 (5 pts)
+Get the Lab Setup
+
+Done on the Ubuntu server VM. Clone the course repo and run the Lab 3 setup script. It creates the accounts, groups, folders and helper scripts used in every question below, and prints the server IP address you need from Kali later. It creates three accounts but does not tell you their names: find them. CLERK is the owner of the reports folder, LEAD is the owner of grades.csv, and AUDITOR is the member of the group auditors. Write the three names down: every later question says CLERK, LEAD or AUDITOR instead of a name, and you type the real name. If the clone says the folder already exists (from Lab 2), that is fine: the git pull updates it.
+
+Package: git, not installed by default, install first. setup.sh installs acl, inotify-tools and openssh-server for you.
+
+sudo apt install -y git
+git clone \
+  https://github.com/SE4CPS/2026-COMP-175.git \
+  ~/2026-COMP-175
+git -C ~/2026-COMP-175 pull
+sudo bash \
+  ~/2026-COMP-175/modules/module-5/lab3/setup.sh
+# it asks for a password: answer it, then run the rest
+getent group registrars auditors
+ls -l /srv/registrar
+
+Screenshot: the setup script ending in SETUP OK with the Ubuntu IP, then getent group registrars auditors and ls -l /srv/registrar, with CLERK, LEAD and AUDITOR written next to them as # comments.
+
+
+Question 2 (8 pts)
+Find Stale Files
+
+Done on the Ubuntu server VM. The registrar wants every archive file that has not been modified in the last 6 months, with its size and date, and a total.
+
+Package: findutils and awk, preinstalled by default.
+
+sudo find /srv/registrar/archive \
+  -type f -mtime +180 \
+  -printf '%s %TY-%Tm-%Td %p\n' \
+  > ~/stale.txt
+cat ~/stale.txt
+wc -l < ~/stale.txt
+awk '{s+=$1} END {print s}' ~/stale.txt
+
+Explain (type it as a # comment line in the terminal): what +180 means, and why -type f is used.
+
+Screenshot: the stale.txt list (size, date, path), the file count, and the total bytes.
+
+
+Question 3 (8 pts)
+Links and Inodes
+
+Done on the Ubuntu server VM. CLERK owns summary.txt in the reports folder. Link to it two ways, then delete the original and see which link survives.
+
+Package: coreutils, preinstalled by default.
+
+cd /srv/registrar/reports
+sudo -u CLERK ln -s summary.txt summary-sym.txt
+sudo -u CLERK ln summary.txt summary-hard.txt
+ls -li
+sudo -u CLERK rm summary.txt
+ls -li
+cat summary-hard.txt summary-sym.txt
+
+Explain (type it as a # comment line in the terminal): which link survived the delete, and why (inode, link count).
+
+Screenshot: both ls -li listings (inode numbers and link counts) and the cat results after the delete.
+
+
+Question 4 (10 pts)
+Shared and Drop Folders
+
+Done on the Ubuntu server VM. The shared folder should give every new file the group registrars. The dropbox should let anyone add files but not delete each other's. Test the shared folder before and after you set its mode.
+
+Package: coreutils, preinstalled by default.
+
+sudo -u CLERK touch /srv/registrar/shared/before.txt
+sudo chmod 2770 /srv/registrar/shared
+sudo -u CLERK touch /srv/registrar/shared/after.txt
+sudo ls -l /srv/registrar/shared
+sudo chmod 1777 /srv/registrar/dropbox
+sudo -u LEAD touch /srv/registrar/dropbox/lead.txt
+sudo -u CLERK rm /srv/registrar/dropbox/lead.txt
+ls -ld /srv/registrar/shared /srv/registrar/dropbox
+
+Explain (type it as a # comment line in the terminal): why after.txt got group registrars but before.txt did not, and what the sticky bit blocked.
+
+Screenshot: the ls -l of shared/ (both files), the rm error in dropbox/, and ls -ld on both folders.
+
+
+Question 5 (12 pts)
+ACL and the Mask
+
+Done on the Ubuntu server VM. The auditor account, AUDITOR, must read grades.csv, but the file must keep its owner, group and mode. Grant it with an ACL, then see how the mask can silently cancel it.
+
+Package: acl (setfacl, getfacl), installed by setup.sh (not installed by default).
+
+sudo -u AUDITOR cat /srv/registrar/grades.csv
+sudo setfacl -m u:AUDITOR:r-- \
+  /srv/registrar/grades.csv
+sudo -u AUDITOR cat /srv/registrar/grades.csv
+getfacl /srv/registrar/grades.csv
+ls -l /srv/registrar/grades.csv
+sudo setfacl -m m::--- /srv/registrar/grades.csv
+getfacl /srv/registrar/grades.csv
+sudo -u AUDITOR cat /srv/registrar/grades.csv
+sudo setfacl -m m::r-- /srv/registrar/grades.csv
+sudo -u AUDITOR cat /srv/registrar/grades.csv
+
+Explain (type it as a # comment line in the terminal): why mask --- denies AUDITOR even though the entry says r--.
+
+Screenshot: the denied cat, the allowed cat, getfacl with #effective:---, and ls -l showing the + (do these in 2 screenshots if needed).
+
+
+Question 6 (12 pts)
+One-Script sudo
+
+Done on the Ubuntu server VM. Let the group registrars run only backup-grades.sh as root, nothing else. A syntax error in a sudoers file can lock everyone out of sudo, so do not write it in place: write the file into /tmp with cat, look at it, check it with visudo -cf, and only then install it with mode 0440. Paste the here-document (the lines from cat > to EOF) as one piece: it writes the file for you. The file name in sudoers.d must not contain a dot.
+
+Package: sudo, preinstalled by default.
+
+sudo rm -f /tmp/90-registrar-backup
+cat > /tmp/90-registrar-backup <<'EOF'
+%registrars ALL=(root) /usr/local/bin/backup-grades.sh
+EOF
+cat /tmp/90-registrar-backup
+sudo visudo -cf /tmp/90-registrar-backup
+sudo install -m 0440 \
+  /tmp/90-registrar-backup \
+  /etc/sudoers.d/90-registrar-backup
+sudo cat /etc/sudoers.d/90-registrar-backup
+sudo visudo -c
+# su asks for a password: run the rest one line at a time
+su - CLERK
+sudo -l
+sudo /usr/local/bin/backup-grades.sh
+sudo cat /etc/shadow
+exit
+
+Explain (type it as a # comment line in the terminal): what each part of the sudoers line means (%registrars, ALL, (root), the path).
+
+Screenshot: the sudoers.d file, visudo -c parsed OK, sudo -l as CLERK, the backup running, and the denied cat /etc/shadow.
+
+
+Question 7 (10 pts)
+Watch and Log
+
+Done on the Ubuntu server VM. Record every change under /srv/registrar with a time stamp, keep the watch running after you log out, then cause three events as two different users. Add the grades row with cat, not an editor.
+
+Package: inotify-tools (inotifywait), installed by setup.sh (not installed by default).
+
+sudo nohup inotifywait -m -r \
+  -e create,modify,delete \
+  --timefmt '%F %T' \
+  --format '%T %w%f %e' \
+  /srv/registrar \
+  >> /tmp/registrar-watch.log 2>&1 &
+sudo -u LEAD sh -c \
+  'cat >> /srv/registrar/grades.csv' \
+  <<'EOF'
+1006,COMP-175,A
+EOF
+sudo -u CLERK touch /srv/registrar/reports/tmp.txt
+sudo -u CLERK rm /srv/registrar/reports/tmp.txt
+cat /tmp/registrar-watch.log
+pgrep -a inotifywait
+
+Explain (type it as a # comment line in the terminal): one thing this log cannot tell you about a change.
+
+Screenshot: the log with CREATE, MODIFY and DELETE lines (with time stamps) and pgrep showing the watcher running.
+
+
+Question 8 (10 pts)
+Runaway Process
+
+Done on the Ubuntu server VM. CLERK starts the end-of-term report job and it eats a whole CPU core (it stops by itself after 10 minutes). Find it, lower its priority, show another user cannot kill it, then stop it cleanly. Replace PID with the number you find.
+
+Package: procps (ps, pgrep, renice, kill), preinstalled by default.
+
+sudo -u CLERK nohup \
+  /opt/registrar/report-job.sh \
+  > /dev/null 2>&1 &
+ps -o pid,ni,pcpu,user,cmd -u CLERK
+sudo renice -n 19 -p PID
+ps -o pid,ni,pcpu,user,cmd -p PID
+sudo -u AUDITOR kill PID
+sudo -u CLERK kill PID
+pgrep -af report-job.sh
+
+Explain (type it as a # comment line in the terminal): why AUDITOR could not kill CLERK's process.
+
+Screenshot: ps before and after renice (NI 0 then 19), the kill denied message, and pgrep showing the job is gone.
+
+
+Question 9 (15 pts)
+SSH Keys From Kali
+
+Done from Kali to the Ubuntu server (use the IP setup.sh printed; replace UBUNTU_IP). Log in as LEAD with a key instead of a password, then turn password login off on the server (write the config file with cat, not an editor). Keep a second Ubuntu session open until you have confirmed the key works, so a mistake cannot lock you out.
+
+Package: openssh-client on Kali (preinstalled) and openssh-server on Ubuntu (installed by setup.sh).
+
+# Kali
+ssh-keygen -t ed25519
+ssh-copy-id LEAD@UBUNTU_IP
+eval "$(ssh-agent -s)"
+ssh-add
+ssh LEAD@UBUNTU_IP 'hostname; whoami'
+# Ubuntu (keep a 2nd session open)
+cat > /tmp/10-lab.conf <<'EOF'
+PasswordAuthentication no
+PermitRootLogin no
+EOF
+sudo install -m 0644 /tmp/10-lab.conf \
+  /etc/ssh/sshd_config.d/10-lab.conf
+sudo sshd -t
+sudo systemctl reload ssh
+sudo sshd -T | grep -Ei '^(password|permitroot)'
+# Kali again
+ssh -o PubkeyAuthentication=no \
+  LEAD@UBUNTU_IP
+
+Explain (type it as a # comment line in the terminal): why you keep a second session open before reloading sshd.
+
+Screenshot: Kali: the key login showing hostname and whoami, and the "Permission denied (publickey)" line. Ubuntu: the sshd -T output.
+
+
+Question 10 (10 pts)
+Tunnel to a Local Page
+
+Done from Kali to the Ubuntu server (replace UBUNTU_IP). The registrar report page is served on the server's localhost only, so it is not reachable from outside. Show that, then reach it through an SSH tunnel.
+
+Package: python3 on Ubuntu, curl and openssh-client on Kali, all preinstalled by default.
+
+# Ubuntu
+python3 -m http.server 8000 \
+  --bind 127.0.0.1 \
+  --directory /srv/registrar/public &
+sudo ss -tlnp | grep 8000
+# Kali
+curl -m 5 http://UBUNTU_IP:8000
+ssh -N -L 9000:localhost:8000 \
+  LEAD@UBUNTU_IP
+# a 2nd Kali terminal
+curl http://localhost:9000
+
+Explain (type it as a # comment line in the terminal): why the direct curl fails but the tunnel works.
+
+Screenshot: Ubuntu: ss showing 127.0.0.1:8000. Kali: the failed direct curl, the running tunnel, and the page text from localhost:9000.
