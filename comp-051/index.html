@@ -462,7 +462,7 @@
 
     <div class="quick-links">
       <a href="./#toc" class="footer-link" target="_self">Schedule</a>
-      <span id="updated-stamp" class="footer-link">Updated: 2026-10-22 15:35 PT</span>
+      <span id="updated-stamp" class="footer-link">Updated: 2026-10-27 13:27 PT</span>
     </div>
 
     <div class="reveal">
@@ -596,7 +596,7 @@
                                 <td data-module="11"><a href="./#module-11" target="_self">Exceptions</a></td>
                                 <td></td>
                                 <td><a href="./#/homework-6" target="_self">Lab/HW 6</a></td>
-                                <td>Hospital</td>
+                                <td>Automotive</td>
                             </tr>
                             <tr>
                                 <td>Week 12</td>
@@ -20682,8 +20682,9 @@ v = &amp;t;
 <li><a href="./#/module-11-agenda-4" target="_self">Standard Exception Types</a></li>
 <li><a href="./#/module-11-agenda-5" target="_self">Custom Exception Classes</a></li>
 <li><a href="./#/module-11-agenda-6" target="_self">Cleanup: What Gets Skipped</a></li>
-<li><a href="./#/module-11-agenda-7" target="_self">Practice Lab</a></li>
-<li><a href="./#/module-11-agenda-8" target="_self">Practice Lab Part 2</a></li>
+<li><a href="./#/module-11-agenda-7" target="_self">Exception Safety &amp; noexcept</a></li>
+<li><a href="./#/module-11-agenda-8" target="_self">Practice Lab</a></li>
+<li><a href="./#/module-11-agenda-9" target="_self">Practice Lab Part 2</a></li>
 </ol>
 </div>
 <div style="flex:1 1 0;">
@@ -20732,6 +20733,13 @@ v = &amp;t;
 </div>
 </div>
 </section>
+<section data-background-color="#ffffff">
+<div style="text-align:center;">
+<h4>Errors Without Exceptions</h4>
+<svg viewBox="0 0 380 310" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:560px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="308" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m11x1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="18" width="300" height="78" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128660;</text><text x="190" y="80" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">setMileage(-5) runs</text><line x1="190" y1="96" x2="190" y2="114" stroke="#999" stroke-width="2.2" marker-end="url(#m11x1)"/><rect x="40" y="116" width="300" height="78" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="150" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#10145;&#65039;</text><text x="190" y="178" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">Returns -1, caller ignores it</text><line x1="190" y1="194" x2="190" y2="212" stroke="#999" stroke-width="2.2" marker-end="url(#m11x1)"/><rect x="40" y="214" width="300" height="78" rx="10" fill="#3a1f0a" stroke="#e03131" stroke-width="2"/><text x="190" y="248" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128680;</text><text x="190" y="276" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">Car saves mileage: -5</text></svg>
+</div>
+</section>
+<section><h2 style="text-align:center;">Questions?</h2></section>
 <section id="module-11-agenda-2">
 <h2 style="text-align:center;">throw and catch</h2>
 </section>
@@ -20800,6 +20808,52 @@ v = &amp;t;
 </div>
 </div>
 </section>
+<section data-tag="terminology" data-term="Throw">
+<div style="display:flex; flex-direction:row; align-items:center; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Word Origin: &quot;Throw&quot;</h4>
+<ul>
+<li>From Old Norse &quot;thrawa&quot;</li>
+<li>CLU (1975) called it &quot;signal&quot;</li>
+<li>C++ chose the ball metaphor</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:360px;display:block;margin:0 auto;"><rect x="1" y="1" width="298" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="150" y="70" text-anchor="middle" font-size="13" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">A thrown exception is launched</text><text x="150" y="92" text-anchor="middle" font-size="13" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">up the call stack, like tossing</text><text x="150" y="114" text-anchor="middle" font-size="13" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">a ball for someone else to catch</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>What Can You Throw?</h4>
+<ul>
+<li>Any type: int, string, class</li>
+<li>Usually an exception type</li>
+<li>Never a raw pointer, by habit</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 380 310" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:520px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="308" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m11x2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="18" width="300" height="78" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128196;</text><text x="190" y="80" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">throw BadMileage()</text><line x1="190" y1="96" x2="190" y2="114" stroke="#999" stroke-width="2.2" marker-end="url(#m11x2)"/><rect x="40" y="116" width="300" height="78" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="150" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128196;</text><text x="190" y="178" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">throw std::string(...)</text><line x1="190" y1="194" x2="190" y2="212" stroke="#999" stroke-width="2.2" marker-end="url(#m11x2)"/><rect x="40" y="214" width="300" height="78" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="248" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#9888;&#65039;</text><text x="190" y="276" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">throw 42; (legal, unclear)</text></svg>
+</div>
+</div>
+</section>
+<section data-tag="terminology" data-term="Catch">
+<div style="display:flex; flex-direction:row; align-items:center; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Word Origin: &quot;Catch&quot;</h4>
+<ul>
+<li>Matches &quot;throw&quot;&#39;s metaphor</li>
+<li>You &quot;catch&quot; what was thrown</li>
+<li>By reference, to avoid a copy</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:360px;display:block;margin:0 auto;"><rect x="1" y="1" width="298" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="150" y="70" text-anchor="middle" font-size="13" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">Catching completes the throw/catch</text><text x="150" y="92" text-anchor="middle" font-size="13" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">metaphor: a handler intercepts</text><text x="150" y="114" text-anchor="middle" font-size="13" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">the exception before it falls</text></svg>
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Questions?</h2></section>
 <section id="module-11-agenda-3">
 <h2 style="text-align:center;">Multiple catch Blocks</h2>
 </section>
@@ -20851,6 +20905,13 @@ v = &amp;t;
 </div>
 </div>
 </section>
+<section data-background-color="#ffffff">
+<div style="text-align:center;">
+<h4>Exception Propagation: First Match Wins</h4>
+<svg viewBox="0 0 380 310" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:560px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="308" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m11x3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="18" width="300" height="78" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128680;</text><text x="190" y="80" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">BrakeFailure is thrown</text><line x1="190" y1="96" x2="190" y2="114" stroke="#999" stroke-width="2.2" marker-end="url(#m11x3)"/><rect x="40" y="116" width="300" height="78" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="150" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128269;</text><text x="190" y="178" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">catch(int): no match, skipped</text><line x1="190" y1="194" x2="190" y2="212" stroke="#999" stroke-width="2.2" marker-end="url(#m11x3)"/><rect x="40" y="214" width="300" height="78" rx="10" fill="#333333" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="248" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128737;&#65039;</text><text x="190" y="276" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">catch(BrakeFailure&amp;): matches</text></svg>
+</div>
+</section>
+<section><h2 style="text-align:center;">Questions?</h2></section>
 <section id="module-11-agenda-4">
 <h2 style="text-align:center;">Standard Exception Types</h2>
 </section>
@@ -20917,6 +20978,20 @@ v = &amp;t;
 </div>
 </div>
 </section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Check: Which Type Fits Best?</h4>
+<p style="font-size:2rem;line-height:1.35;text-align:left;">A fuel gauge reads a value outside 0&ndash;100%. Which standard type names that problem best?</p>
+
+</div>
+<div style="flex:1 1 0;">
+<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">std::out_of_range: the value is outside the domain a valid reading can ever have.</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Questions?</h2></section>
 <section id="module-11-agenda-5">
 <h2 style="text-align:center;">Custom Exception Classes</h2>
 </section>
@@ -20988,6 +21063,43 @@ v = &amp;t;
 </div>
 </div>
 </section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Step 3: Add Context to what()</h4>
+<ul>
+<li>Store the bad value itself</li>
+<li>Build the message in the ctor</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 18pt !important"><span style="color:#c586c0;">class</span> <span style="color:#4ec9b0;">BadVin</span> : <span style="color:#c586c0;">public</span> <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">exception</span> {
+  <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">string</span> msg;
+<span style="color:#c586c0;">public</span>:
+  <span style="color:#dcdcaa;">BadVin</span>(<span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">string</span> v) {
+    msg = <span style="color:#ce9178;">&quot;Bad VIN: &quot;</span> + v;
+  }
+  <span style="color:#c586c0;">const</span> <span style="color:#c586c0;">char</span>* <span style="color:#dcdcaa;">what</span>() <span style="color:#c586c0;">const</span> <span style="color:#c586c0;">override</span> {
+    <span style="color:#c586c0;">return</span> msg.<span style="color:#dcdcaa;">c_str</span>();
+  }
+};</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Check: Why Include the Value?</h4>
+<p style="font-size:2rem;line-height:1.35;text-align:left;">Both messages say &quot;bad VIN&quot;. Why is printing the actual VIN worth the extra code?</p>
+
+</div>
+<div style="flex:1 1 0;">
+<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">A tech reading the log sees exactly which VIN failed, not just that some VIN failed.</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Questions?</h2></section>
 <section id="module-11-agenda-6">
 <h2 style="text-align:center;">Cleanup: What Gets Skipped</h2>
 </section>
@@ -21020,7 +21132,353 @@ v = &amp;t;
 </div>
 </div>
 </section>
+<section data-background-color="#ffffff">
+<div style="text-align:center;">
+<h4>RAII vs. Manual Cleanup</h4>
+<svg viewBox="0 0 380 310" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:560px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="308" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m11x4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="18" width="300" height="78" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128194;</text><text x="190" y="80" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">Diagnostic session opened</text><line x1="190" y1="96" x2="190" y2="114" stroke="#999" stroke-width="2.2" marker-end="url(#m11x4)"/><rect x="40" y="116" width="300" height="78" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="150" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128680;</text><text x="190" y="178" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">throw before manual close()</text><line x1="190" y1="194" x2="190" y2="212" stroke="#999" stroke-width="2.2" marker-end="url(#m11x4)"/><rect x="40" y="214" width="300" height="78" rx="10" fill="#333333" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="248" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#9989;</text><text x="190" y="276" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">RAII destructor closes it</text></svg>
+</div>
+</section>
+<section><h2 style="text-align:center;">Questions?</h2></section>
 <section id="module-11-agenda-7">
+<h2 style="text-align:center;">Exception Safety &amp; noexcept</h2>
+</section>
+<section data-background-color="#ffffff">
+<div style="text-align:center;">
+<h4>Exception Safety Levels</h4>
+<svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:700px;display:block;margin:0 auto;">
+<rect x="1" y="1" width="698" height="378" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+<rect x="40" y="24" width="620" height="76" rx="8" fill="#1e1e1e" stroke="#2b8a3e" stroke-width="2.5"/>
+<text x="60" y="56" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#8ce99a" font-weight="bold">No-Throw Guarantee</text>
+<text x="60" y="80" font-size="14" font-family="Consolas, monospace" fill="#ddd">readSensor() never throws, ever</text>
+<rect x="40" y="110" width="620" height="76" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2.5"/>
+<text x="60" y="142" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">Strong Guarantee</text>
+<text x="60" y="166" font-size="14" font-family="Consolas, monospace" fill="#ddd">setMileage() succeeds, or state is unchanged</text>
+<rect x="40" y="196" width="620" height="76" rx="8" fill="#1e1e1e" stroke="#FF671D" stroke-width="2.5"/>
+<text x="60" y="228" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#ffa94d" font-weight="bold">Basic Guarantee</text>
+<text x="60" y="252" font-size="14" font-family="Consolas, monospace" fill="#ddd">Car stays valid, but one field is unspecified</text>
+<rect x="40" y="282" width="620" height="76" rx="8" fill="#1e1e1e" stroke="#e03131" stroke-width="2.5"/>
+<text x="60" y="314" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#ff8787" font-weight="bold">No Guarantee</text>
+<text x="60" y="338" font-size="14" font-family="Consolas, monospace" fill="#ddd">Avoid: a leaked lock, a half-written record</text>
+</svg>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Check: Which Level Is Safest?</h4>
+<p style="font-size:2rem;line-height:1.35;text-align:left;">A no-throw function and a strong-guarantee function both look safe. Which is actually safer?</p>
+
+</div>
+<div style="flex:1 1 0;">
+<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">No-throw: it can never leave the caller handling an exception at all, the strongest promise there is.</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Existing Software: MISRA C++</h4>
+<ul>
+<li>MISRA C++: real auto standard</li>
+<li>Restricts exceptions in ECUs</li>
+<li>Predictable timing matters</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 380 310" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:520px;display:block;margin:0 auto;"><rect x="1" y="1" width="378" height="308" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m11x5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="18" width="300" height="78" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128663;</text><text x="190" y="80" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">Automotive ECU code</text><line x1="190" y1="96" x2="190" y2="114" stroke="#999" stroke-width="2.2" marker-end="url(#m11x5)"/><rect x="40" y="116" width="300" height="78" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="150" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#128203;</text><text x="190" y="178" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">MISRA C++ / AUTOSAR C++14</text><line x1="190" y1="194" x2="190" y2="212" stroke="#999" stroke-width="2.2" marker-end="url(#m11x5)"/><rect x="40" y="214" width="300" height="78" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="248" text-anchor="middle" font-size="30" font-family="Segoe UI Emoji, Segoe UI, Arial, sans-serif">&#9888;&#65039;</text><text x="190" y="276" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">Exceptions restricted, banned</text></svg><p class="source-line" style="font-size:1rem;">Source: MISRA C++ / AUTOSAR C++14 guidelines</p>
+</div>
+</div>
+</section>
+<section data-tag="terminology" data-term="Exception Safety">
+<div style="display:flex; flex-direction:row; align-items:center; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Word Origin: &quot;Exception Safety&quot;</h4>
+<ul>
+<li>Formalized by David Abrahams</li>
+<li>Defines what survives a throw</li>
+<li>Boost project, mid-1990s</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:360px;display:block;margin:0 auto;"><rect x="1" y="1" width="298" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="150" y="70" text-anchor="middle" font-size="13" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">Exception safety names how much</text><text x="150" y="92" text-anchor="middle" font-size="13" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">of a program's state survives</text><text x="150" y="114" text-anchor="middle" font-size="13" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">intact after a throw occurs</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>noexcept: Promise No Throw</h4>
+<ul>
+<li>Marks a function throw-free</li>
+<li>Breaking it calls terminate</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 20pt !important"><span style="color:#c586c0;">void</span> <span style="color:#dcdcaa;">readSensor</span>() <span style="color:#c586c0;">noexcept</span> {
+  <span style="color:#6a9955;">// promise: this never throws</span>
+  <span style="color:#c586c0;">return</span> lastGoodValue();
+}</pre>
+</div>
+</div>
+</section>
+<section data-tag="terminology" data-term="noexcept">
+<div style="display:flex; flex-direction:row; align-items:center; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Word Origin: &quot;noexcept&quot;</h4>
+<ul>
+<li>Added in C++11 (2011)</li>
+<li>Proposal N3050</li>
+<li>Replaces old throw() specs</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:360px;display:block;margin:0 auto;"><rect x="1" y="1" width="298" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="150" y="70" text-anchor="middle" font-size="13" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">noexcept promises a function</text><text x="150" y="92" text-anchor="middle" font-size="13" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">will never let an exception</text><text x="150" y="114" text-anchor="middle" font-size="13" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">escape; breaking it calls terminate</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Check: What If noexcept Throws?</h4>
+<p style="font-size:2rem;line-height:1.35;text-align:left;">A function marked noexcept throws anyway, by mistake. What does the runtime do?</p>
+
+</div>
+<div style="flex:1 1 0;">
+<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">It calls std::terminate immediately: noexcept is a promise the compiler trusts without checking.</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div style="text-align:center;">
+<h4>The Exception Class Hierarchy</h4>
+<svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:700px;display:block;margin:0 auto;">
+<rect x="1" y="1" width="698" height="398" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+<rect x="265" y="20" width="170" height="56" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/>
+<text x="350" y="53" text-anchor="middle" font-size="15" font-family="Consolas, monospace" fill="#eee" font-weight="bold">std::exception</text>
+<line x1="350" y1="76" x2="200" y2="140" stroke="#777" stroke-width="2"/>
+<line x1="350" y1="76" x2="500" y2="140" stroke="#777" stroke-width="2"/>
+<rect x="115" y="140" width="170" height="52" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+<text x="200" y="171" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#ddd">logic_error</text>
+<rect x="415" y="140" width="170" height="52" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+<text x="500" y="171" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#ddd">runtime_error</text>
+<line x1="200" y1="192" x2="95" y2="256" stroke="#777" stroke-width="2"/>
+<line x1="200" y1="192" x2="265" y2="256" stroke="#777" stroke-width="2"/>
+<line x1="500" y1="192" x2="435" y2="256" stroke="#777" stroke-width="2"/>
+<line x1="500" y1="192" x2="605" y2="256" stroke="#777" stroke-width="2"/>
+<rect x="20" y="256" width="150" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/>
+<text x="95" y="291" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#eee">BadMileage</text>
+<rect x="190" y="256" width="150" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/>
+<text x="265" y="291" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#eee">BadVin</text>
+<rect x="360" y="256" width="150" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/>
+<text x="435" y="291" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#eee">SensorFault</text>
+<rect x="530" y="256" width="150" height="60" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/>
+<text x="605" y="291" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#eee">BrakeFailure</text>
+<text x="350" y="360" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">A catch(std::exception&amp;) matches every leaf below it</text>
+</svg>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>The Hierarchy in Code</h4>
+<ul>
+<li>Inherit from a std:: type</li>
+<li>Call its constructor, too</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 18pt !important"><span style="color:#c586c0;">class</span> <span style="color:#4ec9b0;">SensorFault</span>
+  : <span style="color:#c586c0;">public</span> <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">runtime_error</span> {
+<span style="color:#c586c0;">public</span>:
+  <span style="color:#dcdcaa;">SensorFault</span>()
+    : <span style="color:#dcdcaa;">runtime_error</span>(<span style="color:#ce9178;">&quot;Sensor fault&quot;</span>) {}
+};</pre>
+</div>
+</div>
+</section>
+<section data-tag="terminology" data-term="RAII">
+<div style="display:flex; flex-direction:row; align-items:center; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Word Origin: &quot;RAII&quot;</h4>
+<ul>
+<li>Coined by Bjarne Stroustrup</li>
+<li>Resource Acquisition Is Init.</li>
+<li>Ctor acquires, dtor releases</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:360px;display:block;margin:0 auto;"><rect x="1" y="1" width="298" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="150" y="70" text-anchor="middle" font-size="13" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">RAII ties a resource's lifetime</text><text x="150" y="92" text-anchor="middle" font-size="13" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">to an object's own lifetime,</text><text x="150" y="114" text-anchor="middle" font-size="13" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">so cleanup can never be skipped</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div style="text-align:center;">
+<h4>Try, Throw, Catch: Step by Step</h4>
+<svg viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:700px;display:block;margin:0 auto;">
+<rect x="1" y="1" width="698" height="298" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+<defs><marker id="m11ttc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs>
+<rect x="20" y="100" width="118" height="80" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+<text x="79" y="134" text-anchor="middle" font-size="12.5" font-family="Consolas, monospace" fill="#ddd">try {</text>
+<text x="79" y="152" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#ddd">readSensor()</text>
+<text x="79" y="168" text-anchor="middle" font-size="12.5" font-family="Consolas, monospace" fill="#ddd">}</text>
+<line x1="138" y1="140" x2="162" y2="140" stroke="#999" stroke-width="2.2" marker-end="url(#m11ttc)"/>
+<rect x="164" y="100" width="118" height="80" rx="8" fill="#1e1e1e" stroke="#e03131" stroke-width="2"/>
+<text x="223" y="134" text-anchor="middle" font-size="24" font-family="Segoe UI Emoji, sans-serif">&#128680;</text>
+<text x="223" y="162" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">Out of range</text>
+<line x1="282" y1="140" x2="306" y2="140" stroke="#999" stroke-width="2.2" marker-end="url(#m11ttc)"/>
+<rect x="308" y="100" width="118" height="80" rx="8" fill="#1e1e1e" stroke="#e03131" stroke-width="2"/>
+<text x="367" y="134" text-anchor="middle" font-size="11.5" font-family="Consolas, monospace" fill="#ff8787" font-weight="bold">throw</text>
+<text x="367" y="152" text-anchor="middle" font-size="10.5" font-family="Consolas, monospace" fill="#ddd">SensorFault</text>
+<text x="367" y="168" text-anchor="middle" font-size="10.5" font-family="Consolas, monospace" fill="#ddd">()</text>
+<line x1="426" y1="140" x2="450" y2="140" stroke="#999" stroke-width="2.2" marker-end="url(#m11ttc)"/>
+<rect x="452" y="100" width="118" height="80" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+<text x="511" y="134" text-anchor="middle" font-size="22" font-family="Segoe UI Emoji, sans-serif">&#9992;&#65039;</text>
+<text x="511" y="162" text-anchor="middle" font-size="11.5" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">Stack unwinds</text>
+<line x1="570" y1="140" x2="594" y2="140" stroke="#999" stroke-width="2.2" marker-end="url(#m11ttc)"/>
+<rect x="596" y="100" width="84" height="80" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2"/>
+<text x="638" y="134" text-anchor="middle" font-size="22" font-family="Segoe UI Emoji, sans-serif">&#128737;&#65039;</text>
+<text x="638" y="158" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#ddd" font-weight="bold">catch</text>
+<text x="638" y="172" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">(SensorFault&amp;)</text>
+<text x="350" y="230" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#999">Everything between throw and catch is skipped</text>
+</svg>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Check: Where Does Control Jump?</h4>
+<p style="font-size:2rem;line-height:1.35;text-align:left;">The throw happens inside readSensor(), three calls deep. Where does execution go next?</p>
+
+</div>
+<div style="flex:1 1 0;">
+<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">Straight to the nearest enclosing catch that matches, skipping every line in between.</div>
+
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div style="text-align:center;">
+<h4>Stack Unwinding, Step by Step</h4>
+<svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:700px;display:block;margin:0 auto;">
+<rect x="1" y="1" width="698" height="378" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+<text x="175" y="30" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">BEFORE: call stack grows</text>
+<rect x="60" y="260" width="230" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+<text x="175" y="295" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#ddd">main()</text>
+<rect x="60" y="190" width="230" height="60" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+<text x="175" y="225" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#ddd">runDiagnostics()</text>
+<rect x="60" y="120" width="230" height="60" rx="8" fill="#1e1e1e" stroke="#e03131" stroke-width="2"/>
+<text x="175" y="155" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#ff8787">readSensor() throws</text>
+<text x="525" y="30" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">AFTER: frames pop, dtors run</text>
+<rect x="410" y="260" width="230" height="60" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2"/>
+<text x="525" y="286" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#ddd">main() catches it</text>
+<rect x="410" y="190" width="230" height="60" rx="8" fill="#1e1e1e" stroke="#555" stroke-width="2" opacity="0.5"/>
+<text x="525" y="216" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#aaa">runDiagnostics()</text>
+<text x="525" y="238" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#888">locals destruct, popped</text>
+<rect x="410" y="120" width="230" height="60" rx="8" fill="#1e1e1e" stroke="#555" stroke-width="2" opacity="0.5"/>
+<text x="525" y="146" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#aaa">readSensor()</text>
+<text x="525" y="168" text-anchor="middle" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#888">already gone, popped first</text>
+<line x1="350" y1="190" x2="400" y2="190" stroke="#999" stroke-width="2.5" marker-end="url(#m11uw)"/>
+<defs><marker id="m11uw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs>
+</svg>
+</div>
+</section>
+<section data-tag="terminology" data-term="Stack Unwinding">
+<div style="display:flex; flex-direction:row; align-items:center; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Word Origin: &quot;Stack Unwinding&quot;</h4>
+<ul>
+<li>&quot;Stack&quot;: a LIFO structure</li>
+<li>&quot;Unwinding&quot;: reversing it</li>
+<li>Named in early C++ (ARM, 1990)</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:360px;display:block;margin:0 auto;"><rect x="1" y="1" width="298" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="150" y="70" text-anchor="middle" font-size="13" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">Unwinding pops each stack frame</text><text x="150" y="92" text-anchor="middle" font-size="13" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">in reverse order, running every</text><text x="150" y="114" text-anchor="middle" font-size="13" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">local object's destructor</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div style="text-align:center;">
+<h4>RAII: Cleanup on Exception</h4>
+<svg viewBox="0 0 700 340" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:700px;display:block;margin:0 auto;">
+<rect x="1" y="1" width="698" height="338" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+<text x="175" y="34" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ff8787" font-weight="bold">WITHOUT RAII: manual unlock</text>
+<rect x="50" y="56" width="250" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+<text x="175" y="86" text-anchor="middle" font-size="12.5" font-family="Consolas, monospace" fill="#ddd">lock.acquire()</text>
+<rect x="50" y="116" width="250" height="50" rx="8" fill="#1e1e1e" stroke="#e03131" stroke-width="2"/>
+<text x="175" y="146" text-anchor="middle" font-size="12.5" font-family="Consolas, monospace" fill="#ff8787">throw SensorFault()</text>
+<rect x="50" y="176" width="250" height="50" rx="8" fill="#1e1e1e" stroke="#555" stroke-width="2" opacity="0.5"/>
+<text x="175" y="206" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#888">lock.release()  // skipped!</text>
+<rect x="50" y="236" width="250" height="50" rx="8" fill="#3a1f0a" stroke="#e03131" stroke-width="2.5"/>
+<text x="175" y="266" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ff8787" font-weight="bold">LOCK LEAKED</text>
+<text x="525" y="34" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#8ce99a" font-weight="bold">WITH RAII: EngineLock guard</text>
+<rect x="400" y="56" width="250" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+<text x="525" y="86" text-anchor="middle" font-size="12.5" font-family="Consolas, monospace" fill="#ddd">EngineLock g(car);</text>
+<rect x="400" y="116" width="250" height="50" rx="8" fill="#1e1e1e" stroke="#e03131" stroke-width="2"/>
+<text x="525" y="146" text-anchor="middle" font-size="12.5" font-family="Consolas, monospace" fill="#ff8787">throw SensorFault()</text>
+<rect x="400" y="176" width="250" height="50" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2"/>
+<text x="525" y="202" text-anchor="middle" font-size="11.5" font-family="Consolas, monospace" fill="#ddd">~EngineLock() runs</text>
+<text x="525" y="218" text-anchor="middle" font-size="10" font-family="Segoe UI, Arial, sans-serif" fill="#999">during unwinding, automatic</text>
+<rect x="400" y="236" width="250" height="50" rx="8" fill="#333333" stroke="#9cdcfe" stroke-width="2.5"/>
+<text x="525" y="266" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">LOCK RELEASED</text>
+</svg>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>EngineLock, an RAII Guard</h4>
+<ul>
+<li>Ctor locks, dtor unlocks</li>
+<li>Runs even if a throw happens</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 18pt !important"><span style="color:#c586c0;">class</span> <span style="color:#4ec9b0;">EngineLock</span> {
+  <span style="color:#4ec9b0;">Car</span>&amp; car;
+<span style="color:#c586c0;">public</span>:
+  <span style="color:#dcdcaa;">EngineLock</span>(<span style="color:#4ec9b0;">Car</span>&amp; c) : car(c) {
+    car.lockForDiagnostics();
+  }
+  ~<span style="color:#dcdcaa;">EngineLock</span>() {
+    car.unlock();
+  }
+};</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Check: Does the Lock Ever Leak?</h4>
+<p style="font-size:2rem;line-height:1.35;text-align:left;">A diagnostic throws midway through, with an EngineLock guard already in scope. Does the lock leak?</p>
+
+</div>
+<div style="flex:1 1 0;">
+<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">No: ~EngineLock() still runs during stack unwinding, so the engine is always unlocked again.</div>
+
+</div>
+</div>
+</section>
+<section data-tag="terminology" data-term="Guard">
+<div style="display:flex; flex-direction:row; align-items:center; gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Word Origin: &quot;Guard&quot;</h4>
+<ul>
+<li>From the &quot;scope guard&quot; idiom</li>
+<li>Popularized by Boost, 2000s</li>
+<li>An RAII object with one job</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<svg viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:360px;display:block;margin:0 auto;"><rect x="1" y="1" width="298" height="158" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="150" y="70" text-anchor="middle" font-size="13" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">A guard object's only purpose</text><text x="150" y="92" text-anchor="middle" font-size="13" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">is to run cleanup code when</text><text x="150" y="114" text-anchor="middle" font-size="13" fill="#ccc" font-family="Segoe UI, Arial, sans-serif">it goes out of scope</text></svg>
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Questions?</h2></section>
+<section id="module-11-agenda-8">
 <h2 style="text-align:center;">Practice Lab</h2>
 </section>
 <section data-background-color="#ffffff">
@@ -21125,7 +21583,40 @@ v = &amp;t;
 </div>
 </div>
 </section>
-<section id="module-11-agenda-8">
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Step 4: Test Valid and Invalid</h4>
+<ul>
+<li>Call with a valid value</li>
+<li>Call with an invalid one</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 18pt !important"><span style="color:#c586c0;">try</span> {
+  car.setMileage(<span style="color:#b5cea8;">5000</span>);  <span style="color:#6a9955;">// valid</span>
+  car.setMileage(-<span style="color:#b5cea8;">50</span>);   <span style="color:#6a9955;">// invalid</span>
+} <span style="color:#c586c0;">catch</span> (<span style="color:#4ec9b0;">BadMileage</span>&amp; e) {
+  <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">cout</span> &lt;&lt; e.<span style="color:#dcdcaa;">what</span>();
+}</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Check: What Prints for Valid Input?</h4>
+<p style="font-size:2rem;line-height:1.35;text-align:left;">setMileage(5000) runs first and succeeds. Does anything print for that call?</p>
+
+</div>
+<div style="flex:1 1 0;">
+<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">No: nothing throws, so the catch block never runs and that call prints nothing at all.</div>
+
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Questions?</h2></section>
+<section id="module-11-agenda-9">
 <h2 style="text-align:center;">Practice Lab Part 2</h2>
 </section>
 <section data-background-color="#ffffff">
@@ -21226,6 +21717,40 @@ v = &amp;t;
 </div>
 <div style="flex:1 1 0;">
 <pre style="font-size: 18pt !important">Mileage can't be negative</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Step 4: Add a Third Field</h4>
+<ul>
+<li>Third field: fuel level</li>
+<li>Same custom-exception shape</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre style="font-size: 18pt !important"><span style="color:#c586c0;">class</span> <span style="color:#4ec9b0;">BadFuelLevel</span> : <span style="color:#c586c0;">public</span>
+  <span style="color:#4ec9b0;">std</span>::<span style="color:#dcdcaa;">exception</span> {
+<span style="color:#c586c0;">public</span>:
+  <span style="color:#c586c0;">const</span> <span style="color:#c586c0;">char</span>* <span style="color:#dcdcaa;">what</span>() <span style="color:#c586c0;">const</span>
+    <span style="color:#c586c0;">override</span> {
+    <span style="color:#c586c0;">return</span> <span style="color:#ce9178;">&quot;Fuel level invalid&quot;</span>;
+  }
+};</pre>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Check: How Many catch Blocks Now?</h4>
+<p style="font-size:2rem;line-height:1.35;text-align:left;">The try block can now throw BadMileage, BadVin, or BadFuelLevel. How many catch blocks does it need?</p>
+
+</div>
+<div style="flex:1 1 0;">
+<div class="fragment" style="background:#2a2a2a;color:#fff;border:2px solid #9cdcfe;border-radius:12px;padding:1rem 1.3rem;font-size:2rem;line-height:1.35;text-align:left;">Three: one per exception type, each catching its own type by reference.</div>
+
 </div>
 </div>
 </section>
