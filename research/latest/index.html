@@ -2143,7 +2143,54 @@ fetch_releases("mozilla-firefox/firefox")
                     </ul>
                 </aside>
             </section>
-
+<section data-chapter="7">
+                <div class="divhead">
+                    <span class="paper-tag">In production &middot; releasetrain.io, Sept 29 2026</span>
+                </div>
+                <div class="twocol" style="gap:2em; align-items:center; text-align:left;">
+<div style="flex:1; min-width:0;"><h3>A New Guardrail: artifactRetry</h3>
+                <p class="venue">"I want artifacts and if there are none say so"</p>
+                <p class="story"><b>Before:</b> a version/CVE source's own url was treated as "no artifact" unless it already contained a literal <i>/commit/</i> or <i>/archive/</i> segment: a perfectly real github.com repo link, or a vendor's own Teams/Chrome installer page, was called a "generic reference page."<br>
+                <b>After:</b> <i style="color:#15803d;">hasRealArtifact</i> recognizes a bare GitHub repo (it always has a Download&nbsp;ZIP), a direct installer file (.exe/.dmg/.pkg/.msi/.apk), or an app-store listing as real by shape. When nothing qualifies, a new guardrail runs one <i>guaranteed</i>, code-driven search_web call for the vendor's official download/install page or app-store listing before giving up, not just a prompt hint the model can ignore.</p></div>
+<div style="flex:1; min-width:0;">
+<div class="qbox-row" style="margin-top:0;">
+<div class="qbox risk" style="font-size:0.85em;"><span class="cat">Before</span><p>"Latest Teams version?" &rarr; "no artifact found," even after a live search</p></div>
+<div class="qbox compat" style="font-size:0.85em;"><span class="cat">After</span><p>Guaranteed search finds statics.teams.cdn.office.net's real MSTeamsSetup.exe (verified 200&nbsp;OK)</p></div>
+</div>
+<p class="story" style="margin-top:1em;"><b>Disclosed limit:</b> verified live, a small/free-tier model often won't spend an extra tool call searching for this on its own, which is exactly why this is a deterministic fallback, not only a system-prompt suggestion.</p>
+</div>
+                </div>
+                <aside class="notes">
+                    <ul>
+                        <li>Same "prefer a real signal over a model guess" pattern as Classify and the vendor-substring fix above, applied to a new failure mode: an agent settling for a description page instead of a real, specific download.</li>
+                        <li>Directly related work: Nath, Roy &amp; Jahan (2025) measured 47% of real-world release artifacts missing this exact kind of traceability link (arXiv:2511.18187); this guardrail is one system's attempt to close that gap at answer time rather than just measuring it.</li>
+                    </ul>
+                </aside>
+            </section>
+<section data-chapter="7">
+                <div class="divhead">
+                    <span class="paper-tag">In production &middot; releasetrain.io, Sept 30 2026</span>
+                </div>
+                <div class="twocol" style="gap:2em; align-items:center; text-align:left;">
+<div style="flex:1; min-width:0;"><h3>Feedback Loop: Check Both App Stores</h3>
+                <p class="venue">"have a feedback loop... to also look ios or android app store"</p>
+                <p class="story"><b>Before:</b> the guaranteed search above ran once; a real app is often published on both mobile stores, but one plain web search tends to only rank one of them.<br>
+                <b>After:</b> when the search lands on one store's listing (Google&nbsp;Play or the Apple&nbsp;App&nbsp;Store) but not the other, it runs one more targeted search for the missing platform, and the query itself now says "download or <i>install</i>," not just "download."</p></div>
+<div style="flex:1; min-width:0;">
+<div class="qbox-row" style="margin-top:0;">
+<div class="qbox risk" style="font-size:0.85em;"><span class="cat">Before</span><p>"Latest Chrome version?" &rarr; only whichever store search happened to rank first, or neither</p></div>
+<div class="qbox compat" style="font-size:0.85em;"><span class="cat">After</span><p>Both apps.apple.com and play.google.com listings, verified live on a clean search run</p></div>
+</div>
+<p class="story" style="margin-top:1em;"><b>Disclosed limit:</b> verified live, moments apart: this system has no paid search API, so DuckDuckGo/Bing scraping can silently degrade to generic top results with no error. The same run that found both stores once returned only generic pages on the next three tries, after DuckDuckGo rate-limited the test IP.</p>
+</div>
+                </div>
+                <aside class="notes">
+                    <ul>
+                        <li>Safari is the useful negative case: no apps.apple.com listing exists at all (it ships with the OS) and there is no Android version, so the loop correctly never fires; "found nothing" there is an honest answer, not a bug.</li>
+                        <li>This noisy/rate-limited-backend limit is exactly what the related-work paragraph on the previous research pass named as the core constraint on any agent locating artifacts online.</li>
+                    </ul>
+                </aside>
+            </section>
 
 
 
