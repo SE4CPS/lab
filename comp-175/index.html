@@ -495,7 +495,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-10-27 07:45 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-10-28 15:15 PT</span>
   </div>
 
   <!--
@@ -23830,6 +23830,8 @@ $ ssh wronguser@localhost
 <li><a href="./#/module-10-agenda-5" target="_self">chrony: Staying in Sync</a></li>
 <li><a href="./#/module-10-agenda-6" target="_self">The Hardware Clock</a></li>
 <li><a href="./#/module-10-agenda-7" target="_self">Practice Lab</a></li>
+<li><a href="./#/module-10-agenda-8" target="_self">Practice Lab Part 2</a></li>
+<li><a href="./#/module-10-agenda-9" target="_self">Practice Lab Part 3</a></li>
 </ol>
 </div>
 <div class="col" style="text-align:center;">
@@ -24647,6 +24649,928 @@ System time     : 0.000031 seconds fast</div>
 </div>
 </section>
 <section><h2 style="text-align:center;">Questions?</h2></section>
+<section id="module-10-agenda-8"><h2 style="text-align:center;">Practice Lab Part 2</h2></section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Why This Matters</h4>
+<ul>
+<li>Monitor Read/Write teams</li><li>Need trustworthy timestamps</li><li>Unsynced clock breaks trust</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p2why" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">simulate.sh writes a log</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p2why)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Dashboards read those times</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p2why)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Clock must be right first</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Join the Hospital VM</h4>
+<ul>
+<li>Clone the shared repo</li><li>Run setup.sh</li><li>Confirm SETUP OK</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> <span class="tk-flag">install</span> <span class="tk-flag">-y</span> <span class="tk-str">git</span>
+<span class="tk-comment"># not installed by default</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">git</span> <span class="tk-cmd">clone</span> <span class="tk-punct">\</span>
+  <span class="tk-path">https://github.com/SE4CPS/2026-COMP-175.git</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">cd</span> 2026-COMP-175/project/part-2/Hospital-VM
+<span class="tk-prompt">$ </span><span class="tk-cmd">chmod</span> <span class="tk-flag">+x</span> setup.sh
+<span class="tk-prompt">$ </span><span class="tk-shell">./setup.sh</span>
+<span class="tk-str">SETUP OK</span></div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Scenario: Trust the Clock</h4>
+<ul>
+<li>simulate.sh logs activity</li><li>Dashboards read timestamps</li><li>First: prove the clock</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p2scn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Activity log fills up</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p2scn)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Reads/writes get timed</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p2scn)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Clock must sync first</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Q1: Unknown Clock State</h4>
+<ul>
+<li>New VM, unknown state</li><li>Can't trust logs blindly</li><li>Check status first</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p2q1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">VM just booted</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p2q1)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Clock state unknown</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p2q1)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Check it first</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Q1: What's the Clock State?</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">Before trusting any log timestamp, what command shows the current time, zone, and NTP service state?</p>
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span>
+               Local time: ...
+               Time zone: ...
+             NTP service: active</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Answer: timedatectl</h4>
+<ul>
+<li>Shows local time & zone</li><li>Shows NTP service state</li><li>The starting diagnostic</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"NTP service"</span>
+NTP service: active</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Q2: Zone Set, But Synced?</h4>
+<ul>
+<li>A zone can look correct</li><li>That's not the same as</li><li>actually being synced</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p2q2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Zone looks right</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p2q2)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">But is it synced?</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p2q2)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Check NTPSynchronized</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Q2: Is It Actually Synced?</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">A zone can be set correctly while the clock is still unsynced. What confirms real sync, not just a zone?</p>
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> <span class="tk-flag">show</span> <span class="tk-flag">-p</span> <span class="tk-str">NTPSynchronized</span>
+NTPSynchronized=yes</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Answer: show -p NTPSynchronized</h4>
+<ul>
+<li>yes means truly synced</li><li>Zone alone can mislead</li><li>This is the real check</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> <span class="tk-flag">show</span> <span class="tk-flag">-p</span> <span class="tk-str">NTPSynchronized</span> <span class="tk-flag">--value</span>
+yes</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Q3: chrony Isn't There Yet</h4>
+<ul>
+<li>chrony is not installed</li><li>No sync without it</li><li>Install it first</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p2q3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">chrony missing</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p2q3)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">No active sync</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p2q3)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">apt install chrony</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Q3: Install and Confirm chrony</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">chrony isn't installed by default. What two commands install it and confirm its service is running?</p>
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> <span class="tk-flag">install</span> <span class="tk-flag">-y</span> <span class="tk-str">chrony</span>
+<span class="tk-comment"># not installed by default</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">systemctl</span> <span class="tk-str">status</span> <span class="tk-path">chrony</span>
+Active: active (running)</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Answer: install, then status</h4>
+<ul>
+<li>apt install -y chrony first</li><li>systemctl status confirms</li><li>active (running) is the goal</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">systemctl</span> <span class="tk-flag">is-active</span> <span class="tk-path">chrony</span>
+active</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Q4: Running, But How Far Off?</h4>
+<ul>
+<li>chrony running isn't</li><li>the same as synced tight</li><li>Check the real offset</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p2q4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">chrony is running</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p2q4)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Offset still unknown</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p2q4)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">chronyc tracking</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Q4: Check the Sync Offset</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">chrony is running. What command shows exactly how far off the system clock currently is?</p>
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">tracking</span>
+System time     : 0.000031 seconds fast</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Answer: chronyc tracking</h4>
+<ul>
+<li>System time line is key</li><li>A shrinking offset = good</li><li>Re-check after a minute</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">tracking</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"System time"</span>
+System time     : 0.000031 seconds fast</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Q5: Which Source Is Trusted?</h4>
+<ul>
+<li>Several NTP sources</li><li>Only one is trusted</li><li>Look for the marker</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p2q5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Multiple sources listed</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p2q5)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Only one is trusted</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p2q5)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Find the ^* marker</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Q5: Confirm the Trusted Source</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">Several NTP sources are configured. Which command shows which one is actually trusted right now?</p>
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">sources</span>
+^* ntp.ubuntu.com   2   6   377     1    +12us</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Answer: chronyc sources</h4>
+<ul>
+<li>^* marks the trusted row</li><li>Other rows are candidates</li><li>Confirms a real source</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">sources</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"\^\*"</span>
+^* ntp.ubuntu.com   2   6   377     1    +12us</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Q6: Reading an Epoch Log Line</h4>
+<ul>
+<li>clinical-activity.log</li><li>logs a raw epoch time</li><li>Needs a readable form</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p2q6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Log has epoch seconds</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p2q6)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Hard for a human to read</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p2q6)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">date -d @epoch converts</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Q6: Convert an Epoch Timestamp</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">clinical-activity.log logs a raw epoch timestamp. What command converts it to a readable date?</p>
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">date</span> <span class="tk-flag">-d</span> <span class="tk-str">@1730000000</span>
+Mon Oct 27 ... 2026</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Answer: date -d @epoch</h4>
+<ul>
+<li>-d @epoch reads seconds</li><li>Converts to local time</li><li>Lets you compare to now</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">date</span> <span class="tk-flag">-d</span> <span class="tk-str">@1730000000</span> <span class="tk-flag">+%F_%T</span>
+2026-10-27_14:13:20</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Q7: One Zone for Every Team</h4>
+<ul>
+<li>Different VMs, different</li><li>zones means logs never</li><li>line up across teams</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p2q7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Zones can drift apart</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p2q7)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Logs won't line up</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p2q7)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Set one shared zone</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Q7: Set a Shared Time Zone</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">Every team's clock needs the same zone so logs line up. What command sets it?</p>
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> <span class="tk-flag">set-timezone</span> <span class="tk-str">America/Los_Angeles</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Answer: set-timezone</h4>
+<ul>
+<li>Takes effect immediately</li><li>No reboot needed</li><li>Matches the class standard</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"Time zone"</span>
+Time zone: America/Los_Angeles (PDT, -0700)</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Q8: Will It Survive a Reboot?</h4>
+<ul>
+<li>System clock is correct</li><li>Hardware clock separate</li><li>Write it before reboot</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p2q8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">System time now correct</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p2q8)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Hardware clock still stale</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p2q8)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">hwclock --systohc writes it</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Q8: Survive a Reboot</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">The system clock is now correct. What command makes sure it is still correct after a reboot?</p>
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">hwclock</span> <span class="tk-flag">--systohc</span>
+<span class="tk-comment"># writes system time to the hardware clock</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Answer: hwclock --systohc</h4>
+<ul>
+<li>Writes system to hw clock</li><li>hwclock alone reads it back</li><li>Confirms it actually stuck</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">hwclock</span>
+2026-10-27 14:13:21.123456-07:00</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Deliverable</h4>
+<ul>
+<li>Zone set correctly</li><li>chrony installed & synced</li><li>Trusted source confirmed</li><li>hwclock written</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">tracking</span>
+System time     : 0.000031 seconds fast</div>
+</div>
+</div>
+</section>
+
+<section><h2 style="text-align:center;">Questions?</h2></section>
+
+<section id="module-10-agenda-9"><h2 style="text-align:center;">Practice Lab Part 3</h2></section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Why This Matters</h4>
+<ul>
+<li>Access Control team audits</li><li>mtimes prove when fixed</li><li>Unsynced clock voids proof</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p3why" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Permissions get tightened</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p3why)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">mtime should prove when</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p3why)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Clock must be trusted</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Join the Hospital VM</h4>
+<ul>
+<li>Clone the shared repo</li><li>Run setup.sh</li><li>Confirm SETUP OK</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> <span class="tk-flag">install</span> <span class="tk-flag">-y</span> <span class="tk-str">git</span>
+<span class="tk-comment"># not installed by default</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">git</span> <span class="tk-cmd">clone</span> <span class="tk-punct">\</span>
+  <span class="tk-path">https://github.com/SE4CPS/2026-COMP-175.git</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">cd</span> 2026-COMP-175/project/part-2/Hospital-VM
+<span class="tk-prompt">$ </span><span class="tk-cmd">chmod</span> <span class="tk-flag">+x</span> setup.sh
+<span class="tk-prompt">$ </span><span class="tk-shell">./setup.sh</span>
+<span class="tk-str">SETUP OK</span></div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Scenario: An Old Credential</h4>
+<ul>
+<li>legacy-notify.sh has an</li><li>old hardcoded credential</li><li>How old, exactly?</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p3scn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Old script found on VM</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p3scn)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Need its real age</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p3scn)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Clock must be right</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Q1: Clock State Before the Audit</h4>
+<ul>
+<li>Audit about to start</li><li>Clock state unknown</li><li>Check it first</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p3q1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Audit about to begin</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p3q1)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Clock state unknown</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p3q1)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Check it first</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Q1: What's the Clock State?</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">Before auditing any file timestamp, what command shows the VM's current time, zone, and NTP state?</p>
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span>
+               Local time: ...
+               Time zone: ...
+             NTP service: active</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Answer: timedatectl</h4>
+<ul>
+<li>Shows local time & zone</li><li>Shows NTP service state</li><li>Starting point for the audit</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"NTP service"</span>
+NTP service: active</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Q2: One Zone for the Audit</h4>
+<ul>
+<li>Wrong zone on this VM</li><li>Audit timestamps mislead</li><li>Fix the zone first</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p3q2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Wrong zone set</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p3q2)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Audit entries mislead</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p3q2)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Fix the zone first</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Q2: Set the Audit's Time Zone</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">Audit timestamps need to match the rest of the class. What command sets the correct zone?</p>
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> <span class="tk-flag">set-timezone</span> <span class="tk-str">America/Los_Angeles</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Answer: set-timezone</h4>
+<ul>
+<li>Takes effect immediately</li><li>No reboot needed</li><li>Now matches the class</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"Time zone"</span>
+Time zone: America/Los_Angeles (PDT, -0700)</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Q3: Is chrony Even Installed?</h4>
+<ul>
+<li>chrony is not installed</li><li>No real sync without it</li><li>Install it, then check</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p3q3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">chrony missing</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p3q3)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">No active sync</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p3q3)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">apt install chrony</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Q3: Install and Confirm chrony</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">Assume chrony isn't installed on this VM. What two commands install it and confirm it's running?</p>
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> <span class="tk-flag">install</span> <span class="tk-flag">-y</span> <span class="tk-str">chrony</span>
+<span class="tk-comment"># not installed by default</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">systemctl</span> <span class="tk-str">status</span> <span class="tk-path">chrony</span>
+Active: active (running)</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Answer: install, then status</h4>
+<ul>
+<li>apt install -y chrony first</li><li>systemctl status confirms</li><li>active (running) is the goal</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">systemctl</span> <span class="tk-flag">is-active</span> <span class="tk-path">chrony</span>
+active</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Q4: Offset Before Trusting mtime</h4>
+<ul>
+<li>chrony running isn't</li><li>proof of a tight offset</li><li>Check it before trusting</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p3q4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">chrony is running</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p3q4)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Offset still unknown</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p3q4)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">chronyc tracking</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Q4: Check the Sync Offset</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">Before trusting any file's mtime, what command shows exactly how far off this clock is?</p>
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">tracking</span>
+System time     : 0.000031 seconds fast</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Answer: chronyc tracking</h4>
+<ul>
+<li>System time line is key</li><li>Small offset = trustworthy</li><li>Big offset = investigate</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">tracking</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"System time"</span>
+System time     : 0.000031 seconds fast</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Q5: Which Source Is Trusted?</h4>
+<ul>
+<li>Several NTP sources</li><li>Only one is trusted</li><li>Look for the marker</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p3q5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Multiple sources listed</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p3q5)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Only one is trusted</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p3q5)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Find the ^* marker</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Q5: Confirm the Trusted Source</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">For the audit record, which command shows which NTP source is actually trusted right now?</p>
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">sources</span>
+^* ntp.ubuntu.com   2   6   377     1    +12us</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Answer: chronyc sources</h4>
+<ul>
+<li>^* marks the trusted row</li><li>Worth noting in the audit</li><li>Confirms a real source</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">sources</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"\^\*"</span>
+^* ntp.ubuntu.com   2   6   377     1    +12us</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Q6: How Old Is That Credential?</h4>
+<ul>
+<li>legacy-notify.sh is old</li><li>Need "now" to compare</li><li>against its file date</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p3q6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Old script found</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p3q6)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Need "now" for comparison</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p3q6)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">date shows current time</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Q6: Sanity-Check a File's Age</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">You need to know how old legacy-notify.sh's leftover credential really is. What shows "now" to compare?</p>
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">date</span>
+Tue Oct 27 14:13:20 PDT 2026
+<span class="tk-comment"># compare this to the file's mtime</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Answer: date</h4>
+<ul>
+<li>Shows the current time</li><li>Compare to stat's mtime</li><li>Confirms the real age</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">date</span> <span class="tk-flag">+%F_%T</span>
+2026-10-27_14:13:20</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Q7: A Stale Hardware Clock?</h4>
+<ul>
+<li>VM sat suspended a week</li><li>Hardware clock may be</li><li>stale too, not just drift</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p3q7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">VM suspended a week</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p3q7)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Hardware clock may be stale</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p3q7)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Check it: hwclock</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Q7: Rule Out a Stale Hardware Clock</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">This VM sat suspended for a week. What command checks whether the hardware clock itself is stale?</p>
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">hwclock</span>
+2026-10-20 09:02:11.000001-07:00</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Answer: hwclock</h4>
+<ul>
+<li>Reads the hardware clock</li><li>Compare it to date's output</li><li>A big gap means stale</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">hwclock</span> <span class="tk-flag">--verbose</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"Hw clock"</span>
+Hw clock time : 2026-10-20 09:02:11</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Q8: Sign Off the Audit</h4>
+<ul>
+<li>Every check now passes</li><li>One final summary left</li><li>Confirm, then sign off</li>
+</ul>
+
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p3q8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">All checks passed</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p3q8)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">One final summary</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p3q8)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">timedatectl confirms</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Q8: Final Re-Verification</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">Every clock check has now passed. What single command gives the final summary to sign off the audit?</p>
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span>
+               Local time: Tue 2026-10-27 14:13:20 PDT
+               Time zone: America/Los_Angeles (PDT, -0700)
+             NTP service: active</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Answer: timedatectl</h4>
+<ul>
+<li>Zone: America/Los_Angeles</li><li>NTP service: active</li><li>Audit timestamps now trusted</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> <span class="tk-flag">show</span> <span class="tk-flag">-p</span> <span class="tk-str">NTPSynchronized</span> <span class="tk-flag">--value</span>
+yes</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Deliverable</h4>
+<ul>
+<li>Zone set correctly</li><li>chrony installed & synced</li><li>hwclock confirmed sane</li><li>Audit timestamps trusted</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"NTP service"</span>
+NTP service: active</div>
+</div>
+</div>
+</section>
+
+<section><h2 style="text-align:center;">Questions?</h2></section>
+
+
             </section>
 
 
