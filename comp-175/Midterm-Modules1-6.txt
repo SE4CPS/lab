@@ -1,0 +1,165 @@
+COMP-175: Mock Midterm -- Modules 1-6
+
+Format: 18 multiple choice + 1 diagram question + 1 written
+recommendation, 5 points each = 100 points total.
+
+================================================================
+PART 1: MULTIPLE CHOICE (5 points each)
+================================================================
+
+Module 1 -- Virtualization & Isolation
+
+1. Which best describes a Type 1 (bare-metal) hypervisor?
+A. It runs directly on the hardware itself, with no host OS underneath at all
+B. It runs as an app installed on top of a normal host operating system layer
+C. It only virtualizes memory and never touches the CPU or disk at any time
+D. It exists only to run containers, and it cannot run full virtual machines
+
+2. What is a VM snapshot?
+A. A live network link that connects one running virtual machine to another
+B. A saved copy of a VM's state at one moment, which can be restored later on
+C. A permanent backup that is stored only on the physical host's own hard disk
+D. A record of every single command that was ever typed inside that VM ever
+
+3. In a virtual machine setup, what is the guest?
+A. The physical computer that is running the virtualization software itself
+B. The account that is currently logged in as root inside that machine now
+C. The operating system that is running inside the virtual machine itself
+D. The hypervisor program that creates and manages that virtual machine
+
+Module 2 -- Command-Line & Permissions
+
+4. Why do admins still rely on the command line to manage servers?
+A. Because it requires a full graphical desktop to already be installed
+B. Because it is slower to use, but it is somehow more secure than a GUI
+C. Because it works well over a remote link and can be run from a script
+D. Because it cannot be used to manage more than a single machine at once
+
+5. In the permission set rwxr-xr--, who has write access to the file?
+A. Only the file's owner has write access to that file, nobody else at all
+B. The file's owner and its group both have write access to that file too
+C. Everyone, meaning owner, group, and other, all have write access to it
+D. Only the group has write access to that file, not the owner nor other
+
+6. What does the third part of a Linux command represent?
+A. The username of whoever is the one running that particular command now
+B. The target the command should act on, such as a file or a directory
+C. The exit code that was returned by the command that ran right before it
+D. The name of the shell program that the command is currently running in
+
+Module 3 -- File Systems & Storage
+
+7. Where does the FHS say configuration files belong?
+A. Inside /tmp, since that is the folder meant for configuration files
+B. Inside /etc, since that is the folder meant for configuration files
+C. Inside /home, since that is the folder meant for configuration files
+D. Inside /dev, since that is the folder meant for configuration files
+
+8. What is the key difference between a symlink and a hard link?
+A. A symlink is a path pointer that can break; a hard link shares the inode
+B. A hard link can cross filesystems, while a symlink is never able to do so
+C. A symlink always uses far more disk space than the original file itself
+D. There genuinely is no real difference between these two kinds of links
+
+9. What should a program never assume about files it puts in /tmp?
+A. That those files are somehow encrypted automatically by the system
+B. That those files will still exist the next time the program is run
+C. That only that file's owner is the one who is allowed to read them
+D. That those particular files get backed up automatically every night
+
+Module 4 -- Access Control & Auditing
+
+10. What is the key difference between DAC and MAC?
+A. DAC lets the owner decide; MAC enforces a policy that even root can't skip
+B. MAC only ever applies to network traffic, and never applies to any file
+C. DAC is enforced only by the kernel, while MAC is enforced by the user
+D. They are really just two different names for one identical mechanism
+
+11. Why use an ACL instead of standard permission bits on a file?
+A. Because an ACL removes the need for that file to have an owner at all
+B. Because an ACL can grant access to extra named users beyond one group
+C. Because an ACL is required before that file can ever be read by anyone
+D. Because an ACL fully replaces the need for any user to authenticate
+
+12. A monitoring tool logs that a file changed. What can it NOT tell you?
+A. It cannot tell you which specific file was the one that just changed
+B. It cannot tell you what kind of change, such as create or delete, it was
+C. It cannot tell you which particular user was the one who made the change
+D. It cannot tell you what specific time it was when that change happened
+
+Module 5 -- Process Mgmt & Remote Access
+
+13. What is the difference between a program and a process?
+A. A program is a file on disk; a process is that program actually running
+B. A process is a file on disk; a program is that process actually running
+C. A program and a process are really just two names for the same thing
+D. A program can only ever run once, while a process can run many times
+
+14. What is the difference between a one-time listing and a live view?
+A. A one-time listing only shows root's own processes; a live view shows all
+B. A one-time listing shows one instant; a live view keeps refreshing itself
+C. A one-time listing needs a network link, while a live view never needs one
+D. There truly is no difference at all, since both update automatically too
+
+15. Why is key-based SSH login stronger than password login?
+A. Because it sends your password in encrypted form instead of plain text
+B. Because it proves you hold a private key that is never sent over SSH
+C. Because it removes the need for a username to log in to that server
+D. Because it can only be attacked from the local network, never remotely
+
+Module 6 -- Service Management
+
+16. What is the difference between starting a service and enabling it?
+A. Starting runs it right now; enabling makes it start at every future boot
+B. Enabling runs it right now; starting only prepares it to run later on
+C. Starting and enabling a service both do exactly the same underlying thing
+D. Starting is permanent, while enabling only lasts until the next reboot
+
+17. What was systemd's main advantage over older init systems?
+A. It removed the need for any service to ever have a configuration file
+B. It can start many services in parallel instead of one at a time in order
+C. It works only alongside a graphical desktop, never on a headless server
+D. It removed the need for any service to ever log its own activity at all
+
+18. What is the purpose of the systemd journal?
+A. It stores a central log of service messages, readable back later on it
+B. It stores a full copy of every single file a service has ever created
+C. It fully replaces the need for a system to have any user accounts at all
+D. It is the one place where every service's own config file must live now
+
+================================================================
+PART 2: DIAGRAM QUESTION (5 points)
+================================================================
+
+19. Draw and label a diagram showing what happens when an administrator,
+sitting at a Kali VM, connects over SSH to check whether a web service
+is running on a remote Ubuntu VM.
+
+Your diagram must show, at minimum:
+- The Kali VM and the Ubuntu VM, and the hypervisor/host they run on
+- The SSH connection between Kali and Ubuntu
+- On the Ubuntu side, the chain from systemd (PID 1) down to the
+  running service process
+
+Label every box, and label the connection between Kali and Ubuntu as SSH.
+
+================================================================
+PART 3: WRITTEN RECOMMENDATION (5 points)
+================================================================
+
+20. Hospital use case. A hospital's Linux server stores patient billing
+records in one shared directory. Three groups of staff need different
+access:
+
+- Billing staff need to read and write the files.
+- Nurses need to read the files only.
+- Everyone else, including a system administrator who is not on the
+  billing team, must have no access at all.
+
+Using what you learned about permissions, ACLs, and access control,
+write a short recommendation (a paragraph or a short bulleted list)
+for how you would configure access to this directory. State which
+mechanism(s) you would use and why. Then explain what you would
+additionally recommend if hospital policy required that not even a
+system administrator could override this access without leaving an
+audit trail.

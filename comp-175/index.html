@@ -177,6 +177,14 @@
       margin: 1.5rem auto 0;
     }
 
+    /* Module 10 Practice Lab Q&A fragments (Q1-Q9, both labs): the regular
+       .terminal 1.3rem default read too small on a live screenshot. Class,
+       not inline, per the comp-051 code-font-size GLOBAL RULE; !important
+       for the same specificity-tie reason .terminal-slide documents above. */
+    .terminal.qa-term {
+      font-size: 1.6rem !important;
+    }
+
     /* Hand-marked token colors for a .terminal-slide, so it reads like a
        real editor/terminal instead of flat gray text -- GLOBAL RULE:
        ONLY the code-only full-slide companion (.terminal-slide) gets this;
@@ -484,6 +492,26 @@
     #toc .toc-table tr.current-week td:first-child {
       box-shadow: inset 3px 0 0 #9cdcfe;
     }
+    /* Smooth click-reveal animation for SVG <g class="fragment"> stages
+       (Module 10 Practice Lab Part 2/3 story diagrams) -- reveal.js's
+       fragment transition targets opacity/transform, which work on SVG
+       <g> in modern browsers, but this rule makes the transition explicit
+       so it renders smoothly rather than relying on inheritance alone. */
+    section svg g.fragment {
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    /* The moving "token" dot on those same two diagrams: a persistent
+       element whose class is toggled per fragment stage by the footer
+       script, each class defining a different translateX so the dot
+       visibly glides along the chain instead of jumping or fading. */
+    #m10p2token, #m10p3token {
+      transition: transform 0.6s ease;
+    }
+    #m10p2token.tok-0, #m10p3token.tok-0 { transform: translateY(0px); }
+    #m10p2token.tok-1, #m10p3token.tok-1 { transform: translateY(86px); }
+    #m10p2token.tok-2, #m10p3token.tok-2 { transform: translateY(172px); }
+    #m10p2token.tok-3, #m10p3token.tok-3 { transform: translateY(258px); }
+    #m10p2token.tok-4, #m10p3token.tok-4 { transform: translateY(344px); }
   </style>
 </head>
 
@@ -495,7 +523,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-10-28 15:15 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-10-28 21:49 PT</span>
   </div>
 
   <!--
@@ -24652,16 +24680,213 @@ System time     : 0.000031 seconds fast</div>
 <section id="module-10-agenda-8"><h2 style="text-align:center;">Practice Lab Part 2</h2></section>
 
 <section data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1280 560" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1250px;display:block;margin:0 auto;" role="img"><defs><marker id="m10p2dim" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker><marker id="m10p2hot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9cdcfe"/></marker></defs>
+<text x="640" y="36" text-anchor="middle" font-size="27" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">THE STORY SO FAR: CLICK THROUGH THIS LAB</text>
+<rect x="20" y="70" width="280" height="70" rx="10" fill="#1e1e1e" stroke="#444" stroke-width="2"/><text x="160" y="100" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#888"><tspan x="160" dy="0">VM just</tspan><tspan x="160" dy="24">booted</tspan></text>
+<line x1="160" y1="140" x2="160" y2="152" stroke="#555" stroke-width="1.5" marker-end="url(#m10p2dim)"/>
+<rect x="20" y="156" width="280" height="70" rx="10" fill="#1e1e1e" stroke="#444" stroke-width="2"/><text x="160" y="186" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#888"><tspan x="160" dy="0">simulate.sh</tspan><tspan x="160" dy="24">writes log</tspan></text>
+<line x1="160" y1="226" x2="160" y2="238" stroke="#555" stroke-width="1.5" marker-end="url(#m10p2dim)"/>
+<rect x="20" y="242" width="280" height="70" rx="10" fill="#1e1e1e" stroke="#444" stroke-width="2"/><text x="160" y="272" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#888"><tspan x="160" dy="0">Dashboard</tspan><tspan x="160" dy="24">reads log</tspan></text>
+<line x1="160" y1="312" x2="160" y2="324" stroke="#555" stroke-width="1.5" marker-end="url(#m10p2dim)"/>
+<rect x="20" y="328" width="280" height="70" rx="10" fill="#1e1e1e" stroke="#444" stroke-width="2"/><text x="160" y="358" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#888"><tspan x="160" dy="0">Clock must</tspan><tspan x="160" dy="24">sync first</tspan></text>
+<line x1="160" y1="398" x2="160" y2="410" stroke="#555" stroke-width="1.5" marker-end="url(#m10p2dim)"/>
+<rect x="20" y="414" width="280" height="70" rx="10" fill="#1e1e1e" stroke="#444" stroke-width="2"/><text x="160" y="444" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#888"><tspan x="160" dy="0">Ahead: check,</tspan><tspan x="160" dy="24">sync, prove</tspan></text>
+<g class="fragment fade-in" data-fragment-index="0" data-token="m10p2token"><rect x="20" y="70" width="280" height="70" rx="10" fill="#0a2436" stroke="#9cdcfe" stroke-width="3"/><text x="160" y="100" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#fff" font-weight="bold"><tspan x="160" dy="0">VM just</tspan><tspan x="160" dy="24">booted</tspan></text></g>
+<g class="fragment fade-in" data-fragment-index="1" data-token="m10p2token"><line x1="160" y1="140" x2="160" y2="152" stroke="#9cdcfe" stroke-width="1.5" marker-end="url(#m10p2hot)"/><rect x="20" y="156" width="280" height="70" rx="10" fill="#0a2436" stroke="#9cdcfe" stroke-width="3"/><text x="160" y="186" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#fff" font-weight="bold"><tspan x="160" dy="0">simulate.sh</tspan><tspan x="160" dy="24">writes log</tspan></text></g>
+<g class="fragment fade-in" data-fragment-index="2" data-token="m10p2token"><line x1="160" y1="226" x2="160" y2="238" stroke="#9cdcfe" stroke-width="1.5" marker-end="url(#m10p2hot)"/><rect x="20" y="242" width="280" height="70" rx="10" fill="#0a2436" stroke="#9cdcfe" stroke-width="3"/><text x="160" y="272" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#fff" font-weight="bold"><tspan x="160" dy="0">Dashboard</tspan><tspan x="160" dy="24">reads log</tspan></text></g>
+<g class="fragment fade-in" data-fragment-index="3" data-token="m10p2token"><line x1="160" y1="312" x2="160" y2="324" stroke="#9cdcfe" stroke-width="1.5" marker-end="url(#m10p2hot)"/><rect x="20" y="328" width="280" height="70" rx="10" fill="#0a2436" stroke="#9cdcfe" stroke-width="3"/><text x="160" y="358" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#fff" font-weight="bold"><tspan x="160" dy="0">Clock must</tspan><tspan x="160" dy="24">sync first</tspan></text></g>
+<g class="fragment fade-in" data-fragment-index="4" data-token="m10p2token"><line x1="160" y1="398" x2="160" y2="410" stroke="#9cdcfe" stroke-width="1.5" marker-end="url(#m10p2hot)"/><rect x="20" y="414" width="280" height="70" rx="10" fill="#0a2436" stroke="#9cdcfe" stroke-width="3"/><text x="160" y="444" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#fff" font-weight="bold"><tspan x="160" dy="0">Ahead: check,</tspan><tspan x="160" dy="24">sync, prove</tspan></text></g>
+<g id="m10p2token" class="tok-0"><circle cx="320" cy="105" r="12" fill="#9cdcfe" stroke="#0a2436" stroke-width="2"/></g>
+<rect x="640" y="160" width="630" height="230" rx="12" fill="#0a0a0a" stroke="#555" stroke-width="2"/>
+<text x="955" y="200" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">MONITORING DASHBOARD</text>
+<line x1="660" y1="220" x2="1250" y2="220" stroke="#444" stroke-width="1.5"/>
+<text x="660" y="250" font-size="20" font-family="Consolas, monospace"><tspan fill="#9cdcfe">2026-10-27 10:42:03</tspan><tspan fill="#ddd"> nurse1 read record #4821</tspan></text>
+<text x="660" y="280" font-size="20" font-family="Consolas, monospace"><tspan fill="#9cdcfe">2026-10-27 10:44:17</tspan><tspan fill="#ddd"> physician1 updated #3390</tspan></text>
+<text x="660" y="310" font-size="20" font-family="Consolas, monospace"><tspan fill="#9cdcfe">2026-10-27 10:45:52</tspan><tspan fill="#ddd"> guest1 viewed dashboard</tspan></text>
+<text x="955" y="360" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Is every timestamp here accurate?</text>
+</svg>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1200 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1180px;display:block;margin:0 auto;" role="img"><defs><marker id="m10overviewArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs>
+<text x="600" y="36" text-anchor="middle" font-size="27" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">WHAT setup.sh CREATES</text>
+<text x="600" y="58" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Created once, the same on every team's Ubuntu VM</text>
+<rect x="40" y="76" width="420" height="180" rx="10" fill="#1e1e1e" stroke="#555" stroke-width="2"/>
+<text x="60" y="112" font-size="20" font-family="Consolas, monospace" fill="#eee" font-weight="bold">/srv/clinical-data/</text>
+<text x="80" y="142" font-size="20" font-family="Consolas, monospace" fill="#ccc">patients.csv</text>
+<text x="80" y="164" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">644, world-readable</text>
+<text x="80" y="196" font-size="20" font-family="Consolas, monospace" fill="#ccc">.patients.csv.bak</text>
+<text x="80" y="218" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">644, world-readable</text>
+<rect x="500" y="76" width="360" height="180" rx="10" fill="#1e1e1e" stroke="#555" stroke-width="2"/>
+<text x="520" y="112" font-size="20" font-family="Consolas, monospace" fill="#eee" font-weight="bold">/opt/hospital-vm/</text>
+<text x="540" y="142" font-size="20" font-family="Consolas, monospace" fill="#ccc">legacy-notify.sh</text>
+<text x="540" y="164" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">disabled, legacy stub</text>
+<rect x="900" y="76" width="260" height="180" rx="10" fill="#1e1e1e" stroke="#555" stroke-width="2"/>
+<text x="1030" y="112" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#eee" font-weight="bold">simulate.sh</text>
+<text x="1030" y="136" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">optional, background</text>
+<line x1="1030" y1="148" x2="1030" y2="170" stroke="#555" stroke-width="1.5" marker-end="url(#m10overviewArrow)"/>
+<text x="1030" y="192" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#ccc">/var/log/</text>
+<text x="1030" y="212" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#ccc">clinical-activity.log</text>
+<rect x="50" y="296" width="260" height="140" rx="10" fill="#1e1e1e" stroke="#555" stroke-width="2"/>
+<text x="180" y="340" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#eee" font-weight="bold">guest1</text>
+<text x="180" y="372" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">group: guests</text>
+<rect x="330" y="296" width="260" height="140" rx="10" fill="#1e1e1e" stroke="#555" stroke-width="2"/>
+<text x="460" y="340" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#eee" font-weight="bold">nurse1</text>
+<text x="460" y="372" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">group: nurses</text>
+<rect x="610" y="296" width="260" height="140" rx="10" fill="#1e1e1e" stroke="#555" stroke-width="2"/>
+<text x="740" y="340" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#eee" font-weight="bold">physician1</text>
+<text x="740" y="372" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">group: physicians</text>
+<rect x="890" y="296" width="260" height="140" rx="10" fill="#1e1e1e" stroke="#555" stroke-width="2"/>
+<text x="1020" y="340" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#eee" font-weight="bold">patient1</text>
+<text x="1020" y="372" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">group: patients</text>
+</svg>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>Why This Matters</h4>
+<h4>/srv/clinical-data/ (1/4)</h4>
 <ul>
-<li>Monitor Read/Write teams</li><li>Need trustworthy timestamps</li><li>Unsynced clock breaks trust</li>
+<li>Shared clinical records</li><li>2 files, both 644</li><li>Starts world-readable</li>
 </ul>
-
 </div>
 <div class="col">
-<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p2why" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">simulate.sh writes a log</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p2why)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Dashboards read those times</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p2why)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Clock must be right first</text></svg>
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">ls</span> <span class="tk-flag">-la</span> <span class="tk-path">/srv/clinical-data/</span>
+<span class="tk-output">-rw-r--r-- 1 root root 2048 patients.csv</span>
+<span class="tk-output">-rw-r--r-- 1 root root  512 .patients.csv.bak</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">cat</span> <span class="tk-path">patients.csv</span> | <span class="tk-cmd">cut</span> <span class="tk-flag">-d,</span> <span class="tk-flag">-f1-4</span>
+<span class="tk-output">mrn,name,dob,unit</span>
+<span class="tk-output">ER-1001,Jordan Ellis,1990-03-14,ER-A</span>
+<span class="tk-output">ER-1002,Priya Nandakumar,1985-07-02,ER-B</span></div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>/opt/hospital-vm/ (2/4)</h4>
+<ul>
+<li>Legacy notify script</li><li>Marked for retirement</li><li>Still on disk, still runs</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">ls</span> <span class="tk-flag">-l</span> <span class="tk-path">/opt/hospital-vm/legacy-notify.sh</span>
+<span class="tk-output">-rw-r--r-- 1 root root 118 legacy-notify.sh</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">cat</span> <span class="tk-path">legacy-notify.sh</span>
+<span class="tk-output">#!/bin/bash</span>
+<span class="tk-comment"># TODO: retire, replaced by new pipeline</span>
+<span class="tk-comment"># patient1 / Patient123!</span>
+<span class="tk-output">echo "legacy notify: disabled"</span></div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>simulate.sh (3/4)</h4>
+<ul>
+<li>Optional background script</li><li>Simulates clinic activity</li><li>Full walkthrough coming up</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">ls</span> <span class="tk-flag">-l</span> <span class="tk-path">/var/log/clinical-activity.log</span>
+<span class="tk-output">-rw-r--r-- 1 root root 4096 clinical-activity.log</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">tail</span> <span class="tk-flag">-3</span> <span class="tk-path">clinical-activity.log</span>
+<span class="tk-output">10-27 10:42:03 persona=nurse1 action=read</span>
+<span class="tk-output">10-27 10:43:03 action=vitals-update row=ER-1001</span>
+<span class="tk-output">10-27 10:43:33 persona=guest1 action=read</span></div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>4 Persona Accounts (4/4)</h4>
+<ul>
+<li>guest1, nurse1, physician1</li><li>...and patient1</li><li>Each in its own group</li>
+</ul>
+</div>
+<div class="col">
+<svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;">
+<rect x="10" y="10" width="150" height="95" rx="8" fill="#1e1e1e" stroke="#555" stroke-width="2"/>
+<text x="85" y="42" text-anchor="middle" font-size="24">&#128100;</text>
+<text x="85" y="68" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee" font-weight="bold">guest1</text>
+<text x="85" y="86" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">group: guests</text>
+<rect x="174" y="10" width="150" height="95" rx="8" fill="#1e1e1e" stroke="#555" stroke-width="2"/>
+<text x="249" y="42" text-anchor="middle" font-size="24">&#129658;</text>
+<text x="249" y="68" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee" font-weight="bold">nurse1</text>
+<text x="249" y="86" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">group: nurses</text>
+<rect x="10" y="115" width="150" height="95" rx="8" fill="#1e1e1e" stroke="#555" stroke-width="2"/>
+<text x="85" y="147" text-anchor="middle" font-size="24">&#129489;&#8205;&#9877;&#65039;</text>
+<text x="85" y="173" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee" font-weight="bold">physician1</text>
+<text x="85" y="191" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">group: physicians</text>
+<rect x="174" y="115" width="150" height="95" rx="8" fill="#1e1e1e" stroke="#555" stroke-width="2"/>
+<text x="249" y="147" text-anchor="middle" font-size="24">&#128719;&#65039;</text>
+<text x="249" y="173" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee" font-weight="bold">patient1</text>
+<text x="249" y="191" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">group: patients</text>
+</svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>How simulate.sh Runs</h4>
+<svg viewBox="0 0 340 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><defs><marker id="m10simLoop" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#777"/></marker></defs>
+<rect x="20" y="10" width="260" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="150" y="39" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee">while true; do</text>
+<line x1="150" y1="58" x2="150" y2="74" stroke="#777" stroke-width="2" marker-end="url(#m10simLoop)"/>
+<rect x="20" y="76" width="260" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="150" y="105" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee">pick a persona</text>
+<line x1="150" y1="124" x2="150" y2="140" stroke="#777" stroke-width="2" marker-end="url(#m10simLoop)"/>
+<rect x="20" y="142" width="260" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="150" y="171" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee">act on a row</text>
+<line x1="150" y1="190" x2="150" y2="206" stroke="#777" stroke-width="2" marker-end="url(#m10simLoop)"/>
+<rect x="20" y="208" width="260" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="150" y="237" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee">sleep 30s</text>
+<path d="M280,232 L305,232 L305,34 L283,34" fill="none" stroke="#777" stroke-width="2" marker-end="url(#m10simLoop)"/>
+<text x="150" y="287" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Never exits: not a cron job</text>
+<text x="150" y="307" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Not in crontab: background it yourself</text>
+</svg>
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">nohup</span> <span class="tk-shell">./simulate.sh</span> &amp;
+<span class="tk-comment"># loops forever, must be backgrounded</span>
+<span class="tk-output">10-27 10:42:03 persona=nurse1 action=read</span>
+<span class="tk-output">10-27 10:43:03 action=vitals-update row=ER-1001</span>
+<span class="tk-output">10-27 10:43:33 persona=guest1 action=read</span>
+<span class="tk-output">10-27 10:44:03 persona=patient1 action=read</span></div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Disabled Is Not Removed</h4>
+<svg viewBox="0 0 340 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><defs><marker id="m10legacyArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#777"/></marker></defs>
+<rect x="20" y="10" width="260" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="150" y="39" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee">Permissions: 644</text>
+<line x1="150" y1="58" x2="150" y2="74" stroke="#777" stroke-width="2" marker-end="url(#m10legacyArrow)"/>
+<rect x="20" y="76" width="260" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="150" y="105" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee">World-readable</text>
+<line x1="150" y1="124" x2="150" y2="140" stroke="#777" stroke-width="2" marker-end="url(#m10legacyArrow)"/>
+<rect x="20" y="142" width="260" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="150" y="171" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee">Old password in comment</text>
+<text x="150" y="225" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Disabled script, not removed</text>
+<text x="150" y="245" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">An audit would still find it</text>
+</svg>
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">cat</span> <span class="tk-path">/opt/hospital-vm/legacy-notify.sh</span>
+<span class="tk-output">#!/bin/bash</span>
+<span class="tk-output"># TODO: retire, replaced by new pipeline</span>
+<span class="tk-output"># patient1 / Patient123!</span>
+<span class="tk-output">echo "legacy notify: disabled"</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">ls</span> <span class="tk-flag">-l</span> <span class="tk-path">/opt/hospital-vm/legacy-notify.sh</span>
+<span class="tk-output">-rw-r--r-- 1 root root 118 legacy-notify.sh</span>
+<span class="tk-comment"># an accurate audit would flag this</span></div>
 </div>
 </div>
 </section>
@@ -24691,29 +24916,14 @@ System time     : 0.000031 seconds fast</div>
 <section data-background-color="#ffffff">
 <div class="twocol">
 <div class="col">
-<h4>Scenario: Trust the Clock</h4>
-<ul>
-<li>simulate.sh logs activity</li><li>Dashboards read timestamps</li><li>First: prove the clock</li>
-</ul>
-
-</div>
-<div class="col">
-<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p2scn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Activity log fills up</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p2scn)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Reads/writes get timed</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p2scn)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Clock must sync first</text></svg>
-</div>
-</div>
-</section>
-
-<section data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
 <h4>Q1: Unknown Clock State</h4>
 <ul>
 <li>New VM, unknown state</li><li>Can't trust logs blindly</li><li>Check status first</li>
 </ul>
-
+<div class="fragment fade-in" style="margin-top:12px;"><p style="font-size:1.3rem;line-height:1.4;text-align:left;background:#fff3e8;color:#1a1a1a;border:2px solid #FF671D;border-radius:8px;padding:0.7rem 1rem;font-weight:600;margin:0;">A wrong clock makes a log entry timestamped 10:42 actually be from an hour earlier: Monitor Read/Write can't correlate a dashboard alert with the real event until the clock is proven reliable.</p></div>
 </div>
 <div class="col">
-<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p2q1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">VM just booted</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p2q1)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Clock state unknown</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p2q1)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Check it first</text></svg>
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="20" y="8" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="28" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">MONITORING DASHBOARD</text><text x="190" y="50" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#ddd">10:42:03 nurse1 read #4821</text><rect x="20" y="86" width="340" height="94" rx="8" fill="#2a1216" stroke="#e03131" stroke-width="2"/><text x="34" y="104" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#e03131" font-weight="bold">&#10007; Without this check:</text><text x="34" y="124" font-size="12" font-family="Consolas, monospace" fill="#ff9b9b" font-weight="bold">NTP service: inactive</text><text x="34" y="144" font-size="11" font-family="Consolas, monospace" fill="#e08888">10:42:03 nurse1 read #4821</text><text x="40" y="164" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#c97b7b">&#8592; UNVERIFIED (clock never checked)</text><rect x="20" y="190" width="340" height="114" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="34" y="208" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">&#10003; Fixed by:</text><text x="34" y="228" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">timedatectl</text><text x="34" y="248" font-size="12" font-family="Consolas, monospace" fill="#8fd19e" font-weight="bold">&#8594; NTP service: active</text><text x="34" y="268" font-size="11" font-family="Consolas, monospace" fill="#a8e6b8">10:42:03 nurse1 read #4821</text><text x="40" y="288" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#7fcf94">&#8592; verified, synced 0.3s ago</text></svg>
 </div>
 </div>
 </section>
@@ -24723,10 +24933,11 @@ System time     : 0.000031 seconds fast</div>
 <div class="col">
 <h4>Q1: What's the Clock State?</h4>
 <p style="font-size:1.3rem;line-height:1.4;text-align:left;">Before trusting any log timestamp, what command shows the current time, zone, and NTP service state?</p>
+<svg viewBox="0 0 460 70" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:10px auto 0;"><rect x="5" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="57" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">guest1</text><text x="57" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">guests</text><rect x="115" y="4" width="105" height="60" rx="6" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="168" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#fff" font-weight="bold">nurse1</text><text x="168" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#f0c6a8">nurses</text><rect x="225" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="278" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">physician1</text><text x="278" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">physicians</text><rect x="335" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="388" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">patient1</text><text x="388" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">patients</text></svg>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span>
                Local time: ...
                Time zone: ...
              NTP service: active</div>
@@ -24746,7 +24957,7 @@ System time     : 0.000031 seconds fast</div>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"NTP service"</span>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"NTP service"</span>
 NTP service: active</div>
 </div>
 </div>
@@ -24760,10 +24971,10 @@ NTP service: active</div>
 <ul>
 <li>A zone can look correct</li><li>That's not the same as</li><li>actually being synced</li>
 </ul>
-
+<div class="fragment fade-in" style="margin-top:12px;"><p style="font-size:1.3rem;line-height:1.4;text-align:left;background:#fff3e8;color:#1a1a1a;border:2px solid #FF671D;border-radius:8px;padding:0.7rem 1rem;font-weight:600;margin:0;">A VM suspended for days can still report "America/Los_Angeles" correctly while having drifted underneath: the dashboard would show stale or out-of-order events without this check.</p></div>
 </div>
 <div class="col">
-<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p2q2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Zone looks right</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p2q2)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">But is it synced?</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p2q2)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Check NTPSynchronized</text></svg>
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="20" y="8" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="28" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">MONITORING DASHBOARD</text><text x="190" y="50" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#ddd">VM suspended 4 days, drifted</text><rect x="20" y="86" width="340" height="94" rx="8" fill="#2a1216" stroke="#e03131" stroke-width="2"/><text x="34" y="104" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#e03131" font-weight="bold">&#10007; Without this check:</text><text x="34" y="124" font-size="12" font-family="Consolas, monospace" fill="#ff9b9b" font-weight="bold">NTPSynchronized=no</text><text x="34" y="144" font-size="11" font-family="Consolas, monospace" fill="#e08888">14:02:11 physician1 update #3390</text><text x="40" y="164" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#c97b7b">&#8592; zone right, NOT synced</text><rect x="20" y="190" width="340" height="114" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="34" y="208" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">&#10003; Fixed by:</text><text x="34" y="228" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">timedatectl show -p NTPSynchronized</text><text x="34" y="248" font-size="12" font-family="Consolas, monospace" fill="#8fd19e" font-weight="bold">&#8594; NTPSynchronized=yes</text><text x="34" y="268" font-size="11" font-family="Consolas, monospace" fill="#a8e6b8">14:02:11 physician1 update #3390</text><text x="40" y="288" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#7fcf94">&#8592; zone right, synced (yes)</text></svg>
 </div>
 </div>
 </section>
@@ -24773,10 +24984,11 @@ NTP service: active</div>
 <div class="col">
 <h4>Q2: Is It Actually Synced?</h4>
 <p style="font-size:1.3rem;line-height:1.4;text-align:left;">A zone can be set correctly while the clock is still unsynced. What confirms real sync, not just a zone?</p>
+<svg viewBox="0 0 460 70" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:10px auto 0;"><rect x="5" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="57" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">guest1</text><text x="57" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">guests</text><rect x="115" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="168" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">nurse1</text><text x="168" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">nurses</text><rect x="225" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="278" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">physician1</text><text x="278" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">physicians</text><rect x="335" y="4" width="105" height="60" rx="6" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="388" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#fff" font-weight="bold">patient1</text><text x="388" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#f0c6a8">patients</text></svg>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> <span class="tk-flag">show</span> <span class="tk-flag">-p</span> <span class="tk-str">NTPSynchronized</span>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> <span class="tk-flag">show</span> <span class="tk-flag">-p</span> <span class="tk-str">NTPSynchronized</span>
 NTPSynchronized=yes</div>
 </div>
 </div>
@@ -24794,10 +25006,23 @@ NTPSynchronized=yes</div>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> <span class="tk-flag">show</span> <span class="tk-flag">-p</span> <span class="tk-str">NTPSynchronized</span> <span class="tk-flag">--value</span>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> <span class="tk-flag">show</span> <span class="tk-flag">-p</span> \
+    <span class="tk-str">NTPSynchronized</span> <span class="tk-flag">--value</span>
 yes</div>
 </div>
 </div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 520" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="518" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="34" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">10 VMs, EACH CLOCK LOOKS FINE ALONE</text><text x="575" y="58" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">Project Part 2: five teams, 1 Ubuntu + 1 Kali each, one shared network</text><text x="26" y="114" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#8fd1ff" font-weight="bold">Ubuntu VMs</text><text x="26" y="224" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#8fd1ff" font-weight="bold">Kali VMs</text><rect x="26" y="130" width="210" height="80" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="131" y="162" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Monitor Read</text><text x="131" y="188" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#8fd19e">14:32:07 &#10003;</text><rect x="26" y="240" width="210" height="80" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="131" y="272" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Monitor Read</text><text x="131" y="298" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#8fd19e">14:32:11 &#10003;</text><rect x="248" y="130" width="210" height="80" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="353" y="162" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Monitor Write</text><text x="353" y="188" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#8fd19e">14:31:52 &#10003;</text><rect x="248" y="240" width="210" height="80" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="353" y="272" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Monitor Write</text><text x="353" y="298" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#8fd19e">14:31:49 &#10003;</text><rect x="470" y="130" width="210" height="80" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="575" y="162" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Attacker</text><text x="575" y="188" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#8fd19e">14:32:41 &#10003;</text><rect x="470" y="240" width="210" height="80" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="575" y="272" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Attacker</text><text x="575" y="298" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#8fd19e">14:32:33 &#10003;</text><rect x="692" y="130" width="210" height="80" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="797" y="162" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Clinical Data</text><text x="797" y="188" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#8fd19e">14:32:03 &#10003;</text><rect x="692" y="240" width="210" height="80" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="797" y="272" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Clinical Data</text><text x="797" y="298" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#8fd19e">14:32:19 &#10003;</text><rect x="914" y="130" width="210" height="80" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="1019" y="162" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Web Interface</text><text x="1019" y="188" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#8fd19e">14:31:58 &#10003;</text><rect x="914" y="240" width="210" height="80" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="1019" y="272" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Web Interface</text><text x="1019" y="298" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#8fd19e">14:32:02 &#10003;</text><text x="575" y="352" text-anchor="middle" font-size="18" font-family="Segoe UI, Arial, sans-serif" fill="#ccc" font-weight="bold">EVERY VM REPORTS ITS OWN LOCAL TIME AS CORRECT</text><rect x="235" y="372" width="680" height="62" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="3"/><text x="575" y="398" text-anchor="middle" font-size="18" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">BUT THE FLEET IS UP TO 52 SECONDS APART</text><text x="575" y="420" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#f0c6a8">Monitor Write 14:31:49 vs. Attacker 14:32:41: 52s apart, same instant</text><text x="575" y="464" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#999">"Looks fine locally" is not the same as "in sync with the rest of the fleet."</text><text x="575" y="488" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#999">A log-correlation check across teams needs all 10 clocks agreeing, not each one alone.</text></svg>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 460" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><defs><marker id="m10chronyarrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="1" y="1" width="1148" height="458" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">WHAT CHRONY DOES</text><rect x="60" y="66" width="280" height="78" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="200" y="100" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#eee" font-weight="bold">pool.ntp.org</text><text x="200" y="124" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">external time source</text><line x1="340" y1="105" x2="430" y2="105" stroke="#999" stroke-width="2.5" marker-end="url(#m10chronyarrow2)"/><rect x="435" y="66" width="280" height="78" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="3"/><text x="575" y="100" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#fff" font-weight="bold">chrony (this VM)</text><text x="575" y="124" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#f0c6a8">small, gradual corrections</text><line x1="715" y1="105" x2="805" y2="105" stroke="#999" stroke-width="2.5" marker-end="url(#m10chronyarrow2)"/><rect x="810" y="66" width="280" height="78" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="950" y="100" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Accurate Local Clock</text><text x="950" y="124" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">never jumps abruptly</text><text x="575" y="176" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#ccc" font-weight="bold">EVERY VM IN THE FLEET RUNS ITS OWN chrony</text><rect x="75" y="196" width="320" height="86" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="235" y="232" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Monitor Read/Write VM</text><text x="235" y="260" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#bbb">chrony</text><rect x="415" y="196" width="320" height="86" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="575" y="224" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Clinical Data &amp;</text><text x="575" y="248" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Access Control VM</text><text x="575" y="272" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#bbb">chrony</text><rect x="755" y="196" width="320" height="86" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="915" y="232" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Other Team VMs</text><text x="915" y="260" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#bbb">chrony</text><line x1="235" y1="282" x2="520" y2="326" stroke="#888" stroke-width="1.8"/><line x1="575" y1="282" x2="575" y2="326" stroke="#888" stroke-width="1.8"/><line x1="915" y1="282" x2="630" y2="326" stroke="#888" stroke-width="1.8"/><rect x="325" y="330" width="500" height="46" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="3"/><text x="575" y="359" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">TIMESTAMPS AGREE ACROSS THE FLEET</text><text x="575" y="404" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Without chrony running on every VM, each clock drifts independently</text><text x="575" y="428" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#999">and timestamps from different teams' machines can no longer be compared.</text></svg>
 </div>
 </section>
 
@@ -24808,10 +25033,10 @@ yes</div>
 <ul>
 <li>chrony is not installed</li><li>No sync without it</li><li>Install it first</li>
 </ul>
-
+<div class="fragment fade-in" style="margin-top:12px;"><p style="font-size:1.3rem;line-height:1.4;text-align:left;background:#fff3e8;color:#1a1a1a;border:2px solid #FF671D;border-radius:8px;padding:0.7rem 1rem;font-weight:600;margin:0;">Without chrony actually running, nothing corrects drift over time: a clock can drift minutes per week, enough to make two near-simultaneous log entries appear out of real order on the dashboard.</p></div>
 </div>
 <div class="col">
-<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p2q3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">chrony missing</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p2q3)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">No active sync</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p2q3)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">apt install chrony</text></svg>
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="20" y="8" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="28" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">MONITORING DASHBOARD</text><text x="190" y="50" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#ddd">chrony: not installed</text><rect x="20" y="86" width="340" height="94" rx="8" fill="#2a1216" stroke="#e03131" stroke-width="2"/><text x="34" y="104" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#e03131" font-weight="bold">&#10007; Without this check:</text><text x="34" y="124" font-size="12" font-family="Consolas, monospace" fill="#ff9b9b" font-weight="bold">chrony: command not found</text><text x="34" y="144" font-size="11" font-family="Consolas, monospace" fill="#e08888">09:15:40 guest1 viewed dashboard</text><text x="40" y="164" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#c97b7b">&#8592; no sync service running</text><rect x="20" y="190" width="340" height="114" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="34" y="208" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">&#10003; Fixed by:</text><text x="34" y="228" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">sudo apt install -y chrony</text><text x="34" y="248" font-size="12" font-family="Consolas, monospace" fill="#8fd19e" font-weight="bold">&#8594; Active: active (running)</text><text x="34" y="268" font-size="11" font-family="Consolas, monospace" fill="#a8e6b8">09:15:40 guest1 viewed dashboard</text><text x="40" y="288" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#7fcf94">&#8592; chrony active and syncing</text></svg>
 </div>
 </div>
 </section>
@@ -24821,11 +25046,14 @@ yes</div>
 <div class="col">
 <h4>Q3: Install and Confirm chrony</h4>
 <p style="font-size:1.3rem;line-height:1.4;text-align:left;">chrony isn't installed by default. What two commands install it and confirm its service is running?</p>
+<svg viewBox="0 0 460 70" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:10px auto 0;"><rect x="5" y="4" width="105" height="60" rx="6" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="57" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#fff" font-weight="bold">guest1</text><text x="57" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#f0c6a8">guests</text><rect x="115" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="168" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">nurse1</text><text x="168" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">nurses</text><rect x="225" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="278" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">physician1</text><text x="278" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">physicians</text><rect x="335" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="388" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">patient1</text><text x="388" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">patients</text></svg>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> <span class="tk-flag">install</span> <span class="tk-flag">-y</span> <span class="tk-str">chrony</span>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> <span class="tk-flag">install</span> <span class="tk-flag">-y</span> <span class="tk-str">chrony</span>
 <span class="tk-comment"># not installed by default</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">systemctl</span> <span class="tk-flag">enable</span> <span class="tk-flag">--now</span> <span class="tk-path">chrony</span>
+<span class="tk-comment"># enable on boot + start now</span>
 <span class="tk-prompt">$ </span><span class="tk-cmd">systemctl</span> <span class="tk-str">status</span> <span class="tk-path">chrony</span>
 Active: active (running)</div>
 </div>
@@ -24844,7 +25072,7 @@ Active: active (running)</div>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">systemctl</span> <span class="tk-flag">is-active</span> <span class="tk-path">chrony</span>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">systemctl</span> <span class="tk-flag">is-active</span> <span class="tk-path">chrony</span>
 active</div>
 </div>
 </div>
@@ -24858,10 +25086,10 @@ active</div>
 <ul>
 <li>chrony running isn't</li><li>the same as synced tight</li><li>Check the real offset</li>
 </ul>
-
+<div class="fragment fade-in" style="margin-top:12px;"><p style="font-size:1.3rem;line-height:1.4;text-align:left;background:#fff3e8;color:#1a1a1a;border:2px solid #FF671D;border-radius:8px;padding:0.7rem 1rem;font-weight:600;margin:0;">Confirms how accurate the sync really is, not just that it's turned on: a sub-second offset proves the dashboard can tell which of two near-simultaneous reads happened first.</p></div>
 </div>
 <div class="col">
-<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p2q4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">chrony is running</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p2q4)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Offset still unknown</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p2q4)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">chronyc tracking</text></svg>
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="20" y="8" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="28" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">MONITORING DASHBOARD</text><text x="190" y="50" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#ddd">chrony: active, offset ?</text><rect x="20" y="86" width="340" height="94" rx="8" fill="#2a1216" stroke="#e03131" stroke-width="2"/><text x="34" y="104" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#e03131" font-weight="bold">&#10007; Without this check:</text><text x="34" y="124" font-size="12" font-family="Consolas, monospace" fill="#ff9b9b" font-weight="bold">System time: +847.3 seconds fast</text><text x="34" y="144" font-size="11" font-family="Consolas, monospace" fill="#e08888">10:44:17 physician1 update #3390</text><text x="40" y="164" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#c97b7b">&#8592; off by +847.3s (unverified)</text><rect x="20" y="190" width="340" height="114" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="34" y="208" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">&#10003; Fixed by:</text><text x="34" y="228" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">chronyc tracking</text><text x="34" y="248" font-size="12" font-family="Consolas, monospace" fill="#8fd19e" font-weight="bold">&#8594; System time: 0.000031s fast</text><text x="34" y="268" font-size="11" font-family="Consolas, monospace" fill="#a8e6b8">10:44:17 physician1 update #3390</text><text x="40" y="288" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#7fcf94">&#8592; off by 0.000031s (tight)</text></svg>
 </div>
 </div>
 </section>
@@ -24871,10 +25099,11 @@ active</div>
 <div class="col">
 <h4>Q4: Check the Sync Offset</h4>
 <p style="font-size:1.3rem;line-height:1.4;text-align:left;">chrony is running. What command shows exactly how far off the system clock currently is?</p>
+<svg viewBox="0 0 460 70" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:10px auto 0;"><rect x="5" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="57" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">guest1</text><text x="57" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">guests</text><rect x="115" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="168" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">nurse1</text><text x="168" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">nurses</text><rect x="225" y="4" width="105" height="60" rx="6" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="278" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#fff" font-weight="bold">physician1</text><text x="278" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#f0c6a8">physicians</text><rect x="335" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="388" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">patient1</text><text x="388" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">patients</text></svg>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">tracking</span>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">tracking</span>
 System time     : 0.000031 seconds fast</div>
 </div>
 </div>
@@ -24892,7 +25121,7 @@ System time     : 0.000031 seconds fast</div>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">tracking</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"System time"</span>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">tracking</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"System time"</span>
 System time     : 0.000031 seconds fast</div>
 </div>
 </div>
@@ -24906,10 +25135,10 @@ System time     : 0.000031 seconds fast</div>
 <ul>
 <li>Several NTP sources</li><li>Only one is trusted</li><li>Look for the marker</li>
 </ul>
-
+<div class="fragment fade-in" style="margin-top:12px;"><p style="font-size:1.3rem;line-height:1.4;text-align:left;background:#fff3e8;color:#1a1a1a;border:2px solid #FF671D;border-radius:8px;padding:0.7rem 1rem;font-weight:600;margin:0;">Shows where the time is actually coming from: a compromised or misconfigured NTP source could skew the clock deliberately, making the activity log's event order unreliable.</p></div>
 </div>
 <div class="col">
-<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p2q5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Multiple sources listed</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p2q5)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Only one is trusted</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p2q5)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Find the ^* marker</text></svg>
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="20" y="8" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="28" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">MONITORING DASHBOARD</text><text x="190" y="50" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#ddd">3 NTP sources configured</text><rect x="20" y="86" width="340" height="94" rx="8" fill="#2a1216" stroke="#e03131" stroke-width="2"/><text x="34" y="104" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#e03131" font-weight="bold">&#10007; Without this check:</text><text x="34" y="124" font-size="12" font-family="Consolas, monospace" fill="#ff9b9b" font-weight="bold">ntp.ubuntu.com 2 6 377 1 +12us</text><text x="34" y="144" font-size="11" font-family="Consolas, monospace" fill="#e08888">chronyc sources: 3 listed</text><text x="40" y="164" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#c97b7b">&#8592; no source marked trusted</text><rect x="20" y="190" width="340" height="114" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="34" y="208" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">&#10003; Fixed by:</text><text x="34" y="228" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">chronyc sources</text><text x="34" y="248" font-size="12" font-family="Consolas, monospace" fill="#8fd19e" font-weight="bold">&#8594; ^* ntp.ubuntu.com 2 6 377 1 +12us</text><text x="34" y="268" font-size="11" font-family="Consolas, monospace" fill="#a8e6b8">chronyc sources: 3 listed</text><text x="40" y="288" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#7fcf94">&#8592; ^* ntp.ubuntu.com trusted</text></svg>
 </div>
 </div>
 </section>
@@ -24919,11 +25148,16 @@ System time     : 0.000031 seconds fast</div>
 <div class="col">
 <h4>Q5: Confirm the Trusted Source</h4>
 <p style="font-size:1.3rem;line-height:1.4;text-align:left;">Several NTP sources are configured. Which command shows which one is actually trusted right now?</p>
+<svg viewBox="0 0 460 70" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:10px auto 0;"><rect x="5" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="57" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">guest1</text><text x="57" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">guests</text><rect x="115" y="4" width="105" height="60" rx="6" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="168" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#fff" font-weight="bold">nurse1</text><text x="168" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#f0c6a8">nurses</text><rect x="225" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="278" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">physician1</text><text x="278" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">physicians</text><rect x="335" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="388" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">patient1</text><text x="388" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">patients</text></svg>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">sources</span>
-^* ntp.ubuntu.com   2   6   377     1    +12us</div>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">sources</span>
+^* ntp.ubuntu.com 2 6 377 1 +12us
+# ^* = trusted/synced source
+#   stratum 2, polls every 64s
+# reach 377(oct): last 8 polls OK
+#   +12us = clock 12us ahead</div>
 </div>
 </div>
 </div>
@@ -24940,8 +25174,12 @@ System time     : 0.000031 seconds fast</div>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">sources</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"\^\*"</span>
-^* ntp.ubuntu.com   2   6   377     1    +12us</div>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">sources</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"\^\*"</span>
+^* ntp.ubuntu.com 2 6 377 1 +12us
+# ^* = trusted/synced source
+#   stratum 2, polls every 64s
+# reach 377(oct): last 8 polls OK
+#   +12us = clock 12us ahead</div>
 </div>
 </div>
 </div>
@@ -24952,12 +25190,12 @@ System time     : 0.000031 seconds fast</div>
 <div class="col">
 <h4>Q6: Reading an Epoch Log Line</h4>
 <ul>
-<li>clinical-activity.log</li><li>logs a raw epoch time</li><li>Needs a readable form</li>
+<li>Epoch: seconds since 1970</li><li>clinical-activity.log</li><li>logs a raw epoch time</li><li>Needs a readable form</li>
 </ul>
-
+<div class="fragment fade-in" style="margin-top:12px;"><p style="font-size:1.3rem;line-height:1.4;text-align:left;background:#fff3e8;color:#1a1a1a;border:2px solid #FF671D;border-radius:8px;padding:0.7rem 1rem;font-weight:600;margin:0;">simulate.sh logs human-readable timestamps, but other tools like databases and APIs often log raw epoch numbers: converting one lets you cross-reference a database transaction with a specific logged read event.</p></div>
 </div>
 <div class="col">
-<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p2q6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Log has epoch seconds</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p2q6)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Hard for a human to read</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p2q6)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">date -d @epoch converts</text></svg>
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="20" y="8" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="28" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">MONITORING DASHBOARD</text><text x="190" y="50" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#ddd">clinical-activity.log: 1730000000</text><rect x="20" y="86" width="340" height="94" rx="8" fill="#2a1216" stroke="#e03131" stroke-width="2"/><text x="34" y="104" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#e03131" font-weight="bold">&#10007; Without this check:</text><text x="34" y="124" font-size="12" font-family="Consolas, monospace" fill="#ff9b9b" font-weight="bold">1730000000</text><text x="34" y="144" font-size="11" font-family="Consolas, monospace" fill="#e08888">clinical-activity.log: 1730000000</text><text x="40" y="164" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#c97b7b">&#8592; raw epoch, unreadable</text><rect x="20" y="190" width="340" height="114" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="34" y="208" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">&#10003; Fixed by:</text><text x="34" y="228" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">date -d @1730000000</text><text x="34" y="248" font-size="12" font-family="Consolas, monospace" fill="#8fd19e" font-weight="bold">&#8594; 2026-10-27_14:13:20</text><text x="34" y="268" font-size="11" font-family="Consolas, monospace" fill="#a8e6b8">clinical-activity.log: 1730000000</text><text x="40" y="288" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#7fcf94">&#8592; 2026-10-27 14:13:20</text></svg>
 </div>
 </div>
 </section>
@@ -24967,10 +25205,11 @@ System time     : 0.000031 seconds fast</div>
 <div class="col">
 <h4>Q6: Convert an Epoch Timestamp</h4>
 <p style="font-size:1.3rem;line-height:1.4;text-align:left;">clinical-activity.log logs a raw epoch timestamp. What command converts it to a readable date?</p>
+<svg viewBox="0 0 460 70" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:10px auto 0;"><rect x="5" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="57" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">guest1</text><text x="57" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">guests</text><rect x="115" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="168" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">nurse1</text><text x="168" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">nurses</text><rect x="225" y="4" width="105" height="60" rx="6" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="278" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#fff" font-weight="bold">physician1</text><text x="278" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#f0c6a8">physicians</text><rect x="335" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="388" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">patient1</text><text x="388" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">patients</text></svg>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">date</span> <span class="tk-flag">-d</span> <span class="tk-str">@1730000000</span>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">date</span> <span class="tk-flag">-d</span> <span class="tk-str">@1730000000</span>
 Mon Oct 27 ... 2026</div>
 </div>
 </div>
@@ -24988,9 +25227,23 @@ Mon Oct 27 ... 2026</div>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">date</span> <span class="tk-flag">-d</span> <span class="tk-str">@1730000000</span> <span class="tk-flag">+%F_%T</span>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">date</span> <span class="tk-flag">-d</span> <span class="tk-str">@1730000000</span> <span class="tk-flag">+%F_%T</span>
 2026-10-27_14:13:20</div>
 </div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Epoch's Reference Zone</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;"><strong>Q:</strong> <span class="tk-cmd" style="font-family:Consolas,monospace;">date -d @0</span> prints "Dec 31, 1969 4:00 PM PST," not Jan 1, 1970. Whose midnight does epoch 0 actually use?</p>
+
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;"><strong>A:</strong> UTC's own midnight: epoch 0 is 1970-01-01 00:00:00 UTC exactly, since UTC is the reference zone itself, not an offset from another one. PST's &minus;8h offset just shifts the local <em>display</em> back across the date line; the underlying epoch number never changes.</div>
+
 </div>
 </div>
 </section>
@@ -25002,10 +25255,10 @@ Mon Oct 27 ... 2026</div>
 <ul>
 <li>Different VMs, different</li><li>zones means logs never</li><li>line up across teams</li>
 </ul>
-
+<div class="fragment fade-in" style="margin-top:12px;"><p style="font-size:1.3rem;line-height:1.4;text-align:left;background:#fff3e8;color:#1a1a1a;border:2px solid #FF671D;border-radius:8px;padding:0.7rem 1rem;font-weight:600;margin:0;">If every team's VM uses a different zone, the same real event looks like it happened at different times on different dashboards: Monitor Write's backup logs and Monitor Read's access logs must agree on wall-clock time to line up a write with a suspicious read.</p></div>
 </div>
 <div class="col">
-<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p2q7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Zones can drift apart</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p2q7)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Logs won't line up</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p2q7)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Set one shared zone</text></svg>
+<svg viewBox="0 0 380 344" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="20" y="8" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="28" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">MONITORING DASHBOARD</text><text x="190" y="50" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#ddd">Monitor VM: PT, Audit VM: ET</text><rect x="20" y="86" width="340" height="94" rx="8" fill="#2a1216" stroke="#e03131" stroke-width="2"/><text x="34" y="104" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#e03131" font-weight="bold">&#10007; Without this check:</text><text x="34" y="124" font-size="12" font-family="Consolas, monospace" fill="#ff9b9b" font-weight="bold">Time zone: America/New_York</text><text x="34" y="144" font-size="11" font-family="Consolas, monospace" fill="#e08888">Monitor 14:02 PT vs Audit 17:02 ET</text><text x="40" y="164" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#c97b7b">&#8592; looks 3h apart (same event)</text><rect x="20" y="190" width="340" height="134" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="34" y="208" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">&#10003; Fixed by:</text><text x="34" y="228" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">timedatectl set-timezone</text><text x="34" y="248" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">  America/Los_Angeles</text><text x="34" y="268" font-size="12" font-family="Consolas, monospace" fill="#8fd19e" font-weight="bold">&#8594; Time zone: America/Los_Angeles</text><text x="34" y="288" font-size="11" font-family="Consolas, monospace" fill="#a8e6b8">Monitor 14:02 PT, Audit 14:02 PT</text><text x="40" y="308" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#7fcf94">&#8592; both read as 14:02 PT</text></svg>
 </div>
 </div>
 </section>
@@ -25015,10 +25268,12 @@ Mon Oct 27 ... 2026</div>
 <div class="col">
 <h4>Q7: Set a Shared Time Zone</h4>
 <p style="font-size:1.3rem;line-height:1.4;text-align:left;">Every team's clock needs the same zone so logs line up. What command sets it?</p>
+<svg viewBox="0 0 460 70" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:10px auto 0;"><rect x="5" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="57" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">guest1</text><text x="57" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">guests</text><rect x="115" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="168" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">nurse1</text><text x="168" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">nurses</text><rect x="225" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="278" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">physician1</text><text x="278" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">physicians</text><rect x="335" y="4" width="105" height="60" rx="6" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="388" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#fff" font-weight="bold">patient1</text><text x="388" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#f0c6a8">patients</text></svg>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> <span class="tk-flag">set-timezone</span> <span class="tk-str">America/Los_Angeles</span></div>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> <span class="tk-flag">set-timezone</span> \
+    <span class="tk-str">America/Los_Angeles</span></div>
 </div>
 </div>
 </div>
@@ -25029,14 +25284,17 @@ Mon Oct 27 ... 2026</div>
 <div class="col">
 <h4>Answer: set-timezone</h4>
 <ul>
-<li>Takes effect immediately</li><li>No reboot needed</li><li>Matches the class standard</li>
+<li>Takes effect immediately</li><li>No reboot needed</li><li>Matches the class standard</li><li><a href="https://www.iana.org/time-zones" target="_blank" rel="noopener">IANA (official)</a></li><li><a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones" target="_blank" rel="noopener">Zone list (Wikipedia)</a></li>
 </ul>
 
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"Time zone"</span>
-Time zone: America/Los_Angeles (PDT, -0700)</div>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> <span class="tk-flag">show</span> <span class="tk-flag">-p</span> <span class="tk-str">Timezone</span> <span class="tk-flag">--value</span>
+<span class="tk-output">America/Los_Angeles</span>
+<span class="tk-comment"># proves the zone change stuck</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"Time zone"</span>
+Time zone: America/Los_Angeles</div>
 </div>
 </div>
 </div>
@@ -25049,10 +25307,10 @@ Time zone: America/Los_Angeles (PDT, -0700)</div>
 <ul>
 <li>System clock is correct</li><li>Hardware clock separate</li><li>Write it before reboot</li>
 </ul>
-
+<div class="fragment fade-in" style="margin-top:12px;"><p style="font-size:1.3rem;line-height:1.4;text-align:left;background:#fff3e8;color:#1a1a1a;border:2px solid #FF671D;border-radius:8px;padding:0.7rem 1rem;font-weight:600;margin:0;">VMs get rebooted, for example after a security update; if the hardware clock wasn't written, the VM could boot with a stale time until chrony catches up, mistiming the first few minutes of log entries after every reboot.</p></div>
 </div>
 <div class="col">
-<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p2q8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">System time now correct</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p2q8)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Hardware clock still stale</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p2q8)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">hwclock --systohc writes it</text></svg>
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="20" y="8" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="28" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">MONITORING DASHBOARD</text><text x="190" y="50" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#ddd">reboot pending after update</text><rect x="20" y="86" width="340" height="94" rx="8" fill="#2a1216" stroke="#e03131" stroke-width="2"/><text x="34" y="104" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#e03131" font-weight="bold">&#10007; Without this check:</text><text x="34" y="124" font-size="12" font-family="Consolas, monospace" fill="#ff9b9b" font-weight="bold">hwclock: 2026-10-20 09:02:11</text><text x="34" y="144" font-size="11" font-family="Consolas, monospace" fill="#e08888">post-reboot clock: 2026-10-20</text><text x="40" y="164" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#c97b7b">&#8592; boots 7 days in the past</text><rect x="20" y="190" width="340" height="114" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="34" y="208" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">&#10003; Fixed by:</text><text x="34" y="228" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">sudo hwclock --systohc</text><text x="34" y="248" font-size="12" font-family="Consolas, monospace" fill="#8fd19e" font-weight="bold">&#8594; hwclock: 2026-10-27 14:13:21</text><text x="34" y="268" font-size="11" font-family="Consolas, monospace" fill="#a8e6b8">post-reboot clock: 2026-10-27</text><text x="40" y="288" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#7fcf94">&#8592; boots at the real time</text></svg>
 </div>
 </div>
 </section>
@@ -25062,11 +25320,12 @@ Time zone: America/Los_Angeles (PDT, -0700)</div>
 <div class="col">
 <h4>Q8: Survive a Reboot</h4>
 <p style="font-size:1.3rem;line-height:1.4;text-align:left;">The system clock is now correct. What command makes sure it is still correct after a reboot?</p>
+<svg viewBox="0 0 460 70" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:10px auto 0;"><rect x="5" y="4" width="105" height="60" rx="6" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="57" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#fff" font-weight="bold">guest1</text><text x="57" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#f0c6a8">guests</text><rect x="115" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="168" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">nurse1</text><text x="168" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">nurses</text><rect x="225" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="278" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">physician1</text><text x="278" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">physicians</text><rect x="335" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="388" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">patient1</text><text x="388" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">patients</text></svg>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">hwclock</span> <span class="tk-flag">--systohc</span>
-<span class="tk-comment"># writes system time to the hardware clock</span></div>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">hwclock</span> <span class="tk-flag">--systohc</span>
+<span class="tk-comment"># writes time to the hw clock</span></div>
 </div>
 </div>
 </div>
@@ -25083,8 +25342,60 @@ Time zone: America/Los_Angeles (PDT, -0700)</div>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">hwclock</span>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">hwclock</span>
 2026-10-27 14:13:21.123456-07:00</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Q9: UTC or GMT?</h4>
+<ul>
+<li>Two names, not synonyms</li><li>Only one never shifts</li><li>DST ends this weekend</li>
+</ul>
+<div class="fragment fade-in" style="margin-top:12px;"><p style="font-size:1.3rem;line-height:1.4;text-align:left;background:#fff3e8;color:#1a1a1a;border:2px solid #FF671D;border-radius:8px;padding:0.7rem 1rem;font-weight:600;margin:0;">If this VM's zone were casually labeled GMT instead of UTC, every dashboard timestamp would be off by one hour for roughly seven months a year while the UK observes British Summer Time.</p></div>
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="20" y="8" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="28" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">MONITORING DASHBOARD</text><text x="190" y="50" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#ddd">zone label: GMT (ambiguous)</text><rect x="20" y="86" width="340" height="94" rx="8" fill="#2a1216" stroke="#e03131" stroke-width="2"/><text x="34" y="104" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#e03131" font-weight="bold">&#10007; Without this check:</text><text x="34" y="124" font-size="12" font-family="Consolas, monospace" fill="#ff9b9b" font-weight="bold">Time zone: GMT (BST +1 active)</text><text x="34" y="144" font-size="11" font-family="Consolas, monospace" fill="#e08888">zone label shown as GMT</text><text x="40" y="164" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#c97b7b">&#8592; silently +1h during BST</text><rect x="20" y="190" width="340" height="114" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="34" y="208" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">&#10003; Fixed by:</text><text x="34" y="228" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">timedatectl set-timezone UTC</text><text x="34" y="248" font-size="12" font-family="Consolas, monospace" fill="#8fd19e" font-weight="bold">&#8594; Time zone: UTC</text><text x="34" y="268" font-size="11" font-family="Consolas, monospace" fill="#a8e6b8">zone label shown as UTC</text><text x="40" y="288" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#7fcf94">&#8592; UTC: never shifts</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Q9: UTC or GMT?</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">This weekend (Nov 1), US clocks "fall back" for the end of Daylight Saving Time, so 1:30 AM happens twice in local time. For this VM's clock, would you recommend UTC or GMT, and why?</p>
+<svg viewBox="0 0 460 70" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:420px;display:block;margin:10px auto 0;"><rect x="5" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="57" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">guest1</text><text x="57" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">guests</text><rect x="115" y="4" width="105" height="60" rx="6" fill="#3a1f0a" stroke="#FF671D" stroke-width="2.5"/><text x="168" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#fff" font-weight="bold">nurse1</text><text x="168" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#f0c6a8">nurses</text><rect x="225" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="278" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">physician1</text><text x="278" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">physicians</text><rect x="335" y="4" width="105" height="60" rx="6" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/><text x="388" y="30" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#777" font-weight="bold">patient1</text><text x="388" y="50" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#555">patients</text></svg>
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">timedatectl</span> <span class="tk-flag">set-timezone</span> <span class="tk-str">UTC</span>
+<span class="tk-comment"># UTC never shifts for daylight saving</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Answer: UTC, Not GMT</h4>
+<ul>
+<li>GMT ~ UK winter clock only</li><li>BST (UTC+1) runs Mar-Oct</li><li>UTC is the one fixed point</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> <span class="tk-flag">show</span> <span class="tk-flag">-p</span> <span class="tk-str">Timezone</span> <span class="tk-flag">--value</span>
+<span class="tk-output">UTC</span>
+<span class="tk-comment"># confirms it stuck: never GMT</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"Time zone"</span>
+<span class="tk-output">Time zone: UTC</span></div>
 </div>
 </div>
 </div>
@@ -25111,16 +25422,214 @@ System time     : 0.000031 seconds fast</div>
 <section id="module-10-agenda-9"><h2 style="text-align:center;">Practice Lab Part 3</h2></section>
 
 <section data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1280 560" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1250px;display:block;margin:0 auto;" role="img"><defs><marker id="m10p3dim" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker><marker id="m10p3hot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#9cdcfe"/></marker></defs>
+<text x="640" y="36" text-anchor="middle" font-size="27" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">THE STORY SO FAR: CLICK THROUGH THIS LAB</text>
+<rect x="20" y="70" width="280" height="70" rx="10" fill="#1e1e1e" stroke="#444" stroke-width="2"/><text x="160" y="100" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#888"><tspan x="160" dy="0">Audit about</tspan><tspan x="160" dy="24">to begin</tspan></text>
+<line x1="160" y1="140" x2="160" y2="152" stroke="#555" stroke-width="1.5" marker-end="url(#m10p3dim)"/>
+<rect x="20" y="156" width="280" height="70" rx="10" fill="#1e1e1e" stroke="#444" stroke-width="2"/><text x="160" y="186" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#888"><tspan x="160" dy="0">Found old</tspan><tspan x="160" dy="24">legacy script</tspan></text>
+<line x1="160" y1="226" x2="160" y2="238" stroke="#555" stroke-width="1.5" marker-end="url(#m10p3dim)"/>
+<rect x="20" y="242" width="280" height="70" rx="10" fill="#1e1e1e" stroke="#444" stroke-width="2"/><text x="160" y="272" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#888"><tspan x="160" dy="0">Credential</tspan><tspan x="160" dy="24">looks old</tspan></text>
+<line x1="160" y1="312" x2="160" y2="324" stroke="#555" stroke-width="1.5" marker-end="url(#m10p3dim)"/>
+<rect x="20" y="328" width="280" height="70" rx="10" fill="#1e1e1e" stroke="#444" stroke-width="2"/><text x="160" y="358" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#888"><tspan x="160" dy="0">mtime needs</tspan><tspan x="160" dy="24">trusted clock</tspan></text>
+<line x1="160" y1="398" x2="160" y2="410" stroke="#555" stroke-width="1.5" marker-end="url(#m10p3dim)"/>
+<rect x="20" y="414" width="280" height="70" rx="10" fill="#1e1e1e" stroke="#444" stroke-width="2"/><text x="160" y="444" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#888"><tspan x="160" dy="0">Ahead: check,</tspan><tspan x="160" dy="24">sync, prove</tspan></text>
+<g class="fragment fade-in" data-fragment-index="0" data-token="m10p3token"><rect x="20" y="70" width="280" height="70" rx="10" fill="#0a2436" stroke="#9cdcfe" stroke-width="3"/><text x="160" y="100" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#fff" font-weight="bold"><tspan x="160" dy="0">Audit about</tspan><tspan x="160" dy="24">to begin</tspan></text></g>
+<g class="fragment fade-in" data-fragment-index="1" data-token="m10p3token"><line x1="160" y1="140" x2="160" y2="152" stroke="#9cdcfe" stroke-width="1.5" marker-end="url(#m10p3hot)"/><rect x="20" y="156" width="280" height="70" rx="10" fill="#0a2436" stroke="#9cdcfe" stroke-width="3"/><text x="160" y="186" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#fff" font-weight="bold"><tspan x="160" dy="0">Found old</tspan><tspan x="160" dy="24">legacy script</tspan></text></g>
+<g class="fragment fade-in" data-fragment-index="2" data-token="m10p3token"><line x1="160" y1="226" x2="160" y2="238" stroke="#9cdcfe" stroke-width="1.5" marker-end="url(#m10p3hot)"/><rect x="20" y="242" width="280" height="70" rx="10" fill="#0a2436" stroke="#9cdcfe" stroke-width="3"/><text x="160" y="272" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#fff" font-weight="bold"><tspan x="160" dy="0">Credential</tspan><tspan x="160" dy="24">looks old</tspan></text></g>
+<g class="fragment fade-in" data-fragment-index="3" data-token="m10p3token"><line x1="160" y1="312" x2="160" y2="324" stroke="#9cdcfe" stroke-width="1.5" marker-end="url(#m10p3hot)"/><rect x="20" y="328" width="280" height="70" rx="10" fill="#0a2436" stroke="#9cdcfe" stroke-width="3"/><text x="160" y="358" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#fff" font-weight="bold"><tspan x="160" dy="0">mtime needs</tspan><tspan x="160" dy="24">trusted clock</tspan></text></g>
+<g class="fragment fade-in" data-fragment-index="4" data-token="m10p3token"><line x1="160" y1="398" x2="160" y2="410" stroke="#9cdcfe" stroke-width="1.5" marker-end="url(#m10p3hot)"/><rect x="20" y="414" width="280" height="70" rx="10" fill="#0a2436" stroke="#9cdcfe" stroke-width="3"/><text x="160" y="444" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#fff" font-weight="bold"><tspan x="160" dy="0">Ahead: check,</tspan><tspan x="160" dy="24">sync, prove</tspan></text></g>
+<g id="m10p3token" class="tok-0"><circle cx="320" cy="105" r="12" fill="#9cdcfe" stroke="#0a2436" stroke-width="2"/></g>
+<rect x="640" y="160" width="630" height="230" rx="12" fill="#0a0a0a" stroke="#555" stroke-width="2"/>
+<text x="955" y="200" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">ACCESS AUDIT REPORT</text>
+<line x1="660" y1="220" x2="1250" y2="220" stroke="#444" stroke-width="1.5"/>
+<text x="660" y="250" font-size="20" font-family="Consolas, monospace" fill="#ddd">/srv/clinical-data/patients.csv</text>
+<text x="660" y="276" font-size="20" font-family="Consolas, monospace"><tspan fill="#ddd">Last Modified: </tspan><tspan fill="#9cdcfe">2026-10-27 14:02:11</tspan></text>
+<text x="660" y="310" font-size="20" font-family="Consolas, monospace" fill="#ddd">/opt/hospital-vm/legacy-notify.sh</text>
+<text x="660" y="336" font-size="20" font-family="Consolas, monospace"><tspan fill="#ddd">Last Modified: </tspan><tspan fill="#9cdcfe">2026-10-27 09:15:40</tspan></text>
+<text x="955" y="366" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Is every mtime here accurate?</text>
+</svg>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1200 500" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1180px;display:block;margin:0 auto;" role="img"><defs><marker id="m10overviewArrow3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#555"/></marker></defs>
+<text x="600" y="36" text-anchor="middle" font-size="27" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">WHAT setup.sh CREATES</text>
+<text x="600" y="58" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Created once, the same on every team's Ubuntu VM</text>
+<rect x="40" y="76" width="420" height="180" rx="10" fill="#1e1e1e" stroke="#555" stroke-width="2"/>
+<text x="60" y="112" font-size="20" font-family="Consolas, monospace" fill="#eee" font-weight="bold">/srv/clinical-data/</text>
+<text x="80" y="142" font-size="20" font-family="Consolas, monospace" fill="#ccc">patients.csv</text>
+<text x="80" y="164" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">644, world-readable</text>
+<text x="80" y="196" font-size="20" font-family="Consolas, monospace" fill="#ccc">.patients.csv.bak</text>
+<text x="80" y="218" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">644, world-readable</text>
+<rect x="500" y="76" width="360" height="180" rx="10" fill="#1e1e1e" stroke="#555" stroke-width="2"/>
+<text x="520" y="112" font-size="20" font-family="Consolas, monospace" fill="#eee" font-weight="bold">/opt/hospital-vm/</text>
+<text x="540" y="142" font-size="20" font-family="Consolas, monospace" fill="#ccc">legacy-notify.sh</text>
+<text x="540" y="164" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">disabled, legacy stub</text>
+<rect x="900" y="76" width="260" height="180" rx="10" fill="#1e1e1e" stroke="#555" stroke-width="2"/>
+<text x="1030" y="112" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#eee" font-weight="bold">simulate.sh</text>
+<text x="1030" y="136" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">optional, background</text>
+<line x1="1030" y1="148" x2="1030" y2="170" stroke="#555" stroke-width="1.5" marker-end="url(#m10overviewArrow3)"/>
+<text x="1030" y="192" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#ccc">/var/log/</text>
+<text x="1030" y="212" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#ccc">clinical-activity.log</text>
+<rect x="50" y="296" width="260" height="140" rx="10" fill="#1e1e1e" stroke="#555" stroke-width="2"/>
+<text x="180" y="340" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#eee" font-weight="bold">guest1</text>
+<text x="180" y="372" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">group: guests</text>
+<rect x="330" y="296" width="260" height="140" rx="10" fill="#1e1e1e" stroke="#555" stroke-width="2"/>
+<text x="460" y="340" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#eee" font-weight="bold">nurse1</text>
+<text x="460" y="372" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">group: nurses</text>
+<rect x="610" y="296" width="260" height="140" rx="10" fill="#1e1e1e" stroke="#555" stroke-width="2"/>
+<text x="740" y="340" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#eee" font-weight="bold">physician1</text>
+<text x="740" y="372" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">group: physicians</text>
+<rect x="890" y="296" width="260" height="140" rx="10" fill="#1e1e1e" stroke="#555" stroke-width="2"/>
+<text x="1020" y="340" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#eee" font-weight="bold">patient1</text>
+<text x="1020" y="372" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">group: patients</text>
+</svg>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
 <div class="twocol">
 <div class="col">
-<h4>Why This Matters</h4>
+<h4>/srv/clinical-data/ (1/4)</h4>
 <ul>
-<li>Access Control team audits</li><li>mtimes prove when fixed</li><li>Unsynced clock voids proof</li>
+<li>Shared clinical records</li><li>2 files, both 644</li><li>Starts world-readable</li>
 </ul>
-
 </div>
 <div class="col">
-<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p3why" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Permissions get tightened</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p3why)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">mtime should prove when</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p3why)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Clock must be trusted</text></svg>
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">ls</span> <span class="tk-flag">-la</span> <span class="tk-path">/srv/clinical-data/</span>
+<span class="tk-output">-rw-r--r-- 1 root root 2048 patients.csv</span>
+<span class="tk-output">-rw-r--r-- 1 root root  512 .patients.csv.bak</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">cat</span> <span class="tk-path">patients.csv</span> | <span class="tk-cmd">cut</span> <span class="tk-flag">-d,</span> <span class="tk-flag">-f1-4</span>
+<span class="tk-output">mrn,name,dob,unit</span>
+<span class="tk-output">ER-1001,Jordan Ellis,1990-03-14,ER-A</span>
+<span class="tk-output">ER-1002,Priya Nandakumar,1985-07-02,ER-B</span></div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>/opt/hospital-vm/ (2/4)</h4>
+<ul>
+<li>Legacy notify script</li><li>Marked for retirement</li><li>Still on disk, still runs</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">ls</span> <span class="tk-flag">-l</span> <span class="tk-path">/opt/hospital-vm/legacy-notify.sh</span>
+<span class="tk-output">-rw-r--r-- 1 root root 118 legacy-notify.sh</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">cat</span> <span class="tk-path">legacy-notify.sh</span>
+<span class="tk-output">#!/bin/bash</span>
+<span class="tk-comment"># TODO: retire, replaced by new pipeline</span>
+<span class="tk-comment"># patient1 / Patient123!</span>
+<span class="tk-output">echo "legacy notify: disabled"</span></div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>simulate.sh (3/4)</h4>
+<ul>
+<li>Optional background script</li><li>Simulates clinic activity</li><li>Full walkthrough coming up</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">ls</span> <span class="tk-flag">-l</span> <span class="tk-path">/var/log/clinical-activity.log</span>
+<span class="tk-output">-rw-r--r-- 1 root root 4096 clinical-activity.log</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">tail</span> <span class="tk-flag">-3</span> <span class="tk-path">clinical-activity.log</span>
+<span class="tk-output">10-27 10:42:03 persona=nurse1 action=read</span>
+<span class="tk-output">10-27 10:43:03 action=vitals-update row=ER-1001</span>
+<span class="tk-output">10-27 10:43:33 persona=guest1 action=read</span></div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>4 Persona Accounts (4/4)</h4>
+<ul>
+<li>guest1, nurse1, physician1</li><li>...and patient1</li><li>Each in its own group</li>
+</ul>
+</div>
+<div class="col">
+<svg viewBox="0 0 340 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;">
+<rect x="10" y="10" width="150" height="95" rx="8" fill="#1e1e1e" stroke="#555" stroke-width="2"/>
+<text x="85" y="42" text-anchor="middle" font-size="24">&#128100;</text>
+<text x="85" y="68" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee" font-weight="bold">guest1</text>
+<text x="85" y="86" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">group: guests</text>
+<rect x="174" y="10" width="150" height="95" rx="8" fill="#1e1e1e" stroke="#555" stroke-width="2"/>
+<text x="249" y="42" text-anchor="middle" font-size="24">&#129658;</text>
+<text x="249" y="68" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee" font-weight="bold">nurse1</text>
+<text x="249" y="86" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">group: nurses</text>
+<rect x="10" y="115" width="150" height="95" rx="8" fill="#1e1e1e" stroke="#555" stroke-width="2"/>
+<text x="85" y="147" text-anchor="middle" font-size="24">&#129489;&#8205;&#9877;&#65039;</text>
+<text x="85" y="173" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee" font-weight="bold">physician1</text>
+<text x="85" y="191" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">group: physicians</text>
+<rect x="174" y="115" width="150" height="95" rx="8" fill="#1e1e1e" stroke="#555" stroke-width="2"/>
+<text x="249" y="147" text-anchor="middle" font-size="24">&#128719;&#65039;</text>
+<text x="249" y="173" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee" font-weight="bold">patient1</text>
+<text x="249" y="191" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">group: patients</text>
+</svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>How simulate.sh Runs</h4>
+<svg viewBox="0 0 340 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><defs><marker id="m10simLoop" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#777"/></marker></defs>
+<rect x="20" y="10" width="260" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="150" y="39" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee">while true; do</text>
+<line x1="150" y1="58" x2="150" y2="74" stroke="#777" stroke-width="2" marker-end="url(#m10simLoop)"/>
+<rect x="20" y="76" width="260" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="150" y="105" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee">pick a persona</text>
+<line x1="150" y1="124" x2="150" y2="140" stroke="#777" stroke-width="2" marker-end="url(#m10simLoop)"/>
+<rect x="20" y="142" width="260" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="150" y="171" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee">act on a row</text>
+<line x1="150" y1="190" x2="150" y2="206" stroke="#777" stroke-width="2" marker-end="url(#m10simLoop)"/>
+<rect x="20" y="208" width="260" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="150" y="237" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee">sleep 30s</text>
+<path d="M280,232 L305,232 L305,34 L283,34" fill="none" stroke="#777" stroke-width="2" marker-end="url(#m10simLoop)"/>
+<text x="150" y="287" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Never exits: not a cron job</text>
+<text x="150" y="307" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Not in crontab: background it yourself</text>
+</svg>
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">nohup</span> <span class="tk-shell">./simulate.sh</span> &amp;
+<span class="tk-comment"># loops forever, must be backgrounded</span>
+<span class="tk-output">10-27 10:42:03 persona=nurse1 action=read</span>
+<span class="tk-output">10-27 10:43:03 action=vitals-update row=ER-1001</span>
+<span class="tk-output">10-27 10:43:33 persona=guest1 action=read</span>
+<span class="tk-output">10-27 10:44:03 persona=patient1 action=read</span></div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Disabled Is Not Removed</h4>
+<svg viewBox="0 0 340 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><defs><marker id="m10legacyArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#777"/></marker></defs>
+<rect x="20" y="10" width="260" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="150" y="39" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee">Permissions: 644</text>
+<line x1="150" y1="58" x2="150" y2="74" stroke="#777" stroke-width="2" marker-end="url(#m10legacyArrow)"/>
+<rect x="20" y="76" width="260" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="150" y="105" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee">World-readable</text>
+<line x1="150" y1="124" x2="150" y2="140" stroke="#777" stroke-width="2" marker-end="url(#m10legacyArrow)"/>
+<rect x="20" y="142" width="260" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="150" y="171" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee">Old password in comment</text>
+<text x="150" y="225" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">Disabled script, not removed</text>
+<text x="150" y="245" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">An audit would still find it</text>
+</svg>
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">cat</span> <span class="tk-path">/opt/hospital-vm/legacy-notify.sh</span>
+<span class="tk-output">#!/bin/bash</span>
+<span class="tk-output"># TODO: retire, replaced by new pipeline</span>
+<span class="tk-output"># patient1 / Patient123!</span>
+<span class="tk-output">echo "legacy notify: disabled"</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">ls</span> <span class="tk-flag">-l</span> <span class="tk-path">/opt/hospital-vm/legacy-notify.sh</span>
+<span class="tk-output">-rw-r--r-- 1 root root 118 legacy-notify.sh</span>
+<span class="tk-comment"># an accurate audit would flag this</span></div>
 </div>
 </div>
 </section>
@@ -25150,29 +25659,14 @@ System time     : 0.000031 seconds fast</div>
 <section data-background-color="#ffffff">
 <div class="twocol">
 <div class="col">
-<h4>Scenario: An Old Credential</h4>
-<ul>
-<li>legacy-notify.sh has an</li><li>old hardcoded credential</li><li>How old, exactly?</li>
-</ul>
-
-</div>
-<div class="col">
-<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p3scn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Old script found on VM</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p3scn)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Need its real age</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p3scn)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Clock must be right</text></svg>
-</div>
-</div>
-</section>
-
-<section data-background-color="#ffffff">
-<div class="twocol">
-<div class="col">
 <h4>Q1: Clock State Before the Audit</h4>
 <ul>
 <li>Audit about to start</li><li>Clock state unknown</li><li>Check it first</li>
 </ul>
-
+<div class="fragment fade-in" style="margin-top:12px;"><p style="font-size:1.3rem;line-height:1.4;text-align:left;background:#fff3e8;color:#1a1a1a;border:2px solid #FF671D;border-radius:8px;padding:0.7rem 1rem;font-weight:600;margin:0;">The audit's whole job is to say when access happened: if this VM's own clock state is unverified going in, every timestamp the audit later relies on is suspect before a single file is even checked.</p></div>
 </div>
 <div class="col">
-<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p3q1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Audit about to begin</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p3q1)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Clock state unknown</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p3q1)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Check it first</text></svg>
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="20" y="8" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="28" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">ACCESS AUDIT REPORT</text><text x="190" y="50" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#ddd">audit started, clock state: ?</text><rect x="20" y="86" width="340" height="94" rx="8" fill="#2a1216" stroke="#e03131" stroke-width="2"/><text x="34" y="104" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#e03131" font-weight="bold">&#10007; Without this check:</text><text x="34" y="124" font-size="12" font-family="Consolas, monospace" fill="#ff9b9b" font-weight="bold">NTP service: inactive</text><text x="34" y="144" font-size="11" font-family="Consolas, monospace" fill="#e08888">audit entry #1: timestamp pending</text><text x="40" y="164" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#c97b7b">&#8592; timestamp basis unverified</text><rect x="20" y="190" width="340" height="114" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="34" y="208" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">&#10003; Fixed by:</text><text x="34" y="228" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">timedatectl</text><text x="34" y="248" font-size="12" font-family="Consolas, monospace" fill="#8fd19e" font-weight="bold">&#8594; NTP service: active</text><text x="34" y="268" font-size="11" font-family="Consolas, monospace" fill="#a8e6b8">audit entry #1: timestamp pending</text><text x="40" y="288" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#7fcf94">&#8592; timestamp basis confirmed</text></svg>
 </div>
 </div>
 </section>
@@ -25185,7 +25679,7 @@ System time     : 0.000031 seconds fast</div>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span>
                Local time: ...
                Time zone: ...
              NTP service: active</div>
@@ -25205,7 +25699,7 @@ System time     : 0.000031 seconds fast</div>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"NTP service"</span>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"NTP service"</span>
 NTP service: active</div>
 </div>
 </div>
@@ -25219,10 +25713,10 @@ NTP service: active</div>
 <ul>
 <li>Wrong zone on this VM</li><li>Audit timestamps mislead</li><li>Fix the zone first</li>
 </ul>
-
+<div class="fragment fade-in" style="margin-top:12px;"><p style="font-size:1.3rem;line-height:1.4;text-align:left;background:#fff3e8;color:#1a1a1a;border:2px solid #FF671D;border-radius:8px;padding:0.7rem 1rem;font-weight:600;margin:0;">If this audit VM's zone doesn't match the rest of the fleet, a finding like "patient1 read a record at 2:00 PM" could actually describe an event an hour earlier or later than every other machine's logs.</p></div>
 </div>
 <div class="col">
-<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p3q2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Wrong zone set</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p3q2)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Audit entries mislead</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p3q2)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Fix the zone first</text></svg>
+<svg viewBox="0 0 380 344" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="20" y="8" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="28" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">ACCESS AUDIT REPORT</text><text x="190" y="50" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#ddd">zone: UTC-7 (unconfirmed)</text><rect x="20" y="86" width="340" height="94" rx="8" fill="#2a1216" stroke="#e03131" stroke-width="2"/><text x="34" y="104" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#e03131" font-weight="bold">&#10007; Without this check:</text><text x="34" y="124" font-size="12" font-family="Consolas, monospace" fill="#ff9b9b" font-weight="bold">Time zone: America/Chicago</text><text x="34" y="144" font-size="11" font-family="Consolas, monospace" fill="#e08888">finding logged at 14:02 (zone ?)</text><text x="40" y="164" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#c97b7b">&#8592; zone mismatch vs. the fleet</text><rect x="20" y="190" width="340" height="134" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="34" y="208" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">&#10003; Fixed by:</text><text x="34" y="228" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">timedatectl set-timezone</text><text x="34" y="248" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">  America/Los_Angeles</text><text x="34" y="268" font-size="12" font-family="Consolas, monospace" fill="#8fd19e" font-weight="bold">&#8594; Time zone: America/Los_Angeles</text><text x="34" y="288" font-size="11" font-family="Consolas, monospace" fill="#a8e6b8">finding logged at 14:02 PT</text><text x="40" y="308" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#7fcf94">&#8592; zone matches the fleet</text></svg>
 </div>
 </div>
 </section>
@@ -25235,7 +25729,8 @@ NTP service: active</div>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> <span class="tk-flag">set-timezone</span> <span class="tk-str">America/Los_Angeles</span></div>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> <span class="tk-flag">set-timezone</span> \
+    <span class="tk-str">America/Los_Angeles</span></div>
 </div>
 </div>
 </div>
@@ -25246,16 +25741,31 @@ NTP service: active</div>
 <div class="col">
 <h4>Answer: set-timezone</h4>
 <ul>
-<li>Takes effect immediately</li><li>No reboot needed</li><li>Now matches the class</li>
+<li>Takes effect immediately</li><li>No reboot needed</li><li>Now matches the class</li><li><a href="https://www.iana.org/time-zones" target="_blank" rel="noopener">IANA (official)</a></li><li><a href="https://en.wikipedia.org/wiki/List_of_tz_database_time_zones" target="_blank" rel="noopener">Zone list (Wikipedia)</a></li>
 </ul>
 
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"Time zone"</span>
-Time zone: America/Los_Angeles (PDT, -0700)</div>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> <span class="tk-flag">show</span> <span class="tk-flag">-p</span> <span class="tk-str">Timezone</span> <span class="tk-flag">--value</span>
+<span class="tk-output">America/Los_Angeles</span>
+<span class="tk-comment"># proves the zone change stuck</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"Time zone"</span>
+Time zone: America/Los_Angeles</div>
 </div>
 </div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 520" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><rect x="1" y="1" width="1148" height="518" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="34" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">10 VMs, EACH CLOCK LOOKS FINE ALONE</text><text x="575" y="58" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">Project Part 2: five teams, 1 Ubuntu + 1 Kali each, one shared network</text><text x="26" y="114" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#8fd1ff" font-weight="bold">Ubuntu VMs</text><text x="26" y="224" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#8fd1ff" font-weight="bold">Kali VMs</text><rect x="26" y="130" width="210" height="80" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="131" y="162" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Monitor Read</text><text x="131" y="188" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#8fd19e">14:32:07 &#10003;</text><rect x="26" y="240" width="210" height="80" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="131" y="272" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Monitor Read</text><text x="131" y="298" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#8fd19e">14:32:11 &#10003;</text><rect x="248" y="130" width="210" height="80" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="353" y="162" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Monitor Write</text><text x="353" y="188" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#8fd19e">14:31:52 &#10003;</text><rect x="248" y="240" width="210" height="80" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="353" y="272" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Monitor Write</text><text x="353" y="298" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#8fd19e">14:31:49 &#10003;</text><rect x="470" y="130" width="210" height="80" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="575" y="162" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Attacker</text><text x="575" y="188" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#8fd19e">14:32:41 &#10003;</text><rect x="470" y="240" width="210" height="80" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="575" y="272" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Attacker</text><text x="575" y="298" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#8fd19e">14:32:33 &#10003;</text><rect x="692" y="130" width="210" height="80" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="797" y="162" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Clinical Data</text><text x="797" y="188" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#8fd19e">14:32:03 &#10003;</text><rect x="692" y="240" width="210" height="80" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="797" y="272" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Clinical Data</text><text x="797" y="298" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#8fd19e">14:32:19 &#10003;</text><rect x="914" y="130" width="210" height="80" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="1019" y="162" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Web Interface</text><text x="1019" y="188" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#8fd19e">14:31:58 &#10003;</text><rect x="914" y="240" width="210" height="80" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="1019" y="272" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Web Interface</text><text x="1019" y="298" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#8fd19e">14:32:02 &#10003;</text><text x="575" y="352" text-anchor="middle" font-size="18" font-family="Segoe UI, Arial, sans-serif" fill="#ccc" font-weight="bold">EVERY VM REPORTS ITS OWN LOCAL TIME AS CORRECT</text><rect x="235" y="372" width="680" height="62" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="3"/><text x="575" y="398" text-anchor="middle" font-size="18" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">BUT THE FLEET IS UP TO 52 SECONDS APART</text><text x="575" y="420" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#f0c6a8">Monitor Write 14:31:49 vs. Attacker 14:32:41: 52s apart, same instant</text><text x="575" y="464" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#999">"Looks fine locally" is not the same as "in sync with the rest of the fleet."</text><text x="575" y="488" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#999">A log-correlation check across teams needs all 10 clocks agreeing, not each one alone.</text></svg>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div style="text-align:center;">
+<svg viewBox="0 0 1150 460" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:1150px;display:block;margin:0 auto;" role="img"><defs><marker id="m10chronyarrow3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="1" y="1" width="1148" height="458" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><text x="575" y="36" text-anchor="middle" font-size="22" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">WHAT CHRONY DOES</text><rect x="60" y="66" width="280" height="78" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="200" y="100" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#eee" font-weight="bold">pool.ntp.org</text><text x="200" y="124" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">external time source</text><line x1="340" y1="105" x2="430" y2="105" stroke="#999" stroke-width="2.5" marker-end="url(#m10chronyarrow3)"/><rect x="435" y="66" width="280" height="78" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="3"/><text x="575" y="100" text-anchor="middle" font-size="20" font-family="Consolas, monospace" fill="#fff" font-weight="bold">chrony (this VM)</text><text x="575" y="124" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#f0c6a8">small, gradual corrections</text><line x1="715" y1="105" x2="805" y2="105" stroke="#999" stroke-width="2.5" marker-end="url(#m10chronyarrow3)"/><rect x="810" y="66" width="280" height="78" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="950" y="100" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Accurate Local Clock</text><text x="950" y="124" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#bbb">never jumps abruptly</text><text x="575" y="176" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#ccc" font-weight="bold">EVERY VM IN THE FLEET RUNS ITS OWN chrony</text><rect x="75" y="196" width="320" height="86" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="235" y="232" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Monitor Read/Write VM</text><text x="235" y="260" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#bbb">chrony</text><rect x="415" y="196" width="320" height="86" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="575" y="224" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Clinical Data &amp;</text><text x="575" y="248" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Access Control VM</text><text x="575" y="272" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#bbb">chrony</text><rect x="755" y="196" width="320" height="86" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.5"/><text x="915" y="232" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#eee" font-weight="bold">Other Team VMs</text><text x="915" y="260" text-anchor="middle" font-size="16" font-family="Consolas, monospace" fill="#bbb">chrony</text><line x1="235" y1="282" x2="520" y2="326" stroke="#888" stroke-width="1.8"/><line x1="575" y1="282" x2="575" y2="326" stroke="#888" stroke-width="1.8"/><line x1="915" y1="282" x2="630" y2="326" stroke="#888" stroke-width="1.8"/><rect x="325" y="330" width="500" height="46" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="3"/><text x="575" y="359" text-anchor="middle" font-size="20" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">TIMESTAMPS AGREE ACROSS THE FLEET</text><text x="575" y="404" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Without chrony running on every VM, each clock drifts independently</text><text x="575" y="428" text-anchor="middle" font-size="16" font-family="Segoe UI, Arial, sans-serif" fill="#999">and timestamps from different teams' machines can no longer be compared.</text></svg>
 </div>
 </section>
 
@@ -25266,10 +25776,10 @@ Time zone: America/Los_Angeles (PDT, -0700)</div>
 <ul>
 <li>chrony is not installed</li><li>No real sync without it</li><li>Install it, then check</li>
 </ul>
-
+<div class="fragment fade-in" style="margin-top:12px;"><p style="font-size:1.3rem;line-height:1.4;text-align:left;background:#fff3e8;color:#1a1a1a;border:2px solid #FF671D;border-radius:8px;padding:0.7rem 1rem;font-weight:600;margin:0;">An audit that trusts file timestamps without confirming the auditing machine itself keeps accurate time is building its findings on an unverified assumption: install and enable chrony before trusting anything it reports.</p></div>
 </div>
 <div class="col">
-<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p3q3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">chrony missing</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p3q3)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">No active sync</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p3q3)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">apt install chrony</text></svg>
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="20" y="8" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="28" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">ACCESS AUDIT REPORT</text><text x="190" y="50" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#ddd">chrony: not installed</text><rect x="20" y="86" width="340" height="94" rx="8" fill="#2a1216" stroke="#e03131" stroke-width="2"/><text x="34" y="104" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#e03131" font-weight="bold">&#10007; Without this check:</text><text x="34" y="124" font-size="12" font-family="Consolas, monospace" fill="#ff9b9b" font-weight="bold">chrony: command not found</text><text x="34" y="144" font-size="11" font-family="Consolas, monospace" fill="#e08888">audit VM: sync status unknown</text><text x="40" y="164" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#c97b7b">&#8592; no sync service running</text><rect x="20" y="190" width="340" height="114" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="34" y="208" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">&#10003; Fixed by:</text><text x="34" y="228" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">sudo apt install -y chrony</text><text x="34" y="248" font-size="12" font-family="Consolas, monospace" fill="#8fd19e" font-weight="bold">&#8594; Active: active (running)</text><text x="34" y="268" font-size="11" font-family="Consolas, monospace" fill="#a8e6b8">audit VM: sync status active</text><text x="40" y="288" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#7fcf94">&#8592; chrony active and syncing</text></svg>
 </div>
 </div>
 </section>
@@ -25282,8 +25792,10 @@ Time zone: America/Los_Angeles (PDT, -0700)</div>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> <span class="tk-flag">install</span> <span class="tk-flag">-y</span> <span class="tk-str">chrony</span>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> <span class="tk-flag">install</span> <span class="tk-flag">-y</span> <span class="tk-str">chrony</span>
 <span class="tk-comment"># not installed by default</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">systemctl</span> <span class="tk-flag">enable</span> <span class="tk-flag">--now</span> <span class="tk-path">chrony</span>
+<span class="tk-comment"># enable on boot + start now</span>
 <span class="tk-prompt">$ </span><span class="tk-cmd">systemctl</span> <span class="tk-str">status</span> <span class="tk-path">chrony</span>
 Active: active (running)</div>
 </div>
@@ -25302,7 +25814,7 @@ Active: active (running)</div>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">systemctl</span> <span class="tk-flag">is-active</span> <span class="tk-path">chrony</span>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">systemctl</span> <span class="tk-flag">is-active</span> <span class="tk-path">chrony</span>
 active</div>
 </div>
 </div>
@@ -25316,10 +25828,10 @@ active</div>
 <ul>
 <li>chrony running isn't</li><li>proof of a tight offset</li><li>Check it before trusting</li>
 </ul>
-
+<div class="fragment fade-in" style="margin-top:12px;"><p style="font-size:1.3rem;line-height:1.4;text-align:left;background:#fff3e8;color:#1a1a1a;border:2px solid #FF671D;border-radius:8px;padding:0.7rem 1rem;font-weight:600;margin:0;">If this VM's own clock is still seconds or minutes off, the audit could misjudge the order of two closely timed events, like a backup write versus a suspicious read it's meant to flag.</p></div>
 </div>
 <div class="col">
-<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p3q4" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">chrony is running</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p3q4)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Offset still unknown</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p3q4)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">chronyc tracking</text></svg>
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="20" y="8" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="28" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">ACCESS AUDIT REPORT</text><text x="190" y="50" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#ddd">legacy-notify.sh mtime: ?</text><rect x="20" y="86" width="340" height="94" rx="8" fill="#2a1216" stroke="#e03131" stroke-width="2"/><text x="34" y="104" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#e03131" font-weight="bold">&#10007; Without this check:</text><text x="34" y="124" font-size="12" font-family="Consolas, monospace" fill="#ff9b9b" font-weight="bold">System time: +847.3 seconds fast</text><text x="34" y="144" font-size="11" font-family="Consolas, monospace" fill="#e08888">legacy-notify.sh mtime check</text><text x="40" y="164" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#c97b7b">&#8592; off by +847.3s (unverified)</text><rect x="20" y="190" width="340" height="114" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="34" y="208" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">&#10003; Fixed by:</text><text x="34" y="228" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">chronyc tracking</text><text x="34" y="248" font-size="12" font-family="Consolas, monospace" fill="#8fd19e" font-weight="bold">&#8594; System time: 0.000031s fast</text><text x="34" y="268" font-size="11" font-family="Consolas, monospace" fill="#a8e6b8">legacy-notify.sh mtime check</text><text x="40" y="288" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#7fcf94">&#8592; off by 0.000031s (tight)</text></svg>
 </div>
 </div>
 </section>
@@ -25332,7 +25844,7 @@ active</div>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">tracking</span>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">tracking</span>
 System time     : 0.000031 seconds fast</div>
 </div>
 </div>
@@ -25350,7 +25862,7 @@ System time     : 0.000031 seconds fast</div>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">tracking</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"System time"</span>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">tracking</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"System time"</span>
 System time     : 0.000031 seconds fast</div>
 </div>
 </div>
@@ -25364,10 +25876,10 @@ System time     : 0.000031 seconds fast</div>
 <ul>
 <li>Several NTP sources</li><li>Only one is trusted</li><li>Look for the marker</li>
 </ul>
-
+<div class="fragment fade-in" style="margin-top:12px;"><p style="font-size:1.3rem;line-height:1.4;text-align:left;background:#fff3e8;color:#1a1a1a;border:2px solid #FF671D;border-radius:8px;padding:0.7rem 1rem;font-weight:600;margin:0;">The audit record should name which source the clock actually trusted, not just that some source existed: a rogue or misconfigured source could have skewed the clock the audit itself relied on.</p></div>
 </div>
 <div class="col">
-<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p3q5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Multiple sources listed</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p3q5)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Only one is trusted</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p3q5)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Find the ^* marker</text></svg>
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="20" y="8" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="28" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">ACCESS AUDIT REPORT</text><text x="190" y="50" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#ddd">3 NTP sources configured</text><rect x="20" y="86" width="340" height="94" rx="8" fill="#2a1216" stroke="#e03131" stroke-width="2"/><text x="34" y="104" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#e03131" font-weight="bold">&#10007; Without this check:</text><text x="34" y="124" font-size="12" font-family="Consolas, monospace" fill="#ff9b9b" font-weight="bold">ntp.ubuntu.com 2 6 377 1 +12us</text><text x="34" y="144" font-size="11" font-family="Consolas, monospace" fill="#e08888">chronyc sources: 3 listed</text><text x="40" y="164" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#c97b7b">&#8592; no source marked trusted</text><rect x="20" y="190" width="340" height="114" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="34" y="208" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">&#10003; Fixed by:</text><text x="34" y="228" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">chronyc sources</text><text x="34" y="248" font-size="12" font-family="Consolas, monospace" fill="#8fd19e" font-weight="bold">&#8594; ^* ntp.ubuntu.com 2 6 377 1 +12us</text><text x="34" y="268" font-size="11" font-family="Consolas, monospace" fill="#a8e6b8">chronyc sources: 3 listed</text><text x="40" y="288" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#7fcf94">&#8592; ^* ntp.ubuntu.com trusted</text></svg>
 </div>
 </div>
 </section>
@@ -25380,8 +25892,12 @@ System time     : 0.000031 seconds fast</div>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">sources</span>
-^* ntp.ubuntu.com   2   6   377     1    +12us</div>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">sources</span>
+^* ntp.ubuntu.com 2 6 377 1 +12us
+# ^* = trusted/synced source
+#   stratum 2, polls every 64s
+# reach 377(oct): last 8 polls OK
+#   +12us = clock 12us ahead</div>
 </div>
 </div>
 </div>
@@ -25398,8 +25914,12 @@ System time     : 0.000031 seconds fast</div>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">sources</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"\^\*"</span>
-^* ntp.ubuntu.com   2   6   377     1    +12us</div>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">chronyc</span> <span class="tk-str">sources</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"\^\*"</span>
+^* ntp.ubuntu.com 2 6 377 1 +12us
+# ^* = trusted/synced source
+#   stratum 2, polls every 64s
+# reach 377(oct): last 8 polls OK
+#   +12us = clock 12us ahead</div>
 </div>
 </div>
 </div>
@@ -25412,10 +25932,10 @@ System time     : 0.000031 seconds fast</div>
 <ul>
 <li>legacy-notify.sh is old</li><li>Need "now" to compare</li><li>against its file date</li>
 </ul>
-
+<div class="fragment fade-in" style="margin-top:12px;"><p style="font-size:1.3rem;line-height:1.4;text-align:left;background:#fff3e8;color:#1a1a1a;border:2px solid #FF671D;border-radius:8px;padding:0.7rem 1rem;font-weight:600;margin:0;">A leftover credential in an old script like legacy-notify.sh is only a real finding if you can prove how long it's actually been sitting there: that means comparing its file date against a trustworthy "now."</p></div>
 </div>
 <div class="col">
-<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p3q6" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Old script found</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p3q6)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Need "now" for comparison</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p3q6)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">date shows current time</text></svg>
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="20" y="8" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="28" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">ACCESS AUDIT REPORT</text><text x="190" y="50" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#ddd">legacy-notify.sh: age ?</text><rect x="20" y="86" width="340" height="94" rx="8" fill="#2a1216" stroke="#e03131" stroke-width="2"/><text x="34" y="104" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#e03131" font-weight="bold">&#10007; Without this check:</text><text x="34" y="124" font-size="12" font-family="Consolas, monospace" fill="#ff9b9b" font-weight="bold">mtime: 2026-10-20 09:02:11</text><text x="34" y="144" font-size="11" font-family="Consolas, monospace" fill="#e08888">legacy-notify.sh mtime: 10-20</text><text x="40" y="164" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#c97b7b">&#8592; no "now" to compare against</text><rect x="20" y="190" width="340" height="114" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="34" y="208" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">&#10003; Fixed by:</text><text x="34" y="228" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">date</text><text x="34" y="248" font-size="12" font-family="Consolas, monospace" fill="#8fd19e" font-weight="bold">&#8594; Tue Oct 27 14:13:20 PDT 2026</text><text x="34" y="268" font-size="11" font-family="Consolas, monospace" fill="#a8e6b8">legacy-notify.sh mtime: 10-20</text><text x="40" y="288" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#7fcf94">&#8592; now: 2026-10-27 (7 days old)</text></svg>
 </div>
 </div>
 </section>
@@ -25428,7 +25948,7 @@ System time     : 0.000031 seconds fast</div>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">date</span>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">date</span>
 Tue Oct 27 14:13:20 PDT 2026
 <span class="tk-comment"># compare this to the file's mtime</span></div>
 </div>
@@ -25447,7 +25967,7 @@ Tue Oct 27 14:13:20 PDT 2026
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">date</span> <span class="tk-flag">+%F_%T</span>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">date</span> <span class="tk-flag">+%F_%T</span>
 2026-10-27_14:13:20</div>
 </div>
 </div>
@@ -25461,10 +25981,10 @@ Tue Oct 27 14:13:20 PDT 2026
 <ul>
 <li>VM sat suspended a week</li><li>Hardware clock may be</li><li>stale too, not just drift</li>
 </ul>
-
+<div class="fragment fade-in" style="margin-top:12px;"><p style="font-size:1.3rem;line-height:1.4;text-align:left;background:#fff3e8;color:#1a1a1a;border:2px solid #FF671D;border-radius:8px;padding:0.7rem 1rem;font-weight:600;margin:0;">A VM that sat suspended for a week could resume with a hardware clock still showing last week's date: any file timestamp checked before chrony catches up would be auditing against a clock that hasn't caught up yet either.</p></div>
 </div>
 <div class="col">
-<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p3q7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">VM suspended a week</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p3q7)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Hardware clock may be stale</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p3q7)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">Check it: hwclock</text></svg>
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="20" y="8" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="28" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">ACCESS AUDIT REPORT</text><text x="190" y="50" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#ddd">VM suspended 7 days</text><rect x="20" y="86" width="340" height="94" rx="8" fill="#2a1216" stroke="#e03131" stroke-width="2"/><text x="34" y="104" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#e03131" font-weight="bold">&#10007; Without this check:</text><text x="34" y="124" font-size="12" font-family="Consolas, monospace" fill="#ff9b9b" font-weight="bold">assumed: 2026-10-27 (unverified)</text><text x="34" y="144" font-size="11" font-family="Consolas, monospace" fill="#e08888">hwclock reads 2026-10-20</text><text x="40" y="164" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#c97b7b">&#8592; assumed current (it's wrong)</text><rect x="20" y="190" width="340" height="114" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="34" y="208" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">&#10003; Fixed by:</text><text x="34" y="228" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">hwclock</text><text x="34" y="248" font-size="12" font-family="Consolas, monospace" fill="#8fd19e" font-weight="bold">&#8594; 2026-10-20 09:02:11 (stale)</text><text x="34" y="268" font-size="11" font-family="Consolas, monospace" fill="#a8e6b8">hwclock reads 2026-10-20</text><text x="40" y="288" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#7fcf94">&#8592; confirmed stale, 7 days off</text></svg>
 </div>
 </div>
 </section>
@@ -25477,7 +25997,7 @@ Tue Oct 27 14:13:20 PDT 2026
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">hwclock</span>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">hwclock</span>
 2026-10-20 09:02:11.000001-07:00</div>
 </div>
 </div>
@@ -25495,7 +26015,7 @@ Tue Oct 27 14:13:20 PDT 2026
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">hwclock</span> <span class="tk-flag">--verbose</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"Hw clock"</span>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">hwclock</span> <span class="tk-flag">--verbose</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"Hw clock"</span>
 Hw clock time : 2026-10-20 09:02:11</div>
 </div>
 </div>
@@ -25509,10 +26029,10 @@ Hw clock time : 2026-10-20 09:02:11</div>
 <ul>
 <li>Every check now passes</li><li>One final summary left</li><li>Confirm, then sign off</li>
 </ul>
-
+<div class="fragment fade-in" style="margin-top:12px;"><p style="font-size:1.3rem;line-height:1.4;text-align:left;background:#fff3e8;color:#1a1a1a;border:2px solid #FF671D;border-radius:8px;padding:0.7rem 1rem;font-weight:600;margin:0;">An auditor signing off needs one final, re-run confirmation that zone, sync, and NTP state all still hold, not just a memory of having checked each one separately earlier in the audit.</p></div>
 </div>
 <div class="col">
-<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><defs><marker id="m10p3q8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs><rect x="40" y="16" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="52" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">All checks passed</text><line x1="190" y1="76" x2="190" y2="104" stroke="#999" stroke-width="2" marker-end="url(#m10p3q8)"/><rect x="40" y="108" width="300" height="60" rx="10" fill="#1e1e1e" stroke="#777" stroke-width="2"/><text x="190" y="144" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">One final summary</text><line x1="190" y1="168" x2="190" y2="196" stroke="#999" stroke-width="2" marker-end="url(#m10p3q8)"/><rect x="40" y="200" width="300" height="60" rx="10" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="190" y="236" text-anchor="middle" font-size="13" font-family="Consolas, monospace" fill="#fff">timedatectl confirms</text></svg>
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="20" y="8" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="28" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">ACCESS AUDIT REPORT</text><text x="190" y="50" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#ddd">all checks passed (unconfirmed)</text><rect x="20" y="86" width="340" height="94" rx="8" fill="#2a1216" stroke="#e03131" stroke-width="2"/><text x="34" y="104" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#e03131" font-weight="bold">&#10007; Without this check:</text><text x="34" y="124" font-size="12" font-family="Consolas, monospace" fill="#ff9b9b" font-weight="bold">NTP service: inactive</text><text x="34" y="144" font-size="11" font-family="Consolas, monospace" fill="#e08888">audit summary: pending sign-off</text><text x="40" y="164" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#c97b7b">&#8592; relying on memory of checks</text><rect x="20" y="190" width="340" height="114" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="34" y="208" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">&#10003; Fixed by:</text><text x="34" y="228" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">timedatectl</text><text x="34" y="248" font-size="12" font-family="Consolas, monospace" fill="#8fd19e" font-weight="bold">&#8594; NTP service: active</text><text x="34" y="268" font-size="11" font-family="Consolas, monospace" fill="#a8e6b8">audit summary: all checks green</text><text x="40" y="288" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#7fcf94">&#8592; one final check, confirmed</text></svg>
 </div>
 </div>
 </section>
@@ -25525,10 +26045,10 @@ Hw clock time : 2026-10-20 09:02:11</div>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span>
-               Local time: Tue 2026-10-27 14:13:20 PDT
-               Time zone: America/Los_Angeles (PDT, -0700)
-             NTP service: active</div>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span>
+ Local time: 2026-10-27 14:13:20 PDT
+ Time zone: America/Los_Angeles
+ NTP service: active</div>
 </div>
 </div>
 </div>
@@ -25545,8 +26065,213 @@ Hw clock time : 2026-10-20 09:02:11</div>
 </div>
 <div class="col">
 <div class="fragment">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> <span class="tk-flag">show</span> <span class="tk-flag">-p</span> <span class="tk-str">NTPSynchronized</span> <span class="tk-flag">--value</span>
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> <span class="tk-flag">show</span> <span class="tk-flag">-p</span> \
+    <span class="tk-str">NTPSynchronized</span> <span class="tk-flag">--value</span>
 yes</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Q9: UTC or GMT?</h4>
+<ul>
+<li>Audit needs one fixed clock</li><li>GMT shifts with UK summer</li><li>DST ends this weekend</li>
+</ul>
+<div class="fragment fade-in" style="margin-top:12px;"><p style="font-size:1.3rem;line-height:1.4;text-align:left;background:#fff3e8;color:#1a1a1a;border:2px solid #FF671D;border-radius:8px;padding:0.7rem 1rem;font-weight:600;margin:0;">An audit report dated in GMT would quietly shift by an hour for seven months of the year as the UK moves to British Summer Time: UTC is the one label that never moves, so the audit's own record stays fixed.</p></div>
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="20" y="8" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="28" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">ACCESS AUDIT REPORT</text><text x="190" y="50" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#ddd">audit report dated: GMT</text><rect x="20" y="86" width="340" height="94" rx="8" fill="#2a1216" stroke="#e03131" stroke-width="2"/><text x="34" y="104" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#e03131" font-weight="bold">&#10007; Without this check:</text><text x="34" y="124" font-size="12" font-family="Consolas, monospace" fill="#ff9b9b" font-weight="bold">Time zone: GMT (BST +1 active)</text><text x="34" y="144" font-size="11" font-family="Consolas, monospace" fill="#e08888">report dated: GMT</text><text x="40" y="164" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#c97b7b">&#8592; silently +1h during BST</text><rect x="20" y="190" width="340" height="114" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="34" y="208" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">&#10003; Fixed by:</text><text x="34" y="228" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">timedatectl set-timezone UTC</text><text x="34" y="248" font-size="12" font-family="Consolas, monospace" fill="#8fd19e" font-weight="bold">&#8594; Time zone: UTC</text><text x="34" y="268" font-size="11" font-family="Consolas, monospace" fill="#a8e6b8">report dated: UTC</text><text x="40" y="288" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#7fcf94">&#8592; UTC: never shifts</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Q9: UTC or GMT?</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">This weekend (Nov 1), US clocks "fall back" for the end of Daylight Saving Time, so 1:30 AM happens twice in local time. For the audit's own timestamps, would you recommend UTC or GMT, and why?</p>
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">timedatectl</span> <span class="tk-flag">set-timezone</span> <span class="tk-str">UTC</span>
+<span class="tk-comment"># UTC never shifts, GMT often does</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Answer: UTC, Not GMT</h4>
+<ul>
+<li>GMT ~ UK winter clock only</li><li>BST (UTC+1) runs Mar-Oct</li><li>UTC is the audit's one anchor</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> <span class="tk-flag">show</span> <span class="tk-flag">-p</span> <span class="tk-str">Timezone</span> <span class="tk-flag">--value</span>
+<span class="tk-output">UTC</span>
+<span class="tk-comment"># confirms it stuck: never GMT</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">timedatectl</span> | <span class="tk-cmd">grep</span> <span class="tk-str">"Time zone"</span>
+<span class="tk-output">Time zone: UTC</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Q10: Trusting a Backup's Timing</h4>
+<ul>
+<li>Cron job backs up nightly</li><li>Audit trusts clock first</li><li>Then trusts the schedule</li>
+</ul>
+<div class="fragment fade-in" style="margin-top:12px;"><p style="font-size:1.3rem;line-height:1.4;text-align:left;background:#fff3e8;color:#1a1a1a;border:2px solid #FF671D;border-radius:8px;padding:0.7rem 1rem;font-weight:600;margin:0;">A cron line only means something once the clock it runs against is trusted: now that the audit has verified the clock, the next claim to check is whether the backup job actually fires on the schedule it claims, not just assume the line is real.</p></div>
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="20" y="8" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="28" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">ACCESS AUDIT REPORT</text><text x="190" y="50" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#ddd">backup.sh: schedule unverified</text><rect x="20" y="86" width="340" height="94" rx="8" fill="#2a1216" stroke="#e03131" stroke-width="2"/><text x="34" y="104" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#e03131" font-weight="bold">&#10007; Without this check:</text><text x="34" y="124" font-size="12" font-family="Consolas, monospace" fill="#ff9b9b" font-weight="bold">crontab: not reviewed</text><text x="34" y="144" font-size="11" font-family="Consolas, monospace" fill="#e08888">backup.sh: assumed @ 2 AM</text><text x="40" y="164" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#c97b7b">&#8592; claim never confirmed</text><rect x="20" y="190" width="340" height="114" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="34" y="208" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">&#10003; Fixed by:</text><text x="34" y="228" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">crontab -l</text><text x="34" y="248" font-size="12" font-family="Consolas, monospace" fill="#8fd19e" font-weight="bold">&#8594; 0 2 * * * backup.sh</text><text x="34" y="268" font-size="11" font-family="Consolas, monospace" fill="#a8e6b8">confirmed: runs daily 02:00</text><text x="40" y="288" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#7fcf94">&#8592; schedule now verified</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Q10: Confirm the Backup Schedule</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">An auditor is told a backup job runs nightly at 2 AM. What command shows the real cron schedule, to confirm this claim?</p>
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">crontab</span> <span class="tk-flag">-l</span>
+<span class="tk-output">0 2 * * * /opt/hospital-vm/backup.sh</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Answer: crontab -l</h4>
+<ul>
+<li>5 fields: min hr day mo wk</li><li>0 2 * * * = 2 AM daily</li><li>Backup time now confirmed</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">crontab</span> <span class="tk-flag">-l</span>
+<span class="tk-output">0 2 * * * /opt/hospital-vm/backup.sh</span>
+<span class="tk-comment"># min hr day month weekday</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Q11: Did the Timer Fire on Time?</h4>
+<ul>
+<li>Timer logs LAST and NEXT</li><li>Compare to the interval</li><li>Drift reveals a problem</li>
+</ul>
+<div class="fragment fade-in" style="margin-top:12px;"><p style="font-size:1.3rem;line-height:1.4;text-align:left;background:#fff3e8;color:#1a1a1a;border:2px solid #FF671D;border-radius:8px;padding:0.7rem 1rem;font-weight:600;margin:0;">A systemd timer whose last run has drifted from its own interval can mean a missed run, or that this VM's clock was wrong the last time it fired: the audit needs to see that run time directly, not assume the timer is healthy.</p></div>
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="20" y="8" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="28" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">ACCESS AUDIT REPORT</text><text x="190" y="50" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#ddd">backup.timer: last run unverified</text><rect x="20" y="86" width="340" height="94" rx="8" fill="#2a1216" stroke="#e03131" stroke-width="2"/><text x="34" y="104" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#e03131" font-weight="bold">&#10007; Without this check:</text><text x="34" y="124" font-size="12" font-family="Consolas, monospace" fill="#ff9b9b" font-weight="bold">backup.timer: assumed healthy</text><text x="34" y="144" font-size="11" font-family="Consolas, monospace" fill="#e08888">LAST/NEXT run never reviewed</text><text x="40" y="164" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#c97b7b">&#8592; drift could go unnoticed</text><rect x="20" y="190" width="340" height="114" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="34" y="208" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">&#10003; Fixed by:</text><text x="34" y="228" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">systemctl list-timers</text><text x="34" y="248" font-size="12" font-family="Consolas, monospace" fill="#8fd19e" font-weight="bold">&#8594; NEXT: 02:00 (9h58m left)</text><text x="34" y="268" font-size="11" font-family="Consolas, monospace" fill="#a8e6b8">backup.timer: on schedule</text><text x="40" y="288" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#7fcf94">&#8592; interval confirmed</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Q11: Check the Timer's Run Time</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">The backup should fire at 2 AM daily. What command shows every systemd timer's next (and last) run time?</p>
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">systemctl</span> list-timers
+NEXT   LEFT   UNIT
+02:00  9h58m  backup.timer</div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Answer: systemctl list-timers</h4>
+<ul>
+<li>LAST: when it last fired</li><li>NEXT: next scheduled run</li><li>Matches cron's own time</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">systemctl</span> list-timers
+NEXT   LEFT   UNIT
+02:00  9h58m  backup.timer
+<span class="tk-comment"># LAST column (trimmed) shows</span>
+<span class="tk-comment"># the previous actual run</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Q12: Scanning the Log for Sync</h4>
+<ul>
+<li>Clock and backup both good</li><li>Check log for sync errors</li><li>Clean now isn't forever</li>
+</ul>
+<div class="fragment fade-in" style="margin-top:12px;"><p style="font-size:1.3rem;line-height:1.4;text-align:left;background:#fff3e8;color:#1a1a1a;border:2px solid #FF671D;border-radius:8px;padding:0.7rem 1rem;font-weight:600;margin:0;">A clean chronyc tracking and crontab -l only describe this moment: a past drift event may already be recorded earlier in the system log, so the audit's last step reads that log, filtered to sync warnings, before signing off.</p></div>
+</div>
+<div class="col">
+<svg viewBox="0 0 380 336" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;"><rect x="20" y="8" width="340" height="66" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="2"/><text x="190" y="28" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">ACCESS AUDIT REPORT</text><text x="190" y="50" text-anchor="middle" font-size="11" font-family="Consolas, monospace" fill="#ddd">system log: sync check pending</text><rect x="20" y="86" width="340" height="94" rx="8" fill="#2a1216" stroke="#e03131" stroke-width="2"/><text x="34" y="104" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#e03131" font-weight="bold">&#10007; Without this check:</text><text x="34" y="124" font-size="12" font-family="Consolas, monospace" fill="#ff9b9b" font-weight="bold">chrony: synced right now</text><text x="34" y="144" font-size="11" font-family="Consolas, monospace" fill="#e08888">log never searched for warn</text><text x="40" y="164" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#c97b7b">&#8592; past drift could be hidden</text><rect x="20" y="190" width="340" height="114" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/><text x="34" y="208" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">&#10003; Fixed by:</text><text x="34" y="228" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">journalctl -p warning</text><text x="34" y="248" font-size="12" font-family="Consolas, monospace" fill="#8fd19e" font-weight="bold">&#8594; found: clock step 09-30</text><text x="34" y="268" font-size="11" font-family="Consolas, monospace" fill="#a8e6b8">chronyd: clock wrong by 4s</text><text x="40" y="288" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" font-style="italic" fill="#7fcf94">&#8592; past drift now visible</text></svg>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Q12: Search the Log for Drift</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">chronyc tracking looks clean right now. What command shows the system log, filtered to warnings and errors, to check for a past sync problem?</p>
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">journalctl</span> <span class="tk-flag">-p</span> <span class="tk-str">warning</span> <span class="tk-punct">\</span>
+  <span class="tk-flag">--since</span> <span class="tk-str">"2026-10-01"</span>
+<span class="tk-comment"># then pipe to: grep -i sync</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Answer: journalctl -p warning</h4>
+<ul>
+<li>-p filters by priority</li><li>--since sets time window</li><li>Oldest entries show first</li>
+</ul>
+
+</div>
+<div class="col">
+<div class="fragment">
+<div class="terminal qa-term"><span class="tk-prompt">$ </span><span class="tk-cmd">journalctl</span> <span class="tk-flag">-p</span> <span class="tk-str">warning</span> <span class="tk-punct">\</span>
+  <span class="tk-flag">--since</span> <span class="tk-str">"2026-10-01"</span> | <span class="tk-punct">\</span>
+  <span class="tk-cmd">grep</span> <span class="tk-flag">-i</span> <span class="tk-str">sync</span>
+<span class="tk-output">Sep 30 03:14 chronyd[812]: +4s jump</span>
+<span class="tk-comment"># oldest entry shown first</span></div>
 </div>
 </div>
 </div>
@@ -25557,7 +26282,7 @@ yes</div>
 <div class="col">
 <h4>Deliverable</h4>
 <ul>
-<li>Zone set correctly</li><li>chrony installed & synced</li><li>hwclock confirmed sane</li><li>Audit timestamps trusted</li>
+<li>Zone set correctly</li><li>chrony installed & synced</li><li>hwclock confirmed sane</li><li>Backup & log checks done</li><li>Audit timestamps trusted</li>
 </ul>
 
 </div>
@@ -33286,6 +34011,44 @@ ssh webapp-vm "journalctl -u persona-app -f"</div>
         });
         box.appendChild(btn);
       });
+    })();
+    (function () {
+      // Module 10 Practice Lab Part 2/3 intro-diagram "token": a single
+      // persistent light-blue dot that glides across the story chain on
+      // each click via a CSS-transitioned transform class -- real
+      // movement, not just a show/hide or color change (the per-stage
+      // box highlight is a secondary "landed here" cue; this token's
+      // glide is the primary movement cue). Re-derives the token's
+      // position from the DOM's own current fragment-visibility state
+      // (every [data-token] stage's "visible" class) on every
+      // fragmentshown/fragmenthidden/slidechanged, rather than only
+      // reacting to the fragment event that just fired -- reveal.js's
+      // hash deep-link sync (e.g. loading straight to "#/11/83/2") can
+      // apply several fragments' visibility at once without dispatching
+      // an individual fragmentshown per one, so a handler that only
+      // nudges the token by +/-1 per event can end up stuck out of sync
+      // with what's actually on screen; recomputing from the DOM every
+      // time is self-correcting regardless of how the state got there.
+      var TOKEN_IDS = ['m10p2token', 'm10p3token'];
+      function syncTokens() {
+        TOKEN_IDS.forEach(function (tokenId) {
+          var token = document.getElementById(tokenId);
+          if (!token) return;
+          var stages = document.querySelectorAll('[data-token="' + tokenId + '"]');
+          var maxVisible = -1;
+          stages.forEach(function (el) {
+            if (el.classList.contains('visible')) {
+              var idx = parseInt(el.getAttribute('data-fragment-index'), 10);
+              if (idx > maxVisible) maxVisible = idx;
+            }
+          });
+          token.setAttribute('class', 'tok-' + Math.max(0, maxVisible));
+        });
+      }
+      Reveal.on('fragmentshown', syncTokens);
+      Reveal.on('fragmenthidden', syncTokens);
+      Reveal.on('slidechanged', syncTokens);
+      syncTokens();
     })();
     });
   </script>
