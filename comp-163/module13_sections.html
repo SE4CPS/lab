@@ -1,0 +1,1728 @@
+<section id="module-13">
+
+  <!-- 1 -->
+  <section>
+    <div class="split">
+      <div class="left">
+        <h2>Module 13<br>Relational Database & Data Aggregation</h2>
+      </div>
+      <div class="right">
+        <!-- Teaser: row vs column at a glance -->
+        <svg width="100%" viewBox="0 0 480 260" xmlns="http://www.w3.org/2000/svg" style="font-family:monospace;">
+          <text x="0" y="18" font-size="12" fill="#888" letter-spacing="1">ROW STORAGE</text>
+          <!-- Row 1 -->
+          <rect x="0"   y="26" width="110" height="24" rx="3" fill="#f0f4ff" stroke="#b0bcdd" stroke-width="0.5"/>
+          <rect x="114" y="26" width="70"  height="24" rx="3" fill="#f0f4ff" stroke="#b0bcdd" stroke-width="0.5"/>
+          <rect x="188" y="26" width="80"  height="24" rx="3" fill="#f0f4ff" stroke="#b0bcdd" stroke-width="0.5"/>
+          <rect x="272" y="26" width="90"  height="24" rx="3" fill="#fff3e0" stroke="#f5b85e" stroke-width="1"/>
+          <text x="55"  y="43" text-anchor="middle" font-size="12" fill="#444">Alice</text>
+          <text x="149" y="43" text-anchor="middle" font-size="12" fill="#444">30</text>
+          <text x="228" y="43" text-anchor="middle" font-size="12" fill="#444">NYC</text>
+          <text x="317" y="43" text-anchor="middle" font-size="12" fill="#b07a00">$4,200</text>
+          <!-- Row 2 -->
+          <rect x="0"   y="54" width="110" height="24" rx="3" fill="#f0f4ff" stroke="#b0bcdd" stroke-width="0.5"/>
+          <rect x="114" y="54" width="70"  height="24" rx="3" fill="#f0f4ff" stroke="#b0bcdd" stroke-width="0.5"/>
+          <rect x="188" y="54" width="80"  height="24" rx="3" fill="#f0f4ff" stroke="#b0bcdd" stroke-width="0.5"/>
+          <rect x="272" y="54" width="90"  height="24" rx="3" fill="#fff3e0" stroke="#f5b85e" stroke-width="1"/>
+          <text x="55"  y="71" text-anchor="middle" font-size="12" fill="#444">Bob</text>
+          <text x="149" y="71" text-anchor="middle" font-size="12" fill="#444">25</text>
+          <text x="228" y="71" text-anchor="middle" font-size="12" fill="#444">LA</text>
+          <text x="317" y="71" text-anchor="middle" font-size="12" fill="#b07a00">$3,100</text>
+          <text x="370" y="43" font-size="12" fill="#cc4444">← reads ALL columns</text>
+          <text x="370" y="60" font-size="12" fill="#cc4444">  even for SUM()</text>
+
+          <line x1="0" y1="108" x2="480" y2="108" stroke="#ddd" stroke-width="1"/>
+
+          <text x="0" y="128" font-size="12" fill="#888" letter-spacing="1">COLUMN STORAGE</text>
+          <!-- Column blocks, balance highlighted -->
+          <rect x="0"   y="138" width="90" height="24" rx="3" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+          <rect x="96"  y="138" width="60" height="24" rx="3" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+          <rect x="162" y="138" width="70" height="24" rx="3" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+          <rect x="238" y="138" width="90" height="24" rx="3" fill="#e8f8f0" stroke="#2e9e62" stroke-width="1.5"/>
+          <text x="45"  y="154" text-anchor="middle" font-size="11" fill="#999">name col</text>
+          <text x="126" y="154" text-anchor="middle" font-size="11" fill="#999">age col</text>
+          <text x="197" y="154" text-anchor="middle" font-size="11" fill="#999">city col</text>
+          <text x="283" y="154" text-anchor="middle" font-size="11" fill="#1e7a4a">balance ✓</text>
+
+          <rect x="0"   y="166" width="90" height="24" rx="3" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+          <rect x="96"  y="166" width="60" height="24" rx="3" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+          <rect x="162" y="166" width="70" height="24" rx="3" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+          <rect x="238" y="166" width="90" height="24" rx="3" fill="#e8f8f0" stroke="#2e9e62" stroke-width="1.5"/>
+          <text x="45"  y="182" text-anchor="middle" font-size="11" fill="#bbb">Alice</text>
+          <text x="126" y="182" text-anchor="middle" font-size="11" fill="#bbb">30</text>
+          <text x="197" y="182" text-anchor="middle" font-size="11" fill="#bbb">NYC</text>
+          <text x="283" y="182" text-anchor="middle" font-size="11" fill="#1e7a4a">$4,200</text>
+
+          <text x="340" y="154" font-size="12" fill="#1e7a4a">← reads ONLY</text>
+          <text x="340" y="170" font-size="12" fill="#1e7a4a">  balance ✓</text>
+
+          <rect x="0" y="210" width="360" height="38" rx="6" fill="#fff8e1" stroke="#f5b85e" stroke-width="0.5"/>
+          <text x="180" y="228" text-anchor="middle" font-size="13" fill="#7a5200" font-weight="bold">3B rows × 20 cols = 60B reads (row)</text>
+          <text x="180" y="244" text-anchor="middle" font-size="13" fill="#1e7a4a" font-weight="bold">3B rows ×  1 col  =  3B reads (column)</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 51 -->
+  <section>
+    <div class="split">
+      <div class="left">
+        <h5>Aggregate Functions Overview</h5>
+        <ul>
+          <li><strong>COUNT()</strong> – Counts the number of rows</li>
+          <li><strong>SUM()</strong> – Adds up values in a column</li>
+          <li><strong>AVG()</strong> – Calculates the average</li>
+          <li><strong>MIN()</strong> – Finds minimum value</li>
+          <li><strong>MAX()</strong> – Finds maximum value</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" style="font-family:monospace;">
+          <text x="10" y="18" font-size="11" fill="#888">flowers table</text>
+          <!-- Table -->
+          <rect x="10" y="24" width="80" height="22" rx="2" fill="#f0f4ff" stroke="#b0bcdd" stroke-width="0.5"/>
+          <text x="50" y="39" text-anchor="middle" font-size="11" fill="#666">price</text>
+          <rect x="10" y="48" width="80" height="22" rx="2" fill="#fff" stroke="#ddd" stroke-width="0.5"/>
+          <text x="50" y="63" text-anchor="middle" font-size="12" fill="#222">12</text>
+          <rect x="10" y="72" width="80" height="22" rx="2" fill="#fff" stroke="#ddd" stroke-width="0.5"/>
+          <text x="50" y="87" text-anchor="middle" font-size="12" fill="#222">8</text>
+          <rect x="10" y="96" width="80" height="22" rx="2" fill="#fff" stroke="#ddd" stroke-width="0.5"/>
+          <text x="50" y="111" text-anchor="middle" font-size="12" fill="#222">25</text>
+          <rect x="10" y="120" width="80" height="22" rx="2" fill="#fff" stroke="#ddd" stroke-width="0.5"/>
+          <text x="50" y="135" text-anchor="middle" font-size="12" fill="#222">5</text>
+          <!-- Arrow -->
+          <defs>
+            <marker id="arr1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#4a7cdc" stroke-width="1.5" stroke-linecap="round"/>
+            </marker>
+          </defs>
+          <line x1="98" y1="88" x2="130" y2="88" stroke="#4a7cdc" stroke-width="1.5" marker-end="url(#arr1)"/>
+          <!-- Results -->
+          <text x="140" y="56" font-size="12" fill="#1e7a4a">COUNT(*) = 4</text>
+          <text x="140" y="76" font-size="12" fill="#1e7a4a">SUM(price) = 50</text>
+          <text x="140" y="96" font-size="12" fill="#1e7a4a">AVG(price) = 12.5</text>
+          <text x="140" y="116" font-size="12" fill="#1e7a4a">MIN(price) = 5</text>
+          <text x="140" y="136" font-size="12" fill="#1e7a4a">MAX(price) = 25</text>
+          <!-- Warning box -->
+          <rect x="10" y="162" width="380" height="44" rx="6" fill="#fff0f0" stroke="#e88" stroke-width="0.5"/>
+          <text x="200" y="180" text-anchor="middle" font-size="13" fill="#c00" font-weight="bold">Full table scan required</text>
+          <text x="200" y="198" text-anchor="middle" font-size="12" fill="#888">Every row must be read — no shortcut for totals</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- Aggregation requires full table scan -->
+  <section>
+    <h5>Aggregation Requires Full Table Scan (Flowers)</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Aggregation = compute over all flowers</li>
+          <li>Examples: total sales, counts</li>
+          <li>Must read all relevant rows</li>
+          <li>No shortcut for full totals</li>
+          <li>Leads to full table scan</li>
+        </ul>
+      </div>
+      <div class="right">
+        <pre><code>
+SELECT SUM(price) FROM flowers;
+
+SELECT COUNT(*) FROM flowers;
+
+SELECT AVG(price) FROM flowers;
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section>
+    <h5>Why Storage Model Matters</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Data volumes are exploding</li>
+          <li>Queries need to be fast and efficient</li>
+          <li>Poor design leads to slow systems</li>
+          <li>Storage format directly impacts performance</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 420 220" xmlns="http://www.w3.org/2000/svg" style="font-family:sans-serif;">
+          <text x="10" y="16" font-size="11" fill="#888" font-family="monospace">data generated per day (approximate)</text>
+          <!-- Bars -->
+          <rect x="40"  y="150" width="44" height="34"  rx="3" fill="#aac4f0"/>
+          <rect x="100" y="120" width="44" height="64"  rx="3" fill="#7aaae8"/>
+          <rect x="160" y="82"  width="44" height="102" rx="3" fill="#4a7cdc"/>
+          <rect x="220" y="44"  width="44" height="140" rx="3" fill="#2a5cbc"/>
+          <rect x="280" y="20"  width="44" height="164" rx="3" fill="#1a4ca0"/>
+          <!-- X labels -->
+          <text x="62"  y="196" text-anchor="middle" font-size="11" fill="#888">2010</text>
+          <text x="122" y="196" text-anchor="middle" font-size="11" fill="#888">2014</text>
+          <text x="182" y="196" text-anchor="middle" font-size="11" fill="#888">2018</text>
+          <text x="242" y="196" text-anchor="middle" font-size="11" fill="#888">2022</text>
+          <text x="302" y="196" text-anchor="middle" font-size="11" fill="#1a4ca0">2025</text>
+          <text x="302" y="16"  text-anchor="middle" font-size="11" fill="#e07800">~330 ZB/day</text>
+          <!-- Callout -->
+          <rect x="344" y="60" width="66" height="44" rx="6" fill="#fff8e1" stroke="#f5b85e" stroke-width="0.5"/>
+          <text x="377" y="78"  text-anchor="middle" font-size="11" fill="#7a4f00">Wrong model</text>
+          <text x="377" y="94"  text-anchor="middle" font-size="11" fill="#7a4f00">= no answer</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 Row-Based Storage -->
+  <section>
+    <h5>Row-Based Storage (Row-Oriented)</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Stores entire rows together on disk</li>
+          <li>Excellent for reading or writing full records</li>
+          <li>Ideal for transactional workloads (OLTP)</li>
+          <li>Common in systems like PostgreSQL and MySQL</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 220" xmlns="http://www.w3.org/2000/svg" style="font-family:monospace;">
+          <text x="10" y="16" font-size="11" fill="#888">disk pages — row storage</text>
+          <!-- Page 1 -->
+          <rect x="10" y="24" width="400" height="38" rx="4" fill="#eef3ff" stroke="#93aee8" stroke-width="0.5"/>
+          <text x="18" y="38" font-size="10" fill="#6080c0">Page 1</text>
+          <text x="72" y="38" font-size="12" fill="#222">[ Alice | 30 | NYC | 4200 ]</text>
+          <text x="72" y="54" font-size="12" fill="#222">[ Bob   | 25 | LA  | 3100 ]</text>
+          <!-- Page 2 -->
+          <rect x="10" y="68" width="400" height="38" rx="4" fill="#eef3ff" stroke="#93aee8" stroke-width="0.5"/>
+          <text x="18" y="82" font-size="10" fill="#6080c0">Page 2</text>
+          <text x="72" y="82" font-size="12" fill="#222">[ Carol | 28 | SF  | 5500 ]</text>
+          <text x="72" y="98" font-size="12" fill="#222">[ Dave  | 33 | CHI | 6200 ]</text>
+          <!-- Use cases -->
+          <rect x="10"  y="124" width="185" height="58" rx="6" fill="#e8f8f0" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="102" y="144" text-anchor="middle" font-size="13" fill="#1a7a46" font-weight="bold">✓ Great for</text>
+          <text x="102" y="162" text-anchor="middle" font-size="12" fill="#555">INSERT / UPDATE</text>
+          <text x="102" y="178" text-anchor="middle" font-size="12" fill="#555">single record lookups</text>
+          <rect x="205" y="124" width="205" height="58" rx="6" fill="#fff0f0" stroke="#e88" stroke-width="0.5"/>
+          <text x="307" y="144" text-anchor="middle" font-size="13" fill="#c00" font-weight="bold">✗ Slow for</text>
+          <text x="307" y="162" text-anchor="middle" font-size="12" fill="#555">SUM / AVG / COUNT</text>
+          <text x="307" y="178" text-anchor="middle" font-size="12" fill="#555">across millions of rows</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 Column-Based Storage -->
+  <section>
+    <h5>Column-Based Storage (Columnar)</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Stores each column separately and contiguously</li>
+          <li>Reads only the columns a query actually needs</li>
+          <li>Optimized for analytical workloads (OLAP)</li>
+          <li>Powering modern systems like ClickHouse</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 220" xmlns="http://www.w3.org/2000/svg" style="font-family:monospace;">
+          <text x="10" y="16" font-size="11" fill="#888">disk blocks — column storage</text>
+          <!-- name col -->
+          <rect x="10" y="24" width="78" height="96" rx="4" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+          <text x="49" y="40"  text-anchor="middle" font-size="10" fill="#999">name</text>
+          <text x="49" y="58"  text-anchor="middle" font-size="12" fill="#aaa">Alice</text>
+          <text x="49" y="74"  text-anchor="middle" font-size="12" fill="#aaa">Bob</text>
+          <text x="49" y="90"  text-anchor="middle" font-size="12" fill="#aaa">Carol</text>
+          <text x="49" y="106" text-anchor="middle" font-size="12" fill="#aaa">Dave</text>
+          <text x="49" y="132" text-anchor="middle" font-size="11" fill="#bbb">not loaded</text>
+          <!-- age col -->
+          <rect x="96" y="24" width="64" height="96" rx="4" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+          <text x="128" y="40"  text-anchor="middle" font-size="10" fill="#999">age</text>
+          <text x="128" y="58"  text-anchor="middle" font-size="12" fill="#aaa">30</text>
+          <text x="128" y="74"  text-anchor="middle" font-size="12" fill="#aaa">25</text>
+          <text x="128" y="90"  text-anchor="middle" font-size="12" fill="#aaa">28</text>
+          <text x="128" y="106" text-anchor="middle" font-size="12" fill="#aaa">33</text>
+          <text x="128" y="132" text-anchor="middle" font-size="11" fill="#bbb">not loaded</text>
+          <!-- city col -->
+          <rect x="168" y="24" width="64" height="96" rx="4" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+          <text x="200" y="40"  text-anchor="middle" font-size="10" fill="#999">city</text>
+          <text x="200" y="58"  text-anchor="middle" font-size="12" fill="#aaa">NYC</text>
+          <text x="200" y="74"  text-anchor="middle" font-size="12" fill="#aaa">LA</text>
+          <text x="200" y="90"  text-anchor="middle" font-size="12" fill="#aaa">SF</text>
+          <text x="200" y="106" text-anchor="middle" font-size="12" fill="#aaa">CHI</text>
+          <text x="200" y="132" text-anchor="middle" font-size="11" fill="#bbb">not loaded</text>
+          <!-- balance col — highlighted -->
+          <rect x="240" y="24" width="80" height="96" rx="4" fill="#e8f8f0" stroke="#2e9e62" stroke-width="1.5"/>
+          <text x="280" y="40"  text-anchor="middle" font-size="10" fill="#1a7a46">balance ✓</text>
+          <text x="280" y="58"  text-anchor="middle" font-size="12" fill="#1a7a46">4200</text>
+          <text x="280" y="74"  text-anchor="middle" font-size="12" fill="#1a7a46">3100</text>
+          <text x="280" y="90"  text-anchor="middle" font-size="12" fill="#1a7a46">5500</text>
+          <text x="280" y="106" text-anchor="middle" font-size="12" fill="#1a7a46">6200</text>
+          <text x="280" y="132" text-anchor="middle" font-size="11" fill="#1a7a46">LOADED</text>
+          <!-- Arrow + label -->
+          <defs>
+            <marker id="arrG" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#2e9e62" stroke-width="1.5" stroke-linecap="round"/>
+            </marker>
+          </defs>
+          <line x1="328" y1="72" x2="368" y2="72" stroke="#2e9e62" stroke-width="1.5" marker-end="url(#arrG)"/>
+          <text x="375" y="68" font-size="11" fill="#1a7a46">read</text>
+          <text x="375" y="82" font-size="11" fill="#1a7a46">only</text>
+          <!-- Bottom note -->
+          <rect x="10" y="148" width="400" height="30" rx="5" fill="#e8f8f0" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="210" y="167" text-anchor="middle" font-size="12" fill="#1a7a46">SELECT SUM(balance) → reads 1 of 4 columns = 75% less I/O</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 Row vs Column core idea -->
+  <section>
+    <h5>Row vs Column: The Core Idea</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Row storage → read everything in a row</li>
+          <li>Column storage → read only needed fields</li>
+          <li>Row = fast single-record operations (OLTP)</li>
+          <li>Column = fast scans and aggregations (OLAP)</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 230" xmlns="http://www.w3.org/2000/svg" style="font-family:sans-serif;">
+          <!-- Row side -->
+          <rect x="10" y="10" width="190" height="100" rx="8" fill="#eef3ff" stroke="#93aee8" stroke-width="0.5"/>
+          <text x="105" y="32"  text-anchor="middle" font-size="13" fill="#2a4ca0" font-weight="bold">OLTP (Row)</text>
+          <text x="24"  y="54"  font-size="12" fill="#444">▸ INSERT / UPDATE</text>
+          <text x="24"  y="72"  font-size="12" fill="#444">▸ Single record fetch</text>
+          <text x="24"  y="90"  font-size="12" fill="#444">▸ ACID transactions</text>
+          <text x="105" y="124" text-anchor="middle" font-size="11" fill="#6080c0" font-family="monospace">PostgreSQL · MySQL</text>
+          <!-- Column side -->
+          <rect x="240" y="10" width="190" height="100" rx="8" fill="#e8f8f0" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="335" y="32"  text-anchor="middle" font-size="13" fill="#1a5a36" font-weight="bold">OLAP (Column)</text>
+          <text x="254" y="54"  font-size="12" fill="#444">▸ SUM / AVG / COUNT</text>
+          <text x="254" y="72"  font-size="12" fill="#444">▸ Scan billions of rows</text>
+          <text x="254" y="90"  font-size="12" fill="#444">▸ Read-heavy analytics</text>
+          <text x="335" y="124" text-anchor="middle" font-size="11" fill="#1a7a46" font-family="monospace">ClickHouse · BigQuery</text>
+          <!-- Center arrow -->
+          <text x="220" y="68" text-anchor="middle" font-size="26" fill="#ccc">↔</text>
+          <!-- Bottom summary -->
+          <rect x="10" y="148" width="420" height="34" rx="6" fill="#fff8e1" stroke="#f5b85e" stroke-width="0.5"/>
+          <text x="220" y="163" text-anchor="middle" font-size="12" fill="#7a5200" font-weight="bold">Row: O(n × m) data read   ·   Column: O(n × 1) data read</text>
+          <text x="220" y="179" text-anchor="middle" font-size="12" fill="#1a7a46">3B rows × 20 cols = 60B reads   vs   3B rows × 1 col = 3B reads</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 ClickHouse Overview -->
+  <section>
+    <h5>ClickHouse Overview</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Open-source columnar database</li>
+          <li>Designed specifically for real-time analytics</li>
+          <li>Extremely fast aggregations on large data</li>
+          <li>Excellent compression and scalability</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 420 230" xmlns="http://www.w3.org/2000/svg" style="font-family:sans-serif;">
+          <text x="210" y="18" text-anchor="middle" font-size="11" fill="#888" font-family="monospace">ClickHouse query pipeline</text>
+          <!-- Steps as pipeline -->
+          <defs>
+            <marker id="arrP" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#999" stroke-width="1.5" stroke-linecap="round"/>
+            </marker>
+          </defs>
+          <!-- SQL -->
+          <rect x="140" y="28" width="140" height="34" rx="6" fill="#eef3ff" stroke="#93aee8" stroke-width="0.5"/>
+          <text x="210" y="49" text-anchor="middle" font-size="13" fill="#2a4ca0" font-family="monospace">SQL Query</text>
+          <line x1="210" y1="62" x2="210" y2="82" stroke="#999" stroke-width="1.5" marker-end="url(#arrP)"/>
+          <!-- Column prune -->
+          <rect x="120" y="84" width="180" height="34" rx="6" fill="#fff8e1" stroke="#f5b85e" stroke-width="0.5"/>
+          <text x="210" y="105" text-anchor="middle" font-size="13" fill="#7a5200">Column pruning</text>
+          <line x1="210" y1="118" x2="210" y2="138" stroke="#999" stroke-width="1.5" marker-end="url(#arrP)"/>
+          <!-- Vectorized -->
+          <rect x="100" y="140" width="220" height="34" rx="6" fill="#f0e8ff" stroke="#8866cc" stroke-width="0.5"/>
+          <text x="210" y="161" text-anchor="middle" font-size="13" fill="#5a3090">Vectorized + SIMD execution</text>
+          <line x1="210" y1="174" x2="210" y2="194" stroke="#999" stroke-width="1.5" marker-end="url(#arrP)"/>
+          <!-- Result -->
+          <rect x="140" y="196" width="140" height="28" rx="6" fill="#e8f8f0" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="210" y="214" text-anchor="middle" font-size="12" fill="#1a7a46" font-family="monospace">Result in milliseconds</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 Why Rows Are Slow -->
+  <section>
+    <h5>Why Rows Are Slow for Aggregations</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>In row storage, columns are scattered across rows</li>
+          <li>Query must load full rows even if only 1-2 columns needed</li>
+          <li>High I/O: lots of unnecessary data read from disk</li>
+          <li>CPU wastes time skipping irrelevant fields</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 220" xmlns="http://www.w3.org/2000/svg" style="font-family:monospace;">
+          <text x="10" y="16" font-size="11" fill="#888">price is scattered — each row loaded whole</text>
+          <!-- Rows with price highlighted -->
+          <rect x="10" y="24" width="380" height="28" rx="3" fill="#fff0f0" stroke="#e88" stroke-width="0.5"/>
+          <text x="20" y="42" font-size="11" fill="#888">[ Rose | Red  | Outdoor |</text>
+          <rect x="258" y="28" width="50" height="20" rx="2" fill="#ffcccc" stroke="#e44" stroke-width="1"/>
+          <text x="283" y="42" text-anchor="middle" font-size="11" fill="#c00">12.99</text>
+          <text x="314" y="42" font-size="11" fill="#888">]</text>
+          <text x="370" y="42" font-size="12" fill="#c00">←</text>
+
+          <rect x="10" y="56" width="380" height="28" rx="3" fill="#fff0f0" stroke="#e88" stroke-width="0.5"/>
+          <text x="20" y="74" font-size="11" fill="#888">[ Tulip| Yel | Indoor  |</text>
+          <rect x="258" y="60" width="50" height="20" rx="2" fill="#ffcccc" stroke="#e44" stroke-width="1"/>
+          <text x="283" y="74" text-anchor="middle" font-size="11" fill="#c00">8.50</text>
+          <text x="314" y="74" font-size="11" fill="#888">]</text>
+
+          <rect x="10" y="88" width="380" height="28" rx="3" fill="#fff0f0" stroke="#e88" stroke-width="0.5"/>
+          <text x="20" y="106" font-size="11" fill="#888">[ Lily | Wht | Outdoor |</text>
+          <rect x="258" y="92" width="50" height="20" rx="2" fill="#ffcccc" stroke="#e44" stroke-width="1"/>
+          <text x="283" y="106" text-anchor="middle" font-size="11" fill="#c00">22.00</text>
+          <text x="314" y="106" font-size="11" fill="#888">]</text>
+
+          <rect x="10" y="136" width="400" height="44" rx="6" fill="#fff0f0" stroke="#e88" stroke-width="0.5"/>
+          <text x="20" y="154" font-size="12" fill="#c00">SELECT SUM(price) FROM flowers;</text>
+          <text x="20" y="172" font-size="12" fill="#888">Reads name, color, type — all wasted</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 Why Columns Are Fast -->
+  <section>
+    <h5>Why Columns Are Fast for Aggregations</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Columns stored contiguously → perfect data locality</li>
+          <li>Query reads only required columns (column pruning)</li>
+          <li>Much less data scanned → lower I/O and faster access</li>
+          <li>Easy to process large batches of similar values</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 200" xmlns="http://www.w3.org/2000/svg" style="font-family:monospace;">
+          <text x="10" y="16" font-size="11" fill="#888">price column — contiguous on disk</text>
+          <!-- All prices together -->
+          <rect x="10" y="24" width="400" height="70" rx="6" fill="#e8f8f0" stroke="#2e9e62" stroke-width="1"/>
+          <text x="210" y="42" text-anchor="middle" font-size="11" fill="#1a7a46">price column block</text>
+          <rect x="26"  y="50" width="48" height="24" rx="2" fill="#c8f0da" stroke="#2e9e62" stroke-width="0.5"/>
+          <rect x="82"  y="50" width="48" height="24" rx="2" fill="#c8f0da" stroke="#2e9e62" stroke-width="0.5"/>
+          <rect x="138" y="50" width="48" height="24" rx="2" fill="#c8f0da" stroke="#2e9e62" stroke-width="0.5"/>
+          <rect x="194" y="50" width="48" height="24" rx="2" fill="#c8f0da" stroke="#2e9e62" stroke-width="0.5"/>
+          <rect x="250" y="50" width="48" height="24" rx="2" fill="#c8f0da" stroke="#2e9e62" stroke-width="0.5"/>
+          <rect x="306" y="50" width="48" height="24" rx="2" fill="#c8f0da" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="50"  y="66" text-anchor="middle" font-size="11" fill="#1a7a46">12.99</text>
+          <text x="106" y="66" text-anchor="middle" font-size="11" fill="#1a7a46">8.50</text>
+          <text x="162" y="66" text-anchor="middle" font-size="11" fill="#1a7a46">22.00</text>
+          <text x="218" y="66" text-anchor="middle" font-size="11" fill="#1a7a46">5.75</text>
+          <text x="274" y="66" text-anchor="middle" font-size="11" fill="#1a7a46">15.00</text>
+          <text x="330" y="66" text-anchor="middle" font-size="11" fill="#1a7a46">9.99</text>
+          <text x="210" y="108" text-anchor="middle" font-size="12" fill="#1a7a46">sequential → excellent CPU cache usage</text>
+          <!-- Benefits -->
+          <rect x="10" y="120" width="400" height="56" rx="6" fill="#e8f8f0" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="20" y="140" font-size="12" fill="#1a7a46">✓  Only price block loaded from disk</text>
+          <text x="20" y="158" font-size="12" fill="#1a7a46">✓  CPU processes values in bulk via SIMD</text>
+          <text x="20" y="170" font-size="12" fill="#1a7a46">✓  name / age / city columns untouched</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 Row vs Column core idea (duplicate retained) -->
+  <section>
+    <h5>Row vs Column: The Core Idea</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Row storage → read everything in a row</li>
+          <li>Column storage → read only needed fields</li>
+          <li>Row = fast single-record operations (OLTP)</li>
+          <li>Column = fast scans and aggregations (OLAP)</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 200" xmlns="http://www.w3.org/2000/svg" style="font-family:monospace;">
+          <text x="10" y="16" font-size="11" fill="#888">I/O comparison: SUM(balance) on 3B-row table</text>
+          <text x="10" y="44" font-size="13" fill="#c00">Row (20 cols)</text>
+          <rect x="10" y="52" width="380" height="26" rx="4" fill="#ffcccc" stroke="#e44" stroke-width="0.5"/>
+          <text x="200" y="69" text-anchor="middle" font-size="12" fill="#c00">60 billion values read</text>
+          <text x="10" y="106" font-size="13" fill="#1a7a46">Column (1 col)</text>
+          <rect x="10" y="114" width="19" height="26" rx="4" fill="#b0e8c8" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="38" y="131" font-size="12" fill="#1a7a46">3 billion values read</text>
+          <text x="220" y="170" text-anchor="middle" font-size="16" fill="#e07800" font-weight="bold">20× less I/O</text>
+          <text x="220" y="190" text-anchor="middle" font-size="13" fill="#888">In practice: 10–100× speedup for analytics</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 ClickHouse Overview (second) -->
+  <section>
+    <h5>ClickHouse Overview</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Open-source columnar database</li>
+          <li>Designed specifically for real-time analytics</li>
+          <li>Extremely fast aggregations on large data</li>
+          <li>Excellent compression and scalability</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 420 160" xmlns="http://www.w3.org/2000/svg" style="font-family:sans-serif;">
+          <text x="10" y="16" font-size="11" fill="#888" font-family="monospace">query: SELECT SUM(revenue) — 3B rows</text>
+          <text x="10" y="44" font-size="13" fill="#c00">PostgreSQL (row)</text>
+          <rect x="10" y="52" width="350" height="22" rx="4" fill="#ffcccc" stroke="#e44" stroke-width="0.5"/>
+          <text x="370" y="67" font-size="12" fill="#c00" font-family="monospace">180 s</text>
+          <text x="10" y="96" font-size="13" fill="#1a7a46">ClickHouse (column)</text>
+          <rect x="10" y="104" width="35" height="22" rx="4" fill="#b0e8c8" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="55" y="119" font-size="12" fill="#1a7a46" font-family="monospace">1.8 s</text>
+          <text x="210" y="148" text-anchor="middle" font-size="15" fill="#e07800" font-weight="bold">≈ 100× faster</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 Why Rows Are Slow (duplicate retained for flow) -->
+  <section>
+    <h5>Why Rows Are Slow for Aggregations</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>In row storage, columns are scattered across rows</li>
+          <li>Query must load full rows even if only 1-2 columns needed</li>
+          <li>High I/O: lots of unnecessary data read from disk</li>
+          <li>CPU wastes time skipping irrelevant fields</li>
+        </ul>
+      </div>
+      <div class="right">
+        <pre><code>
+SELECT * FROM users WHERE id = 10;
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 Why Columns Fast (duplicate retained) -->
+  <section>
+    <h5>Why Columns Are Fast for Aggregations</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Columns stored contiguously → perfect data locality</li>
+          <li>Query reads only required columns (column pruning)</li>
+          <li>Much less data scanned → lower I/O and faster access</li>
+          <li>Easy to process large batches of similar values</li>
+        </ul>
+      </div>
+      <div class="right">
+        <pre><code>
+SELECT SUM(balance)
+FROM payments;
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 I/O Impact -->
+  <section>
+    <h5>I/O Impact: Rows vs Columns</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Row: 3 billion rows × 20 columns = huge scan</li>
+          <li>Column: 3 billion rows × 1 column = minimal scan</li>
+          <li>Result: Columnar can be 10-100x faster for analytics</li>
+          <li>Less disk/memory bandwidth wasted</li>
+        </ul>
+      </div>
+      <div class="right">
+        <pre><code>
+Row:  3B rows × 20 cols = 60B values read
+Col:  3B rows ×  1 col  =  3B values read
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 Compression Basics -->
+  <section>
+    <h5>Compression Basics in Columnar Storage</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Each column has uniform data types</li>
+          <li>Values often repeat or follow patterns</li>
+          <li>Enables much higher compression ratios</li>
+          <li>Smaller data = faster reads and lower costs</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 190" xmlns="http://www.w3.org/2000/svg" style="font-family:monospace;">
+          <text x="10" y="16" font-size="11" fill="#888">why columns compress better than rows</text>
+          <!-- Row: mixed types -->
+          <text x="10" y="38" font-size="12" fill="#c00">Row data (mixed types — hard to compress)</text>
+          <rect x="10" y="46" width="390" height="24" rx="3" fill="#fff0f0" stroke="#e88" stroke-width="0.5"/>
+          <text x="18" y="62" font-size="11" fill="#888">[ Alice | 30 | NYC | 4200 | Bob | 25 | LA | 3100 … ]</text>
+          <text x="406" y="62" font-size="12" fill="#c00">12 GB</text>
+          <!-- Arrow -->
+          <defs>
+            <marker id="arrD" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#e07800" stroke-width="1.5" stroke-linecap="round"/>
+            </marker>
+          </defs>
+          <line x1="406" y1="70" x2="406" y2="100" stroke="#e07800" stroke-width="1.5" marker-end="url(#arrD)"/>
+          <text x="416" y="88" font-size="14" fill="#e07800">↓6×</text>
+          <!-- Column: uniform -->
+          <text x="10" y="92" font-size="12" fill="#1a7a46">Column data (same type — compresses well)</text>
+          <rect x="10" y="100" width="390" height="24" rx="3" fill="#e8f8f0" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="18" y="116" font-size="11" fill="#1a7a46">[ 4200 | 3100 | 5500 | 4200 | 3100 | 4200 … ]</text>
+          <text x="406" y="116" font-size="12" fill="#1a7a46">2 GB</text>
+          <!-- Techniques -->
+          <rect x="10" y="140" width="390" height="40" rx="6" fill="#eef3ff" stroke="#93aee8" stroke-width="0.5"/>
+          <text x="200" y="158" text-anchor="middle" font-size="13" fill="#2a4ca0" font-weight="bold">Common techniques</text>
+          <text x="200" y="174" text-anchor="middle" font-size="12" fill="#666">Run-Length Encoding · Dictionary Encoding · Delta Encoding</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15 RLE -->
+  <section>
+    <h5>Run-Length Encoding (RLE)</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Replaces sequences of identical values with (value, count)</li>
+          <li>Simple yet powerful for repetitive data</li>
+          <li>Common in columnar databases</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 230" xmlns="http://www.w3.org/2000/svg" style="font-family:monospace;">
+          <text x="10" y="16" font-size="11" fill="#888">status column — 8 values → RLE encoded</text>
+          <!-- Before: 8 boxes -->
+          <rect x="10"  y="26" width="40" height="28" rx="3" fill="#ddeeff" stroke="#6090d0" stroke-width="0.5"/>
+          <rect x="54"  y="26" width="40" height="28" rx="3" fill="#ddeeff" stroke="#6090d0" stroke-width="0.5"/>
+          <rect x="98"  y="26" width="40" height="28" rx="3" fill="#ddeeff" stroke="#6090d0" stroke-width="0.5"/>
+          <rect x="142" y="26" width="44" height="28" rx="3" fill="#ffe0e0" stroke="#e08080" stroke-width="0.5"/>
+          <rect x="190" y="26" width="44" height="28" rx="3" fill="#ffe0e0" stroke="#e08080" stroke-width="0.5"/>
+          <rect x="238" y="26" width="40" height="28" rx="3" fill="#ddeeff" stroke="#6090d0" stroke-width="0.5"/>
+          <rect x="282" y="26" width="40" height="28" rx="3" fill="#ddeeff" stroke="#6090d0" stroke-width="0.5"/>
+          <rect x="326" y="26" width="40" height="28" rx="3" fill="#ddeeff" stroke="#6090d0" stroke-width="0.5"/>
+          <text x="30"  y="44" text-anchor="middle" font-size="9" fill="#2060a0">active</text>
+          <text x="74"  y="44" text-anchor="middle" font-size="9" fill="#2060a0">active</text>
+          <text x="118" y="44" text-anchor="middle" font-size="9" fill="#2060a0">active</text>
+          <text x="164" y="44" text-anchor="middle" font-size="9" fill="#b04040">inactv</text>
+          <text x="212" y="44" text-anchor="middle" font-size="9" fill="#b04040">inactv</text>
+          <text x="258" y="44" text-anchor="middle" font-size="9" fill="#2060a0">active</text>
+          <text x="302" y="44" text-anchor="middle" font-size="9" fill="#2060a0">active</text>
+          <text x="346" y="44" text-anchor="middle" font-size="9" fill="#2060a0">active</text>
+          <text x="200" y="72" text-anchor="middle" font-size="12" fill="#666">8 values stored on disk</text>
+          <!-- Arrow -->
+          <defs>
+            <marker id="arrRLE" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#e07800" stroke-width="1.5" stroke-linecap="round"/>
+            </marker>
+          </defs>
+          <line x1="200" y1="80" x2="200" y2="100" stroke="#e07800" stroke-width="2" marker-end="url(#arrRLE)"/>
+          <text x="212" y="94" font-size="12" fill="#e07800">RLE encode</text>
+          <!-- After: 3 pairs -->
+          <rect x="36"  y="108" width="100" height="34" rx="5" fill="#ddeeff" stroke="#6090d0" stroke-width="1"/>
+          <rect x="154" y="108" width="100" height="34" rx="5" fill="#ffe0e0" stroke="#e08080" stroke-width="1"/>
+          <rect x="272" y="108" width="100" height="34" rx="5" fill="#ddeeff" stroke="#6090d0" stroke-width="1"/>
+          <text x="86"  y="129" text-anchor="middle" font-size="12" fill="#2060a0">(active, 3)</text>
+          <text x="204" y="129" text-anchor="middle" font-size="12" fill="#b04040">(inactv, 2)</text>
+          <text x="322" y="129" text-anchor="middle" font-size="12" fill="#2060a0">(active, 3)</text>
+          <text x="200" y="160" text-anchor="middle" font-size="12" fill="#666">3 pairs stored on disk</text>
+          <!-- Savings -->
+          <rect x="40" y="174" width="330" height="36" rx="6" fill="#e8f8f0" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="205" y="190" text-anchor="middle" font-size="13" fill="#1a7a46" font-weight="bold">8 values → 3 pairs = 62.5% smaller</text>
+          <text x="205" y="204" text-anchor="middle" font-size="12" fill="#888">savings grow with longer runs</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 16 RLE Example: Simple Sequence -->
+  <section>
+    <h5>RLE Example: Simple Sequence</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Works best on sorted or low-cardinality columns</li>
+          <li>Reduces storage by eliminating redundancy</li>
+          <li>Decoding is extremely fast</li>
+        </ul>
+      </div>
+      <div class="right">
+        <pre><code>
+A A A A B B
+
+→ (A, 4), (B, 2)
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 17 RLE in Real Databases -->
+  <section>
+    <h5>RLE in Real Databases</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Ideal for status flags, categories, or timestamps</li>
+          <li>Columns often have long runs of the same value</li>
+          <li>ClickHouse applies it automatically</li>
+        </ul>
+      </div>
+      <div class="right">
+        <pre><code>
+status:
+active active active inactive
+
+→ (active, 3), (inactive, 1)
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 18 Why RLE Works So Well in Columns -->
+  <section>
+    <h5>Why RLE Works So Well in Columns</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Low-cardinality data (few unique values)</li>
+          <li>High repetition within each column</li>
+          <li>Sequential layout preserves runs</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 200" xmlns="http://www.w3.org/2000/svg" style="font-family:monospace;">
+          <text x="10" y="16" font-size="11" fill="#888">status column sorted by value</text>
+          <!-- Long run of active -->
+          <rect x="10" y="26" width="260" height="28" rx="4" fill="#ddeeff" stroke="#6090d0" stroke-width="0.5"/>
+          <text x="140" y="44" text-anchor="middle" font-size="12" fill="#2060a0">active × 10,000</text>
+          <!-- Short run of inactive -->
+          <rect x="10" y="58" width="80" height="28" rx="4" fill="#ffe0e0" stroke="#e08080" stroke-width="0.5"/>
+          <text x="50" y="76" text-anchor="middle" font-size="12" fill="#b04040">inactive × 2,000</text>
+          <!-- Very short pending -->
+          <rect x="10" y="90" width="40" height="28" rx="4" fill="#fff8e1" stroke="#e07800" stroke-width="0.5"/>
+          <text x="30" y="108" text-anchor="middle" font-size="11" fill="#7a5200">pend</text>
+          <text x="60" y="108" font-size="11" fill="#7a5200">× 500</text>
+          <!-- Result -->
+          <defs>
+            <marker id="arrRLE2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#e07800" stroke-width="1.5" stroke-linecap="round"/>
+            </marker>
+          </defs>
+          <line x1="310" y1="72" x2="340" y2="72" stroke="#e07800" stroke-width="1.5" marker-end="url(#arrRLE2)"/>
+          <text x="350" y="48" font-size="12" fill="#2060a0">(active, 10000)</text>
+          <text x="350" y="68" font-size="12" fill="#b04040">(inactive, 2000)</text>
+          <text x="350" y="88" font-size="12" fill="#7a5200">(pending, 500)</text>
+          <rect x="10" y="140" width="400" height="36" rx="6" fill="#e8f8f0" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="210" y="156" text-anchor="middle" font-size="12" fill="#1a7a46" font-weight="bold">12,500 values → 3 pairs  (99.98% compression!)</text>
+          <text x="210" y="172" text-anchor="middle" font-size="12" fill="#888">ClickHouse applies this automatically for low-cardinality cols</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 19 Compression Impact on Performance -->
+  <section>
+    <h5>Compression Impact on Performance</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Reduces disk usage dramatically</li>
+          <li>Lowers memory footprint</li>
+          <li>Fewer bytes to read → faster queries</li>
+        </ul>
+      </div>
+      <div class="right">
+        <pre><code>
+Raw data:     ~12 GB
+Compressed:   ~2 GB (or better)
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 20 Aggregation Complexity -->
+  <section>
+    <h5>Aggregation Complexity: Rows vs Columns</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Row: Must process O(n × m) data (n rows, m columns)</li>
+          <li>Column: Processes only O(n) for the needed column</li>
+          <li>Massive reduction in work for analytics</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 180" xmlns="http://www.w3.org/2000/svg" style="font-family:monospace;">
+          <text x="10" y="16" font-size="11" fill="#888">big table: 3B rows, 20 columns</text>
+          <!-- Row bar -->
+          <text x="10" y="44" font-size="13" fill="#c00">Row storage:</text>
+          <rect x="10" y="52" width="380" height="24" rx="4" fill="#ffcccc" stroke="#e44" stroke-width="0.5"/>
+          <text x="200" y="68" text-anchor="middle" font-size="12" fill="#c00">O(n × m) = 60 billion values read</text>
+          <!-- Column bar -->
+          <text x="10" y="102" font-size="13" fill="#1a7a46">Column storage:</text>
+          <rect x="10" y="110" width="19" height="24" rx="4" fill="#b0e8c8" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="38" y="126" font-size="12" fill="#1a7a46">O(n) = 3 billion values read</text>
+          <rect x="10" y="150" width="400" height="24" rx="6" fill="#fff8e1" stroke="#f5b85e" stroke-width="0.5"/>
+          <text x="210" y="166" text-anchor="middle" font-size="13" fill="#7a5200" font-weight="bold">Column reduces work by factor of m (20×)</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 21 ClickHouse Core Advantages -->
+  <section>
+    <h5>ClickHouse Core Advantages</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Reads only required columns</li>
+          <li>Leverages advanced compression</li>
+          <li>Built-in parallel and vectorized execution</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 170" xmlns="http://www.w3.org/2000/svg" style="font-family:sans-serif;">
+          <!-- 3 pillars -->
+          <rect x="20"  y="20" width="110" height="110" rx="8" fill="#eef3ff" stroke="#93aee8" stroke-width="0.5"/>
+          <rect x="154" y="20" width="110" height="110" rx="8" fill="#fff8e1" stroke="#f5b85e" stroke-width="0.5"/>
+          <rect x="288" y="20" width="110" height="110" rx="8" fill="#e8f8f0" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="75"  y="54"  text-anchor="middle" font-size="24" fill="#2a4ca0">✂</text>
+          <text x="209" y="54"  text-anchor="middle" font-size="24" fill="#7a5200">▣</text>
+          <text x="343" y="54"  text-anchor="middle" font-size="24" fill="#1a7a46">⚡</text>
+          <text x="75"  y="78"  text-anchor="middle" font-size="13" fill="#2a4ca0" font-weight="bold">Column</text>
+          <text x="75"  y="96"  text-anchor="middle" font-size="13" fill="#2a4ca0" font-weight="bold">Pruning</text>
+          <text x="209" y="78"  text-anchor="middle" font-size="13" fill="#7a5200" font-weight="bold">Advanced</text>
+          <text x="209" y="96"  text-anchor="middle" font-size="13" fill="#7a5200" font-weight="bold">Compression</text>
+          <text x="343" y="78"  text-anchor="middle" font-size="13" fill="#1a7a46" font-weight="bold">Vectorized</text>
+          <text x="343" y="96"  text-anchor="middle" font-size="13" fill="#1a7a46" font-weight="bold">SIMD</text>
+          <text x="75"  y="118" text-anchor="middle" font-size="12" fill="#888">less I/O</text>
+          <text x="209" y="118" text-anchor="middle" font-size="12" fill="#888">smaller files</text>
+          <text x="343" y="118" text-anchor="middle" font-size="12" fill="#888">fast CPU</text>
+          <rect x="20" y="148" width="378" height="18" rx="4" fill="#e8f8f0" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="209" y="161" text-anchor="middle" font-size="12" fill="#1a7a46">Combined: billions of rows answered in milliseconds</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 22 Vectorization -->
+  <section>
+    <h5>Vectorization: Processing in Batches</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Instead of one row at a time, process blocks of data</li>
+          <li>Better CPU cache usage</li>
+          <li>Significantly higher throughput</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 200" xmlns="http://www.w3.org/2000/svg" style="font-family:monospace;">
+          <!-- Scalar -->
+          <text x="10" y="18" font-size="12" fill="#c00">Scalar: one value per CPU cycle</text>
+          <rect x="10"  y="26" width="34" height="28" rx="3" fill="#ffe0b0" stroke="#e07800" stroke-width="1"/>
+          <rect x="48"  y="26" width="34" height="28" rx="3" fill="#f5f5f5" stroke="#ddd" stroke-width="0.5"/>
+          <rect x="86"  y="26" width="34" height="28" rx="3" fill="#f5f5f5" stroke="#ddd" stroke-width="0.5"/>
+          <rect x="124" y="26" width="34" height="28" rx="3" fill="#f5f5f5" stroke="#ddd" stroke-width="0.5"/>
+          <rect x="162" y="26" width="34" height="28" rx="3" fill="#f5f5f5" stroke="#ddd" stroke-width="0.5"/>
+          <rect x="200" y="26" width="34" height="28" rx="3" fill="#f5f5f5" stroke="#ddd" stroke-width="0.5"/>
+          <rect x="238" y="26" width="34" height="28" rx="3" fill="#f5f5f5" stroke="#ddd" stroke-width="0.5"/>
+          <rect x="276" y="26" width="34" height="28" rx="3" fill="#f5f5f5" stroke="#ddd" stroke-width="0.5"/>
+          <text x="27" y="44"   text-anchor="middle" font-size="10" fill="#e07800">▶</text>
+          <text x="330" y="44"  font-size="12" fill="#c00">→ slow</text>
+
+          <!-- SIMD -->
+          <text x="10" y="80" font-size="12" fill="#1a7a46">SIMD: 8 values per CPU cycle</text>
+          <rect x="10"  y="88" width="34" height="28" rx="3" fill="#c8f0da" stroke="#2e9e62" stroke-width="0.5"/>
+          <rect x="48"  y="88" width="34" height="28" rx="3" fill="#c8f0da" stroke="#2e9e62" stroke-width="0.5"/>
+          <rect x="86"  y="88" width="34" height="28" rx="3" fill="#c8f0da" stroke="#2e9e62" stroke-width="0.5"/>
+          <rect x="124" y="88" width="34" height="28" rx="3" fill="#c8f0da" stroke="#2e9e62" stroke-width="0.5"/>
+          <rect x="162" y="88" width="34" height="28" rx="3" fill="#c8f0da" stroke="#2e9e62" stroke-width="0.5"/>
+          <rect x="200" y="88" width="34" height="28" rx="3" fill="#c8f0da" stroke="#2e9e62" stroke-width="0.5"/>
+          <rect x="238" y="88" width="34" height="28" rx="3" fill="#c8f0da" stroke="#2e9e62" stroke-width="0.5"/>
+          <rect x="276" y="88" width="34" height="28" rx="3" fill="#c8f0da" stroke="#2e9e62" stroke-width="0.5"/>
+          <!-- Bracket -->
+          <line x1="10"  y1="120" x2="310" y2="120" stroke="#2e9e62" stroke-width="1"/>
+          <line x1="10"  y1="116" x2="10"  y2="124" stroke="#2e9e62" stroke-width="1"/>
+          <line x1="310" y1="116" x2="310" y2="124" stroke="#2e9e62" stroke-width="1"/>
+          <text x="160" y="138" text-anchor="middle" font-size="12" fill="#1a7a46">all 8 processed in one instruction</text>
+          <text x="330" y="106" font-size="12" fill="#1a7a46">→ fast!</text>
+          <!-- Summary -->
+          <rect x="10" y="152" width="400" height="34" rx="6" fill="#eef3ff" stroke="#93aee8" stroke-width="0.5"/>
+          <text x="210" y="167" text-anchor="middle" font-size="13" fill="#2a4ca0" font-weight="bold">Columnar data = natural fit for SIMD</text>
+          <text x="210" y="181" text-anchor="middle" font-size="12" fill="#888">same-type contiguous values fill CPU registers perfectly</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 23 SIMD -->
+  <section>
+    <h5>SIMD: Single Instruction, Multiple Data</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Modern CPUs apply one operation to many values at once</li>
+          <li>Perfect match for columnar data</li>
+          <li>ClickHouse uses SIMD for massive speedups</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 190" xmlns="http://www.w3.org/2000/svg" style="font-family:monospace;">
+          <text x="10" y="16" font-size="11" fill="#888">SIMD ADD — 8 additions in 1 instruction</text>
+          <!-- Vec A -->
+          <text x="10" y="40" font-size="11" fill="#2060a0">vec A</text>
+          <rect x="60" y="28" width="36" height="22" rx="2" fill="#ddeeff" stroke="#6090d0" stroke-width="0.5"/>
+          <rect x="100" y="28" width="36" height="22" rx="2" fill="#ddeeff" stroke="#6090d0" stroke-width="0.5"/>
+          <rect x="140" y="28" width="36" height="22" rx="2" fill="#ddeeff" stroke="#6090d0" stroke-width="0.5"/>
+          <rect x="180" y="28" width="36" height="22" rx="2" fill="#ddeeff" stroke="#6090d0" stroke-width="0.5"/>
+          <text x="78"  y="43" text-anchor="middle" font-size="10" fill="#2060a0">12</text>
+          <text x="118" y="43" text-anchor="middle" font-size="10" fill="#2060a0">8</text>
+          <text x="158" y="43" text-anchor="middle" font-size="10" fill="#2060a0">25</text>
+          <text x="198" y="43" text-anchor="middle" font-size="10" fill="#2060a0">5</text>
+          <!-- Vec B -->
+          <text x="10" y="72" font-size="11" fill="#7a5200">vec B</text>
+          <rect x="60" y="60" width="36" height="22" rx="2" fill="#fff8e1" stroke="#f5b85e" stroke-width="0.5"/>
+          <rect x="100" y="60" width="36" height="22" rx="2" fill="#fff8e1" stroke="#f5b85e" stroke-width="0.5"/>
+          <rect x="140" y="60" width="36" height="22" rx="2" fill="#fff8e1" stroke="#f5b85e" stroke-width="0.5"/>
+          <rect x="180" y="60" width="36" height="22" rx="2" fill="#fff8e1" stroke="#f5b85e" stroke-width="0.5"/>
+          <text x="78"  y="75" text-anchor="middle" font-size="10" fill="#7a5200">3</text>
+          <text x="118" y="75" text-anchor="middle" font-size="10" fill="#7a5200">7</text>
+          <text x="158" y="75" text-anchor="middle" font-size="10" fill="#7a5200">2</text>
+          <text x="198" y="75" text-anchor="middle" font-size="10" fill="#7a5200">9</text>
+          <!-- Op -->
+          <text x="250" y="52" font-size="22" fill="#aaa">⊕ ADD</text>
+          <text x="252" y="70" font-size="11" fill="#888">1 instruction</text>
+          <!-- Arrow -->
+          <defs>
+            <marker id="arrSIMD" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#2e9e62" stroke-width="1.5" stroke-linecap="round"/>
+            </marker>
+          </defs>
+          <line x1="130" y1="84" x2="130" y2="106" stroke="#2e9e62" stroke-width="1.5" marker-end="url(#arrSIMD)"/>
+          <!-- Result -->
+          <text x="10" y="124" font-size="11" fill="#1a7a46">result</text>
+          <rect x="60" y="110" width="36" height="22" rx="2" fill="#c8f0da" stroke="#2e9e62" stroke-width="0.5"/>
+          <rect x="100" y="110" width="36" height="22" rx="2" fill="#c8f0da" stroke="#2e9e62" stroke-width="0.5"/>
+          <rect x="140" y="110" width="36" height="22" rx="2" fill="#c8f0da" stroke="#2e9e62" stroke-width="0.5"/>
+          <rect x="180" y="110" width="36" height="22" rx="2" fill="#c8f0da" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="78"  y="125" text-anchor="middle" font-size="10" fill="#1a7a46">15</text>
+          <text x="118" y="125" text-anchor="middle" font-size="10" fill="#1a7a46">15</text>
+          <text x="158" y="125" text-anchor="middle" font-size="10" fill="#1a7a46">27</text>
+          <text x="198" y="125" text-anchor="middle" font-size="10" fill="#1a7a46">14</text>
+          <rect x="10" y="148" width="400" height="30" rx="6" fill="#e8f8f0" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="210" y="167" text-anchor="middle" font-size="12" fill="#1a7a46">Columnar data fills the CPU register perfectly → 4–8× throughput</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 24 Simple Aggregation Example -->
+  <section>
+    <h5>Simple Aggregation Example</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Typical analytics query on large logs or metrics</li>
+          <li>Extremely fast in ClickHouse thanks to columnar design</li>
+        </ul>
+      </div>
+      <div class="right">
+        <pre><code>
+SELECT COUNT(*) FROM logs;
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 25 Time-Series Data Example -->
+  <section>
+    <h5>Time-Series Data Example</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Logs, events, and metrics over time</li>
+          <li>Column storage shines for grouping by time</li>
+        </ul>
+      </div>
+      <div class="right">
+        <pre><code>
+SELECT hour, COUNT(*)
+FROM logs
+GROUP BY hour;
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 26 Use Case: Real-Time Dashboards -->
+  <section>
+    <h5>Use Case: Real-Time Dashboards</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Live metrics and business insights</li>
+          <li>Fast aggregations over huge datasets</li>
+          <li>ClickHouse powers responsive dashboards</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 200" xmlns="http://www.w3.org/2000/svg" style="font-family:sans-serif;">
+          <!-- Dashboard mockup -->
+          <rect x="10" y="10" width="400" height="170" rx="8" fill="#f8f9fc" stroke="#dde" stroke-width="1"/>
+          <rect x="10" y="10" width="400" height="30" rx="8" fill="#eef3ff"/>
+          <rect x="10" y="38" width="400" height="2" fill="#dde"/>
+          <text x="210" y="30" text-anchor="middle" font-size="12" fill="#666">Analytics Dashboard — live</text>
+          <!-- KPI cards -->
+          <rect x="22" y="50" width="100" height="50" rx="5" fill="#fff" stroke="#dde" stroke-width="0.5"/>
+          <text x="72" y="68" text-anchor="middle" font-size="10" fill="#888">Revenue</text>
+          <text x="72" y="88" text-anchor="middle" font-size="16" fill="#1a7a46" font-weight="bold">$2.4M</text>
+          <rect x="132" y="50" width="100" height="50" rx="5" fill="#fff" stroke="#dde" stroke-width="0.5"/>
+          <text x="182" y="68" text-anchor="middle" font-size="10" fill="#888">Events</text>
+          <text x="182" y="88" text-anchor="middle" font-size="16" fill="#2a4ca0" font-weight="bold">18.3B</text>
+          <rect x="242" y="50" width="100" height="50" rx="5" fill="#fff" stroke="#dde" stroke-width="0.5"/>
+          <text x="292" y="68" text-anchor="middle" font-size="10" fill="#888">Query</text>
+          <text x="292" y="88" text-anchor="middle" font-size="16" fill="#e07800" font-weight="bold">12ms</text>
+          <!-- Mini bar chart -->
+          <rect x="22"  y="116" width="14" height="40" rx="2" fill="#93aee8"/>
+          <rect x="40"  y="128" width="14" height="28" rx="2" fill="#93aee8"/>
+          <rect x="58"  y="120" width="14" height="36" rx="2" fill="#93aee8"/>
+          <rect x="76"  y="108" width="14" height="48" rx="2" fill="#4a7cdc"/>
+          <rect x="94"  y="118" width="14" height="38" rx="2" fill="#93aee8"/>
+          <rect x="112" y="124" width="14" height="32" rx="2" fill="#93aee8"/>
+          <text x="250" y="134" font-size="12" fill="#1a7a46">Powered by ClickHouse</text>
+          <text x="250" y="152" font-size="12" fill="#1a7a46">12ms on 18B rows</text>
+          <text x="250" y="168" font-size="11" fill="#888">refreshes every second</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 27 Use Case: Transactional Systems -->
+  <section>
+    <h5>Use Case: Transactional Systems</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Payments, user updates, order processing</li>
+          <li>Row-based databases (OLTP) are better here</li>
+          <li>ClickHouse is not designed for heavy writes/updates</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 180" xmlns="http://www.w3.org/2000/svg" style="font-family:sans-serif;">
+          <rect x="10" y="10" width="400" height="70" rx="8" fill="#e8f8f0" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="210" y="34" text-anchor="middle" font-size="14" fill="#1a7a46" font-weight="bold">Use Row DB (PostgreSQL) for:</text>
+          <text x="210" y="54" text-anchor="middle" font-size="12" fill="#333">Payments · User updates · Order processing</text>
+          <text x="210" y="68" text-anchor="middle" font-size="12" fill="#333">Inventory management · ACID guarantees</text>
+          <rect x="10" y="96" width="400" height="70" rx="8" fill="#fff0f0" stroke="#e88" stroke-width="0.5"/>
+          <text x="210" y="120" text-anchor="middle" font-size="14" fill="#c00" font-weight="bold">ClickHouse is NOT suited for:</text>
+          <text x="210" y="140" text-anchor="middle" font-size="12" fill="#333">Frequent single-row UPDATE / DELETE</text>
+          <text x="210" y="156" text-anchor="middle" font-size="12" fill="#333">Full ACID transactions · Point-in-time rollbacks</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 28 Indexing Differences -->
+  <section>
+    <h5>Indexing Differences</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Row DBs rely heavily on indexes for speed</li>
+          <li>Column DBs scan data so quickly they need fewer indexes</li>
+          <li>Focus shifts to data layout and compression</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 190" xmlns="http://www.w3.org/2000/svg" style="font-family:sans-serif;">
+          <text x="10" y="16" font-size="11" fill="#888" font-family="monospace">row DB: B-tree index → page → row</text>
+          <rect x="10" y="26" width="90" height="80" rx="5" fill="#eef3ff" stroke="#93aee8" stroke-width="0.5"/>
+          <text x="55" y="48" text-anchor="middle" font-size="11" fill="#2a4ca0" font-weight="bold">B-tree</text>
+          <text x="55" y="64" text-anchor="middle" font-size="11" fill="#888">index</text>
+          <text x="55" y="82" text-anchor="middle" font-size="10" fill="#666">id=5 →</text>
+          <text x="55" y="96" text-anchor="middle" font-size="10" fill="#666">page 12</text>
+          <defs>
+            <marker id="arrIdx" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#2a4ca0" stroke-width="1.5" stroke-linecap="round"/>
+            </marker>
+          </defs>
+          <line x1="100" y1="66" x2="138" y2="66" stroke="#2a4ca0" stroke-width="1.5" marker-end="url(#arrIdx)"/>
+          <rect x="140" y="50" width="120" height="32" rx="4" fill="#f0f4ff" stroke="#93aee8" stroke-width="0.5"/>
+          <text x="200" y="70" text-anchor="middle" font-size="12" fill="#444">row page 12</text>
+
+          <text x="10" y="132" font-size="11" fill="#888" font-family="monospace">column DB: sequential scan beats index for analytics</text>
+          <rect x="10" y="142" width="400" height="34" rx="5" fill="#e8f8f0" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="210" y="157" text-anchor="middle" font-size="12" fill="#1a7a46" font-weight="bold">Column scan is already so fast</text>
+          <text x="210" y="173" text-anchor="middle" font-size="12" fill="#888">that a B-tree index would slow it down for aggregations</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 29 ClickHouse Performance Highlights -->
+  <section>
+    <h5>ClickHouse Performance Highlights</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Often 10-100x faster than row-based systems for analytics</li>
+          <li>Scans less data thanks to column pruning</li>
+          <li>Higher compression ratios</li>
+        </ul>
+      </div>
+      <div class="right">
+        <pre><code>
+Row:  3B rows × 20 cols = 60B values read
+Col:  3B rows ×  1 col  =  3B values read
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 30 Common Compression Techniques -->
+  <section>
+    <h5>Common Compression Techniques</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Run-Length Encoding (RLE)</li>
+          <li>Dictionary Encoding</li>
+          <li>Delta Encoding</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 220" xmlns="http://www.w3.org/2000/svg" style="font-family:monospace;">
+          <!-- RLE -->
+          <rect x="10" y="10" width="400" height="56" rx="6" fill="#eef3ff" stroke="#93aee8" stroke-width="0.5"/>
+          <text x="20" y="30" font-size="12" fill="#2a4ca0" font-weight="bold">RLE — repeated values</text>
+          <text x="20" y="48" font-size="12" fill="#444">active active active → (active, 3)</text>
+          <!-- Dictionary -->
+          <rect x="10" y="76" width="400" height="56" rx="6" fill="#fff8e1" stroke="#f5b85e" stroke-width="0.5"/>
+          <text x="20" y="96" font-size="12" fill="#7a5200" font-weight="bold">Dictionary — map strings to integers</text>
+          <text x="20" y="114" font-size="12" fill="#444">New York → 0  ·  Los Angeles → 1  ·  SF → 2</text>
+          <!-- Delta -->
+          <rect x="10" y="142" width="400" height="56" rx="6" fill="#e8f8f0" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="20" y="162" font-size="12" fill="#1a7a46" font-weight="bold">Delta — store differences, not raw values</text>
+          <text x="20" y="180" font-size="12" fill="#444">100, 101, 102, 103 → base 100, deltas: +1 +1 +1</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 31 RLE Recap -->
+  <section>
+    <h5>RLE Recap</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Stores value + repetition count</li>
+          <li>Excellent for repeated or categorical data</li>
+          <li>Fast to encode and decode</li>
+        </ul>
+      </div>
+      <div class="right">
+        <pre><code>
+(A, 5)
+(B, 2)
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 32 Example: Colors Column -->
+  <section>
+    <h5>Example: Colors Column (Low Cardinality)</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Many repeated values</li>
+          <li>High compression ratio possible</li>
+          <li>Common in analytics tables</li>
+        </ul>
+      </div>
+      <div class="right">
+        <pre><code>
+Red Red Red Red
+
+→ (Red, 4)
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 33 Example: Status Column -->
+  <section>
+    <h5>Example: Status Column</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Binary or categorical values (active/inactive)</li>
+          <li>Highly repetitive patterns</li>
+          <li>Perfect candidate for RLE</li>
+        </ul>
+      </div>
+      <div class="right">
+        <pre><code>
+Active Active Inactive
+
+→ (Active, 2), (Inactive, 1)
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 34 Query Optimization in ClickHouse -->
+  <section>
+    <h5>Query Optimization in ClickHouse</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Column pruning reduces scanned data</li>
+          <li>Compressed data read directly</li>
+          <li>Parallel execution across cores</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 200" xmlns="http://www.w3.org/2000/svg" style="font-family:monospace;">
+          <text x="10" y="16" font-size="11" fill="#888">ClickHouse optimization steps</text>
+          <defs>
+            <marker id="arrOpt" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#999" stroke-width="1.5" stroke-linecap="round"/>
+            </marker>
+          </defs>
+          <rect x="10"  y="26" width="390" height="24" rx="4" fill="#eef3ff" stroke="#93aee8" stroke-width="0.5"/>
+          <text x="205" y="42" text-anchor="middle" font-size="12" fill="#2a4ca0">1. Parse SQL → identify required columns</text>
+          <line x1="205" y1="50" x2="205" y2="62" stroke="#999" stroke-width="1" marker-end="url(#arrOpt)"/>
+          <rect x="10"  y="64" width="390" height="24" rx="4" fill="#fff8e1" stroke="#f5b85e" stroke-width="0.5"/>
+          <text x="205" y="80" text-anchor="middle" font-size="12" fill="#7a5200">2. Load only those column blocks from disk</text>
+          <line x1="205" y1="88" x2="205" y2="100" stroke="#999" stroke-width="1" marker-end="url(#arrOpt)"/>
+          <rect x="10"  y="102" width="390" height="24" rx="4" fill="#f0e8ff" stroke="#8866cc" stroke-width="0.5"/>
+          <text x="205" y="118" text-anchor="middle" font-size="12" fill="#5a3090">3. Decompress (RLE / dict / delta decode)</text>
+          <line x1="205" y1="126" x2="205" y2="138" stroke="#999" stroke-width="1" marker-end="url(#arrOpt)"/>
+          <rect x="10"  y="140" width="390" height="24" rx="4" fill="#e8fff0" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="205" y="156" text-anchor="middle" font-size="12" fill="#1a7a46">4. SIMD vectorized aggregate across CPU cores</text>
+          <line x1="205" y1="164" x2="205" y2="176" stroke="#999" stroke-width="1" marker-end="url(#arrOpt)"/>
+          <rect x="140" y="178" width="130" height="18" rx="4" fill="#e8f8f0" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="205" y="191" text-anchor="middle" font-size="11" fill="#1a7a46">result in milliseconds</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 35 Utilizing Multiple CPU Cores -->
+  <section>
+    <h5>Utilizing Multiple CPU Cores</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Modern servers have many cores</li>
+          <li>ClickHouse parallelizes queries automatically</li>
+          <li>Scales with hardware</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 210" xmlns="http://www.w3.org/2000/svg" style="font-family:sans-serif;">
+          <defs>
+            <marker id="arrPar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#999" stroke-width="1.5" stroke-linecap="round"/>
+            </marker>
+            <marker id="arrParG" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#2e9e62" stroke-width="1.5" stroke-linecap="round"/>
+            </marker>
+          </defs>
+          <!-- Input -->
+          <rect x="150" y="10" width="130" height="28" rx="5" fill="#eef3ff" stroke="#93aee8" stroke-width="0.5"/>
+          <text x="215" y="28" text-anchor="middle" font-size="12" fill="#2a4ca0">3B row column</text>
+          <!-- Fan out -->
+          <line x1="180" y1="38" x2="72"  y2="72" stroke="#999" stroke-width="1" marker-end="url(#arrPar)"/>
+          <line x1="215" y1="38" x2="215" y2="72" stroke="#999" stroke-width="1" marker-end="url(#arrPar)"/>
+          <line x1="250" y1="38" x2="358" y2="72" stroke="#999" stroke-width="1" marker-end="url(#arrPar)"/>
+          <!-- Cores -->
+          <rect x="24"  y="74" width="96" height="40" rx="5" fill="#e8f8f0" stroke="#2e9e62" stroke-width="0.5"/>
+          <rect x="167" y="74" width="96" height="40" rx="5" fill="#e8f8f0" stroke="#2e9e62" stroke-width="0.5"/>
+          <rect x="310" y="74" width="96" height="40" rx="5" fill="#e8f8f0" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="72"  y="90" text-anchor="middle" font-size="12" fill="#1a7a46">Core 1</text>
+          <text x="215" y="90" text-anchor="middle" font-size="12" fill="#1a7a46">Core 2</text>
+          <text x="358" y="90" text-anchor="middle" font-size="12" fill="#1a7a46">Core 3</text>
+          <text x="72"  y="106" text-anchor="middle" font-size="11" fill="#888">1B rows</text>
+          <text x="215" y="106" text-anchor="middle" font-size="11" fill="#888">1B rows</text>
+          <text x="358" y="106" text-anchor="middle" font-size="11" fill="#888">1B rows</text>
+          <!-- Partial results -->
+          <line x1="72"  y1="114" x2="72"  y2="144" stroke="#999" stroke-width="1" marker-end="url(#arrPar)"/>
+          <line x1="215" y1="114" x2="215" y2="144" stroke="#999" stroke-width="1" marker-end="url(#arrPar)"/>
+          <line x1="358" y1="114" x2="358" y2="144" stroke="#999" stroke-width="1" marker-end="url(#arrPar)"/>
+          <rect x="24"  y="146" width="96" height="26" rx="4" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+          <rect x="167" y="146" width="96" height="26" rx="4" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+          <rect x="310" y="146" width="96" height="26" rx="4" fill="#f5f5f5" stroke="#ccc" stroke-width="0.5"/>
+          <text x="72"  y="163" text-anchor="middle" font-size="11" fill="#888">partial sum</text>
+          <text x="215" y="163" text-anchor="middle" font-size="11" fill="#888">partial sum</text>
+          <text x="358" y="163" text-anchor="middle" font-size="11" fill="#888">partial sum</text>
+          <!-- Merge -->
+          <line x1="72"  y1="172" x2="180" y2="196" stroke="#2e9e62" stroke-width="1" marker-end="url(#arrParG)"/>
+          <line x1="215" y1="172" x2="215" y2="196" stroke="#2e9e62" stroke-width="1" marker-end="url(#arrParG)"/>
+          <line x1="358" y1="172" x2="250" y2="196" stroke="#2e9e62" stroke-width="1" marker-end="url(#arrParG)"/>
+          <rect x="152" y="198" width="126" height="10" rx="3" fill="#c8f0da" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="215" y="207" text-anchor="middle" font-size="9" fill="#1a7a46">final result</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 36 Parallel Processing in Action -->
+  <section>
+    <h5>Parallel Processing in Action</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Data split into chunks</li>
+          <li>Processed simultaneously</li>
+          <li>Results merged efficiently</li>
+        </ul>
+      </div>
+      <div class="right">
+        <pre><code>
+-- ClickHouse splits automatically:
+
+SELECT SUM(revenue)
+FROM sales;
+
+-- Core 1: SUM rows 0..1B    → 4.2B
+-- Core 2: SUM rows 1B..2B   → 3.8B
+-- Core 3: SUM rows 2B..3B   → 4.0B
+-- Merge:  4.2 + 3.8 + 4.0  = 12.0B
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 37 Memory Efficiency -->
+  <section>
+    <h5>Memory Efficiency</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Compressed columnar data uses less RAM</li>
+          <li>Better cache locality</li>
+          <li>More data fits in memory → faster queries</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 190" xmlns="http://www.w3.org/2000/svg" style="font-family:monospace;">
+          <text x="10" y="16" font-size="11" fill="#888">same dataset, different memory footprint</text>
+          <text x="10" y="40" font-size="13" fill="#c00" font-family="sans-serif">Row, uncompressed</text>
+          <rect x="10" y="48" width="360" height="22" rx="4" fill="#ffcccc" stroke="#e44" stroke-width="0.5"/>
+          <text x="378" y="62" font-size="12" fill="#c00">12 GB</text>
+          <text x="10" y="90" font-size="13" fill="#e07800" font-family="sans-serif">Column, no compression</text>
+          <rect x="10" y="98" width="240" height="22" rx="4" fill="#ffe0b0" stroke="#e07800" stroke-width="0.5"/>
+          <text x="258" y="112" font-size="12" fill="#e07800">8 GB</text>
+          <text x="10" y="140" font-size="13" fill="#1a7a46" font-family="sans-serif">Column + compression</text>
+          <rect x="10" y="148" width="60" height="22" rx="4" fill="#b0e8c8" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="80" y="162" font-size="12" fill="#1a7a46">2 GB  ← 6× smaller than row, uncompressed</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 38 ClickHouse Strengths Summary -->
+  <section>
+    <h5>ClickHouse Strengths Summary</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Lightning-fast full-table scans</li>
+          <li>Handles petabyte-scale datasets</li>
+          <li>Superior compression + vectorization</li>
+        </ul>
+      </div>
+      <div class="right">
+        <pre><code>
+Row:  3B rows × 20 cols = 60B values read
+Col:  3B rows ×  1 col  =  3B values read
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 39 Limitations of ClickHouse -->
+  <section>
+    <h5>Limitations of ClickHouse</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Not optimized for frequent single-row updates</li>
+          <li>Limited full ACID transaction support</li>
+          <li>Best used for analytics, not pure OLTP</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 180" xmlns="http://www.w3.org/2000/svg" style="font-family:sans-serif;">
+          <rect x="10" y="10" width="400" height="64" rx="8" fill="#e8f8f0" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="210" y="34" text-anchor="middle" font-size="14" fill="#1a7a46" font-weight="bold">ClickHouse excels at:</text>
+          <text x="210" y="54" text-anchor="middle" font-size="12" fill="#333">Append-heavy · bulk inserts · SELECT aggregations</text>
+          <text x="210" y="68" text-anchor="middle" font-size="12" fill="#333">Immutable historical data · analytics at scale</text>
+          <rect x="10" y="92" width="400" height="64" rx="8" fill="#fff0f0" stroke="#e88" stroke-width="0.5"/>
+          <text x="210" y="116" text-anchor="middle" font-size="14" fill="#c00" font-weight="bold">ClickHouse struggles with:</text>
+          <text x="210" y="136" text-anchor="middle" font-size="12" fill="#333">Frequent UPDATE / DELETE · ACID transactions</text>
+          <text x="210" y="152" text-anchor="middle" font-size="12" fill="#333">Primary-key point lookups · complex JOIN chains</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 40 Best Practice Recommendation -->
+  <section>
+    <h5>Best Practice Recommendation</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Use row-oriented DBs for OLTP (transactions)</li>
+          <li>Use columnar DBs like ClickHouse for OLAP (analytics)</li>
+          <li>Hybrid architectures when both are needed</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 200" xmlns="http://www.w3.org/2000/svg" style="font-family:sans-serif;">
+          <!-- App box -->
+          <defs>
+            <marker id="arrHyb" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#e07800" stroke-width="1.5" stroke-linecap="round"/>
+            </marker>
+            <marker id="arrHybB" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#2a4ca0" stroke-width="1.5" stroke-linecap="round"/>
+            </marker>
+            <marker id="arrHybG" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M2 1L8 5L2 9" fill="none" stroke="#1a7a46" stroke-width="1.5" stroke-linecap="round"/>
+            </marker>
+          </defs>
+          <rect x="160" y="10" width="120" height="28" rx="5" fill="#eef3ff" stroke="#93aee8" stroke-width="0.5"/>
+          <text x="220" y="28" text-anchor="middle" font-size="12" fill="#2a4ca0">Application</text>
+          <line x1="196" y1="38" x2="110" y2="72" stroke="#2a4ca0" stroke-width="1.5" marker-end="url(#arrHybB)"/>
+          <rect x="20" y="74" width="120" height="42" rx="6" fill="#eef3ff" stroke="#93aee8" stroke-width="0.5"/>
+          <text x="80" y="92" text-anchor="middle" font-size="12" fill="#2a4ca0" font-weight="bold">PostgreSQL</text>
+          <text x="80" y="108" text-anchor="middle" font-size="11" fill="#666">OLTP (writes)</text>
+          <line x1="140" y1="95" x2="206" y2="95" stroke="#e07800" stroke-width="1.5" marker-end="url(#arrHyb)"/>
+          <text x="173" y="90" text-anchor="middle" font-size="10" fill="#e07800">ETL/CDC</text>
+          <rect x="208" y="74" width="130" height="42" rx="6" fill="#e8f8f0" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="273" y="92" text-anchor="middle" font-size="12" fill="#1a7a46" font-weight="bold">ClickHouse</text>
+          <text x="273" y="108" text-anchor="middle" font-size="11" fill="#666">OLAP (analytics)</text>
+          <line x1="255" y1="116" x2="220" y2="150" stroke="#1a7a46" stroke-width="1.5" marker-end="url(#arrHybG)"/>
+          <rect x="150" y="152" width="140" height="36" rx="6" fill="#e8f8f0" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="220" y="170" text-anchor="middle" font-size="12" fill="#1a7a46">BI Dashboard</text>
+          <text x="220" y="184" text-anchor="middle" font-size="11" fill="#888">real-time analytics</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 41 Key Insight -->
+  <section>
+    <h5>Key Insight</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Storage format determines query speed</li>
+          <li>Match design to your workload</li>
+          <li>Choose the right tool for the job</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 160" xmlns="http://www.w3.org/2000/svg" style="font-family:sans-serif;">
+          <rect x="10" y="10" width="400" height="68" rx="10" fill="#fff8e1" stroke="#f5b85e" stroke-width="0.5"/>
+          <text x="210" y="38" text-anchor="middle" font-size="18" fill="#7a5200" font-weight="bold">The Golden Rule</text>
+          <text x="210" y="60" text-anchor="middle" font-size="13" fill="#333">Design your storage around your queries,</text>
+          <text x="210" y="76" text-anchor="middle" font-size="13" fill="#333">not the other way around.</text>
+          <text x="72"  y="116" text-anchor="middle" font-size="12" fill="#2a4ca0">Row DB</text>
+          <text x="72"  y="132" text-anchor="middle" font-size="11" fill="#888">writes &amp; lookups</text>
+          <text x="210" y="116" text-anchor="middle" font-size="12" fill="#e07800">Hybrid</text>
+          <text x="210" y="132" text-anchor="middle" font-size="11" fill="#888">both + ETL</text>
+          <text x="352" y="116" text-anchor="middle" font-size="12" fill="#1a7a46">Column DB</text>
+          <text x="352" y="132" text-anchor="middle" font-size="11" fill="#888">analytics</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 42 Summary -->
+  <section>
+    <h5>Summary</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Row storage → great for transactions</li>
+          <li>Column storage → excels at analytics</li>
+          <li>ClickHouse delivers unmatched OLAP performance</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 200" xmlns="http://www.w3.org/2000/svg" style="font-family:sans-serif;">
+          <!-- Comparison table -->
+          <rect x="10" y="10" width="400" height="30" rx="4" fill="#f0f4ff" stroke="#93aee8" stroke-width="0.5"/>
+          <text x="120" y="30" text-anchor="middle" font-size="12" fill="#666" font-weight="bold">Query Type</text>
+          <text x="265" y="30" text-anchor="middle" font-size="12" fill="#2a4ca0" font-weight="bold">Row DB</text>
+          <text x="370" y="30" text-anchor="middle" font-size="12" fill="#1a7a46" font-weight="bold">Column DB</text>
+          <!-- Rows -->
+          <rect x="10" y="44" width="400" height="28" rx="2" fill="#f9f9f9" stroke="#eee" stroke-width="0.5"/>
+          <text x="120" y="62" text-anchor="middle" font-size="12" fill="#333">Single row lookup</text>
+          <text x="265" y="62" text-anchor="middle" font-size="12" fill="#1a7a46">✓ Fast</text>
+          <text x="370" y="62" text-anchor="middle" font-size="12" fill="#c00">✗ Slow</text>
+          <rect x="10" y="76" width="400" height="28" rx="2" fill="#f9f9f9" stroke="#eee" stroke-width="0.5"/>
+          <text x="120" y="94" text-anchor="middle" font-size="12" fill="#333">SUM / AVG at scale</text>
+          <text x="265" y="94" text-anchor="middle" font-size="12" fill="#c00">✗ Slow</text>
+          <text x="370" y="94" text-anchor="middle" font-size="12" fill="#1a7a46">✓ Fast</text>
+          <rect x="10" y="108" width="400" height="28" rx="2" fill="#f9f9f9" stroke="#eee" stroke-width="0.5"/>
+          <text x="120" y="126" text-anchor="middle" font-size="12" fill="#333">INSERT / UPDATE</text>
+          <text x="265" y="126" text-anchor="middle" font-size="12" fill="#1a7a46">✓ Fast</text>
+          <text x="370" y="126" text-anchor="middle" font-size="12" fill="#c00">✗ Limited</text>
+          <rect x="10" y="140" width="400" height="28" rx="2" fill="#f9f9f9" stroke="#eee" stroke-width="0.5"/>
+          <text x="120" y="158" text-anchor="middle" font-size="12" fill="#333">GROUP BY billions</text>
+          <text x="265" y="158" text-anchor="middle" font-size="12" fill="#c00">✗ Slow</text>
+          <text x="370" y="158" text-anchor="middle" font-size="12" fill="#1a7a46">✓ Fast</text>
+          <rect x="10" y="172" width="400" height="16" rx="4" fill="#e8f8f0" stroke="#2e9e62" stroke-width="0.5"/>
+          <text x="210" y="184" text-anchor="middle" font-size="11" fill="#1a7a46">Match storage model to dominant workload</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- 43 Why Rows Slow Down (Recap) -->
+  <section>
+    <h5>Why Rows Slow Down Aggregations (Recap)</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Full rows must be read → massive unnecessary I/O</li>
+          <li>Scattered column values hurt cache performance</li>
+          <li>CPU processes irrelevant data</li>
+        </ul>
+      </div>
+      <div class="right">
+        <pre><code>
+Row storage path for SUM(price):
+
+1. Load full row: [name|color|type|price]
+2. Skip name, color, type
+3. Extract price
+4. Repeat for every row
+
+→ reads ~20× more data than needed
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 44 Why Columns Accelerate (Recap) -->
+  <section>
+    <h5>Why Columns Accelerate Aggregations (Recap)</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Only relevant columns loaded</li>
+          <li>Contiguous data + compression = minimal I/O</li>
+          <li>Vectorized/SIMD processing maximizes CPU power</li>
+        </ul>
+      </div>
+      <div class="right">
+        <pre><code>
+Column storage path for SUM(price):
+
+1. Load price column block only
+2. Decompress (RLE / dict)
+3. SIMD vectorized SUM
+4. Done
+
+→ reads only the data it needs ✓
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 45 Final Questions -->
+  <section>
+    <h5>Final Questions to Think About</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>When should you choose a column database?</li>
+          <li>When is row storage still the right choice?</li>
+          <li>How does RLE improve both storage and speed?</li>
+        </ul>
+      </div>
+      <div class="right">
+        <pre><code>
+Scenario A:
+  Bank app — 10K transactions/sec
+  ACID guarantees required
+  → Which storage?
+
+Scenario B:
+  Monthly revenue report
+  50B events, SUM/GROUP BY
+  → Which storage?
+
+Scenario C:
+  Both — what's the architecture?
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 46 Closing Thoughts -->
+  <section>
+    <h5>Closing Thoughts</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Always think about data access patterns</li>
+          <li>Optimize storage for your specific workload</li>
+          <li>Build systems that scale with growing data</li>
+        </ul>
+      </div>
+      <div class="right">
+        <pre><code>
+-- Three questions to ask first:
+
+1. What queries run most often?
+   → point lookups vs aggregations
+
+2. What is the read/write ratio?
+   → heavy writes  → row-based
+   → heavy reads   → columnar
+
+3. What scale do I need?
+   → billions of rows → ClickHouse
+   → millions + ACID  → PostgreSQL
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 47 Row Storage in Practice -->
+  <section>
+    <h5>Row Storage in Practice</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Fast point lookups and updates</li>
+          <li>ACID compliance easier to maintain</li>
+          <li>Traditional relational databases</li>
+        </ul>
+      </div>
+      <div class="right">
+        <pre><code>
+-- Point lookup: perfect for row DB
+SELECT * FROM users WHERE id = 42;
+
+-- Update: row DBs handle this well
+UPDATE users
+SET email = 'new@email.com'
+WHERE id = 42;
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 48 Column Storage in Practice -->
+  <section>
+    <h5>Column Storage in Practice</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Ideal for reporting and BI tools</li>
+          <li>Handles billions of rows efficiently</li>
+          <li>Real-time analytics at scale</li>
+        </ul>
+      </div>
+      <div class="right">
+        <pre><code>
+-- ClickHouse: analytics at scale
+SELECT
+  toMonth(event_time) AS month,
+  SUM(revenue)        AS total
+FROM events
+GROUP BY month
+ORDER BY month;
+-- 50B rows → ~200ms
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 49 Hybrid Architectures -->
+  <section>
+    <h5>Hybrid Architectures</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>Row DB for operational data</li>
+          <li>Column DB for analytics copy</li>
+          <li>ETL or CDC to sync between them</li>
+        </ul>
+      </div>
+      <div class="right">
+        <pre><code>
+-- OLTP: PostgreSQL
+INSERT INTO orders VALUES (...);
+UPDATE users SET email = ...;
+
+-- Sync via CDC / ETL pipeline
+
+-- OLAP: ClickHouse
+SELECT region, SUM(revenue)
+FROM sales
+GROUP BY region;
+</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- 50 Module Complete -->
+  <section>
+    <h5>Module Complete</h5>
+    <div class="split">
+      <div class="left">
+        <ul>
+          <li>You now understand why columnar shines for aggregation</li>
+          <li>Ready to explore ClickHouse in action</li>
+          <li>Next: Hands-on queries and setup</li>
+        </ul>
+      </div>
+      <div class="right">
+        <svg width="100%" viewBox="0 0 440 200" xmlns="http://www.w3.org/2000/svg" style="font-family:sans-serif;">
+          <rect x="10" y="10" width="400" height="170" rx="10" fill="#f8fff8" stroke="#2e9e62" stroke-width="1"/>
+          <text x="210" y="46" text-anchor="middle" font-size="16" fill="#1a7a46" font-weight="bold">Module 13 — Key Takeaways</text>
+          <text x="30" y="76" font-size="13" fill="#333">✓  Row storage = OLTP  (writes, lookups)</text>
+          <text x="30" y="100" font-size="13" fill="#333">✓  Column storage = OLAP  (analytics, aggregations)</text>
+          <text x="30" y="124" font-size="13" fill="#333">✓  RLE / Dict / Delta compress columns 6×+</text>
+          <text x="30" y="148" font-size="13" fill="#333">✓  SIMD vectorization = 4–8× CPU throughput</text>
+          <text x="30" y="172" font-size="13" fill="#1a7a46">✓  ClickHouse: 10–100× faster than row DB for analytics</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+</section>
