@@ -21,6 +21,31 @@
    call -- that goes through reveal.js's own centering math, so it can't
    drift off-center the way a competing CSS width override could. */
 
+/* GLOBAL GUARDRAIL -- comp-163's own section/code/table/li base font-size
+   (20pt/12pt/16px/16pt) had silently drifted smaller than comp-175's
+   already-tuned ones (24pt/14pt/18px/19pt), with nothing to compare
+   against until a screenshot showed the title slide reading too small.
+
+   A single shared CSS rule here is NOT the fix, though: these decks
+   don't actually want identical values. comp-175/comp-163 deliberately
+   override reveal.js's own theme default (black.min.css's
+   --r-main-font-size: 42px, ~31.5pt) DOWN to ~24pt because their slides
+   are dense enough to need the extra room; data-013 has no local
+   section/li override at all and relies on that same larger ~42px
+   theme default on purpose. Adding a blanket `section { font-size: 24pt }`
+   rule here was tried and reverted after checking reveal.js's own CSS --
+   it would have silently shrunk data-013 well below its real, working
+   size, the same class of silent-drift bug this note exists to prevent,
+   just introduced from the opposite direction.
+
+   The actual fix is a floor to check against, not an enforced value:
+   before writing or keeping a deck's own section/code/table/li override,
+   compare it to the other already-tuned decks (currently comp-175's
+   24pt/14pt/18px/19pt is the densest-content reference point) and don't
+   let a deck end up smaller without a stated reason -- but a deck that
+   intentionally wants the reveal.js theme's own larger default (like
+   data-013) is not an error and shouldn't be forced down to match. */
+
 /* Push reveal.js's own bottom-right prev/next/up/down arrow cluster up out
    of the way of the module-counter/Agenda-link chrome, which sits at the
    true bottom-right corner (bottom:10px). Without this, the two fixed
