@@ -531,7 +531,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-11-01 15:23 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-11-01 16:30 PT</span>
   </div>
 
   <!--
@@ -26324,8 +26324,9 @@ NTP service: active</div>
 <li><a href="./#/module-11-agenda-3" target="_self">Variables &amp; Arguments</a></li>
 <li><a href="./#/module-11-agenda-4" target="_self">Conditionals in Bash</a></li>
 <li><a href="./#/module-11-agenda-5" target="_self">Loops in Bash</a></li>
-<li><a href="./#/module-11-agenda-6" target="_self">Functions &amp; Exit Codes</a></li>
-<li><a href="./#/module-11-agenda-7" target="_self">Practice Lab</a></li>
+<li><a href="./#/module-11-agenda-6" target="_self">Pipelines &amp; Failure</a></li>
+<li><a href="./#/module-11-agenda-7" target="_self">Functions &amp; Exit Codes</a></li>
+<li><a href="./#/module-11-agenda-8" target="_self">Practice Lab</a></li>
 </ol>
 </div>
 <div class="col" style="text-align:center;">
@@ -26608,6 +26609,7 @@ name=<span class="tk-str">"clindata-backup.sh"</span>
 <div class="terminal">#!/bin/bash
 <span class="tk-cmd">read</span> -p <span class="tk-str">"Target dir: "</span> target
 <span class="tk-cmd">echo</span> "You chose $target"</div>
+<p class="source-line">Docs: <a href="https://www.gnu.org/software/bash/manual/html_node/Bash-Builtins.html" target="_blank" rel="noopener">GNU Bash Manual: read</a></p>
 
 </div>
 </div>
@@ -26818,7 +26820,322 @@ name=<span class="tk-str">"clindata-backup.sh"</span>
 </div>
 </div>
 </section>
-<section id="module-11-agenda-6"><h2 style="text-align:center;">Functions &amp; Exit Codes</h2></section>
+<section><h2 style="text-align:center;">Questions?</h2></section>
+<section id="module-11-agenda-6"><h2 style="text-align:center;">Pipelines &amp; Failure</h2></section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Pipelines &amp; Failure</h4>
+<ul>
+<li>| chains commands together</li>
+<li>One stage can fail unseen</li>
+<li>Abort loudly, not silently</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:480px;display:block;margin:0 auto;" role="img">
+<rect x="1" y="1" width="478" height="298" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+<defs><marker id="m11pipe" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs>
+<line x1="165" y1="75" x2="185" y2="75" stroke="#888" stroke-width="2" marker-end="url(#m11pipe)"/>
+<line x1="305" y1="75" x2="325" y2="75" stroke="#888" stroke-width="2" marker-end="url(#m11pipe)"/>
+<g>
+<animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.46;0.50;1" dur="16s" begin="0s" repeatCount="indefinite"/>
+<rect x="20" y="50" width="145" height="50" rx="8" fill="#1e1e1e" stroke="#555" stroke-width="2"/><text x="92.5" y="79.2" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#fff">grep ERROR</text>
+</g>
+<g>
+<animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.46;0.50;1" dur="16s" begin="0s" repeatCount="indefinite"/>
+<rect x="20" y="50" width="145" height="50" rx="8" fill="#1e1e1e" stroke="#e03131" stroke-width="3"/><text x="92.5" y="79.2" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#fff">grep ERROR</text>
+<text x="92" y="38" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#e03131" font-weight="bold">&#10007; permission denied</text>
+</g>
+<rect x="185" y="50" width="120" height="50" rx="8" fill="#1e1e1e" stroke="#555" stroke-width="2"/><text x="245.0" y="79.2" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#fff">sort</text>
+<rect x="325" y="50" width="135" height="50" rx="8" fill="#1e1e1e" stroke="#555" stroke-width="2"/><text x="392.5" y="79.2" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#fff">uniq -c</text>
+<circle r="6" fill="#9cdcfe">
+<animateMotion path="M 22,75 L 458,75" keyPoints="0;1" keyTimes="0;1" calcMode="linear" dur="4s" begin="0s" repeatCount="indefinite"/>
+</circle>
+<rect x="150" y="150" width="180" height="46" rx="8" fill="#1e1e1e" stroke="#3fb950" stroke-width="2"/>
+<text x="240" y="178" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#3fb950" font-weight="bold">exit code: 0</text>
+<g>
+<animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.46;0.50;1" dur="16s" begin="0s" repeatCount="indefinite"/>
+<text x="240" y="225" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#eee">Every stage runs. Every stage succeeds.</text>
+</g>
+<g>
+<animate attributeName="opacity" values="0;0;1;1" keyTimes="0;0.46;0.50;1" dur="16s" begin="0s" repeatCount="indefinite"/>
+<text x="240" y="225" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">But grep just failed. Nobody noticed.</text>
+</g>
+<text x="240" y="258" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#999">Bash only reports the LAST stage's exit code, by default</text>
+</svg>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Why This Matters</h4>
+<ul>
+<li>Pipes predate most of Unix</li>
+<li>Failure handling came later</li>
+<li>Safety is still opt-in today</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 340 288" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:340px;display:block;margin:0 auto;"><rect x="1" y="1" width="338" height="286" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><line x1="62" y1="14" x2="62" y2="254" stroke="#555" stroke-width="2"/><circle cx="62" cy="38" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="42" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1973</text><text x="76" y="34" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="34">Unix pipe: Thompson builds</tspan><tspan x="76" y="48">McIlroy's | into the shell</tspan></text><circle cx="62" cy="92" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="96" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1977</text><text x="76" y="88" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="88">AWK (Aho, Weinberger,</tspan><tspan x="76" y="102">Kernighan): a filter language</tspan></text><circle cx="62" cy="146" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="150" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">1998</text><text x="76" y="142" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="142">ksh93 introduces pipefail:</tspan><tspan x="76" y="156">catch any stage's failure</tspan></text><circle cx="62" cy="200" r="6.5" fill="#2a2a2a" stroke="#777" stroke-width="1.5"/><text x="48" y="204" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">2004</text><text x="76" y="196" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="196">Bash 3.0 adds its own</tspan><tspan x="76" y="210">set -o pipefail</tspan></text><circle cx="62" cy="254" r="6.5" fill="#9cdcfe" stroke="#9cdcfe" stroke-width="1.5"/><text x="48" y="258" text-anchor="end" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">Today</text><text x="76" y="250" text-anchor="start" font-size="10.5" font-family="Segoe UI, Arial, sans-serif" fill="#eee"><tspan x="76" y="250">pipefail + trap: standard</tspan><tspan x="76" y="264">for any real script</tspan></text></svg>
+</div>
+</div>
+</section>
+<section id="cmd-sort" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>What Is a Pipe?</h4>
+<ul>
+<li>| sends stdout to stdin</li>
+<li>sort groups the duplicates</li>
+<li>uniq -c counts each one</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">#!/bin/bash
+<span class="tk-cmd">grep</span> ERROR vitals.log | <span class="tk-cmd">sort</span> | <span class="tk-cmd">uniq</span> -c</div>
+<p class="source-line">Docs: <a href="https://man7.org/linux/man-pages/man1/sort.1.html" target="_blank" rel="noopener">sort(1) man page</a></p>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>What Is a Pipe?</h4>
+<div class="terminal terminal-slide"><span class="tk-comment">#!/bin/bash</span>
+<span class="tk-cmd">grep</span> ERROR vitals.log | <span class="tk-cmd">sort</span> | <span class="tk-cmd">uniq</span> -c
+<span class="tk-comment"># sort must run before uniq -c: it only counts ADJACENT dupes</span></div>
+</section>
+<section id="cmd-awk" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>awk: Pull Out a Field</h4>
+<ul>
+<li>Splits each line on whitespace</li>
+<li>$1, $2... are column numbers</li>
+<li>Prints just the field you want</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">#!/bin/bash
+<span class="tk-cmd">grep</span> ERROR vitals.log | <span class="tk-cmd">awk</span> '{print $1, $2}'</div>
+<p class="source-line">Docs: <a href="https://www.gnu.org/software/gawk/manual/gawk.html" target="_blank" rel="noopener">GNU Awk User's Guide</a></p>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>awk: Pull Out a Field</h4>
+<div class="terminal terminal-slide"><span class="tk-comment">#!/bin/bash</span>
+<span class="tk-cmd">grep</span> ERROR vitals.log | <span class="tk-cmd">awk</span> '{print $1, $2}'
+<span class="tk-comment"># $1 = date, $2 = time: awk numbers columns from 1</span></div>
+</section>
+<section id="cmd-xargs" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>xargs: Feed Output as Args</h4>
+<ul>
+<li>Turns lines into arguments</li>
+<li>Runs the next command per line</li>
+<li>Acts on a whole file list</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">#!/bin/bash
+<span class="tk-cmd">grep</span> -l ERROR *.log | <span class="tk-cmd">xargs</span> tail -n 3</div>
+<p class="source-line">Docs: <a href="https://man7.org/linux/man-pages/man1/xargs.1.html" target="_blank" rel="noopener">xargs(1) man page</a></p>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>xargs: Feed Output as Args</h4>
+<div class="terminal terminal-slide"><span class="tk-comment">#!/bin/bash</span>
+<span class="tk-cmd">grep</span> -l ERROR *.log | <span class="tk-cmd">xargs</span> tail -n 3
+<span class="tk-comment"># -l lists FILENAMES only; xargs tails each one found</span></div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>The Silent Failure</h4>
+<ul>
+<li>$? is only the LAST stage</li>
+<li>An earlier failure hides</li>
+<li>False confidence in a script</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">#!/bin/bash
+<span class="tk-cmd">false</span> | <span class="tk-cmd">echo</span> "still looks fine"
+<span class="tk-cmd">echo</span> "$?"</div>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>The Silent Failure</h4>
+<div class="terminal terminal-slide"><span class="tk-comment">#!/bin/bash</span>
+<span class="tk-cmd">false</span> | <span class="tk-cmd">echo</span> "still looks fine"
+<span class="tk-comment"># false always exits 1 -- but echo is the LAST stage</span>
+<span class="tk-cmd">echo</span> "$?"
+<span class="tk-comment"># prints 0: echo succeeded, so the pipeline "succeeded"</span></div>
+</section>
+<section id="cmd-set" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>pipefail: See Every Stage</h4>
+<ul>
+<li>Off by default in bash</li>
+<li>Exit code = worst stage's code</li>
+<li>Put it first, before the pipe</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">#!/bin/bash
+<span class="tk-cmd">set</span> -o pipefail
+<span class="tk-cmd">false</span> | <span class="tk-cmd">echo</span> "still prints"
+<span class="tk-cmd">echo</span> "$?"</div>
+<p class="source-line">Docs: <a href="https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html" target="_blank" rel="noopener">GNU Bash Manual: The Set Builtin</a></p>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>pipefail: See Every Stage</h4>
+<div class="terminal terminal-slide"><span class="tk-comment">#!/bin/bash</span>
+<span class="tk-cmd">set</span> -o pipefail
+<span class="tk-cmd">false</span> | <span class="tk-cmd">echo</span> "still prints"
+<span class="tk-comment"># echo itself still runs and still prints</span>
+<span class="tk-cmd">echo</span> "$?"
+<span class="tk-comment"># now 1: pipefail reports the worst stage, not the last</span></div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>set -e: Abort on Any Error</h4>
+<ul>
+<li>Stops the script right there</li>
+<li>No need to check $? by hand</li>
+<li>Pair it with pipefail</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">#!/bin/bash
+<span class="tk-cmd">set</span> -euo pipefail
+<span class="tk-cmd">rsync</span> -az clindata-vm:/srv/clinical-data/ ./backup/
+<span class="tk-cmd">echo</span> "Backup verified"</div>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>set -e: Abort on Any Error</h4>
+<div class="terminal terminal-slide"><span class="tk-comment">#!/bin/bash</span>
+<span class="tk-cmd">set</span> -euo pipefail
+<span class="tk-comment"># -e: stop on error  -u: undefined var is an error  -o pipefail: above</span>
+<span class="tk-cmd">rsync</span> -az clindata-vm:/srv/clinical-data/ ./backup/
+<span class="tk-comment"># if rsync fails, "Backup verified" never prints</span>
+<span class="tk-cmd">echo</span> "Backup verified"</div>
+</section>
+<section id="cmd-trap" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>trap: Run Code on Exit</h4>
+<ul>
+<li>Fires on error, not just exit</li>
+<li>Good for cleanup or alerts</li>
+<li>ERR fires before the exit</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">#!/bin/bash
+<span class="tk-cmd">set</span> -euo pipefail
+<span class="tk-cmd">trap</span> 'echo "Backup FAILED" &gt;&amp;2' ERR
+<span class="tk-cmd">rsync</span> -az clindata-vm:/srv/clinical-data/ ./backup/</div>
+<p class="source-line">Docs: <a href="https://www.gnu.org/software/bash/manual/html_node/Bourne-Shell-Builtins.html" target="_blank" rel="noopener">GNU Bash Manual: trap</a></p>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>trap: Run Code on Exit</h4>
+<div class="terminal terminal-slide"><span class="tk-comment">#!/bin/bash</span>
+<span class="tk-cmd">set</span> -euo pipefail
+<span class="tk-cmd">trap</span> 'echo "Backup FAILED" &gt;&amp;2' ERR
+<span class="tk-comment"># runs this line automatically if anything below fails</span>
+<span class="tk-cmd">rsync</span> -az clindata-vm:/srv/clinical-data/ ./backup/</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>PIPESTATUS: Per-Stage Code</h4>
+<ul>
+<li>One exit code per pipe stage</li>
+<li>Index 0 is the first command</li>
+<li>Diagnose WHICH stage broke</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">#!/bin/bash
+<span class="tk-cmd">grep</span> ERROR vitals.log | <span class="tk-cmd">sort</span> | <span class="tk-cmd">uniq</span> -c
+<span class="tk-cmd">echo</span> "${PIPESTATUS[@]}"</div>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>PIPESTATUS: Per-Stage Code</h4>
+<div class="terminal terminal-slide"><span class="tk-comment">#!/bin/bash</span>
+<span class="tk-cmd">grep</span> ERROR vitals.log | <span class="tk-cmd">sort</span> | <span class="tk-cmd">uniq</span> -c
+<span class="tk-cmd">echo</span> "${PIPESTATUS[@]}"
+<span class="tk-comment"># e.g. "0 0 0": grep, sort, and uniq each succeeded</span></div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Use Case: Error Audit</h4>
+<ul>
+<li>grep finds the raw matches</li>
+<li>sort groups duplicates</li>
+<li>uniq -c turns them into counts</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 320 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:320px;display:block;margin:0 auto;"><rect x="1" y="1" width="318" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m11uc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="20" y="20" width="280" height="64" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.8"/><text x="160" y="46" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">SITUATION</text><text x="160" y="66" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee">Need every ERROR line, deduped</text><line x1="160" y1="84" x2="160" y2="104" stroke="#888" stroke-width="1.8" marker-end="url(#m11uc)"/><rect x="20" y="108" width="280" height="64" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.8"/><text x="160" y="134" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">TOOL</text><text x="160" y="154" text-anchor="middle" font-size="10.5" font-family="Consolas, monospace" fill="#eee">grep ERROR vitals.log | sort | uniq -c</text><line x1="160" y1="172" x2="160" y2="192" stroke="#888" stroke-width="1.8" marker-end="url(#m11uc)"/><rect x="20" y="196" width="280" height="64" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="1.8"/><text x="160" y="222" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">RESULT</text><text x="160" y="242" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee">Instant count, no manual scanning</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Use Case: Safer Backup</h4>
+<ul>
+<li>pipefail catches a hidden fail</li>
+<li>set -e stops the script there</li>
+<li>trap sends the alert for you</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 320 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:320px;display:block;margin:0 auto;"><rect x="1" y="1" width="318" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><defs><marker id="m11uc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#888"/></marker></defs><rect x="20" y="20" width="280" height="64" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.8"/><text x="160" y="46" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">SITUATION</text><text x="160" y="66" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee">Backup must abort loudly if rsync fails</text><line x1="160" y1="84" x2="160" y2="104" stroke="#888" stroke-width="1.8" marker-end="url(#m11uc)"/><rect x="20" y="108" width="280" height="64" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.8"/><text x="160" y="134" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">TOOL</text><text x="160" y="154" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#eee">set -euo pipefail; trap ... ERR</text><line x1="160" y1="172" x2="160" y2="192" stroke="#888" stroke-width="1.8" marker-end="url(#m11uc)"/><rect x="20" y="196" width="280" height="64" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="1.8"/><text x="160" y="222" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#FF671D" font-weight="bold">RESULT</text><text x="160" y="242" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#eee">A silent failure becomes a loud one</text></svg>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Project 2: Safer Backups</h4>
+<ul>
+<li>Same backup_clinical_data()</li>
+<li>pipefail + set -e + trap added</li>
+<li>Now it can't fail silently</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">#!/bin/bash
+<span class="tk-cmd">set</span> -euo pipefail
+<span class="tk-cmd">trap</span> 'echo "Backup FAILED" &gt;&amp;2' ERR
+<span class="tk-cmd">backup_clinical_data</span>() {
+  <span class="tk-cmd">rsync</span> -az clindata-vm:/srv/clinical-data/ ./backup/
+}
+<span class="tk-cmd">backup_clinical_data</span></div>
+</div>
+</div>
+</section>
+<section id="module-11-cmdtable-end6" data-background-color="#ffffff"><div class="cmd-table" data-through="cmd-trap"></div></section>
+<section><h2 style="text-align:center;">Questions?</h2></section>
+<section id="module-11-agenda-7"><h2 style="text-align:center;">Functions &amp; Exit Codes</h2></section>
 <section data-background-color="#ffffff">
 <div class="twocol">
 <div class="col">
@@ -26912,6 +27229,7 @@ name=<span class="tk-str">"clindata-backup.sh"</span>
 <div class="col">
 <div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> <span class="tk-flag">install</span> <span class="tk-flag">-y</span> <span class="tk-str">shellcheck</span>
 <span class="tk-prompt">$ </span><span class="tk-cmd">shellcheck</span> <span class="tk-path">clindata-backup.sh</span></div>
+<p class="source-line">Docs: <a href="https://www.shellcheck.net/wiki/" target="_blank" rel="noopener">ShellCheck Wiki</a></p>
 
 </div>
 </div>
@@ -26958,8 +27276,8 @@ name=<span class="tk-str">"clindata-backup.sh"</span>
 </div>
 </div>
 </section>
-<section id="module-11-cmdtable-end6" data-background-color="#ffffff"><div class="cmd-table" data-through="cmd-shellcheck"></div></section>
-<section id="module-11-agenda-7"><h2 style="text-align:center;">Practice Lab</h2></section>
+<section id="module-11-cmdtable-end7" data-background-color="#ffffff"><div class="cmd-table" data-through="cmd-shellcheck"></div></section>
+<section id="module-11-agenda-8"><h2 style="text-align:center;">Practice Lab</h2></section>
 <section data-background-color="#ffffff">
 <div class="twocol">
 <div class="col">
@@ -33907,6 +34225,11 @@ ssh webapp-vm "journalctl -u persona-app -f"</div>
         { id: 'cmd-hwclock', module: 10, cmd: 'hwclock', example: 'sudo hwclock --systohc', purpose: 'Read or write the battery-backed hardware clock' },
         { id: 'cmd-read', module: 11, cmd: 'read', example: 'read -p "Target dir: " target', purpose: 'Pause a script and read typed input' },
         { id: 'cmd-shellcheck', module: 11, cmd: 'shellcheck', example: 'shellcheck clindata-backup.sh', purpose: 'Lint a shell script for common mistakes' },
+        { id: 'cmd-sort', module: 11, cmd: 'sort', example: 'grep ERROR vitals.log | sort | uniq -c', purpose: 'Order lines so uniq can count duplicates' },
+        { id: 'cmd-awk', module: 11, cmd: 'awk', example: "awk '{print $1, $2}'", purpose: 'Print specific whitespace-separated fields' },
+        { id: 'cmd-xargs', module: 11, cmd: 'xargs', example: 'grep -l ERROR *.log | xargs tail -n 3', purpose: 'Feed piped lines in as a command\'s arguments' },
+        { id: 'cmd-set', module: 11, cmd: 'set', example: 'set -euo pipefail', purpose: 'Catch a pipeline failure, abort on any error' },
+        { id: 'cmd-trap', module: 11, cmd: 'trap', example: "trap 'echo FAILED' ERR", purpose: 'Run cleanup/alert code automatically on failure' },
         { id: 'cmd-iptables', module: 12, cmd: 'iptables', example: 'sudo iptables -L -v', purpose: 'View, add, or remove kernel firewall rules' },
         { id: 'cmd-nft', module: 12, cmd: 'nft', example: 'sudo nft list ruleset', purpose: 'View or edit nftables firewall rules' },
         { id: 'cmd-ipcalc', module: 13, cmd: 'ipcalc', example: 'ipcalc 192.168.1.0/24', purpose: 'Compute a subnet\'s network, host range, broadcast' },
