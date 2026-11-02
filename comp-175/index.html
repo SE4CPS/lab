@@ -531,7 +531,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-11-01 16:46 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-11-01 18:48 PT</span>
   </div>
 
   <!--
@@ -26327,6 +26327,7 @@ NTP service: active</div>
 <li><a href="./#/module-11-agenda-6" target="_self">Pipelines &amp; Failure</a></li>
 <li><a href="./#/module-11-agenda-7" target="_self">Functions &amp; Exit Codes</a></li>
 <li><a href="./#/module-11-agenda-8" target="_self">Practice Lab</a></li>
+<li><a href="./#/module-11-agenda-9" target="_self">Practice Lab Part 2</a></li>
 </ol>
 </div>
 <div class="col" style="text-align:center;">
@@ -27321,6 +27322,300 @@ name=<span class="tk-str">"clindata-backup.sh"</span>
 </section>
 <section id="module-11-cmdtable-end7" data-background-color="#ffffff"><div class="cmd-table" data-through="cmd-shellcheck"></div></section>
 <section id="module-11-agenda-8"><h2 style="text-align:center;">Practice Lab</h2></section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Scenario: Your First Script</h4>
+<ul>
+<li>One echo line, nothing fancy</li>
+<li>Edit it, run it, trust it</li>
+<li>Then back up real log files</li>
+</ul>
+</div>
+<div class="col" style="text-align:center;">
+<svg viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:480px;display:block;margin:0 auto;" role="img">
+<rect x="1" y="1" width="478" height="298" rx="12" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+<text x="240" y="26" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#9cdcfe" font-weight="bold">YOUR FIRST SCRIPT, START TO FINISH</text>
+<rect x="30" y="44" width="130" height="80" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="1.8"/>
+<text x="95" y="76" text-anchor="middle" font-size="22">&#128187;</text>
+<text x="95" y="98" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Edit in Windows</text>
+<rect x="175" y="44" width="130" height="80" rx="8" fill="#1e1e1e" stroke="#9cdcfe" stroke-width="1.8"/>
+<text x="240" y="76" text-anchor="middle" font-size="22">&#128260;</text>
+<text x="240" y="98" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">Run + test in WSL</text>
+<rect x="320" y="44" width="130" height="80" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="1.8"/>
+<text x="385" y="76" text-anchor="middle" font-size="22">&#128228;</text>
+<text x="385" y="98" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#eee">scp to clindata-vm</text>
+<line x1="160" y1="84" x2="175" y2="84" stroke="#888" stroke-width="2"/>
+<line x1="305" y1="84" x2="320" y2="84" stroke="#888" stroke-width="2"/>
+<rect x="30" y="150" width="420" height="120" rx="10" fill="#1e1e1e" stroke="#555" stroke-width="1.5"/>
+<g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.020;0.040;0.480;0.500" dur="10s" begin="0s" repeatCount="indefinite"/><text x="240" y="196" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">Start: one echo line</text><text x="240" y="222" text-anchor="middle" font-size="12.5" font-family="Consolas, monospace" fill="#9cdcfe">echo &quot;Backup script running&quot;</text><text x="240" y="248" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#999">Edit it, save it, run it again</text></g>
+<g opacity="0"><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.500;0.520;0.960;0.980" dur="10s" begin="0s" repeatCount="indefinite"/><text x="240" y="196" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#fff" font-weight="bold">Grow it: find + copy</text><text x="240" y="222" text-anchor="middle" font-size="12.5" font-family="Consolas, monospace" fill="#9cdcfe">find ... -mtime -1 | scp ...</text><text x="240" y="248" text-anchor="middle" font-size="11" font-family="Segoe UI, Arial, sans-serif" fill="#999">Only logs changed in the last 24h</text></g>
+</svg>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 1: Find VM in Windows</h4>
+<ul>
+<li>Kali/Ubuntu run inside WSL2</li>
+<li>Explorer browses straight in</li>
+<li>No separate VM disk needed</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">pwd</span>
+/home/kali
+<span class="tk-prompt">$ </span><span class="tk-cmd">explorer.exe</span> <span class="tk-str">.</span>
+<span class="tk-comment"># Opens THIS folder in Windows Explorer</span></div>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 1: Find VM in Windows</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">pwd</span>
+<span class="tk-comment"># Confirms where you are inside the VM</span>
+/home/kali
+<span class="tk-prompt">$ </span><span class="tk-cmd">explorer.exe</span> <span class="tk-str">.</span>
+<span class="tk-comment"># Same folder, now in a real Explorer window</span>
+<span class="tk-comment"># Address bar: \\wsl.localhost\kali-linux\home\kali</span></div>
+<p class="note-below fragment">&#9888;&#65039; The path starts with <span class="highlight">\\wsl.localhost\</span>, not a drive letter &mdash; typing it directly into Explorer's address bar works too.</p>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 2: Create backup.sh</h4>
+<ul>
+<li>touch makes an empty file</li>
+<li>chmod now, before any content</li>
+<li>Double-click it to edit</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">touch</span> <span class="tk-path">backup.sh</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">chmod</span> <span class="tk-flag">+x</span> <span class="tk-path">backup.sh</span>
+<span class="tk-comment"># Ready to run the moment it has content</span></div>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 2: Create backup.sh</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">touch</span> <span class="tk-path">backup.sh</span>
+<span class="tk-comment"># Empty file, right permissions can come first</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">chmod</span> <span class="tk-flag">+x</span> <span class="tk-path">backup.sh</span>
+<span class="tk-comment"># Now right-click backup.sh in Explorer</span>
+<span class="tk-comment"># Open with Notepad or VS Code, NOT nano/vim</span></div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 3: Start Simple</h4>
+<ul>
+<li>Shebang, then one echo</li>
+<li>Save in the Windows editor</li>
+<li>Run it from the WSL terminal</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">#!/bin/bash
+<span class="tk-cmd">echo</span> "Backup script running"</div>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 3: Start Simple</h4>
+<div class="terminal terminal-slide">#!/bin/bash
+<span class="tk-cmd">echo</span> "Backup script running"
+<span class="tk-comment">(saved from Notepad, nothing else yet)</span>
+<span class="tk-prompt">$ </span><span class="tk-path">./backup.sh</span>
+Backup script running</div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 4: Edit &amp; Retest</h4>
+<ul>
+<li>Change just the echo text</li>
+<li>Save, switch back to WSL</li>
+<li>Rerun, confirm the change</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">#!/bin/bash
+<span class="tk-cmd">echo</span> "Backup script v2 is alive"</div>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 4: Edit &amp; Retest</h4>
+<div class="terminal terminal-slide">#!/bin/bash
+<span class="tk-cmd">echo</span> "Backup script v2 is alive"
+<span class="tk-comment">(same file, one line changed)</span>
+<span class="tk-prompt">$ </span><span class="tk-path">./backup.sh</span>
+Backup script v2 is alive
+<span class="tk-comment"># Small edit, immediate proof it took</span></div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 5: Find Logs, Last 24h</h4>
+<ul>
+<li>find already filters for us</li>
+<li>-mtime -1 means changed in 24h</li>
+<li>Skip files nothing touched</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">#!/bin/bash
+<span class="tk-cmd">echo</span> "Checking for changed logs..."
+<span class="tk-cmd">find</span> /var/log/clindata <span class="tk-flag">-name</span> "*.log" <span class="tk-flag">-mtime</span> -1</div>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 5: Find Logs, Last 24h</h4>
+<div class="terminal terminal-slide">#!/bin/bash
+<span class="tk-cmd">echo</span> "Checking for changed logs..."
+<span class="tk-cmd">find</span> /var/log/clindata <span class="tk-flag">-name</span> "*.log" <span class="tk-flag">-mtime</span> -1
+<span class="tk-comment"># -mtime -1: modified less than 1 day ago</span></div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 6: Loop and Copy</h4>
+<ul>
+<li>for walks the matching files</li>
+<li>scp ships each one over SSH</li>
+<li>Echo before, so you can watch</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">#!/bin/bash
+<span class="tk-cmd">for</span> f in $(<span class="tk-cmd">find</span> /var/log/clindata -name "*.log" -mtime -1); <span class="tk-cmd">do</span>
+  <span class="tk-cmd">echo</span> "Sending $f to clindata-vm"
+  <span class="tk-cmd">scp</span> "$f" clindata-vm:/backups/
+<span class="tk-cmd">done</span></div>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 6: Loop and Copy</h4>
+<div class="terminal terminal-slide">#!/bin/bash
+<span class="tk-cmd">for</span> f in $(<span class="tk-cmd">find</span> ... -mtime -1); <span class="tk-cmd">do</span>
+<span class="tk-comment"># One pass per changed log file</span>
+  <span class="tk-cmd">echo</span> "Sending $f to clindata-vm"
+  <span class="tk-cmd">scp</span> "$f" clindata-vm:/backups/
+<span class="tk-comment"># Quoted "$f": safe even with spaces</span>
+<span class="tk-cmd">done</span></div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 7: Confirm via SSH</h4>
+<ul>
+<li>scp succeeding isn&#39;t proof</li>
+<li>ssh in and actually look</li>
+<li>From Kali, straight to Ubuntu</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">ssh</span> clindata-vm "ls -la /backups/"
+<span class="tk-comment"># Lists what actually arrived</span></div>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 7: Confirm via SSH</h4>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">ssh</span> clindata-vm "ls -la /backups/"
+<span class="tk-comment"># One ssh call, one remote command</span>
+-rw-r--r-- 1 kali kali 842 vitals.log
+<span class="tk-comment"># If it&#39;s listed, the scp really landed</span></div>
+</section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Step 8: The Full Script</h4>
+<ul>
+<li>Every step so far, combined</li>
+<li>Verbose: an echo per stage</li>
+<li>Still only 10 lines total</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal">#!/bin/bash
+<span class="tk-cmd">echo</span> "Starting log backup..."
+LOGS=$(<span class="tk-cmd">find</span> /var/log/clindata -name "*.log" -mtime -1)
+<span class="tk-cmd">echo</span> "Found: $LOGS"
+<span class="tk-cmd">for</span> f in $LOGS; <span class="tk-cmd">do</span>
+  <span class="tk-cmd">echo</span> "Sending $f to clindata-vm"
+  <span class="tk-cmd">scp</span> "$f" clindata-vm:/backups/
+<span class="tk-cmd">done</span>
+<span class="tk-cmd">echo</span> "Backup complete."
+<span class="tk-cmd">ssh</span> clindata-vm "ls -la /backups/"</div>
+</div>
+</div>
+</section>
+<section data-background-color="#0a0a0a">
+<h4>Step 8: The Full Script</h4>
+<div class="terminal terminal-slide">#!/bin/bash
+<span class="tk-cmd">echo</span> "Starting log backup..."
+LOGS=$(<span class="tk-cmd">find</span> /var/log/clindata -name "*.log" -mtime -1)
+<span class="tk-cmd">echo</span> "Found: $LOGS"
+<span class="tk-cmd">for</span> f in $LOGS; <span class="tk-cmd">do</span>
+  <span class="tk-cmd">echo</span> "Sending $f to clindata-vm"
+  <span class="tk-cmd">scp</span> "$f" clindata-vm:/backups/
+<span class="tk-cmd">done</span>
+<span class="tk-cmd">echo</span> "Backup complete."
+<span class="tk-cmd">ssh</span> clindata-vm "ls -la /backups/"</div>
+</section>
+<section data-background-color="#ffffff">
+<div class="twocol">
+<div class="col">
+<h4>Check: Why -mtime -1?</h4>
+<p style="font-size:1.3rem;line-height:1.4;text-align:left;">Why not just scp every log file, every single night, and skip the find step entirely?</p>
+</div>
+<div class="col">
+<div class="fragment" style="background:#2a2a2a;color:#eee;border:2px solid #9cdcfe;border-radius:10px;padding:1rem 1.2rem;font-size:1.2rem;line-height:1.4;text-align:left;">Resending every file every night wastes bandwidth and time; -mtime -1 only ships what actually changed.</div>
+</div>
+</div>
+</section>
+<section id="cmd-diff" data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Project 2: Verify First</h4>
+<ul>
+<li>scp alone isn&#39;t proof enough</li>
+<li>diff -r compares two trees</li>
+<li>Monitor Write runs this, too</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">diff</span> <span class="tk-flag">-r</span> /backups/ /var/log/clindata/
+<span class="tk-comment"># No output at all means: identical</span>
+<span class="tk-comment"># Any line printed means something differs</span></div>
+<p class="source-line"><a href="https://man7.org/linux/man-pages/man1/diff.1.html" target="_blank" rel="noopener">man7.org: diff(1)</a></p>
+</div>
+</div>
+</section>
+<section id="module-11-cmdtable-end8" data-background-color="#ffffff"><div class="cmd-table" data-through="cmd-diff"></div></section>
+<section data-background-color="#0a0a0a">
+<div class="twocol">
+<div class="col">
+<h4>Deliverable</h4>
+<ul>
+<li>backup.sh, built up in stages</li>
+<li>Tested after every change</li>
+<li>Confirmed live via ssh</li>
+</ul>
+</div>
+<div class="col">
+<div class="terminal"><span class="tk-cmd">echo</span> "Backup complete."</div>
+</div>
+</div>
+</section>
+<section><h2 style="text-align:center;">Questions?</h2></section>
+<section id="module-11-agenda-9"><h2 style="text-align:center;">Practice Lab Part 2</h2></section>
 <section data-background-color="#ffffff">
 <div class="twocol">
 <div class="col">
@@ -34273,6 +34568,7 @@ ssh webapp-vm "journalctl -u persona-app -f"</div>
         { id: 'cmd-xargs', module: 11, cmd: 'xargs', example: 'grep -l ERROR *.log | xargs tail -n 3', purpose: 'Feed piped lines in as a command\'s arguments' },
         { id: 'cmd-set', module: 11, cmd: 'set', example: 'set -euo pipefail', purpose: 'Catch a pipeline failure, abort on any error' },
         { id: 'cmd-trap', module: 11, cmd: 'trap', example: "trap 'echo FAILED' ERR", purpose: 'Run cleanup/alert code automatically on failure' },
+        { id: 'cmd-diff', module: 11, cmd: 'diff', example: 'diff -r /backups/ /var/log/clindata/', purpose: 'Compare two files or directory trees' },
         { id: 'cmd-iptables', module: 12, cmd: 'iptables', example: 'sudo iptables -L -v', purpose: 'View, add, or remove kernel firewall rules' },
         { id: 'cmd-nft', module: 12, cmd: 'nft', example: 'sudo nft list ruleset', purpose: 'View or edit nftables firewall rules' },
         { id: 'cmd-ipcalc', module: 13, cmd: 'ipcalc', example: 'ipcalc 192.168.1.0/24', purpose: 'Compute a subnet\'s network, host range, broadcast' },
