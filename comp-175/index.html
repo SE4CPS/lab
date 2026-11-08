@@ -531,7 +531,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-11-08 09:18 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-11-08 11:18 PT</span>
   </div>
 
   <!--
@@ -27952,7 +27952,9 @@ To                         Action      From
 Status: active
 To                         Action      From
 22/tcp                     ALLOW IN    Anywhere
-<span class="tk-comment"># This is what iptables -L would also show</span></div>
+<span class="tk-comment"># verbose: numbered rules plus the default policy</span>
+<span class="tk-comment"># This is what iptables -L would also show</span>
+<span class="tk-comment"># Project Part 2: capture this as defense evidence</span></div>
 </section>
 
 <section data-background-color="#ffffff">
@@ -28064,22 +28066,29 @@ To                         Action      From
 <div class="col">
 <h4>Viewing Tracked Connections</h4>
 <ul>
-<li>Shows every active flow</li><li>ESTABLISHED, NEW, or closing</li>
+<li>Not installed by default</li><li>Shows every active flow</li><li>ESTABLISHED, NEW, or closing</li>
 </ul>
 
 </div>
 <div class="col">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">conntrack</span> -L
-tcp 6 431999 ESTABLISHED src=10.0.0.5 dst=10.0.0.1 sport=51342 dport=22</div>
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> <span class="tk-flag">install</span> <span class="tk-flag">-y</span> <span class="tk-str">conntrack-tools</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">conntrack</span> -L
+tcp 6 431999 ESTABLISHED src=10.0.0.5 dst=10.0.0.1
+    sport=51342 dport=22</div>
 
 </div>
 </div>
 </section>
 <section data-background-color="#0a0a0a">
 <h4>Viewing Tracked Connections</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">conntrack</span> -L
-tcp 6 431999 ESTABLISHED src=10.0.0.5 dst=10.0.0.1 sport=51342 dport=22
-<span class="tk-comment"># 431999: seconds left before this entry expires</span></div>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> <span class="tk-flag">install</span> <span class="tk-flag">-y</span> <span class="tk-str">conntrack-tools</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">conntrack</span> -L
+tcp 6 431999 ESTABLISHED src=10.0.0.5 dst=10.0.0.1
+    sport=51342 dport=22
+<span class="tk-comment"># conntrack-tools package provides this command</span>
+<span class="tk-comment"># -L: list every tracked connection</span>
+<span class="tk-comment"># 431999: seconds left before this entry expires</span>
+<span class="tk-comment"># Project Part 2: watch for Attacker team scans</span></div>
 </section>
 
 <section data-background-color="#ffffff">
@@ -28127,7 +28136,10 @@ ACCEPT  tcp  --  anywhere  anywhere  tcp dpt:ssh</div>
 <div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">iptables</span> <span class="tk-flag">-L</span> <span class="tk-flag">-v</span>
 Chain INPUT (policy ACCEPT)
 ACCEPT  tcp  --  anywhere  anywhere  tcp dpt:ssh
-<span class="tk-comment"># -v adds packet and byte counters</span></div>
+<span class="tk-comment"># iptables ships with ufw (Module 2), no install needed</span>
+<span class="tk-comment"># -v adds packet and byte counters</span>
+<span class="tk-comment"># -L -n: same listing, skips slow DNS lookups</span>
+<span class="tk-comment"># Project Part 2: screenshot every rule change</span></div>
 </section>
 
 <section data-background-color="#0a0a0a">
@@ -28148,7 +28160,11 @@ ACCEPT  tcp  --  anywhere  anywhere  tcp dpt:ssh
 <section data-background-color="#0a0a0a">
 <h4>Adding a Rule</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">iptables</span> <span class="tk-flag">-A</span> INPUT -p tcp --dport 8080 -j ACCEPT
-<span class="tk-comment"># -j ACCEPT: the target action for a match</span></div>
+<span class="tk-comment"># -A INPUT: append this rule to the INPUT chain</span>
+<span class="tk-comment"># -p tcp: match only TCP packets</span>
+<span class="tk-comment"># --dport 8080: match destination port 8080</span>
+<span class="tk-comment"># -j ACCEPT: the target action for a match</span>
+<span class="tk-comment"># Project Part 2: open only the port your role needs</span></div>
 </section>
 
 <section data-background-color="#0a0a0a">
@@ -28156,7 +28172,7 @@ ACCEPT  tcp  --  anywhere  anywhere  tcp dpt:ssh
 <div class="col">
 <h4>Not Saved by Default</h4>
 <ul>
-<li>A reboot wipes them</li><li>iptables-persistent saves them</li>
+<li>A reboot wipes them</li><li>Not installed by default</li><li>iptables-persistent saves them</li>
 </ul>
 
 </div>
@@ -28169,7 +28185,9 @@ ACCEPT  tcp  --  anywhere  anywhere  tcp dpt:ssh
 <section data-background-color="#0a0a0a">
 <h4>Not Saved by Default</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> <span class="tk-flag">install</span> <span class="tk-flag">-y</span> <span class="tk-str">iptables-persistent</span>
-<span class="tk-comment"># Prompts to save current rules on install</span></div>
+<span class="tk-comment"># -y: auto-confirm the install prompt</span>
+<span class="tk-comment"># Prompts to save current rules on install</span>
+<span class="tk-comment"># Project Part 2: keep rules after a VM reboot</span></div>
 </section>
 
 <section data-background-color="#ffffff">
@@ -28225,7 +28243,10 @@ ACCEPT  tcp  --  anywhere  anywhere  tcp dpt:ssh
 <section data-background-color="#0a0a0a">
 <h4>Flushing a Chain</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">iptables</span> -F INPUT
-<span class="tk-comment"># Only INPUT is cleared; policy stays set</span></div>
+<span class="tk-comment"># -F: flush (delete) every rule in a chain</span>
+<span class="tk-comment"># INPUT: flush only this chain, not all three</span>
+<span class="tk-comment"># Only INPUT is cleared; policy stays set</span>
+<span class="tk-comment"># Project Part 2: don't flush rules before demo day</span></div>
 </section>
 
 <section data-background-color="#ffffff">
@@ -28271,12 +28292,13 @@ ACCEPT  tcp  --  anywhere  anywhere  tcp dpt:ssh
 <div class="col">
 <h4>Listing nftables Rules</h4>
 <ul>
-<li>Uses tables and chains</li><li>Its own, newer syntax</li>
+<li>Not installed by default</li><li>Uses tables and chains</li><li>Its own, newer syntax</li>
 </ul>
 
 </div>
 <div class="col">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">nft</span> list ruleset
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> <span class="tk-flag">install</span> <span class="tk-flag">-y</span> <span class="tk-str">nftables</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">nft</span> list ruleset
 table inet filter {
   chain input { ... }
 }</div>
@@ -28286,11 +28308,15 @@ table inet filter {
 </section>
 <section data-background-color="#0a0a0a">
 <h4>Listing nftables Rules</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">nft</span> list ruleset
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">apt</span> <span class="tk-flag">install</span> <span class="tk-flag">-y</span> <span class="tk-str">nftables</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">nft</span> list ruleset
 table inet filter {
   chain input { ... }
 }
-<span class="tk-comment"># inet: one table covers IPv4 and IPv6</span></div>
+<span class="tk-comment"># nftables package provides the nft command</span>
+<span class="tk-comment"># list ruleset: show every table and chain</span>
+<span class="tk-comment"># inet: one table covers IPv4 and IPv6</span>
+<span class="tk-comment"># Project Part 2: document which tool you used</span></div>
 </section>
 
 <section data-background-color="#ffffff" data-tag="terminology" data-term="nftables">
@@ -28346,15 +28372,20 @@ table inet filter {
 
 </div>
 <div class="col">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">nft</span> add rule inet filter input tcp dport 8080 accept</div>
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">nft</span> add rule inet filter input \
+    tcp dport 8080 accept</div>
 
 </div>
 </div>
 </section>
 <section data-background-color="#0a0a0a">
 <h4>Adding an nftables Rule</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">nft</span> add rule inet filter input tcp dport 8080 accept
-<span class="tk-comment"># inet filter input: table, then chain</span></div>
+<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">nft</span> add rule inet filter input \
+    tcp dport 8080 accept
+<span class="tk-comment"># add rule: appends to the named chain</span>
+<span class="tk-comment"># inet filter input: table, then chain</span>
+<span class="tk-comment"># tcp dport 8080 accept: match, then target</span>
+<span class="tk-comment"># Project Part 2: match your own ufw rules here too</span></div>
 </section>
 
 <section data-background-color="#ffffff" data-tag="terminology" data-term="Netfilter">
@@ -28468,7 +28499,10 @@ MASQUERADE  all  --  any  eth0  anywhere  anywhere</div>
 <div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">iptables</span> -t nat -L -v
 Chain POSTROUTING (policy ACCEPT)
 MASQUERADE  all  --  any  eth0  anywhere  anywhere
-<span class="tk-comment"># MASQUERADE: rewrite source to this host's IP</span></div>
+<span class="tk-comment"># -t nat: operate on the NAT table, not filter</span>
+<span class="tk-comment"># POSTROUTING: applied just before a packet leaves</span>
+<span class="tk-comment"># MASQUERADE: rewrite source to this host's IP</span>
+<span class="tk-comment"># Project Part 2: bridged VMs don't need NAT</span></div>
 </section>
 
 <section data-background-color="#ffffff">
@@ -28552,7 +28586,11 @@ Private-Key: (1024 bit, 2 primes)</div>
 <h4>Checking a Key's Size</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">openssl</span> rsa -in key.pem -text -noout | grep bit
 Private-Key: (1024 bit, 2 primes)
-<span class="tk-comment"># (4096 bit) or (2048 bit) is the safer reading</span></div>
+<span class="tk-comment"># openssl ships with the OS; no install needed</span>
+<span class="tk-comment"># -in key.pem: read this key file</span>
+<span class="tk-comment"># | grep bit: filter to just the key-size line</span>
+<span class="tk-comment"># (4096 bit) or (2048 bit) is the safer reading</span>
+<span class="tk-comment"># Project Part 2: avoid old key sizes on your web VM</span></div>
 </section>
 
 <section data-background-color="#ffffff">
@@ -28643,7 +28681,9 @@ PORT     STATE SERVICE
 <div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">nmap</span> -p 8080 &lt;VM-IP&gt;
 PORT     STATE SERVICE
 8080/tcp open
-<span class="tk-comment"># Run from Kali, against the Ubuntu VM</span></div>
+<span class="tk-comment"># -p 8080: scan only this one port</span>
+<span class="tk-comment"># Run from Kali, against the Ubuntu VM</span>
+<span class="tk-comment"># Project Part 2: the Attacker team runs this on you</span></div>
 </section>
 
 <section data-background-color="#0a0a0a">
@@ -28664,7 +28704,10 @@ PORT     STATE SERVICE
 <section data-background-color="#0a0a0a">
 <h4>Step 2: Drop the Port</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">iptables</span> -A INPUT -p tcp --dport 8080 -j DROP
-<span class="tk-comment"># DROP gives no response at all</span></div>
+<span class="tk-comment"># -A INPUT: append to the INPUT chain</span>
+<span class="tk-comment"># -j DROP: silently discard, no response sent</span>
+<span class="tk-comment"># DROP gives no response at all</span>
+<span class="tk-comment"># Project Part 2: block only the port under test</span></div>
 </section>
 
 <section data-background-color="#0a0a0a">
@@ -28689,7 +28732,9 @@ PORT     STATE    SERVICE
 <div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">nmap</span> -p 8080 &lt;VM-IP&gt;
 PORT     STATE    SERVICE
 8080/tcp filtered
-<span class="tk-comment"># filtered: nmap got no response at all</span></div>
+<span class="tk-comment"># Same command as Step 1, same port</span>
+<span class="tk-comment"># filtered: nmap got no response at all</span>
+<span class="tk-comment"># Project Part 2: filtered proves your rule works</span></div>
 </section>
 
 <section data-background-color="#0a0a0a">
@@ -28710,7 +28755,10 @@ PORT     STATE    SERVICE
 <section data-background-color="#0a0a0a">
 <h4>Step 4: Remove the Rule</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">iptables</span> -D INPUT -p tcp --dport 8080 -j DROP
-<span class="tk-comment"># -D removes one rule, matched exactly</span></div>
+<span class="tk-comment"># -D INPUT: delete from the INPUT chain</span>
+<span class="tk-comment"># Must match the rule's flags exactly</span>
+<span class="tk-comment"># -D removes one rule, matched exactly</span>
+<span class="tk-comment"># Project Part 2: remove test rules before demo day</span></div>
 </section>
 
 <section data-background-color="#ffffff">
@@ -28735,6 +28783,7 @@ PORT     STATE    SERVICE
 
 <section><h2 style="text-align:center;">Questions?</h2></section>
             </section>
+
 
 
 
