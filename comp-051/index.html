@@ -463,7 +463,7 @@
 
     <div class="quick-links">
       <a href="./#toc" class="footer-link" target="_self">Schedule</a>
-      <span id="updated-stamp" class="footer-link">Updated: 2026-11-10 14:10 PT</span>
+      <span id="updated-stamp" class="footer-link">Updated: 2026-11-10 14:56 PT</span>
     </div>
 
     <div class="reveal">
@@ -22796,6 +22796,7 @@ GridRunner.exe</code></pre>
 </div>
 <div style="flex:1 1 0;">
 <pre><code class="language-cpp code-18">int key = _getch();
+// 224 = arrow key prefix code
 if (key == 224) key = _getch();
 switch (key) {
   case 72: carRow--; break; // Up
@@ -22818,7 +22819,8 @@ switch (key) {
 </ul>
 </div>
 <div style="flex:1 1 0;">
-<pre><code class="language-cpp code-18">if (newRow &lt; 0 || newRow &gt;= SIZE ||
+<pre><code class="language-cpp code-18">// off-grid first, then a wall
+if (newRow &lt; 0 || newRow &gt;= SIZE ||
     newCol &lt; 0 || newCol &gt;= SIZE) {
   gameOver = true;
   cout &lt;&lt; "Crashed!";
@@ -22896,6 +22898,7 @@ switch (key) {
 </div>
 <div style="flex:1 1 0;">
 <pre><code class="language-cpp code-18">auto now = chrono::steady_clock::now();
+// seconds since the last move
 double elapsed =
   chrono::duration&lt;double&gt;(now -
     lastMoveTime).count();
@@ -22920,13 +22923,31 @@ if (elapsed &gt;= moveIntervalSec) {
 <div style="flex:1 1 0;">
 <pre><code class="language-cpp code-18">void moveRandomCar(
     Car&amp; c, const Grid&amp; g) {
+  // 72/80/75/77 = arrow key codes
   int dirs[4] = {72, 80, 75, 77};
   int pick = dirs[rand() % 4];
-  // ...compute newRow, newCol
-  if (g.isInBounds(newRow, newCol) &amp;&amp;
-      !g.isWall(newRow, newCol)) {
-    c.moveTo(newRow, newCol);
-  }
+  // ...sets newRow / newCol
+}</code></pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Parallel Cars: Move If Legal</h4>
+<ul>
+<li>Only moves onto open ground</li>
+<li>isInBounds keeps it on grid</li>
+<li>isWall blocks a crash</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre><code class="language-cpp code-18">// move only if in-bounds
+// and not a wall
+if (g.isInBounds(newRow, newCol) &amp;&amp;
+    !g.isWall(newRow, newCol)) {
+  c.moveTo(newRow, newCol);
 }</code></pre>
 </div>
 </div>
@@ -23260,6 +23281,7 @@ public:
 <pre><code class="language-cpp code-18">ifstream in("maze.txt");
 for (int r=0; r&lt;SIZE; r++)
   for (int c=0; c&lt;SIZE; c++)
+    // &gt;&gt; auto-skips newlines
     in &gt;&gt; grid[r][c];
 in.close();</code></pre>
 </div>
