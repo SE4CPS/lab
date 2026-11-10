@@ -463,7 +463,7 @@
 
     <div class="quick-links">
       <a href="./#toc" class="footer-link" target="_self">Schedule</a>
-      <span id="updated-stamp" class="footer-link">Updated: 2026-11-10 11:23 PT</span>
+      <span id="updated-stamp" class="footer-link">Updated: 2026-11-10 11:40 PT</span>
     </div>
 
     <div class="reveal">
@@ -22884,6 +22884,54 @@ switch (key) {
 </div>
 </section>
 
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Auto-Drive: Timed Moves</h4>
+<ul>
+<li>A clock checks elapsed time</li>
+<li>Moves once per interval</li>
+<li>No keypress needed each time</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre><code class="language-cpp code-18">auto now = chrono::steady_clock::now();
+double elapsed =
+  chrono::duration&lt;double&gt;(now -
+    lastMoveTime).count();
+if (elapsed &gt;= moveIntervalSec) {
+  lastMoveTime = now;
+  // ... move in currentDir
+}</code></pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Parallel Cars: Random Moves</h4>
+<ul>
+<li>Each car picks a random dir</li>
+<li>Moves if it's not a wall</li>
+<li>All tick on the same interval</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre><code class="language-cpp code-18">void moveRandomCar(
+    Car&amp; c, const Grid&amp; g) {
+  int dirs[4] = {72, 80, 75, 77};
+  int pick = dirs[rand() % 4];
+  // ...compute newRow, newCol
+  if (g.isInBounds(newRow, newCol) &amp;&amp;
+      !g.isWall(newRow, newCol)) {
+    c.moveTo(newRow, newCol);
+  }
+}</code></pre>
+</div>
+</div>
+</section>
+
 <section>
 <div style="display:flex;align-items:center;gap:28px;">
 <div style="flex:1 1 0;">
@@ -22908,14 +22956,38 @@ switch (key) {
 <h4>The Grid Is a 2D Vector</h4>
 <ul>
 <li>One row per vector&lt;char&gt;</li>
-<li>SIZE sets the board dimensions</li>
+<li>Size comes from your window</li>
 <li>Every cell starts as empty</li>
 </ul>
 </div>
 <div style="flex:1 1 0;">
-<pre><code class="language-cpp code-18">const int SIZE = 20;
-vector&lt;vector&lt;char&gt;&gt; grid(SIZE,
-  vector&lt;char&gt;(SIZE, '.'));</code></pre>
+<pre><code class="language-cpp code-18">int gridRows, gridCols;
+getConsoleSize(gridCols, gridRows);
+Grid grid(gridRows, gridCols);</code></pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Sizing to the Console</h4>
+<ul>
+<li>Reads real columns and rows</li>
+<li>Falls back to 80x25 if needed</li>
+<li>Caller clamps it to 5-50</li>
+</ul>
+</div>
+<div style="flex:1 1 0;">
+<pre><code class="language-cpp code-18">bool getConsoleSize(
+    int&amp; cols, int&amp; rows) {
+  // read csbi via Win32 API
+  cols = csbi.srWindow.Right -
+    csbi.srWindow.Left + 1;
+  rows = csbi.srWindow.Bottom -
+    csbi.srWindow.Top + 1;
+  return true;  // or 80x25 fallback
+}</code></pre>
 </div>
 </div>
 </section>
@@ -22930,10 +23002,10 @@ vector&lt;vector&lt;char&gt;&gt; grid(SIZE,
 </ul>
 </div>
 <div style="flex:1 1 0;">
-<pre><code class="language-cpp code-18">void printGrid() {
-  for (int r=0; r&lt;SIZE; r++) {
-    for (int c=0; c&lt;SIZE; c++)
-      cout &lt;&lt; grid[r][c];
+<pre><code class="language-cpp code-18">void printGrid(const Grid&amp; grid) {
+  for (int r=0; r&lt;grid.rows; r++) {
+    for (int c=0; c&lt;grid.cols; c++)
+      cout &lt;&lt; grid.cells[r][c];
     cout &lt;&lt; "\n";
   }
 }</code></pre>
