@@ -531,7 +531,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-11-11 14:05 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-11-11 14:22 PT</span>
   </div>
 
   <!--
@@ -13238,6 +13238,7 @@ $ hostname -I</div>
 </div>
 <div class="col" style="text-align:center;">
 <div class="terminal">$ sudo passwd $(whoami)
+# on Ubuntu, run: hostname -I (its own address)
 $ echo "&lt;VM-IP&gt;  clinic-records" \
     | sudo tee -a /etc/hosts
 $ ssh $(whoami)@clinic-records</div>
@@ -13249,9 +13250,9 @@ $ ssh $(whoami)@clinic-records</div>
 <h4>The Fix: Connect via SSH</h4>
 <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">sudo</span> <span class="tk-cmd">passwd</span> $(whoami)
 <span class="tk-comment"># sets a password for YOUR OWN account</span>
+<span class="tk-comment"># &lt;VM-IP&gt;: on Ubuntu, run hostname -I</span>
 <span class="tk-prompt">$</span> echo <span class="tk-str">"&lt;VM-IP&gt; clinic-records"</span> \
     | <span class="tk-cmd">sudo</span> <span class="tk-cmd">tee</span> <span class="tk-flag">-a</span> /etc/hosts
-<span class="tk-comment"># &lt;VM-IP&gt;: the address from Port Open?</span>
 <span class="tk-prompt">$</span> <span class="tk-cmd">ssh</span> $(whoami)@clinic-records
 <span class="tk-comment"># run this from Kali, not from Ubuntu</span></div>
 </section>
@@ -20346,6 +20347,7 @@ network:
   version: 2
   ethernets:
     eth0:
+      # use real ip addr/route values
       addresses: [&lt;new-ip&gt;/24]
       routes: [{to: default, via: &lt;gateway&gt;}]
       nameservers: {addresses: [8.8.8.8]}
@@ -20363,6 +20365,7 @@ network:
   version: 2
   ethernets:
     eth0:
+<span class="tk-comment">      # use real ip addr/route values</span>
       addresses: [&lt;new-ip&gt;/24]
       routes: [{to: default, via: &lt;gateway&gt;}]
       nameservers: {addresses: [8.8.8.8]}
@@ -21086,7 +21089,8 @@ $ sudo systemctl restart ssh
 </ul>
 </div>
 <div class="col" style="text-align:center;">
-<div class="terminal">$ IP=&lt;ubuntu-ip&gt;
+<div class="terminal"># no SSH yet? open Ubuntu's own console, run hostname -I
+$ IP=&lt;ubuntu-ip&gt;
 $ ssh-keygen -f ~/.ssh/known_hosts -R $IP
 # safe to run even if nothing's stale</div>
 
@@ -21096,7 +21100,8 @@ $ ssh-keygen -f ~/.ssh/known_hosts -R $IP
 </section>
 <section data-tag="kali" data-background-color="#0a0a0a">
 <h4>Clear Any Stale Host Key</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$</span> IP=&lt;ubuntu-ip&gt;
+<div class="terminal terminal-slide"><span class="tk-comment"># no SSH yet? open Ubuntu's own console, run hostname -I</span>
+<span class="tk-prompt">$</span> IP=&lt;ubuntu-ip&gt;
 <span class="tk-prompt">$</span> <span class="tk-cmd">ssh-keygen</span> <span class="tk-flag">-f</span> <span class="tk-path">~/.ssh/known_hosts</span> <span class="tk-flag">-R</span> $IP
 <span class="tk-comment"># safe to run even if nothing's stale</span>
 <span class="tk-comment"># removes any old entry for this IP</span></div>
@@ -21174,6 +21179,7 @@ network:
   version: 2
   ethernets:
     eth0:
+      # from Step 1's ip addr/route, above
       addresses: [&lt;new-ip&gt;/24]
       routes: [{to: default, via: &lt;gateway&gt;}]
       nameservers: {addresses: [8.8.8.8]}
@@ -21191,6 +21197,7 @@ network:
   version: 2
   ethernets:
     eth0:
+<span class="tk-comment">      # from Step 1's ip addr/route, above</span>
       addresses: [&lt;new-ip&gt;/24]
       routes: [{to: default, via: &lt;gateway&gt;}]
       nameservers: {addresses: [8.8.8.8]}
@@ -21320,6 +21327,7 @@ network:
   version: 2
   ethernets:
     eth0:
+      # same values you set in Step 2
       addresses: [&lt;new-ip&gt;/24]
       routes: [{to: default, via: &lt;gateway&gt;}]
       nameservers: {addresses: [8.8.8.8]}
@@ -21337,6 +21345,7 @@ network:
   version: 2
   ethernets:
     eth0:
+<span class="tk-comment">      # same values you set in Step 2</span>
       addresses: [&lt;new-ip&gt;/24]
       routes: [{to: default, via: &lt;gateway&gt;}]
       nameservers: {addresses: [8.8.8.8]}
@@ -28743,14 +28752,20 @@ Private-Key: (1024 bit, 2 primes)
 <div class="twocol">
 <div class="col">
 <p style="text-align:center;color:#2b6cb0;font-weight:bold;margin-bottom:4px;">KALI</p>
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">nmap</span> -p 8080 &lt;VM-IP&gt;
+<div class="terminal"><span class="tk-prompt">$ </span>VM_IP=10.0.2.15
+<span class="tk-comment"># paste the address Ubuntu just showed</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">nmap</span> -p 8080 $VM_IP
 PORT     STATE SERVICE
 8080/tcp open
 <span class="tk-comment"># open: listener answered, nothing blocking</span></div>
 </div>
 <div class="col">
 <p style="text-align:center;color:#5E2750;font-weight:bold;margin-bottom:4px;">UBUNTU</p>
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">python3</span> -m http.server 8080 &amp;
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">ufw</span> allow 8080/tcp
+<span class="tk-comment"># ufw's default denies new ports</span>
+<span class="tk-prompt">$ </span><span class="tk-cmd">hostname</span> -I
+10.0.2.15
+<span class="tk-prompt">$ </span><span class="tk-cmd">python3</span> -m http.server 8080 &amp;
 [1] 4821
 <span class="tk-comment"># &amp;: runs the listener in the background</span></div>
 </div>
@@ -28782,7 +28797,8 @@ PORT     STATE SERVICE
 <div class="twocol">
 <div class="col">
 <p style="text-align:center;color:#2b6cb0;font-weight:bold;margin-bottom:4px;">KALI</p>
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">nmap</span> -p 8080 &lt;VM-IP&gt;
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">nmap</span> -p 8080 $VM_IP
+<span class="tk-comment"># $VM_IP: set once in Step 1, still valid</span>
 PORT     STATE    SERVICE
 8080/tcp filtered
 <span class="tk-comment"># filtered: no response at all, now blocked</span></div>
@@ -28820,7 +28836,8 @@ PORT     STATE    SERVICE
 <div class="twocol">
 <div class="col">
 <p style="text-align:center;color:#2b6cb0;font-weight:bold;margin-bottom:4px;">KALI</p>
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">nmap</span> -p 8080 &lt;VM-IP&gt;
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">nmap</span> -p 8080 $VM_IP
+<span class="tk-comment"># $VM_IP: still the value from Step 1</span>
 PORT     STATE  SERVICE
 8080/tcp closed
 <span class="tk-comment"># closed: port refused, nothing listening now</span></div>
@@ -29936,7 +29953,9 @@ changed: [192.168.1.10]</div>
 
 </div>
 <div class="col">
-<div class="terminal">[target]
+<div class="terminal"># &lt;VM-IP&gt;: hostname -I on the target
+# &lt;your-user&gt;: whoami on the target
+[target]
 &lt;VM-IP&gt; ansible_user=&lt;your-user&gt;</div>
 
 </div>
@@ -29944,8 +29963,9 @@ changed: [192.168.1.10]</div>
 </section>
 <section data-background-color="#0a0a0a">
 <h4>Step 2: Write the Inventory</h4>
-<div class="terminal terminal-slide">[target]
-<span class="tk-comment"># Reuses the same username this course has used</span>
+<div class="terminal terminal-slide"><span class="tk-comment"># &lt;VM-IP&gt;: hostname -I on the target</span>
+<span class="tk-comment"># &lt;your-user&gt;: whoami on the target</span>
+[target]
 &lt;VM-IP&gt; ansible_user=&lt;your-user&gt;</div>
 </section>
 <section data-background-color="#0a0a0a">
@@ -34200,6 +34220,7 @@ $ cat lab7-report.txt</div>
 <span class="tk-comment"># confirms the shell is now nologin</span>
 <span class="tk-output">intern:x:1011:1018::/home/intern:</span>
 <span class="tk-output">/usr/sbin/nologin</span>
+<span class="tk-comment"># &lt;IP&gt;: hostname -I on this VM</span>
 <span class="tk-cmd">ssh</span> intern@&lt;IP&gt;
 <span class="tk-comment"># tries logging in with the old key</span>
 <span class="tk-output">Permission denied (publickey)</span></div>
@@ -34225,6 +34246,7 @@ $ cat lab7-report.txt</div>
 <div class="terminal" style="font-size:1.5rem;"><span class="tk-cmd">sudo</span> <span class="tk-cmd">sshd</span> <span class="tk-flag">-T</span> <span class="tk-punct">|</span> <span class="tk-cmd">grep</span> passwordauth
 <span class="tk-comment"># -T: dumps the real effective config</span>
 <span class="tk-output">passwordauthentication no</span>
+<span class="tk-comment"># &lt;IP&gt;: hostname -I on this VM</span>
 <span class="tk-cmd">ssh</span> <span class="tk-flag">-o</span> PreferredAuthentications=password <span class="tk-punct">\</span>
   <span class="tk-flag">-o</span> PubkeyAuthentication=no osboxes@&lt;IP&gt;
 <span class="tk-comment"># forces a password-only login attempt</span>
