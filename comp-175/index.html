@@ -531,7 +531,7 @@
 
   <div class="quick-links">
     <a href="./#/toc" class="footer-link" target="_self">Schedule</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-11-10 09:32 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-11-11 14:05 PT</span>
   </div>
 
   <!--
@@ -28727,7 +28727,7 @@ Private-Key: (1024 bit, 2 primes)
 <div class="col">
 <h4>Scenario: Block and Verify</h4>
 <ul>
-<li>Block a port with iptables</li><li>Confirm it from Kali with nmap</li><li>Then remove the rule again</li>
+<li>Open a port, then block it</li><li>Confirm filtered via nmap</li><li>Remove rule, close port</li>
 </ul>
 
 </div>
@@ -28738,108 +28738,99 @@ Private-Key: (1024 bit, 2 primes)
 </section>
 
 <section data-background-color="#0a0a0a">
+<h4 style="text-align:center;">Step 1: Open the Port</h4>
+<p class="muted" style="text-align:center;font-size:1.05rem;margin-top:-4px;">Ubuntu starts a listener; Kali confirms it's open</p>
 <div class="twocol">
 <div class="col">
-<h4>Step 1: Port Is Open?</h4>
-<ul>
-<li>Baseline check before blocking</li>
-</ul>
-
-</div>
-<div class="col">
+<p style="text-align:center;color:#2b6cb0;font-weight:bold;margin-bottom:4px;">KALI</p>
 <div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">nmap</span> -p 8080 &lt;VM-IP&gt;
-PORT     STATE SERVICE
-8080/tcp open</div>
-
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<h4>Step 1: Port Is Open?</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">nmap</span> -p 8080 &lt;VM-IP&gt;
 PORT     STATE SERVICE
 8080/tcp open
-<span class="tk-comment"># -p 8080: scan only this one port</span>
-<span class="tk-comment"># Run from Kali, against the Ubuntu VM</span>
-<span class="tk-comment"># Project Part 2: the Attacker team runs this on you</span></div>
+<span class="tk-comment"># open: listener answered, nothing blocking</span></div>
+</div>
+<div class="col">
+<p style="text-align:center;color:#5E2750;font-weight:bold;margin-bottom:4px;">UBUNTU</p>
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">python3</span> -m http.server 8080 &amp;
+[1] 4821
+<span class="tk-comment"># &amp;: runs the listener in the background</span></div>
+</div>
+</div>
 </section>
 
 <section data-background-color="#0a0a0a">
+<h4 style="text-align:center;">Step 2: Block the Port</h4>
+<p class="muted" style="text-align:center;font-size:1.05rem;margin-top:-4px;">Ubuntu adds a firewall rule; Kali just waits</p>
 <div class="twocol">
 <div class="col">
-<h4>Step 2: Drop the Port</h4>
-<ul>
-<li>DROP: silently discard it</li>
-</ul>
-
+<p style="text-align:center;color:#2b6cb0;font-weight:bold;margin-bottom:4px;">KALI</p>
+<div class="terminal"><span class="tk-prompt">$ </span>
+<span class="tk-comment"># nothing to run yet -- Ubuntu is adding the rule</span></div>
 </div>
 <div class="col">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">iptables</span> -A INPUT -p tcp --dport 8080 -j DROP</div>
-
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<h4>Step 2: Drop the Port</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">iptables</span> -A INPUT -p tcp --dport 8080 -j DROP
+<p style="text-align:center;color:#5E2750;font-weight:bold;margin-bottom:4px;">UBUNTU</p>
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">iptables</span> -A INPUT -p tcp \
+    --dport 8080 -j DROP
 <span class="tk-comment"># -A INPUT: append to the INPUT chain</span>
-<span class="tk-comment"># -p tcp: match only TCP packets</span>
-<span class="tk-comment"># --dport 8080: match destination port 8080</span>
-<span class="tk-comment"># -j DROP: silently discard, no response sent</span>
-<span class="tk-comment"># Project Part 2: block only the port under test</span></div>
+<span class="tk-comment"># -j DROP: silently discard, no reply sent</span></div>
+</div>
+</div>
 </section>
 
 <section data-background-color="#0a0a0a">
+<h4 style="text-align:center;">Step 3: Verify from Kali</h4>
+<p class="muted" style="text-align:center;font-size:1.05rem;margin-top:-4px;">Same scan, now blocked by the new rule</p>
 <div class="twocol">
 <div class="col">
-<h4>Step 3: Verify from Kali</h4>
-<ul>
-<li>Re-run the same scan</li>
-</ul>
-
-</div>
-<div class="col">
+<p style="text-align:center;color:#2b6cb0;font-weight:bold;margin-bottom:4px;">KALI</p>
 <div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">nmap</span> -p 8080 &lt;VM-IP&gt;
 PORT     STATE    SERVICE
-8080/tcp filtered</div>
-
-</div>
-</div>
-</section>
-<section data-background-color="#0a0a0a">
-<h4>Step 3: Verify from Kali</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">nmap</span> -p 8080 &lt;VM-IP&gt;
-PORT     STATE    SERVICE
 8080/tcp filtered
-<span class="tk-comment"># -p 8080: same single-port scan as Step 1</span>
-<span class="tk-comment"># Same command as Step 1, same port</span>
-<span class="tk-comment"># filtered: nmap got no response at all</span>
-<span class="tk-comment"># Project Part 2: filtered proves your rule works</span></div>
+<span class="tk-comment"># filtered: no response at all, now blocked</span></div>
+</div>
+<div class="col">
+<p style="text-align:center;color:#5E2750;font-weight:bold;margin-bottom:4px;">UBUNTU</p>
+<div class="terminal"><span class="tk-prompt">$ </span>
+<span class="tk-comment"># rule already applied -- just watching now</span></div>
+</div>
+</div>
 </section>
 
 <section data-background-color="#0a0a0a">
+<h4 style="text-align:center;">Step 4: Remove the Rule</h4>
+<p class="muted" style="text-align:center;font-size:1.05rem;margin-top:-4px;">Ubuntu undoes the block; Kali still waits</p>
 <div class="twocol">
 <div class="col">
-<h4>Step 4: Remove the Rule</h4>
-<ul>
-<li>-D deletes a matching rule</li>
-</ul>
-
+<p style="text-align:center;color:#2b6cb0;font-weight:bold;margin-bottom:4px;">KALI</p>
+<div class="terminal"><span class="tk-prompt">$ </span>
+<span class="tk-comment"># waiting to re-scan once the rule's gone</span></div>
 </div>
 <div class="col">
-<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">iptables</span> -D INPUT -p tcp --dport 8080 -j DROP</div>
-
+<p style="text-align:center;color:#5E2750;font-weight:bold;margin-bottom:4px;">UBUNTU</p>
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">iptables</span> -D INPUT -p tcp \
+    --dport 8080 -j DROP
+<span class="tk-comment"># -D INPUT: delete the matching rule</span>
+<span class="tk-comment"># same flags given to -A in Step 2</span></div>
 </div>
 </div>
 </section>
+
 <section data-background-color="#0a0a0a">
-<h4>Step 4: Remove the Rule</h4>
-<div class="terminal terminal-slide"><span class="tk-prompt">$ </span><span class="tk-cmd">sudo</span> <span class="tk-cmd">iptables</span> -D INPUT -p tcp --dport 8080 -j DROP
-<span class="tk-comment"># -D INPUT: delete from the INPUT chain</span>
-<span class="tk-comment"># -p tcp: must match the rule's flags exactly</span>
-<span class="tk-comment"># --dport 8080: same port given to -A in Step 2</span>
-<span class="tk-comment"># -j DROP: the same target as Step 2's rule</span>
-<span class="tk-comment"># Project Part 2: remove test rules before demo day</span></div>
+<h4 style="text-align:center;">Step 5: Close the Port</h4>
+<p class="muted" style="text-align:center;font-size:1.05rem;margin-top:-4px;">Ubuntu stops the listener; Kali confirms it's gone</p>
+<div class="twocol">
+<div class="col">
+<p style="text-align:center;color:#2b6cb0;font-weight:bold;margin-bottom:4px;">KALI</p>
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">nmap</span> -p 8080 &lt;VM-IP&gt;
+PORT     STATE  SERVICE
+8080/tcp closed
+<span class="tk-comment"># closed: port refused, nothing listening now</span></div>
+</div>
+<div class="col">
+<p style="text-align:center;color:#5E2750;font-weight:bold;margin-bottom:4px;">UBUNTU</p>
+<div class="terminal"><span class="tk-prompt">$ </span><span class="tk-cmd">kill</span> %1
+<span class="tk-comment"># %1: the background job started in Step 1</span></div>
+</div>
+</div>
 </section>
 
 <section data-background-color="#ffffff">
@@ -28852,7 +28843,7 @@ PORT     STATE    SERVICE
 <div class="col">
 <h4>Deliverable</h4>
 <ul>
-<li>A port opened, then dropped</li><li>An nmap scan proving filtered</li><li>The rule cleanly removed after</li>
+<li>A port opened, then dropped</li><li>An nmap scan proving filtered</li><li>Rule removed, port closed again</li>
 </ul>
 
 </div>
