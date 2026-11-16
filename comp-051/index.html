@@ -463,7 +463,7 @@
 
     <div class="quick-links">
       <a href="./#toc" class="footer-link" target="_self">Schedule</a>
-      <span id="updated-stamp" class="footer-link">Updated: 2026-11-12 13:43 PT</span>
+      <span id="updated-stamp" class="footer-link">Updated: 2026-11-16 14:04 PT</span>
     </div>
 
     <div class="reveal">
@@ -23728,12 +23728,18 @@ else
 <h4>Step 9: Make Roads Look Like a City</h4>
 <ul>
 <li>Every 4th row/col is a road</li>
+<li>Walls line the whole border</li>
 </ul>
-<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:320px;display:block;margin:12px auto 0;"><rect x="1" y="1" width="318" height="178" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="40" y="12" width="36" height="36" rx="4" fill="#444" stroke="#666" stroke-width="1"/><rect x="80" y="12" width="36" height="36" rx="4" fill="#444" stroke="#666" stroke-width="1"/><rect x="120" y="12" width="36" height="36" rx="4" fill="#444" stroke="#666" stroke-width="1"/><rect x="160" y="12" width="36" height="36" rx="4" fill="#444" stroke="#666" stroke-width="1"/><rect x="40" y="54" width="36" height="36" rx="4" fill="#444" stroke="#666" stroke-width="1"/><rect x="80" y="54" width="36" height="36" rx="4" fill="#2f3d1a" stroke="#666" stroke-width="1"/><rect x="120" y="54" width="36" height="36" rx="4" fill="#2f3d1a" stroke="#666" stroke-width="1"/><rect x="160" y="54" width="36" height="36" rx="4" fill="#2f3d1a" stroke="#666" stroke-width="1"/><rect x="40" y="96" width="36" height="36" rx="4" fill="#444" stroke="#666" stroke-width="1"/><rect x="80" y="96" width="36" height="36" rx="4" fill="#2f3d1a" stroke="#666" stroke-width="1"/><rect x="120" y="96" width="36" height="36" rx="4" fill="#2f3d1a" stroke="#666" stroke-width="1"/><rect x="160" y="96" width="36" height="36" rx="4" fill="#2f3d1a" stroke="#666" stroke-width="1"/><g><animateMotion path="M 58 30 L 178 30" dur="3s" repeatCount="indefinite"/><circle r="11" fill="#b8860b" stroke="#fff" stroke-width="1.5"/><text text-anchor="middle" dy="4" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">C</text></g><text x="160" y="160" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">streets form a grid</text></svg>
+<svg viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:320px;display:block;margin:12px auto 0;"><rect x="1" y="1" width="318" height="178" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><rect x="34" y="6" width="204" height="132" rx="4" fill="none" stroke="#8b1e1e" stroke-width="4"/><rect x="40" y="12" width="36" height="36" rx="4" fill="#444" stroke="#666" stroke-width="1"/><rect x="80" y="12" width="36" height="36" rx="4" fill="#444" stroke="#666" stroke-width="1"/><rect x="120" y="12" width="36" height="36" rx="4" fill="#444" stroke="#666" stroke-width="1"/><rect x="160" y="12" width="36" height="36" rx="4" fill="#444" stroke="#666" stroke-width="1"/><rect x="40" y="54" width="36" height="36" rx="4" fill="#444" stroke="#666" stroke-width="1"/><rect x="80" y="54" width="36" height="36" rx="4" fill="#2f3d1a" stroke="#666" stroke-width="1"/><rect x="120" y="54" width="36" height="36" rx="4" fill="#2f3d1a" stroke="#666" stroke-width="1"/><rect x="160" y="54" width="36" height="36" rx="4" fill="#2f3d1a" stroke="#666" stroke-width="1"/><rect x="40" y="96" width="36" height="36" rx="4" fill="#444" stroke="#666" stroke-width="1"/><rect x="80" y="96" width="36" height="36" rx="4" fill="#2f3d1a" stroke="#666" stroke-width="1"/><rect x="120" y="96" width="36" height="36" rx="4" fill="#2f3d1a" stroke="#666" stroke-width="1"/><rect x="160" y="96" width="36" height="36" rx="4" fill="#2f3d1a" stroke="#666" stroke-width="1"/><g><animateMotion path="M 58 30 L 178 30" dur="3s" repeatCount="indefinite"/><circle r="11" fill="#b8860b" stroke="#fff" stroke-width="1.5"/><text text-anchor="middle" dy="4" font-size="11" font-family="Consolas, monospace" fill="#fff" font-weight="bold">C</text></g><text x="160" y="160" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">grid walled on every side</text></svg>
 </div>
 <div style="flex:1 1 0;">
-<pre><code class="language-cpp code-18">if (r % 4==0 || c % 4==0)
-  grid[r][c] = 'o';</code></pre>
+<pre><code class="language-cpp code-18">if (r==0 || r==rows-1 ||
+    c==0 || c==cols-1) {
+  grid[r][c] = '#';
+} else if (r % 4==0 ||
+           c % 4==0) {
+  grid[r][c] = 'o';
+}</code></pre>
 </div>
 </div>
 </section>
@@ -23741,7 +23747,27 @@ else
 <section data-background-color="#0a0a0a">
 <div style="display:flex;align-items:center;gap:28px;">
 <div style="flex:1 1 0;">
-<h4>Step 10: Try Again</h4>
+<h4>Step 10: Add Weather Fog</h4>
+<ul>
+<li>Fog hides tiles far from car</li>
+</ul>
+<svg viewBox="0 0 320 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:320px;display:block;margin:12px auto 0;"><rect x="1" y="1" width="318" height="208" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/><g><animate attributeName="opacity" values="0;0;0.5;0.5;0" keyTimes="0;0.3;0.4;0.8;1" dur="4s" repeatCount="indefinite"/><rect x="60" y="14" width="32" height="32" rx="3" fill="#444"/><rect x="96" y="14" width="32" height="32" rx="3" fill="#444"/><rect x="132" y="14" width="32" height="32" rx="3" fill="#444"/><rect x="168" y="14" width="32" height="32" rx="3" fill="#444"/><rect x="204" y="14" width="32" height="32" rx="3" fill="#444"/><rect x="60" y="50" width="32" height="32" rx="3" fill="#444"/><rect x="204" y="50" width="32" height="32" rx="3" fill="#444"/><rect x="60" y="86" width="32" height="32" rx="3" fill="#444"/><rect x="204" y="86" width="32" height="32" rx="3" fill="#444"/><rect x="60" y="122" width="32" height="32" rx="3" fill="#444"/><rect x="204" y="122" width="32" height="32" rx="3" fill="#444"/><rect x="60" y="158" width="32" height="32" rx="3" fill="#444"/><rect x="96" y="158" width="32" height="32" rx="3" fill="#444"/><rect x="132" y="158" width="32" height="32" rx="3" fill="#444"/><rect x="168" y="158" width="32" height="32" rx="3" fill="#444"/><rect x="204" y="158" width="32" height="32" rx="3" fill="#444"/></g><rect x="96" y="50" width="32" height="32" rx="3" fill="#2f3d1a" stroke="#666" stroke-width="1"/><rect x="132" y="50" width="32" height="32" rx="3" fill="#2f3d1a" stroke="#666" stroke-width="1"/><rect x="168" y="50" width="32" height="32" rx="3" fill="#2f3d1a" stroke="#666" stroke-width="1"/><rect x="96" y="86" width="32" height="32" rx="3" fill="#2f3d1a" stroke="#666" stroke-width="1"/><rect x="132" y="86" width="32" height="32" rx="3" fill="#2f3d1a" stroke="#666" stroke-width="1"/><rect x="168" y="86" width="32" height="32" rx="3" fill="#2f3d1a" stroke="#666" stroke-width="1"/><rect x="96" y="122" width="32" height="32" rx="3" fill="#2f3d1a" stroke="#666" stroke-width="1"/><rect x="132" y="122" width="32" height="32" rx="3" fill="#2f3d1a" stroke="#666" stroke-width="1"/><rect x="168" y="122" width="32" height="32" rx="3" fill="#2f3d1a" stroke="#666" stroke-width="1"/><circle cx="148" cy="102" r="12" fill="#b8860b" stroke="#fff" stroke-width="1.5"/><text x="148" y="106" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#fff" font-weight="bold">C</text><text x="160" y="192" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ccc">far tiles are just blank</text></svg>
+</div>
+<div style="flex:1 1 0;">
+<pre><code class="language-cpp code-18">int dr = abs(r - carRow);
+int dc = abs(c - carCol);
+if (max(dr, dc) > radius)
+  cout &lt;&lt; "  ";
+else
+  cout &lt;&lt; grid[r][c];</code></pre>
+</div>
+</div>
+</section>
+
+<section data-background-color="#0a0a0a">
+<div style="display:flex;align-items:center;gap:28px;">
+<div style="flex:1 1 0;">
+<h4>Step 11: Try Again</h4>
 <ul>
 <li>A loop lets you play again</li>
 </ul>
