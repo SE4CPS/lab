@@ -5,6 +5,18 @@
 MODEL="llama3.2:3b"
 REQUEST="$*"
 
+# Find ollama even on a tarball (no-sudo) install, and start the server
+# if it is not already running.
+if ! command -v ollama > /dev/null && [ -x "$HOME/ollama-demo/bin/ollama" ]; then
+  export PATH="$HOME/ollama-demo/bin:$PATH"
+  export OLLAMA_MODELS="$HOME/ollama-demo/models"
+fi
+if ! curl -s --max-time 2 http://localhost:11434/ > /dev/null; then
+  echo "(starting ollama server...)"
+  nohup ollama serve > /dev/null 2>&1 &
+  sleep 3
+fi
+
 CONTEXT='You translate a plain-English request into exactly one safe,
 common Linux command. Reply with ONLY two lines: the command, then a
 "# comment" explaining it. No markdown, no backticks, no other text.
