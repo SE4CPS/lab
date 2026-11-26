@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Run an LLM in Your Terminal</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/9850/9850812.png" type="image/png">
+
+  <!-- Include Reveal.js CSS from CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/black.min.css" id="theme">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/monokai.css">
+
+  <!-- Shared chrome (seal, quick-links footer, highlight color, slides width) -->
+  <link rel="stylesheet" href="../../assets/deck-chrome.css">
+
+  <style>
+    body { margin: 0; }
+    section { font-size: 24pt; }
+    li { font-size: 19pt; }
+    img { border-radius: 4px; margin: 0px !important; }
+
+    .twocol {
+      display: flex;
+      gap: 36px;
+      align-items: center;
+      text-align: left;
+    }
+    .twocol .col { flex: 1; min-width: 0; }
+
+    .terminal {
+      background: #0d0d0d;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      text-align: left;
+      font-family: 'Consolas', 'Courier New', monospace;
+      font-size: 1.3rem;
+      line-height: 1.6;
+      color: #d4d4d4;
+      overflow-x: auto;
+      white-space: pre;
+      position: relative;
+    }
+    .terminal-slide {
+      font-size: 1.7rem !important;
+      max-width: 1100px;
+      margin: 1.2rem auto 0;
+    }
+    .tk-prompt { color: #60db60; font-weight: bold; }
+    .tk-cmd { color: #9cdcfe; font-weight: bold; }
+    .tk-flag { color: #ffd555; }
+    .tk-str { color: #ce9178; }
+    .tk-comment { color: #6a9955; font-style: italic; }
+  </style>
+</head>
+
+<body>
+
+  <img src="https://upload.wikimedia.org/wikipedia/en/b/bb/University_of_the_Pacific_seal.svg"
+    alt="University of the Pacific seal"
+    class="seal" />
+
+  <div class="quick-links">
+    <a href="https://www.meetup.com/antrunner/events/317257980/" class="footer-link" target="_blank" rel="noopener">Meetup</a>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-11-26 10:54 PT</span>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- 1 Title -->
+      <section style="text-align:center;">
+        <h2>Run an LLM in Your Terminal</h2>
+        <h4 style="color:#aaa;">Plain English in, Linux commands out</h4>
+        <p style="font-size:1.1rem;color:#888;margin-top:2rem;">
+          AntRunner Meetup &middot; Intro to Command Line Prompting for Everyone<br>
+          Friday, November 27, 2026 &middot; Online
+        </p>
+      </section>
+
+      <!-- 2 Agenda -->
+      <section data-background-color="#ffffff">
+        <div class="twocol">
+          <div class="col">
+            <h4>Agenda</h4>
+            <ol style="line-height: 1.8;">
+              <li>What is a local LLM?</li>
+              <li>What you need</li>
+              <li>Install WSL + Ollama</li>
+              <li>ask.sh: English to command</li>
+              <li>Live demo</li>
+              <li>Why the confirm step</li>
+              <li>Troubleshooting</li>
+              <li>Try it yourself</li>
+            </ol>
+          </div>
+          <div class="col">
+            <img src="./ask-uptime.png" style="width:100%;" alt="ask.sh session: uptime request translated, run, and interpreted">
+            <p class="source-line">A real session from this talk's demo machine</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 Concept -->
+      <section data-background-color="#ffffff">
+        <div class="twocol">
+          <div class="col">
+            <h4>What Is a Local LLM?</h4>
+            <ul>
+              <li>A chatbot on your laptop</li>
+              <li>Private: text never leaves</li>
+              <li>Free: no account, no fees</li>
+              <li>Works offline, on a plane</li>
+            </ul>
+          </div>
+          <div class="col">
+            <svg viewBox="0 0 340 268" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:480px;display:block;margin:0 auto;">
+              <rect x="1" y="1" width="338" height="266" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+              <rect x="30" y="30" width="280" height="90" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="170" y="62" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee">Cloud chatbot</text>
+              <text x="170" y="88" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">your text travels to their servers</text>
+              <rect x="30" y="148" width="280" height="90" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/>
+              <text x="170" y="180" text-anchor="middle" font-size="15" font-family="Segoe UI, Arial, sans-serif" fill="#eee">Local LLM (today)</text>
+              <text x="170" y="206" text-anchor="middle" font-size="13" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">everything stays on your laptop</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 What you need -->
+      <section data-background-color="#ffffff">
+        <div class="twocol">
+          <div class="col">
+            <h4>What You Need</h4>
+            <ul>
+              <li>Windows 10 or 11</li>
+              <li>8 GB RAM or more</li>
+              <li>~5 GB free disk space</li>
+              <li>No GPU required</li>
+            </ul>
+          </div>
+          <div class="col">
+            <h4>What We Install</h4>
+            <ul>
+              <li>WSL: Linux inside Windows</li>
+              <li>Ollama: runs the model</li>
+              <li>llama3.2:3b: the model, 2 GB</li>
+              <li>ask.sh: 40 lines of bash</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 Step 1 -->
+      <section data-background-color="#0a0a0a">
+        <h4>Step 1: Install WSL</h4>
+        <div class="terminal terminal-slide"><span class="tk-comment"># in PowerShell, run as yourself (no admin console needed)</span>
+<span class="tk-prompt">&gt;</span> <span class="tk-cmd">wsl</span> <span class="tk-flag">--install -d</span> Ubuntu
+
+<span class="tk-comment"># then reboot once when Windows asks</span></div>
+        <p class="fragment note-below">&#9888;&#65039; If it fails, virtualization is usually <span class="highlight">disabled</span> in your BIOS: enable "Virtualization" or "SVM" there first.</p>
+      </section>
+
+      <!-- 6 Step 2 -->
+      <section data-background-color="#0a0a0a">
+        <h4>Step 2: First Launch</h4>
+        <div class="terminal terminal-slide"><span class="tk-comment"># after the reboot, Ubuntu opens and asks once:</span>
+Enter new UNIX username: <span class="tk-str">you</span>
+New password: <span class="tk-str">********</span>
+
+<span class="tk-prompt">$</span> <span class="tk-cmd">whoami</span>
+you</div>
+        <p class="fragment note-below">&#9888;&#65039; The password prompt shows <span class="highlight">nothing</span> while you type: that is normal, just type it and press Enter.</p>
+      </section>
+
+      <!-- 7 Step 3 -->
+      <section data-background-color="#0a0a0a">
+        <h4>Step 3: Install Ollama</h4>
+        <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">curl</span> <span class="tk-flag">-fsSL</span> https://ollama.com/install.sh | <span class="tk-cmd">sh</span>
+
+&gt;&gt;&gt; Installing ollama to /usr/local
+&gt;&gt;&gt; The Ollama API is now available at 127.0.0.1:11434</div>
+        <p class="source-line">Official install script: <a href="https://ollama.com/download/linux" target="_blank" rel="noopener">ollama.com/download/linux</a></p>
+      </section>
+
+      <!-- 8 Step 4 -->
+      <section data-background-color="#0a0a0a">
+        <h4>Step 4: Get the Model (at Home!)</h4>
+        <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">ollama</span> pull llama3.2:3b
+pulling manifest... success   <span class="tk-comment"># ~2 GB, do this before the meetup</span>
+
+<span class="tk-prompt">$</span> <span class="tk-cmd">ollama</span> list
+NAME           SIZE
+llama3.2:3b    2.0 GB</div>
+        <p class="fragment note-below">&#9888;&#65039; The download is <span class="highlight">2&nbsp;GB</span>: pull it on home Wi-Fi beforehand, then everything tonight runs offline.</p>
+      </section>
+
+      <!-- 9 The idea -->
+      <section data-background-color="#ffffff">
+        <div class="twocol">
+          <div class="col">
+            <h4>ask.sh: Stop Memorizing</h4>
+            <ul>
+              <li>You type plain English</li>
+              <li>LLM writes the command</li>
+              <li>Plus a comment explaining it</li>
+              <li>Runs only after you say y</li>
+              <li>Then it explains the result</li>
+            </ul>
+          </div>
+          <div class="col">
+            <svg viewBox="0 0 340 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;">
+              <rect x="1" y="1" width="338" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+              <defs><marker id="askflow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs>
+              <rect x="40" y="18" width="260" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="170" y="44" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee">"how much disk space is free"</text>
+              <line x1="170" y1="60" x2="170" y2="72" stroke="#999" stroke-width="2.2" marker-end="url(#askflow)"/>
+              <rect x="40" y="76" width="260" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="170" y="102" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#9cdcfe">df -h  # free disk space</text>
+              <line x1="170" y1="118" x2="170" y2="130" stroke="#999" stroke-width="2.2" marker-end="url(#askflow)"/>
+              <rect x="40" y="134" width="260" height="42" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/>
+              <text x="170" y="160" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee">you read it, press y</text>
+              <line x1="170" y1="176" x2="170" y2="188" stroke="#999" stroke-width="2.2" marker-end="url(#askflow)"/>
+              <rect x="40" y="192" width="260" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="170" y="218" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee">command runs</text>
+              <line x1="170" y1="234" x2="170" y2="246" stroke="#999" stroke-width="2.2" marker-end="url(#askflow)"/>
+              <rect x="40" y="250" width="260" height="42" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="170" y="276" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee">LLM explains the output</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- 10 Script: context -->
+      <section data-background-color="#0a0a0a">
+        <h4>Inside ask.sh: The Prompt Context</h4>
+        <div class="terminal terminal-slide"><span class="tk-comment"># the context sent with every request:</span>
+You translate a plain-English request into exactly
+one safe, common Linux command. Reply with ONLY two
+lines: the command, then a "# comment" explaining it.
+Only use real Linux commands. Examples:
+Request: where am I
+pwd
+# prints the folder you are currently in</div>
+        <p class="fragment note-below">&#9888;&#65039; The <span class="highlight">examples</span> are what make a small model behave: without them it invents commands that do not exist.</p>
+      </section>
+
+      <!-- 11 Script: loop -->
+      <section data-background-color="#0a0a0a">
+        <h4>Inside ask.sh: The Loop</h4>
+        <div class="terminal terminal-slide">ANSWER=$(<span class="tk-cmd">ollama</span> run llama3.2:3b <span class="tk-str">"$CONTEXT ... $REQUEST"</span>)
+CMD=$(echo <span class="tk-str">"$ANSWER"</span> | <span class="tk-cmd">head</span> <span class="tk-flag">-1</span>)
+
+<span class="tk-cmd">read</span> <span class="tk-flag">-p</span> <span class="tk-str">"Run it? [y/N] "</span> OK      <span class="tk-comment"># nothing runs without y</span>
+
+OUTPUT=$(<span class="tk-cmd">bash</span> <span class="tk-flag">-c</span> <span class="tk-str">"$CMD"</span>)
+<span class="tk-cmd">ollama</span> run llama3.2:3b <span class="tk-str">"interpret: $OUTPUT"</span></div>
+        <p class="source-line">Full script (40 lines): <a href="./ask.sh" target="_blank" rel="noopener">ask.sh</a></p>
+      </section>
+
+      <!-- 12 Demo 1 -->
+      <section data-background-color="#ffffff">
+        <h4 style="text-align:center;">It Works: Disk Space</h4>
+        <img src="./ask-disk.png" style="max-width:760px;width:90%;display:block;margin:0 auto;" alt="ask.sh translating a disk space request to df -h, running it, and interpreting the output">
+        <p class="source-line">Captured on this machine: llama3.2:3b inside Ubuntu WSL</p>
+      </section>
+
+      <!-- 13 Why confirm -->
+      <section data-background-color="#ffffff">
+        <h4 style="text-align:center;">Why the Confirm Step Exists</h4>
+        <img src="./ask-danger.png" style="max-width:760px;width:90%;display:block;margin:0 auto;" alt="a smaller model answering a disk space question with rm -rf, blocked by the confirm prompt">
+        <p class="fragment note-below">&#128680; A smaller model (llama3.2:1b) really answered this with <span class="highlight">rm&nbsp;-rf</span>, which deletes everything: read the command, then press y.</p>
+      </section>
+
+      <!-- 14 Troubleshooting -->
+      <section data-background-color="#ffffff">
+        <div class="twocol">
+          <div class="col">
+            <h4>When It Does Not Work</h4>
+            <ul>
+              <li>wsl --install errors</li>
+              <li>Ollama times out</li>
+              <li>Download is slow</li>
+            </ul>
+          </div>
+          <div class="col">
+            <h4>The Fix</h4>
+            <ul>
+              <li>Enable virtualization in BIOS</li>
+              <li>sudo ufw disable, try again</li>
+              <li>Pull the model at home first</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 15 Try it -->
+      <section data-background-color="#0a0a0a">
+        <h4>Try It Yourself, Tonight</h4>
+        <div class="terminal terminal-slide"><span class="tk-prompt">$</span> <span class="tk-cmd">curl</span> <span class="tk-flag">-O</span> https://se4cps.github.io/lab/meetup/2026-11-wsl-llm/ask.sh
+<span class="tk-prompt">$</span> <span class="tk-cmd">chmod</span> +x ask.sh
+<span class="tk-prompt">$</span> ./ask.sh what is my ip address</div>
+        <p class="source-line">Model library for other models: <a href="https://ollama.com/library" target="_blank" rel="noopener">ollama.com/library</a></p>
+      </section>
+
+      <!-- 16 Close -->
+      <section style="text-align:center;">
+        <h2>Questions?</h2>
+        <img src="./deck-qr.png" style="width:220px;background:#fff;padding:10px;display:block;margin:1rem auto;" alt="QR code linking to these slides">
+        <p style="font-size:1.1rem;color:#aaa;">These slides: <a href="https://se4cps.github.io/lab/meetup/2026-11-wsl-llm/" target="_blank" rel="noopener">se4cps.github.io/lab/meetup/2026-11-wsl-llm</a></p>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/highlight.min.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      width: 1280,
+      height: 720,
+      margin: 0.1,
+      slideNumber: false,
+      plugins: [RevealHighlight]
+    }).then(function () {
+      // Slide counter, bottom right (horizontal slides only), same
+      // convention as the course decks.
+      (function () {
+        var el = document.createElement('div');
+        el.style.cssText = 'position:fixed;bottom:10px;right:14px;z-index:40;font-size:0.82rem;color:#aaa;padding:4px 10px;background:rgba(0,0,0,0.25);border-radius:6px;';
+        document.body.appendChild(el);
+        function update() {
+          var total = document.querySelectorAll('.reveal > .slides > section').length;
+          var idx = Reveal.getIndices();
+          el.textContent = (idx.h + 1) + '/' + total;
+        }
+        Reveal.on('slidechanged', update);
+        update();
+      })();
+
+      // "Updated: Today" display, same mechanism as the course decks.
+      (function () {
+        var span = document.getElementById('updated-stamp');
+        if (!span) return;
+        var m = span.textContent.match(/Updated: (\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}) PT/);
+        if (!m) return;
+        var today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+        if (m[1] >= today) span.textContent = 'Updated: Today ' + m[2] + ' PT';
+      })();
+    });
+  </script>
+</body>
+
+</html>
