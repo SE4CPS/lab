@@ -55,6 +55,7 @@ read -p "Run it? [y/N] " OK
 [ "$OK" = "y" ] || exit 0
 
 echo ""
+echo "\$ $CMD"
 OUTPUT=$(bash -c "$CMD" 2>&1 | head -20)
 echo "$OUTPUT"
 echo ""
