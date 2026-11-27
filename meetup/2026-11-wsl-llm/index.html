@@ -50,6 +50,7 @@
       max-width: 1100px;
       margin: 1.2rem auto 0;
     }
+    .terminal-col { font-size: 1.05rem !important; }
     .tk-prompt { color: #60db60; font-weight: bold; }
     .tk-cmd { color: #9cdcfe; font-weight: bold; }
     .tk-flag { color: #ffd555; }
@@ -73,7 +74,7 @@
 
   <div class="quick-links">
     <a href="https://www.meetup.com/antrunner/events/317257980/" class="footer-link" target="_blank" rel="noopener">Meetup</a>
-    <span id="updated-stamp" class="footer-link">Updated: 2026-11-26 11:23 PT</span>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-11-27 08:50 PT</span>
   </div>
 
   <div class="reveal">
@@ -100,6 +101,7 @@
               <li>What you need</li>
               <li>Install WSL + Ollama</li>
               <li>ask.sh: English to command</li>
+              <li>Inside the code, step by step</li>
               <li>Live demo</li>
               <li>Why the confirm step</li>
               <li>Troubleshooting</li>
@@ -288,31 +290,195 @@ llama3.2:3b    2.0 GB</div>
         </div>
       </section>
 
-      <!-- 10 Script: context -->
+      <!-- 10 Code walkthrough: setup -->
       <section data-background-color="#0a0a0a">
-        <h4>Inside ask.sh: The Prompt Context</h4>
-        <div class="terminal terminal-slide"><span class="tk-comment"># the context sent with every request:</span>
-You translate a plain-English request into exactly
-one safe, common Linux command. Reply with ONLY two
-lines: the command, then a "# comment" explaining it.
-Only use real Linux commands. Examples:
-Request: where am I
-pwd
-# prints the folder you are currently in</div>
-        <p class="fragment note-below">&#9888;&#65039; The <span class="highlight">examples</span> are what make a small model behave: without them it invents commands that do not exist.</p>
+        <div class="twocol">
+          <div class="col">
+            <h4>Inside ask.sh: Setup</h4>
+            <svg viewBox="0 0 340 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;">
+              <rect x="1" y="1" width="338" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+              <defs><marker id="setupflow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs>
+              <rect x="40" y="40" width="260" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="170" y="70" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#9cdcfe">./ask.sh free disk space</text>
+              <line x1="170" y1="94" x2="170" y2="121" stroke="#999" stroke-width="2.2" marker-end="url(#setupflow)"/>
+              <rect x="40" y="125" width="260" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="170" y="146" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#9cdcfe">REQUEST="$*"</text>
+              <text x="170" y="166" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">your whole sentence, one string</text>
+              <line x1="170" y1="179" x2="170" y2="206" stroke="#999" stroke-width="2.2" marker-end="url(#setupflow)"/>
+              <rect x="40" y="210" width="260" height="50" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/>
+              <text x="170" y="231" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee">server not running? start it</text>
+              <text x="170" y="251" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#ddd">nohup ollama serve &amp;</text>
+            </svg>
+          </div>
+          <div class="col">
+            <div class="terminal terminal-col"><span class="tk-comment">#!/bin/bash</span>
+MODEL=<span class="tk-str">"llama3.2:3b"</span>
+REQUEST=<span class="tk-str">"$*"</span>
+
+<span class="tk-comment"># start the server if it is not up</span>
+if ! <span class="tk-cmd">curl</span> <span class="tk-flag">-s</span> localhost:11434/ &gt; /dev/null
+then
+  <span class="tk-cmd">nohup</span> <span class="tk-cmd">ollama</span> serve &gt; /dev/null 2&gt;&amp;1 &amp;
+  <span class="tk-cmd">sleep</span> 3
+fi</div>
+            <p class="source-line">Full code: <a href="https://github.com/SE4CPS/lab/blob/main/meetup/2026-11-wsl-llm/ask.sh" target="_blank" rel="noopener">ask.sh on GitHub</a></p>
+          </div>
+        </div>
       </section>
 
-      <!-- 11 Script: loop -->
+      <!-- 11 Code walkthrough: context rules -->
       <section data-background-color="#0a0a0a">
-        <h4>Inside ask.sh: The Loop</h4>
-        <div class="terminal terminal-slide">ANSWER=$(<span class="tk-cmd">ollama</span> run llama3.2:3b <span class="tk-str">"$CONTEXT ... $REQUEST"</span>)
+        <div class="twocol">
+          <div class="col">
+            <h4>The Context: The Rules</h4>
+            <svg viewBox="0 0 340 320" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;">
+              <rect x="1" y="1" width="338" height="318" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+              <defs><marker id="ctxflow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs>
+              <rect x="25" y="30" width="135" height="62" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="92" y="56" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" font-weight="bold" fill="#eee">CONTEXT</text>
+              <text x="92" y="78" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">rules + examples</text>
+              <rect x="180" y="30" width="135" height="62" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="247" y="56" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" font-weight="bold" fill="#eee">REQUEST</text>
+              <text x="247" y="78" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">your sentence</text>
+              <line x1="95" y1="96" x2="135" y2="134" stroke="#999" stroke-width="2.2" marker-end="url(#ctxflow)"/>
+              <line x1="244" y1="96" x2="204" y2="134" stroke="#999" stroke-width="2.2" marker-end="url(#ctxflow)"/>
+              <rect x="40" y="138" width="260" height="54" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="170" y="161" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee">one prompt to the model</text>
+              <text x="170" y="182" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#aaa">ollama run llama3.2:3b</text>
+              <line x1="170" y1="196" x2="170" y2="222" stroke="#999" stroke-width="2.2" marker-end="url(#ctxflow)"/>
+              <rect x="40" y="226" width="260" height="56" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/>
+              <text x="170" y="249" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#eee">df -h</text>
+              <text x="170" y="270" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#6a9955"># free disk space, readable</text>
+            </svg>
+          </div>
+          <div class="col">
+            <div class="terminal terminal-col">CONTEXT=<span class="tk-str">'You translate a plain-English
+request into exactly one safe, common
+Linux command. Reply with ONLY two
+lines: the command, then a "# comment"
+explaining it. No markdown, no
+backticks, no other text.
+Only use real Linux commands. ...'</span></div>
+            <p class="source-line">Full code: <a href="https://github.com/SE4CPS/lab/blob/main/meetup/2026-11-wsl-llm/ask.sh" target="_blank" rel="noopener">ask.sh on GitHub</a></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 12 Code walkthrough: few-shot examples -->
+      <section data-background-color="#0a0a0a">
+        <div class="twocol">
+          <div class="col">
+            <h4>The Context: Four Examples</h4>
+            <svg viewBox="0 0 340 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;">
+              <rect x="1" y="1" width="338" height="298" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+              <defs><marker id="fewshot" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs>
+              <rect x="20" y="50" width="145" height="54" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="92" y="82" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee">no examples</text>
+              <rect x="175" y="50" width="145" height="54" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="247" y="82" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee">4 examples</text>
+              <line x1="92" y1="108" x2="92" y2="146" stroke="#999" stroke-width="2.2" marker-end="url(#fewshot)"/>
+              <line x1="247" y1="108" x2="247" y2="146" stroke="#999" stroke-width="2.2" marker-end="url(#fewshot)"/>
+              <rect x="20" y="150" width="145" height="70" rx="8" fill="#1e1e1e" stroke="#e03131" stroke-width="2"/>
+              <text x="92" y="180" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ff8080">&#10007; fake commands</text>
+              <text x="92" y="203" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#aaa">dsk --free</text>
+              <rect x="175" y="150" width="145" height="70" rx="8" fill="#1e1e1e" stroke="#2ea043" stroke-width="2"/>
+              <text x="247" y="180" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#7ee787">&#10003; real command</text>
+              <text x="247" y="203" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#aaa">df -h</text>
+              <text x="170" y="262" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">small models copy patterns, not rules</text>
+            </svg>
+          </div>
+          <div class="col">
+            <div class="terminal terminal-col">Request: where am I
+<span class="tk-cmd">pwd</span>
+<span class="tk-comment"># prints the folder you are currently in</span>
+
+Request: make a folder called notes
+<span class="tk-cmd">mkdir</span> notes
+<span class="tk-comment"># creates a new folder named notes</span></div>
+            <p class="source-line">Full code: <a href="https://github.com/SE4CPS/lab/blob/main/meetup/2026-11-wsl-llm/ask.sh" target="_blank" rel="noopener">ask.sh on GitHub</a></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 13 Code walkthrough: translate + confirm -->
+      <section data-background-color="#0a0a0a">
+        <div class="twocol">
+          <div class="col">
+            <h4>Translate, Then Confirm</h4>
+            <svg viewBox="0 0 340 330" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;">
+              <rect x="1" y="1" width="338" height="328" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+              <defs><marker id="confflow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs>
+              <rect x="40" y="26" width="260" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="170" y="46" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee">answer: two lines</text>
+              <text x="170" y="66" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">the command + # comment</text>
+              <line x1="170" y1="78" x2="170" y2="98" stroke="#999" stroke-width="2.2" marker-end="url(#confflow)"/>
+              <rect x="40" y="102" width="260" height="48" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="170" y="122" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee">CMD = the first line</text>
+              <text x="170" y="142" text-anchor="middle" font-size="12" font-family="Consolas, monospace" fill="#aaa">head -1</text>
+              <line x1="170" y1="154" x2="170" y2="174" stroke="#999" stroke-width="2.2" marker-end="url(#confflow)"/>
+              <rect x="40" y="178" width="260" height="48" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/>
+              <text x="170" y="208" text-anchor="middle" font-size="15" font-family="Consolas, monospace" font-weight="bold" fill="#eee">Run it? [y/N]</text>
+              <line x1="150" y1="230" x2="100" y2="248" stroke="#999" stroke-width="2.2" marker-end="url(#confflow)"/>
+              <line x1="190" y1="230" x2="240" y2="248" stroke="#999" stroke-width="2.2" marker-end="url(#confflow)"/>
+              <rect x="30" y="252" width="130" height="46" rx="8" fill="#1e1e1e" stroke="#2ea043" stroke-width="2"/>
+              <text x="95" y="280" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#7ee787">y: run it</text>
+              <rect x="180" y="252" width="130" height="46" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="245" y="280" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">N: stop</text>
+            </svg>
+          </div>
+          <div class="col">
+            <div class="terminal terminal-col">ANSWER=$(<span class="tk-cmd">ollama</span> run <span class="tk-str">"$MODEL"</span> \
+  <span class="tk-str">"$CONTEXT  Request: $REQUEST"</span>)
 CMD=$(echo <span class="tk-str">"$ANSWER"</span> | <span class="tk-cmd">head</span> <span class="tk-flag">-1</span>)
 
-<span class="tk-cmd">read</span> <span class="tk-flag">-p</span> <span class="tk-str">"Run it? [y/N] "</span> OK      <span class="tk-comment"># nothing runs without y</span>
+<span class="tk-comment"># warn on dangerous commands</span>
+if echo <span class="tk-str">"$CMD"</span> | <span class="tk-cmd">grep</span> <span class="tk-flag">-qE</span> <span class="tk-str">'rm|dd|mkfs'</span>
+then
+  echo <span class="tk-str">"!! careful: deletes data"</span>
+fi
 
-OUTPUT=$(<span class="tk-cmd">bash</span> <span class="tk-flag">-c</span> <span class="tk-str">"$CMD"</span>)
-<span class="tk-cmd">ollama</span> run llama3.2:3b <span class="tk-str">"interpret: $OUTPUT"</span></div>
-        <p class="source-line">Full script (40 lines): <a href="./ask.sh" target="_blank" rel="noopener">ask.sh</a></p>
+<span class="tk-cmd">read</span> <span class="tk-flag">-p</span> <span class="tk-str">"Run it? [y/N] "</span> OK
+[ <span class="tk-str">"$OK"</span> = <span class="tk-str">"y"</span> ] || exit 0</div>
+            <p class="source-line">Full code: <a href="https://github.com/SE4CPS/lab/blob/main/meetup/2026-11-wsl-llm/ask.sh" target="_blank" rel="noopener">ask.sh on GitHub</a></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 14 Code walkthrough: run + interpret -->
+      <section data-background-color="#0a0a0a">
+        <div class="twocol">
+          <div class="col">
+            <h4>Run It, Then Explain It</h4>
+            <svg viewBox="0 0 340 332" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;">
+              <rect x="1" y="1" width="338" height="330" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+              <defs><marker id="runflow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs>
+              <rect x="40" y="28" width="260" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="170" y="58" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#9cdcfe">bash -c "$CMD"</text>
+              <line x1="170" y1="82" x2="170" y2="99" stroke="#999" stroke-width="2.2" marker-end="url(#runflow)"/>
+              <rect x="40" y="103" width="260" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="170" y="133" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee">output, first 20 lines</text>
+              <line x1="170" y1="157" x2="170" y2="174" stroke="#999" stroke-width="2.2" marker-end="url(#runflow)"/>
+              <rect x="40" y="178" width="260" height="50" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/>
+              <text x="170" y="208" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee">LLM reads the output</text>
+              <line x1="170" y1="232" x2="170" y2="249" stroke="#999" stroke-width="2.2" marker-end="url(#runflow)"/>
+              <rect x="40" y="253" width="260" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="170" y="283" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee">plain-English summary</text>
+            </svg>
+          </div>
+          <div class="col">
+            <div class="terminal terminal-col">echo <span class="tk-str">"\$ $CMD"</span>
+OUTPUT=$(<span class="tk-cmd">bash</span> <span class="tk-flag">-c</span> <span class="tk-str">"$CMD"</span> 2&gt;&amp;1 | <span class="tk-cmd">head</span> <span class="tk-flag">-20</span>)
+echo <span class="tk-str">"$OUTPUT"</span>
+
+<span class="tk-comment"># second LLM call: explain the result</span>
+<span class="tk-cmd">ollama</span> run <span class="tk-str">"$MODEL"</span> <span class="tk-str">"In two short
+sentences, interpret this output of
+the command '$CMD' for a beginner:
+
+$OUTPUT"</span></div>
+            <p class="source-line">Full code: <a href="https://github.com/SE4CPS/lab/blob/main/meetup/2026-11-wsl-llm/ask.sh" target="_blank" rel="noopener">ask.sh on GitHub</a></p>
+          </div>
+        </div>
       </section>
 
       <!-- 12 Demo 1 -->
