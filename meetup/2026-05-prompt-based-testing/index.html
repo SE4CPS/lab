@@ -90,9 +90,24 @@
 .bx-a { border-color:#92400e; }
 .bx-p { border-color:#6d28d9; }
 </style>
+
+  <!-- November-format chrome: seal, quick-links footer (inlined so the
+       deck's own tuned layout is untouched by the shared stylesheet) -->
+  <style>
+    .seal { position: fixed; top: 18px; right: 18px; width: 85px; opacity: 0.55; z-index: 40; border-radius: 4px; }
+    .quick-links { position: fixed; bottom: 10px; left: 10px; z-index: 40; display: flex; gap: 8px; }
+    .footer-link { color: #f2f2f2; background: rgba(0,0,0,0.6); font-size: 0.82rem; padding: 4px 10px; border-radius: 6px; text-decoration: none; }
+  </style>
 </head>
 <body>
-  <div style="position: fixed; bottom: 10px; left: 10px; z-index: 9999; display: flex; gap: 8px;"><span style="color: #ccc; font-size: 0.8rem; background: rgba(0,0,0,0.4); padding: 4px 10px; border-radius: 4px;">Updated: 2026-08-10 12:26 PT</span></div>
+    <img src="./antrunner-logo.webp"
+    alt="AntRunner meetup logo"
+    class="seal" />
+
+  <div class="quick-links">
+    <a href="https://www.meetup.com/antrunner/" class="footer-link" target="_blank" rel="noopener">Meetup</a>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-11-27 12:37 PT</span>
+  </div>
 
 <div class="reveal">
 <div class="slides">
@@ -1412,26 +1427,29 @@ Reveal.initialize({
 }).then(function () {
     (function () {
       var el = document.createElement('div');
-      el.style.cssText = 'position:fixed; bottom:10px; right:10px; z-index:9999; color:#ccc; ' +
-        'font-size:0.8rem; background:rgba(0,0,0,0.4); padding:4px 10px; border-radius:4px; ' +
-        'pointer-events:none;';
-      document.body.appendChild(el);
-      function updateCounter() {
-        var hSlides = document.querySelectorAll('.reveal > .slides > section');
-        var idx = Reveal.getIndices();
-        var h = idx.h, v = idx.v || 0;
-        var cur = hSlides[h];
-        var vSlides = cur ? cur.querySelectorAll(':scope > section') : [];
-        var text = (h + 1) + '/' + hSlides.length;
-        if (vSlides.length > 1) {
-          text += ' &middot; ' + (v + 1) + '/' + vSlides.length;
+        el.style.cssText = 'position:fixed;bottom:10px;right:14px;z-index:40;font-size:0.82rem;color:#f2f2f2;padding:4px 10px;background:rgba(0,0,0,0.6);border-radius:6px;';
+        document.body.appendChild(el);
+        function update() {
+          var total = document.querySelectorAll('.reveal > .slides > section > section').length;
+          var idx = Reveal.getIndices();
+          el.textContent = (idx.v + 1) + '/' + total;
         }
-        el.innerHTML = text;
-      }
-      updateCounter();
-      Reveal.on('slidechanged', updateCounter);
-    })();
+        Reveal.on('slidechanged', update);
+        update();
+      })();
     });
 </script>
+
+  <script>
+    // "Updated: Today" display, same mechanism as the November deck.
+    (function () {
+      var span = document.getElementById('updated-stamp');
+      if (!span) return;
+      var m = span.textContent.match(/Updated: (\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}) PT/);
+      if (!m) return;
+      var today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+      if (m[1] >= today) span.textContent = 'Updated: Today ' + m[2] + ' PT';
+    })();
+  </script>
 </body>
 </html>
