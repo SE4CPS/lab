@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meet, Greet, and Share Your Project</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="./antrunner-logo.webp" type="image/webp">
+
+  <!-- Include Reveal.js CSS from CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/black.min.css" id="theme">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/monokai.css">
+
+  <!-- Shared chrome (seal, quick-links footer, highlight color, slides width) -->
+  <link rel="stylesheet" href="../../assets/deck-chrome.css">
+
+  <style>
+    body { margin: 0; }
+    section { font-size: 24pt; }
+    li { font-size: 19pt; }
+    img { border-radius: 4px; margin: 0px !important; }
+
+    .twocol {
+      display: flex;
+      gap: 36px;
+      align-items: center;
+      text-align: left;
+    }
+    .twocol .col { flex: 1; min-width: 0; }
+
+    /* The shared chrome's light-gray pills vanish on this deck's white
+       slides: darker pill, lighter text reads on both backgrounds. */
+    .footer-link {
+      color: #f2f2f2 !important;
+      background: rgba(0, 0, 0, 0.6) !important;
+    }
+  </style>
+</head>
+
+<body>
+
+  <img src="./antrunner-logo.webp"
+    alt="AntRunner meetup logo"
+    class="seal" style="width:85px;opacity:0.55;" />
+
+  <div class="quick-links">
+    <a href="https://www.meetup.com/antrunner/" class="footer-link" target="_blank" rel="noopener">Meetup</a>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-11-27 12:28 PT</span>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+      <section>
+
+      <!-- 1 Title -->
+      <section style="text-align:center;">
+        <h2>Meet, Greet, and Share Your Project</h2>
+        <h4 style="color:#aaa;">Community session</h4>
+        <p style="font-size:1.1rem;color:#888;margin-top:2rem;">
+          AntRunner Meetup &middot; Mobile App-Development<br>
+          Friday, October 30, 2026 &middot; Online
+        </p>
+      </section>
+
+      <!-- 2 Format -->
+      <section data-background-color="#ffffff">
+        <div class="twocol">
+          <div class="col">
+            <h4>The Format</h4>
+            <ol style="line-height: 1.8;">
+              <li>Introduce yourself</li>
+              <li>Show your project</li>
+              <li>Get feedback</li>
+              <li>Find collaborators</li>
+            </ol>
+          </div>
+          <div class="col">
+            <h4>Ground Rules</h4>
+            <ul>
+              <li>5 minutes per project</li>
+              <li>Work in progress is fine</li>
+              <li>Questions welcome</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 Close -->
+      <section style="text-align:center;">
+        <h2>Thanks for Sharing</h2>
+        <p style="font-size:1.1rem;color:#aaa;margin-top:2rem;">All AntRunner decks: <a href="https://se4cps.github.io/lab/meetup/" target="_blank" rel="noopener">se4cps.github.io/lab/meetup</a></p>
+      </section>
+
+      </section>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/highlight.min.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      width: 1280,
+      height: 720,
+      margin: 0.1,
+      slideNumber: false,
+      plugins: [RevealHighlight]
+    }).then(function () {
+      // Slide counter, bottom right (vertical slides), same convention
+      // as the other meetup decks.
+      (function () {
+        var el = document.createElement('div');
+        el.style.cssText = 'position:fixed;bottom:10px;right:14px;z-index:40;font-size:0.82rem;color:#f2f2f2;padding:4px 10px;background:rgba(0,0,0,0.6);border-radius:6px;';
+        document.body.appendChild(el);
+        function update() {
+          var total = document.querySelectorAll('.reveal > .slides > section > section').length;
+          var idx = Reveal.getIndices();
+          el.textContent = (idx.v + 1) + '/' + total;
+        }
+        Reveal.on('slidechanged', update);
+        update();
+      })();
+
+      // "Updated: Today" display, same mechanism as the course decks.
+      (function () {
+        var span = document.getElementById('updated-stamp');
+        if (!span) return;
+        var m = span.textContent.match(/Updated: (\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}) PT/);
+        if (!m) return;
+        var today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+        if (m[1] >= today) span.textContent = 'Updated: Today ' + m[2] + ' PT';
+      })();
+    });
+  </script>
+</body>
+
+</html>

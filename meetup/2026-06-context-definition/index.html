@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Context Definition for Mobile Web Apps</title>
+
+  <!-- Favicon -->
+  <link rel="icon" href="./antrunner-logo.webp" type="image/webp">
+
+  <!-- Include Reveal.js CSS from CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/black.min.css" id="theme">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/monokai.css">
+
+  <!-- Shared chrome (seal, quick-links footer, highlight color, slides width) -->
+  <link rel="stylesheet" href="../../assets/deck-chrome.css">
+
+  <style>
+    body { margin: 0; }
+    section { font-size: 24pt; }
+    li { font-size: 19pt; }
+    img { border-radius: 4px; margin: 0px !important; }
+
+    .twocol {
+      display: flex;
+      gap: 36px;
+      align-items: center;
+      text-align: left;
+    }
+    .twocol .col { flex: 1; min-width: 0; }
+
+    /* The shared chrome's light-gray pills vanish on this deck's white
+       slides: darker pill, lighter text reads on both backgrounds. */
+    .footer-link {
+      color: #f2f2f2 !important;
+      background: rgba(0, 0, 0, 0.6) !important;
+    }
+  </style>
+</head>
+
+<body>
+
+  <img src="./antrunner-logo.webp"
+    alt="AntRunner meetup logo"
+    class="seal" style="width:85px;opacity:0.55;" />
+
+  <div class="quick-links">
+    <a href="https://www.meetup.com/antrunner/" class="footer-link" target="_blank" rel="noopener">Meetup</a>
+    <span id="updated-stamp" class="footer-link">Updated: 2026-11-27 12:28 PT</span>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+      <section>
+
+      <!-- 1 Title -->
+      <section style="text-align:center;">
+        <h2>Context Definition for Mobile Web Apps</h2>
+        <h4 style="color:#aaa;">What the model needs to know</h4>
+        <p style="font-size:1.1rem;color:#888;margin-top:2rem;">
+          AntRunner Meetup &middot; Mobile App-Development<br>
+          Friday, June 26, 2026 &middot; Online
+        </p>
+      </section>
+
+      <!-- 2 Why context matters -->
+      <section data-background-color="#ffffff">
+        <div class="twocol">
+          <div class="col">
+            <h4>Why Context Matters</h4>
+            <ul>
+              <li>Prompts alone are generic</li>
+              <li>Context makes them specific</li>
+              <li>Mobile: state changes fast</li>
+              <li>Define it, do not improvise</li>
+            </ul>
+          </div>
+          <div class="col">
+            <svg viewBox="0 0 340 280" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;">
+              <rect x="1" y="1" width="338" height="278" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+              <defs><marker id="whyctx" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs>
+              <rect x="20" y="40" width="145" height="54" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="92" y="72" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee">prompt only</text>
+              <rect x="175" y="40" width="145" height="54" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="247" y="72" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee">prompt + context</text>
+              <line x1="92" y1="98" x2="92" y2="136" stroke="#999" stroke-width="2.2" marker-end="url(#whyctx)"/>
+              <line x1="247" y1="98" x2="247" y2="136" stroke="#999" stroke-width="2.2" marker-end="url(#whyctx)"/>
+              <rect x="20" y="140" width="145" height="70" rx="8" fill="#1e1e1e" stroke="#e03131" stroke-width="2"/>
+              <text x="92" y="170" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ff8080">&#10007; generic code</text>
+              <text x="92" y="193" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">ignores your device</text>
+              <rect x="175" y="140" width="145" height="70" rx="8" fill="#1e1e1e" stroke="#2ea043" stroke-width="2"/>
+              <text x="247" y="170" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#7ee787">&#10003; fits the device</text>
+              <text x="247" y="193" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">offline, battery, OS</text>
+              <text x="170" y="248" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">same request, different answers</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3 What counts as context -->
+      <section data-background-color="#ffffff">
+        <div class="twocol">
+          <div class="col">
+            <h4>What Counts as Context</h4>
+            <ul>
+              <li>Device: viewport, battery</li>
+              <li>Network: offline, slow</li>
+              <li>Platform: Android, iOS</li>
+              <li>Project: rules, patterns</li>
+            </ul>
+          </div>
+          <div class="col">
+            <svg viewBox="0 0 340 246" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;">
+              <rect x="1" y="1" width="338" height="244" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+              <defs><marker id="ctxfan" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs>
+              <rect x="10" y="36" width="100" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="60" y="66" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee">Device</text>
+              <rect x="120" y="36" width="100" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="170" y="66" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee">Network</text>
+              <rect x="230" y="36" width="100" height="50" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="280" y="66" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee">Platform</text>
+              <line x1="60" y1="90" x2="130" y2="146" stroke="#999" stroke-width="2.2" marker-end="url(#ctxfan)"/>
+              <line x1="170" y1="90" x2="170" y2="146" stroke="#999" stroke-width="2.2" marker-end="url(#ctxfan)"/>
+              <line x1="280" y1="90" x2="210" y2="146" stroke="#999" stroke-width="2.2" marker-end="url(#ctxfan)"/>
+              <rect x="40" y="150" width="260" height="64" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/>
+              <text x="170" y="176" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" font-weight="bold" fill="#eee">one context block</text>
+              <text x="170" y="198" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">written down, not guessed</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 Context as files -->
+      <section data-background-color="#ffffff">
+        <div class="twocol">
+          <div class="col">
+            <h4>Context as Files</h4>
+            <ul>
+              <li>base.json: shared rules</li>
+              <li>ctx.json per platform</li>
+              <li>agents.md for projects</li>
+              <li>Versioned like code</li>
+            </ul>
+          </div>
+          <div class="col">
+            <svg viewBox="0 0 340 246" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;">
+              <rect x="1" y="1" width="338" height="244" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+              <defs><marker id="ctxfiles" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#999"/></marker></defs>
+              <rect x="25" y="36" width="135" height="54" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="92" y="68" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#9cdcfe">base.json</text>
+              <rect x="180" y="36" width="135" height="54" rx="8" fill="#1e1e1e" stroke="#777" stroke-width="2"/>
+              <text x="247" y="68" text-anchor="middle" font-size="14" font-family="Consolas, monospace" fill="#9cdcfe">ios.ctx.json</text>
+              <line x1="95" y1="94" x2="135" y2="146" stroke="#999" stroke-width="2.2" marker-end="url(#ctxfiles)"/>
+              <line x1="244" y1="94" x2="204" y2="146" stroke="#999" stroke-width="2.2" marker-end="url(#ctxfiles)"/>
+              <rect x="40" y="150" width="260" height="64" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/>
+              <text x="170" y="176" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" font-weight="bold" fill="#eee">assembled context</text>
+              <text x="170" y="198" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#ddd">same files, every teammate</text>
+            </svg>
+            <p class="source-line">Context files: <a href="https://github.com/antrunner/meetup/tree/master/llm" target="_blank" rel="noopener">GitHub</a> &middot; builds on the <a href="https://se4cps.github.io/lab/meetup/2026-04-prompt-templates/" target="_blank" rel="noopener">April talk</a></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 Keep it small -->
+      <section data-background-color="#ffffff">
+        <div class="twocol">
+          <div class="col">
+            <h4>Keep Context Small</h4>
+            <ul>
+              <li>Tokens cost attention</li>
+              <li>Only what the task needs</li>
+              <li>Prune stale rules</li>
+              <li>Review context like code</li>
+            </ul>
+          </div>
+          <div class="col">
+            <svg viewBox="0 0 340 246" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;max-width:460px;display:block;margin:0 auto;">
+              <rect x="1" y="1" width="338" height="244" rx="10" fill="#2a2a2a" stroke="#555" stroke-width="1.5"/>
+              <rect x="20" y="50" width="145" height="90" rx="8" fill="#1e1e1e" stroke="#e03131" stroke-width="2"/>
+              <text x="92" y="86" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#ff8080">&#10007; everything</text>
+              <text x="92" y="112" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">buried in noise</text>
+              <rect x="175" y="50" width="145" height="90" rx="8" fill="#1e1e1e" stroke="#2ea043" stroke-width="2"/>
+              <text x="247" y="86" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#7ee787">&#10003; per task</text>
+              <text x="247" y="112" text-anchor="middle" font-size="12" font-family="Segoe UI, Arial, sans-serif" fill="#aaa">scoped and current</text>
+              <rect x="40" y="170" width="260" height="48" rx="8" fill="#3a1f0a" stroke="#FF671D" stroke-width="2"/>
+              <text x="170" y="199" text-anchor="middle" font-size="14" font-family="Segoe UI, Arial, sans-serif" fill="#eee">small context, better answers</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6 Close -->
+      <section style="text-align:center;">
+        <h2>Questions?</h2>
+        <p style="font-size:1.1rem;color:#aaa;margin-top:2rem;">Related decks: <a href="https://se4cps.github.io/lab/meetup/2026-04-prompt-templates/" target="_blank" rel="noopener">Prompt Templates</a> &middot; <a href="https://se4cps.github.io/lab/meetup/2026-05-prompt-based-testing/" target="_blank" rel="noopener">Prompt-Based Testing</a></p>
+        <p style="font-size:1.1rem;color:#aaa;">All AntRunner decks: <a href="https://se4cps.github.io/lab/meetup/" target="_blank" rel="noopener">se4cps.github.io/lab/meetup</a></p>
+      </section>
+
+      </section>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/highlight/highlight.min.js"></script>
+
+  <script>
+    Reveal.initialize({
+      hash: true,
+      width: 1280,
+      height: 720,
+      margin: 0.1,
+      slideNumber: false,
+      plugins: [RevealHighlight]
+    }).then(function () {
+      // Slide counter, bottom right (vertical slides), same convention
+      // as the other meetup decks.
+      (function () {
+        var el = document.createElement('div');
+        el.style.cssText = 'position:fixed;bottom:10px;right:14px;z-index:40;font-size:0.82rem;color:#f2f2f2;padding:4px 10px;background:rgba(0,0,0,0.6);border-radius:6px;';
+        document.body.appendChild(el);
+        function update() {
+          var total = document.querySelectorAll('.reveal > .slides > section > section').length;
+          var idx = Reveal.getIndices();
+          el.textContent = (idx.v + 1) + '/' + total;
+        }
+        Reveal.on('slidechanged', update);
+        update();
+      })();
+
+      // "Updated: Today" display, same mechanism as the course decks.
+      (function () {
+        var span = document.getElementById('updated-stamp');
+        if (!span) return;
+        var m = span.textContent.match(/Updated: (\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}) PT/);
+        if (!m) return;
+        var today = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Los_Angeles', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date());
+        if (m[1] >= today) span.textContent = 'Updated: Today ' + m[2] + ' PT';
+      })();
+    });
+  </script>
+</body>
+
+</html>

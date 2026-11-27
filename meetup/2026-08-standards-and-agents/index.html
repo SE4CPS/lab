@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Standards-Based Software Development in the Age of Agents</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/black.min.css" id="theme"/>
+<style>
+body { margin:0; font-family:Arial,Helvetica,sans-serif; }
+.slides { width:98% !important; }
+
+h4 {
+    font-size:0.68em !important; font-weight:400 !important;
+    color:#555 !important; letter-spacing:0.1em;
+    text-transform:uppercase; margin-bottom:.5rem !important;
+}
+li { font-size:11pt; line-height:1.45em; }
+
+.hl  { background:#333; color:#ffcc00; padding:1px 4px; border-radius:3px;
+       font-weight:bold; font-family:monospace; font-size:.9em; }
+.dim { font-size:0.74em; color:#888; }
+.tag { display:inline-block; border:1px solid #555; padding:1px 7px;
+       border-radius:5px; font-size:0.72em; color:#ccc; margin:2px;
+       font-family:monospace; }
+.tag.new { border-color:#a855f7; color:#d8b4fe; }
+
+.box {
+    background:#0d1f35; border-left:3px solid #3b82f6;
+    border-radius:0 5px 5px 0; padding:6px 10px;
+    font-size:0.76em; color:#93c5fd; margin:8px 0; line-height:1.4;
+    text-align:left;
+}
+.box.g { border-color:#22c55e; color:#86efac; background:#0a1f10; }
+.box.y { border-color:#eab308; color:#fde68a; background:#241c04; }
+
+/* ── standard card: name + year + one-line role ── */
+.card {
+    background:#111; border:1px solid #333; border-radius:8px;
+    padding:8px 12px; text-align:left; font-size:.9em;
+}
+.card .name { color:#fff; font-weight:bold; font-size:1em; }
+.card .year { color:#888; font-size:.66em; font-family:monospace; float:right; }
+.card .role { color:#aaa; font-size:.76em; margin-top:3px; line-height:1.35; }
+.card .src { display:block; font-size:.62em; color:#666; margin-top:5px; }
+.card .src a { color:#6b9bd1; text-decoration:none; }
+.card .src a:hover { text-decoration:underline; }
+
+/* ── two-up compare ── */
+.pair { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:8px 0; }
+
+/* ── LEFT/RIGHT split ── */
+.split2 { display:flex; align-items:center; gap:26px; text-align:left; }
+.split2 .col-l { flex:1 1 40%; min-width:0; }
+.split2 .col-r { flex:1 1 60%; min-width:0; display:flex; align-items:center; justify-content:center; }
+.split2 .col-l ul { margin-top:6px; }
+.split2 .col-l li { margin-bottom:6px; }
+
+/* ── code / JSON block ── */
+.code {
+    background:#111; border:1px solid #333; border-radius:6px;
+    padding:10px 13px; font-family:monospace; font-size:.66em;
+    line-height:1.55; color:#ccc; white-space:pre; text-align:left;
+    margin:0; width:100%; box-sizing:border-box; overflow:auto;
+}
+.code .k { color:#93c5fd; }
+.code .s { color:#86efac; }
+.code .n { color:#fde68a; }
+.code .c { color:#666; font-style:italic; }
+
+/* ── timeline strip ── */
+.tl { display:flex; align-items:flex-start; justify-content:space-between;
+      gap:2px; margin:14px 0 4px; position:relative; }
+.tl::before { content:""; position:absolute; top:8px; left:0; right:0;
+      height:2px; background:#333; }
+.tl-pt { flex:1; text-align:center; position:relative; z-index:1; }
+.tl-dot { width:9px; height:9px; border-radius:50%; background:#555;
+      margin:2px auto 6px; }
+.tl-pt.now .tl-dot { background:#a855f7; box-shadow:0 0 6px #a855f7; }
+.tl-yr { font-size:.62em; color:#888; font-family:monospace; }
+.tl-lb { font-size:.66em; color:#ccc; margin-top:2px; line-height:1.3; }
+.tl-pt.now .tl-lb { color:#d8b4fe; }
+
+/* ── flow / architecture diagram ── */
+.flow { display:flex; align-items:center; justify-content:center;
+        gap:5px; width:100%; flex-wrap:wrap; }
+.flow.vert { flex-direction:column; }
+.flow-box { padding:7px 11px; border-radius:6px; font-family:monospace;
+        font-size:.66em; text-align:center; border:1px solid #333;
+        background:#111; color:#ccc; line-height:1.35; }
+.flow-box.agent { border-color:#a855f7; color:#d8b4fe; background:#1a0a30; }
+.flow-box.proto  { border-color:#3b82f6; color:#93c5fd; background:#0d1f35; }
+.flow-box.tool   { border-color:#22c55e; color:#86efac; background:#0a1f10; }
+.flow-box.data   { border-color:#eab308; color:#fde68a; background:#241c04; }
+.flow-arr { color:#555; font-size:.85em; }
+.flow-arr.down { transform:rotate(90deg); }
+
+/* ── tag pill grid (quality characteristics) ── */
+.pill-grid { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; max-width:260px; }
+.pill { border:1px solid #3b82f6; color:#93c5fd; background:#0d1f35;
+        border-radius:12px; padding:4px 10px; font-size:.66em; font-family:monospace; }
+.pill.new { border-color:#a855f7; color:#d8b4fe; background:#1a0a30; }
+
+/* ── checklist ── */
+ul.checks { list-style:none; padding-left:0; margin-top:6px; }
+ul.checks li { padding-left:1.3em; position:relative; margin-bottom:6px; }
+ul.checks li::before { content:"\2713"; position:absolute; left:0; color:#22c55e; }
+</style>
+</head>
+<body>
+<div class="reveal"><div class="slides"><section>
+
+<!-- ══ 1. TITLE ═══════════════════════════════════════════════════════ -->
+<section style="text-align:center">
+    <h3>Standards-Based <span class="hl">Software Development</span></h3>
+    <p style="margin-top:.3rem;color:#aaa;font-size:.9em">
+        Reusing ISO, IEEE &amp; open standards when building software with agents
+    </p>
+    <hr style="margin:.9rem 26%;border-color:#333">
+    <div style="display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-top:.8rem">
+        <span class="tag new">ISO/IEC 42001</span>
+        <span class="tag new">ISO/IEC 25059</span>
+        <span class="tag new">IEEE 7000</span>
+        <span class="tag">ISO/IEC 27001</span>
+        <span class="tag">OpenAPI</span>
+        <span class="tag">JSON Schema</span>
+        <span class="tag">OAuth 2.1</span>
+        <span class="tag">SPDX</span>
+    </div>
+    <p class="dim" style="margin-top:1rem">A meetup talk on building agentic software on standards bodies, not vendor lock-in</p>
+</section>
+
+<!-- ══ 2. AGENDA ══════════════════════════════════════════════════════ -->
+<section>
+    <h4>Agenda</h4>
+    <ol style="line-height:1.9; font-size:.92em;">
+        <li>Why standards matter more, not less, with agents</li>
+        <li>A timeline of standards-body milestones</li>
+        <li>Interface standards agents already lean on (OpenAPI, JSON Schema)</li>
+        <li>The new ISO/IEC AI standards family (42001, 23894, 25059)</li>
+        <li>IEEE &amp; W3C: ethics and verifiable identity</li>
+        <li>Trust, auth &amp; supply chain (OAuth 2.1, SBOM, ISO/IEC 27001)</li>
+        <li>Observability &amp; the quiet backbone (OpenTelemetry, SemVer)</li>
+        <li>Putting it together &amp; an adoption playbook</li>
+    </ol>
+</section>
+
+<!-- ══ 3. WHY STANDARDS ══════════════════════════════════════════════ -->
+<section>
+    <h4>Why Standards, Still?</h4>
+    <div class="split2">
+        <div class="col-l">
+            <ul>
+                <li>A standard is a <span class="hl">shared contract</span> nobody had to negotiate twice</li>
+                <li>Broader = more an agent can correctly guess across vendors</li>
+            </ul>
+        </div>
+        <div class="col-r">
+            <div class="flow vert">
+                <div class="flow-box agent">Agent</div>
+                <div class="flow-arr down">&darr;</div>
+                <div class="flow-box proto">One Standard Contract</div>
+                <div class="flow-arr down">&darr;</div>
+                <div class="flow" style="gap:6px">
+                    <div class="flow-box tool">Vendor A</div>
+                    <div class="flow-box tool">Vendor B</div>
+                    <div class="flow-box tool">Vendor C</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ 4. TIMELINE ═══════════════════════════════════════════════════ -->
+<section>
+    <h4>A Timeline of Standards-Body Milestones</h4>
+    <div class="tl">
+        <div class="tl-pt"><div class="tl-dot"></div><div class="tl-yr">2000</div><div class="tl-lb">REST<br>architectural style</div></div>
+        <div class="tl-pt"><div class="tl-dot"></div><div class="tl-yr">2011</div><div class="tl-lb">SemVer 2.0.0<br>OpenAPI spec</div></div>
+        <div class="tl-pt"><div class="tl-dot"></div><div class="tl-yr">2017</div><div class="tl-lb">ISO/IEC JTC 1<br>SC 42 formed</div></div>
+        <div class="tl-pt"><div class="tl-dot"></div><div class="tl-yr">2021</div><div class="tl-lb">OpenAPI 3.1<br>IEEE 7000</div></div>
+        <div class="tl-pt now"><div class="tl-dot"></div><div class="tl-yr">Feb 2023</div><div class="tl-lb">ISO/IEC 23894<br>AI risk mgmt</div></div>
+        <div class="tl-pt now"><div class="tl-dot"></div><div class="tl-yr">2023</div><div class="tl-lb">ISO/IEC 25059<br>AI quality model</div></div>
+        <div class="tl-pt now"><div class="tl-dot"></div><div class="tl-yr">Dec 2023</div><div class="tl-lb">ISO/IEC 42001<br>AI mgmt systems</div></div>
+        <div class="tl-pt now"><div class="tl-dot"></div><div class="tl-yr">2025</div><div class="tl-lb">RFC 9700<br>OAuth security BCP</div></div>
+    </div>
+    <p class="dim" style="text-align:center;margin-top:14px">Purple = the newest layer: formal, international, still built with agentic systems in mind</p>
+</section>
+
+<!-- ══ 5. OPENAPI ════════════════════════════════════════════════════ -->
+<section>
+    <h4>Reused Standard: OpenAPI</h4>
+    <div class="split2">
+        <div class="col-l">
+            <div class="card"><span class="year">2011 &rarr; today</span><div class="name">OpenAPI Spec</div>
+                <div class="role">Governed by the OpenAPI Initiative (Linux Foundation), not one vendor.</div>
+                <span class="src">Source: <a href="https://www.openapis.org/" target="_blank" rel="noopener">openapis.org</a></span></div>
+            <ul><li>One file = every call an agent can make</li></ul>
+        </div>
+        <div class="col-r">
+<pre class="code"><span class="k">"paths"</span>: {
+  <span class="k">"/users/{id}"</span>: {
+    <span class="k">"get"</span>: {
+      <span class="k">"operationId"</span>: <span class="s">"getUser"</span>,
+      <span class="k">"parameters"</span>: [{
+        <span class="k">"name"</span>: <span class="s">"id"</span>,
+        <span class="k">"in"</span>: <span class="s">"path"</span>,
+        <span class="k">"required"</span>: <span class="n">true</span>
+      }]
+    }
+  }
+}</pre>
+        </div>
+    </div>
+</section>
+
+<!-- ══ 6. JSON SCHEMA ════════════════════════════════════════════════ -->
+<section>
+    <h4>Reused Standard: JSON Schema</h4>
+    <div class="split2">
+        <div class="col-l">
+            <div class="card"><span class="year">2009 &rarr; today</span><div class="name">JSON Schema</div>
+                <div class="role">Independent, vendor-neutral vocabulary for JSON shapes.</div>
+                <span class="src">Source: <a href="https://json-schema.org/" target="_blank" rel="noopener">json-schema.org</a></span></div>
+            <ul><li>Describes a tool's inputs, validates its output -- same schema</li></ul>
+        </div>
+        <div class="col-r">
+<pre class="code"><span class="c">// get_weather tool</span>
+{
+  <span class="k">"type"</span>: <span class="s">"object"</span>,
+  <span class="k">"properties"</span>: {
+    <span class="k">"city"</span>: { <span class="k">"type"</span>: <span class="s">"string"</span> },
+    <span class="k">"units"</span>: {
+      <span class="k">"enum"</span>: [<span class="s">"C"</span>, <span class="s">"F"</span>]
+    }
+  },
+  <span class="k">"required"</span>: [<span class="s">"city"</span>]
+}</pre>
+        </div>
+    </div>
+</section>
+
+<!-- ══ 7. ISO/IEC 42001 ══════════════════════════════════════════════ -->
+<section>
+    <h4>New Standard: ISO/IEC 42001:2023</h4>
+    <div class="split2">
+        <div class="col-l">
+            <div class="card" style="border-color:#a855f7">
+                <span class="year">Dec 2023</span>
+                <div class="name">AI Management System</div>
+                <div class="role">First certifiable management-system standard for AI governance.</div>
+                <span class="src">Source: <a href="https://www.iso.org/standard/42001" target="_blank" rel="noopener">iso.org/standard/42001</a></span>
+            </div>
+            <ul><li>Same Annex SL structure as ISO/IEC 27001 -- built to integrate</li></ul>
+        </div>
+        <div class="col-r">
+            <div class="flow vert">
+                <div class="flow-box proto">Organization</div>
+                <div class="flow-arr down">&darr;</div>
+                <div class="flow-box agent">AI Management System<br><span class="dim">(scope)</span></div>
+                <div class="flow-arr down">&darr;</div>
+                <div class="flow" style="gap:6px">
+                    <div class="flow-box tool">Models</div>
+                    <div class="flow-box tool">Agents</div>
+                    <div class="flow-box tool">Data</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ 8. PDCA CYCLE ═════════════════════════════════════════════════ -->
+<section>
+    <h4>How ISO Management Standards Run</h4>
+    <div class="split2">
+        <div class="col-l">
+            <ul>
+                <li>Plan-Do-Check-Act: the loop under 42001, 27001, and 9001 alike</li>
+                <li>One habit, reused across every management-system standard</li>
+            </ul>
+        </div>
+        <div class="col-r">
+            <div class="flow">
+                <div class="flow-box agent">Plan</div>
+                <div class="flow-arr">&rarr;</div>
+                <div class="flow-box proto">Do</div>
+                <div class="flow-arr">&rarr;</div>
+                <div class="flow-box tool">Check</div>
+                <div class="flow-arr">&rarr;</div>
+                <div class="flow-box data">Act</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ 9. ISO/IEC 23894 ══════════════════════════════════════════════ -->
+<section>
+    <h4>New Standard: ISO/IEC 23894:2023</h4>
+    <div class="split2">
+        <div class="col-l">
+            <div class="card" style="border-color:#a855f7">
+                <span class="year">Feb 2023</span>
+                <div class="name">AI Risk Management</div>
+                <div class="role">Applies ISO 31000 risk management specifically to AI.</div>
+                <span class="src">Source: <a href="https://www.iso.org/standard/77304.html" target="_blank" rel="noopener">iso.org/standard/77304</a></span>
+            </div>
+            <ul><li>Directly applicable to an agent acting on its own</li></ul>
+        </div>
+        <div class="col-r">
+            <div class="flow vert">
+                <div class="flow-box proto">Identify</div>
+                <div class="flow-arr down">&darr;</div>
+                <div class="flow-box proto">Analyze</div>
+                <div class="flow-arr down">&darr;</div>
+                <div class="flow-box tool">Evaluate</div>
+                <div class="flow-arr down">&darr;</div>
+                <div class="flow-box agent">Treat</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ 10. ISO/IEC 25010 ═════════════════════════════════════════════ -->
+<section>
+    <h4>Reused Standard: ISO/IEC 25010 (SQuaRE)</h4>
+    <div class="split2">
+        <div class="col-l">
+            <div class="card"><span class="year">2011, revised 2023</span><div class="name">Software Quality Model</div>
+                <div class="role">The baseline vocabulary every later quality standard builds on.</div>
+                <span class="src">Source: <a href="https://www.iso.org/standard/78176.html" target="_blank" rel="noopener">iso.org/standard/78176</a></span></div>
+        </div>
+        <div class="col-r">
+            <div class="pill-grid">
+                <span class="pill">Reliability</span>
+                <span class="pill">Security</span>
+                <span class="pill">Usability</span>
+                <span class="pill">Performance</span>
+                <span class="pill">Maintainability</span>
+                <span class="pill">Compatibility</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ 11. ISO/IEC 25059 ═════════════════════════════════════════════ -->
+<section>
+    <h4>New Standard: ISO/IEC 25059:2023</h4>
+    <div class="split2">
+        <div class="col-l">
+            <div class="card" style="border-color:#a855f7">
+                <span class="year">2023</span>
+                <div class="name">Quality Model for AI Systems</div>
+                <div class="role">Reused, not reinvented -- one focused extension of 25010.</div>
+                <span class="src">Source: <a href="https://www.iso.org/standard/80655.html" target="_blank" rel="noopener">iso.org/standard/80655</a></span>
+            </div>
+        </div>
+        <div class="col-r">
+            <div class="flow vert">
+                <div class="flow-box proto">ISO/IEC 25010<br><span class="dim">base model</span></div>
+                <div class="flow-arr down">&uarr;<span class="dim" style="display:block">extends</span></div>
+                <div class="pill-grid">
+                    <span class="pill new">Robustness</span>
+                    <span class="pill new">Controllability</span>
+                    <span class="pill new">Adaptability</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ 12. IEEE 7000 ═════════════════════════════════════════════════ -->
+<section>
+    <h4>New Standard: IEEE 7000-2021</h4>
+    <div class="split2">
+        <div class="col-l">
+            <div class="card" style="border-color:#a855f7">
+                <span class="year">2021</span>
+                <div class="name">Ethical Concerns in System Design</div>
+                <div class="role">A repeatable process, not a vague values statement.</div>
+                <span class="src">Source: <a href="https://ieeexplore.ieee.org/document/9536679/" target="_blank" rel="noopener">ieeexplore.ieee.org</a></span>
+            </div>
+        </div>
+        <div class="col-r">
+            <div class="flow vert">
+                <div class="flow-box proto">Stakeholders</div>
+                <div class="flow-arr down">&darr;</div>
+                <div class="flow-box proto">Elicit Values</div>
+                <div class="flow-arr down">&darr;</div>
+                <div class="flow-box tool">Ethical Risk</div>
+                <div class="flow-arr down">&darr;</div>
+                <div class="flow-box agent">Design Reqs</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ 13. W3C VC / DID ══════════════════════════════════════════════ -->
+<section>
+    <h4>New Standard: W3C Verifiable Credentials &amp; DIDs</h4>
+    <div class="split2">
+        <div class="col-l">
+            <div class="card" style="border-color:#a855f7">
+                <span class="year">DID: 2022 &middot; VC 2.0: 2025</span>
+                <div class="name">Verifiable Credentials / DIDs</div>
+                <div class="role">A signed, checkable identity -- no single issuer required.</div>
+                <span class="src">Source: <a href="https://www.w3.org/TR/vc-data-model-2.0/" target="_blank" rel="noopener">w3.org/TR/vc-data-model-2.0</a>,
+                    <a href="https://www.w3.org/TR/did-core/" target="_blank" rel="noopener">w3.org/TR/did-core</a></span>
+            </div>
+        </div>
+        <div class="col-r">
+<pre class="code">{
+  <span class="k">"type"</span>: [<span class="s">"VerifiableCredential"</span>],
+  <span class="k">"issuer"</span>: <span class="s">"did:web:example.org"</span>,
+  <span class="k">"credentialSubject"</span>: {
+    <span class="k">"id"</span>: <span class="s">"did:key:agent123"</span>,
+    <span class="k">"role"</span>: <span class="s">"agent"</span>
+  }
+}</pre>
+        </div>
+    </div>
+</section>
+
+<!-- ══ 14. OAUTH 2.1 ═════════════════════════════════════════════════ -->
+<section>
+    <h4>Reused Standard: OAuth 2.1 (IETF)</h4>
+    <div class="split2">
+        <div class="col-l">
+            <div class="card"><span class="year">Draft, w/ RFC 9700 (2025)</span><div class="name">OAuth 2.1</div>
+                <div class="role">A scoped, revocable token -- never a master password.</div>
+                <span class="src">Source: <a href="https://oauth.net/2.1/" target="_blank" rel="noopener">oauth.net/2.1</a>,
+                    <a href="https://www.rfc-editor.org/info/rfc9700/" target="_blank" rel="noopener">RFC 9700</a></span></div>
+        </div>
+        <div class="col-r">
+            <div class="flow vert">
+                <div class="flow-box agent">Agent Client</div>
+                <div class="flow-arr down">&darr;</div>
+                <div class="flow-box proto">Authorization Server</div>
+                <div class="flow-arr down">&darr;<span class="dim" style="display:block">scope=files:read</span></div>
+                <div class="flow-box tool">Resource Server</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ 15. SBOM ══════════════════════════════════════════════════════ -->
+<section>
+    <h4>Reused Standard: SBOM (SPDX / CycloneDX)</h4>
+    <div class="split2">
+        <div class="col-l">
+            <div class="pair">
+                <div class="card" style="font-size:.8em"><span class="year">ISO/IEC 5962</span><div class="name">SPDX</div></div>
+                <div class="card" style="font-size:.8em"><span class="year">OWASP</span><div class="name">CycloneDX</div></div>
+            </div>
+            <span class="src">Sources: <a href="https://www.iso.org/standard/81870.html" target="_blank" rel="noopener">iso.org/standard/81870</a>,
+                <a href="https://cyclonedx.org/" target="_blank" rel="noopener">cyclonedx.org</a></span>
+            <ul><li>The machine-readable "ingredient list" of an app</li></ul>
+        </div>
+        <div class="col-r">
+<pre class="code">{
+  <span class="k">"name"</span>: <span class="s">"example-lib"</span>,
+  <span class="k">"version"</span>: <span class="s">"1.4.0"</span>,
+  <span class="k">"license"</span>: <span class="s">"MIT"</span>,
+  <span class="k">"purl"</span>:
+    <span class="s">"pkg:generic/example-lib@1.4.0"</span>
+}</pre>
+        </div>
+    </div>
+</section>
+
+<!-- ══ 16. ISO/IEC 27001 ═════════════════════════════════════════════ -->
+<section>
+    <h4>Reused Standard: ISO/IEC 27001</h4>
+    <div class="split2">
+        <div class="col-l">
+            <div class="card"><span class="year">Latest revision: 2022</span><div class="name">Information Security Mgmt</div>
+                <div class="role">Whatever an agent can touch is, first, a security question.</div>
+                <span class="src">Source: <a href="https://www.iso.org/standard/27001" target="_blank" rel="noopener">iso.org/standard/27001</a></span></div>
+        </div>
+        <div class="col-r">
+            <div class="flow vert">
+                <div class="flow-box data">Asset</div>
+                <div class="flow-arr down">&darr;</div>
+                <div class="flow-box proto">Risk Assessment</div>
+                <div class="flow-arr down">&darr;</div>
+                <div class="flow-box tool">Controls<br><span class="dim">(Annex A)</span></div>
+                <div class="flow-arr down">&darr;</div>
+                <div class="flow-box agent">Continual Improvement</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ 17. OPENTELEMETRY + SEMVER ════════════════════════════════════ -->
+<section>
+    <h4>The Quiet Backbone: OpenTelemetry &amp; SemVer</h4>
+    <div class="split2">
+        <div class="col-l">
+            <div class="pair">
+                <div class="card" style="font-size:.8em"><span class="year">CNCF</span><div class="name">OpenTelemetry</div></div>
+                <div class="card" style="font-size:.8em"><span class="year">semver.org</span><div class="name">SemVer</div></div>
+            </div>
+            <span class="src">Sources: <a href="https://opentelemetry.io/" target="_blank" rel="noopener">opentelemetry.io</a>,
+                <a href="https://semver.org/" target="_blank" rel="noopener">semver.org</a></span>
+            <div class="box y">A promise about what a version bump means, and proof of what an agent actually did.</div>
+        </div>
+        <div class="col-r">
+<pre class="code"><span class="c">// OTel span</span>
+{ <span class="k">"name"</span>: <span class="s">"agent.tool_call"</span>,
+  <span class="k">"attributes"</span>: {
+    <span class="k">"tool"</span>: <span class="s">"getUser"</span> } }
+
+<span class="c">// SemVer</span>
+<span class="n">2</span>.<span class="n">4</span>.<span class="n">1</span>
+<span class="c">^     ^  ^
+| MAJOR MINOR PATCH</span></pre>
+        </div>
+    </div>
+</section>
+
+<!-- ══ 18. PUTTING IT TOGETHER ═══════════════════════════════════════ -->
+<section>
+    <h4>Putting It Together</h4>
+    <div class="split2">
+        <div class="col-l">
+            <ul>
+                <li>Every hop traced (OpenTelemetry)</li>
+                <li>Every dependency tracked (SBOM)</li>
+                <li>The whole loop audited under ISO/IEC 27001</li>
+            </ul>
+        </div>
+        <div class="col-r">
+            <div class="flow vert">
+                <div class="flow-box agent">ISO/IEC 42001<br><span class="dim">mgmt wrapper</span></div>
+                <div class="flow-arr down">&darr;</div>
+                <div class="flow-box proto">Agent System<br><span class="dim">25059-graded</span></div>
+                <div class="flow-arr down">&darr;</div>
+                <div class="flow-box tool">OpenAPI Service<br><span class="dim">OAuth 2.1-scoped</span></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ══ 19. ADOPTION PLAYBOOK ═════════════════════════════════════════ -->
+<section>
+    <h4>Adoption Playbook</h4>
+    <div class="split2">
+        <div class="col-l">
+            <ul class="checks">
+                <li>Prefer a standard over a bespoke shape</li>
+                <li>Map your pipeline to 42001's PDCA loop</li>
+                <li>Run an IEEE 7000 review before shipping</li>
+                <li>Scope every OAuth token tightly</li>
+            </ul>
+        </div>
+        <div class="col-r">
+<pre class="code"><span class="c">// bespoke</span>
+{ <span class="k">"usr_nm"</span>: <span class="s">"Ana"</span>,
+  <span class="k">"is_ok"</span>: <span class="n">1</span> }
+
+<span class="c">// standard (JSON Schema)</span>
+{ <span class="k">"name"</span>: <span class="s">"string"</span>,
+  <span class="k">"active"</span>: <span class="s">"boolean"</span> }</pre>
+        </div>
+    </div>
+</section>
+
+<!-- ══ 20. CLOSING ═══════════════════════════════════════════════════ -->
+<section style="text-align:center">
+    <h3>Standards, Not Silos</h3>
+    <p style="color:#aaa;font-size:.9em;max-width:70%;margin:.6rem auto;">
+        The most durable parts of the agent stack won't be any one vendor's
+        protocol -- they'll be the ISO, IEEE, and open specs that outlive it.
+    </p>
+    <div style="display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-top:1rem">
+        <span class="tag">ISO/IEC 42001</span>
+        <span class="tag">ISO/IEC 23894</span>
+        <span class="tag">ISO/IEC 25059</span>
+        <span class="tag">ISO/IEC 27001</span>
+        <span class="tag">IEEE 7000</span>
+        <span class="tag">W3C VC / DID</span>
+        <span class="tag">OpenAPI</span>
+        <span class="tag">JSON Schema</span>
+        <span class="tag">OAuth 2.1</span>
+        <span class="tag">SPDX / CycloneDX</span>
+        <span class="tag">OpenTelemetry</span>
+        <span class="tag">SemVer</span>
+    </div>
+    <p class="dim" style="margin-top:1.2rem">Thanks! Questions welcome.</p>
+</section>
+
+</section></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+<script>
+    Reveal.initialize({ slideNumber: false, controls:true, progress:true, center:true, hash:true, margin:0.04 }).then(function () {
+    (function () {
+      var el = document.createElement('div');
+      el.style.cssText = 'position:fixed; bottom:10px; right:10px; z-index:9999; color:#ccc; ' +
+        'font-size:0.8rem; background:rgba(0,0,0,0.4); padding:4px 10px; border-radius:4px; ' +
+        'pointer-events:none;';
+      document.body.appendChild(el);
+      function updateCounter() {
+        var hSlides = document.querySelectorAll('.reveal > .slides > section');
+        var idx = Reveal.getIndices();
+        var h = idx.h, v = idx.v || 0;
+        var cur = hSlides[h];
+        var vSlides = cur ? cur.querySelectorAll(':scope > section') : [];
+        var text = (h + 1) + '/' + hSlides.length;
+        if (vSlides.length > 1) {
+          text += ' &middot; ' + (v + 1) + '/' + vSlides.length;
+        }
+        el.innerHTML = text;
+      }
+      updateCounter();
+      Reveal.on('slidechanged', updateCounter);
+    })();
+    });
+</script>
+</body>
+</html>
